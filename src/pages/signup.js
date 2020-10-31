@@ -28,12 +28,12 @@ export default () => {
                                 className="img-fluid mb-3"
                             />
                             <h2>Sign up</h2>
-                            <p className="text-muted">His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.</p>
+                            <p className="text-muted">You're just a few steps away from scoring loot and doing some good.</p>
                         </div>
                         <Form className="form-validate">
                             <FormGroup>
                                 <Label for="loginUsername" className="form-label">
-                                    Email Adress
+                                    Email Address
                             </Label>
                                 <Input
                                     name="loginUsername"
@@ -91,24 +91,44 @@ export default () => {
                                 className="btn-social mb-3"
                             >
                                 <i className="fa-2x fa-facebook-f fab btn-social-icon" />
-                                Connect
+                                Connect&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Facebook
                                 </span>
                             </Button>
                             <Button
-                                color="outline-muted"
+                                color="outline-primary"
+                                block
+                                className="btn-social mb-3"
+                            >
+                                <i className="fa-2x fa-twitter fab btn-social-icon" />
+                                Connect&nbsp;
+                                <span className="d-none d-sm-inline">
+                                    with Twitter
+                                </span>
+                            </Button>
+                            <Button
+                                color="outline-primary"
                                 block
                                 className="btn-social mb-3"
                             >
                                 <i className="fa-2x fa-google fab btn-social-icon" />
-                                Connect
+                                Connect&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Google
                                 </span>
                             </Button>
                             <hr className="my-4" />
-                            <p className="text-sm text-muted">By signing up you agree to Directory's <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>.</p>
+                            <p className="text-center">
+                                <small className="text-muted text-center">
+                                    Already have an account?&nbsp;
+                                    <Link href="/login">
+                                        <a>Sign in</a>
+                                    </Link>
+                                </small>
+                            </p>
+
+                            <p className="text-sm text-muted">By signing up you agree to Contrib's <a href="/about/terms">Terms and Conditions</a> and <a href="/about/privacy">Privacy Policy</a>.</p>
                         </Form>
                         <Link href="/">
                             <a className="close-absolute mr-md-5 mr-xl-6 pt-5">

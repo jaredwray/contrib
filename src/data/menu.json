@@ -182,30 +182,7 @@
                ]
             }
          ]
-      ],
-      "services": [
-         {
-            "title": "Best rentals",
-            "content": "Find the perfect place",
-            "icon": "/content/svg/orion-svg-sprite.svg#destination-map-1"
-         },
-         {
-            "title": "Earn points",
-            "content": "And get great rewards",
-            "icon": "/content/svg/orion-svg-sprite.svg#money-box-1"
-         },
-         {
-            "title": "020-800-456-747",
-            "content": "24/7 Available Support",
-            "icon": "/content/svg/orion-svg-sprite.svg#customer-support-1"
-         },
-         {
-            "title": "Secure Payment",
-            "content": "Secure Payment",
-            "icon": "/content/svg/orion-svg-sprite.svg#secure-payment-1"
-         }
-      ],
-      "image": "/content/img/photo/photo-1521170665346-3f21e2291d8b.jpg"
+      ]
    },
    {
       "title": "About",
@@ -239,8 +216,8 @@
       ]
    },
    {
-      "title": "Join",
-      "link": "/join",
+      "title": "Sign up",
+      "link": "/signup",
       "button": true,
       "hideToLoggedUser": true
    }

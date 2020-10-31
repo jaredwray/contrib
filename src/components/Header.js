@@ -216,41 +216,7 @@ export default props => {
                                                                     </Col>
                                                                 )}
                                                             </Row>
-                                                            {item.services &&
-                                                                <Row
-                                                                    className="megamenu-services d-none d-lg-flex pl-lg-5"
-                                                                >
-                                                                    {item.services.map(service =>
-                                                                        <Col
-                                                                            key={service.title}
-                                                                            xl="3"
-                                                                            lg="6"
-                                                                            className="d-flex"
-                                                                        >
-                                                                            <div className="megamenu-services-item">
-                                                                                <svg className="svg-icon megamenu-services-icon"
-                                                                                >
-                                                                                    <use xlinkHref={service.icon}> </use>
-                                                                                </svg>
-                                                                                <div>
-                                                                                    <h6 className="text-uppercase">{service.title}</h6>
-                                                                                    <p className="mb-0 text-muted text-sm">{service.content}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </Col>
-                                                                    )}
-
-                                                                </Row>
-                                                            }
-
-
-
                                                         </Col>
-                                                        {item.image &&
-                                                            <Col lg="3" className="d-none d-lg-block">
-                                                                <img src={item.image} alt="" className="bg-image" />
-                                                            </Col>
-                                                        }
                                                     </Row>
                                                 }
                                             </DropdownMenu>

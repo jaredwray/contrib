@@ -32,7 +32,7 @@ export default () => {
                         <Form className="form-validate">
                             <FormGroup>
                                 <Label for="loginUsername" className="form-label">
-                                    Email Adress
+                                    Email Address
                             </Label>
                                 <Input
                                     name="loginUsername"
@@ -90,18 +90,29 @@ export default () => {
                                 className="btn-social mb-3"
                             >
                                 <i className="fa-2x fa-facebook-f fab btn-social-icon" />
-                                Connect
+                                Connect&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Facebook
                                 </span>
                             </Button>
                             <Button
-                                color="outline-muted"
+                                color="outline-primary"
+                                block
+                                className="btn-social mb-3"
+                            >
+                                <i className="fa-2x fa-twitter fab btn-social-icon" />
+                                Connect&nbsp;
+                                <span className="d-none d-sm-inline">
+                                    with Twitter
+                                </span>
+                            </Button>
+                            <Button
+                                color="outline-primary"
                                 block
                                 className="btn-social mb-3"
                             >
                                 <i className="fa-2x fa-google fab btn-social-icon" />
-                                Connect
+                                Connect&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Google
                                 </span>
@@ -111,7 +122,7 @@ export default () => {
                                 <small className="text-muted text-center">
                                     Don't have an account yet?&nbsp;
                                     <Link href="/signup">
-                                        <a>Sign Up</a>
+                                        <a>Sign up</a>
                                     </Link>
                                 </small>
                             </p>
