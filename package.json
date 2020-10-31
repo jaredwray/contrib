@@ -1,0 +1,55 @@
+{
+  "name": "contrib",
+  "version": "0.2.0",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next build && next export"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/react-fontawesome": "^0.1.9",
+    "leaflet": "^1.6.0",
+    "mongodb": "^3.5.9",
+    "next": "9.3.5",
+    "next-auth": "^3.1.0",
+    "next-images": "^1.4.0",
+    "nextjs-progressbar": "0.0.5",
+    "nouislider-react": "^3.3.7",
+    "react": "^16.13.1",
+    "react-dates": "^21.8.0",
+    "react-dom": "^16.13.1",
+    "react-dropzone": "^11.0.1",
+    "react-id-swiper": "^3.0.0",
+    "react-image-lightbox": "^5.1.1",
+    "react-leaflet": "^2.7.0",
+    "react-scroll": "^1.7.16",
+    "react-select": "^3.1.0",
+    "react-syntax-highlighter": "^12.2.1",
+    "reactstrap": "^8.4.1",
+    "sass": "^1.26.3",
+    "swiper": "^5.3.8",
+    "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.5.27",
+    "@types/next-auth": "^3.1.14",
+    "@types/node": "^14.11.8",
+    "@types/react": "^16.9.52"
+  },
+  "browserslist": [
+    ">= 1%",
+    "last 1 major version",
+    "not dead",
+    "Chrome >= 45",
+    "Firefox >= 38",
+    "Edge >= 12",
+    "Explorer >= 10",
+    "iOS >= 9",
+    "Safari >= 9",
+    "Android >= 4.4",
+    "Opera >= 30"
+  ]
+}

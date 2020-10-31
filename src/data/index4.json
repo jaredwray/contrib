@@ -1,0 +1,291 @@
+{
+    "hero": "/content/img/photo/photo-1512917774080-9991f1c4c750-2.jpg",
+    "title": "Let us guide you home",
+    "subTitle": "Uncover the best offers on the real estate market.",
+    "searchTabs": {
+        "tabs": [
+            {
+                "title": "Buy"
+            },
+            {
+                "title": "Rent"
+            },
+            {
+                "title": "Sell"
+            }
+        ],
+        "locationOptions": [
+            { "value": "city_0", "label": "San Francisco" },
+            { "value": "city_1", "label": "Los Angeles" },
+            { "value": "city_2", "label": "Santa Monica" },
+            { "value": "city_3", "label": "San Diego" },
+            { "value": "city_4", "label": "Fresno" }
+        ],
+        "typeOptions": [
+            { "value": "type_0", "label": "Duplex" },
+            { "value": "type_1", "label": "Appartment" },
+            { "value": "type_2", "label": "House" },
+            { "value": "type_3", "label": "Land" },
+            { "value": "type_4", "label": "Other" }
+        ],
+        "priceOptions": [
+            { "value": "price_0", "label": "$5,000" },
+            { "value": "price_1", "label": "$10,000" },
+            { "value": "price_2", "label": "$25,000" },
+            { "value": "price_3", "label": "$50,000" }
+        ]
+    },
+    "featured": {
+        "subTitle": "Find your home today",
+        "title": "Featured listings around you",
+        "button": "See all featured listings",
+        "buttonLink": "category-rooms",
+        "swiper": [
+            {
+                "title": "Modern, Well-Appointed Room",
+                "location": "San Francisco",
+                "type": "House",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1484154218962-a197022b5858.jpg",
+                "meters": "350",
+                "bedrooms": "3",
+                "bathrooms": "2",
+                "price": "$150k"
+            },
+            {
+                "title": "Cute Quirky Garden apt, NYC adjacent",
+                "location": "San Francisco",
+                "type": "Apartment",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1426122402199-be02db90eb90.jpg",
+                "meters": "85",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$65k"
+            },
+            {
+                "title": "Modern Apt - Vibrant Neighborhood!",
+                "location": "San Francisco",
+                "type": "House",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1512917774080-9991f1c4c750.jpg",
+                "meters": "350",
+                "bedrooms": "3",
+                "bathrooms": "2",
+                "price": "$150k"
+            },
+            {
+                "title": "Sunny Private Studio-Apartment",
+                "location": "San Francisco",
+                "type": "Apartment",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1494526585095-c41746248156.jpg",
+                "meters": "85",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$65k"
+            },
+            {
+                "title": "Mid-Century Modern Garden Paradise",
+                "location": "San Francisco",
+                "type": "House",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1522771739844-6a9f6d5f14af.jpg",
+                "meters": "350",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$150k"
+            },
+            {
+                "title": "Brooklyn Life, Easy to Manhattan",
+                "location": "San Francisco",
+                "type": "Apartment",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1488805990569-3c9e1d76d51c.jpg",
+                "meters": "85",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$65k"
+            },
+            {
+                "title": "Modern, Well-Appointed Room",
+                "location": "San Francisco",
+                "type": "House",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1484154218962-a197022b5858.jpg",
+                "meters": "350",
+                "bedrooms": "3",
+                "bathrooms": "2",
+                "price": "$150k"
+            },
+            {
+                "title": "Cute Quirky Garden apt, NYC adjacent",
+                "location": "San Francisco",
+                "type": "Apartment",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1426122402199-be02db90eb90.jpg",
+                "meters": "85",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$65k"
+            },
+            {
+                "title": "Modern Apt - Vibrant Neighborhood!",
+                "location": "San Francisco",
+                "type": "House",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1512917774080-9991f1c4c750.jpg",
+                "meters": "350",
+                "bedrooms": "3",
+                "bathrooms": "2",
+                "price": "$150k"
+            },
+            {
+                "title": "Sunny Private Studio-Apartment",
+                "location": "San Francisco",
+                "type": "Apartment",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1494526585095-c41746248156.jpg",
+                "meters": "85",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$65k"
+            },
+            {
+                "title": "Mid-Century Modern Garden Paradise",
+                "location": "San Francisco",
+                "type": "House",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1522771739844-6a9f6d5f14af.jpg",
+                "meters": "350",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$150k"
+            },
+            {
+                "title": "Brooklyn Life, Easy to Manhattan",
+                "location": "San Francisco",
+                "type": "Apartment",
+                "link": "/detail-rooms",
+                "img": "img/photo/photo-1488805990569-3c9e1d76d51c.jpg",
+                "meters": "85",
+                "bedrooms": "2",
+                "bathrooms": "1",
+                "price": "$65k"
+            }
+        ]
+    },
+    "popularCities": {
+        "title": "What's on our radar",
+        "subTitle": "Most popular cities"
+    },
+    "discover": {
+        "title": "Discover the best investment opportunities around you",
+        "subTitle": "Why us?",
+        "blocks": [
+            {
+                "title": "Find the best investment area",
+                "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in",
+                "icon": "#destination-map-1",
+                "color": "primary"
+            },
+            {
+                "title": "Purchase a property",
+                "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pit",
+                "icon": "#real-estate-1",
+                "color": "secondary"
+            },
+            {
+                "title": "Profit",
+                "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar ",
+                "icon": "#pay-1",
+                "color": "primary"
+            }
+        ]
+    },
+    "divider": {
+        "title": "Directory is the best way to find & discover great local businesses",
+        "subTitle": "Start using Directory today",
+        "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in",
+        "button": "Create Your Account",
+        "buttonLink": "#",
+        "small": "It's free!"
+    },
+    "team": {
+        "title": "Meet our team",
+        "subTitle": "Who are we?",
+        "button": "Meet us all",
+        "buttonLink": "team",
+        "members": [
+            {
+                "title": "Meredith Goodwin",
+                "type": "CEO & Founder",
+                "avatar": "img/avatar/agent-0.png",
+                "link": "#"
+            },
+            {
+                "title": "Weeks Garrett",
+                "type": "Co-founder",
+                "avatar": "img/avatar/agent-1.png",
+                "link": "#"
+            },
+            {
+                "title": "Fisher Bauer",
+                "type": "CTO",
+                "avatar": "img/avatar/agent-2.png",
+                "link": "#"
+            },
+            {
+                "title": "Aguilar Webb",
+                "type": "Community",
+                "avatar": "img/avatar/agent-3.png",
+                "link": "#"
+            }
+        ]
+    },
+    "brands": {
+        "title": "As seen on",
+        "brands": [
+            {
+                "title": "Brand 1",
+                "img": "img/brand/brand-1.svg"
+            },
+            {
+                "title": "Brand 2",
+                "img": "img/brand/brand-2.svg"
+            },
+            {
+                "title": "Brand 3",
+                "img": "img/brand/brand-3.svg"
+            },
+            {
+                "title": "Brand 4",
+                "img": "img/brand/brand-4.svg"
+            },
+            {
+                "title": "Brand 5",
+                "img": "img/brand/brand-5.svg"
+            },
+            {
+                "title": "Brand 6",
+                "img": "img/brand/brand-6.svg"
+            },
+            {
+                "title": "Brand 1",
+                "img": "img/brand/brand-1.svg"
+            },
+            {
+                "title": "Brand 2",
+                "img": "img/brand/brand-2.svg"
+            },
+            {
+                "title": "Brand 3",
+                "img": "img/brand/brand-3.svg"
+            },
+            {
+                "title": "Brand 4",
+                "img": "img/brand/brand-4.svg"
+            }
+        ]
+    }
+}

@@ -1,0 +1,189 @@
+{
+    "from": {
+        "month": "April",
+        "day": "17",
+        "year": "2019"
+    },
+    "to": {
+        "month": "April",
+        "day": "18",
+        "year": "2019"
+    },
+    "steps": [
+    {
+        "title": "Review house rules",
+        "subtitle": "Book your holiday home",
+        "badge": "<strong>This home is on people’s minds.</strong> It’s been viewed 43 times in the past week.",
+        
+        "formBlocks": [
+            {
+                "title": "1 night in London",
+                "type": "fromto",
+                "checkin": {
+                    "title": "Wednesday check-in",
+                    "content": "3PM - 7PM"
+                },
+                "checkout": {
+                    "title": "Thursday check-out",
+                    "content": "11AM"
+                }
+                
+            },
+            {
+                "title": "Things to keep in mind",
+                "type": "keepinmind",
+                "items": [
+                    {
+                        "content": "Not suitable for children and infants - The entrance staircase doesn't have handrails",
+                        "icon": "child"
+                    },
+                    {
+                        "content": "No parties or events",
+                        "icon": "glass-cheers"
+                    },
+                    {
+                        "content": "No smoking",
+                        "icon": "smoking-ban"
+                    },
+                    {
+                        "content": "No pets",
+                        "icon": "cat"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Who's coming?",
+        "subtitle": "Book your holiday home",
+        "badge": "<strong>This home is on people’s minds.</strong> It’s been viewed 43 times in the past week.",
+        "formBlocks": [
+            {
+                "title": "Guests",
+                "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in.",
+                "type": "guests",
+                "name": "form_guests",
+                "options": [
+                    {
+                        "label": "1",
+                        "value": "guest_0"
+                    },
+                    {
+                        "label": "2",
+                        "value": "guest_1"
+                    },
+                    {
+                        "label": "3",
+                        "value": "guest_2"
+                    },
+                    {
+                        "label": "4",
+                        "value": "guest_3"
+                    },
+                    {
+                        "label": "5",
+                        "value": "guest_4"
+                    }
+                ]
+            },
+            {
+                "title": "What's the main purpose of this trip?",
+                "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pit.",
+                "type": "radios",
+                "radios": [
+                    {
+                        "label": "Personal travel",
+                        "name": "purpose",
+                        "id": "purpose_0"
+                    },
+                    {
+                        "label": "Business travel",
+                        "name": "purpose",
+                        "id": "purpose_1"
+                    }
+                ]
+            },
+            {
+                "title": "Say hello to your host",
+                "name": "hello",
+                "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar .",
+                "avatar": "avatar-10.jpg",
+                "type": "textarea"
+            }
+        ]
+    },
+    {
+        "title": "Confirm and pay",
+        "subtitle": "Book your holiday home",
+        "badge": "<strong>This home is on people’s minds.</strong> It’s been viewed 43 times in the past week.",
+        "formBlocks": [
+            {
+                "title": "Pay with your card",
+                "type": "paybycard",
+                "name": "payment",
+                "options": [
+                    {
+                        "label": "Visa •••• 5687",
+                        "value": "card_0"
+                    },
+                    {
+                        "label": "Mastercard •••• 4569",
+                        "value": "card_1"
+                    }
+                ],
+                "inputs": [
+                    {
+                        "label": "Name on Card",
+                        "col": "6",
+                        "name": "card-name"
+                    },
+                    {
+                        "label": "Card Number",
+                        "col": "6",
+                        "name": "card-number"
+                    },
+                    {
+                        "label": "Expiry Date",
+                        "col": "4",
+                        "name": "expiry-date",
+                        "placeholder": "MM/YY"
+                    },
+                    {
+                        "label": "CVC/CVV",
+                        "col": "4",
+                        "name": "cvv",
+                        "placeholder": "123"
+                    },
+                    {
+                        "label": "ZIP",
+                        "col": "4",
+                        "name": "zip",
+                        "placeholder": "123"
+                    }
+                ]
+            },
+            {
+                "title": "Cancellation policy",
+                "content": "<p class='text-sm text-muted'>Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of .</p><p class='text-sm text-muted'>He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the flounde.</p>",
+                "type": "policy"
+            }
+        ]
+    },
+    {
+        "title": "Booking placed",
+        "subtitle": "Book your holiday home",
+        "content": "Thank you for your booking, Ondrej.",
+        "content2": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.",
+        "buttons": [
+            {
+                "title": "View your order",
+                "link": "/user-booking-detail"
+            },
+            {
+                "title": "Or something else",
+                "link": "#"
+            }
+        ]
+    }
+]
+}

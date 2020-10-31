@@ -1,0 +1,253 @@
+{
+  "title": "Mid-Century Modern Garden Paradise",
+  "category": "Entire Apartment",
+  "img": "restaurant-1515164783716-8e6920f3e77c.jpg",
+  "location": "Brooklyn, New York",
+  "price": "$120",
+  "tags": [
+    {
+      "icon": "users",
+      "value": "4 guests"
+    },
+    {
+      "icon": "door-open",
+      "value": "1 bedroom"
+    },
+    {
+      "icon": "bed",
+      "value": "3 beds"
+    },
+    {
+      "icon": "bath",
+      "value": "1 bath"
+    }
+  ],
+  "swiper": [
+    {
+      "img": "photo-1426122402199-be02db90eb90.jpg",
+      "title": "Our street",
+      "alt": "Our street"
+    },
+    {
+      "img": "photo-1512917774080-9991f1c4c750.jpg",
+      "title": "Outside",
+      "alt": "Outside"
+    },
+    {
+      "img": "photo-1494526585095-c41746248156.jpg",
+      "title": "Rear entrance",
+      "alt": "Rear entrance"
+    },
+    {
+      "img": "photo-1484154218962-a197022b5858.jpg",
+      "title": "Kitchen",
+      "alt": "Kitchen"
+    },
+    {
+      "img": "photo-1522771739844-6a9f6d5f14af.jpg",
+      "title": "Bedroom",
+      "alt": "Bedroom"
+    },
+    {
+      "img": "photo-1488805990569-3c9e1d76d51c.jpg",
+      "title": "Bedroom",
+      "alt": "Bedroom"
+    }
+  ],
+
+  "amenities": [
+    {
+      "icon": "wifi",
+      "value": "Wifi"
+    },
+    {
+      "icon": "tv",
+      "value": "Cable TV"
+    },
+    {
+      "icon": "snowflake",
+      "value": "Air conditioning"
+    },
+    {
+      "icon": "thermometer-three-quarters",
+      "value": "Heating"
+    },
+    {
+      "icon": "bath",
+      "value": "Toiletteries"
+    },
+    {
+      "icon": "utensils",
+      "value": "Equipped Kitchen"
+    },
+    {
+      "icon": "laptop",
+      "value": "Desk for work"
+    },
+    {
+      "icon": "tshirt",
+      "value": "Washing machine"
+    }
+  ],
+  "author": {
+    "name": "Jack London",
+    "content": "<p class='text-muted text-sm mb-2'>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p><p class='text-muted text-sm'>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>",
+    "avatar": "avatar-10.jpg"
+  },
+  "reviews": [
+    {
+      "title": "Padmé Amidala",
+      "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections",
+      "date": "Dec 2018",
+      "avatar": "avatar-8.jpg",
+      "stars": "5"
+    },
+    {
+      "title": "Luke Skywalker",
+      "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. 'What's happened to me?' he thought. It wasn't a dream.",
+      "date": "Dec 2018",
+      "avatar": "avatar-2.jpg",
+      "stars": "4"
+    },
+    {
+      "title": "Princess Leia",
+      "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.",
+      "date": "Dec 2018",
+      "avatar": "avatar-3.jpg",
+      "stars": "3"
+    },
+    {
+      "title": "Jabba Hut",
+      "content": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.",
+      "date": "Dec 2018",
+      "avatar": "avatar-4.jpg",
+      "stars": "5"
+    }
+  ],
+  "similar": {
+    "title": "Similar places",
+    "subtitle": "You may also like",
+    "items": [
+      {
+        "properties": {
+          "name": "Modern, Well-Appointed Room",
+          "subtitle": "Private room",
+          "image": "photo-1484154218962-a197022b5858.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-0.jpg",
+          "person": "Pamela",
+          "stars": "4",
+          "price": "80"
+        }
+      },
+      {
+        "properties": {
+          "name": "Cute Quirky Garden apt, NYC adjacent",
+          "subtitle": "Entire apartment",
+          "image": "photo-1484154218962-a197022b5858.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-7.jpg",
+          "person": "John",
+          "stars": "5",
+          "price": "121"
+        }
+      },
+      {
+        "properties": {
+          "name": "Modern Apt - Vibrant Neighborhood!",
+          "subtitle": "Entire apartment",
+          "image": "photo-1512917774080-9991f1c4c750.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-8.jpg",
+          "person": "Julie",
+          "stars": "3",
+          "price": "75"
+        }
+      },
+      {
+        "properties": {
+          "name": "Sunny Private Studio-Apartment",
+          "subtitle": "Private room",
+          "image": "photo-1484154218962-a197022b5858.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-9.jpg",
+          "person": "Barbora",
+          "stars": "4",
+          "price": "93"
+        }
+      },
+      {
+        "properties": {
+          "name": "Mid-Century Modern Garden Paradise",
+          "subtitle": "Private room",
+          "image": "photo-1522771739844-6a9f6d5f14af.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-10.jpg",
+          "person": "Jack",
+          "stars": "5",
+          "price": "115"
+        }
+      },
+      {
+        "properties": {
+          "name": "Brooklyn Life, Easy to Manhattan",
+          "subtitle": "Private room",
+          "image": "photo-1488805990569-3c9e1d76d51c.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-11.jpg",
+          "person": "Stuart",
+          "stars": "4",
+          "price": "123"
+        }
+      },
+      {
+        "properties": {
+          "name": "Modern, Well-Appointed Room",
+          "subtitle": "Private room",
+          "image": "photo-1484154218962-a197022b5858.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-0.jpg",
+          "person": "Pamela",
+          "stars": "4",
+          "price": "80"
+        }
+      },
+      {
+        "properties": {
+          "name": "Cute Quirky Garden apt, NYC adjacent",
+          "subtitle": "Entire apartment",
+          "image": "photo-1484154218962-a197022b5858.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-7.jpg",
+          "person": "John",
+          "stars": "5",
+          "price": "121"
+        }
+      },
+      {
+        "properties": {
+          "name": "Modern Apt - Vibrant Neighborhood!",
+          "subtitle": "Entire apartment",
+          "image": "photo-1512917774080-9991f1c4c750.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-8.jpg",
+          "person": "Julie",
+          "stars": "3",
+          "price": "75"
+        }
+      },
+      {
+        "properties": {
+          "name": "Sunny Private Studio-Apartment",
+          "subtitle": "Private room",
+          "image": "photo-1484154218962-a197022b5858.jpg",
+          "link": "detail-rooms",
+          "avatar": "img/avatar/avatar-9.jpg",
+          "person": "Barbora",
+          "stars": "4",
+          "price": "93"
+        }
+      }
+    ]
+  }
+}

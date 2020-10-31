@@ -1,0 +1,38 @@
+{
+    "title": "Your nearest bookings",
+    "content": "You have no upcoming trips. Start exploring ideas for your next trip.",
+    "bookings": [
+        {
+            "title": "Modern, Well-Appointed Room",
+            "date": "March 2019",
+            "type": "Private room",
+            "stars": 5,
+            "img": "photo-1484154218962-a197022b5858.jpg",
+            "link": "/user-booking-detail"
+        },
+        {
+            "title": "Cute Quirky Garden apt, NYC adjacent",
+            "date": "March 2019",
+            "type": "Entire apartment",
+            "stars": 4,
+            "img": "photo-1426122402199-be02db90eb90.jpg",
+            "link": "/user-booking-detail"
+        },
+        {
+            "title": "Modern Apt - Vibrant Neighborhood!",
+            "date": "March 2019",
+            "type": "Entire apartment",
+            "stars": 3,
+            "img": "photo-1512917774080-9991f1c4c750.jpg",
+            "link": "/user-booking-detail"
+        },
+        {
+            "title": "Sunny Private Studio-Apartment",
+            "date": "March 2019",
+            "type": "Shared room",
+            "stars": 4,
+            "img": "photo-1494526585095-c41746248156.jpg",
+            "link": "/user-booking-detail"
+        }
+    ]
+}

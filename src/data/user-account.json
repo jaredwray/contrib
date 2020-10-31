@@ -1,0 +1,42 @@
+{
+    "title": "Your account",
+    "subtitle": "Manage your account and settings here.",
+    "cards": [
+        {
+            "title": "Personal info",
+            "link": "/user-personal",
+            "icon": "identity-1",
+            "content": "Provide personal details and how we can reach you"
+        },
+        {
+            "title": "Login & security",
+            "link": "/user-security",
+            "icon": "password-1",
+            "content": "Update your password and secure your account"
+        },
+        {
+            "title": "Payments & payouts",
+            "link": "#",
+            "icon": "pay-by-card-1",
+            "content": "Review payments, payouts, coupons, gift cards, and taxes"
+        },
+        {
+            "title": "Notifications",
+            "link": "#",
+            "icon": "chat-app-1",
+            "content": "Choose notification preferences and how you want to be contacted"
+        },
+        {
+            "title": "Privacy & sharing",
+            "link": "#",
+            "icon": "diary-1",
+            "content": "Control connected apps, what you share, and who sees it"
+        },
+        {
+            "title": "Global preferences",
+            "link": "#",
+            "icon": "mix-1",
+            "content": "Set your default language, currency, and timezone"
+        }
+    ]
+}

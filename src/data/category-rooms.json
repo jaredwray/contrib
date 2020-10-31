@@ -1,0 +1,51 @@
+{
+  "title": "New York",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.",
+  "cityQuarters": {
+    "title": "City Quarters",
+    "items": [
+      {
+        "title": "Mount Vernon",
+        "link": "#"
+      },
+      {
+        "title": "Johnstown",
+        "link": "#"
+      },
+      {
+        "title": "Jamestown",
+        "link": "#"
+      },
+      {
+        "title": "Hudson",
+        "link": "#"
+      },
+      {
+        "title": "Kingston",
+        "link": "#"
+      }
+    ]
+  },
+  "sortby": [
+    {
+      "value": "popular",
+      "label": "Most popular"
+    },
+    {
+      "value": "recommended",
+      "label": "Recommended"
+    },
+    {
+      "value": "newest",
+      "label": "Newest"
+    },
+    {
+      "value": "oldest",
+      "label": "Oldest"
+    },
+    {
+      "value": "closest",
+      "label": "Closest"
+    }
+  ]
+}

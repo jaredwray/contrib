@@ -1,0 +1,118 @@
+{
+    "title": "Your nearest bookings",
+    "button": {
+        "title": "Past bookings",
+        "link": "#"
+    },
+    "download": {
+        "title": "Download CSV",
+        "link": "#"
+    },
+    "sortby": [
+        {
+            "value": "popular",
+            "label":  "Most popular"
+            
+        },
+        {
+            "value": "recommended",
+            "label":  "Recommended"
+            
+        },
+        {
+            "value": "newest",
+            "label":  "Newest"
+            
+        },
+        {
+            "value": "oldest",
+            "label":  "Oldest"
+            
+        },
+        {
+            "value": "closest",
+            "label":  "Closest"
+            
+        }
+    ],
+    "bookings": [
+        {
+            "title": "Meredith Goodwin",
+            "avatar": "avatar-0.jpg",
+            "type": "Double Room",
+            "date": "February 16, 2019 - February 19, 2019",
+            "rate": "Bed & Breakfast",
+            "nights": "3",
+            "occupancy": "1 pax",
+            "charge": "$244.42",
+            "booked": "February 16, 2019",
+            "arrival": "Around 4 PM",
+            "paid": true,
+            "confirmed": true,
+            "link": "/user-booking-detail"
+        },
+        {
+            "title": "Weeks Garrett",
+            "avatar": "avatar-1.jpg",
+            "type": "Double Room",
+            "date": "March 14, 2019 - March 17, 2019",
+            "badgecolor": "primary-light",
+            "rate": "Bed & Breakfast",
+            "nights": "3",
+            "occupancy": "3 pax",
+            "charge": "$495.73",
+            "booked": "March 14, 2019",
+            "arrival": "Around 4 PM",
+            "paid": true,
+            "confirmed": false,
+            "link": "/user-booking-detail"
+        },
+        {
+            "title": "Fisher Bauer",
+            "avatar": "avatar-2.jpg",
+            "type": "Double Room",
+            "date": "March 10, 2019 - March 13, 2019",
+            "badgecolor": "danger-light",
+            "rate": "Bed & Breakfast",
+            "nights": "3",
+            "occupancy": "2 pax",
+            "charge": "$938.48",
+            "booked": "March 10, 2019",
+            "arrival": "Around 4 PM",
+            "paid": true,
+            "confirmed": true,
+            "link": "/user-booking-detail"
+        },
+        {
+            "title": "Aguilar Webb",
+            "avatar": "avatar-3.jpg",
+            "type": "Double Room",
+            "date": "April 09, 2019 - April 13, 2019",
+            "badgecolor": "success-light",
+            "rate": "Bed & Breakfast",
+            "nights": "4",
+            "occupancy": "3 pax",
+            "charge": "$955.07",
+            "booked": "April 09, 2019",
+            "arrival": "Around 4 PM",
+            "paid": true,
+            "confirmed": false,
+            "link": "/user-booking-detail"
+        },
+        {
+            "title": "Melton Simon",
+            "avatar": "avatar-4.jpg",
+            "type": "Double Room",
+            "date": "March 24, 2019 - March 28, 2019",
+            "rate": "Bed & Breakfast",
+            "nights": "4",
+            "occupancy": "3 pax",
+            "charge": "$882.25",
+            "booked": "March 24, 2019",
+            "arrival": "Around 4 PM",
+            "paid": true,
+            "confirmed": true,
+            "link": "/user-booking-detail"
+        }
+    ]
+}

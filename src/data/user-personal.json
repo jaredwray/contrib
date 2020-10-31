@@ -1,0 +1,228 @@
+{
+  "title": "Personal info",
+  "subtitle": "Manage your Personal info and settings here.",
+  "personal": [
+    {
+      "title": "John Doe",
+      "icon": "id-card"
+    },
+    {
+      "title": "06/22/1980",
+      "icon": "birthday-cake"
+    },
+    {
+      "title": "john.doe@directory.com",
+      "icon": "envelope-open"
+    },
+    {
+      "title": "+42055544466",
+      "icon": "phone"
+    }
+  ],
+  "adress": {
+    "line1": "123 Main St., Apt #7",
+    "line2": "San Francisco, CA, 902 10"
+  },
+  "options": [
+    {
+      "label": "Alabama",
+      "value": "state_0"
+    },
+    {
+      "label": "Alaska",
+      "value": "state_1"
+    },
+    {
+      "label": "Arizona",
+      "value": "state_2"
+    },
+    {
+      "label": "Arkansas",
+      "value": "state_3"
+    },
+    {
+      "label": "California",
+      "value": "state_4"
+    },
+    {
+      "label": "Colorado",
+      "value": "state_5"
+    },
+    {
+      "label": "Connecticut",
+      "value": "state_6"
+    },
+    {
+      "label": "Delaware",
+      "value": "state_7"
+    },
+    {
+      "label": "Florida",
+      "value": "state_8"
+    },
+    {
+      "label": "Georgia",
+      "value": "state_9"
+    },
+    {
+      "label": "Hawaii",
+      "value": "state_10"
+    },
+    {
+      "label": "Idaho",
+      "value": "state_11"
+    },
+    {
+        "label": "Illinois",
+        "value": "state_12"
+      },
+      {
+        "label": "Indiana",
+        "value": "state_13"
+      },
+      {
+        "label": "Iowa",
+        "value": "state_14"
+      },
+      {
+        "label": "Kansas",
+        "value": "state_15"
+      },
+      {
+        "label": "Kentucky",
+        "value": "state_16"
+      },
+      {
+        "label": "Louisiana",
+        "value": "state_17"
+      },
+      {
+        "label": "Maine",
+        "value": "state_18"
+      },
+      {
+        "label": "Maryland",
+        "value": "state_19"
+      },
+      {
+        "label": "Massachusetts",
+        "value": "state_20"
+      },
+      {
+        "label": "Michigan",
+        "value": "state_21"
+      },
+      {
+        "label": "Minnesota",
+        "value": "state_22"
+      },
+      {
+        "label": "Mississippi",
+        "value": "state_23"
+      },
+      {
+        "label": "Missouri",
+        "value": "state_24"
+      },
+      {
+        "label": "Montana",
+        "value": "state_25"
+      },
+      {
+        "label": "Nebraska",
+        "value": "state_26"
+      },
+      {
+        "label": "Nevada",
+        "value": "state_27"
+      },
+      {
+        "label": "New Hampshire",
+        "value": "state_28"
+      },
+      {
+        "label": "New Jersey",
+        "value": "state_29"
+      },
+      {
+        "label": "New Mexico",
+        "value": "state_30"
+      },
+      {
+        "label": "New York",
+        "value": "state_31"
+      },
+      {
+        "label": "North Carolina",
+        "value": "state_32"
+      },
+      {
+        "label": "North Dakota",
+        "value": "state_33"
+      },
+      {
+        "label": "Ohio",
+        "value": "state_34"
+      },
+      {
+        "label": "Oklahoma",
+        "value": "state_35"
+      },
+      {
+        "label": "Oregon",
+        "value": "state_36"
+      },
+      {
+        "label": "Pennsylvania",
+        "value": "state_37"
+      },
+      {
+        "label": "Rhode Island",
+        "value": "state_38"
+      },
+      {
+        "label": "South Carolina",
+        "value": "state_39"
+      },
+      {
+        "label": "South Dakota",
+        "value": "state_40"
+      },
+      {
+        "label": "Tennessee",
+        "value": "state_41"
+      },
+      {
+        "label": "Texas",
+        "value": "state_42"
+      },
+      {
+        "label": "Utah",
+        "value": "state_43"
+      },
+      {
+        "label": "Vermont",
+        "value": "state_44"
+      },
+      {
+        "label": "Virginia",
+        "value": "state_45"
+      },
+      {
+        "label": "Washington",
+        "value": "state_46"
+      },
+      {
+        "label": "West Virginia",
+        "value": "state_47"
+      },
+      {
+        "label": "Wisconsin",
+        "value": "state_48"
+      },
+      {
+        "label": "Wyoming",
+        "value": "state_49"
+      }
+  ]
+}

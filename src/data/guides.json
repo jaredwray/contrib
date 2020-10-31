@@ -1,0 +1,32 @@
+{
+    "title": "Our guides",
+    "subTitle": "Stay and eat like a local",
+    "button": "See all guides",
+    "buttonLink": "/category-2-rooms",
+    "swiperItems": [
+        {
+            "title": "New York",
+            "subtitle": "The big apple",
+            "img": "img/photo/new-york.jpg",
+            "link": "/category-2-rooms"
+        },
+        {
+            "title": "Paris",
+            "subtitle": "Artist capital of Europe",
+            "img": "img/photo/paris.jpg",
+            "link": "/category-2-rooms"
+        },
+        {
+            "title": "Barcelona",
+            "subtitle": "Dalí, Gaudí, Barrio Gotico",
+            "img": "img/photo/barcelona.jpg",
+            "link": "/category-2-rooms"
+        },
+        {
+            "title": "Prague",
+            "subtitle": "City of hundred towers",
+            "img": "img/photo/prague.jpg",
+            "link": "/category-2-rooms"
+        }
+    ]
+}

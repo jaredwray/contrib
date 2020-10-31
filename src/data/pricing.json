@@ -1,0 +1,109 @@
+{
+    "title": "Plans & Pricing",
+    "subtitle": "Pricing",
+    "content": "Flexible options that move with you",
+    "columns": [
+        {
+            "title": "Free",
+            "price": "$0",
+            "items": [
+                {
+                    "title": "Single User",
+                    "status": true
+                },
+                {
+                    "title": "5GB Storage",
+                    "status": true
+                },
+                {
+                    "title": "Unlimited Public Projects",
+                    "status": true
+                },
+                {
+                    "title": "Community Access",
+                    "status": false
+                },
+                {
+                    "title": "Unlimited Private Projects",
+                    "status": false
+                },
+                {
+                    "title": "Dedicated Phone Support",
+                    "status": false
+                },
+                {
+                    "title": "Monthly Status Reports",
+                    "status": false
+                }
+            ]
+        },
+        {
+            "title": "Plus",
+            "price": "$9",
+            "items": [
+                {
+                    "title": "Single User",
+                    "status": true
+                },
+                {
+                    "title": "5GB Storage",
+                    "status": true
+                },
+                {
+                    "title": "Unlimited Public Projects",
+                    "status": true
+                },
+                {
+                    "title": "Community Access",
+                    "status": true
+                },
+                {
+                    "title": "Unlimited Private Projects",
+                    "status": true
+                },
+                {
+                    "title": "Dedicated Phone Support",
+                    "status": false
+                },
+                {
+                    "title": "Monthly Status Reports",
+                    "status": false
+                }
+            ]
+        },
+        {
+            "title": "Pro",
+            "price": "$30",
+            "items": [
+                {
+                    "title": "Single User",
+                    "status": true
+                },
+                {
+                    "title": "5GB Storage",
+                    "status": true
+                },
+                {
+                    "title": "Unlimited Public Projects",
+                    "status": true
+                },
+                {
+                    "title": "Community Access",
+                    "status": true
+                },
+                {
+                    "title": "Unlimited Private Projects",
+                    "status": true
+                },
+                {
+                    "title": "Dedicated Phone Support",
+                    "status": true
+                },
+                {
+                    "title": "Monthly Status Reports",
+                    "status": true
+                }
+            ]
+        }
+    ]
+}

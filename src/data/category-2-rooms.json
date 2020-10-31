@@ -1,0 +1,343 @@
+{
+    "title": "Stay on Manhattan, NY",
+    "guests": [
+        {
+            "label": "1",
+            "value": "guests_0"
+        },
+        {
+            "label": "2",
+            "value": "guests_1"
+        },
+        {
+            "label": "3",
+            "value": "guests_2"
+        },
+        {
+            "label": "4",
+            "value": "guests_3"
+        },
+        {
+            "label": "5",
+            "value": "guests_4"
+        }
+    ],
+    "type": [
+        {
+            "label": "Entire place",
+            "value": "type_0"
+        },
+        {
+            "label": "Private room",
+            "value": "type_1"
+        },
+        {
+            "label": "Shared room",
+            "value": "type_2"
+        }
+    ],
+    "neighbourhood": [
+        {
+            "value": "0",
+            "label":  "Battery Park City"
+        },
+        {
+            "value": "1",
+            "label":  "Bowery"
+        },
+        {
+            "value": "2",
+            "label":  "Carnegie Hill"
+        },
+        {
+            "value": "3",
+            "label":  "Central Park"
+        },
+        {
+            "value": "4",
+            "label":  "Chelsea"
+        },
+        {
+            "value": "5",
+            "label":  "Chinatown"
+        },
+        {
+            "value": "6",
+            "label":  "Civic Center"
+        },
+        {
+            "value": "7",
+            "label":  "East Harlem"
+        },
+        {
+            "value": "8",
+            "label":  "Financial District"
+        },
+        {
+            "value": "9",
+            "label":  "Flatiron"
+        },
+        {
+            "value": "10",
+            "label":  "Garment District"
+        },
+        {
+            "value": "11",
+            "label":  "Gramercy Park"
+        },
+        {
+            "value": "12",
+            "label":  "Greenwich Village"
+        },
+        {
+            "value": "13",
+            "label":  "East Village"
+        },
+        {
+            "value": "14",
+            "label":  "West Village"
+        },
+        {
+            "value": "15",
+            "label":  "Hamilton Heights"
+        },
+        {
+            "value": "16",
+            "label":  "Harlem"
+        },
+        {
+            "value": "17",
+            "label":  "Hell's Kitchen / Clinton"
+        },
+        {
+            "value": "18",
+            "label":  "Inwood"
+        },
+        {
+            "value": "19",
+            "label":  "Kips Bay"
+        },
+        {
+            "value": "20",
+            "label":  "Lenox Hill"
+        },
+        {
+            "value": "21",
+            "label":  "Little Italy"
+        },
+        {
+            "value": "22",
+            "label":  "Lower Eastside"
+        },
+        {
+            "value": "23",
+            "label":  "Madison Square"
+        },
+        {
+            "value": "24",
+            "label":  "Manhattan Valley"
+        },
+        {
+            "value": "25",
+            "label":  "Meatpacking District"
+        },
+        {
+            "value": "26",
+            "label":  "Midtown"
+        },
+        {
+            "value": "27",
+            "label":  "Morningside Heights"
+        },
+        {
+            "value": "28",
+            "label":  "Murray Hill"
+        },
+        {
+            "value": "29",
+            "label":  "NoHo"
+        },
+        {
+            "value": "30",
+            "label":  "NoLita"
+        },
+        {
+            "value": "31",
+            "label":  "Roosevelt Island"
+        },
+        {
+            "value": "32",
+            "label":  "SoHo"
+        },
+        {
+            "value": "33",
+            "label":  "Stuyvesant Town (Stuyvesant Square)"
+        },
+        {
+            "value": "34",
+            "label":  "Sutton Place"
+        },
+        {
+            "value": "35",
+            "label":  "Times Square"
+        },
+        {
+            "value": "36",
+            "label":  "Tribeca"
+        },
+        {
+            "value": "37",
+            "label":  "Turtle Bay"
+        },
+        {
+            "value": "38",
+            "label":  "Upper Eastside"
+        },
+        {
+            "value": "39",
+            "label":  "Upper Westside"
+        },
+        {
+            "value": "40",
+            "label":  "Washington Heights"
+        },
+        {
+            "value": "41",
+            "label":  "Yorkville"
+        }
+    ],
+    "tags": {
+        "title": "Neighbourhood Tag",
+        "items": [
+            {
+                "value": "type_0",
+                "label": "Hipster"
+            },
+            {
+                "value": "type_1",
+                "label": "Bussines"
+            },
+            {
+                "value": "type_2",
+                "label": "Family"
+            },
+            {
+                "value": "type_3",
+                "label": "Green"
+            }
+        ]
+    },
+    "amenities": {
+        "title": "Amenities",
+        "items": [
+            {
+                "value": "amenities_0",
+                "label": "Kitchen"
+            },
+            {
+                "value": "amenities_1",
+                "label": "Shampoo"
+            },
+            {
+                "value": "amenities_2",
+                "label": "Heating"
+            },
+            {
+                "value": "amenities_3",
+                "label": "Air conditioning"
+            },
+            {
+                "value": "amenities_4",
+                "label": "Washer"
+            },
+            {
+                "value": "amenities_5",
+                "label": "Dryer"
+            },
+            {
+                "value": "amenities_6",
+                "label": "Wifi"
+            },
+            {
+                "value": "amenities_7",
+                "label": "Breakfast"
+            },
+            {
+                "value": "amenities_8",
+                "label": "Indoor fireplace"
+            },
+            {
+                "value": "amenities_9",
+                "label": "Buzzer/wireless intercom"
+            },
+            {
+                "value": "amenities_10",
+                "label": "Doorman"
+            },
+            {
+                "value": "amenities_11",
+                "label": "Hangers"
+            },
+            {
+                "value": "amenities_12",
+                "label": "Iron"
+            },
+            {
+                "value": "amenities_13",
+                "label": "Hair dryer"
+            },
+            {
+                "value": "amenities_14",
+                "label": "Laptop friendly workspace"
+            }
+        ]
+    },
+    "facilities": {
+        "title": "Facilities",
+        "items": [
+            {
+                "value": "facilities_0",
+                "label": "Free parking on premises"
+            },
+            {
+                "value": "facilities_1",
+                "label": "Gym"
+            },
+            {
+                "value": "facilities_2",
+                "label": "Hot tub"
+            },
+            {
+                "value": "facilities_3",
+                "label": "Pool"
+            }
+        ]
+    },
+    "sortby": [
+        {
+            "value": "popular",
+            "label":  "Most popular"
+            
+        },
+        {
+            "value": "recommended",
+            "label":  "Recommended"
+            
+        },
+        {
+            "value": "newest",
+            "label":  "Newest"
+            
+        },
+        {
+            "value": "oldest",
+            "label":  "Oldest"
+            
+        },
+        {
+            "value": "closest",
+            "label":  "Closest"
+            
+        }
+    ]
+}

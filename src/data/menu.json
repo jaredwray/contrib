@@ -1,0 +1,310 @@
+[
+    {
+       "title":"Home",
+       "dropdown":[
+          {
+             "title":"Rooms",
+             "link":"/"
+          },
+          {
+             "title":"Restaurant",
+             "link":"/index-2"
+          },
+          {
+             "title":"Travel",
+             "link":"/index-3"
+          },
+          {
+             "title":"Real estate",
+             "link":"/index-4",
+             "new":true
+          }
+       ]
+    },
+    {
+       "title":"Template",
+       "position":"static",
+       "megamenu":[
+          [
+             {
+                "title":"Homepage",
+                "links":[
+                   {
+                      "title":"Rooms",
+                      "link":"/",
+                      "parent":"Home"
+                   },
+                   {
+                      "title":"Restaurants",
+                      "link":"/index-2",
+                      "parent":"Home"
+                   },
+                   {
+                      "title":"Travel",
+                      "link":"/index-3",
+                      "parent":"Home"
+                   },
+                   {
+                      "title":"Real estate",
+                      "link":"/index-4",
+                      "parent":"Home",
+                      "new":true
+                   }
+                ]
+             },
+             {
+                "title":"Restaurants",
+                "links":[
+                   {
+                      "title":"Category - Map on the top",
+                      "link":"/category"
+                   },
+                   {
+                      "title":"Category - Map on the right",
+                      "link":"/category-2"
+                   },
+                   {
+                      "title":"Category - no map",
+                      "link":"/category-3"
+                   },
+                   {
+                      "title":"Restaurant detail",
+                      "link":"/detail"
+                   }
+                ]
+             }
+          ],
+          [
+             {
+                "title":"Rooms",
+                "links":[
+                   {
+                      "title":"Category - Map on the top",
+                      "link":"/category-rooms"
+                   },
+                   {
+                      "title":"Category - Map on the right",
+                      "link":"/category-2-rooms"
+                   },
+                   {
+                      "title":"Category - no map",
+                      "link":"/category-3-rooms"
+                   },
+                   {
+                      "title":"Room detail",
+                      "link":"/detail-rooms"
+                   }
+                ]
+             },
+             {
+                "title":"Blog",
+                "links":[
+                   {
+                      "title":"Blog",
+                      "link":"/blog"
+                   },
+                   {
+                      "title":"Post",
+                      "link":"/blog/[slug]",
+                      "as":"/blog/autumn-fashion-tips-and-tricks"
+                   }
+                ]
+             }
+          ],
+          [
+             {
+                "title":"Pages",
+                "links":[
+                   {
+                      "title":"Comparison",
+                      "link":"/compare",
+                      "new":true
+                   },
+                   {
+                      "title":"Team",
+                      "link":"/team",
+                      "new":true
+                   },
+                   {
+                      "title":"Contact",
+                      "link":"/contact",
+                      "parent":"Contact"
+                   },
+                   {
+                      "title":"Pricing",
+                      "link":"/pricing"
+                   },
+                   {
+                      "title":"Text page",
+                      "link":"/text"
+                   },
+                   {
+                      "title":"F.A.Q.s",
+                      "link":"/faq"
+                   },
+                   {
+                      "title":"Coming soon",
+                      "link":"/coming-soon"
+                   },
+                   {
+                      "title":"404 page",
+                      "link":"/404",
+                      "new":true
+                   }
+                ]
+             },
+             {
+                "title":"Host",
+                "links":[
+                   {
+                      "title":"Add new listing - 6 pages",
+                      "link":"/user-add-0"
+                   },
+                   {
+                      "title":"Bookings - list view",
+                      "link":"/user-list"
+                   }
+                ]
+             }
+          ],
+          [
+             {
+                "title":"User",
+                "links":[
+                   {
+                      "title":"Profile",
+                      "link":"/user-profile",
+                      "new":true
+                   },
+                   {
+                      "title":"Account",
+                      "link":"/user-account",
+                      "new":true
+                   },
+                   {
+                      "title":"Personal info - forms",
+                      "link":"/user-personal",
+                      "new":true
+                   },
+                   {
+                      "title":"Password & security - forms",
+                      "link":"/user-security",
+                      "new":true
+                   },
+                   {
+                      "title":"Sign in",
+                      "link":"/login"
+                   },
+                   {
+                      "title":"Sign up",
+                      "link":"/signup"
+                   },
+                   {
+                      "title":"Booking process - 4 pages",
+                      "link":"/user-booking-1"
+                   },
+                   {
+                      "title":"Bookings - grid view",
+                      "link":"/user-grid"
+                   },
+                   {
+                      "title":"Booking detail",
+                      "link":"/user-booking-detail"
+                   }
+                ]
+             }
+          ]
+       ],
+       "services":[
+          {
+             "title":"Best rentals",
+             "content":"Find the perfect place",
+             "icon":"/content/svg/orion-svg-sprite.svg#destination-map-1"
+          },
+          {
+             "title":"Earn points",
+             "content":"And get great rewards",
+             "icon":"/content/svg/orion-svg-sprite.svg#money-box-1"
+          },
+          {
+             "title":"020-800-456-747",
+             "content":"24/7 Available Support",
+             "icon":"/content/svg/orion-svg-sprite.svg#customer-support-1"
+          },
+          {
+             "title":"Secure Payment",
+             "content":"Secure Payment",
+             "icon":"/content/svg/orion-svg-sprite.svg#secure-payment-1"
+          }
+       ],
+       "image":"/content/img/photo/photo-1521170665346-3f21e2291d8b.jpg"
+    },
+    {
+       "title":"Contact",
+       "link":"/contact"
+    },
+    {
+       "title":"Docs",
+       "hideToLoggedUser": true,
+       "dropdown":[
+          {
+             "title":"Documentation",
+             "links":[
+                {
+                   "title":"Introduction",
+                   "link":"/docs/docs-introduction"
+                },
+                {
+                   "title":"Directory structure",
+                   "link":"/docs/docs-directory-structure"
+                },
+                {
+                   "title":"Next.js",
+                   "link":"/docs/docs-next"
+                },
+                {
+                   "title":"Customizing CSS",
+                   "link":"/docs/docs-customizing-css"
+                },
+                {
+                   "title":"Credits",
+                   "link":"/docs/docs-credits"
+                },
+                {
+                   "title":"Changelog",
+                   "link":"/docs/docs-changelog"
+                }
+             ]
+          },
+          {
+             "title":"Components",
+             "links":[
+                {
+                   "title":"Bootstrap",
+                   "link":"/docs/components-bootstrap"
+                },
+                {
+                   "title":"Theme",
+                   "link":"/docs/components-directory"
+                }
+             ]
+          }
+       ]
+    },
+    {
+       "title":"Sign in",
+       "link":"/login",
+       "hideToLoggedUser": true
+    },
+    {
+       "title":"Sign up",
+       "link":"/signup",
+       "hideToLoggedUser": true
+    },
+    {
+       "title":"Add a listing",
+       "link":"/user-add-0",
+       "button":true,
+       "hideToLoggedUser": true
+    }
+ ]

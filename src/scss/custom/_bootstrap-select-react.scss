@@ -1,0 +1,23 @@
+.selectpicker__menu {
+    position: relative;
+    z-index: 60 !important;
+    font-size: 0.9rem;
+    border-color: none !important;
+}
+
+.selectpicker__control {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.selectpicker__control {
+    border-color: $gray-400 !important;
+}
+
+.selectpicker__control--menu-is-open,
+.selectpicker__control--is-focused {
+    border-color: lighten(theme-color("primary"), 15%) !important;
+    box-shadow: 0 0 0 $input-btn-focus-width $input-btn-focus-color !important;
+}

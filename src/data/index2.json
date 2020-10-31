@@ -1,0 +1,114 @@
+{
+    "hero": {
+        "title": "Discover Directory",
+        "subTitle": "Uncover the best places to eat, drink, and shop nearest to you.",
+        "img": "img/photo/photo-1525610553991-2bede1a236e2.jpg"
+    },
+    "searchOptions": [
+        { "value": "small", "label": "Restaurants" },
+        { "value": "medium", "label": "Hotels" },
+        { "value": "large", "label": "Cafes" },
+        { "value": "x-large", "label": "Garages" }
+    ],
+    "popularCities": {
+        "title": "What's trending",
+        "subTitle": "Most popular cities"
+    },
+    "discover": {
+        "title": "Discover great local businesses around you",
+        "subTitle": "One-of-a-kind directory app",
+        "blocks": [
+            {
+                "title": "Find the perfect place",
+                "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in",
+                "icon": "#love-pin-1",
+                "color": "secondary"
+            },
+            {
+                "title": "Book your seats",
+                "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pit",
+                "icon": "#pay-by-card-1",
+                "color": "primary"
+            },
+            {
+                "title": "Enjoy your evening",
+                "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar",
+                "icon": "#food-1",
+                "color": "secondary"
+            },
+            {
+                "title": "Earn points",
+                "content": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of",
+                "icon": "#pay-1",
+                "color": "primary"
+            }
+        ]
+    },
+    "popular": {
+        "title": "Popular places around you",
+        "subTitle": "Try something new today",
+        "button": "See all places",
+        "buttonLink": "category-2"
+    },
+    "travel": {
+        "title": "Travel & Explore",
+        "subtitle": "Find the best spots",
+        "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections",
+        "button": "Get started",
+        "buttonLink": "category-rooms",
+        "img": "photo-1507915135761-41a0a222c709.jpg"
+    },
+    "brands": {
+        "title": "Our brands",
+        "brands": [
+            {
+                "title": "Brand 1",
+                "img": "img/brand/brand-1.svg"
+            },
+            {
+                "title": "Brand 2",
+                "img": "img/brand/brand-2.svg"
+            },
+            {
+                "title": "Brand 3",
+                "img": "img/brand/brand-3.svg"
+            },
+            {
+                "title": "Brand 4",
+                "img": "img/brand/brand-4.svg"
+            },
+            {
+                "title": "Brand 5",
+                "img": "img/brand/brand-5.svg"
+            },
+            {
+                "title": "Brand 6",
+                "img": "img/brand/brand-6.svg"
+            },
+            {
+                "title": "Brand 1",
+                "img": "img/brand/brand-1.svg"
+            },
+            {
+                "title": "Brand 2",
+                "img": "img/brand/brand-2.svg"
+            },
+            {
+                "title": "Brand 3",
+                "img": "img/brand/brand-3.svg"
+            },
+            {
+                "title": "Brand 4",
+                "img": "img/brand/brand-4.svg"
+            }
+        ]
+    },
+    "bottomBlock": {
+        "title": "Start using Directory today",
+        "subTitle": "Directory is the best way to find & discover great local businesses",
+        "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in",
+        "button": "Create Your Account",
+        "buttonLink": "#",
+        "small": "It's free!"
+    }
+}

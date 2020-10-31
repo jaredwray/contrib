@@ -1,0 +1,175 @@
+{
+    "swiper": [
+        {
+            "title": "Japan",
+            "subTitle": "Blue & White",
+            "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.",
+            "img": "img/photo/photo-1493976040374-85c8e12f0c0e.jpg",
+            "parallax": "-500",
+            "button": "Start exploring Japan",
+            "buttonLink": "#",
+            "buttonClasses": "d-none d-sm-inline-block",
+            "iconsRight": [
+                {
+                    "title": "Flights",
+                    "badge": "from $345",
+                    "icon": "#airplane-mode-1",
+                    "link": "#"
+                },
+                {
+                    "title": "Holidays",
+                    "badge": "from $1,245",
+                    "icon": "#suitcase-1",
+                    "link": "#"
+                },
+                {
+                    "title": "Guide & gallery",
+                    "content": "See more",
+                    "icon": "#image-gallery-1",
+                    "link": "#"
+                }
+            ]
+        },
+        {
+            "title": "Morocco",
+            "content": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before.",
+            "img": "img/photo/photo-1558114965-eeb97aa84c3b.jpg",
+            "parallax": "-500",
+            "button": "Start exploring",
+            "buttonLink": "#",
+            "buttonClasses": "d-md-none",
+            "blocks": [
+                {
+                    "title": "Fez",
+                    "location": "Central Morocco",
+                    "img": "img/photo/fez.jpg",
+                    "link": "detail-rooms",
+                    "stars": "5"
+                },
+                {
+                    "title": "Marrakech",
+                    "location": "Central Morocco",
+                    "img": "img/photo/marrakech.jpg",
+                    "link": "detail-rooms",
+                    "stars": "4"
+                },
+                {
+                    "title": "Essaouira",
+                    "location": "Coast",
+                    "img": "img/photo/essaouira.jpg",
+                    "link": "detail-rooms",
+                    "stars": "5"
+                }
+            ]
+        },
+        {
+            "title": "Peru",
+            "subTitle": "Discover South America",
+            "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pit",
+            "img": "img/photo/photo-1526392060635-9d6019884377.jpg",
+            "parallax": "-500",
+            "iconsBottom": [
+                {
+                    "title": "Flights",
+                    "badge": "from $345",
+                    "icon": "#airplane-mode-1",
+                    "link": "#"
+                },
+                {
+                    "title": "Holidays",
+                    "badge": "from $1,245",
+                    "icon": "#suitcase-1",
+                    "link": "#"
+                },
+                {
+                    "title": "Guide & gallery",
+                    "content": "See more",
+                    "icon": "#image-gallery-1",
+                    "link": "#"
+                }
+            ]
+        }
+    ],
+    "numberedBlocks": [
+        {
+            "title": "Travel",
+            "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his"
+        },
+        {
+            "title": "Relax",
+            "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size."
+        },
+        {
+            "title": "Explore",
+            "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samp."
+        }
+    ],
+    "imageDivider": "img/photo/places-divider.jpg",
+    "searchOptions": [
+        { "value": "small", "label": "Restaurants" },
+        { "value": "medium", "label": "Hotels" },
+        { "value": "large", "label": "Cafes" },
+        { "value": "x-large", "label": "Garages" }
+    ],
+    "popular": {
+        "title": "Popular destinations in August",
+        "content": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.",
+        "button": "Take me there",
+        "places": [
+            {
+                "title": "Kathmandu",
+                "subTitle": "Spirituality & mountains",
+                "img": "img/photo/kathmandu.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "Medellín",
+                "subTitle": "Tropical paradise",
+                "img": "img/photo/medellin.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "Bangkok",
+                "subTitle": "Temples and street food",
+                "img": "img/photo/bangkok.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "Kyoto",
+                "subTitle": "Imperial capital",
+                "img": "img/photo/kyoto.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "Los Angeles",
+                "subTitle": "City of angeles",
+                "img": "img/photo/los-angeles.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "London",
+                "subTitle": "Galleries and shopping",
+                "img": "img/photo/london.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "Madrid",
+                "subTitle": "Aquí no hay playa",
+                "img": "img/photo/madrid.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "Havana",
+                "subTitle": "La Havana",
+                "img": "img/photo/havana.jpg",
+                "link": "category-3"
+            },
+            {
+                "title": "Barcelona",
+                "subTitle": "Dalí, Gaudí, Barrio Gotico",
+                "img": "img/photo/barcelona.jpg",
+                "link": "category-3"
+            }
+        ]
+    }
+}

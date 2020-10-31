@@ -1,0 +1,52 @@
+/*
+* ===================================================
+*     Navbar - Slide up + down
+* ===================================================
+*/
+
+@include media-breakpoint-up(lg) {
+    header .dropdown-menu {
+      &.show {
+        animation: slideUp 0.4s;
+        animation-fill-mode: forwards;
+      }
+      &.hide {
+        display: block;
+        animation: slideDown 0.4s;
+        animation-fill-mode: forwards;
+      }
+    }
+  }
+  
+  @keyframes slideUp {
+    0% {
+      transform: translateY(30px);
+      visibility: hidden;
+      opacity: 0;
+    }
+    50% {
+      transform: translateY(0px);
+    }
+    100% {
+      transform: translateY(0px);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  
+  @keyframes slideDown {
+    0% {
+      transform: translateY(0px);
+      visibility: visible;
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(30px);
+    }
+  
+    100% {
+      transform: translateY(30px);
+      opacity: 0;
+      visibility: hidden;
+    }
+  }

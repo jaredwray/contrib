@@ -1,0 +1,111 @@
+[
+    {
+        "title": "Directory",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+        "social": [
+            {
+                "title": "twitter",
+                "link": "#"
+            },
+            {
+                "title": "facebook",
+                "link": "#"
+            },
+            {
+                "title": "instagram",
+                "link": "#"
+            },
+            {
+                "title": "pinterest",
+                "link": "#"
+            },
+            {
+                "title": "vimeo",
+                "link": "#"
+            }
+        ],
+        "lg": "4"
+    },
+    {
+        "title": "Rentals",
+        "links": [
+            {
+                "title": "Rooms",
+                "link": "/"
+            },
+            {
+                "title": "Map on top",
+                "link": "/category-rooms"
+            },
+            {
+                "title": "Side map",
+                "link": "/category-2-rooms"
+            },
+            {
+                "title": "No map",
+                "link": "/category-3-rooms"
+            },
+            {
+                "title": "Room detail",
+                "link": "/detail-rooms"
+            }
+        ],
+        "lg": "2",
+        "md": "6"
+    },
+    {
+        "title": "Pages",
+        "links": [
+            {
+                "title": "Comparison",
+                "link": "/compare",
+                "new": true
+            },
+            {
+                "title": "Team",
+                "link": "/team",
+                "new": true
+            },
+            {
+                "title": "Contact",
+                "link": "/contact"
+            },
+            {
+                "title": "Pricing",
+                "link": "/pricing"
+            },
+            {
+                "title": "Room detail",
+                "link": "/detail-rooms"
+            },
+            {
+                "title": "Text page",
+                "link": "/text"
+            },
+            {
+                "title": "F.A.Q.s",
+                "link": "/faq"
+            },
+            {
+                "title": "Coming soon",
+                "link": "/coming-soon"
+            },
+            {
+                "title": "404 page",
+                "link": "/404",
+                "new": true
+            }
+        ],
+        "lg": "2",
+        "md": "6"
+    },
+    {
+        "title": "Daily Offers & Discounts",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. At itaque temporibus.",
+        "contentBottomMargin": "3",
+        "form": {
+            "placeholder": "Your Email Address"
+        },
+        "lg": "4"
+    }
+]

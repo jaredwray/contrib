@@ -1,0 +1,145 @@
+{
+    "title": "Fifteen Restaurant & Bar",
+    "category": "Eat & Drink",
+    "img": "restaurant-1515164783716-8e6920f3e77c.jpg",
+    "location": "53 Broadway, Brooklyn, NY 1129",
+    "stars": "4",
+    "reviewsNumber": "8",
+    "content1": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.",
+    "content2": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "gallery": [
+        {
+            "img": "restaurant-1515164783716-8e6920f3e77c.jpg",
+            "title": ""
+        },
+        {
+            "img": "restaurant-1466978913421-dad2ebd01d17.jpg",
+            "title": ""
+        },
+        {
+            "img": "restaurant-1477763858572-cda7deaa9bc5.jpg",
+            "title": ""
+        },
+        {
+            "img": "restaurant-1505275350441-83dcda8eeef5.jpg",
+            "title": ""
+        },
+        {
+            "img": "restaurant-1508766917616-d22f3f1eea14.jpg",
+            "title": ""
+        },
+        {
+            "img": "restaurant-1430931071372-38127bd472b8.jpg",
+            "title": ""
+        }
+    ],
+    "amenities": [
+        "Elevator",
+        "Vegan friendly",
+        "Alcohol served",
+        "No smoking",
+        "Parking spaces (paid)",
+        "WiFi"
+    ],
+    "reviews": [
+        {
+            "title": "Padmé Amidala",
+            "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections",
+            "date": "Dec 2018",
+            "avatar": "avatar-8.jpg",
+            "stars": "5"
+        },
+        {
+            "title": "Luke Skywalker",
+            "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. 'What's happened to me?' he thought. It wasn't a dream.",
+            "date": "Dec 2018",
+            "avatar": "avatar-2.jpg",
+            "stars": "4"
+        },
+        {
+            "title": "Princess Leia",
+            "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.",
+            "date": "Dec 2018",
+            "avatar": "avatar-3.jpg",
+            "stars": "3"
+        },
+        {
+            "title": "Jabba Hut",
+            "content": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.",
+            "date": "Dec 2018",
+            "avatar": "avatar-4.jpg",
+            "stars": "5"
+        }
+    ],
+    "openingHours": [
+        {
+            "day": "Sunday",
+            "hours": "8:00 am - 6:00 pm"
+        },
+        {
+            "day": "Monday",
+            "hours": "8:00 am - 6:00 pm"
+        },
+        {
+            "day": "Tuesday",
+            "hours": "8:00 am - 6:00 pm"
+        },
+        {
+            "day": "Wednesday",
+            "hours": "8:00 am - 6:00 pm"
+        },
+        {
+            "day": "Thursday",
+            "hours": "8:00 am - 6:00 pm"
+        },
+        {
+            "day": "Friday",
+            "hours": "8:00 am - 6:00 pm"
+        },
+        {
+            "day": "Saturday",
+            "hours": "closed"
+        }
+    ],
+    "contacts": [
+        {
+            "icon": "fa fa-phone",
+            "content": "(020) 123 456 789",
+            "link": "#"
+        },
+        {
+            "icon": "fa fa-envelope",
+            "content": "info@example.com",
+            "link": "#"
+        },
+        {
+            "icon": "fa fa-globe",
+            "content": "www.example.com",
+            "link": "#"
+        },
+        {
+            "icon": "fab fa-facebook",
+            "content": "Facebook",
+            "link": "#"
+        },
+        {
+            "icon": "fab fa-twitter",
+            "content": "Twitter",
+            "link": "#"
+        },
+        {
+            "icon": "fab fa-instagram",
+            "content": "Instagram",
+            "link": "#"
+        },
+        {
+            "icon": "fab fa-google-plus",
+            "content": "Google+",
+            "link": "#"
+        }
+    ],
+    "similar": {
+        "title": "Similar places",
+        "subtitle": "You may also like"
+    }
+}

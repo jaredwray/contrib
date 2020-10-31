@@ -1,0 +1,31 @@
+{
+    "button": "See all cities",
+    "buttonLink": "category",
+    "cities": [
+        {
+            "title": "San Francisco",
+            "img": "img/photo/photo-1449034446853-66c86144b0ad.jpg",
+            "link": "category-2"
+        },
+        {
+            "title": "Los Angeles",
+            "img": "img/photo/photo-1429554429301-1c7d5ae2d42e.jpg",
+            "link": "category"
+        },
+        {
+            "title": "Santa Monica",
+            "img": "img/photo/photo-1523430410476-0185cb1f6ff9.jpg",
+            "link": "category-3"
+        },
+        {
+            "title": "San Diego",
+            "img": "img/photo/photo-1505245208761-ba872912fac0.jpg",
+            "link": "category-2"
+        },
+        {
+            "title": "Fresno",
+            "img": "img/photo/photo-1519867850-74775a87e783.jpg",
+            "link": "category"
+        }
+    ]
+}

@@ -1,0 +1,91 @@
+{
+    "title": "Meat our team",
+    "subtitle": "Team",
+    "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections",
+    "founders": {
+        "title": "Our founders",
+        "items": [
+            {
+                "title": "Meredith Goodwin",
+                "content": "CEO & Founder",
+                "img": "agent-0.png",
+                "link": "#"
+            },
+            {
+                "title": "Weeks Garrett",
+                "content": "Co-founder",
+                "img": "agent-1.png",
+                "link": "#"
+            },
+            {
+                "title": "Fisher Bauer",
+                "content": "CTO",
+                "img": "agent-2.png",
+                "link": "#"
+            }
+        ]
+    },
+    "quote": {
+        "title": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.",
+        "author": "Meredith Goodwin, Founder",
+        "avatar": "avatar-0.jpg"
+    },
+    "sales": {
+        "title": "Sales",
+        "items": [
+            {
+                "title": "Meredith Goodwin",
+                "content": "CEO & Founder",
+                "img": "agent-0.png",
+                "link": "#"
+            },
+            {
+                "title": "Weeks Garrett",
+                "content": "Co-founder",
+                "img": "agent-1.png",
+                "link": "#"
+            },
+            {
+                "title": "Fisher Bauer",
+                "content": "CTO",
+                "img": "agent-2.png",
+                "link": "#"
+            },
+            {
+                "title": "Aguilar Webb",
+                "content": "Community",
+                "img": "agent-3.png",
+                "link": "#"
+            }
+        ]
+    },
+    "marketing": {
+        "title": "Marketing",
+        "items": [
+            {
+                "title": "Meredith Goodwin",
+                "content": "CEO & Founder",
+                "img": "agent-0.png",
+                "link": "#"
+            },
+            {
+                "title": "Weeks Garrett",
+                "content": "Co-founder",
+                "img": "agent-1.png",
+                "link": "#"
+            },
+            {
+                "title": "Fisher Bauer",
+                "content": "CTO",
+                "img": "agent-2.png",
+                "link": "#"
+            },
+            {
+                "title": "Aguilar Webb",
+                "content": "Community",
+                "img": "agent-3.png",
+                "link": "#"
+            }
+        ]
+    }
+}

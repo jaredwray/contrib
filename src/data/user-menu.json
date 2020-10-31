@@ -1,0 +1,27 @@
+[
+    {
+       "img": "/img/avatar/avatar-10.jpg",
+       "type": "avatar",
+       "title": "Jack London",
+       "dropdown": [
+          {
+             "title": "Booking process - 4 pages",
+             "link": "/user-booking-1"
+          },
+          {
+            "title": "Bookings — grid view",
+            "link": "/user-grid"
+         },
+         {
+            "title": "Booking detail",
+            "link": "/user-booking-detail"
+         },
+         {
+            "title": "Sign out",
+            "link": "/login",
+            "divider": true
+         }
+       ]
+      
+    }
+]

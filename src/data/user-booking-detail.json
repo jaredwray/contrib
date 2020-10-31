@@ -1,0 +1,107 @@
+{
+  "title": "Modern Apt - Vibrant Neighborhood",
+  "date": "Monday Apr 17 - Tuesday Apr 18",
+  "swiper": [
+    {
+      "img": "photo-1426122402199-be02db90eb90.jpg",
+      "title": "Our street"
+    },
+    {
+      "img": "photo-1512917774080-9991f1c4c750.jpg",
+      "title": "Outside"
+    },
+    {
+      "img": "photo-1494526585095-c41746248156.jpg",
+      "title": "Rear entrance"
+    },
+    {
+      "img": "photo-1484154218962-a197022b5858.jpg",
+      "title": "Kitchen"
+    },
+    {
+      "img": "photo-1522771739844-6a9f6d5f14af.jpg",
+      "title": "Bedroom"
+    },
+    {
+      "img": "photo-1488805990569-3c9e1d76d51c.jpg",
+      "title": "Bedroom"
+    }
+  ],
+  "stay": {
+    "title": "1 night in London",
+    "from": {
+      "month": "April",
+      "day": "17",
+      "year": "2019"
+    },
+    "to": {
+      "month": "April",
+      "day": "18",
+      "year": "2019"
+    },
+    "checkin": {
+      "title": "Wednesday check-in",
+      "content": "3PM - 7PM"
+    },
+    "checkout": {
+      "title": "Thursday check-out",
+      "content": "11AM"
+    }
+  },
+  "adress": "Ap #867, 859 Sit Rd., London",
+  "phone": "+421 454 897 545",
+  "type": "Entire appartment",
+  "owner": {
+    "name": "Jack London",
+    "avatar": "avatar-10.jpg"
+  },
+  "members": [
+    {
+      "name": "Ondrej",
+      "avatar": "avatar-0.jpg"
+    },
+    {
+      "name": "Julie",
+      "avatar": "avatar-1.jpg"
+    },
+    {
+      "name": "Barbora",
+      "avatar": "avatar-2.jpg"
+    }
+  ],
+  "cost": "$499.50",
+  "rules": [
+    {
+      "content": "Not suitable for children and infants - The entrance staircase doesn't have handrails",
+      "icon": "child"
+    },
+    {
+      "content": "No parties or events",
+      "icon": "glass-cheers"
+    },
+    {
+      "content": "No smoking",
+      "icon": "smoking-ban"
+    },
+    {
+      "content": "No pets",
+      "icon": "cat"
+    },
+    {
+      "content": "Not suitable for children and infants - The entrance staircase doesn't have handrails",
+      "icon": "child"
+    },
+    {
+      "content": "No parties or events",
+      "icon": "glass-cheers"
+    },
+    {
+      "content": "No smoking",
+      "icon": "smoking-ban"
+    },
+    {
+      "content": "No pets",
+      "icon": "cat"
+    }
+  ]
+}

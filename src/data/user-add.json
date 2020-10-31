@@ -1,0 +1,306 @@
+[
+  {
+    "title": "Let's get started",
+    "subtitle": "Add a new listing",
+    "content": "<p class='text-muted'>His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.</p><p class='text-muted mb-5'>Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>",
+    "button": "Add your listing"
+  },
+  {
+    "title": "Basic information",
+    "subtitle": "Add a new listing",
+    "formBlocks": [
+      {
+        "title": "Basic",
+        "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.",
+        "inputs": [
+          {
+            "label": "Property name",
+            "name": "form_name",
+            "type": "text"
+          },
+          {
+            "label": "Home type",
+            "name": "type",
+            "type": "select",
+            "text": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections",
+            "options": [
+              {
+                "label": "Entire place",
+                "value": "type_0"
+              },
+              {
+                "label": "Private room",
+                "value": "type_1"
+              },
+              {
+                "label": "Shared room",
+                "value": "type_2"
+              }
+            ]
+          },
+          {
+            "label": "Is your property set as a dedicated guest space?",
+            "type": "radios",
+            "radios": [
+              {
+                "label": "Yes, it's primarily set up for guests",
+                "name": "guests",
+                "id": "guests_0"
+              },
+              {
+                "label": "No, I keep my personal belongings there",
+                "name": "guests",
+                "id": "guests_1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Location",
+        "content": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.",
+        "inputs": [
+          {
+            "label": "Country / Region",
+            "name": "form_country",
+            "type": "select",
+            "options": [
+              {
+                "label": "Afghanistan",
+                "value": "country_0"
+              },
+              {
+                "label": "Albania",
+                "value": "country_1"
+              },
+              {
+                "label": "Algeria",
+                "value": "country_2"
+              },
+              {
+                "label": "Andorra",
+                "value": "country_3"
+              },
+              {
+                "label": "Angola",
+                "value": "country_4"
+              },
+              {
+                "label": "Anguilla",
+                "value": "country_5"
+              }
+            ]
+          },
+          {
+            "label": "Street Address",
+            "name": "form_street",
+            "type": "text"
+          },
+          {
+            "label": "Adress",
+            "type": "form-group",
+            "inputs": [
+              {
+                "label": "City",
+                "name": "form_city",
+                "type": "text",
+                "col": "6"
+              },
+              {
+                "label": "State",
+                "name": "form_state",
+                "type": "text",
+                "col": "6"
+              },
+              {
+                "label": "ZIP Code",
+                "name": "form_zip",
+                "type": "number",
+                "col": "6"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Texts",
+    "subtitle": "Add a new listing",
+    "formBlocks": [
+      {
+        "title": "Description",
+        "content": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.",
+        "inputs": [
+          {
+            "label": "Describe your place to guests",
+            "name": "form_description",
+            "type": "textarea",
+            "helpId": "descriptionHelp",
+            "help": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. 'What's happened to me?' he thought. It wasn't a dream."
+          },
+          {
+            "label": "Your availability",
+            "name": "form_availability",
+            "type": "textarea",
+            "helpId": "availabilityHelp",
+            "help": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table."
+          },
+          {
+            "label": "Your neighbourhood",
+            "name": "form_neighbourhood",
+            "type": "textarea",
+            "helpId": "hoodHelp",
+            "help": "Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Disposition and Amenities",
+    "subtitle": "Add a new listing",
+    "formBlocks": [
+      {
+        "title": "Rooms and beds",
+        "content": "The number and types of beds you have determines how many guests can stay comfortably",
+        "inputs": [
+          {
+            "type": "buttons",
+            "buttons": [
+                {
+                    "label": "Beds",
+                    "name": "form_beds"
+                },
+                {
+                    "label": "Bedrooms",
+                    "name": "form_bedrooms"
+                },
+                {
+                    "label": "Bathrooms",
+                    "name": "form_bathrooms"
+                }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Amenities",
+        "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.",
+        "inputs": [
+          {
+            "type": "checkboxes",
+            "label": "Available Amenities",
+            "checkboxes": [
+                {
+                    "label": "Kitchen",
+                    "id": "amenities_0",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Shampoo",
+                    "id": "amenities_1",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Heating",
+                    "id": "amenities_2",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Air conditioning",
+                    "id": "amenities_3",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Washer",
+                    "id": "amenities_4",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Dryer",
+                    "id": "amenities_5",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Wifi",
+                    "id": "amenities_6",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Breakfast",
+                    "id": "amenities_7",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Indoor fireplace",
+                    "id": "amenities_8",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Buzzer/wireless intercom",
+                    "id": "amenities_9",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Doorman",
+                    "id": "amenities_10",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Hangers",
+                    "id": "amenities_11",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Iron",
+                    "id": "amenities_12",
+                    "name": "amenities[]"
+                },
+                {
+                    "label": "Hot dryer",
+                    "id": "amenities_13",
+                    "name": "amenities[]"
+                },{
+                    "label": "Laptop friendly workspace",
+                    "id": "amenities_14",
+                    "name": "amenities[]"
+                }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Photos",
+    "subtitle": "Add a new listing",
+    "content": "<p class='text-muted'>His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.</p><p class='text-muted mb-5'>Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>",
+    "formBlocks": [
+        {
+            "title": "Photos",
+            "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.",
+            "inputs": [
+                {
+                    "type": "upload"
+                }
+            ]
+        }
+    ]
+  },
+  {
+    "title": "Linsting uploaded",
+    "subtitle": "Add a new listing",
+    "content": "Thank you, Ondrej. Your listing has been saved and will be reviewed shortly.",
+    "buttons": [
+        {
+            "title": "Do something",
+            "link": "#"
+        },
+        {
+            "title": "Or something else",
+            "link": "#"
+        }
+    ]
+  }
+]

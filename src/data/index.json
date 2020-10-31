@@ -1,0 +1,98 @@
+{
+
+    "hero": {
+        "title": "Stay like a local",
+        "subTitle": "The best holiday experience"
+    },
+    "swiperPoster": "photo-1501621965065-c6e1cf6b53e2-lowres.jpg",
+    "swiperImages": [
+        "photo-1501621965065-c6e1cf6b53e2.jpg",
+        "photo-1519974719765-e6559eac2575.jpg",
+        "photo-1490578474895-699cd4e2cf59.jpg",
+        "photo-1534850336045-c6c6d287f89e.jpg"
+    ],
+    "searchOptions": [{
+            "value": "small",
+            "label": "Restaurants"
+        },
+        {
+            "value": "medium",
+            "label": "Hotels"
+        },
+        {
+            "value": "large",
+            "label": "Cafes"
+        },
+        {
+            "value": "x-large",
+            "label": "Garages"
+        }
+    ],
+    "topBlocks": {
+        "title": "Booking with us is easy",
+        "subTitle": "One-of-a-kind vacation rentals",
+        "blocks": [{
+                "title": "Find the perfect rental",
+                "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in",
+                "icon": "#destination-map-1"
+            },
+            {
+                "title": "Book with confidence",
+                "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pit",
+                "icon": "#pay-by-card-1"
+            },
+            {
+                "title": "Enjoy your vacation",
+                "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar",
+                "icon": "#heart-1"
+            }
+        ]
+    },
+    "jumbotron": {
+        "title": "Ready for your next holidays?",
+        "button": "Get started",
+        "link": "category-rooms",
+        "img": "img/photo/photo-1497436072909-60f360e1d4b1.jpg"
+    },
+    "testimonials": {
+        "title": "Our dear customers said about us",
+        "subTitle": "Testimonials",
+        "swiperItems": [{
+                "title": "Jessica Watson",
+                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+                "avatar": "img/avatar/avatar-3.jpg"
+            },
+            {
+                "title": "Jessica Watson",
+                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+                "avatar": "img/avatar/avatar-3.jpg"
+            },
+            {
+                "title": "Jessica Watson",
+                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+                "avatar": "img/avatar/avatar-3.jpg"
+            },
+            {
+                "title": "Jessica Watson",
+                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+                "avatar": "img/avatar/avatar-3.jpg"
+            },
+            {
+                "title": "Jessica Watson",
+                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+                "avatar": "img/avatar/avatar-3.jpg"
+            },
+            {
+                "title": "Jessica Watson",
+                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+                "avatar": "img/avatar/avatar-3.jpg"
+            }
+        ]
+    },
+    "blogPosts": {
+        "title": "From our travel blog",
+        "subTitle": "Stories from around the globe",
+        "button": "See all articles",
+        "buttonLink": "blog"
+    }
+}
