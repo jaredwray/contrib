@@ -74,7 +74,7 @@ export default () => {
             <section className="py-6">
                 <Container>
                     <Row>
-                        {data.adress &&
+                        {data.address &&
                             <Col
                                 md="4"
                                 className="text-center text-md-left mb-4 mb-md-0"
@@ -84,12 +84,12 @@ export default () => {
                                         <use xlinkHref="content/svg/orion-svg-sprite.svg#map-location-1" />
                                     </svg>
                                 </div>
-                                <h3 className="h5">{data.adress.title}</h3>
-                                <p className="text-muted">{data.adress.row1}
+                                <h3 className="h5">{data.address.title}</h3>
+                                <p className="text-muted">{data.address.row1}
                                     <br />
-                                    {data.adress.row2}
+                                    {data.address.row2}
                                     <br />
-                                    <span dangerouslySetInnerHTML={{ __html: data.adress.row3 }} />
+                                    <span dangerouslySetInnerHTML={{ __html: data.address.row3 }} />
                                 </p>
                             </Col>
                         }
@@ -153,13 +153,12 @@ export default () => {
                                                     for="name"
                                                     className="form-label"
                                                 >
-                                                    Your firstname *
+                                                    Your first name *
                                                 </Label>
                                                 <Input
                                                     type="text"
                                                     name="name"
                                                     id="name"
-                                                    placeholder="Enter your firstname"
                                                     required
                                                 />
                                             </FormGroup>
@@ -170,13 +169,12 @@ export default () => {
                                                     for="surname"
                                                     className="form-label"
                                                 >
-                                                    Your firstname *
+                                                    Your last name *
                                                 </Label>
                                                 <Input
                                                     type="text"
                                                     name="surname"
                                                     id="surname"
-                                                    placeholder="Enter your lasttname"
                                                     required
                                                 />
                                             </FormGroup>
@@ -187,13 +185,12 @@ export default () => {
                                             for="email"
                                             className="form-label"
                                         >
-                                            Your email *
+                                            Your email address*
                                                 </Label>
                                         <Input
                                             type="email"
                                             name="email"
                                             id="email"
-                                            placeholder="Enter your email"
                                             required
                                         />
                                     </FormGroup>
@@ -209,7 +206,6 @@ export default () => {
                                             rows="4"
                                             name="message"
                                             id="message"
-                                            placeholder="Enter your message"
                                             required
                                         />
                                     </FormGroup>
@@ -246,13 +242,13 @@ export default () => {
                     </Row>
                 </Container>
             </section>
-            <div className="map-wrapper-300">
+            <div className="map-wrapper-450">
                 {mapLoaded &&
                     <Map
                         className="h-100"
-                        center={[40.732346, -74.0014247]}
-                        markerPosition={[40.732346, -74.0014247]}
-                        zoom={16}
+                        center={[47.6188227, -122.3446415]}
+                        markerPosition={[47.6188227, -122.3446415]}
+                        zoom={13}
                         dragging={dragging}
                         tap={tap}
                     />

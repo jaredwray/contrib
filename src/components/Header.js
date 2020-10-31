@@ -88,39 +88,9 @@ export default props => {
                     <div className="d-flex align-items-center">
                         <Link href="/" passHref>
                             <a className="py-1 navbar-brand">
-                                <img src={Logo} alt="Directory logo" />
+                                <img src={Logo} alt="Contrib logo" />
                             </a>
                         </Link>
-
-                        {/* search form */}
-                        <Form id="search" className="form-inline d-none d-sm-flex">
-                            <div className={`input-label-absolute input-label-absolute-left input-reset input-expand ml-lg-2 ml-xl-3 ${searchFocus ? 'focus' : ''}`}
-                            >
-                                <Label
-                                    for="search_search"
-                                    className="label-absolute">
-                                    <i className="fa fa-search"></i>
-                                    <span className="sr-only">
-                                        What are you looking for?
-                                    </span>
-                                </Label>
-                                <Input
-                                    id="search_search"
-                                    placeholder="Search"
-                                    aria-label="Search"
-                                    bsSize="sm"
-                                    className="border-0 shadow-0 bg-gray-200"
-                                    onFocus={onFocus}
-                                    onBlur={() => setTimeout(() => onFocus(), 333)}
-                                />
-                                <button
-                                    type="reset"
-                                    className="btn btn-sm btn-reset"
-                                >
-                                    <i className="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </Form>
                     </div>
                     <NavbarToggler
                         onClick={() => setCollapsed(!collapsed)}

@@ -1,4 +1,4 @@
-import { ObjectID } from 'mongodb';
+import { ObjectID } from 'mongodb'
 
 export type Auction = {
     _id: ObjectID,

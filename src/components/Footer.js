@@ -79,24 +79,8 @@ export default () => {
                     <Row className="align-items-center">
                         <Col md="6" className="text-center text-md-left">
                             <p className="text-sm mb-md-0">
-                                © 2020, Your company.  All rights reserved.
+                                &copy; 2020 Contrib LLC. All rights reserved.
                             </p>
-                        </Col>
-                        <Col md="6">
-                            <ul className="list-inline mb-0 mt-2 mt-md-0 text-center text-md-right">
-                                <li className="list-inline-item">
-                                    <img src="/content/svg/visa.svg" alt="..." className="w-2rem" />
-                                </li>
-                                <li className="list-inline-item">
-                                    <img src="/content/svg/mastercard.svg" alt="..." className="w-2rem" />
-                                </li>
-                                <li className="list-inline-item">
-                                    <img src="/content/svg/paypal.svg" alt="..." className="w-2rem" />
-                                </li>
-                                <li className="list-inline-item">
-                                    <img src="/content/svg/western-union.svg" alt="..." className="w-2rem" />
-                                </li>
-                            </ul>
                         </Col>
                     </Row>
                 </Container>

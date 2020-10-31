@@ -1,8 +1,8 @@
 {
 
     "hero": {
-        "title": "Stay like a local",
-        "subTitle": "The best holiday experience"
+        "title": "See what's up for grabs",
+        "subTitle": "Score some loot"
     },
     "swiperPoster": "photo-1501621965065-c6e1cf6b53e2-lowres.jpg",
     "swiperImages": [
@@ -13,19 +13,19 @@
     ],
     "searchOptions": [{
             "value": "small",
-            "label": "Restaurants"
+            "label": "Soccer"
         },
         {
             "value": "medium",
-            "label": "Hotels"
+            "label": "Baseball"
         },
         {
             "value": "large",
-            "label": "Cafes"
+            "label": "Basketball"
         },
         {
             "value": "x-large",
-            "label": "Garages"
+            "label": "Football"
         }
     ],
     "topBlocks": {

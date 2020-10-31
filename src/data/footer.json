@@ -1,66 +1,49 @@
 [
     {
-        "title": "Directory",
-        "content": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+        "title": "Contrib",
+        "content": "Direct athlete-to-fan charity auctions.",
         "social": [
             {
                 "title": "twitter",
-                "link": "#"
+                "link": "#contrib"
             },
             {
                 "title": "facebook",
-                "link": "#"
+                "link": "#contrib"
             },
             {
                 "title": "instagram",
-                "link": "#"
-            },
-            {
-                "title": "pinterest",
-                "link": "#"
-            },
-            {
-                "title": "vimeo",
-                "link": "#"
+                "link": "#contrib"
             }
         ],
         "lg": "4"
     },
     {
-        "title": "Rentals",
+        "title": "Auctions",
         "links": [
             {
-                "title": "Rooms",
+                "title": "Soccer",
                 "link": "/"
             },
             {
-                "title": "Map on top",
-                "link": "/category-rooms"
+                "title": "Baseball",
+                "link": "/"
             },
             {
-                "title": "Side map",
-                "link": "/category-2-rooms"
+                "title": "Basketball",
+                "link": "/"
             },
             {
-                "title": "No map",
-                "link": "/category-3-rooms"
-            },
-            {
-                "title": "Room detail",
-                "link": "/detail-rooms"
+                "title": "Football",
+                "link": "/"
             }
         ],
         "lg": "2",
         "md": "6"
     },
     {
-        "title": "Pages",
+        "title": "More info",
         "links": [
-            {
-                "title": "Comparison",
-                "link": "/compare",
-                "new": true
-            },
             {
                 "title": "Team",
                 "link": "/team",
@@ -71,37 +54,24 @@
                 "link": "/contact"
             },
             {
-                "title": "Pricing",
-                "link": "/pricing"
+                "title": "Charities",
+                "link": "/contact"
             },
             {
-                "title": "Room detail",
-                "link": "/detail-rooms"
-            },
-            {
-                "title": "Text page",
-                "link": "/text"
+                "title": "Atheletes",
+                "link": "/contact"
             },
             {
                 "title": "F.A.Q.s",
                 "link": "/faq"
-            },
-            {
-                "title": "Coming soon",
-                "link": "/coming-soon"
-            },
-            {
-                "title": "404 page",
-                "link": "/404",
-                "new": true
             }
         ],
         "lg": "2",
         "md": "6"
     },
     {
-        "title": "Daily Offers & Discounts",
-        "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. At itaque temporibus.",
+        "title": "Stay in touch",
+        "content": "Keep up to date with what Contrib is doing.",
         "contentBottomMargin": "3",
         "form": {
             "placeholder": "Your Email Address"

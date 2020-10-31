@@ -107,9 +107,9 @@ export default props => {
                                                 {data.about}
                                             </p>
                                         }
-                                        {data.adress &&
+                                        {data.address &&
                                             <p className="text-muted mb-1">
-                                                {data.adress}
+                                                {data.address}
                                             </p>
                                         }
                                         {data.email &&
