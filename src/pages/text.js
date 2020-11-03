@@ -1,8 +1,5 @@
 import React from 'react'
-
 import Link from 'next/link'
-
-
 import {
     Container,
     Row,
@@ -10,7 +7,6 @@ import {
     Breadcrumb,
     BreadcrumbItem
 } from 'reactstrap'
-
 import data from '../data/text.json'
 
 export async function getStaticProps() {

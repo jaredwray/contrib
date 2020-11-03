@@ -1,20 +1,21 @@
 import React from 'react'
 import Link from 'next/link'
+import { csrfToken } from 'next-auth/client'
+import { Container, Row, Col, Button, Form } from 'reactstrap'
 
-import { Container, Row, Col, Button, Form, Input, Label, FormGroup, CustomInput } from 'reactstrap'
-
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
     return {
         props: {
             title: "Sign in",
             hideHeader: true,
             hideFooter: true,
-            noPaddingTop: true
+            noPaddingTop: true,
+            csrfToken: await csrfToken(context)
         },
     }
 }
 
-export default () => {
+export default (props) => {
     return (
         <Container fluid className="px-3">
             <Row className="min-vh-100">
@@ -29,104 +30,60 @@ export default () => {
                             />
                             <h2>Welcome back</h2>
                         </div>
-                        <Form className="form-validate">
-                            <FormGroup>
-                                <Label for="loginUsername" className="form-label">
-                                    Email Address
-                            </Label>
-                                <Input
-                                    name="loginUsername"
-                                    id="loginUsername"
-                                    type="email"
-                                    placeholder="name@address.com"
-                                    autoComplete="off"
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup className="mb-4">
-                                <Row>
-                                    <Col>
-                                        <Label for="loginPassword" className="form-label">
-                                            Password
-                                        </Label>
-                                    </Col>
-                                    <Col xs="auto">
-                                        <a href="#" className="form-text small">
-                                            Forgot password?
-                                        </a>
-                                    </Col>
-                                </Row>
-                                <Input
-                                    name="loginPassword"
-                                    id="loginPassword"
-                                    type="email"
-                                    placeholder="Password"
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup className="mb-4">
-                                <CustomInput
-                                    name="loginRemember"
-                                    id="loginRemember"
-                                    type="checkbox"
-                                    className="text-muted"
-                                    label={<span className="text-sm">Remember me for 30 days</span>}
-                                />
-                            </FormGroup>
-                            <Button
-                                size="lg"
-                                color="primary"
-                                block
-                            >
-                                Sign in
-                            </Button>
-                            <hr
-                                data-content="OR"
-                                className="my-3 hr-text letter-spacing-2"
-                            />
+                        <Form action="http://localhost:3000/api/auth/signin/facebook" method="post">
+                            <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
+                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
                             <Button
                                 color="outline-primary"
                                 block
                                 className="btn-social mb-3"
                             >
                                 <i className="fa-2x fa-facebook-f fab btn-social-icon" />
-                                Connect&nbsp;
+                                Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Facebook
                                 </span>
                             </Button>
+                        </Form>
+                        <Form action="http://localhost:3000/api/auth/signin/twitter" method="post">
+                            <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
+                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
                             <Button
                                 color="outline-primary"
                                 block
                                 className="btn-social mb-3"
                             >
                                 <i className="fa-2x fa-twitter fab btn-social-icon" />
-                                Connect&nbsp;
+                                Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Twitter
                                 </span>
                             </Button>
+                        </Form>
+                        <Form action="http://localhost:3000/api/auth/signin/google" method="post">
+                            <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
+                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
                             <Button
                                 color="outline-primary"
                                 block
                                 className="btn-social mb-3"
                             >
                                 <i className="fa-2x fa-google fab btn-social-icon" />
-                                Connect&nbsp;
+                                Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Google
                                 </span>
                             </Button>
-                            <hr className="my-4" />
-                            <p className="text-center">
-                                <small className="text-muted text-center">
-                                    Don't have an account yet?&nbsp;
-                                    <Link href="/signup">
-                                        <a>Sign up</a>
-                                    </Link>
-                                </small>
-                            </p>
                         </Form>
+                        <hr className="my-4" />
+                        <p className="text-center">
+                            <small className="text-muted text-center">
+                                Don't have an account yet?&nbsp;
+                                    <Link href="/signup">
+                                    <a>Sign up</a>
+                                </Link>
+                            </small>
+                        </p>
                         <Link href="/">
                             <a className="close-absolute mr-md-5 mr-xl-6 pt-5">
                                 <svg className="svg-icon w-3rem h-3rem">

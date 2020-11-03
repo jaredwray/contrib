@@ -60,7 +60,6 @@ export default props => {
                         <span className="h4 text-primary">
                             ${data.price}
                         </span>
-                        &nbsp;per night
                     </CardText>
                 </div>
             </CardBody>

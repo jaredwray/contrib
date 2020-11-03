@@ -185,40 +185,13 @@
       ]
    },
    {
-      "title": "About",
-      "link": "/team"
-   },
-   {
-      "title": "Contact",
-      "link": "/contact"
-   },
-   {
-      "title": "Sign In",
+      "title": "Login",
       "hideToLoggedUser": true,
-      "dropdown": [
-         {
-            "title": "Use your social",
-            "links": [
-               {
-                  "title": "Twitter",
-                  "link": "/docs/docs-introduction"
-               },
-               {
-                  "title": "Facebook/Instagram",
-                  "link": "/docs/docs-directory-structure"
-               },
-               {
-                  "title": "Google",
-                  "link": "/docs/docs-next"
-               }
-            ]
-         }
-      ]
+      "link": "/login"
    },
    {
       "title": "Sign up",
       "link": "/signup",
-      "button": true,
       "hideToLoggedUser": true
    }
 ]

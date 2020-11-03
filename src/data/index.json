@@ -2,7 +2,7 @@
 
     "hero": {
         "title": "See what's up for grabs",
-        "subTitle": "Score some loot"
+        "subTitle": "Score some gear"
     },
     "swiperPoster": "photo-1501621965065-c6e1cf6b53e2-lowres.jpg",
     "swiperImages": [
@@ -29,21 +29,21 @@
         }
     ],
     "topBlocks": {
-        "title": "Booking with us is easy",
-        "subTitle": "One-of-a-kind vacation rentals",
+        "title": "Get cool gear, help a charity",
+        "subTitle": "One-of-a-kind sports memorabilia",
         "blocks": [{
-                "title": "Find the perfect rental",
-                "content": "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in",
+                "title": "Find the perfect gift",
+                "content": "What do you get a fan that has everything? Something unique direct from their favorite athlete.",
                 "icon": "#destination-map-1"
             },
             {
-                "title": "Book with confidence",
-                "content": "The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pit",
+                "title": "Buy with confidence",
+                "content": "We only use Stripe Payments to ensure transactions are safe and secure.",
                 "icon": "#pay-by-card-1"
             },
             {
-                "title": "Enjoy your vacation",
-                "content": "His room, a proper human room although a little too small, lay peacefully between its four familiar",
+                "title": "Support charities",
+                "content": "Every item sold goes towards funding charities.",
                 "icon": "#heart-1"
             }
         ]

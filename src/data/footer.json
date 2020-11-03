@@ -42,7 +42,7 @@
         "md": "6"
     },
     {
-        "title": "More info",
+        "title": "About us",
         "links": [
             {
                 "title": "Team",
@@ -54,15 +54,15 @@
                 "link": "/contact"
             },
             {
-                "title": "Charities",
+                "title": "Charity?",
                 "link": "/contact"
             },
             {
-                "title": "Atheletes",
+                "title": "Athelete?",
                 "link": "/contact"
             },
             {
-                "title": "F.A.Q.s",
+                "title": "Help",
                 "link": "/faq"
             }
         ],
