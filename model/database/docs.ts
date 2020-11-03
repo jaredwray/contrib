@@ -5,10 +5,10 @@ export class ContribDocuments {
   _db: Db
 
   constructor(db: Db) {
-    this._db = db;
+    this._db = db
   }
 
   auctions(): Collection<Auction> {
-    return this._db.collection('auctions') as Collection<Auction>;
+    return this._db.collection('auctions') as Collection<Auction>
   }
 }
