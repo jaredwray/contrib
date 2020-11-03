@@ -53,7 +53,7 @@ Additionally recommended:
 - [x] NextJS
 - [x] MongoDB
 - [x] React + React/DOM
-- [ ] Auth0
+- [x] NextAuth
 - [ ] Stripe
 - [ ] Google Cloud
 
