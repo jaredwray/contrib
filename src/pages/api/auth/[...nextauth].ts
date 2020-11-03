@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import { NextApiRequest, NextApiResponse } from 'next'
+import NextAuth from 'next-auth'
+import Providers from 'next-auth/providers'
 
 const options = {
   providers: [
@@ -18,6 +18,6 @@ const options = {
     })
   ],
   secret: process.env.SECRET
-};
+}
 
-export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);
+export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options)
