@@ -1,0 +1,19 @@
+{
+    "number": "202009001",
+    "issued": "Sep 01, 2020",
+    "due": "Sep 01, 2020",
+    "items": [
+        {
+            "name": "Room Rental Services",
+            "description": "August",
+            "price": 958,
+            "quantity": 1
+        },
+        {
+            "name": "Premium Listing",
+            "description": "August",
+            "price": 100,
+            "quantity": 1
+        }
+    ]
+}

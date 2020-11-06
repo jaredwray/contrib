@@ -97,7 +97,7 @@
             "type": "text"
           },
           {
-            "label": "Adress",
+            "label": "Address",
             "type": "form-group",
             "inputs": [
               {
