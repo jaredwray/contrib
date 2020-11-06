@@ -11,7 +11,7 @@ import Swiper from './Swiper'
 import data from '../data/lastminute.json'
 import geoJSON from '../data/rooms-geojson.json'
 
-export default props => {
+const LastMinute = props => {
   return (
     <section className={`py-6 ${props.greyBackground ? 'bg-gray-100' : ''}`}>
       <Container>
@@ -49,4 +49,6 @@ export default props => {
       </Container>
     </section>
   )
-}
+};
+
+export default LastMinute;

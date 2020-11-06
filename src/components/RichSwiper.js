@@ -18,7 +18,7 @@ import Stars from './Stars'
 
 import ReactIdSwiper from 'react-id-swiper'
 
-export default (props) => {
+const RichSwiper = (props) => {
     const breakpoints = []
     if (props.sm) {
         breakpoints[565] = {
@@ -233,3 +233,5 @@ export default (props) => {
             : 'loading'
     )
 }
+
+export default RichSwiper

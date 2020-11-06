@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import NextNProgress from 'nextjs-progressbar'
+import NextNProgress from '../components/NextNProgress';
 
 import Header from './Header'
 import Footer from './Footer'
@@ -8,7 +8,7 @@ import Footer from './Footer'
 import { FormProvider } from '../components/FormContext'
 import { BookingProvider } from '../components/BookingContext';
 
-export default pageProps => {
+const Layout = pageProps => {
   const headerProps = {
     nav: {
       classes: pageProps.nav && pageProps.nav.classes,
@@ -23,10 +23,10 @@ export default pageProps => {
   return (
     <div style={{ paddingTop: pageProps.noPaddingTop ? '0' : '72px' }} className={pageProps.className}>
       <Head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Poppins:ital,wght@0,300;0,400;0,700;1,400&display=swap" />
         <link rel="icon" href="/favicon.png" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Poppins:ital,wght@0,300;0,400;0,700;1,400&amp;display=swap" />
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.3.8/css/swiper.min.css" />
+        <link href='https://use.fontawesome.com/releases/v5.8.1/css/all.css' rel="stylesheet" />
+        <link href='https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.3.8/css/swiper.min.css' rel="stylesheet" />
         <title>{pageProps.title} - Directory React Theme</title>
       </Head>
       <NextNProgress color="#4E66F8" options={{ showSpinner: false }} />
@@ -56,5 +56,7 @@ export default pageProps => {
       }
     </div>
   )
-}
+};
+
+export default Layout;
 

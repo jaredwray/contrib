@@ -7,7 +7,7 @@ import {
 } from 'reactstrap'
 
 
-export default props => {
+const CardPost = props => {
     const post = props.data
     return (
         <Card className="border-0 h-100 shadow">
@@ -46,4 +46,7 @@ export default props => {
             </CardBody>
         </Card>
     )
-}
+};
+
+
+export default CardPost;

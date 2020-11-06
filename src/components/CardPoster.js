@@ -8,7 +8,7 @@ import {
     CardText
 } from 'reactstrap'
 
-export default props => {
+const CardPoster = props => {
     const data = props.data
     return (
         <Card className="card-poster gradient-overlay hover-animate mb-4 mb-lg-0">
@@ -26,4 +26,6 @@ export default props => {
             </CardBody>
         </Card>
     )
-}
+};
+
+export default CardPoster;

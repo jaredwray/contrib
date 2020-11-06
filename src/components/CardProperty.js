@@ -8,7 +8,7 @@ import {
     CardSubtitle
 } from 'reactstrap'
 
-export default props => {
+const CardProperty = props => {
     const data = props.data
     return (
         <Card className="h-100 border-0 shadow">
@@ -66,4 +66,6 @@ export default props => {
             </CardBody>
         </Card>
     )
-}
+};
+
+export default CardProperty;

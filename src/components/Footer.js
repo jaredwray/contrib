@@ -12,7 +12,7 @@ import {
 
 import footerContent from '../data/footer.json'
 
-export default () => {
+const Footer = () => {
     return (
         <footer className="position-relative z-index-10 d-print-none" >
             <div className="py-6 bg-gray-200 text-muted">
@@ -82,9 +82,13 @@ export default () => {
                                 &copy; 2020 Contrib LLC. All rights reserved.
                             </p>
                         </Col>
+                        <Col md="6">
+                        </Col>
                     </Row>
                 </Container>
             </div>
         </footer >
     )
-}
+};
+
+export default Footer;

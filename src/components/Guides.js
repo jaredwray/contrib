@@ -10,7 +10,7 @@ import Swiper from './Swiper'
 
 import data from '../data/guides.json'
 
-export default props => {
+const Guides = props => {
   return (
     <section className={`py-6 ${props.greyBackground ? 'bg-gray-100' : ''}`}>
       <Container>
@@ -47,4 +47,6 @@ export default props => {
       </Container>
     </section>
   )
-}
+};
+
+export default Guides;

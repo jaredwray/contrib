@@ -11,7 +11,7 @@ import {
     Col
 } from 'reactstrap'
 
-export default () => {
+const ReviewForm = () => {
     const [reviewCollapse, setReviewCollapse] = React.useState(false)
     return (
         <div className="py-5">
@@ -106,4 +106,6 @@ export default () => {
             </Collapse>
         </div>
     )
-}
+};
+
+export default ReviewForm;

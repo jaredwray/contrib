@@ -2,7 +2,7 @@ import React from 'react'
 
 import Select from 'react-select'
 
-export default props => {
+const SortBy = props => {
     return (
         <div>
             <label className="form-label mr-2">Sort by</label>
@@ -16,4 +16,6 @@ export default props => {
             />
         </div>
     )
-}
+};
+
+export default SortBy;

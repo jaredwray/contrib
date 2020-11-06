@@ -2,7 +2,7 @@ import React from 'react'
 
 import SortBy from './SortBy'
 
-export default props => {
+const ResultsTopBar = props => {
     return (
         <div className="d-flex justify-content-between align-items-center flex-column flex-md-row mb-4">
             <div className="mr-3">
@@ -14,4 +14,6 @@ export default props => {
             {props.sortBy && <SortBy data={props.sortBy} />}
         </div>
     )
-}
+};
+
+export default ResultsTopBar;

@@ -9,7 +9,7 @@ import {
 
 import Stars from '../components/Stars'
 
-export default props => {
+const CardRestaurant = props => {
     const data = props.data
     return (
         <Card className="h-100 border-0 shadow">
@@ -65,4 +65,6 @@ export default props => {
             </CardBody>
         </Card>
     )
-}
+};
+
+export default CardRestaurant;

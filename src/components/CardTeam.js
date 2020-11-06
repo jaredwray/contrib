@@ -10,7 +10,7 @@ import {
 } from 'reactstrap'
 
 
-export default props => {
+const CardTeam = props => {
     const data = props.data
     return (
         <Card className="border-0 hover-animate bg-transparent">
@@ -30,4 +30,7 @@ export default props => {
             </CardBody>
         </Card>
     )
-}
+};
+
+
+export default CardTeam;

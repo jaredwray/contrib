@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 import data from '../data/instagram.json'
 
-export default () => {
+const Instagram = () => {
     const params = {
         containerClass: `swiper-container instagram-slider`,
         slidesPerView: 4,
@@ -46,4 +46,6 @@ export default () => {
             </Container>
         </section>
     )
-}
+};
+
+export default Instagram;

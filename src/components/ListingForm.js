@@ -10,7 +10,7 @@ import { useDropzone } from 'react-dropzone'
 import { FormContext } from '../components/FormContext'
 
 
-export default props => {
+const ListingForm = props => {
     const data = props.data
     const [formInputs, setFormInputs] = React.useContext(FormContext)
 
@@ -305,4 +305,7 @@ export default props => {
         </Form>
 
     )
-}
+};
+
+
+export default ListingForm;

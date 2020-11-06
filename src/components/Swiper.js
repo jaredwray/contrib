@@ -8,7 +8,7 @@ import CardProperty from './CardProperty'
 
 import ReactIdSwiper from 'react-id-swiper'
 
-export default (props) => {
+const Swiper = (props) => {
     const breakpoints = []
     if (props.sm) {
         breakpoints[565] = {
@@ -103,3 +103,5 @@ export default (props) => {
             : 'loading'
     )
 }
+
+export default Swiper

@@ -4,7 +4,7 @@ import ReactIdSwiper from 'react-id-swiper'
 
 import CardTestimonial from '../components/CardTestimonial'
 
-export default props => {
+const SwiperTestimonial = props => {
     const data = props.data
 
     const params = {
@@ -39,4 +39,6 @@ export default props => {
             )}
         </ReactIdSwiper>
     )
-}
+};
+
+export default SwiperTestimonial;

@@ -2,7 +2,7 @@ import React from 'react'
 
 import CardReview from './CardReview'
 
-export default props => {
+const Reviews = props => {
 
     return (
         <div className="text-block">
@@ -17,4 +17,6 @@ export default props => {
             )}
         </div>
     )
-}
+};
+
+export default Reviews;

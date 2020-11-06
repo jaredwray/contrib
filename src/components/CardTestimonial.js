@@ -4,7 +4,7 @@ import {
     Card
 } from 'reactstrap'
 
-export default props => {
+const CardTestimonial = props => {
     const data = props.data
     return (
         <Card className="testimonial rounded-lg shadow border-0">
@@ -22,4 +22,6 @@ export default props => {
             </div>
         </Card>
     )
-}
+};
+
+export default CardTestimonial;

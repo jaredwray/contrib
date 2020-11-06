@@ -3,8 +3,9 @@ import React from 'react'
 import { Row, Col } from 'reactstrap'
 
 import Lightbox from 'react-image-lightbox'
+import 'react-image-lightbox/style.css'
 
-export default props => {
+const Gallery = props => {
     const data = props.data
     const [lightBoxOpen, setLightBoxOpen] = React.useState(false)
     const [activeImage, setActiveImage] = React.useState(0)
@@ -60,4 +61,6 @@ export default props => {
             )}
         </React.Fragment>
     )
-}
+};
+
+export default Gallery;

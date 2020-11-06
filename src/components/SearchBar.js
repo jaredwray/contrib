@@ -12,12 +12,12 @@ import {
 
 import Select from 'react-select'
 
-export default props => {
+const SearchBar = props => {
 
     const customSelectStyles = {
         control: (provided, state) => ({
             ...provided,
-            borderStyle: 'transparent',
+            border: '0 solid #fff',
         }),
         indicatorSeparator: (provided, state) => ({
             display: 'none'
@@ -36,7 +36,7 @@ export default props => {
             <Form>
                 <Row>
                     <Col
-                        lg="6"
+                        lg="4"
                         className="d-flex align-items-center form-group"
                     >
                         <Input
@@ -47,7 +47,28 @@ export default props => {
                         />
                     </Col>
                     <Col
-                        lg="4"
+                        lg="3"
+                        md={props.halfInputs ? "6" : "12"}
+                        className="d-flex align-items-center form-group"
+                    >
+                        <div className="input-label-absolute input-label-absolute-right w-100">
+                            <Label
+                                for="location"
+                                className="label-absolute">
+                                <i className="fa fa-crosshairs" />
+                                <span className="sr-only">City</span>
+                            </Label>
+                            <Input
+                                type="text"
+                                name="location"
+                                placeholder="Location"
+                                id="location"
+                                className="border-0 shadow-0"
+                            />
+                        </div>
+                    </Col>
+                    <Col
+                        lg="3"
                         md={props.halfInputs ? "6" : "12"}
                         className="d-flex align-items-center form-group no-divider"
                     >
@@ -76,4 +97,6 @@ export default props => {
             </Form>
         </div>
     )
-}
+};
+
+export default SearchBar;

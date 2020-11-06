@@ -4,7 +4,7 @@ import { Media, Card, CardBody, CardFooter } from 'reactstrap'
 
 import Stars from '../components/Stars'
 
-export default props => {
+const BookingColumn = props => {
     const from = props.from
     const to = props.to
     return (
@@ -102,4 +102,6 @@ export default props => {
             </CardFooter>
         </Card>
     )
-}
+};
+
+export default BookingColumn;

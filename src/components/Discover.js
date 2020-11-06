@@ -6,7 +6,7 @@ import {
     Col
 } from 'reactstrap'
 
-export default props => {
+const Discover = props => {
     return (
         <section className={props.className}>
             <Container>
@@ -40,4 +40,6 @@ export default props => {
             </Container>
         </section>
     )
-}
+};
+
+export default Discover;

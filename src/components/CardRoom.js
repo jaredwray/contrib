@@ -13,7 +13,7 @@ import {
 
 import Stars from './Stars'
 
-export default props => {
+const CardRoom = props => {
     const data = props.data
     return (
         <Card className="h-100 border-0 shadow">
@@ -65,4 +65,6 @@ export default props => {
             </CardBody>
         </Card>
     )
-}
+};
+
+export default CardRoom;

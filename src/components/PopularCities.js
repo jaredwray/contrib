@@ -10,7 +10,7 @@ import {
 
 import data from '../data/popular_cities.json'
 
-export default props => {
+const PopularCities = props => {
 
     return (
         <section className={`py-6 ${props.greyBackground ? 'bg-gray-100' : ''}`}>
@@ -55,4 +55,6 @@ export default props => {
             </Container>
         </section>
     )
-}
+};
+
+export default PopularCities;

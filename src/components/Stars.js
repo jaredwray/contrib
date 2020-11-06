@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default props => {
+const Stars = props => {
     const starsArray = []
     for (let i = 1; i <= 5; i++) {
         i <= props.stars ?
@@ -15,3 +15,5 @@ export default props => {
     }
     return starsArray
 }
+
+export default Stars

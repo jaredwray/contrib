@@ -23,12 +23,16 @@ import {
 } from 'reactstrap'
 
 import UseWindowSize from '../hooks/UseWindowSize'
+
 import ActiveLink from './ActiveLink'
 import Logo from '../../public/content/svg/logo.svg'
+
 import menu from '../data/menu.json'
+
 import userMenu from '../data/user-menu.json'
 
-export default props => {
+const Header = props => {
+
     const [collapsed, setCollapsed] = React.useState(false)
     const [dropdownOpen, setDropdownOpen] = React.useState({})
     const [searchFocus, setSearchFocus] = React.useState(false)
@@ -272,4 +276,6 @@ export default props => {
             </Navbar>
         </header >
     )
-}
+};
+
+export default Header;

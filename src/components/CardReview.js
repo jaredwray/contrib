@@ -7,7 +7,7 @@ import {
 
 import Stars from './Stars'
 
-export default props => {
+const CardReview = props => {
     const data = props.data
     return (
         <Media className="d-block d-sm-flex review">
@@ -26,4 +26,6 @@ export default props => {
             </Media>
         </Media>
     )
-}
+};
+
+export default CardReview;

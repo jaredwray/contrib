@@ -7,7 +7,7 @@ import {
 } from 'reactstrap'
 
 
-export default () => {
+const PaginationComponent = () => {
     return (
         <Pagination aria-label="Page navigation example" className="d-flex justify-content-center">
             <PaginationItem>
@@ -37,4 +37,7 @@ export default () => {
             </PaginationItem>
         </Pagination>
     )
-}
+};
+
+
+export default PaginationComponent;

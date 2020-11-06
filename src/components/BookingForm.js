@@ -7,7 +7,7 @@ import Select from 'react-select'
 import { BookingContext } from '../components/BookingContext'
 
 
-export default props => {
+const BookingForm = props => {
     const data = props.data
     const from = props.from
     const to = props.to
@@ -209,3 +209,5 @@ export default props => {
         )
     )
 }
+
+export default BookingForm

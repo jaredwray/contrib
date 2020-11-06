@@ -6,7 +6,7 @@ import {
 
 import ReactIdSwiper from 'react-id-swiper'
 
-export default props => {
+const Brands = props => {
     const params = {
         containerClass: `swiper-container brands-slider pb-5`,
         slidesPerView: 2,
@@ -47,4 +47,6 @@ export default props => {
             </Container>
         </section>
     )
-}
+};
+
+export default Brands;
