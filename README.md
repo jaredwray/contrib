@@ -5,34 +5,7 @@
 ### Database
 
 1. Install MongoDB locally using default ports etc.
-2. Create a `contrib` database containing a `auctions` collection
-3. Insert a sample auction, e.g.
-
-```json
-{
-   "_id":{
-      "$oid":"5f8761fed6d34e586f0dd448"
-   },
-   "title":"Sounders match-played soccer ball",
-   "startAt":{
-      "$date":"2020-10-15T16:00:00.000Z"
-   },
-   "endAt":{
-      "$date":"2020-10-20T16:00:00.000Z"
-   },
-   "startPrice": 1199,
-   "seller":{
-      "id":"5f87628bd6d34e586f0dd44a",
-      "name":"Xavi"
-   },
-   "location":{
-      "country":"us",
-      "zip":"98034",
-      "city":"Seattle"
-   },
-   "active":true
-}
-```
+2. Visit https://github.com/contriborg/database for more info
 
 ### Development
 
@@ -56,6 +29,16 @@ Additionally recommended:
 - [x] NextAuth
 - [ ] Stripe
 - [ ] Google Cloud
+- [x] [Directory NextJS theme](https://directory-rose.now.sh/docs/docs-next)
+
+## Social support
+
+Social sign-in support is supported for:
+
+- [x] FaceBook
+- [x] Twitter
+- [x] Google
+- [ ] Apple
 
 ## Endpoints
 
