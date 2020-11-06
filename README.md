@@ -16,9 +16,11 @@ You will require:
 3. Chrome (for debugging/launching from VS)
 4. `crossenv` npm package globally installed `npm i -g crossenv`
 
-Additionally recommended:
+To start:
 
-1. [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi/related)
+1. Open the `website` folder in VS Code
+2. In the status bar ensure `Debug with Chrome (website)` is selected
+3. Use `Run > Start Debugging` from the menu or press <kbd>F5</kbd>
 
 ## Technology used
 
