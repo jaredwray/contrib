@@ -15,7 +15,7 @@ export async function getServerSideProps(context) {
     }
 }
 
-const Signup = () => {
+const Signup = (props) => {
     return (
         <Container fluid className="px-3">
             <Row className="min-vh-100">
