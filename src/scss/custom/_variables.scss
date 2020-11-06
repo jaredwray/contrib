@@ -157,7 +157,7 @@ $border-radius:               .4rem !default;
 $border-radius-lg:            .6rem !default;
 $border-radius-sm:            .2rem !default;
 
-$box-shadow-sm:               0 0 .25rem rgba($black, .075) !default;
+$box-shadow-sm:               0 .1rem .3rem rgba($black, .1) !default;
 $box-shadow:                  0 0 1rem rgba($black, .15) !default;
 $box-shadow-lg:               0 1rem 3rem rgba($black, .175) !default;
 
@@ -214,9 +214,6 @@ $dropdown-header-color:             $gray-500 !default;
 $dropdown-box-shadow:               0 0rem 1.5rem rgba($black, .175) !default;
 $dropdown-border-width:             0 !default;
 $dropdown-link-hover-color:         theme-color('primary') !default;
-
-$dropdown-link-active-color:        theme-color('dark') !default;
-$dropdown-link-active-bg:           $white !default;
 
 $navbar-brand-font-size:            $font-size-base !default;
 $navbar-padding-y:                  $spacer !default;

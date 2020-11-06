@@ -14,7 +14,7 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-
+    
     @include media-breakpoint-up(md) {
         min-height: 600px;
     }
@@ -152,7 +152,7 @@
     position: relative;
     text-align: center;
     background: $gray-100;
-    box-shadow: $box-shadow-sm;
+    box-shadow: 0 .05rem .3rem rgba($black, .1);
 }
 
 .hero-slider {

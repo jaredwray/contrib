@@ -30,7 +30,7 @@
     height: 80px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    box-shadow: -5.665px 9.429px 35px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: -5.665px 9.429px 30px 0px rgba(0, 0, 0, 0.2);
     @include position(absolute, 50%, $left: 0);
 }
 

@@ -67,6 +67,54 @@
 }
 
 /*
+    Border - 0 for table cells
+   ------------------------
+*/
+
+.border-0 {
+
+    >th,
+    >td {
+        border: none !important;
+    }
+}
+
+/*
+    Star checkbox
+   ------------------------
+*/
+
+.form-star {
+
+    label {
+        position: relative;
+        margin-bottom: 0;
+        cursor: pointer;
+        color: $gray-300;
+        min-height: $font-size-base * $line-height-base;
+
+        &::before {
+            content: "\f005";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            transition: all .2s ease;
+            font-size: 1.0625rem;
+        }
+    }
+
+    >input:checked~label {
+        color: theme-color('warning');
+    }
+
+    input {
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
+    }
+}
+
+
+/*
     Responsive borders - border-[breakpoint]
    ------------------------
 */
@@ -211,7 +259,7 @@ $value in $theme-colors {
 
 .table-hover {
     tbody tr.no-stripe {
-            background-color: transparent !important;
+        background-color: transparent !important;
     }
 }
 
@@ -368,6 +416,23 @@ img.bg-image {
 
 .list-group {
     border-radius: $list-group-border-radius
+}
+
+@media print {
+
+    .shadow-print-0 {
+        box-shadow: none !important;
+    }
+
+    .px-print-0 {
+        padding-left: 0 !important; 
+        padding-right: 0 !important; 
+    }
+
+    .p-print-0 {
+        padding: 0 !important; 
+    }
+
 }
 
 // fixes for IE11
