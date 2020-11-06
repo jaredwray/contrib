@@ -21,7 +21,7 @@ export async function getStaticProps() {
 
 import Stars from '../components/Stars'
 
-export default () => {
+const UserGrid = () => {
     return (
         <section className="py-5">
             <Container>
@@ -92,4 +92,6 @@ export default () => {
             </Container>
         </section>
     )
-}
+};
+
+export default UserGrid;

@@ -18,7 +18,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const UserAccount = () => {
     return (
         <section className="py-5">
             <Container>
@@ -68,4 +68,6 @@ export default () => {
             </Container>
         </section>
     )
-}
+};
+
+export default UserAccount;

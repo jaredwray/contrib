@@ -44,7 +44,8 @@ export async function getStaticProps() {
     }
 }
 let Map
-export default () => {
+
+const Category2Rooms = () => {
     const [mapLoaded, setMapLoaded] = React.useState(false)
     const [dragging, setDragging] = React.useState(false)
     const [tap, setTap] = React.useState(false)
@@ -130,9 +131,8 @@ export default () => {
                                         Guests
                                     </Label>
                                     <Select
-                                        instanceId="guestsSelect"
+                                        inputId="form_guests"
                                         name="guests"
-                                        id="form_guests"
                                         options={data.guests && data.guests}
                                         className="form-control dropdown bootstrap-select"
                                         classNamePrefix="selectpicker"
@@ -152,6 +152,7 @@ export default () => {
                                     </Label>
                                     <Select
                                         instanceId="typeSelect"
+                                        inputId="form_type"
                                         name="type"
                                         id="form_type"
                                         options={data.type && data.type}
@@ -232,7 +233,7 @@ export default () => {
                                                     <Select
                                                         instanceId="neighbourhoodSelect"
                                                         name="neighbourhood"
-                                                        id="form_neighbourhood"
+                                                        inputId="form_neighbourhood"
                                                         options={data.neighbourhood && data.neighbourhood}
                                                         isMulti
                                                         isSearchable
@@ -502,4 +503,6 @@ export default () => {
 
         </React.Fragment>
     )
-}
+};
+
+export default Category2Rooms;

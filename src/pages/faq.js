@@ -26,7 +26,7 @@ export async function getStaticProps() {
 }
 
 
-export default () => {
+const Faq = () => {
 
     const groupByN = (n, data) => {
         let result = [];
@@ -92,4 +92,7 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+
+export default Faq;

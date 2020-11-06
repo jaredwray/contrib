@@ -36,7 +36,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Index3 = () => {
     return (
         <React.Fragment>
             <RichSwiper
@@ -159,6 +159,8 @@ export default () => {
         </React.Fragment>
 
     )
-}
+};
+
+export default Index3;
 
 

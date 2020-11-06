@@ -1,5 +1,8 @@
 import React from 'react'
+
 import Link from 'next/link'
+
+
 import {
     Container,
     Row,
@@ -7,6 +10,7 @@ import {
     Breadcrumb,
     BreadcrumbItem
 } from 'reactstrap'
+
 import data from '../data/text.json'
 
 export async function getStaticProps() {
@@ -22,7 +26,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Text = () => {
     return (
         <React.Fragment>
             <section className="hero py-6 py-lg-7 text-white dark-overlay">
@@ -68,4 +72,6 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+export default Text;

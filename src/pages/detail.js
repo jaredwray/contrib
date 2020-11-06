@@ -41,7 +41,8 @@ export async function getStaticProps() {
 }
 
 let Map
-export default () => {
+
+const Detail = () => {
     const [mapLoaded, setMapLoaded] = React.useState(false)
     const [dragging, setDragging] = React.useState(false)
     const [tap, setTap] = React.useState(false)
@@ -301,4 +302,6 @@ export default () => {
         </React.Fragment>
     )
 
-}
+};
+
+export default Detail;

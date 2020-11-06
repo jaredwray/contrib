@@ -2,11 +2,10 @@ import React from 'react'
 import Layout from '../components/Layout'
 import { Provider } from 'next-auth/client'
 
-import 'leaflet/dist/leaflet.css'
-import 'react-image-lightbox/style.css'
 import '../scss/style.default.scss'
 
-export default ({ Component, pageProps }) => {
+
+const App = ({ Component, pageProps }) => {
   return (
     <Provider session={pageProps.session}>
       <Layout {...pageProps}>
@@ -14,4 +13,8 @@ export default ({ Component, pageProps }) => {
       </Layout>
     </Provider>
   )
-}
+};
+
+
+// This default export is required in a new `pages/_app.js` file.
+export default App;

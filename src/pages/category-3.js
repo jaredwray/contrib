@@ -35,7 +35,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Category3 = () => {
 
     const [filterCollapse, setFilterCollapse] = React.useState(false)
     const [priceMin, setPriceMin] = React.useState(40)
@@ -88,7 +88,7 @@ export default () => {
                                 <Label for="form_neighbourhood" className="form-label">Neighbourhood</Label>
                                 <Select
                                     name="neighbourhood"
-                                    id="form_neighbourhood"
+                                    inputId="form_neighbourhood"
                                     options={data.neighbourhood && data.neighbourhood}
                                     isMulti
                                     isSearchable
@@ -101,7 +101,7 @@ export default () => {
                                     className="form-label">Category</Label>
                                 <Select
                                     name="category"
-                                    id="form_category"
+                                    inputId="form_category"
                                     options={data.categories && data.categories}
                                     className="form-control dropdown bootstrap-select"
                                     classNamePrefix="selectpicker"
@@ -221,4 +221,6 @@ export default () => {
             </Container>
         </React.Fragment>
     )
-}
+};
+
+export default Category3;

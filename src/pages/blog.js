@@ -28,7 +28,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Blog = () => {
 
     const featuredPost = data.posts[0]
 
@@ -92,4 +92,6 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+export default Blog;

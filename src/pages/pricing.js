@@ -28,7 +28,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Pricing = () => {
 
     return (
         <React.Fragment>
@@ -127,4 +127,6 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+export default Pricing;

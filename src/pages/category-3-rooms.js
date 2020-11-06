@@ -44,7 +44,7 @@ export async function getStaticProps() {
 }
 
 
-export default () => {
+const Category3Rooms = () => {
     const size = UseWindowSize()
     const [range, setRange] = React.useState([{ startDate: new Date() }, { endDate: '' }])
     const [dateFocused, setDateFocused] = React.useState(range.startDate)
@@ -117,7 +117,7 @@ export default () => {
                                 <div>
                                     <Select
                                         name="guests"
-                                        id="form_guests"
+                                        inputId="form_guests"
                                         options={data.guests && data.guests}
                                         isMulti
                                         isSearchable
@@ -135,7 +135,7 @@ export default () => {
                                     </Label>
                                 <Select
                                     name="type"
-                                    id="form_type"
+                                    inputId="form_type"
                                     options={data.guests && data.guests}
                                     isMulti
                                     isSearchable
@@ -198,7 +198,7 @@ export default () => {
                                                     </Label>
                                             <Select
                                                 name="neighbourhood"
-                                                id="form_neighbourhood"
+                                                inputId="form_neighbourhood"
                                                 options={data.neighbourhood && data.neighbourhood}
                                                 isMulti
                                                 isSearchable
@@ -436,4 +436,7 @@ export default () => {
             </Container>
         </React.Fragment>
     )
-}
+};
+
+
+export default Category3Rooms;

@@ -27,7 +27,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Team = () => {
     const Team = (data) => {
         return (
             <Row>
@@ -131,4 +131,6 @@ export default () => {
             }
         </React.Fragment>
     )
-}
+};
+
+export default Team;

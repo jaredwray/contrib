@@ -28,7 +28,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const UserBooking1 = () => {
     return (
         <React.Fragment>
             <ProgressBar progress={25} />
@@ -89,4 +89,6 @@ export default () => {
             </section>
         </React.Fragment >
     )
-}
+};
+
+export default UserBooking1;

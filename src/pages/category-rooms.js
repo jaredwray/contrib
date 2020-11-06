@@ -34,7 +34,8 @@ export async function getStaticProps() {
     }
 }
 let Map
-export default () => {
+
+const CategoryRooms = () => {
     const [mapLoaded, setMapLoaded] = React.useState(false)
     const [dragging, setDragging] = React.useState(false)
     const [tap, setTap] = React.useState(false)
@@ -125,4 +126,6 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+export default CategoryRooms;

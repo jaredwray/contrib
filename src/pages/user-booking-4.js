@@ -27,7 +27,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const UserBooking4 = () => {
     const [bookingInputs, setBookingInputs] = React.useContext(BookingContext)
 
     console.log(bookingInputs)
@@ -84,4 +84,6 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+export default UserBooking4;

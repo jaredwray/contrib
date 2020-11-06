@@ -25,7 +25,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const UserAdd5 = () => {
     const [formInputs, setFormInputs] = React.useContext(FormContext)
 
     console.log(formInputs)
@@ -62,4 +62,6 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+export default UserAdd5;

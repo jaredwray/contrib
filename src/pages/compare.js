@@ -29,7 +29,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Compare = () => {
     return (
         <React.Fragment>
             <section className="hero py-5 py-lg-7">
@@ -287,4 +287,6 @@ export default () => {
             </section>
         </React.Fragment>
     )
-}
+};
+
+export default Compare;

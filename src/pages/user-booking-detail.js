@@ -23,7 +23,7 @@ export async function getStaticProps() {
 
 import Swiper from '../components/Swiper'
 
-export default () => {
+const UserBookingDetail = () => {
     const Map = dynamic(
         () => import('../components/Map'),
         { ssr: false }
@@ -147,7 +147,7 @@ export default () => {
                             <Col xs="sm">
                                 <h6>Address</h6>
                                 <p className="text-muted">
-                                    {data.adress}
+                                    {data.address}
                                 </p>
                             </Col>
 
@@ -303,4 +303,6 @@ export default () => {
             </Row>
         </Container>
     )
-}
+};
+
+export default UserBookingDetail;

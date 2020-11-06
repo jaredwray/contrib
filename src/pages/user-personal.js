@@ -21,10 +21,10 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const UserPersonal = () => {
 
     const [personalCollapse, setPersonalCollapse] = React.useState(false)
-    const [adressCollapse, setAdressCollapse] = React.useState(false)
+    const [addressCollapse, setAddressCollapse] = React.useState(false)
 
     return (
         <section className="py-5">
@@ -82,25 +82,25 @@ export default () => {
                                             <Label for="name" className="form-label" >
                                                 Name
                                             </Label>
-                                            <Input type="text" name="name" id="name" value="John Doe" />
+                                            <Input type="text" name="name" id="name" defaultValue="John Doe" />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <Label for="date" className="form-label">
                                                 Date of birth
                                             </Label>
-                                            <Input type="text" name="date" id="date" value="06/22/1980" />
+                                            <Input type="text" name="date" id="date" defaultValue="06/22/1980" />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <Label for="email" className="form-label">
                                                 Email address
                                             </Label>
-                                            <Input type="email" name="email" id="email" value="john.doe@directory.com" />
+                                            <Input type="email" name="email" id="email" defaultValue="john.doe@directory.com" />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <Label for="phone" className="form-label">
                                                 Phone number
                                             </Label>
-                                            <Input type="text" name="phone" id="phone" value="+42055544466" />
+                                            <Input type="text" name="phone" id="phone" defaultValue="+42055544466" />
                                         </Col>
                                     </Row>
                                     <Button
@@ -116,13 +116,13 @@ export default () => {
                         <div className="text-block">
                             <Row className="mb-3">
                                 <Col sm="9">
-                                    <h5>Adress</h5>
+                                    <h5>Address</h5>
                                 </Col>
                                 <Col sm="3" className="text-right">
                                     <Button
                                         color="link"
                                         className="pl-0 text-primary collapsed"
-                                        onClick={() => setAdressCollapse(!adressCollapse)}
+                                        onClick={() => setAddressCollapse(!addressCollapse)}
                                     >
                                         Change
                                     </Button>
@@ -131,29 +131,29 @@ export default () => {
                             <Media className="text-sm text-muted">
                                 <i className="fa fa-address-book fa-fw mr-2" />
                                 <Media body className="mt-n1">
-                                    {data.adress.line1}
+                                    {data.address.line1}
                                     <br />
-                                    {data.adress.line2}
+                                    {data.address.line2}
                                 </Media>
                             </Media>
-                            <Collapse isOpen={adressCollapse}>
+                            <Collapse isOpen={addressCollapse}>
                                 <Form>
                                     <Row className="pt-4">
                                         <Col md="6" className="form-group">
                                             <Label for="street" className="form-label">Street</Label>
-                                            <Input type="text" name="street" id="street" value="123 Main St." />
+                                            <Input type="text" name="street" id="street" defaultValue="123 Main St." />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <Label for="apt" className="form-label">
                                                 Apt. (optional)
                                             </Label>
-                                            <Input type="text" name="apt" id="apt" value="Apt #7" />
+                                            <Input type="text" name="apt" id="apt" defaultValue="Apt #7" />
                                         </Col>
                                         <Col md="6" className="form-group" >
                                             <Label for="city" className="form-label">
                                                 City
                                             </Label>
-                                            <Input type="text" name="city" id="city" value="San Francisco" />
+                                            <Input type="text" name="city" id="city" defaultValue="San Francisco" />
                                         </Col>
                                         <Col md="6" className="form-group" >
                                             <Label for="state" className="form-label" >
@@ -172,7 +172,7 @@ export default () => {
                                             <Label for="zip" className="form-label">
                                                 Zip
                                             </Label>
-                                            <Input type="text" name="zip" id="zip" value="902 10" />
+                                            <Input type="text" name="zip" id="zip" defaultValue="902 10" />
                                         </Col>
                                     </Row>
                                     <Button
@@ -180,7 +180,7 @@ export default () => {
                                         color="outline-primary"
                                         className=" mb-4"
                                     >
-                                        Save adress
+                                        Save address
                                     </Button>
                                 </Form>
                             </Collapse>
@@ -210,4 +210,6 @@ export default () => {
             </Container>
         </section>
     )
-}
+};
+
+export default UserPersonal;

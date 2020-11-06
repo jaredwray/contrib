@@ -35,7 +35,8 @@ export async function getStaticProps() {
 }
 
 let Map
-export default () => {
+
+const Contact = () => {
     const [mapLoaded, setMapLoaded] = React.useState(false)
     const [dragging, setDragging] = React.useState(false)
     const [tap, setTap] = React.useState(false)
@@ -153,12 +154,13 @@ export default () => {
                                                     for="name"
                                                     className="form-label"
                                                 >
-                                                    Your first name *
+                                                    Your First Name *
                                                 </Label>
                                                 <Input
                                                     type="text"
                                                     name="name"
                                                     id="name"
+                                                    placeholder="Enter your first name"
                                                     required
                                                 />
                                             </FormGroup>
@@ -169,12 +171,13 @@ export default () => {
                                                     for="surname"
                                                     className="form-label"
                                                 >
-                                                    Your last name *
+                                                    Your Last Name *
                                                 </Label>
                                                 <Input
                                                     type="text"
                                                     name="surname"
                                                     id="surname"
+                                                    placeholder="Enter your last name"
                                                     required
                                                 />
                                             </FormGroup>
@@ -185,12 +188,13 @@ export default () => {
                                             for="email"
                                             className="form-label"
                                         >
-                                            Your email address*
+                                            Your email *
                                                 </Label>
                                         <Input
                                             type="email"
                                             name="email"
                                             id="email"
+                                            placeholder="Enter your email"
                                             required
                                         />
                                     </FormGroup>
@@ -206,6 +210,7 @@ export default () => {
                                             rows="4"
                                             name="message"
                                             id="message"
+                                            placeholder="Enter your message"
                                             required
                                         />
                                     </FormGroup>
@@ -256,4 +261,6 @@ export default () => {
             </div>
         </React.Fragment>
     )
-}
+};
+
+export default Contact;

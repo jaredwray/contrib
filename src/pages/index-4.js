@@ -44,7 +44,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Index4 = () => {
 
     const [activeTab, setActiveTab] = React.useState(0);
     const toggle = tab => {
@@ -312,6 +312,8 @@ export default () => {
         </React.Fragment>
 
     )
-}
+};
+
+export default Index4;
 
 

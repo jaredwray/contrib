@@ -42,7 +42,8 @@ export async function getStaticProps() {
 }
 
 let Map
-export default () => {
+
+const DetailRooms = () => {
     const [mapLoaded, setMapLoaded] = React.useState(false)
     const [range, setRange] = React.useState([{ startDate: new Date() }, { endDate: '' }])
     const [dateFocused, setDateFocused] = React.useState(range.startDate)
@@ -330,4 +331,6 @@ export default () => {
         </React.Fragment>
     )
 
-}
+};
+
+export default DetailRooms;

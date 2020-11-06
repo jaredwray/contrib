@@ -15,7 +15,7 @@ export async function getServerSideProps(context) {
     }
 }
 
-export default (props) => {
+const Login = () => {
     return (
         <Container fluid className="px-3">
             <Row className="min-vh-100">
@@ -79,11 +79,11 @@ export default (props) => {
                         <p className="text-center">
                             <small className="text-muted text-center">
                                 Don't have an account yet?&nbsp;
-                                    <Link href="/signup">
+                                <Link href="/signup">
                                     <a>Sign up</a>
                                 </Link>
                             </small>
-                        </p>
+                        </p>                        
                         <Link href="/">
                             <a className="close-absolute mr-md-5 mr-xl-6 pt-5">
                                 <svg className="svg-icon w-3rem h-3rem">
@@ -102,4 +102,6 @@ export default (props) => {
             </Row>
         </Container >
     )
-}
+};
+
+export default Login;

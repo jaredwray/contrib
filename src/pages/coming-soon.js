@@ -14,7 +14,7 @@ export async function getStaticProps() {
     }
   }
 
-export default () => {
+const ComingSoon = () => {
     const social = [
         {
             "icon": "twitter",
@@ -66,4 +66,6 @@ export default () => {
         </div>
            
     )
-}
+};
+
+export default ComingSoon;

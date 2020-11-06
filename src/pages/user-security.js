@@ -19,7 +19,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const UserSecurity = () => {
 
     const [loginCollapse, setLoginCollapse] = React.useState(false)
 
@@ -165,4 +165,6 @@ export default () => {
             </Container>
         </section >
     )
-}
+};
+
+export default UserSecurity;

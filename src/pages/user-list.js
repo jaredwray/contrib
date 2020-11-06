@@ -23,7 +23,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const UserList = () => {
     return (
         <section className="py-5">
             <Container>
@@ -73,8 +73,8 @@ export default () => {
                     </div>
                 </div>
                 <ListGroup className="shadow mb-5">
-                    {data.bookings.map(booking =>
-                        <Link href={booking.link} passHref>
+                    {data.bookings.map((booking, index) =>
+                        <Link href={booking.link} passHref key={index}>
                             <ListGroupItem action className="p4" tag="a">
                                 <Row>
                                     <Col lg="4" className="align-self-center mb-4 mb-lg-0">
@@ -161,4 +161,6 @@ export default () => {
             </Container>
         </section>
     )
-}
+};
+
+export default UserList;

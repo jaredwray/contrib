@@ -33,7 +33,7 @@ export async function getStaticProps() {
     }
 }
 
-export default () => {
+const Index2 = () => {
 
 
     return (
@@ -196,4 +196,6 @@ export default () => {
             <Instagram />
         </React.Fragment>
     )
-}
+};
+
+export default Index2;

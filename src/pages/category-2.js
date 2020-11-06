@@ -39,7 +39,8 @@ export async function getStaticProps() {
 }
 
 let Map
-export default () => {
+
+const Category2 = () => {
     const [mapLoaded, setMapLoaded] = React.useState(false)
     const [dragging, setDragging] = React.useState(false)
     const [tap, setTap] = React.useState(false)
@@ -117,7 +118,7 @@ export default () => {
 
                                     <Select
                                         name="neighbourhood"
-                                        id="form_neighbourhood"
+                                        inputId="form_neighbourhood"
                                         options={data.neighbourhood}
                                         isMulti
                                         isSearchable
@@ -134,7 +135,7 @@ export default () => {
 
                                     <Select
                                         name="category"
-                                        id="form_category"
+                                        inputId="form_category"
                                         options={data.categories}
                                         className="form-control dropdown bootstrap-select"
                                         classNamePrefix="selectpicker"
@@ -294,4 +295,6 @@ export default () => {
             </Container>
         </React.Fragment>
     )
-}
+};
+
+export default Category2;
