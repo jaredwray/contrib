@@ -19,22 +19,22 @@
         "lg": "4"
     },
     {
-        "title": "Auctions",
+        "title": "Join us",
         "links": [
             {
-                "title": "Soccer",
+                "title": "Fans",
                 "link": "/"
             },
             {
-                "title": "Baseball",
+                "title": "Athletes",
                 "link": "/"
             },
             {
-                "title": "Basketball",
+                "title": "Charities",
                 "link": "/"
             },
             {
-                "title": "Football",
+                "title": "Staff",
                 "link": "/"
             }
         ],
@@ -51,14 +51,6 @@
             },
             {
                 "title": "Contact",
-                "link": "/contact"
-            },
-            {
-                "title": "Charity?",
-                "link": "/contact"
-            },
-            {
-                "title": "Athelete?",
                 "link": "/contact"
             },
             {
