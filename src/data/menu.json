@@ -5,32 +5,6 @@
       "megamenu": [
          [
             {
-               "title": "Homepage",
-               "links": [
-                  {
-                     "title": "Rooms",
-                     "link": "/",
-                     "parent": "Home"
-                  },
-                  {
-                     "title": "Restaurants",
-                     "link": "/index-2",
-                     "parent": "Home"
-                  },
-                  {
-                     "title": "Travel",
-                     "link": "/index-3",
-                     "parent": "Home"
-                  },
-                  {
-                     "title": "Real estate",
-                     "link": "/index-4",
-                     "parent": "Home",
-                     "new": true
-                  }
-               ]
-            },
-            {
                "title": "Restaurants",
                "links": [
                   {
