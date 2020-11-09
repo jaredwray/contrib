@@ -17,7 +17,6 @@ import SearchBar from '../components/SearchBar'
 
 import LastMinute from '../components/LastMinute'
 import Guides from '../components/Guides'
-import Instagram from '../components/Instagram'
 
 import data from '../data/index3.json'
 
@@ -155,7 +154,6 @@ const Index3 = () => {
                 </section>
             }
             <LastMinute />
-            <Instagram />
         </React.Fragment>
 
     )

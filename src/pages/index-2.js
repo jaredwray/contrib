@@ -14,7 +14,6 @@ import Swiper from '../components/Swiper'
 import SearchBar from '../components/SearchBar'
 import PopularCities from '../components/PopularCities'
 import Discover from '../components/Discover'
-import Instagram from '../components/Instagram'
 import Brands from '../components/Brands'
 
 import data from '../data/index2.json'
@@ -193,7 +192,6 @@ const Index2 = () => {
                 </section>
             }
 
-            <Instagram />
         </React.Fragment>
     )
 };

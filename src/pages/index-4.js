@@ -27,7 +27,6 @@ import Swiper from '../components/Swiper'
 import PopularCities from '../components/PopularCities'
 import Discover from '../components/Discover'
 import Brands from '../components/Brands'
-import Instagram from '../components/Instagram'
 
 import data from '../data/index4.json'
 
@@ -308,7 +307,6 @@ const Index4 = () => {
                     greyBackground
                 />
             }
-            <Instagram />
         </React.Fragment>
 
     )
