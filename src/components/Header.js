@@ -24,14 +24,16 @@ import {
 
 import UseWindowSize from '../hooks/UseWindowSize'
 
-import ActiveLink from './ActiveLink'
 import Logo from '../../public/content/svg/logo.svg'
 
 import menu from '../data/menu.json'
 
 import userMenu from '../data/user-menu.json'
 
+import { useSession } from 'next-auth/client'
+
 const Header = props => {
+    const [session] = useSession()
 
     const [collapsed, setCollapsed] = React.useState(false)
     const [dropdownOpen, setDropdownOpen] = React.useState({})
@@ -165,25 +167,25 @@ const Header = props => {
                                                                     {dropdownItem.title}
                                                                 </h6>
                                                                 {dropdownItem.links.map(link =>
-                                                                    <ActiveLink key={link.title} activeClassName="active" href={link.link} passHref>
+                                                                    <Link key={link.title} activeClassName="active" href={link.link} passHref>
                                                                         <DropdownItem onClick={() => onLinkClick(item.title)}>
                                                                             {link.title}
                                                                             {link.new &&
                                                                                 <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
                                                                             }
                                                                         </DropdownItem>
-                                                                    </ActiveLink>
+                                                                    </Link>
                                                                 )}
                                                             </React.Fragment>
                                                             :
-                                                            <ActiveLink key={dropdownItem.title} activeClassName="active" href={dropdownItem.link} passHref>
+                                                            <Link key={dropdownItem.title} activeClassName="active" href={dropdownItem.link} passHref>
                                                                 <DropdownItem onClick={() => onLinkClick(item.title)}>
                                                                     {dropdownItem.title}
                                                                     {dropdownItem.new &&
                                                                         <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
                                                                     }
                                                                 </DropdownItem>
-                                                            </ActiveLink>
+                                                            </Link>
                                                     )
                                                 }
                                                 {item.megamenu &&
@@ -200,14 +202,14 @@ const Header = props => {
                                                                                         <li
                                                                                             key={link.title}
                                                                                             className="megamenu-list-item">
-                                                                                            <ActiveLink activeClassName="active" href={link.link} as={link.as} passHref>
+                                                                                            <Link activeClassName="active" href={link.link} as={link.as} passHref>
                                                                                                 <DropdownItem className="megamenu-list-link" onClick={() => link.parent ? onLinkClick(link.parent) : onLinkClick(item.title)}>
                                                                                                     {link.title}
                                                                                                     {link.new &&
                                                                                                         <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
                                                                                                     }
                                                                                                 </DropdownItem>
-                                                                                            </ActiveLink>
+                                                                                            </Link>
                                                                                         </li>
                                                                                     )}
                                                                                 </ul>
@@ -229,9 +231,9 @@ const Header = props => {
                                             key={item.title}
                                             className={item.button ? 'mt-3 mt-lg-0 ml-lg-3 d-lg-none d-xl-inline-block' : ''}>
                                             {item.button ?
-                                                item.showToLoggedUser !== false && <ActiveLink activeClassName="active" href={item.link}><a className='btn btn-primary' onClick={() => onLinkClick(item.title)}>{item.title}</a></ActiveLink>
+                                                item.showToLoggedUser !== false && <Link activeClassName="active" href={item.link}><a className='btn btn-primary' onClick={() => onLinkClick(item.title)}>{item.title}</a></Link>
                                                 :
-                                                <ActiveLink activeClassName="active" href={item.link} passHref><NavLink onClick={() => onLinkClick(item.title)}>{item.title}</NavLink></ActiveLink>
+                                                <Link activeClassName="active" href={item.link} passHref><NavLink onClick={() => onLinkClick(item.title)}>{item.title}</NavLink></Link>
                                             }
                                         </NavItem>
                                         :
@@ -260,12 +262,12 @@ const Header = props => {
                                     <DropdownMenu className={dropdownAnimate[item.title] === false ? 'hide' : ''} right>
                                         {item.dropdown &&
                                             item.dropdown.map(dropdownItem =>
-                                                <ActiveLink key={dropdownItem.title} activeClassName="active" href={dropdownItem.link} passHref>
+                                                <Link key={dropdownItem.title} activeClassName="active" href={dropdownItem.link} passHref>
                                                     <DropdownItem onClick={() => onLinkClick(item.title)}>
                                                         {dropdownItem.title}
                                                     </DropdownItem>
 
-                                                </ActiveLink>
+                                                </Link>
                                             )}
                                     </DropdownMenu>
                                 </Dropdown>
