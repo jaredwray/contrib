@@ -1,25 +1,19 @@
 import React from 'react'
 
-import Link from 'next/link'
-
 import {
   Container,
   Row,
   Col,
-  Button
 } from 'reactstrap'
 
 import Swiper from '../components/Swiper'
 import SearchBar from '../components/SearchBar'
 import LastMinute from '../components/LastMinute'
-import Guides from '../components/Guides'
 import Instagram from '../components/Instagram'
-import CardPost from '../components/CardPost'
 
 import SwiperTestimonial from '../components/SwiperTestimonial'
 
 import data from '../data/index.json'
-import blog from '../data/blog.json'
 
 export async function getStaticProps() {
   return {
@@ -102,26 +96,7 @@ const Index = () => {
           </Container>
         </section>
       }
-      <Guides />
       <LastMinute greyBackground />
-      {data.jumbotron &&
-        <section className="py-7 position-relative dark-overlay">
-          <img src={`/content/${data.jumbotron.img}`} alt="" className="bg-image" />
-          <Container>
-            <div className="overlay-content text-white py-lg-5">
-              <h3 className="display-3 font-weight-bold text-serif text-shadow mb-5">
-                {data.jumbotron.title}
-              </h3>
-              <Link href={data.jumbotron.link}>
-                <Button color="light">
-                  Get started
-                </Button>
-              </Link>
-
-            </div>
-          </Container>
-        </section>
-      }
       {data.testimonials &&
         <section className="py-7">
           <Container>
@@ -137,54 +112,6 @@ const Index = () => {
           </Container>
         </section>
       }
-      {blog.posts &&
-        <section className="py-6 bg-gray-100">
-          <Container>
-            <Row className="mb-5">
-              <Col md="8">
-                <p className="subtitle text-secondary">
-                  {data.blogPosts.subTitle}
-                </p>
-                <h2>
-                  {data.blogPosts.title}
-                </h2>
-              </Col>
-              <Col
-                md="4"
-                className="d-md-flex align-items-center justify-content-end"
-              >
-                <Link href={data.blogPosts.buttonLink}>
-                  <a
-
-                    className="text-muted text-sm"
-                  >
-                    {data.blogPosts.button}
-                    <i className="fas fa-angle-double-right ml-2" />
-                  </a>
-                </Link>
-              </Col>
-            </Row>
-            <Row>
-              {blog.posts.map((post, index) => {
-                if (index <= 2)
-                  return <Col
-                    key={post.title}
-                    lg="4"
-                    sm="6"
-                    className="mb-4 hover-animate"
-                  >
-                    <CardPost data={post} />
-                  </Col>
-
-              }
-              )}
-
-            </Row>
-          </Container>
-        </section>
-      }
-
-      <Instagram />
     </React.Fragment>
   )
 };

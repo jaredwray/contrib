@@ -5,7 +5,6 @@ import {
 } from 'reactstrap'
 
 import ReactIdSwiper from 'react-id-swiper'
-import Link from 'next/link'
 
 import data from '../data/instagram.json'
 

@@ -5,7 +5,6 @@ import {
     Col,
     Form,
     Input,
-    Label,
     Button,
 
 } from 'reactstrap'
@@ -36,7 +35,7 @@ const SearchBar = props => {
             <Form>
                 <Row>
                     <Col
-                        lg="4"
+                        lg="5"
                         className="d-flex align-items-center form-group"
                     >
                         <Input
@@ -47,28 +46,7 @@ const SearchBar = props => {
                         />
                     </Col>
                     <Col
-                        lg="3"
-                        md={props.halfInputs ? "6" : "12"}
-                        className="d-flex align-items-center form-group"
-                    >
-                        <div className="input-label-absolute input-label-absolute-right w-100">
-                            <Label
-                                for="location"
-                                className="label-absolute">
-                                <i className="fa fa-crosshairs" />
-                                <span className="sr-only">City</span>
-                            </Label>
-                            <Input
-                                type="text"
-                                name="location"
-                                placeholder="Location"
-                                id="location"
-                                className="border-0 shadow-0"
-                            />
-                        </div>
-                    </Col>
-                    <Col
-                        lg="3"
+                        lg="4"
                         md={props.halfInputs ? "6" : "12"}
                         className="d-flex align-items-center form-group no-divider"
                     >
@@ -82,7 +60,7 @@ const SearchBar = props => {
                         />
                     </Col>
                     <Col
-                        lg="2"
+                        lg="3"
                         className={props.btnMb ? `mb-${props.btnMb}` : ``}
                     >
                         <Button
