@@ -1,7 +1,6 @@
 import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
 
-import geoJSON from '../../data/rooms-geojson.json'
 import CardRoom from '../../components/CardRoom'
 import { connectToDatabase } from '../../../utils/mongodb'
 import Error404 from '../404'
@@ -9,7 +8,7 @@ import Error404 from '../404'
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
-    const athlete = await docs.athletes().findOne({ _id: id })
+    const athlete = await docs.athletes().findOne({ "_id": id })
 
     return {
         props: {            
@@ -20,7 +19,7 @@ export async function getServerSideProps(context) {
             },
             loggedUser: true,
             title: athlete ? athlete.name : "Not Found",
-            athlete: athlete
+            athlete: athlete,
         },
     }
 }
@@ -55,15 +54,19 @@ const UserProfile = (props) => {
                                         <p className="mb-0">{athlete.verified ? "Verified" : "Unverified"} Athlete</p>
                                     </Media>
                                 </Media>
-                                <hr />
-                                <h6>
-                                    {athlete.firstName}'s social
-                                </h6>
-                                <CardText tag="ul">
-                                    {Object.entries(athlete.social).map(kv =>
-                                        <li key={kv[0]}>{kv[1]}</li>
-                                    )}
-                                </CardText>
+                                {athlete.social &&
+                                    <React.Fragment>
+                                    <hr />
+                                    <h6>
+                                        Follow {athlete.firstName} on
+                                    </h6>
+                                    <CardText tag="ul" className="list-unstyled">
+                                        {athlete.social.twitter && <li className="text-primary"><i className="fab fa-twitter"/> <a href={`https://twitter.com/${athlete.social.twitter}`}>Twitter</a></li>}
+                                        {athlete.social.facebook && <li className="text-primary"><i className="fab fa-facebook"/> <a href={`https://facebook.com/${athlete.social.facebook}`}>FaceBook</a></li>}
+                                        {athlete.social.instagram && <li className="text-primary"><i className="fab fa-instagram"/> <a href={`https://instagram.com/${athlete.social.instagram}`} name="ABC">{athlete.social.instagram}</a></li>}
+                                    </CardText>
+                                    </React.Fragment>
+                                }
                             </CardBody>
                         </Card>
                     </Col>
@@ -77,19 +80,28 @@ const UserProfile = (props) => {
                             </p>
                             <div dangerouslySetInnerHTML={{ __html: athlete.description }} />
                         </div>
-                        <div className="text-block">
-                            <h4 className="mb-5">
-                                {athlete.firstName}'s Listings
-                            </h4>
-                            <Row>
-                                {geoJSON.features.map(listing =>
-                                    <Col sm="6" lg="4" className="mb-30px hover-animate" key={listing.properties.name}>
-                                        <CardRoom data={listing.properties} />
-                                    </Col>
-                                )}
+                        { props.auctions ?
+                            <div className="text-block">
+                                <h4 className="mb-5">
+                                    {athlete.firstName}'s listings
+                                </h4>
+                                <Row>
+                                    {props.auctions.map(auction =>
+                                        <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
+                                            <CardRoom data={auction.properties} />
+                                        </Col>
+                                    )}
 
-                            </Row>
-                        </div>
+                                </Row>
+                            </div>                        
+                        :
+                            <div className="text-block">
+                                <h4 className="mb-3">
+                                    {athlete.firstName}'s has no listings right now
+                                </h4>
+                                <p>Check back again soon!</p>
+                            </div>
+                        }
                     </Col>
                 </Row>
             </Container>
