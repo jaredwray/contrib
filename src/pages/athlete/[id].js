@@ -4,11 +4,13 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge
 import geoJSON from '../../data/rooms-geojson.json'
 import CardRoom from '../../components/CardRoom'
 import { connectToDatabase } from '../../../utils/mongodb'
+import Error404 from '../404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
     const athlete = await docs.athletes().findOne({ _id: id })
+
     return {
         props: {            
             nav: {
@@ -17,7 +19,7 @@ export async function getServerSideProps(context) {
                 color: "white",
             },
             loggedUser: true,
-            title: athlete.name,
+            title: athlete ? athlete.name : "Not Found",
             athlete: athlete
         },
     }
@@ -25,6 +27,8 @@ export async function getServerSideProps(context) {
 
 const UserProfile = (props) => {
     const athlete = props.athlete
+    if (athlete == null) return <Error404 />
+
     return (
         <section className="py-5">
             <Container>
