@@ -31,14 +31,6 @@
                "title": "Rooms",
                "links": [
                   {
-                     "title": "Category - Map on the top",
-                     "link": "/category-rooms"
-                  },
-                  {
-                     "title": "Category - Map on the right",
-                     "link": "/category-2-rooms"
-                  },
-                  {
                      "title": "Category - no map",
                      "link": "/category-3-rooms"
                   },
@@ -75,10 +67,6 @@
                   {
                      "title": "Contact",
                      "link": "/contact"
-                  },
-                  {
-                     "title": "Text page",
-                     "link": "/text"
                   },
                   {
                      "title": "F.A.Q.s",
