@@ -7,10 +7,15 @@ import { SocialMedia } from './socialMedia'
 export type Athlete = {
     _id: ObjectID,
     name: string,
+    firstName: string,
+    lastName: string,
     description: string,
     charities: CharitySupport[],
     avatar: AthleteAvatar,    
     social: SocialMedia,
+    location: Location,
+    joined: Date,
+    verified: true
 }
 
 export type AthleteAvatar = {

@@ -27,7 +27,7 @@ const Layout = pageProps => {
         <link rel="icon" href="/favicon.png" />
         <link href='https://use.fontawesome.com/releases/v5.8.1/css/all.css' rel="stylesheet" />
         <link href='https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.3.8/css/swiper.min.css' rel="stylesheet" />
-        <title>{pageProps.title} - Directory React Theme</title>
+        <title>{pageProps.title} - Contrib</title>
       </Head>
       <NextNProgress color="#4E66F8" options={{ showSpinner: false }} />
       {!pageProps.hideHeader &&

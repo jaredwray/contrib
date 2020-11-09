@@ -10,7 +10,7 @@ export class ContribDocuments {
     this._db = db
   }
 
-  atheletes(): Collection<Athlete> {
+  athletes(): Collection<Athlete> {
     return this._db.collection('athletes') as Collection<Athlete>
   }
 
