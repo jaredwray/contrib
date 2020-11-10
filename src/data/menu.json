@@ -14,10 +14,6 @@
                   {
                      "title": "Category - Map on the right",
                      "link": "/category-2"
-                  },
-                  {
-                     "title": "Category - no map",
-                     "link": "/category-3"
                   }
                ]
             }
@@ -128,10 +124,6 @@
                   {
                      "title": "Bookings - grid view",
                      "link": "/user-grid"
-                  },
-                  {
-                     "title": "Booking detail",
-                     "link": "/user-booking-detail"
                   }
                ]
             }
