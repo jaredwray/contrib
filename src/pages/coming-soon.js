@@ -1,7 +1,5 @@
 import React from 'react'
 import { Container } from 'reactstrap'
-import Head from 'next/head'
-
 
 export async function getStaticProps() {
     return {

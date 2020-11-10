@@ -10,7 +10,6 @@ import {
     CardBody,
     CardTitle,
     CardSubtitle,
-    CardText,
     Badge
 } from 'reactstrap'
 
