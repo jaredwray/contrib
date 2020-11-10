@@ -30,11 +30,7 @@ import menu from '../data/menu.json'
 
 import userMenu from '../data/user-menu.json'
 
-import { useSession } from 'next-auth/client'
-
 const Header = props => {
-    const [session] = useSession()
-
     const [collapsed, setCollapsed] = React.useState(false)
     const [dropdownOpen, setDropdownOpen] = React.useState({})
     const [searchFocus, setSearchFocus] = React.useState(false)
@@ -190,7 +186,7 @@ const Header = props => {
                                                 }
                                                 {item.megamenu &&
                                                     <Row>
-                                                        <Col lg="9">
+                                                        <Col lg="12">
                                                             <Row className="p-3 pr-lg-0 pl-lg-5 pt-lg-5">
                                                                 {item.megamenu.map((megamenuItem, index) =>
                                                                     <Col key={index} lg="3">

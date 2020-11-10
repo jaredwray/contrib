@@ -316,28 +316,28 @@
     },
     "sortby": [
         {
+            "value": "match",
+            "label":  "Best match"
+            
+        },
+        {
             "value": "popular",
             "label":  "Most popular"
             
         },
         {
-            "value": "recommended",
-            "label":  "Recommended"
+            "value": "price",
+            "label":  "Lowest price"
             
         },
         {
             "value": "newest",
-            "label":  "Newest"
+            "label":  "Newly listed"
             
         },
         {
-            "value": "oldest",
-            "label":  "Oldest"
-            
-        },
-        {
-            "value": "closest",
-            "label":  "Closest"
+            "value": "soonest",
+            "label":  "Ending soonest"
             
         }
     ]

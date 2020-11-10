@@ -27,7 +27,7 @@ import Pagination from '../components/Pagination'
 import ResultsTopBar from '../components/ResultsTopBar'
 import CardRoom from '../components/CardRoom'
 
-import data from '../data/category-3-rooms.json'
+import data from '../data/auctions.json'
 import geoJSON from '../data/rooms-geojson.json'
 
 export async function getStaticProps() {

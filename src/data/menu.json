@@ -5,44 +5,28 @@
       "megamenu": [
          [
             {
-               "title": "Restaurants",
+               "title": "Auction",
                "links": [
                   {
-                     "title": "Category - Map on the top",
-                     "link": "/category"
+                     "title": "Filter list/search",
+                     "link": "/auctions"
                   },
                   {
-                     "title": "Category - Map on the right",
-                     "link": "/category-2"
-                  }
-               ]
-            }
-         ],
-         [
-            {
-               "title": "Rooms",
-               "links": [
-                  {
-                     "title": "Category - no map",
-                     "link": "/category-3-rooms"
-                  },
-                  {
-                     "title": "Room detail",
+                     "title": "Item detail",
                      "link": "/detail-rooms"
                   }
                ]
             },
             {
-               "title": "Blog",
+               "title": "System",
                "links": [
                   {
-                     "title": "Blog",
-                     "link": "/blog"
+                     "title": "404 page",
+                     "link": "/404"
                   },
                   {
-                     "title": "Post",
-                     "link": "/blog/[slug]",
-                     "as": "/blog/autumn-fashion-tips-and-tricks"
+                     "title": "Coming soon",
+                     "link": "/coming-soon"
                   }
                ]
             }
@@ -61,25 +45,72 @@
                      "link": "/contact"
                   },
                   {
-                     "title": "F.A.Q.s",
+                     "title": "Help (FAQ)",
                      "link": "/faq"
+                  }
+               ]
+            },            
+            {
+               "title": "Blog",
+               "links": [
+                  {
+                     "title": "Blog",
+                     "link": "/blog"
                   },
                   {
-                     "title": "404 page",
-                     "link": "/404",
-                     "new": true
+                     "title": "Post",
+                     "link": "/blog/[slug]",
+                     "as": "/blog/autumn-fashion-tips-and-tricks"
+                  }
+               ]
+            }
+         ],
+         [
+            {
+               "title": "Join us",
+               "links": [
+                  {
+                     "title": "Fans",
+                     "link": "#"
+                  },
+                  {
+                     "title": "Athletes",
+                     "link": "#"
+                  },
+                  {
+                     "title": "Charities",
+                     "link": "#"
+                  },
+                  {
+                     "title": "Staff",
+                     "link": "#"
+                  }
+               ]
+            }
+         ],
+         [
+            {
+               "title": "Athletes & Charities",
+               "links": [
+                  {
+                     "title": "Auction a new item - 6 pages",
+                     "link": "/user-add-0"
+                  },
+                  {
+                     "title": "Active auctions",
+                     "link": "/user-list"
                   }
                ]
             },
             {
-               "title": "Host",
+               "title": "Fans",
                "links": [
                   {
-                     "title": "Add new listing - 6 pages",
-                     "link": "/user-add-0"
+                     "title": "Place a bid?",
+                     "link": "/user-booking-1"
                   },
                   {
-                     "title": "Bookings - list view",
+                     "title": "Active auctions",
                      "link": "/user-list"
                   }
                ]
@@ -91,39 +122,27 @@
                "links": [
                   {
                      "title": "Profile",
-                     "link": "/user-profile",
-                     "new": true
+                     "link": "/user-profile"
                   },
                   {
                      "title": "Account",
-                     "link": "/user-account",
-                     "new": true
+                     "link": "/user-account"
                   },
                   {
                      "title": "Personal info - forms",
-                     "link": "/user-personal",
-                     "new": true
+                     "link": "/user-personal"
                   },
                   {
                      "title": "Password & security - forms",
-                     "link": "/user-security",
-                     "new": true
+                     "link": "/user-security"
                   },
                   {
-                     "title": "Sign in",
+                     "title": "Login",
                      "link": "/login"
                   },
                   {
                      "title": "Sign up",
                      "link": "/signup"
-                  },
-                  {
-                     "title": "Booking process - 4 pages",
-                     "link": "/user-booking-1"
-                  },
-                  {
-                     "title": "Bookings - grid view",
-                     "link": "/user-grid"
                   }
                ]
             }
