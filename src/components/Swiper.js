@@ -3,7 +3,6 @@ import React from 'react'
 
 import CardRestaurant from './CardRestaurant'
 import CardRoom from './CardRoom'
-import CardPoster from './CardPoster'
 import CardProperty from './CardProperty'
 
 import ReactIdSwiper from 'react-id-swiper'
@@ -87,9 +86,6 @@ const Swiper = (props) => {
                                 <CardProperty data={slide} />
                             </div>
 
-                        }
-                        {props.imgCards &&
-                            <CardPoster data={slide} />
                         }
                         {props.restaurantCards &&
                             <div className="w-100 h-100 hover-animate">
