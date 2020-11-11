@@ -172,7 +172,7 @@ const UserPersonal = () => {
                                             <Label for="zip" className="form-label">
                                                 Zip
                                             </Label>
-                                            <Input type="text" name="zip" id="zip" defaultValue="902 10" />
+                                            <Input type="text" name="zip" id="zip" defaultValue="90210" />
                                         </Col>
                                     </Row>
                                     <Button
@@ -201,8 +201,7 @@ const UserPersonal = () => {
                                 </Media>
                             </CardHeader>
                             <CardBody className="p-4">
-                                <p className="text-muted text-sm card-text">Directory only releases contact information for hosts and guests <strong>after a reservation is confirmed</strong>.</p>
-                                <p className="text-muted text-sm card-text">Amet nisi eiusmod minim commodo sit voluptate aute ut quis ea veniam sunt proident ex. <strong>Exercitation culpa laboris</strong> consequat fugiat non ipsum veniam Lorem aliqua deserunt tempor elit veniam.</p>
+                                <p className="text-muted text-sm card-text">Contrib only releases information necessary for shipping between buyers and sellers <strong>after an auction is won</strong>.</p>
                             </CardBody>
                         </Card>
                     </Col>

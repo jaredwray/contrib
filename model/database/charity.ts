@@ -1,10 +1,9 @@
-import { ObjectID } from 'mongodb'
 import { Photo } from './photo'
 import { Video } from './video'
 
 // A Charity is an organization that will receive proceeds from one or more Auctions.
 export type Charity = {
-    _id: ObjectID,
+    _id: string, // Short name for key & slug
     name: string,
     ein: string,            // Tax ID
     description: string,

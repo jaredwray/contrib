@@ -23,7 +23,7 @@ export type Auction = {
 }
 
 export type AuctionSellerRef = {
-    id: ObjectID,
+    id: string,
     name: string,
     type: 'athelete'
 }

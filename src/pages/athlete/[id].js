@@ -1,14 +1,14 @@
 import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
-
-import CardRoom from '../../components/CardRoom'
+import CardAuction from '../../components/CardAuction'
 import { connectToDatabase } from '../../../utils/mongodb'
 import Error404 from '../404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
-    const athlete = await docs.athletes().findOne({ "_id": id })
+    const athlete = await docs.athletes().findOne({ _id: id })
+    const auctions = await docs.auctions().find({ "seller.id": id }).toArray()
 
     return {
         props: {            
@@ -18,8 +18,9 @@ export async function getServerSideProps(context) {
                 color: "white",
             },
             loggedUser: true,
-            title: athlete ? athlete.name : "Not Found",
+            title: athlete ? athlete.name : "404 Not Found",
             athlete: athlete,
+            auctions: JSON.parse(JSON.stringify(auctions))
         },
     }
 }
@@ -36,7 +37,7 @@ const UserProfile = (props) => {
                         <Card className="border-0 shadow mb-6 mb-lg-0">
                             <CardHeader className="bg-gray-100 py-4 border-0 text-center">
                                 <a href="#" className="d-inline-block">
-                                    <img src={`${athlete.avatar.small}`} alt="" className="d-block avatar avatar-xxl p-2 mb-2" />
+                                    <img src={`${athlete.avatar.medium}`} alt="" className="d-block avatar avatar-xxl p-2 mb-2" />
                                 </a>
                                 <h5>{athlete.name}</h5>
                                 <p className="text-muted text-sm mb-0">
@@ -61,9 +62,9 @@ const UserProfile = (props) => {
                                         Follow {athlete.firstName} on
                                     </h6>
                                     <CardText tag="ul" className="list-unstyled">
-                                        {athlete.social.twitter && <li className="text-primary"><i className="fab fa-twitter"/> <a href={`https://twitter.com/${athlete.social.twitter}`}>Twitter</a></li>}
-                                        {athlete.social.facebook && <li className="text-primary"><i className="fab fa-facebook"/> <a href={`https://facebook.com/${athlete.social.facebook}`}>FaceBook</a></li>}
-                                        {athlete.social.instagram && <li className="text-primary"><i className="fab fa-instagram"/> <a href={`https://instagram.com/${athlete.social.instagram}`} name="ABC">{athlete.social.instagram}</a></li>}
+                                        {athlete.social.twitter && <li className="text-primary"><i className="fab fa-twitter"/> <a href={`https://twitter.com/${athlete.social.twitter}`}>{athlete.social.twitter}</a></li>}
+                                        {athlete.social.facebook && <li className="text-primary"><i className="fab fa-facebook"/> <a href={`https://facebook.com/${athlete.social.facebook}`}>{athlete.social.facebook}</a></li>}
+                                        {athlete.social.instagram && <li className="text-primary"><i className="fab fa-instagram"/> <a href={`https://instagram.com/${athlete.social.instagram}`}>{athlete.social.instagram}</a></li>}
                                     </CardText>
                                     </React.Fragment>
                                 }
@@ -83,21 +84,20 @@ const UserProfile = (props) => {
                         { props.auctions ?
                             <div className="text-block">
                                 <h4 className="mb-5">
-                                    {athlete.firstName}'s listings
+                                    {athlete.firstName}'s items
                                 </h4>
                                 <Row>
                                     {props.auctions.map(auction =>
                                         <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
-                                            <CardRoom data={auction.properties} />
+                                            <CardAuction data={auction} />
                                         </Col>
                                     )}
-
                                 </Row>
                             </div>                        
                         :
                             <div className="text-block">
                                 <h4 className="mb-3">
-                                    {athlete.firstName}'s has no listings right now
+                                    {athlete.firstName} has no items up for auction right now
                                 </h4>
                                 <p>Check back again soon!</p>
                             </div>
