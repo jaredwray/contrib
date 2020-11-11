@@ -185,36 +185,32 @@ const Header = props => {
                                                     )
                                                 }
                                                 {item.megamenu &&
-                                                    <Row>
-                                                        <Col lg="12">
-                                                            <Row className="p-3 pr-lg-0 pl-lg-5 pt-lg-5">
-                                                                {item.megamenu.map((megamenuItem, index) =>
-                                                                    <Col key={index} lg="3">
-                                                                        {megamenuItem.map((block, index) =>
-                                                                            <React.Fragment key={index}>
-                                                                                <h6 className="text-uppercase">{block.title}</h6>
-                                                                                <ul className="megamenu-list list-unstyled">
-                                                                                    {block.links.map(link =>
-                                                                                        <li
-                                                                                            key={link.title}
-                                                                                            className="megamenu-list-item">
-                                                                                            <Link activeClassName="active" href={link.link} as={link.as} passHref>
-                                                                                                <DropdownItem className="megamenu-list-link" onClick={() => link.parent ? onLinkClick(link.parent) : onLinkClick(item.title)}>
-                                                                                                    {link.title}
-                                                                                                    {link.new &&
-                                                                                                        <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
-                                                                                                    }
-                                                                                                </DropdownItem>
-                                                                                            </Link>
-                                                                                        </li>
-                                                                                    )}
-                                                                                </ul>
-                                                                            </React.Fragment>
-                                                                        )}
-                                                                    </Col>
+                                                    <Row className="p-3 pr-lg-0 pl-lg-5 pt-lg-5">
+                                                        {item.megamenu.map((megamenuItem, index) =>
+                                                            <Col key={index} lg="2">
+                                                                {megamenuItem.map((block, index) =>
+                                                                    <React.Fragment key={index}>
+                                                                        <h6 className="text-uppercase">{block.title}</h6>
+                                                                        <ul className="megamenu-list list-unstyled">
+                                                                            {block.links.map(link =>
+                                                                                <li
+                                                                                    key={link.title}
+                                                                                    className="megamenu-list-item">
+                                                                                    <Link activeClassName="active" href={link.link} as={link.as} passHref>
+                                                                                        <DropdownItem className="megamenu-list-link" onClick={() => link.parent ? onLinkClick(link.parent) : onLinkClick(item.title)}>
+                                                                                            {link.title}
+                                                                                            {link.new &&
+                                                                                                <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
+                                                                                            }
+                                                                                        </DropdownItem>
+                                                                                    </Link>
+                                                                                </li>
+                                                                            )}
+                                                                        </ul>
+                                                                    </React.Fragment>
                                                                 )}
-                                                            </Row>
-                                                        </Col>
+                                                            </Col>
+                                                        )}
                                                     </Row>
                                                 }
                                             </DropdownMenu>
