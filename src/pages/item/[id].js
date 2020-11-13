@@ -1,8 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-
 import 'react-dates/initialize'
-
 import {
     Container,
     Row,
@@ -14,12 +12,8 @@ import {
     FormGroup,
     Media,
 } from 'reactstrap'
-import UseWindowSize from '../../hooks/UseWindowSize'
-import { DateRangePicker } from 'react-dates'
 import Swiper from '../../components/Swiper'
-
 import data from '../../data/detail-rooms.json'
-
 import GalleryAbsolute from '../../components/GalleryAbsolute'
 import { connectToDatabase } from '../../../utils/mongodb'
 import { ObjectID } from 'mongodb'
@@ -28,33 +22,27 @@ import Error404 from '../404'
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
-    const auction = await docs.auctions().findOne({_id: new ObjectID(id.toString())})
-    const athlete = await docs.athletes().findOne({_id: auction.seller.id })
-    console.log(auction.seller.id)
+    const auction = await docs.auctions().findOne({ _id: new ObjectID(id.toString()) })
+    const athlete = await docs.athletes().findOne({ _id: auction.seller.id })
 
     return {
         props: {
             nav: {
                 light: true,
-                classes: "shadow",
-                color: "white",
+                classes: 'shadow',
+                color: 'white',
             },
             title: auction ? auction.title : '404 Not Found',
             auction: JSON.parse(JSON.stringify(auction)),
-            seller: athlete
+            seller: JSON.parse(JSON.stringify(athlete))
         },
     }
 }
-
 
 const ItemDetail = (props) => {
     const auction = props.auction
     const seller = props.seller
     if (auction == null) return <Error404 />
-
-    const [range, setRange] = React.useState([{ startDate: new Date() }, { endDate: '' }])
-    const [dateFocused, setDateFocused] = React.useState(range.startDate)
-    const size = UseWindowSize()
 
     return (
         <React.Fragment>
@@ -63,17 +51,15 @@ const ItemDetail = (props) => {
                     <Row>
                         <Col lg="8">
                             <div className="text-block">
-                                {data.title &&
-                                    <h1>
-                                        {auction.title}
-                                    </h1>
-                                }
+                                <h1>
+                                    {auction.title}
+                                </h1>
                                 {auction.category &&
                                     <div className="text-muted text-uppercase mb-4">
                                         {auction.category}
                                     </div>
                                 }
-                                <div className="text-muted font-weight-light" dangerouslySetInnerHTML={{__html:auction.description}} />
+                                <div className="text-muted font-weight-light" dangerouslySetInnerHTML={{ __html: auction.description }} />
                             </div>
                             {seller &&
                                 <div className="text-block">
@@ -99,7 +85,6 @@ const ItemDetail = (props) => {
                                     </Media>
                                 </div>
                             }
-
                             {auction.photos &&
                                 <div className="text-block">
                                     <h3 className="mb-4">Gallery</h3>
@@ -129,18 +114,12 @@ const ItemDetail = (props) => {
                                     className="form">
                                     <FormGroup>
                                         <Label className="form-label">Your bid</Label>
-                                        <br/>
+                                        <br />
                                         <Input type="text" name="bid" id="bid" />
                                         <p className="text-muted text-sm">Enter ${auction.startPrice / 100 + 1} or more</p>
                                     </FormGroup>
                                     <FormGroup>
-                                        <Button
-                                            type="submit"
-                                            color="primary"
-                                            block
-                                        >
-                                            Place your bid
-                                </Button>
+                                        <Button type="submit" color="primary" block>Place your bid</Button>
                                     </FormGroup>
                                 </Form>
                                 <p className="text-muted text-sm text-center">Bidding means you're committing to buy this item if you're the winning bidder.</p>
@@ -181,10 +160,8 @@ const ItemDetail = (props) => {
                     </Container>
                 </section>
             }
-
         </React.Fragment>
     )
-
 };
 
 export default ItemDetail;

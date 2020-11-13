@@ -4,6 +4,5 @@
 export type Location = {
     country: string,
     city: string,
-    zip: number,
-    // TODO: Geo-loc for maps?
+    zip: number
 }

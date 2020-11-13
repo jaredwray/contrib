@@ -3,5 +3,11 @@
 export type Photo = {
     url: string,
     format: string,
-    resolution: string
+    resolution: string,
+    tags: PhotoTag[]
+}
+
+enum PhotoTag {
+    AvatarMedium = 'avatar-med',
+    AvatarLarge = 'avatar-large'
 }

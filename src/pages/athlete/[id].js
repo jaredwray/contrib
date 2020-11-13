@@ -19,7 +19,7 @@ export async function getServerSideProps(context) {
             },
             loggedUser: true,
             title: athlete ? athlete.name : "404 Not Found",
-            athlete: athlete,
+            athlete: JSON.parse(JSON.stringify(athlete)),
             auctions: JSON.parse(JSON.stringify(auctions))
         },
     }

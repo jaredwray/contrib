@@ -1,29 +1,34 @@
-import { ObjectID } from 'mongodb'
-import { CharitySupport } from './charitySupport'
+import { ObjectId } from 'mongodb'
+import { AthleteRef } from './athlete'
+import { CharityRef } from './charity'
 import { Photo } from './photo'
 import { Video } from './video'
 
-// An Auction is a single item being sold by an Athlete to benefit one or
-// more Charities. It is valid for a specific duration between startAt and
-// endAt. It may contain a number of Videos or Photos to help show the item
-// as well as a detailed description.
+export type AuctionId = ObjectId
+export type Price = number
+
+// An Auction is a single item being sold by an Athlete to benefit a
+// Charity. It is valid for a specific duration between startAt and
+// endAt. It may contain a number of Videos or Photos to help show the
+// item \as well as a detailed description.
 export type Auction = {
-    _id: ObjectID,
+    _id: AuctionId,
     title: string,
     description: string,
     startAt: Date,
     endAt: Date,
-    startPrice: number,
-    seller: AuctionSellerRef,
+    startPrice: Price,
+    seller: SellerRef,      // Index on seller.id
     location: Location,
-    active: boolean,
+    active: boolean,        // Index
     videos: Video[],
     photos: Photo[],
-    charities: CharitySupport[]
+    charities: CharityRef[]
 }
 
-export type AuctionSellerRef = {
-    id: string,
-    name: string,
-    type: 'athelete'
+export type AuctionRef = {
+    id: AuctionId,
+    title: string
 }
+
+export type SellerRef = AthleteRef
