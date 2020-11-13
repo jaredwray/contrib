@@ -6,7 +6,7 @@ import { Container, Row, Col, Button, Form } from 'reactstrap'
 export async function getServerSideProps(context) {
     return {
         props: {
-            title: "Join",
+            title: 'Join',
             hideHeader: true,
             hideFooter: true,
             noPaddingTop: true,
@@ -16,6 +16,8 @@ export async function getServerSideProps(context) {
 }
 
 const Signup = (props) => {
+    const submitUrlBase = process.env.NEXTAUTH_URL + '/api/auth/signin'
+    const redirectToUrl = process.env.NEXTAUTH_URL
     return (
         <Container fluid className="px-3">
             <Row className="min-vh-100">
@@ -31,9 +33,9 @@ const Signup = (props) => {
                             <h2>Join</h2>
                             <p className="text-muted">You're just a few steps away from scoring gear and doing some good.</p>
                         </div>
-                        <Form action="http://localhost:3000/api/auth/signin/facebook" method="post">
+                        <Form action={`${submitUrlBase}/facebook`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
+                            <input name="callbackUrl" type="hidden" value={redirectToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
@@ -46,9 +48,9 @@ const Signup = (props) => {
                                 </span>
                             </Button>
                         </Form>
-                        <Form action="http://localhost:3000/api/auth/signin/facebook" method="post">
+                        <Form action={`${submitUrlBase}/twitter`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
+                            <input name="callbackUrl" type="hidden" value={redirectToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
@@ -61,9 +63,9 @@ const Signup = (props) => {
                                 </span>
                             </Button>
                         </Form>
-                        <Form action="http://localhost:3000/api/auth/signin/facebook" method="post">
+                        <Form action={`${submitUrlBase}/google`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
+                            <input name="callbackUrl" type="hidden" value={redirectToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
