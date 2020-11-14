@@ -54,3 +54,9 @@ There is also an api at `/api/auctions` that returns a list of Auctions as JSON 
 3. Work on the Athlete, Fan and Auction models & get some realistic sample data setup
 4. Create pages to show the Auctions
 6. Allow fans to bid
+
+
+## Docker
+
+Build: `docker build --rm --pull -f "./Dockerfile" -t "contrib:latest" "./"`
+Run: `docker run --rm -d  -p 3000:3000/tcp contrib:latest`
