@@ -6,6 +6,8 @@ import Select from 'react-select'
 import { Container, Row, Col, Button, Collapse, Form, Input, Label, Media, Card, CardHeader, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
 import data from '../data/user-personal.json'
+import countries from '../data/countries.json'
+import states from '../data/regions/us.json'
 
 export async function getStaticProps() {
     return {
@@ -59,8 +61,7 @@ const UserPersonal = () => {
                                     <Button
                                         color="link"
                                         className="pl-0 text-primary collapsed"
-                                        onClick={() => setPersonalCollapse(!personalCollapse)}
-                                    >
+                                        onClick={() => setPersonalCollapse(!personalCollapse)}>
                                         Update
                                     </Button>
                                 </Col>
@@ -133,7 +134,9 @@ const UserPersonal = () => {
                                     <br />
                                     {data.address.line2}
                                     <br />
-                                    {data.address.line3}
+                                    {data.address.region} {data.address.postCode}
+                                    <br />
+                                    {countries.find(c => c.value == data.address.country).label}
                                 </Media>
                             </Media>
                             <Collapse isOpen={addressCollapse}>
@@ -162,8 +165,8 @@ const UserPersonal = () => {
                                             <Select
                                                 id="state"
                                                 name="state"
-                                                options={data.states}
-                                                defaultValue={data.states[4]}
+                                                options={states}
+                                                defaultValue={states.find(s => s.value == data.address.region)}
                                                 className="selectpicker z-index-20"
                                                 classNamePrefix="selectpicker"
                                             />
@@ -181,8 +184,8 @@ const UserPersonal = () => {
                                             <Select
                                                 id="country"
                                                 name="country"
-                                                options={data.countries}
-                                                defaultValue={data.countries[0]}
+                                                options={countries}
+                                                defaultValue={countries.find(c => c.value == data.address.country)}
                                                 className="selectpicker z-index-20"
                                                 classNamePrefix="selectpicker"
                                             />

@@ -31,7 +31,7 @@ const UserMenu = (props) => {
                 <DropdownItem>
                     <b>{user.name}</b>
                 </DropdownItem>
-                <Link key="userMenu-account" activeClassName="active" href="/user-profile" passHref>
+                <Link key="userMenu-profile" activeClassName="active" href="/user-profile" passHref>
                     <DropdownItem onClick={() => onLinkClick("Profile")}>
                         Profile
                     </DropdownItem>
@@ -43,7 +43,7 @@ const UserMenu = (props) => {
                 </Link>
                 <hr/>
                 <Link key="userMenu-bids" activeClassName="active" href="/user-account" passHref>
-                    <DropdownItem onClick={() => onLinkClick("Your bids")}>
+                    <DropdownItem onClick={() => onLinkClick("Bids")}>
                         Bids
                     </DropdownItem>
                 </Link>
@@ -58,8 +58,8 @@ const UserMenu = (props) => {
                     </DropdownItem>
                 </Link>
                 <hr />
-                <Link key="userMenu-listings" activeClassName="active" href="/user-account" passHref>
-                    <DropdownItem onClick={() => onLinkClick("Purchase history")}>
+                <Link key="userMenu-auctions" activeClassName="active" href="/user-list" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Manage auctions")}>
                        Manage auctions
                     </DropdownItem>
                 </Link>
