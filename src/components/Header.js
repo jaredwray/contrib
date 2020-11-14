@@ -1,43 +1,31 @@
 import React from 'react'
 import Link from 'next/link'
-import Router from 'next/router'
 import {
     Collapse,
     Navbar,
     NavbarToggler,
     Nav,
-    NavItem,
-    NavLink,
     Dropdown,
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
     Container,
-    Row,
-    Col,
     Form,
     Label,
     Input,
     Button,
-    Badge
 } from 'reactstrap'
-
-import UseWindowSize from '../hooks/UseWindowSize'
 
 import Logo from '../../public/content/svg/logo.svg'
 
-import menu from '../data/menu.json'
-
 import userMenu from '../data/user-menu.json'
+import MegaMenu from './MegaMenu'
 
 const Header = props => {
     const [collapsed, setCollapsed] = React.useState(false)
     const [dropdownOpen, setDropdownOpen] = React.useState({})
     const [searchFocus, setSearchFocus] = React.useState(false)
     const [dropdownAnimate, setDropdownAnimate] = React.useState(false)
-    const [parentName, setParentName] = React.useState(false)
-
-    const size = UseWindowSize()
 
     const onFocus = () => setSearchFocus(!searchFocus)
 
@@ -45,33 +33,6 @@ const Header = props => {
         setDropdownOpen({ ...dropdownOpen, [name]: !dropdownOpen[name] })
     }
 
-    const onLinkClick = (parent) => {
-        size.width < 991 && setCollapsed(!collapsed)
-        setParentName(parent)
-    }
-
-    // highlight not only active dropdown item, but also its parent, i.e. dropdown toggle
-    const highlightDropdownParent = () => {
-        menu.map(item => {
-            item.dropdown && item.dropdown.map(dropdownLink => {
-                dropdownLink.link && dropdownLink.link === Router.route && setParentName(item.title)
-                dropdownLink.links && dropdownLink.links.map(link => link.link === Router.route && setParentName(item.title))
-            }
-            )
-            item.megamenu && item.megamenu.map(megamenuColumn =>
-                megamenuColumn.map(megamenuBlock =>
-                    megamenuBlock.links.map(dropdownLink => {
-                        if (dropdownLink.link === Router.route) {
-                            dropdownLink.parent ? setParentName(dropdownLink.parent) : setParentName(item.title)
-                        }
-                    })
-                )
-            )
-            item.link === Router.route && setParentName(item.title)
-        })
-    }
-
-    React.useEffect(highlightDropdownParent, [])
     return (
         <header className={`header ${props.headerClasses ? props.headerClasses : ''}`}>
             <Navbar
@@ -80,8 +41,7 @@ const Header = props => {
                 dark={props.nav.dark && true}
                 fixed={props.nav.fixed ? props.nav.fixed : "top"}
                 expand="lg"
-                className={props.nav.classes ? props.nav.classes : ""}
-            >
+                className={props.nav.classes ? props.nav.classes : ""}>
                 <Container fluid={true}>
                     <div className="d-flex align-items-center">
                         <Link href="/" passHref>
@@ -92,8 +52,7 @@ const Header = props => {
                     </div>
                     <NavbarToggler
                         onClick={() => setCollapsed(!collapsed)}
-                        className="navbar-toggler-right"
-                    >
+                        className="navbar-toggler-right">
                         <i className="fa fa-bars"></i>
 
                     </NavbarToggler>
@@ -101,10 +60,8 @@ const Header = props => {
                         {/* mobile search form */}
                         <Form
                             id="searchcollapsed"
-                            className="form-inline mt-4 mb-2 d-sm-none"
-                        >
-                            <div className={`input-label-absolute input-label-absolute-left input-reset w-100 ${searchFocus ? 'focus' : ''}`}
-                            >
+                            className="form-inline mt-4 mb-2 d-sm-none">
+                            <div className={`input-label-absolute input-label-absolute-left input-reset w-100 ${searchFocus ? 'focus' : ''}`}>
                                 <Label
                                     for="searchcollapsed_search"
                                     className="label-absolute">
@@ -121,116 +78,18 @@ const Header = props => {
                                     bsSize="sm"
                                     className="border-0 shadow-0 bg-gray-200"
                                     onFocus={onFocus}
-                                    onBlur={() => setTimeout(() => onFocus(), 333)}
-                                />
+                                    onBlur={() => setTimeout(() => onFocus(), 333)}/>
                                 <Button
                                     type="reset"
                                     size="sm"
                                     color="deoco"
-                                    className="btn-reset"
-                                >
+                                    className="btn-reset">
                                     <i className="fas fa-times"></i>
                                 </Button>
                             </div>
                         </Form>
                         <Nav navbar className="ml-auto">
-                            {menu && menu.map(item =>
-                                item.dropdown || item.megamenu ?
-                                    // show entire menu to unlogged user or hide items that have hideToLoggedUser set to true
-                                    !props.loggedUser || (props.loggedUser && !item.hideToLoggedUser) ?
-                                        <Dropdown
-                                            nav
-                                            inNavbar
-                                            key={item.title}
-                                            className={item.position ? `position-${item.position}` : ``}
-                                            isOpen={dropdownOpen[item.title]}
-                                            toggle={() => toggleDropdown(item.title)}
-                                        >
-                                            <DropdownToggle
-                                                nav
-                                                caret
-                                                onClick={() => setDropdownAnimate({ ...dropdownAnimate, [item.title]: !dropdownOpen[item.title] })}
-                                                className={parentName === item.title ? 'active' : ''}
-                                            >
-                                                {item.title}
-                                            </DropdownToggle>
-                                            <DropdownMenu className={`${dropdownAnimate[item.title] === false ? 'hide' : ''} ${item.megamenu ? 'megamenu py-lg-0' : ''}`}>
-                                                {item.dropdown &&
-                                                    item.dropdown.map(dropdownItem =>
-                                                        dropdownItem.links ?
-                                                            <React.Fragment key={dropdownItem.title}>
-                                                                <h6 className="dropdown-header font-weight-normal">
-                                                                    {dropdownItem.title}
-                                                                </h6>
-                                                                {dropdownItem.links.map(link =>
-                                                                    <Link key={link.title} activeClassName="active" href={link.link} passHref>
-                                                                        <DropdownItem onClick={() => onLinkClick(item.title)}>
-                                                                            {link.title}
-                                                                            {link.new &&
-                                                                                <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
-                                                                            }
-                                                                        </DropdownItem>
-                                                                    </Link>
-                                                                )}
-                                                            </React.Fragment>
-                                                            :
-                                                            <Link key={dropdownItem.title} activeClassName="active" href={dropdownItem.link} passHref>
-                                                                <DropdownItem onClick={() => onLinkClick(item.title)}>
-                                                                    {dropdownItem.title}
-                                                                    {dropdownItem.new &&
-                                                                        <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
-                                                                    }
-                                                                </DropdownItem>
-                                                            </Link>
-                                                    )
-                                                }
-                                                {item.megamenu &&
-                                                    <Row className="p-3 pr-lg-0 pl-lg-5 pt-lg-5">
-                                                        {item.megamenu.map((megamenuItem, index) =>
-                                                            <Col key={index} lg="2">
-                                                                {megamenuItem.map((block, index) =>
-                                                                    <React.Fragment key={index}>
-                                                                        <h6 className="text-uppercase">{block.title}</h6>
-                                                                        <ul className="megamenu-list list-unstyled">
-                                                                            {block.links.map(link =>
-                                                                                <li
-                                                                                    key={link.title}
-                                                                                    className="megamenu-list-item">
-                                                                                    <Link activeClassName="active" href={link.link} as={link.as} passHref>
-                                                                                        <DropdownItem className="megamenu-list-link" onClick={() => link.parent ? onLinkClick(link.parent) : onLinkClick(item.title)}>
-                                                                                            {link.title}
-                                                                                            {link.new &&
-                                                                                                <Badge color="info-light" className="ml-1 mt-n1">New</Badge>
-                                                                                            }
-                                                                                        </DropdownItem>
-                                                                                    </Link>
-                                                                                </li>
-                                                                            )}
-                                                                        </ul>
-                                                                    </React.Fragment>
-                                                                )}
-                                                            </Col>
-                                                        )}
-                                                    </Row>
-                                                }
-                                            </DropdownMenu>
-                                        </Dropdown>
-                                        :
-                                        ''
-                                    :
-                                    props.loggedUser && !item.hideToLoggedUser || !props.loggedUser ?
-                                        <NavItem
-                                            key={item.title}
-                                            className={item.button ? 'mt-3 mt-lg-0 ml-lg-3 d-lg-none d-xl-inline-block' : ''}>
-                                            {item.button ?
-                                                item.showToLoggedUser !== false && <Link activeClassName="active" href={item.link}><a className='btn btn-primary' onClick={() => onLinkClick(item.title)}>{item.title}</a></Link>
-                                                :
-                                                <Link activeClassName="active" href={item.link} passHref><NavLink onClick={() => onLinkClick(item.title)}>{item.title}</NavLink></Link>
-                                            }
-                                        </NavItem>
-                                        :
-                                        ''
-                            )}
+                            <MegaMenu />
                             {props.loggedUser && userMenu && userMenu.map(item =>
                                 <Dropdown
                                     nav

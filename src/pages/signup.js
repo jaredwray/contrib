@@ -26,7 +26,7 @@ const Signup = (props) => {
                         <div className="mb-4">
                             <img
                                 src="/content/svg/logo-square.svg"
-                                alt="..."
+                                alt="Contrib logo"
                                 style={{ maxWidth: "4rem" }}
                                 className="img-fluid mb-3" />
                             <h2>Sign up</h2>
