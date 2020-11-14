@@ -55,7 +55,7 @@ const Header = props => {
                                     className="label-absolute">
                                     <i className="fa fa-search"></i>
                                     <span className="sr-only">
-                                        What are you looking for?
+                                        What are you searching for?
                                     </span>
                                 </Label>
                                 <Input
@@ -76,8 +76,8 @@ const Header = props => {
                             </div>
                         </Form>
                         <Nav navbar className="ml-auto">
-                            <MegaMenu />
-                            <UserMenu data={props.loggedUser} />
+                            <MegaMenu isLoggedIn={props.loggedUser ? true : false} />
+                            <UserMenu user={props.loggedUser} />
                         </Nav>
                     </Collapse>
                 </Container>

@@ -56,21 +56,19 @@ const MegaMenu = (props) => {
     return menu && menu.map(item =>
         item.dropdown || item.megamenu ?
             // show entire menu to unlogged user or hide items that have hideToLoggedUser set to true
-            !props.loggedUser || (props.loggedUser && !item.hideToLoggedUser) ?
+            !props.isLoggedIn || (props.isLoggedIn && !item.hideToLoggedUser) ?
                 <Dropdown
                     nav
                     inNavbar
                     key={item.title}
                     className={item.position ? `position-${item.position}` : ``}
                     isOpen={dropdownOpen[item.title]}
-                    toggle={() => toggleDropdown(item.title)}
-                >
+                    toggle={() => toggleDropdown(item.title)}>
                     <DropdownToggle
                         nav
                         caret
                         onClick={() => setDropdownAnimate({ ...dropdownAnimate, [item.title]: !dropdownOpen[item.title] })}
-                        className={parentName === item.title ? 'active' : ''}
-                    >
+                        className={parentName === item.title ? 'active' : ''}>
                         {item.title}
                     </DropdownToggle>
                     <DropdownMenu className={`${dropdownAnimate[item.title] === false ? 'hide' : ''} ${item.megamenu ? 'megamenu py-lg-0' : ''}`}>
@@ -137,7 +135,7 @@ const MegaMenu = (props) => {
                 :
                 ''
             :
-            props.loggedUser && !item.hideToLoggedUser || !props.loggedUser ?
+            props.isLoggedIn && !item.hideToLoggedUser || !props.isLoggedIn ?
                 <NavItem
                     key={item.title}
                     className={item.button ? 'mt-3 mt-lg-0 ml-lg-3 d-lg-none d-xl-inline-block' : ''}>

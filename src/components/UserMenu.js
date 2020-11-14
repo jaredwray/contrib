@@ -1,10 +1,5 @@
 import Link from 'next/link'
-import {
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-} from 'reactstrap'
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 
 import userMenu from '../data/user-menu.json'
 
@@ -16,7 +11,9 @@ const UserMenu = (props) => {
         setDropdownOpen({ ...dropdownOpen, [name]: !dropdownOpen[name] })
     }
 
-    return  userMenu && userMenu.map(item =>
+    const user = props.user
+
+    return props.user && userMenu && userMenu.map(item =>
         <Dropdown
             nav
             inNavbar
@@ -29,7 +26,7 @@ const UserMenu = (props) => {
                 style={item.type === "avatar" && { padding: 0 }}
                 onClick={() => setDropdownAnimate({ ...dropdownAnimate, [item.title]: !dropdownOpen[item.img] })}>
                 {item.type === "avatar" ?
-                    <img src={`/content${item.img}`} alt={item.title} className="avatar avatar-sm avatar-border-white mr-2" />
+                    <img src={user.image} alt={item.title} className="avatar avatar-sm avatar-border-white mr-2" />
                     :
                     item.title
                 }
