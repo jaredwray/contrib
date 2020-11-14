@@ -33,7 +33,6 @@ export async function getServerSideProps() {
 }
 
 const Index = (props) => {
-  console.log('pa', props)
   return (
     <React.Fragment>
       <section className="hero-home" style={{ backgroundImage: `url(content/img/photo/${data.swiperPoster})` }}>

@@ -114,7 +114,7 @@ const ItemDetail = (props) => {
                                         <Label className="form-label">Your bid</Label>
                                         <br />
                                         <Input type="text" name="bid" id="bid" />
-                                        <p className="text-muted text-sm">Enter ${auction.startPrice / 100 + 1} or more</p>
+                                        <p className="text-muted text-sm">Enter ${((auction.startPrice / 100) + 1).toFixed(2)} or more to bid.</p>
                                     </FormGroup>
                                     <FormGroup>
                                         <Button type="submit" color="primary" block>Place your bid</Button>
