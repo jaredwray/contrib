@@ -1,5 +1,6 @@
 import React from 'react'
 
+import CardAuction from './CardAuction'
 import CardRoom from './CardRoom'
 
 import ReactIdSwiper from 'react-id-swiper'
@@ -76,6 +77,11 @@ const Swiper = (props) => {
                         {props.cards &&
                             <div className="w-100 h-100 hover-animate">
                                 <CardRoom data={slide.properties} />
+                            </div>
+                        }
+                        {props.auctions &&
+                            <div className="w-100 h-100 hover-animate">
+                                <CardAuction data={slide} />
                             </div>
                         }
                     </div>

@@ -11,7 +11,7 @@ import {
 
 const CardAuction = props => {
     const auction = props.data
-    return (
+    return auction && (
         <Card className="h-100 border-0 shadow">
             <div className="card-img-top overflow-hidden gradient-overlay">
                 <img src={auction.photos[0].url} alt={auction.title} className="img-fluid" />
@@ -48,7 +48,7 @@ const CardAuction = props => {
                 </div>
             </CardBody>
         </Card>
-    )
+    ) || ''
 };
 
 export default CardAuction;

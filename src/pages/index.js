@@ -12,9 +12,13 @@ import LastMinute from '../components/LastMinute'
 
 import SwiperTestimonial from '../components/SwiperTestimonial'
 
+import { connectToDatabase } from '../../utils/mongodb'
 import data from '../data/index.json'
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
+  const { docs } = await connectToDatabase() 
+  const auctions = await docs.auctions().find({ "active": true }).toArray()
+
   return {
     props: {
       nav: {
@@ -22,12 +26,14 @@ export async function getStaticProps() {
         classes: "shadow",
         color: "white",
       },
-      title: 'Homepage'
+      title: 'Homepage',
+      auctions: JSON.parse(JSON.stringify(auctions))
     },
   }
 }
 
-const Index = () => {
+const Index = (props) => {
+  console.log('pa', props)
   return (
     <React.Fragment>
       <section className="hero-home" style={{ backgroundImage: `url(content/img/photo/${data.swiperPoster})` }}>
@@ -44,6 +50,7 @@ const Index = () => {
           autoplay={true}
           delay={10000}
         />
+
         <Container className="py-6 py-md-7 text-white z-index-20">
           <Row>
             <Col xl="10">
@@ -66,6 +73,7 @@ const Index = () => {
           </Row>
         </Container>
       </section>
+
       {data.topBlocks &&
         <section className="py-6 bg-gray-100">
           <Container>
@@ -95,7 +103,8 @@ const Index = () => {
           </Container>
         </section>
       }
-      <LastMinute greyBackground />
+      <LastMinute greyBackground data={props.auctions} />
+
       {data.testimonials &&
         <section className="py-7">
           <Container>
