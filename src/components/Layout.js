@@ -12,7 +12,6 @@ import { useSession } from 'next-auth/client'
 
 const Layout = pageProps => {
   const [session] = useSession()
-  console.log(session)
 
   const headerProps = {
     nav: {

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
-
-import userMenu from '../data/user-menu.json'
+import { signOut } from 'next-auth/client'
 
 const UserMenu = (props) => {
     const [dropdownOpen, setDropdownOpen] = React.useState({})
@@ -12,37 +11,62 @@ const UserMenu = (props) => {
     }
 
     const user = props.user
+    const title = 'user'
 
-    return props.user && userMenu && userMenu.map(item =>
+    return user &&
         <Dropdown
             nav
             inNavbar
-            key={item.title}
-            className={item.type === "avatar" ? "ml-lg-3" : ""}
-            isOpen={dropdownOpen[item.title]}
-            toggle={() => toggleDropdown(item.title)}>
+            key={title}
+            className="ml-lg-3"
+            isOpen={dropdownOpen[title]}
+            toggle={() => toggleDropdown(title)}>
             <DropdownToggle
                 nav
-                style={item.type === "avatar" && { padding: 0 }}
-                onClick={() => setDropdownAnimate({ ...dropdownAnimate, [item.title]: !dropdownOpen[item.img] })}>
-                {item.type === "avatar" ?
-                    <img src={user.image} alt={item.title} className="avatar avatar-sm avatar-border-white mr-2" />
-                    :
-                    item.title
-                }
+                style={{ padding: 0 }}
+                onClick={() => setDropdownAnimate({ ...dropdownAnimate, [title]: !dropdownOpen[user.image] })}>
+                <img src={user.image} alt={title} className="avatar avatar-sm avatar-border-white mr-2" />
             </DropdownToggle>
-            <DropdownMenu className={dropdownAnimate[item.title] === false ? 'hide' : ''} right>
-                {item.dropdown &&
-                    item.dropdown.map(dropdownItem =>
-                        <Link key={dropdownItem.title} activeClassName="active" href={dropdownItem.link} passHref>
-                            <DropdownItem onClick={() => onLinkClick(item.title)}>
-                                {dropdownItem.title}
-                            </DropdownItem>
-                        </Link>
-                    )}
+            <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
+                <DropdownItem className="font-weight-bold">
+                    <h6><a href="/profile">{user.name}</a></h6>
+                </DropdownItem>
+                <Link key="userMenu-account" activeClassName="active" href="/user-account" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Account")}>
+                        Account
+                    </DropdownItem>
+                </Link>
+                <hr/>
+                <Link key="userMenu-bids" activeClassName="active" href="/user-account" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Your bids")}>
+                        Bids
+                    </DropdownItem>
+                </Link>
+                <Link key="userMenu-watchlist" activeClassName="active" href="/user-account" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Watch list")}>
+                        Watch list
+                    </DropdownItem>
+                </Link>
+                <Link key="userMenu-purchases" activeClassName="active" href="/user-account" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Purchase history")}>
+                        Purchase history
+                    </DropdownItem>
+                </Link>
+                <hr />
+                <Link key="userMenu-listings" activeClassName="active" href="/user-account" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Purchase history")}>
+                        Your auctions
+                    </DropdownItem>
+                </Link>
+                <hr />
+                <Link key="signout" activeClassName="active" href="/" passHref>
+                    <DropdownItem onClick={() => signOut()}>
+                        Sign out
+                    </DropdownItem>
+                </Link>
             </DropdownMenu>
         </Dropdown>
-    ) || ''
+        || ''
 }
 
 export default UserMenu;

@@ -4,7 +4,6 @@ import { Provider } from 'next-auth/client'
 
 import '../scss/style.default.scss'
 
-
 const App = ({ Component, pageProps }) => {
   return (
     <Provider session={pageProps.session}>
@@ -13,8 +12,6 @@ const App = ({ Component, pageProps }) => {
       </Layout>
     </Provider>
   )
-};
+}
 
-
-// This default export is required in a new `pages/_app.js` file.
-export default App;
+export default App
