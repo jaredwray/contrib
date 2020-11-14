@@ -25,12 +25,17 @@ const UserMenu = (props) => {
                 nav
                 style={{ padding: 0 }}
                 onClick={() => setDropdownAnimate({ ...dropdownAnimate, [title]: !dropdownOpen[user.image] })}>
-                <img src={user.image} alt={title} className="avatar avatar-sm avatar-border-white mr-2" />
+                <img src={user.image} alt={user.name} title={user.name} className="avatar avatar-sm avatar-border-white mr-2" />
             </DropdownToggle>
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
-                <DropdownItem className="font-weight-bold">
-                    <h6><a href="/profile">{user.name}</a></h6>
+                <DropdownItem>
+                    <b>{user.name}</b>
                 </DropdownItem>
+                <Link key="userMenu-account" activeClassName="active" href="/user-profile" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Profile")}>
+                        Profile
+                    </DropdownItem>
+                </Link>
                 <Link key="userMenu-account" activeClassName="active" href="/user-account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Account")}>
                         Account
@@ -55,10 +60,10 @@ const UserMenu = (props) => {
                 <hr />
                 <Link key="userMenu-listings" activeClassName="active" href="/user-account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Purchase history")}>
-                        Your auctions
+                       Manage auctions
                     </DropdownItem>
                 </Link>
-                <hr />
+                <hr/>
                 <Link key="signout" activeClassName="active" href="/" passHref>
                     <DropdownItem onClick={() => signOut()}>
                         Sign out
@@ -66,7 +71,7 @@ const UserMenu = (props) => {
                 </Link>
             </DropdownMenu>
         </Dropdown>
-        || ''
+    || ''
 }
 
 export default UserMenu;

@@ -36,7 +36,7 @@ const UserPersonal = () => {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
-                        <Link href="/user-acccount">
+                        <Link href="/user-account">
                             <a>Account</a>
                         </Link>
                     </BreadcrumbItem>
@@ -106,8 +106,7 @@ const UserPersonal = () => {
                                     <Button
                                         type="submit"
                                         color="outline-primary"
-                                        className=" mb-4"
-                                    >
+                                        className=" mb-4">
                                         Save your personal details
                                     </Button>
                                 </Form>
@@ -122,8 +121,7 @@ const UserPersonal = () => {
                                     <Button
                                         color="link"
                                         className="pl-0 text-primary collapsed"
-                                        onClick={() => setAddressCollapse(!addressCollapse)}
-                                    >
+                                        onClick={() => setAddressCollapse(!addressCollapse)}>
                                         Change
                                     </Button>
                                 </Col>
@@ -134,6 +132,8 @@ const UserPersonal = () => {
                                     {data.address.line1}
                                     <br />
                                     {data.address.line2}
+                                    <br />
+                                    {data.address.line3}
                                 </Media>
                             </Media>
                             <Collapse isOpen={addressCollapse}>
@@ -162,8 +162,8 @@ const UserPersonal = () => {
                                             <Select
                                                 id="state"
                                                 name="state"
-                                                options={data.options}
-                                                defaultValue={data.options[0]}
+                                                options={data.states}
+                                                defaultValue={data.states[4]}
                                                 className="selectpicker z-index-20"
                                                 classNamePrefix="selectpicker"
                                             />
@@ -174,12 +174,24 @@ const UserPersonal = () => {
                                             </Label>
                                             <Input type="text" name="zip" id="zip" defaultValue="90210" />
                                         </Col>
+                                        <Col md="6" className="form-group">
+                                            <Label for="country" className="form-label">
+                                                Country
+                                            </Label>
+                                            <Select
+                                                id="country"
+                                                name="country"
+                                                options={data.countries}
+                                                defaultValue={data.countries[0]}
+                                                className="selectpicker z-index-20"
+                                                classNamePrefix="selectpicker"
+                                            />
+                                        </Col>
                                     </Row>
                                     <Button
                                         type="submit"
                                         color="outline-primary"
-                                        className=" mb-4"
-                                    >
+                                        className=" mb-4">
                                         Save address
                                     </Button>
                                 </Form>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-import { Container, Row, Col, Button, Collapse, Badge, Form, Input, Label, Media, Card, CardHeader, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap'
+import { Container, Row, Col, Button, Badge, Media, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
 import data from '../data/user-security.json'
 
@@ -14,15 +14,12 @@ export async function getStaticProps() {
                 color: "white",
             },
             loggedUser: true,
-            title: "Personal & security - forms"
+            title: "Sign in & security"
         },
     }
 }
 
 const UserSecurity = () => {
-
-    const [loginCollapse, setLoginCollapse] = React.useState(false)
-
     return (
         <section className="py-5">
             <Container>
@@ -33,7 +30,7 @@ const UserSecurity = () => {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
-                        <Link href="/">
+                        <Link href="/user-account">
                             <a>Account</a>
                         </Link>
                     </BreadcrumbItem>
@@ -47,51 +44,6 @@ const UserSecurity = () => {
                 <Row>
                     <Col lg="7">
                         <div className="text-block">
-                            <h3 className="mb-4">Login</h3>
-                            <Row>
-                                <Col sm="8">
-                                    <h6>Password</h6>
-                                    <p className="text-sm text-muted">Last updated 3 years ago</p>
-                                </Col>
-                                <Col className="text-right">
-                                    <Button
-                                        onClick={() => setLoginCollapse(!loginCollapse)}
-                                        color="link"
-                                        className="pl-0 text-primary"
-                                    >
-                                        Update
-                                    </Button>
-                                </Col>
-                            </Row>
-                            <Collapse isOpen={loginCollapse}>
-                                <Form>
-                                    <Row className="mt-4">
-                                        <Col xs="12" className="form-group">
-                                            <Label for="password-current" className="form-label">
-                                                Current Password
-                                            </Label>
-                                            <Input type="password" name="password-current" id="password-current" />
-                                        </Col>
-                                        <Col md="6" className="form-group">
-                                            <Label for="password-new" className="form-label">
-                                                New Password
-                                            </Label>
-                                            <Input type="password" name="password-new" id="password-new" />
-                                        </Col>
-                                        <Col md="6" className="form-group">
-                                            <Label for="password-confirm" className="form-label" >
-                                                Confirm Password
-                                            </Label>
-                                            <Input type="password" name="password-confirm" id="password-confirm" />
-                                        </Col>
-                                    </Row>
-                                    <Button type="submit" color="outline-primary">
-                                        Update Password
-                                    </Button>
-                                </Form>
-                            </Collapse>
-                        </div>
-                        <div className="text-block">
                             <h3 className="mb-4">Social accounts</h3>
                             <Row>
                                 <Col sm="8">
@@ -100,6 +52,15 @@ const UserSecurity = () => {
                                 </Col>
                                 <Col className="text-right">
                                     <Button color="link" className="pl-0 text-primary">Connect</Button>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col sm="8">
+                                    <h6>Twitter</h6>
+                                    <p className="text-sm text-muted">Connected</p>
+                                </Col>
+                                <Col className="text-right">
+                                    <Button color="link" className="pl-0 text-primary">Disconnect</Button>
                                 </Col>
                             </Row>
                             <Row>
@@ -130,36 +91,6 @@ const UserSecurity = () => {
                                 </Media>
                             </Media>
                         </div>
-                    </Col>
-                    <Col md="6" lg="4" className="ml-lg-auto">
-                        <Card className="border-0 shadow">
-                            <CardHeader className="bg-primary-light py-4 border-0">
-                                <Media className="align-items-center">
-                                    <Media body>
-                                        <h4 className="h6 subtitle text-sm text-primary">
-                                            Let's make your account more secure
-                                        </h4>
-                                    </Media>
-                                    <svg className="svg-icon svg-icon svg-icon-light w-3rem h-3rem ml-3 text-primary">
-                                        <use xlinkHref="/content/svg/orion-svg-sprite.svg#shield-security-1"> </use>
-                                    </svg>
-                                </Media>
-                            </CardHeader>
-                            <CardBody className="p-4">
-                                <h6 className="card-text">
-                                    Your account security:
-                                </h6>
-                                <p className="card-text mb-4">
-                                    <Badge color="info-light">Medium</Badge>
-                                </p>
-                                <p className="text-muted card-text">We’re always working on ways to increase safety in our community. </p>
-                                <p className="text-muted card-text">That’s why we look at every account to make sure it’s as secure as possible.</p>
-                                <hr />
-                                <Button color="outline-primary" size="sm">
-                                    Improve
-                                </Button>
-                            </CardBody>
-                        </Card>
                     </Col>
                 </Row>
             </Container>

@@ -90,7 +90,7 @@
          ],
          [
             {
-               "title": "Athletes & Charities",
+               "title": "Athletes",
                "links": [
                   {
                      "title": "Auction a new item",
@@ -106,11 +106,16 @@
                "title": "Fans",
                "links": [
                   {
-                     "title": "Place a bid?",
-                     "link": "/user-booking-1"
-                  },
-                  {
                      "title": "Active auctions",
+                     "link": "/user-list"
+                  }
+               ]
+            },
+            {
+               "title": "Charities",
+               "links": [
+                  {
+                     "title": "Manage payments",
                      "link": "/user-list"
                   }
                ]

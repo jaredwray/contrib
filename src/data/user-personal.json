@@ -21,9 +21,10 @@
   ],
   "address": {
     "line1": "123 Main St., Apt #7",
-    "line2": "San Francisco, CA, 902 10"
+    "line2": "San Francisco, CA 90210",
+    "line3": "USA"
   },
-  "options": [
+  "states": [
     {
       "label": "Alabama",
       "value": "state_0"
@@ -224,5 +225,11 @@
         "label": "Wyoming",
         "value": "state_49"
       }
+  ],
+  "countries": [
+    {
+      "label": "USA",
+      "value": "us"
+    }
   ]
 }
