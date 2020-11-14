@@ -108,6 +108,10 @@
                   {
                      "title": "Active auctions",
                      "link": "/user-list"
+                  },
+                  {
+                     "title": "Complete purchase",
+                     "link": "/user-booking-1"
                   }
                ]
             },
