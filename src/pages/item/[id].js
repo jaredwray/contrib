@@ -12,8 +12,6 @@ import {
     FormGroup,
     Media,
 } from 'reactstrap'
-import Swiper from '../../components/Swiper'
-import data from '../../data/detail-rooms.json'
 import GalleryAbsolute from '../../components/GalleryAbsolute'
 import { connectToDatabase } from '../../../utils/mongodb'
 import { ObjectID } from 'mongodb'
@@ -137,29 +135,6 @@ const ItemDetail = (props) => {
                     </Row>
                 </Container>
             </section>
-
-            {data.similar &&
-                <section className="py-6 bg-gray-100">
-                    <Container>
-                        <h5 className="mb-0">Similar items</h5>
-                        <p className="subtitle text-sm text-primary mb-4">
-                            {data.similar.subtitle}
-                        </p>
-                        <Swiper
-                            className="swiper-container-mx-negative items-slider pb-5"
-                            perView={1}
-                            spaceBetween={20}
-                            loop={true}
-                            roundLengths={true}
-                            md={2}
-                            lg={3}
-                            xl={4}
-                            data={data.similar.items}
-                            cards={true}
-                        />
-                    </Container>
-                </section>
-            }
         </React.Fragment>
     )
 };

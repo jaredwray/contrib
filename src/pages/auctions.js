@@ -1,13 +1,8 @@
 import React from 'react'
-
 import 'react-dates/initialize'
-
 import UseWindowSize from '../hooks/UseWindowSize'
-
 import { DateRangePicker } from 'react-dates'
-
 import Select from 'react-select'
-
 import {
     Container,
     Row,
@@ -23,12 +18,8 @@ import {
 
 import Nouislider from 'nouislider-react'
 import Pagination from '../components/Pagination'
-
 import ResultsTopBar from '../components/ResultsTopBar'
-import CardRoom from '../components/CardRoom'
-
 import data from '../data/auctions.json'
-import geoJSON from '../data/rooms-geojson.json'
 
 export async function getStaticProps() {
     return {
@@ -42,7 +33,6 @@ export async function getStaticProps() {
         },
     }
 }
-
 
 const Category3Rooms = () => {
     const size = UseWindowSize()
@@ -417,19 +407,6 @@ const Category3Rooms = () => {
                     </Col>
                     <Col lg="9">
                         <ResultsTopBar sortBy={data.sortby} />
-                        <Row>
-                            {geoJSON.features && geoJSON.features.map(room =>
-                                <Col
-                                    key={room.properties.name}
-                                    sm="6"
-                                    xl="4"
-                                    className="mb-5 hover-animate"
-                                >
-                                    <CardRoom data={room.properties} />
-                                </Col>
-                            )}
-
-                        </Row>
                         <Pagination />
                     </Col>
                 </Row>
