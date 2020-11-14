@@ -6,18 +6,18 @@ import { Container, Row, Col, Button, Form } from 'reactstrap'
 export async function getServerSideProps(context) {
     return {
         props: {
-            title: 'Join',
+            title: 'Sign up',
             hideHeader: true,
             hideFooter: true,
             noPaddingTop: true,
-            csrfToken: await csrfToken(context)
-        },
+            csrfToken: await csrfToken(context),
+            authUrl: process.env.NEXTAUTH_URL + '/api/auth/signin',
+            returnToUrl: process.env.NEXTAUTH_URL
+        }
     }
 }
 
 const Signup = (props) => {
-    const submitUrlBase = process.env.NEXTAUTH_URL + '/api/auth/signin'
-    const redirectToUrl = process.env.NEXTAUTH_URL
     return (
         <Container fluid className="px-3">
             <Row className="min-vh-100">
@@ -28,19 +28,17 @@ const Signup = (props) => {
                                 src="/content/svg/logo-square.svg"
                                 alt="..."
                                 style={{ maxWidth: "4rem" }}
-                                className="img-fluid mb-3"
-                            />
-                            <h2>Join</h2>
+                                className="img-fluid mb-3" />
+                            <h2>Sign up</h2>
                             <p className="text-muted">You're just a few steps away from scoring gear and doing some good.</p>
                         </div>
-                        <Form action={`${submitUrlBase}/facebook`} method="post">
+                        <Form action={`${props.authUrl}/facebook`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value={redirectToUrl} />
+                            <input name="callbackUrl" type="hidden" value={props.returnToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3"
-                            >
+                                className="btn-social mb-3">
                                 <i className="fa-2x fa-facebook-f fab btn-social-icon" />
                                 Sign up&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -48,14 +46,13 @@ const Signup = (props) => {
                                 </span>
                             </Button>
                         </Form>
-                        <Form action={`${submitUrlBase}/twitter`} method="post">
+                        <Form action={`${props.authUrl}/twitter`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value={redirectToUrl} />
+                            <input name="callbackUrl" type="hidden" value={props.returnToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3"
-                            >
+                                className="btn-social mb-3">
                                 <i className="fa-2x fa-twitter fab btn-social-icon" />
                                 Sign up&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -63,14 +60,13 @@ const Signup = (props) => {
                                 </span>
                             </Button>
                         </Form>
-                        <Form action={`${submitUrlBase}/google`} method="post">
+                        <Form action={`${props.authUrl}/google`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value={redirectToUrl} />
+                            <input name="callbackUrl" type="hidden" value={props.returnToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3"
-                            >
+                                className="btn-social mb-3">
                                 <i className="fa-2x fa-google fab btn-social-icon" />
                                 Sign up&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -82,13 +78,13 @@ const Signup = (props) => {
                         <p className="text-center">
                             <small className="text-muted text-center">
                                 Already have an account?&nbsp;
-                                    <Link href="/login">
-                                    <a>Login</a>
+                                    <Link href="/signin">
+                                    <a>Sign in</a>
                                 </Link>
                             </small>
                         </p>
 
-                        <p className="text-sm text-muted">By signing up you agree to Contrib's <a href="/about/terms">Terms and Conditions</a> and <a href="/about/privacy">Privacy Policy</a>.</p>                        
+                        <p className="text-sm text-muted">By signing up you agree to Contrib's <a href="/about/terms">Terms &amp; Conditions</a> and <a href="/about/privacy">Privacy Policy</a>.</p>                        
                         <Link href="/">
                             <a className="close-absolute mr-md-5 mr-xl-6 pt-5">
                                 <svg className="svg-icon w-3rem h-3rem">

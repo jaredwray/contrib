@@ -10,12 +10,14 @@ export async function getServerSideProps(context) {
             hideHeader: true,
             hideFooter: true,
             noPaddingTop: true,
-            csrfToken: await csrfToken(context)
+            csrfToken: await csrfToken(context),
+            authUrl: process.env.NEXTAUTH_URL + '/api/auth/signin',
+            returnToUrl: process.env.NEXTAUTH_URL
         },
     }
 }
 
-const Login = (props) => {
+const Signin = (props) => {
     return (
         <Container fluid className="px-3">
             <Row className="min-vh-100">
@@ -26,18 +28,16 @@ const Login = (props) => {
                                 src="/content/svg/logo-square.svg"
                                 alt="..."
                                 style={{ maxWidth: "4rem" }}
-                                className="img-fluid mb-3"
-                            />
+                                className="img-fluid mb-3" />
                             <h2>Welcome back</h2>
                         </div>
-                        <Form action="http://localhost:3000/api/auth/signin/facebook" method="post">
+                        <Form action={`${props.authUrl}/facebook`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
+                            <input name="callbackUrl" type="hidden" value={props.returnToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3"
-                            >
+                                className="btn-social mb-3">
                                 <i className="fa-2x fa-facebook-f fab btn-social-icon" />
                                 Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -45,14 +45,13 @@ const Login = (props) => {
                                 </span>
                             </Button>
                         </Form>
-                        <Form action="http://localhost:3000/api/auth/signin/twitter" method="post">
+                        <Form action={`${props.authUrl}/twitter`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
+                            <input name="callbackUrl" type="hidden" value={props.returnToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3"
-                            >
+                                className="btn-social mb-3">
                                 <i className="fa-2x fa-twitter fab btn-social-icon" />
                                 Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -60,14 +59,13 @@ const Login = (props) => {
                                 </span>
                             </Button>
                         </Form>
-                        <Form action="http://localhost:3000/api/auth/signin/google" method="post">
+                        <Form action={`${props.authUrl}/google`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
-                            <input name="callbackUrl" type="hidden" value="http://localhost:3000" />
+                            <input name="callbackUrl" type="hidden" value={props.returnToUrl} />
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3"
-                            >
+                                className="btn-social mb-3">
                                 <i className="fa-2x fa-google fab btn-social-icon" />
                                 Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -104,4 +102,4 @@ const Login = (props) => {
     )
 };
 
-export default Login;
+export default Signin;

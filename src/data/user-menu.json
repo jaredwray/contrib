@@ -14,7 +14,7 @@
          },
          {
             "title": "Sign out",
-            "link": "/login",
+            "link": "/signout",
             "divider": true
          }
        ]

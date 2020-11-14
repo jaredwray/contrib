@@ -137,8 +137,8 @@
                      "link": "/user-security"
                   },
                   {
-                     "title": "Login",
-                     "link": "/login"
+                     "title": "Sign in",
+                     "link": "/signin"
                   },
                   {
                      "title": "Sign up",
@@ -150,9 +150,9 @@
       ]
    },
    {
-      "title": "Login",
+      "title": "Sign in",
       "hideToLoggedUser": true,
-      "link": "/login"
+      "link": "/signin"
    },
    {
       "title": "Sign up",

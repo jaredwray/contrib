@@ -32,6 +32,7 @@ To start:
 - [ ] Stripe
 - [ ] Google Cloud
 - [x] [Directory NextJS theme](https://directory-rose.now.sh/docs/docs-next)
+- [ ] NewRelic
 
 ## Social support
 
@@ -50,7 +51,7 @@ There is also an api at `/api/auctions` that returns a list of Auctions as JSON 
 
 ## Next steps
 
-1. Allow fans to login
+1. Allow fans to sign in
 3. Work on the Athlete, Fan and Auction models & get some realistic sample data setup
 4. Create pages to show the Auctions
 6. Allow fans to bid
