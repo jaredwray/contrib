@@ -1,6 +1,5 @@
 import React from 'react'
 
-import CardRestaurant from './CardRestaurant'
 import CardRoom from './CardRoom'
 
 import ReactIdSwiper from 'react-id-swiper'
@@ -77,11 +76,6 @@ const Swiper = (props) => {
                         {props.cards &&
                             <div className="w-100 h-100 hover-animate">
                                 <CardRoom data={slide.properties} />
-                            </div>
-                        }
-                        {props.restaurantCards &&
-                            <div className="w-100 h-100 hover-animate">
-                                <CardRestaurant data={slide.properties} />
                             </div>
                         }
                     </div>
