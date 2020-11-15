@@ -48,51 +48,24 @@
             }
         ]
     },
-    "jumbotron": {
-        "title": "Ready for your next holidays?",
-        "button": "Get started",
-        "link": "category-rooms",
-        "img": "img/photo/photo-1497436072909-60f360e1d4b1.jpg"
-    },
     "testimonials": {
-        "title": "Our dear customers said about us",
+        "title": "Fans, athletes & charities.",
         "subTitle": "Testimonials",
         "swiperItems": [{
-                "title": "Jessica Watson",
-                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+                "title": "Brad Evans",
+                "content": "With Contrib's direct approach I can get game-worn memrobilia into fans hands. No delay, no middleman, all for Charity.",
+                "avatar": "img/avatar/brad.webp"
+            },
+            {
+                "title": "Seattle Children's Hospital",
+                "content": "Working with Contrib couldn't be eaiser and it provides valuable charitable support in a way that really connects with fans.",
                 "avatar": "img/avatar/avatar-3.jpg"
             },
             {
-                "title": "Jessica Watson",
-                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
-                "avatar": "img/avatar/avatar-3.jpg"
-            },
-            {
-                "title": "Jessica Watson",
-                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
-                "avatar": "img/avatar/avatar-3.jpg"
-            },
-            {
-                "title": "Jessica Watson",
-                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
-                "avatar": "img/avatar/avatar-3.jpg"
-            },
-            {
-                "title": "Jessica Watson",
-                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
-                "avatar": "img/avatar/avatar-3.jpg"
-            },
-            {
-                "title": "Jessica Watson",
-                "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
-                "avatar": "img/avatar/avatar-3.jpg"
+                "title": "Max Gather",
+                "content": "I've been collecting sports memorabilia for a while and always found it difficult to get hold of items from my favorite athletes. Not any more with Contrib!",
+                "avatar": "img/avatar/agent-2.png"
             }
         ]
-    },
-    "blogPosts": {
-        "title": "From our travel blog",
-        "subTitle": "Stories from around the globe",
-        "button": "See all articles",
-        "buttonLink": "blog"
     }
 }

@@ -6,6 +6,8 @@ import Select from 'react-select'
 import { Container, Row, Col, Button, Collapse, Form, Input, Label, Media, Card, CardHeader, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
 import data from '../data/user-personal.json'
+import countries from '../data/countries.json'
+import states from '../data/regions/us.json'
 
 export async function getStaticProps() {
     return {
@@ -36,7 +38,7 @@ const UserPersonal = () => {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
-                        <Link href="/user-acccount">
+                        <Link href="/user-account">
                             <a>Account</a>
                         </Link>
                     </BreadcrumbItem>
@@ -59,8 +61,7 @@ const UserPersonal = () => {
                                     <Button
                                         color="link"
                                         className="pl-0 text-primary collapsed"
-                                        onClick={() => setPersonalCollapse(!personalCollapse)}
-                                    >
+                                        onClick={() => setPersonalCollapse(!personalCollapse)}>
                                         Update
                                     </Button>
                                 </Col>
@@ -106,8 +107,7 @@ const UserPersonal = () => {
                                     <Button
                                         type="submit"
                                         color="outline-primary"
-                                        className=" mb-4"
-                                    >
+                                        className=" mb-4">
                                         Save your personal details
                                     </Button>
                                 </Form>
@@ -122,8 +122,7 @@ const UserPersonal = () => {
                                     <Button
                                         color="link"
                                         className="pl-0 text-primary collapsed"
-                                        onClick={() => setAddressCollapse(!addressCollapse)}
-                                    >
+                                        onClick={() => setAddressCollapse(!addressCollapse)}>
                                         Change
                                     </Button>
                                 </Col>
@@ -134,6 +133,10 @@ const UserPersonal = () => {
                                     {data.address.line1}
                                     <br />
                                     {data.address.line2}
+                                    <br />
+                                    {data.address.region} {data.address.postCode}
+                                    <br />
+                                    {countries.find(c => c.value == data.address.country).label}
                                 </Media>
                             </Media>
                             <Collapse isOpen={addressCollapse}>
@@ -162,8 +165,8 @@ const UserPersonal = () => {
                                             <Select
                                                 id="state"
                                                 name="state"
-                                                options={data.options}
-                                                defaultValue={data.options[0]}
+                                                options={states}
+                                                defaultValue={states.find(s => s.value == data.address.region)}
                                                 className="selectpicker z-index-20"
                                                 classNamePrefix="selectpicker"
                                             />
@@ -172,14 +175,26 @@ const UserPersonal = () => {
                                             <Label for="zip" className="form-label">
                                                 Zip
                                             </Label>
-                                            <Input type="text" name="zip" id="zip" defaultValue="902 10" />
+                                            <Input type="text" name="zip" id="zip" defaultValue="90210" />
+                                        </Col>
+                                        <Col md="6" className="form-group">
+                                            <Label for="country" className="form-label">
+                                                Country
+                                            </Label>
+                                            <Select
+                                                id="country"
+                                                name="country"
+                                                options={countries}
+                                                defaultValue={countries.find(c => c.value == data.address.country)}
+                                                className="selectpicker z-index-20"
+                                                classNamePrefix="selectpicker"
+                                            />
                                         </Col>
                                     </Row>
                                     <Button
                                         type="submit"
                                         color="outline-primary"
-                                        className=" mb-4"
-                                    >
+                                        className=" mb-4">
                                         Save address
                                     </Button>
                                 </Form>
@@ -201,8 +216,7 @@ const UserPersonal = () => {
                                 </Media>
                             </CardHeader>
                             <CardBody className="p-4">
-                                <p className="text-muted text-sm card-text">Directory only releases contact information for hosts and guests <strong>after a reservation is confirmed</strong>.</p>
-                                <p className="text-muted text-sm card-text">Amet nisi eiusmod minim commodo sit voluptate aute ut quis ea veniam sunt proident ex. <strong>Exercitation culpa laboris</strong> consequat fugiat non ipsum veniam Lorem aliqua deserunt tempor elit veniam.</p>
+                                <p className="text-muted text-sm card-text">Contrib only releases information necessary for shipping between buyers and sellers <strong>after an auction is won</strong>.</p>
                             </CardBody>
                         </Card>
                     </Col>

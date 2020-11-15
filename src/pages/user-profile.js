@@ -3,9 +3,6 @@ import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
 
 import data from '../data/user-profile.json'
-import geoJSON from '../data/rooms-geojson.json'
-
-import CardRoom from '../components/CardRoom'
 import Reviews from '../components/Reviews'
 import ReviewForm from '../components/ReviewForm'
 
@@ -86,14 +83,6 @@ const UserProfile = () => {
                             <h4 className="mb-5">
                                 {data.firstname}'s Listings
                             </h4>
-                            <Row>
-                                {geoJSON.features.map(listing =>
-                                    <Col sm="6" lg="4" className="mb-30px hover-animate" key={listing.properties.name}>
-                                        <CardRoom data={listing.properties} />
-                                    </Col>
-                                )}
-
-                            </Row>
                         </div>
                         <div className="text-block">
                             <Reviews data={data.reviews} />

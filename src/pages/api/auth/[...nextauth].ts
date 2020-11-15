@@ -17,7 +17,10 @@ const options = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET
     })
   ],
-  secret: process.env.SECRET
+  secret: process.env.SESSION_SECRET,
+  session: {
+    jwt: true
+  }
 }
 
 export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options)

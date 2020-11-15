@@ -6,31 +6,30 @@ import { Container, Row, Col, Button, Form } from 'reactstrap'
 export async function getServerSideProps(context) {
     return {
         props: {
-            title: 'Sign up',
+            title: "Sign in",
             hideHeader: true,
             hideFooter: true,
             noPaddingTop: true,
             csrfToken: await csrfToken(context),
             authUrl: process.env.NEXTAUTH_URL + '/api/auth/signin',
             returnToUrl: process.env.NEXTAUTH_URL
-        }
+        },
     }
 }
 
-const Signup = (props) => {
+const Signin = (props) => {
     return (
         <Container fluid className="px-3">
             <Row className="min-vh-100">
                 <Col md="8" lg="6" xl="5" className="d-flex align-items-center">
                     <div className="w-100 py-5 px-md-5 px-xl-6 position-relative">
-                        <div className="mb-4">
+                        <div className="mb-5">
                             <img
                                 src="/content/svg/logo-square.svg"
-                                alt="Contrib logo"
+                                alt="..."
                                 style={{ maxWidth: "4rem" }}
                                 className="img-fluid mb-3" />
-                            <h2>Sign up</h2>
-                            <p className="text-muted">You're just a few steps away from scoring gear and doing some good.</p>
+                            <h2>Welcome back</h2>
                         </div>
                         <Form action={`${props.authUrl}/facebook`} method="post">
                             <input name="csrfToken" type="hidden" defaultValue={props.csrfToken} />
@@ -40,7 +39,7 @@ const Signup = (props) => {
                                 block
                                 className="btn-social mb-3">
                                 <i className="fa-2x fa-facebook-f fab btn-social-icon" />
-                                Sign up&nbsp;
+                                Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Facebook
                                 </span>
@@ -54,7 +53,7 @@ const Signup = (props) => {
                                 block
                                 className="btn-social mb-3">
                                 <i className="fa-2x fa-twitter fab btn-social-icon" />
-                                Sign up&nbsp;
+                                Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Twitter
                                 </span>
@@ -68,7 +67,7 @@ const Signup = (props) => {
                                 block
                                 className="btn-social mb-3">
                                 <i className="fa-2x fa-google fab btn-social-icon" />
-                                Sign up&nbsp;
+                                Sign in&nbsp;
                                 <span className="d-none d-sm-inline">
                                     with Google
                                 </span>
@@ -77,14 +76,12 @@ const Signup = (props) => {
                         <hr className="my-4" />
                         <p className="text-center">
                             <small className="text-muted text-center">
-                                Already have an account?&nbsp;
-                                    <Link href="/signin">
-                                    <a>Sign in</a>
+                                Don't have an account yet?&nbsp;
+                                <Link href="/signup">
+                                    <a>Sign up</a>
                                 </Link>
                             </small>
-                        </p>
-
-                        <p className="text-sm text-muted">By signing up you agree to Contrib's <a href="/about/terms">Terms &amp; Conditions</a> and <a href="/about/privacy">Privacy Policy</a>.</p>                        
+                        </p>                        
                         <Link href="/">
                             <a className="close-absolute mr-md-5 mr-xl-6 pt-5">
                                 <svg className="svg-icon w-3rem h-3rem">
@@ -105,4 +102,4 @@ const Signup = (props) => {
     )
 };
 
-export default Signup;
+export default Signin;

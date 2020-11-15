@@ -1,7 +1,5 @@
 import React from 'react'
 import { Container } from 'reactstrap'
-import Head from 'next/head'
-
 
 export async function getStaticProps() {
     return {
@@ -27,14 +25,6 @@ const ComingSoon = () => {
         {
             "icon": "instagram",
             "link": "#"
-        },
-        {
-            "icon": "pinterest",
-            "link": "#"
-        },
-        {
-            "icon": "vimeo",
-            "link": "#"
         }
     ]
     return (
@@ -49,9 +39,9 @@ const ComingSoon = () => {
                     Coming soon
                     <img src="content/img/coming-soon.png" alt="Coming Soon" className="img-fluid" />
                 </h1>
-                <h3 className="mb-5 text-shadow">Our directory is coming to you soon.</h3>
+                <h3 className="mb-5 text-shadow">Contrib is coming to you soon.</h3>
                 <p className="font-weight-light mb-4">
-                    <i className="fas fa-map-marker-alt mr-2" /> Directory Ltd. | 25 Baker St., LB8 E18 London, UK
+                    <i className="fas fa-map-marker-alt mr-2" /> Contrib - Seattle, WA
                 </p>
                 <ul className="list-inline">
                     {social && social.map(icon =>

@@ -1,11 +1,5 @@
 import React from 'react'
-
-
-import CardRestaurant from './CardRestaurant'
-import CardRoom from './CardRoom'
-import CardPoster from './CardPoster'
-import CardProperty from './CardProperty'
-
+import CardAuction from './CardAuction'
 import ReactIdSwiper from 'react-id-swiper'
 
 const Swiper = (props) => {
@@ -77,23 +71,9 @@ const Swiper = (props) => {
                     />
                     :
                     <div key={index} className="h-auto px-2">
-                        {props.cards &&
+                        {props.auctions &&
                             <div className="w-100 h-100 hover-animate">
-                                <CardRoom data={slide.properties} />
-                            </div>
-                        }
-                        {props.propertyCards &&
-                            <div className="w-100 h-100 hover-animate">
-                                <CardProperty data={slide} />
-                            </div>
-
-                        }
-                        {props.imgCards &&
-                            <CardPoster data={slide} />
-                        }
-                        {props.restaurantCards &&
-                            <div className="w-100 h-100 hover-animate">
-                                <CardRestaurant data={slide.properties} />
+                                <CardAuction data={slide} />
                             </div>
                         }
                     </div>

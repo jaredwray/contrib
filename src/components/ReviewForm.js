@@ -36,7 +36,7 @@ const ReviewForm = () => {
                                     for="name"
                                     className="form-label"
                                 >
-                                    Your name *
+                                    Name *
                             </Label>
                                 <Input
                                     type="text"
@@ -53,7 +53,7 @@ const ReviewForm = () => {
                                     for="rating"
                                     className="form-label"
                                 >
-                                    Your name *
+                                    Rating *
                             </Label>
                                 <select name="rating" id="rating" className="custom-select focus-shadow-0">
                                     <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733; (5/5)</option>
@@ -70,13 +70,13 @@ const ReviewForm = () => {
                             for="email"
                             className="form-label"
                         >
-                            Your name *
+                            Email *
                             </Label>
                         <Input
                             type="email"
                             name="email"
                             id="email"
-                            placeholder="Enter your  email"
+                            placeholder="Enter your email"
                             required
                         />
                     </FormGroup>
@@ -85,14 +85,14 @@ const ReviewForm = () => {
                             for="review"
                             className="form-label"
                         >
-                            Review text *
+                            Review *
                             </Label>
                         <Input
                             rows="4"
                             type="textarea"
                             name="review"
                             id="review"
-                            placeholder="Enter your  email"
+                            placeholder="Enter your review"
                             required
                         />
                     </FormGroup>

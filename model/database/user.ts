@@ -1,11 +1,14 @@
-import { ObjectID } from "mongodb"
+import { ObjectId } from 'mongodb'
+
+export type UserId = ObjectId
 
 // A User is somebody who can log into the site.
-// What roles they can perform is dependent upon
-// permissions.
+// What roles they can perform is dependent upon other factors.
 export type User = {
-    _id: ObjectID,
+    _id: UserId,
     email: string,
+    firstName: string,
+    lastName: string,
     auths: UserOAuth[]
 }
 
