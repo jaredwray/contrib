@@ -58,5 +58,5 @@ There is also an api at `/api/auctions` that returns a list of Auctions as JSON 
 
 ## Docker
 
-Build: `docker build --rm --pull -f "./Dockerfile" -t "contrib:latest" "./"`
-Run: `docker run --rm -d  -p 3000:3000/tcp contrib:latest`
+* Build: `docker build --rm --pull -f "./Dockerfile" -t "contrib:latest" "./"`
+* Run: `docker run --rm -d  -p 3000:3000/tcp contrib:latest`
