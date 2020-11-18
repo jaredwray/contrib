@@ -6,7 +6,7 @@ import { Charity } from './charity'
 import { Watch } from './watch'
 
 // Primary strongly-typed version of MongoDB 'Db' option to facilitate better
-// typescript.
+// TypeScript.
 export class ContribDocuments {
   _db: Db
 

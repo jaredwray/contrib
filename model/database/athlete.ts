@@ -1,3 +1,4 @@
+import { Avatar } from './avatar'
 import { CharityRef } from './charity'
 import { Photo } from './photo'
 import { SocialMedia } from './socialMedia'
@@ -13,18 +14,12 @@ export type Athlete = {
     lastName: string,
     description: string,
     charities: CharityRef[],
-    avatar: AthleteAvatar,    
+    avatar: Avatar,    
     social: SocialMedia,
     location: Location,
     joined: Date,
     verified: true,
     photos: Photo[]
-}
-
-// TODO: Replace with tags on photos collection for flexibility.
-export type AthleteAvatar = {
-    medium: string,
-    large: string
 }
 
 // An AthleteRef is a reference to an athlete from an auction.

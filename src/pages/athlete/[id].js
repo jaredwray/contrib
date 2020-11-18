@@ -25,7 +25,7 @@ export async function getServerSideProps(context) {
     }
 }
 
-const UserProfile = (props) => {
+const AthleteProfile = (props) => {
     const athlete = props.athlete
     if (athlete == null) return <Error404 />
 
@@ -37,12 +37,14 @@ const UserProfile = (props) => {
                         <Card className="border-0 shadow mb-6 mb-lg-0">
                             <CardHeader className="bg-gray-100 py-4 border-0 text-center">
                                 <a href="#" className="d-inline-block">
-                                    <img src={`${athlete.avatar.medium}`} alt="" className="d-block avatar avatar-xxl p-2 mb-2" />
+                                    <img src={`${athlete.avatar.medium}`} alt={`Avatar for ${athlete.name}`} className="d-block avatar avatar-xxl p-2 mb-2" />
                                 </a>
                                 <h5>{athlete.name}</h5>
-                                <p className="text-muted text-sm mb-0">
-                                    {athlete.location.city}
-                                </p>
+                                {athlete.location && athlete.location.city &&
+                                    <p className="text-muted text-sm mb-0">
+                                        {athlete.location.city}
+                                    </p>
+                                }
                             </CardHeader>
                             <CardBody className="p-4">
                                 <Media className="align-items-center mb-3">
@@ -55,37 +57,41 @@ const UserProfile = (props) => {
                                         <p className="mb-0">{athlete.verified ? "Verified" : "Unverified"} Athlete</p>
                                     </Media>
                                 </Media>
+                                {athlete.joined &&
+                                    <React.Fragment>
+                                        <hr />
+                                        <Badge color="secondary-light">
+                                            Joined in {new Date(athlete.joined).getFullYear()}
+                                        </Badge>
+                                    </React.Fragment>
+                                }                            
                                 {athlete.social &&
                                     <React.Fragment>
-                                    <hr />
-                                    <h6>
-                                        Follow {athlete.firstName} on
-                                    </h6>
-                                    <CardText tag="ul" className="list-unstyled">
-                                        {athlete.social.twitter && <li className="text-primary"><i className="fab fa-twitter"/> <a href={`https://twitter.com/${athlete.social.twitter}`}>{athlete.social.twitter}</a></li>}
-                                        {athlete.social.facebook && <li className="text-primary"><i className="fab fa-facebook"/> <a href={`https://facebook.com/${athlete.social.facebook}`}>{athlete.social.facebook}</a></li>}
-                                        {athlete.social.instagram && <li className="text-primary"><i className="fab fa-instagram"/> <a href={`https://instagram.com/${athlete.social.instagram}`}>{athlete.social.instagram}</a></li>}
-                                    </CardText>
+                                        <hr />
+                                        <h6>
+                                            Follow them on
+                                        </h6>
+                                        <CardText tag="ul" className="list-unstyled">
+                                            {athlete.social.twitter && <li className="text-primary"><i className="fab fa-twitter"/> <a href={`https://twitter.com/${athlete.social.twitter}`} title={`${athlete.name} on Twitter`} target="_blank">{athlete.social.twitter}</a></li>}
+                                            {athlete.social.facebook && <li className="text-primary"><i className="fab fa-facebook"/> <a href={`https://facebook.com/${athlete.social.facebook}`} title={`${athlete.name} on Facebook`} target="_blank">{athlete.social.facebook}</a></li>}
+                                            {athlete.social.instagram && <li className="text-primary"><i className="fab fa-instagram"/> <a href={`https://instagram.com/${athlete.social.instagram}`} title={`${athlete.name} on Instagram`} target="_blank">{athlete.social.instagram}</a></li>}
+                                            {athlete.social.youtube && <li className="text-primary"><i className="fab fa-youtube"/> <a href={`https://youtube.com/user/${athele.social.youtube}`} title={`${athlete.name} on YouTube`} target="_blank">{athlete.social.youtube}</a></li>}
+                                        </CardText>
                                     </React.Fragment>
                                 }
                             </CardBody>
                         </Card>
                     </Col>
                     <Col lg="9" className="pl-lg-5">
-                        <h1 className="hero-heading mb-0">{athlete.name}</h1>
+                        <h1 className="hero-heading mb-3">{athlete.name}</h1>
                         <div className="text-block">
-                            <p>
-                                <Badge color="secondary-light">
-                                    Joined in {new Date(athlete.joined).getFullYear()}
-                                </Badge>
-                            </p>
                             <div dangerouslySetInnerHTML={{ __html: athlete.description }} />
                         </div>
                         { props.auctions ?
                             <div className="text-block">
-                                <h4 className="mb-5">
-                                    {athlete.firstName}'s items
-                                </h4>
+                                <h3 className="mb-5">
+                                    {athlete.firstName}'s items being auctioned
+                                </h3>
                                 <Row>
                                     {props.auctions.map(auction =>
                                         <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
@@ -109,4 +115,4 @@ const UserProfile = (props) => {
     )
 };
 
-export default UserProfile;
+export default AthleteProfile;

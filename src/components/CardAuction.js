@@ -30,17 +30,17 @@ const CardAuction = props => {
                 <div className="w-100">
                     <CardTitle tag="h6">
                         <Link href={`/item/${auction._id}`}>
-                            <a className="text-decoration-none text-dark">
+                            <a className="text-decoration-none text-dark text-truncate">
                                 {auction.title}
                             </a>
                         </Link>
                     </CardTitle>
                     <CardSubtitle className="d-flex mb-3">
                         <p className="flex-grow-1 mb-0 text-muted text-uppercase text-sm">
-                            {auction.category}
+                            {auction.seller.name}
                         </p>
                     </CardSubtitle>
-                    <CardText className="text-muted">
+                    <CardText className="text-muted text-right">
                         <span className="h4 text-primary">
                             ${auction.startPrice / 100}
                         </span>

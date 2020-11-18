@@ -3,5 +3,6 @@
 export type SocialMedia = {
     facebook: string,
     instagram: string,
-    twitter: string
+    twitter: string,
+    youtube: string
 }
