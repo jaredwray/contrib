@@ -2,9 +2,9 @@ import React from 'react'
 
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
 
-import data from '../data/user-profile.json'
-import Reviews from '../components/Reviews'
-import ReviewForm from '../components/ReviewForm'
+import data from '../../data/user-profile.json'
+import Reviews from '../../components/Reviews'
+import ReviewForm from '../../components/ReviewForm'
 
 export async function getStaticProps() {
     return {
@@ -90,10 +90,9 @@ const UserProfile = () => {
                         </div>
                     </Col>
                 </Row>
-
             </Container>
         </section>
     )
-};
+}
 
-export default UserProfile;
+export default UserProfile

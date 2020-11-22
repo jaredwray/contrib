@@ -131,27 +131,27 @@
                "links": [
                   {
                      "title": "Profile",
-                     "link": "/user-profile"
+                     "link": "/user/profile"
                   },
                   {
                      "title": "Account",
-                     "link": "/user-account"
+                     "link": "/user/account"
                   },
                   {
                      "title": "Personal info - forms",
-                     "link": "/user-personal"
+                     "link": "/user/personal"
                   },
                   {
                      "title": "Password & security - forms",
-                     "link": "/user-security"
+                     "link": "/user/security"
                   },
                   {
                      "title": "Sign in",
-                     "link": "/signin"
+                     "link": "/user/signin"
                   },
                   {
                      "title": "Sign up",
-                     "link": "/signup"
+                     "link": "/user/signup"
                   }
                ]
             }
@@ -161,11 +161,11 @@
    {
       "title": "Sign in",
       "hideToLoggedUser": true,
-      "link": "/signin"
+      "link": "/user/signin"
    },
    {
       "title": "Sign up",
-      "link": "/signup",
+      "link": "/user/signup",
       "hideToLoggedUser": true
    }
 ]

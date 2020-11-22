@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { Container, Row, Col, Button, Badge, Media, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
-import data from '../data/user-security.json'
+import data from '../../data/user-security.json'
 
 export async function getStaticProps() {
     return {
@@ -96,6 +96,6 @@ const UserSecurity = () => {
             </Container>
         </section >
     )
-};
+}
 
-export default UserSecurity;
+export default UserSecurity

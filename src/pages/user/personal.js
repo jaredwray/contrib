@@ -5,9 +5,9 @@ import Select from 'react-select'
 
 import { Container, Row, Col, Button, Collapse, Form, Input, Label, Media, Card, CardHeader, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
-import data from '../data/user-personal.json'
-import countries from '../data/countries.json'
-import states from '../data/regions/us.json'
+import data from '../../data/user-personal.json'
+import countries from '../../data/countries.json'
+import states from '../../data/regions/us.json'
 
 export async function getStaticProps() {
     return {
@@ -24,7 +24,6 @@ export async function getStaticProps() {
 }
 
 const UserPersonal = () => {
-
     const [personalCollapse, setPersonalCollapse] = React.useState(false)
     const [addressCollapse, setAddressCollapse] = React.useState(false)
 
@@ -224,6 +223,6 @@ const UserPersonal = () => {
             </Container>
         </section>
     )
-};
+}
 
-export default UserPersonal;
+export default UserPersonal

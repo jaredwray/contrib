@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { Container, Row, Col, Card, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
-import data from '../data/user-account.json'
+import data from '../../data/user-account.json'
 
 export async function getStaticProps() {
     return {
@@ -68,6 +68,6 @@ const UserAccount = () => {
             </Container>
         </section>
     )
-};
+}
 
-export default UserAccount;
+export default UserAccount
