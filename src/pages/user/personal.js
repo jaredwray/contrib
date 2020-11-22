@@ -79,16 +79,16 @@ const UserPersonal = () => {
                                 <Form>
                                     <Row className="pt-4">
                                         <Col md="6" className="form-group">
-                                            <Label for="name" className="form-label" >
-                                                Name
+                                            <Label for="firstName" className="form-label" >
+                                                First name
                                             </Label>
-                                            <Input type="text" name="name" id="name" defaultValue="John Doe" />
+                                            <Input type="text" name="firstName" id="firstName" defaultValue="John" />
                                         </Col>
                                         <Col md="6" className="form-group">
-                                            <Label for="date" className="form-label">
-                                                Date of birth
+                                            <Label for="lastName" className="form-label" >
+                                                Last name
                                             </Label>
-                                            <Input type="text" name="date" id="date" defaultValue="06/22/1980" />
+                                            <Input type="text" name="lastName" id="lastName" defaultValue="Doe" />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <Label for="email" className="form-label">

@@ -4,13 +4,13 @@
     "cards": [
         {
             "title": "Personal info",
-            "link": "/user-personal",
+            "link": "/user/personal",
             "icon": "identity-1",
             "content": "Provide personal details and how we can reach you."
         },
         {
             "title": "Sign in & security",
-            "link": "/user-security",
+            "link": "/user/security",
             "icon": "password-1",
             "content": "Manage your social accounts and device history."
         },
