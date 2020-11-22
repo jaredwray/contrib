@@ -13,7 +13,7 @@ export async function getStaticProps() {
                 classes: "shadow",
                 color: "white",
             },
-            title: "User Account"
+            title: "Your account"
         },
     }
 }
@@ -29,8 +29,8 @@ const UserAccount = () => {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem active>
-                        Host view
-                        </BreadcrumbItem>
+                        Account
+                    </BreadcrumbItem>
                 </Breadcrumb>
 
                 <h1 className="hero-heading mb-0">{data.title}</h1>

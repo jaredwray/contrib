@@ -3,9 +3,16 @@ import Link from 'next/link'
 
 import { Container, Row, Col, Button, Badge, Media, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
-import data from '../../data/user-security.json'
+import { connectToDatabase } from '../../../utils/mongodb'
+import { ObjectID } from 'mongodb'
+import { getSession } from 'next-auth/client'
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
+    const session = await getSession(context)
+    const { docs } = await connectToDatabase()
+    const user = await docs.users().findOne({ email: session.user.email })
+    const accounts = await docs.accounts().find({ userId: new ObjectID(user._id) }).toArray()
+
     return {
         props: {
             nav: {
@@ -13,13 +20,18 @@ export async function getStaticProps() {
                 classes: "shadow",
                 color: "white",
             },
-            loggedUser: true,
-            title: "Sign in & security"
+            title: "Sign in & security",
+            accounts: JSON.parse(JSON.stringify(accounts))
         },
     }
 }
 
-const UserSecurity = () => {
+const UserSecurity = (props) => {
+    const accounts = props.accounts
+    const facebookConnected = accounts.find(a => a.providerId == 'facebook')
+    const twitterConnected = accounts.find(a => a.providerId == 'twitter')
+    const googleConnected = accounts.find(a => a.providerId == 'google')
+
     return (
         <section className="py-5">
             <Container>
@@ -30,17 +42,17 @@ const UserSecurity = () => {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
-                        <Link href="/user-account">
+                        <Link href="/user/account">
                             <a>Account</a>
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem active>
-                        {data.title}
+                        Sign in &amp; security
                     </BreadcrumbItem>
                 </Breadcrumb>
 
-                <h1 className="hero-heading mb-0">{data.title}</h1>
-                <p className="text-muted mb-5">{data.subtitle}</p>
+                <h1 className="hero-heading mb-0">Sign in &amp; security</h1>
+                <p className="text-muted mb-5">Manage your social accounts connections here.</p>
                 <Row>
                     <Col lg="7">
                         <div className="text-block">
@@ -48,48 +60,30 @@ const UserSecurity = () => {
                             <Row>
                                 <Col sm="8">
                                     <h6>Facebook</h6>
-                                    <p className="text-sm text-muted">Not connected</p>
+                                    <p className="text-sm text-muted">{ facebookConnected ? 'Connected' : 'Not connected'}</p>
                                 </Col>
                                 <Col className="text-right">
-                                    <Button color="link" className="pl-0 text-primary">Connect</Button>
+                                    <Button color="link" className="pl-0 text-primary">{ facebookConnected ? 'Disconnect' : 'Connect'}</Button>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col sm="8">
                                     <h6>Twitter</h6>
-                                    <p className="text-sm text-muted">Connected</p>
+                                    <p className="text-sm text-muted">{ twitterConnected ? 'Connected' : 'Not connected'}</p>
                                 </Col>
                                 <Col className="text-right">
-                                    <Button color="link" className="pl-0 text-primary">Disconnect</Button>
+                                    <Button color="link" className="pl-0 text-primary">{ twitterConnected ? 'Disconnect' : 'Connect'}</Button>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col sm="8">
                                     <h6>Google</h6>
-                                    <p className="text-sm text-muted">Connected</p>
+                                    <p className="text-sm text-muted">{ googleConnected ? 'Connected' : 'Not connected'}</p>
                                 </Col>
                                 <Col className="text-right">
-                                    <Button color="link" className="pl-0 text-primary">Disconnect</Button>
+                                    <Button color="link" className="pl-0 text-primary">{ googleConnected ? 'Disconnect' : 'Connect'}</Button>
                                 </Col>
                             </Row>
-                        </div>
-                        <div className="text-block mb-5 mb-lg-0">
-                            <h3 className="mb-4">Device history</h3>
-                            <Media>
-                                <div className="icon-rounded bg-secondary-light">
-                                    <svg className="svg-icon text-secondary w-2rem h-2rem">
-                                        <use xlinkHref="/content/svg/orion-svg-sprite.svg#imac-screen-1" />
-                                    </svg>
-                                </div>
-                                <Media className="pt-2 ml-3" body>
-                                    <strong>Windows 10.0 </strong>· Chrome&nbsp;
-                                    <Badge color="secondary-light" className="text-uppercase">Current  Session</Badge>
-                                    <p className="text-sm text-muted">Ostrava, Moravskoslezsky kraj · April 6, 2020 at 01:51pm</p>
-                                    <Button color="text" className="text-primary pl-0">
-                                        Log out device
-                                </Button>
-                                </Media>
-                            </Media>
                         </div>
                     </Col>
                 </Row>
