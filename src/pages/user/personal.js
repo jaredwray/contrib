@@ -5,11 +5,15 @@ import Select from 'react-select'
 
 import { Container, Row, Col, Button, Collapse, Form, Input, Label, Media, Card, CardHeader, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
-import data from '../data/user-personal.json'
-import countries from '../data/countries.json'
-import states from '../data/regions/us.json'
+import data from '../../data/user-personal.json'
 
-export async function getStaticProps() {
+import countries from '../../data/countries.json'
+import states from '../../data/regions/us.json'
+
+import { getSession } from 'next-auth/client'
+
+export async function getServerSideProps(context) {
+    const session = await getSession(context)
     return {
         props: {
             nav: {
@@ -17,16 +21,17 @@ export async function getStaticProps() {
                 classes: "shadow",
                 color: "white",
             },
-            loggedUser: true,
-            title: "Personal info - forms"
+            title: "Personal info",
+            user: session && session.user,
         },
     }
 }
 
-const UserPersonal = () => {
-
+const UserPersonal = (props) => {
     const [personalCollapse, setPersonalCollapse] = React.useState(false)
     const [addressCollapse, setAddressCollapse] = React.useState(false)
+
+    const user = props.user
 
     return (
         <section className="py-5">
@@ -38,18 +43,18 @@ const UserPersonal = () => {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
-                        <Link href="/user-account">
+                        <Link href="/user/account">
                             <a>Account</a>
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem active>
-                        Host view
+                        Personal info
                     </BreadcrumbItem>
                 </Breadcrumb>
 
 
-                <h1 className="hero-heading mb-0">{data.title}</h1>
-                <p className="text-muted mb-5">{data.subtitle}</p>
+                <h1 className="hero-heading mb-0">Personal info</h1>
+                <p className="text-muted mb-5">Manage your personal information here.</p>
                 <Row>
                     <Col lg="7">
                         <div className="text-block">
@@ -60,22 +65,16 @@ const UserPersonal = () => {
                                 <Col sm="3" className="text-right">
                                     <Button
                                         color="link"
-                                        className="pl-0 text-primary collapsed"
+                                        className="pl-0 pr-0 text-primary collapsed"
                                         onClick={() => setPersonalCollapse(!personalCollapse)}>
                                         Update
                                     </Button>
                                 </Col>
                             </Row>
-                            <p className="text-sm text-muted">
-                                {data.personal.map((item, index) =>
-                                    <React.Fragment key={index}>
-                                        <i className={`fa fa-${item.icon} fa-fw mr-2`} />
-                                        {item.title}
-                                        {index === data.personal.length - 2 && <span className="mx-2"> | </span>}
-                                        {index < data.personal.length - 2 && <br />}
-                                    </React.Fragment>
-                                )}
-                            </p>
+                            <ol className="list-unstyled text-sm text-muted">
+                                <li><i className={`fa fa-id-card fa-fw mr-2`} />{user.name}</li>
+                                <li><i className={`fa fa-envelope-open fa-fw mr-2`} />{user.email}</li>
+                            </ol>
                             <Collapse isOpen={personalCollapse}>
                                 <Form>
                                     <Row className="pt-4">
@@ -83,25 +82,13 @@ const UserPersonal = () => {
                                             <Label for="name" className="form-label" >
                                                 Name
                                             </Label>
-                                            <Input type="text" name="name" id="name" defaultValue="John Doe" />
-                                        </Col>
-                                        <Col md="6" className="form-group">
-                                            <Label for="date" className="form-label">
-                                                Date of birth
-                                            </Label>
-                                            <Input type="text" name="date" id="date" defaultValue="06/22/1980" />
+                                            <Input type="text" name="name" id="name" defaultValue={user.name} />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <Label for="email" className="form-label">
                                                 Email address
                                             </Label>
-                                            <Input type="email" name="email" id="email" defaultValue="john.doe@directory.com" />
-                                        </Col>
-                                        <Col md="6" className="form-group">
-                                            <Label for="phone" className="form-label">
-                                                Phone number
-                                            </Label>
-                                            <Input type="text" name="phone" id="phone" defaultValue="+42055544466" />
+                                            <Input type="email" name="email" id="email" defaultValue={user.email} />
                                         </Col>
                                     </Row>
                                     <Button
@@ -116,12 +103,12 @@ const UserPersonal = () => {
                         <div className="text-block">
                             <Row className="mb-3">
                                 <Col sm="9">
-                                    <h5>Address</h5>
+                                    <h5>Shipping address</h5>
                                 </Col>
                                 <Col sm="3" className="text-right">
                                     <Button
                                         color="link"
-                                        className="pl-0 text-primary collapsed"
+                                        className="pl-0 pr-0 text-primary collapsed"
                                         onClick={() => setAddressCollapse(!addressCollapse)}>
                                         Change
                                     </Button>
@@ -195,7 +182,7 @@ const UserPersonal = () => {
                                         type="submit"
                                         color="outline-primary"
                                         className=" mb-4">
-                                        Save address
+                                        Save shipping address
                                     </Button>
                                 </Form>
                             </Collapse>
@@ -224,6 +211,6 @@ const UserPersonal = () => {
             </Container>
         </section>
     )
-};
+}
 
-export default UserPersonal;
+export default UserPersonal

@@ -2,7 +2,6 @@ import { Db, MongoClient, MongoClientOptions } from 'mongodb'
 import { ContribDocuments } from '../model/database/docs'
 
 const uri = process.env.MONGODB_URI
-const dbName = process.env.MONGODB_DB
 
 const clientOptions: MongoClientOptions = {
   useNewUrlParser: true,
@@ -21,14 +20,10 @@ if (!uri) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
 }
 
-if (!dbName) {
-  throw new Error('Please define the MONGODB_DB environment variable inside .env.local')
-}
-
 export async function connectToDatabase(): Promise<MongoConnection> {
   if (!cached) {
     const client = await MongoClient.connect(uri, clientOptions)
-    const db = client.db(dbName)
+    const db = client.db()
     const docs = new ContribDocuments(db)
     cached = { client, db, docs }
   }

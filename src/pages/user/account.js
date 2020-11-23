@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { Container, Row, Col, Card, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
-import data from '../data/user-account.json'
+import data from '../../data/user-account.json'
 
 export async function getStaticProps() {
     return {
@@ -13,7 +13,7 @@ export async function getStaticProps() {
                 classes: "shadow",
                 color: "white",
             },
-            title: "User Account"
+            title: "Your account"
         },
     }
 }
@@ -29,8 +29,8 @@ const UserAccount = () => {
                         </Link>
                     </BreadcrumbItem>
                     <BreadcrumbItem active>
-                        Host view
-                        </BreadcrumbItem>
+                        Account
+                    </BreadcrumbItem>
                 </Breadcrumb>
 
                 <h1 className="hero-heading mb-0">{data.title}</h1>
@@ -68,6 +68,6 @@ const UserAccount = () => {
             </Container>
         </section>
     )
-};
+}
 
-export default UserAccount;
+export default UserAccount

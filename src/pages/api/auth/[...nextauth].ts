@@ -3,6 +3,7 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
 const options = {
+  database: process.env.MONGODB_URI,
   providers: [
     Providers.Facebook({
       clientId: process.env.FB_CLIENT_ID,

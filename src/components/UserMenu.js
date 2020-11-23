@@ -28,31 +28,28 @@ const UserMenu = (props) => {
                 <img src={user.image} alt={user.name} title={user.name} className="avatar avatar-sm avatar-border-white mr-2" />
             </DropdownToggle>
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
-                <DropdownItem>
-                    <b>{user.name}</b>
-                </DropdownItem>
-                <Link key="userMenu-profile" activeClassName="active" href="/user-profile" passHref>
+                <Link key="userMenu-profile" activeClassName="active" href="/user/profile" passHref>
                     <DropdownItem onClick={() => onLinkClick("Profile")}>
-                        Profile
+                    <b>{user.name}</b>
                     </DropdownItem>
                 </Link>
-                <Link key="userMenu-account" activeClassName="active" href="/user-account" passHref>
+                <Link key="userMenu-account" activeClassName="active" href="/user/account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Account")}>
                         Account
                     </DropdownItem>
                 </Link>
                 <hr/>
-                <Link key="userMenu-bids" activeClassName="active" href="/user-account" passHref>
+                <Link key="userMenu-bids" activeClassName="active" href="/user/account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Bids")}>
                         Bids
                     </DropdownItem>
                 </Link>
-                <Link key="userMenu-watchlist" activeClassName="active" href="/user-account" passHref>
+                <Link key="userMenu-watchlist" activeClassName="active" href="/user/account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Watch list")}>
                         Watch list
                     </DropdownItem>
                 </Link>
-                <Link key="userMenu-purchases" activeClassName="active" href="/user-account" passHref>
+                <Link key="userMenu-purchases" activeClassName="active" href="/user/account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Purchase history")}>
                         Purchase history
                     </DropdownItem>

@@ -22,6 +22,7 @@ export async function getServerSideProps(context) {
     const { docs } = await connectToDatabase()
     const auction = await docs.auctions().findOne({ _id: new ObjectID(id.toString()) })
     const athlete = await docs.athletes().findOne({ _id: auction.seller.id })
+    const charity = await docs.charities().findOne({ _id: auction.charities[0].id })
 
     return {
         props: {
@@ -32,6 +33,7 @@ export async function getServerSideProps(context) {
             },
             title: auction ? auction.title : '404 Not Found',
             auction: JSON.parse(JSON.stringify(auction)),
+            charity: JSON.parse(JSON.stringify(charity)),
             seller: JSON.parse(JSON.stringify(athlete))
         },
     }
@@ -40,6 +42,7 @@ export async function getServerSideProps(context) {
 const ItemDetail = (props) => {
     const auction = props.auction
     const seller = props.seller
+    const charity = props.charity
     if (auction == null) return <Error404 />
 
     return (
@@ -79,6 +82,23 @@ const ItemDetail = (props) => {
                                                     </a>
                                                 </Link>
                                             </p>
+                                        </Media>
+                                    </Media>
+                                </div>
+                            }
+                            {charity &&
+                                <div className="text-block">
+                                    <Media>
+                                        <a href={`/charity/${charity._id}`}><img src={charity.avatar.medium} alt={charity.name} className="avatar avatar-lg mr-4" /></a>
+                                        <Media body>
+                                            <p>
+                                                <span className="text-muted text-uppercase text-sm">Benefiting</span>
+                                                <br />
+                                                <strong>
+                                                    <a href={`/charity/${charity._id}`}>{charity.name}</a>
+                                                </strong>
+                                            </p>
+                                            <div dangerouslySetInnerHTML={{ __html: charity.shortDescription }} />
                                         </Media>
                                     </Media>
                                 </div>
