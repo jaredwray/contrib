@@ -1,9 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
-
-import { Container, Row, Col, Button, Badge, Media, Breadcrumb, BreadcrumbItem } from 'reactstrap'
-
-import { connectToDatabase } from '../../../utils/mongodb'
+import { Container, Row, Col, Button, Breadcrumb, BreadcrumbItem } from 'reactstrap'
+import { connectToDatabase } from 'utils/mongodb'
 import { ObjectID } from 'mongodb'
 import { getSession } from 'next-auth/client'
 

@@ -1,5 +1,4 @@
 import React from 'react'
-
 import SortBy from './SortBy'
 
 const ResultsTopBar = props => {
@@ -14,6 +13,6 @@ const ResultsTopBar = props => {
             {props.sortBy && <SortBy data={props.sortBy} />}
         </div>
     )
-};
+}
 
-export default ResultsTopBar;
+export default ResultsTopBar

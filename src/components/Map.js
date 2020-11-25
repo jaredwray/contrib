@@ -2,16 +2,12 @@ import React from "react"
 import Link from 'next/link'
 import { Map, Marker, Popup, TileLayer, Tooltip, Circle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-
 import MarkerIcon from '../../public/content/svg/marker.svg'
 import MarkerIconHighlight from '../../public/content/svg/marker-hover.svg'
-
 import Stars from './Stars'
 
 const MapComponent = props => {
-
     let tileLayers = []
-
     tileLayers[1] = { tiles: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>', subdomains: 'abcd' }
     tileLayers[2] = { tiles: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }
     tileLayers[3] = { tiles: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png', attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }
@@ -208,6 +204,6 @@ const MapComponent = props => {
             }
         </Map>
     )
-};
+}
 
-export default MapComponent;
+export default MapComponent

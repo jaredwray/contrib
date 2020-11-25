@@ -1,6 +1,6 @@
 import React from 'react'
 import 'react-dates/initialize'
-import UseWindowSize from '../hooks/UseWindowSize'
+import UseWindowSize from 'hooks/UseWindowSize'
 import { DateRangePicker } from 'react-dates'
 import Select from 'react-select'
 import {
@@ -17,9 +17,9 @@ import {
 } from 'reactstrap'
 
 import Nouislider from 'nouislider-react'
-import Pagination from '../components/Pagination'
-import ResultsTopBar from '../components/ResultsTopBar'
-import data from '../data/auctions.json'
+import Pagination from 'components/Pagination'
+import ResultsTopBar from 'components/ResultsTopBar'
+import data from 'data/auctions.json'
 
 export async function getStaticProps() {
     return {

@@ -37,7 +37,6 @@ const GalleryAbsolute = props => {
                     </Col>
                 )}
             </Row>
-
             {lightBoxOpen && (
                 <Lightbox
                     mainSrc={`${data[activeImage].url}`}
@@ -56,6 +55,6 @@ const GalleryAbsolute = props => {
             )}
         </React.Fragment>
     )
-};
+}
 
-export default GalleryAbsolute;
+export default GalleryAbsolute

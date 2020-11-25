@@ -3,9 +3,9 @@ import React from 'react'
 
 import { Container } from 'reactstrap'
 
-import ProgressBar from '../components/ProgressBar'
-import ListingForm from '../components/ListingForm'
-import data from '../data/user-add.json'
+import ProgressBar from 'components/ProgressBar'
+import ListingForm from 'components/ListingForm'
+import data from 'data/user-add.json'
 export async function getStaticProps() {
 
     return {

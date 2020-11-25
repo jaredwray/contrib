@@ -1,15 +1,5 @@
 import React from 'react'
-
-import {
-    Button,
-    Collapse,
-    Form,
-    FormGroup,
-    Input,
-    Label,
-    Row,
-    Col
-} from 'reactstrap'
+import { Button, Collapse, Form, FormGroup, Input, Label, Row, Col } from 'reactstrap'
 
 const ReviewForm = () => {
     const [reviewCollapse, setReviewCollapse] = React.useState(false)
@@ -106,6 +96,6 @@ const ReviewForm = () => {
             </Collapse>
         </div>
     )
-};
+}
 
-export default ReviewForm;
+export default ReviewForm

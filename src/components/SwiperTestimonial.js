@@ -1,14 +1,10 @@
 import React from 'react'
-
 import ReactIdSwiper from 'react-id-swiper'
-
-import CardTestimonial from '../components/CardTestimonial'
+import CardTestimonial from 'components/CardTestimonial'
 
 const SwiperTestimonial = props => {
     const data = props.data
-
     const params = {
-
         slidesPerView: 1,
         spaceBetween: 20,
         loop: true,
@@ -39,6 +35,6 @@ const SwiperTestimonial = props => {
             )}
         </ReactIdSwiper>
     )
-};
+}
 
-export default SwiperTestimonial;
+export default SwiperTestimonial

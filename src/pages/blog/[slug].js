@@ -1,22 +1,8 @@
 import React from 'react'
-
 import Link from 'next/link'
-
-import blog from '../../data/blog.json'
-import postDummyData from '../../data/post.json'
-
-import {
-    Container,
-    Row,
-    Col,
-    Button,
-    Media,
-    Collapse,
-    Form,
-    Input,
-    Label,
-    FormGroup
-} from 'reactstrap'
+import blog from 'data/blog.json'
+import postDummyData from 'data/post.json'
+import { Container, Row, Col, Button, Media, Collapse, Form, Input, Label, FormGroup } from 'reactstrap'
 
 export function getAllPostIds() {
     return blog.posts.map(post => ({
@@ -43,7 +29,6 @@ export async function getStaticPaths() {
 
 
 export async function getStaticProps({ params }) {
-
     const postData = getPostData(params.slug);
     return {
         props: {
@@ -58,9 +43,7 @@ export async function getStaticProps({ params }) {
     }
 }
 export default ({ postData }) => {
-
     const [formCollapse, setFormCollapse] = React.useState(false)
-
     return (
         <React.Fragment>
             <section className="hero-home dark-overlay mb-5">
@@ -206,7 +189,6 @@ export default ({ postData }) => {
                                             color="primary"
                                         >
                                             <i className="far fa-comment" /> Comment
-
                                         </Button>
                                     </Form>
                                 </Collapse>
@@ -218,4 +200,3 @@ export default ({ postData }) => {
         </React.Fragment>
     )
 }
-

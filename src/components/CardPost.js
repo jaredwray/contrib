@@ -1,11 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-
-import {
-    Card,
-    CardBody
-} from 'reactstrap'
-
+import { Card, CardBody } from 'reactstrap'
 
 const CardPost = props => {
     const post = props.data
@@ -46,7 +41,6 @@ const CardPost = props => {
             </CardBody>
         </Card>
     )
-};
+}
 
-
-export default CardPost;
+export default CardPost

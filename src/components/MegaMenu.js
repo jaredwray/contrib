@@ -1,19 +1,8 @@
 import Router from 'next/router'
 import Link from 'next/link'
-import {
-    NavItem,
-    NavLink,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Row,
-    Col,
-    Badge
-} from 'reactstrap'
-import UseWindowSize from '../hooks/UseWindowSize'
-
-import menu from '../data/menu.json'
+import { NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Col, Badge } from 'reactstrap'
+import UseWindowSize from 'hooks/UseWindowSize'
+import menu from 'data/menu.json'
 
 const MegaMenu = (props) => {
     const size = UseWindowSize()
@@ -150,4 +139,4 @@ const MegaMenu = (props) => {
     );
 }
 
-export default MegaMenu;
+export default MegaMenu

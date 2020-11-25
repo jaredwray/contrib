@@ -1,8 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Media, Card, CardBody, CardFooter } from 'reactstrap'
-
-import Stars from '../components/Stars'
+import Stars from 'components/Stars'
 
 const BookingColumn = props => {
     const from = props.from
@@ -102,6 +101,6 @@ const BookingColumn = props => {
             </CardFooter>
         </Card>
     )
-};
+}
 
-export default BookingColumn;
+export default BookingColumn

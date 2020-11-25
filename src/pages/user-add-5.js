@@ -1,14 +1,9 @@
 import React from 'react'
-
 import Link from 'next/link'
-
 import { Container, Button } from 'reactstrap'
-
-import { FormContext } from '../components/FormContext'
-
-import ProgressBar from '../components/ProgressBar'
-
-import data from '../data/user-add.json'
+import { FormContext } from 'components/FormContext'
+import ProgressBar from 'components/ProgressBar'
+import data from 'data/user-add.json'
 
 export async function getStaticProps() {
     return {

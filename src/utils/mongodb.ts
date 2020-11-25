@@ -1,5 +1,5 @@
 import { Db, MongoClient, MongoClientOptions } from 'mongodb'
-import { ContribDocuments } from '../model/database/docs'
+import { ContribDocuments } from 'models/database/docs'
 
 const uri = process.env.MONGODB_URI
 

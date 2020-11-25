@@ -1,11 +1,5 @@
 import React from 'react'
-
-import {
-    Pagination,
-    PaginationItem,
-    PaginationLink
-} from 'reactstrap'
-
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap'
 
 const PaginationComponent = () => {
     return (
@@ -37,7 +31,6 @@ const PaginationComponent = () => {
             </PaginationItem>
         </Pagination>
     )
-};
+}
 
-
-export default PaginationComponent;
+export default PaginationComponent

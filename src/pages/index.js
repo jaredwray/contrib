@@ -1,19 +1,11 @@
 import React from 'react'
-
-import {
-  Container,
-  Row,
-  Col,
-} from 'reactstrap'
-
-import Swiper from '../components/Swiper'
-import SearchBar from '../components/SearchBar'
-import LastMinute from '../components/LastMinute'
-
-import SwiperTestimonial from '../components/SwiperTestimonial'
-
-import { connectToDatabase } from '../../utils/mongodb'
-import data from '../data/index.json'
+import { Container, Row, Col } from 'reactstrap'
+import Swiper from 'components/Swiper'
+import SearchBar from 'components/SearchBar'
+import LastMinute from 'components/LastMinute'
+import SwiperTestimonial from 'components/SwiperTestimonial'
+import { connectToDatabase } from 'utils/mongodb'
+import data from 'data/index.json'
 
 export async function getServerSideProps() {
   const { docs } = await connectToDatabase() 
@@ -121,6 +113,6 @@ const Index = (props) => {
       }
     </React.Fragment>
   )
-};
+}
 
-export default Index;
+export default Index

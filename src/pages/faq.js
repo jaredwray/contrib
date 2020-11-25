@@ -1,16 +1,7 @@
 import React from 'react'
-
 import Link from 'next/link'
-
-import {
-    Container,
-    Row,
-    Col,
-    Breadcrumb,
-    BreadcrumbItem
-} from 'reactstrap'
-
-import data from '../data/faq.json'
+import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap'
+import data from 'data/faq.json'
 
 export async function getStaticProps() {
     return {
@@ -25,9 +16,7 @@ export async function getStaticProps() {
     }
 }
 
-
 const Faq = () => {
-
     const groupByN = (n, data) => {
         let result = [];
         for (let i = 0; i < data.length; i += n) result.push(data.slice(i, i + n));
@@ -92,7 +81,6 @@ const Faq = () => {
             </section>
         </React.Fragment>
     )
-};
+}
 
-
-export default Faq;
+export default Faq

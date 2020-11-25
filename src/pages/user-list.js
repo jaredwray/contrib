@@ -1,13 +1,9 @@
 import React from 'react'
-
 import Link from 'next/link'
-
 import { Container, Button, ListGroup, ListGroupItem, Row, Col, Badge, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 import Select from 'react-select'
-
-import data from '../data/user-list.json'
-
-import Pagination from '../components/Pagination'
+import data from 'data/user-list.json'
+import Pagination from 'components/Pagination'
 
 export async function getStaticProps() {
     return {
@@ -161,6 +157,6 @@ const UserList = () => {
             </Container>
         </section>
     )
-};
+}
 
-export default UserList;
+export default UserList

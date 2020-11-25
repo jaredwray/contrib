@@ -1,18 +1,8 @@
 import React from 'react'
-
 import Link from 'next/link'
-
-import {
-    Container,
-    Row,
-    Col,
-    Breadcrumb,
-    BreadcrumbItem
-} from 'reactstrap'
-
-import data from '../data/team.json'
-
-import CardTeam from '../components/CardTeam'
+import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap'
+import data from 'data/team.json'
+import CardTeam from 'components/CardTeam'
 
 export async function getStaticProps() {
     return {
@@ -42,7 +32,6 @@ const Team = () => {
                 )}
             </Row>
         )
-
     }
     return (
         <React.Fragment>
@@ -131,6 +120,6 @@ const Team = () => {
             }
         </React.Fragment>
     )
-};
+}
 
-export default Team;
+export default Team

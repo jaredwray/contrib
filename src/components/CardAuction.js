@@ -1,13 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-
-import {
-    Card,
-    CardBody,
-    CardTitle,
-    CardSubtitle,
-    CardText,
-} from 'reactstrap'
+import { Card, CardBody, CardTitle, CardSubtitle, CardText } from 'reactstrap'
 
 const CardAuction = props => {
     const auction = props.data
@@ -49,6 +42,6 @@ const CardAuction = props => {
             </CardBody>
         </Card>
     ) || ''
-};
+}
 
-export default CardAuction;
+export default CardAuction

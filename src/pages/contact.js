@@ -1,25 +1,9 @@
 import React from 'react'
-
 import Link from 'next/link'
-
 import dynamic from 'next/dynamic'
-
-import {
-    Container,
-    Row,
-    Col,
-    Form,
-    FormGroup,
-    Input,
-    Label,
-    Button,
-    Breadcrumb,
-    BreadcrumbItem
-} from 'reactstrap'
-
-import UseWindowSize from '../hooks/UseWindowSize'
-
-import data from '../data/contact.json'
+import { Container, Row, Col, Form, FormGroup, Input, Label, Button, Breadcrumb, BreadcrumbItem } from 'reactstrap'
+import UseWindowSize from 'hooks/UseWindowSize'
+import data from 'data/contact.json'
 
 export async function getStaticProps() {
     return {
@@ -44,7 +28,7 @@ const Contact = () => {
     const size = UseWindowSize()
     React.useEffect(() => {
         Map = dynamic(
-            () => import('../components/Map'),
+            () => import('components/Map'),
             { ssr: false }
         )
         setMapLoaded(true)
@@ -261,6 +245,6 @@ const Contact = () => {
             </div>
         </React.Fragment>
     )
-};
+}
 
-export default Contact;
+export default Contact

@@ -1,18 +1,8 @@
 import React from 'react'
-
-import {
-    Row,
-    Col,
-    Form,
-    Input,
-    Button,
-
-} from 'reactstrap'
-
+import { Row, Col, Form, Input, Button } from 'reactstrap'
 import Select from 'react-select'
 
 const SearchBar = props => {
-
     const customSelectStyles = {
         control: (provided, state) => ({
             ...provided,
@@ -75,6 +65,6 @@ const SearchBar = props => {
             </Form>
         </div>
     )
-};
+}
 
-export default SearchBar;
+export default SearchBar

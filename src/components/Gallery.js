@@ -1,7 +1,5 @@
 import React from 'react'
-
 import { Row, Col } from 'reactstrap'
-
 import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 
@@ -24,7 +22,6 @@ const Gallery = props => {
     }
     return (
         <React.Fragment>
-
             <Row className={props.rowClasses}>
                 {data.map((item, index) =>
                     <Col
@@ -41,7 +38,6 @@ const Gallery = props => {
 
                 )}
             </Row>
-
             {lightBoxOpen && (
                 <Lightbox
                     mainSrc={`/content/img/photo/${data[activeImage].img}`}
@@ -61,6 +57,6 @@ const Gallery = props => {
             )}
         </React.Fragment>
     )
-};
+}
 
-export default Gallery;
+export default Gallery

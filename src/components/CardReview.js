@@ -1,10 +1,5 @@
 import React from 'react'
-import Link from 'next/link'
-
-import {
-    Media
-} from 'reactstrap'
-
+import { Media } from 'reactstrap'
 import Stars from './Stars'
 
 const CardReview = props => {
@@ -26,6 +21,6 @@ const CardReview = props => {
             </Media>
         </Media>
     )
-};
+}
 
-export default CardReview;
+export default CardReview

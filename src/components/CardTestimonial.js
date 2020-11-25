@@ -1,8 +1,5 @@
 import React from 'react'
-
-import {
-    Card
-} from 'reactstrap'
+import { Card } from 'reactstrap'
 
 const CardTestimonial = props => {
     const data = props.data
@@ -22,6 +19,6 @@ const CardTestimonial = props => {
             </div>
         </Card>
     )
-};
+}
 
-export default CardTestimonial;
+export default CardTestimonial

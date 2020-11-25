@@ -18,7 +18,7 @@ export async function getStaticProps() {
 const Error404 = () => {
     return (
         <React.Fragment>
-            <div className="mh-full-screen d-flex align-items-center dark-overlay">
+            <p className="mh-full-screen d-flex align-items-center dark-overlay">
                 <img src="/content/img/photo/aron-visuals-3jBU9TbKW7o-unsplash.jpg" alt="Not found" className="bg-image" />
                 <Container className="text-white text-lg overlay-content py-6 py-lg-0">
                     <h1 className="display-3 font-weight-bold mb-5">Oops, we couldn't find that.</h1>
@@ -32,9 +32,9 @@ const Error404 = () => {
                         </Link></p>
                     <p className="h4 text-shadow">404 Not Found</p>
                 </Container>
-            </div>
+            </p>
         </React.Fragment>
     )
 }
 
-export default Error404;
+export default Error404

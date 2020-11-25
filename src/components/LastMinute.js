@@ -1,11 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import {
-  Container,
-  Row,
-  Col,
-} from 'reactstrap'
-
+import { Container, Row, Col } from 'reactstrap'
 import Swiper from './Swiper'
 
 const LastMinute = (props) => {
@@ -43,6 +38,6 @@ const LastMinute = (props) => {
       </Container>
     </section>
   )
-};
+}
 
-export default LastMinute;
+export default LastMinute

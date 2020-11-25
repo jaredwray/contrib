@@ -1,13 +1,7 @@
-/**
- *
- * NProgress
- *
- */
-
-import React from 'react';
-import NProgress from 'nprogress';
-import Router from "next/router";
-import PropTypes from 'prop-types';
+import React from 'react'
+import NProgress from 'nprogress'
+import Router from "next/router"
+import PropTypes from 'prop-types'
 // import styled from 'styled-components';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -17,21 +11,21 @@ class NextNProgress extends React.Component {
     startPosition: 0.3,
     stopDelayMs: 200,
     height: 3,
-  };
+  }
 
-  timer = null;
+  timer = null
 
   routeChangeStart = () => {
     NProgress.set(this.props.startPosition);
     NProgress.start();
-  };
+  }
 
   routeChangeEnd = () => {
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       NProgress.done(true);
     }, this.props.stopDelayMs);
-  };
+  }
 
   render() {
     const { color, height } = this.props;
@@ -125,6 +119,6 @@ NextNProgress.propTypes = {
   startPosition: PropTypes.number,
   stopDelayMs: PropTypes.number,
   options: PropTypes.object,
-};
+}
 
-export default NextNProgress;
+export default NextNProgress

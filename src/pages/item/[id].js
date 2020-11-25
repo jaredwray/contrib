@@ -1,21 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
 import 'react-dates/initialize'
-import {
-    Container,
-    Row,
-    Col,
-    Form,
-    Label,
-    Input,
-    Button,
-    FormGroup,
-    Media,
-} from 'reactstrap'
-import GalleryAbsolute from '../../components/GalleryAbsolute'
-import { connectToDatabase } from '../../../utils/mongodb'
+import { Container, Row, Col, Form, Label, Input, Button, FormGroup, Media } from 'reactstrap'
+import GalleryAbsolute from 'components/GalleryAbsolute'
+import { connectToDatabase } from 'utils/mongodb'
 import { ObjectID } from 'mongodb'
-import Error404 from '../404'
+import Error404 from 'pages/404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -157,6 +147,6 @@ const ItemDetail = (props) => {
             </section>
         </React.Fragment>
     )
-};
+}
 
-export default ItemDetail;
+export default ItemDetail

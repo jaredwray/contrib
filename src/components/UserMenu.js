@@ -71,4 +71,4 @@ const UserMenu = (props) => {
     || ''
 }
 
-export default UserMenu;
+export default UserMenu

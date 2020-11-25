@@ -54,8 +54,7 @@ const ComingSoon = () => {
                 </ul>
             </Container>
         </div>
-           
     )
-};
+}
 
-export default ComingSoon;
+export default ComingSoon

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
-import CardAuction from '../../components/CardAuction'
-import { connectToDatabase } from '../../../utils/mongodb'
-import Error404 from '../404'
+import CardAuction from 'components/CardAuction'
+import { connectToDatabase } from 'utils/mongodb'
+import Error404 from 'pages/404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -113,6 +113,6 @@ const AthleteProfile = (props) => {
             </Container>
         </section>
     )
-};
+}
 
-export default AthleteProfile;
+export default AthleteProfile

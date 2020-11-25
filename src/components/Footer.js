@@ -10,7 +10,7 @@ import {
     Badge
 } from 'reactstrap'
 
-import footerContent from '../data/footer.json'
+import footerContent from 'data/footer.json'
 
 const Footer = () => {
     return (

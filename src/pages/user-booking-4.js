@@ -1,16 +1,10 @@
 import React from 'react'
-
 import Link from 'next/link'
-
 import { Container, Button, Row, Col } from 'reactstrap'
-
-import { BookingContext } from '../components/BookingContext'
-
-import ProgressBar from '../components/ProgressBar'
-
-import data from '../data/user-booking.json'
-
-import BookingColumn from '../components/BookingColumn'
+import { BookingContext } from 'components/BookingContext'
+import ProgressBar from 'components/ProgressBar'
+import data from 'data/user-booking.json'
+import BookingColumn from 'components/BookingColumn'
 
 export async function getStaticProps() {
     return {
@@ -30,7 +24,6 @@ export async function getStaticProps() {
 const UserBooking4 = () => {
     const [bookingInputs, setBookingInputs] = React.useContext(BookingContext)
 
-    console.log(bookingInputs)
     return (
         <React.Fragment>
             <ProgressBar progress={100} />
@@ -84,6 +77,6 @@ const UserBooking4 = () => {
             </section>
         </React.Fragment>
     )
-};
+}
 
-export default UserBooking4;
+export default UserBooking4

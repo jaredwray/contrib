@@ -1,5 +1,4 @@
 import React from 'react'
-
 import Select from 'react-select'
 
 const SortBy = props => {
@@ -16,6 +15,6 @@ const SortBy = props => {
             />
         </div>
     )
-};
+}
 
-export default SortBy;
+export default SortBy

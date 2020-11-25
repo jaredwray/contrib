@@ -1,9 +1,7 @@
 import React from 'react'
-
 import CardReview from './CardReview'
 
 const Reviews = props => {
-
     return (
         <div className="text-block">
             <p className="subtitle text-sm text-primary">
@@ -17,6 +15,6 @@ const Reviews = props => {
             )}
         </div>
     )
-};
+}
 
-export default Reviews;
+export default Reviews

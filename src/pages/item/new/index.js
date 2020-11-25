@@ -2,7 +2,6 @@ import React from 'react'
 import Link from 'next/link'
 import { Container, Row, Col, Button } from 'reactstrap'
 import ProgressBar from 'components/ProgressBar'
-import data from 'data/user-add.json'
 
 export async function getStaticProps() {
     return {
@@ -13,12 +12,12 @@ export async function getStaticProps() {
                 color: "white",
             },
             loggedUser: true,
-            title: "Add your listing"
+            title: "Auction an item"
         },
     }
 }
 
-const UserAdd0 = () => {
+const NewAuction0 = () => {
     return (
         <React.Fragment>
             <ProgressBar progress={0} />
@@ -27,18 +26,20 @@ const UserAdd0 = () => {
                     <Row>
                         <Col lg="5">
                             <p className="subtitle text-primary">
-                                {data[0].subtitle}
+                                Auction an item
                             </p>
                             <h1 className="h2 mb-5">
-                                {data[0].title}
+                                Let's get started
                             </h1>
-                            <div dangerouslySetInnerHTML={{
-                                __html: data[0].content
-                            }} />
+                            <p>The following steps will guide you through the process of listing
+                                your item for auction via Contrib.</p>
+                            <p> You will be prompted to enter details for your item, upload photos 
+                                and videos as well as select the starting price,
+                                charity and how long the auction runs for.</p>
                             <p className="mb-5 mb-lg-0">
-                                <Link href="user-add-1" passHref>
+                                <Link href="new/step-1" passHref>
                                     <Button color="primary">
-                                        {data[0].button}
+                                        Start
                                     </Button>
                                 </Link>
                             </p>
@@ -50,8 +51,8 @@ const UserAdd0 = () => {
                     </Row>
                 </Container>
             </section>
-        </React.Fragment >
+        </React.Fragment>
     )
-};
+}
 
-export default UserAdd0;
+export default NewAuction0

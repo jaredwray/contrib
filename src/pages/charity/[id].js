@@ -1,9 +1,9 @@
 import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
-import CardAuction from '../../components/CardAuction'
-import GalleryAbsolute from '../../components/GalleryAbsolute'
-import { connectToDatabase } from '../../../utils/mongodb'
-import Error404 from '../404'
+import CardAuction from 'components/CardAuction'
+import GalleryAbsolute from 'components/GalleryAbsolute'
+import { connectToDatabase } from 'utils/mongodb'
+import Error404 from 'pages/404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -124,6 +124,6 @@ const CharityProfile = (props) => {
             </Container>
         </section>
     )
-};
+}
 
-export default CharityProfile;
+export default CharityProfile

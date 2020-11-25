@@ -1,10 +1,7 @@
 import React from 'react'
-
 import { Row, Col, Media, Label, Input, Button, Collapse, CustomInput } from 'reactstrap'
-
 import Select from 'react-select'
-
-import { BookingContext } from '../components/BookingContext'
+import { BookingContext } from 'components/BookingContext'
 
 
 const BookingForm = props => {

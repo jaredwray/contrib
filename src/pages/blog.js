@@ -1,7 +1,5 @@
 import React from 'react'
-
 import Link from 'next/link'
-
 import {
     Container,
     Row,
@@ -10,10 +8,8 @@ import {
     PaginationItem,
     PaginationLink
 } from 'reactstrap'
-
-import CardPost from '../components/CardPost'
-
-import data from '../data/blog.json'
+import CardPost from 'components/CardPost'
+import data from 'data/blog.json'
 
 export async function getStaticProps() {
     return {

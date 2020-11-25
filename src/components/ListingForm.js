@@ -1,14 +1,9 @@
 import React from 'react'
-
 import Link from 'next/link'
-
 import { Row, Col, Form, FormGroup, Label, Input, Button, CustomInput } from 'reactstrap'
-
 import Select from 'react-select'
 import { useDropzone } from 'react-dropzone'
-
-import { FormContext } from '../components/FormContext'
-
+import { FormContext } from 'components/FormContext'
 
 const ListingForm = props => {
     const data = props.data
@@ -50,9 +45,7 @@ const ListingForm = props => {
         setFormInputs({ ...formInputs, [name]: value + 1 })
     }
 
-
     return (
-
         <Form>
             {data.formBlocks.map(block =>
                 <Row className="form-block" key={block.title}>
@@ -305,7 +298,6 @@ const ListingForm = props => {
         </Form>
 
     )
-};
+}
 
-
-export default ListingForm;
+export default ListingForm

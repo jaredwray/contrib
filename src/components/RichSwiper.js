@@ -1,20 +1,7 @@
 import React from "react"
 import Link from 'next/link'
-
-import {
-    Container,
-    Row,
-    Col,
-    Button,
-    Card,
-    CardBody,
-    CardTitle,
-    CardSubtitle,
-    Badge
-} from 'reactstrap'
-
+import { Container, Row, Col, Button, Card, CardBody, CardTitle, CardSubtitle, Badge } from 'reactstrap'
 import Stars from './Stars'
-
 import ReactIdSwiper from 'react-id-swiper'
 
 const RichSwiper = (props) => {

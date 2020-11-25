@@ -1,14 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-
-import {
-    Card,
-    CardBody,
-    CardTitle,
-    CardSubtitle,
-    CardImg
-} from 'reactstrap'
-
+import { Card, CardBody, CardTitle, CardSubtitle, CardImg } from 'reactstrap'
 
 const CardTeam = props => {
     const data = props.data
@@ -30,7 +22,6 @@ const CardTeam = props => {
             </CardBody>
         </Card>
     )
-};
+}
 
-
-export default CardTeam;
+export default CardTeam

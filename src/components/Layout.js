@@ -1,13 +1,10 @@
 import React from 'react'
 import Head from 'next/head'
-import NextNProgress from '../components/NextNProgress';
-
+import NextNProgress from 'components/NextNProgress';
 import Header from './Header'
 import Footer from './Footer'
-
-import { FormProvider } from '../components/FormContext'
-import { BookingProvider } from '../components/BookingContext'
-
+import { FormProvider } from 'components/FormContext'
+import { BookingProvider } from 'components/BookingContext'
 import { useSession } from 'next-auth/client'
 
 const Layout = pageProps => {
@@ -60,7 +57,6 @@ const Layout = pageProps => {
       }
     </div>
   )
-};
+}
 
-export default Layout;
-
+export default Layout

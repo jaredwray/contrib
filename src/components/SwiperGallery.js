@@ -1,7 +1,5 @@
 import React from 'react'
-
 import ReactIdSwiper from 'react-id-swiper'
-
 import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 
@@ -61,6 +59,7 @@ const SwiperGallery = props => {
             position: 'fixed',
         }
     }
+    
     return (
         <React.Fragment>
             <ReactIdSwiper {...params}>
@@ -94,6 +93,6 @@ const SwiperGallery = props => {
             )}
         </React.Fragment>
     )
-};
+}
 
-export default SwiperGallery;
+export default SwiperGallery
