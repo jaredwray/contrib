@@ -3,7 +3,7 @@ import Link from 'next/link'
 import 'react-dates/initialize'
 import { Container, Row, Col, Form, Label, Input, Button, FormGroup, Media } from 'reactstrap'
 import GalleryAbsolute from 'components/GalleryAbsolute'
-import { connectToDatabase } from 'utils/mongodb'
+import { connectToDatabase } from 'services/mongodb'
 import { ObjectID } from 'mongodb'
 import Error404 from 'pages/404'
 

@@ -4,7 +4,7 @@ import Swiper from 'components/Swiper'
 import SearchBar from 'components/SearchBar'
 import LastMinute from 'components/LastMinute'
 import SwiperTestimonial from 'components/SwiperTestimonial'
-import { connectToDatabase } from 'utils/mongodb'
+import { connectToDatabase } from 'services/mongodb'
 import data from 'data/index.json'
 
 export async function getServerSideProps() {

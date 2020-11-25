@@ -1,6 +1,6 @@
 import { ObjectID } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase } from 'utils/mongodb'
+import { connectToDatabase } from 'services/mongodb'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') {
