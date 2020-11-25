@@ -94,7 +94,7 @@
                "links": [
                   {
                      "title": "Auction a new item",
-                     "link": "/user-add-0"
+                     "link": "/item/new"
                   },
                   {
                      "title": "Active auctions",

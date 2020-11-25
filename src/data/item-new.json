@@ -1,0 +1,151 @@
+[
+  {
+    "title": "Let's get started",
+    "subtitle": "Add a new listing",
+    "content": "<p class='text-muted'>His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.</p><p class='text-muted mb-5'>Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>",
+    "button": "Add your listing"
+  },
+  {
+    "title": "Basic information",
+    "formBlocks": [
+      {
+        "title": "Basic",
+        "content": "Provide information about the item you are listing. This affects how the item is shown in social networks and on search results.",
+        "inputs": [
+          {
+            "label": "Item title",
+            "name": "form_title",
+            "type": "text"
+          },
+          {
+            "label": "Sport category",
+            "name": "form_category",
+            "type": "select",
+            "options": [
+              {
+                "label": "Soccer",
+                "value": "type_0"
+              },
+              {
+                "label": "Basketball",
+                "value": "type_1"
+              },
+              {
+                "label": "Baseball",
+                "value": "type_2"
+              }
+            ]
+          },
+          {
+            "label": "Game played in",
+            "name": "form_game",
+            "type": "text"
+          },
+          {
+            "label": "Short social item description",
+            "name": "form_social",
+            "type": "textarea",
+            "rows": 2,
+            "help": "This is the short one or two sentence description that will be used to describe the item when linked out to social networks like Twitter and Facebook."
+          },
+          {
+            "label": "Full page item description",
+            "name": "form_description",
+            "type": "textarea",
+            "rows": 10,
+            "helpId": "descriptionHelp",
+            "help": "This is the full description that will appear on the page on Contrib alongside the bidding box etc."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Photos & video",
+    "formBlocks": [
+        {
+            "title": "Photos",
+            "content": "Provide a number of photos that show the item off from a couple of angles as well as any standout markings, endorsements etc.",
+            "inputs": [
+                {
+                    "type": "upload"
+                }
+            ]
+        },
+        {
+          "title": "Video",
+          "content": "Provide a single video (preferably in portrait mode) that shows the item off and talks to what makes it special.",
+          "inputs": [
+              {
+                  "type": "upload"
+              }
+          ]
+      }
+    ]
+  },
+  {
+    "title": "Auction details",
+    "formBlocks": [
+      {
+        "title": "Starting price",
+        "content": "The starting price for the item which determines the minimum amount that can be bid. The item will not sell if no bids at or above this price are received.",
+        "inputs": [
+          {
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "title": "Start date & time",
+        "content": "When the auction should start - we need to determine a timezone here?",
+        "inputs": [
+          {
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "title": "Duration",
+        "content": "How long the auction should run for. Shorter auctions play to intensity and instant gratification. Longer auctions can achieve higher prices with longer exposure.",
+        "inputs": [
+          {
+            "type": "select",
+            "name": "form_duration",
+            "options": [
+              {
+                "label": "3 days",
+                "value": "3"
+              },
+              {
+                "label": "5 days",
+                "value": "5"
+              },
+              {
+                "label": "7 days",
+                "value": "7"
+              },
+              {
+                "label": "10 days",
+                "value": "10"
+              }                 
+            ]            
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Complete",
+    "content": "Thank you! Your listing is now viewable and will start at the specified time.",
+    "buttons": [
+        {
+            "title": "Share on Twitter",
+            "link": "#"
+        },
+        {
+            "title": "Share on Facebook",
+            "link": "#"
+        }
+    ]
+  }
+]

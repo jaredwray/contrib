@@ -9,6 +9,7 @@ const ListingForm = props => {
     const data = props.data
     const [formInputs, setFormInputs] = React.useContext(FormContext)
 
+    // TODO: Figure out how to split photo/video
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: acceptedFiles => {
@@ -82,7 +83,7 @@ const ListingForm = props => {
                                     </FormGroup>
                                 }
                                 {input.type === "textarea" &&
-                                    <FormGroup className="mb-5">
+                                    <FormGroup className="mb-3">
                                         <Label
                                             className="form-label"
                                             for={input.name}
@@ -91,7 +92,7 @@ const ListingForm = props => {
                                         </Label>
                                         <Input
                                             type={input.type}
-                                            rows="5"
+                                            rows={input.rows || 5}
                                             input={input.name}
                                             name={input.name}
                                             id={input.name}
@@ -150,7 +151,6 @@ const ListingForm = props => {
                                                 label={radio.label}
                                             />
                                         )}
-
                                     </FormGroup>
                                 }
                                 {input.type === "form-group" &&
@@ -173,7 +173,6 @@ const ListingForm = props => {
                                             </Col>
                                         )}
                                     </Row>
-
                                 }
                                 {input.type === "buttons" &&
                                     <Row>
@@ -208,7 +207,6 @@ const ListingForm = props => {
                                             </Col>
                                         )}
                                     </Row>
-
                                 }
                                 {input.type === "checkboxes" &&
                                     <FormGroup>
@@ -239,7 +237,6 @@ const ListingForm = props => {
                                             <input {...getInputProps()} />
                                             <div className="dz-message text-muted">
                                                 <p>Drop files here or click to upload.</p>
-                                                <p><span className="note">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span></p>
                                             </div>
                                         </div>
                                         <Row className="mt-4">
@@ -254,7 +251,6 @@ const ListingForm = props => {
                                                 </div>
                                             )}
                                         </Row>
-
                                     </FormGroup>
                                 }
                             </React.Fragment>
@@ -262,7 +258,6 @@ const ListingForm = props => {
                         )}
                     </Col>
                 </Row>
-
             )}
             <Row className="form-block flex-column flex-sm-row">
                 <Col className="text-center text-sm-left">
@@ -273,7 +268,6 @@ const ListingForm = props => {
                                 Back
                             </Button>
                         </Link>
-
                     }
                 </Col>
                 <Col className="text-center text-sm-right">
@@ -296,7 +290,6 @@ const ListingForm = props => {
                 </Col>
             </Row>
         </Form>
-
     )
 }
 

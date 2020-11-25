@@ -1,8 +1,8 @@
 import React from 'react'
 import { Container } from 'reactstrap'
 import ProgressBar from 'components/ProgressBar'
-import data from 'data/user-add.json'
 import ListingForm from 'components/ListingForm'
+import data from 'data/item-new.json'
 
 export async function getStaticProps() {
     return {
@@ -12,35 +12,30 @@ export async function getStaticProps() {
                 classes: "shadow",
                 color: "white",
             },
-            loggedUser: true,
-            title: "Add your listing",
+            title: "Auction an item - Step 1",
             listingForm: true
         },
     }
 }
 
-const UserAdd2 = () => {
+const NewAuction1 = () => {
     return (
         <React.Fragment>
-            <ProgressBar progress={40} />
+            <ProgressBar progress={20} />
             <section className="py-5">
                 <Container>
                     <p className="subtitle text-primary">
-                        {data[2].subtitle}
+                        Auction an item
                     </p>
                     <h1 className="h2 mb-5">
-                        {data[2].title}
-                        <span className="text-muted float-right">Step 2</span>
+                        {data.title}
+                        <span className="text-muted float-right">Step 1</span>
                     </h1>
-                    <ListingForm
-                        data={data[2]}
-                        prevStep="/user-add-1"
-                        nextStep="/user-add-3"
-                    />
+                    <ListingForm data={data[1]} nextStep="step-2" />
                 </Container>
             </section>
         </React.Fragment>
     )
-};
+}
 
-export default UserAdd2;
+export default NewAuction1
