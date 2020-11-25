@@ -40,16 +40,15 @@ const NewAuction4 = () => {
                         {data[4].content}
                     </p>
                     <p className="mb-5">
-                        <Link href={data[4].buttons[0].link} passHref>
-                            <Button color="primary" className="mr-2 mb-2">
-                                {data[4].buttons[0].title}
-                            </Button>
-                        </Link>
-                        <Link href={data[4].buttons[1].link} passHref>
-                            <Button color="outline-muted" className="mb-2">
-                                {data[4].buttons[1].title}
-                            </Button>
-                        </Link>
+                        {
+                            data[4].buttons.map(button =>
+                                <Link href={button.link} passHref>
+                                    <Button color="primary" className="mr-2 mb-2">
+                                        {button.title}
+                                    </Button>
+                                </Link>
+                            )
+                        }
                     </p>
                 </Container>
             </section>

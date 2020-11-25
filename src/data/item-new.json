@@ -2,7 +2,6 @@
   {
     "title": "Let's get started",
     "subtitle": "Add a new listing",
-    "content": "<p class='text-muted'>His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.</p><p class='text-muted mb-5'>Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>",
     "button": "Add your listing"
   },
   {
@@ -13,12 +12,12 @@
         "content": "Provide information about the item you are listing. This affects how the item is shown in social networks and on search results.",
         "inputs": [
           {
-            "label": "Item title",
+            "label": "Title",
             "name": "form_title",
             "type": "text"
           },
           {
-            "label": "Sport category",
+            "label": "Sports category",
             "name": "form_category",
             "type": "select",
             "options": [
@@ -42,19 +41,19 @@
             "type": "text"
           },
           {
-            "label": "Short social item description",
+            "label": "Short social description",
             "name": "form_social",
             "type": "textarea",
             "rows": 2,
-            "help": "This is the short one or two sentence description that will be used to describe the item when linked out to social networks like Twitter and Facebook."
+            "help": "This is the short one or two sentence description that will be used to describe the item when shared on social networks like Twitter and Facebook."
           },
           {
-            "label": "Full page item description",
+            "label": "Full page description",
             "name": "form_description",
             "type": "textarea",
             "rows": 10,
             "helpId": "descriptionHelp",
-            "help": "This is the full description that will appear on the page on Contrib alongside the bidding box etc."
+            "help": "This is the full description that will appear on the Contrib auction page alongside the bidding box etc. It may contain a limited amount of HTML formatting."
           }
         ]
       }
@@ -96,18 +95,12 @@
         ]
       },
       {
-        "title": "Start date & time",
-        "content": "When the auction should start - we need to determine a timezone here?",
+        "title": "Start time & duration",
+        "content": "When the auction should start and how long it should run for.",
         "inputs": [
           {
             "type": "text"
-          }
-        ]
-      },
-      {
-        "title": "Duration",
-        "content": "How long the auction should run for. Shorter auctions play to intensity and instant gratification. Longer auctions can achieve higher prices with longer exposure.",
-        "inputs": [
+          },
           {
             "type": "select",
             "name": "form_duration",
@@ -131,6 +124,26 @@
             ]            
           }
         ]
+      },
+      {
+        "title": "Charity",
+        "content": "What charity will benefit from the proceeds of this auction.",
+        "inputs": [
+          {
+            "type": "select",
+            "name": "form_charity",
+            "options": [
+              {
+                "label": "Seattle Children's Hospital",
+                "value": "seattle-childrens"
+              },
+              {
+                "label": "Aviva Family and Children’s Services",
+                "value": "aviva-family"
+              }
+            ]            
+          }
+        ]
       }
     ]
   },
@@ -145,7 +158,11 @@
         {
             "title": "Share on Facebook",
             "link": "#"
-        }
-    ]
+        },
+        {
+          "title": "Share on Instagram",
+          "link": "#"
+      }
+  ]
   }
 ]
