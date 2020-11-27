@@ -18,7 +18,7 @@ You will require:
 
 To start:
 
-1. Open the `website` folder in VS Code
+1. Open the `contrib-app` folder in VS Code
 2. In the status bar ensure `Debug with Chrome (website)` is selected
 3. Use `Run > Start Debugging` from the menu or press <kbd>F5</kbd>
 
@@ -43,17 +43,12 @@ Social sign-in support is supported for:
 - [x] Google
 - [ ] Apple
 
-## Endpoints
-
-Right now there is just enough for an index page to establish a connection to the DB and render a list of auctions. (Does not use the API in accordance with the NextJS model)
-
-There is also an api at `/api/auctions` that returns a list of Auctions as JSON and `/api/auctions/[id]` to return a singular Auction. 
-
 ## Next steps
 
 - [x] Allow fans to sign in
 - [x] Work on the Athlete, Fan and Auction models & get some realistic sample data setup
 - [x] Create pages to show the Auctions
+- [x] Create charity pages
 - [ ] Allow fans to bid
 
 ## Docker
