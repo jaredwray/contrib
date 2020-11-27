@@ -50,6 +50,7 @@ Social sign-in support is supported for:
 - [x] Create pages to show the Auctions
 - [x] Create charity pages
 - [ ] Allow fans to bid
+- [x] Stub auction creation UI
 
 ## Docker
 
