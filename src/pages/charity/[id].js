@@ -70,7 +70,7 @@ const CharityProfile = (props) => {
                                             Follow them on
                                         </h6>
                                         <CardText tag="ul" className="list-unstyled">
-                                            {charity.officialSite && <li className="text-primary"><i className="fas fa-globe"/> <a href={charity.officialSite} title={`${charity.name} website`}>Website</a></li>}
+                                            {charity.officialSite && <li className="text-primary"><i className="fas fa-globe"/> <a href={charity.officialSite} title={`${charity.name} official site`}>Website</a></li>}
                                             {charity.social.twitter && <li className="text-primary"><i className="fab fa-twitter"/> <a href={`https://twitter.com/${charity.social.twitter}`} title={`${charity.name} on Twitter`} target="_blank">{charity.social.twitter}</a></li>}
                                             {charity.social.facebook && <li className="text-primary"><i className="fab fa-facebook"/> <a href={`https://facebook.com/${charity.social.facebook}`} title={`${charity.name} on Facebook`} target="_blank">{charity.social.facebook}</a></li>}
                                             {charity.social.instagram && <li className="text-primary"><i className="fab fa-instagram"/> <a href={`https://instagram.com/${charity.social.instagram}`} title={`${charity.name} on Instagram`} target="_blank">{charity.social.instagram}</a></li>}
