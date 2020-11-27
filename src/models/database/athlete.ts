@@ -19,6 +19,7 @@ export type Athlete = {
     location: Location,
     joined: Date,
     verified: true,
+    officialSite: string,
     photos: Photo[]
 }
 
