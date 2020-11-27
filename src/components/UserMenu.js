@@ -28,11 +28,9 @@ const UserMenu = (props) => {
                 <img src={user.image} alt={user.name} title={user.name} className="avatar avatar-sm avatar-border-white mr-2" />
             </DropdownToggle>
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
-                <Link key="userMenu-profile" activeClassName="active" href="/user/profile" passHref>
-                    <DropdownItem onClick={() => onLinkClick("Profile")}>
+                <DropdownItem>
                     <b>{user.name}</b>
-                    </DropdownItem>
-                </Link>
+                </DropdownItem>
                 <Link key="userMenu-account" activeClassName="active" href="/user/account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Account")}>
                         Account

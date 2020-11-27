@@ -130,10 +130,6 @@
                "title": "User",
                "links": [
                   {
-                     "title": "Profile",
-                     "link": "/user/profile"
-                  },
-                  {
                      "title": "Account",
                      "link": "/user/account"
                   },
