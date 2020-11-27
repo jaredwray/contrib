@@ -62,8 +62,7 @@ const Contact = () => {
                         {data.address &&
                             <Col
                                 md="4"
-                                className="text-center text-md-left mb-4 mb-md-0"
-                            >
+                                className="text-center text-md-left mb-4 mb-md-0">
                                 <div className="icon-rounded mb-4 bg-primary-light">
                                     <svg className="svg-icon w-2rem h-2rem text-primary">
                                         <use xlinkHref="content/svg/orion-svg-sprite.svg#map-location-1" />
@@ -127,8 +126,7 @@ const Contact = () => {
                     <Row>
                         <Col
                             md="7"
-                            className="mb-5 mb-md-0"
-                        >
+                            className="mb-5 mb-md-0">
                             <Form>
                                 <div className="controls">
                                     <Row>
@@ -136,75 +134,65 @@ const Contact = () => {
                                             <FormGroup>
                                                 <Label
                                                     for="name"
-                                                    className="form-label"
-                                                >
-                                                    Your First Name *
+                                                    className="form-label">
+                                                    Your first name *
                                                 </Label>
                                                 <Input
                                                     type="text"
                                                     name="name"
                                                     id="name"
                                                     placeholder="Enter your first name"
-                                                    required
-                                                />
+                                                    required />
                                             </FormGroup>
                                         </Col>
                                         <Col sm="6">
                                             <FormGroup>
                                                 <Label
                                                     for="surname"
-                                                    className="form-label"
-                                                >
-                                                    Your Last Name *
+                                                    className="form-label">
+                                                    Your last name *
                                                 </Label>
                                                 <Input
                                                     type="text"
                                                     name="surname"
                                                     id="surname"
                                                     placeholder="Enter your last name"
-                                                    required
-                                                />
+                                                    required />
                                             </FormGroup>
                                         </Col>
                                     </Row>
                                     <FormGroup>
                                         <Label
                                             for="email"
-                                            className="form-label"
-                                        >
-                                            Your email *
-                                                </Label>
+                                            className="form-label">
+                                            Your email address*
+                                        </Label>
                                         <Input
                                             type="email"
                                             name="email"
                                             id="email"
                                             placeholder="Enter your email"
-                                            required
-                                        />
+                                            required />
                                     </FormGroup>
                                     <FormGroup>
                                         <Label
                                             for="message"
-                                            className="form-label"
-                                        >
+                                            className="form-label">
                                             Your message for us *
-                                                </Label>
+                                        </Label>
                                         <Input
                                             type="textarea"
                                             rows="4"
                                             name="message"
                                             id="message"
                                             placeholder="Enter your message"
-                                            required
-                                        />
+                                            required />
                                     </FormGroup>
                                     <Button
                                         type="submit"
-                                        color="outline-primary"
-                                    >
+                                        color="outline-primary">
                                         Send message
-                                        </Button>
-
+                                    </Button>
                                 </div>
                             </Form>
                         </Col>

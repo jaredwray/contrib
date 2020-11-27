@@ -27,7 +27,6 @@ export async function getStaticPaths() {
     };
 }
 
-
 export async function getStaticProps({ params }) {
     const postData = getPostData(params.slug);
     return {
@@ -42,7 +41,8 @@ export async function getStaticProps({ params }) {
         },
     }
 }
-export default ({ postData }) => {
+
+const BlogPost = ({ postData }) => {
     const [formCollapse, setFormCollapse] = React.useState(false)
     return (
         <React.Fragment>
@@ -62,8 +62,7 @@ export default ({ postData }) => {
                         <Col
                             lg="10"
                             xl="8"
-                            className="mx-auto"
-                        >
+                            className="mx-auto">
                             <p className="py-3 mb-5 text-muted text-center font-weight-light">
                                 {postDummyData.authorLink &&
                                     <Link href={postDummyData.authorLink}>
@@ -94,7 +93,6 @@ export default ({ postData }) => {
                                 <span className="mx-1">|</span><a href="#" className="text-muted">{postDummyData.comments && postDummyData.comments.length} comments </a>
                             </p>
                             <p className="lead mb-5" dangerouslySetInnerHTML={{ __html: postDummyData.excerpt }} />
-
                         </Col>
                     </Row>
                     <Row>
@@ -106,8 +104,7 @@ export default ({ postData }) => {
                         <Col
                             xl="8"
                             lg="10"
-                            className="mx-auto"
-                        >
+                            className="mx-auto">
                             <div className="text-content">
                                 <div dangerouslySetInnerHTML={{ __html: postDummyData.content }} />
                                 <hr />
@@ -129,7 +126,8 @@ export default ({ postData }) => {
                                                 </p>
                                                 <p>
                                                     <Button color="link" href="#" className="text-primary">
-                                                        <i className="fa fa-reply" /> Reply</Button>
+                                                        <i className="fa fa-reply" /> Reply
+                                                    </Button>
                                                 </p>
                                             </Media>
                                         </Media>
@@ -142,22 +140,18 @@ export default ({ postData }) => {
                                     aria-expanded={formCollapse}
                                     aria-controls="leaveComment"
                                     color="outline-primary"
-                                    onClick={() => setFormCollapse(!formCollapse)}
-                                >
+                                    onClick={() => setFormCollapse(!formCollapse)}>
                                     Leave a comment
-                            </Button>
+                                </Button>
                                 <Collapse id="leaveComment" isOpen={formCollapse} className="mt-4">
                                     <h5 className="mb-4">Leave a comment</h5>
-                                    <Form
-                                        method="post"
-                                    >
+                                    <Form method="post">
                                         <Row>
                                             <Col md="6">
                                                 <FormGroup>
                                                     <Label
                                                         for="name"
-                                                        className="form-label"
-                                                    >
+                                                        className="form-label">
                                                         Name <span className="required">*</span>
                                                     </Label>
                                                     <Input id="name" type="text" />
@@ -167,8 +161,7 @@ export default ({ postData }) => {
                                                 <FormGroup>
                                                     <Label
                                                         for="email"
-                                                        className="form-label"
-                                                    >
+                                                        className="form-label">
                                                         Email <span className="required">*</span>
                                                     </Label>
                                                     <Input id="email" type="text" />
@@ -178,16 +171,14 @@ export default ({ postData }) => {
                                         <FormGroup className="mb-4">
                                             <Label
                                                 for="comment"
-                                                className="form-label"
-                                            >
+                                                className="form-label">
                                                 Comment <span className="required">*</span>
                                             </Label>
                                             <Input id="comment" type="textarea" className="form-control" rows="4" />
                                         </FormGroup>
                                         <Button
                                             type="submit"
-                                            color="primary"
-                                        >
+                                            color="primary">
                                             <i className="far fa-comment" /> Comment
                                         </Button>
                                     </Form>
@@ -200,3 +191,5 @@ export default ({ postData }) => {
         </React.Fragment>
     )
 }
+
+export default BlogPost

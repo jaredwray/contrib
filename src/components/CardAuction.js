@@ -4,8 +4,8 @@ import { Badge, Card, CardBody, CardTitle, CardSubtitle, CardText } from 'reacts
 
 const CardAuction = props => {
     const auction = props.data
-    return auction && (
-        <Card className="h-100 border-0 shadow" style={{opacity: auction.active ? 1 : 0.5}}>
+    return (
+        <Card className="h-100 border-0 shadow" style={{ opacity: auction.active ? 1 : 0.5 }}>
             <div className="card-img-top overflow-hidden gradient-overlay">
                 <img src={auction.photos[0].url} alt={auction.title} className="img-fluid" />
                 <Link href={`/item/${auction._id}`}>
@@ -45,7 +45,7 @@ const CardAuction = props => {
                 </div>
             </CardBody>
         </Card>
-    ) || ''
+    )
 }
 
 export default CardAuction

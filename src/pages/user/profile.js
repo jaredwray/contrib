@@ -12,7 +12,6 @@ export async function getStaticProps() {
                 classes: "shadow",
                 color: "white",
             },
-            loggedUser: true,
             title: "User Profile"
         },
     }

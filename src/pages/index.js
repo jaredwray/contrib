@@ -18,7 +18,7 @@ export async function getServerSideProps() {
         classes: "shadow",
         color: "white",
       },
-      title: 'Homepage',
+      title: "Home",
       auctions: JSON.parse(JSON.stringify(auctions))
     },
   }

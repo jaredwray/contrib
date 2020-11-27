@@ -16,8 +16,7 @@ const MegaMenu = (props) => {
             item.dropdown && item.dropdown.map(dropdownLink => {
                 dropdownLink.link && dropdownLink.link === Router.route && setParentName(item.title)
                 dropdownLink.links && dropdownLink.links.map(link => link.link === Router.route && setParentName(item.title))
-            }
-            )
+            })
             item.megamenu && item.megamenu.map(megamenuColumn =>
                 megamenuColumn.map(megamenuBlock =>
                     megamenuBlock.links.map(dropdownLink => {
@@ -136,7 +135,7 @@ const MegaMenu = (props) => {
                 </NavItem>
                 :
                 ''
-    );
+    )
 }
 
 export default MegaMenu

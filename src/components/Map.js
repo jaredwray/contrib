@@ -53,12 +53,10 @@ const MapComponent = props => {
             tap={props.tap}
             bounds={props.geoJSON ? markers : null}
             onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
-        >
+            onBlur={() => setFocus(false)}>
             <TileLayer
                 url={tileLayers[1].tiles}
                 attribution={tileLayers[1].attribution}
-
             />
             {props.geoJSON && props.geoJSON.features && props.geoJSON.features.map(feature => {
                 const data = feature.properties
@@ -66,19 +64,15 @@ const MapComponent = props => {
                     props.popupVenue ?
                         <Marker
                             key={data.id}
-
                             position={[
                                 feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
-
                             onMouseOver={() => {
                                 setHover(data.id)
                             }}
                             onMouseOut={() => {
                                 setHover(false)
                             }}
-                            icon={hover === data.id || props.hoverCard === feature.properties.id ? highlightIcon : icon}
-                        >
-
+                            icon={hover === data.id || props.hoverCard === feature.properties.id ? highlightIcon : icon}>
                             <Popup className="map-custom-popup" maxWidth="600" minWidth="200">
                                 <div className="popup-venue">
                                     {data.image ?
@@ -122,12 +116,10 @@ const MapComponent = props => {
                                             <p className="text-muted mb-1">
                                                 <i className="fa fa-phone fa-fw text-dark mr-2" />
                                                 {data.phone}
-
                                             </p>
                                         }
                                     </div>
                                 </div>
-
                             </Popup>
                         </Marker>
                         :
@@ -142,21 +134,16 @@ const MapComponent = props => {
                             }}
                             onMouseOut={() => {
                                 setHover(false)
-                            }}
-                        >
+                            }}>
                             <Tooltip
                                 permanent={true}
                                 interactive={true}
                                 direction="top"
-
-                                className={`map-custom-tooltip ${hover === data.id || props.hoverCard === feature.properties.id ? 'active' : ''}`}
-
-                            >
+                                className={`map-custom-tooltip ${hover === data.id || props.hoverCard === feature.properties.id ? 'active' : ''}`}>
                                 ${data.price}
                             </Tooltip>
 
                             <Popup className="map-custom-popup" maxWidth="600" minWidth="200">
-
                                 <div className="popup-rental">
                                     {data.image ?
                                         <div
@@ -189,8 +176,7 @@ const MapComponent = props => {
             {props.markerPosition &&
                 <Marker
                     position={props.markerPosition}
-                    icon={icon}
-                />
+                    icon={icon} />
             }
             {props.circlePosition &&
                 <Circle
@@ -199,8 +185,7 @@ const MapComponent = props => {
                     fillColor={'#8798fa'}
                     opacity={.5}
                     radius={props.circleRadius}
-                    weight={2}
-                />
+                    weight={2} />
             }
         </Map>
     )

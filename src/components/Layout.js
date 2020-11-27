@@ -34,7 +34,6 @@ const Layout = pageProps => {
       {!pageProps.hideHeader &&
         <Header {...headerProps} />
       }
-
       {pageProps.listingForm || pageProps.bookingForm ?
         <React.Fragment>
           {pageProps.listingForm &&
@@ -51,7 +50,6 @@ const Layout = pageProps => {
         :
         <main>{pageProps.children}</main>
       }
-
       {!pageProps.hideFooter &&
         <Footer />
       }

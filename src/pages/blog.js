@@ -1,13 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import {
-    Container,
-    Row,
-    Col,
-    Pagination,
-    PaginationItem,
-    PaginationLink
-} from 'reactstrap'
+import { Container, Row, Col, Pagination, PaginationItem, PaginationLink } from 'reactstrap'
 import CardPost from 'components/CardPost'
 import data from 'data/blog.json'
 
@@ -25,9 +18,7 @@ export async function getStaticProps() {
 }
 
 const Blog = () => {
-
     const featuredPost = data.posts[0]
-
     return (
         <React.Fragment>
             {featuredPost && <section className="position-relative py-6">
@@ -64,13 +55,11 @@ const Blog = () => {
                                     key={index}
                                     sm="6"
                                     lg="4"
-                                    className="mb-4 hover-animate"
-                                >
+                                    className="mb-4 hover-animate">
                                     <CardPost data={post} index={index} />
                                 </Col>
                         }
                         )}
-
                     </Row>
                     <Pagination aria-label="Page navigation example" listClassName="d-flex justify-content-between mb-5">
                         <PaginationItem>
@@ -88,6 +77,6 @@ const Blog = () => {
             </section>
         </React.Fragment>
     )
-};
+}
 
-export default Blog;
+export default Blog

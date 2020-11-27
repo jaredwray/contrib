@@ -3,18 +3,7 @@ import 'react-dates/initialize'
 import UseWindowSize from 'hooks/UseWindowSize'
 import { DateRangePicker } from 'react-dates'
 import Select from 'react-select'
-import {
-    Container,
-    Row,
-    Col,
-    Form,
-    Input,
-    Label,
-    Collapse,
-    Button,
-    FormGroup,
-    CustomInput
-} from 'reactstrap'
+import { Container, Row, Col, Form, Input, Label, Collapse, Button, FormGroup, CustomInput } from 'reactstrap'
 
 import Nouislider from 'nouislider-react'
 import Pagination from 'components/Pagination'
@@ -34,7 +23,7 @@ export async function getStaticProps() {
     }
 }
 
-const Category3Rooms = () => {
+const Auctions = () => {
     const size = UseWindowSize()
     const [range, setRange] = React.useState([{ startDate: new Date() }, { endDate: '' }])
     const [dateFocused, setDateFocused] = React.useState(range.startDate)
@@ -70,21 +59,18 @@ const Category3Rooms = () => {
             </Container>
             <Container
                 fluid
-                className="py-5 px-lg-5"
-            >
+                className="py-5 px-lg-5">
                 <Row>
                     <Col
                         lg="3"
-                        className="pt-3"
-                    >
+                        className="pt-3">
                         <Form className="pr-xl-3">
                             <div className="mb-4">
                                 <Label
                                     for="form_dates"
-                                    className="form-label"
-                                >
+                                    className="form-label">
                                     Dates
-                                    </Label>
+                                </Label>
                                 <DateRangePicker
                                     startDate={range.startDate}
                                     startDateId="fromDate"
@@ -94,14 +80,12 @@ const Category3Rooms = () => {
                                     focusedInput={dateFocused}
                                     block={true}
                                     onFocusChange={dateFocused => setDateFocused(dateFocused)}
-                                    orientation={size.width < 400 ? "vertical" : "horizontal"}
-                                />
+                                    orientation={size.width < 400 ? "vertical" : "horizontal"} />
                             </div>
                             <div className="mb-4">
                                 <Label
                                     for="form_guests"
-                                    className="form-label"
-                                >
+                                    className="form-label">
                                     Guests
                                 </Label>
                                 <div>
@@ -112,17 +96,15 @@ const Category3Rooms = () => {
                                         isMulti
                                         isSearchable
                                         className="form-control dropdown bootstrap-select"
-                                        classNamePrefix="selectpicker"
-                                    />
+                                        classNamePrefix="selectpicker" />
                                 </div>
                             </div>
                             <div className="mb-4">
                                 <Label
                                     for="form_type"
-                                    className="form-label"
-                                >
+                                    className="form-label">
                                     Home type
-                                    </Label>
+                                </Label>
                                 <Select
                                     name="type"
                                     inputId="form_type"
@@ -130,47 +112,39 @@ const Category3Rooms = () => {
                                     isMulti
                                     isSearchable
                                     className="form-control dropdown bootstrap-select"
-                                    classNamePrefix="selectpicker"
-                                />
+                                    classNamePrefix="selectpicker" />
                             </div>
                             <div className="mb-4">
-                                <Label
-                                    className="form-label"
-                                >
+                                <Label className="form-label">
                                     Price range
-                                    </Label>
+                                </Label>
                                 <Nouislider
                                     range={{ min: 40, max: 110 }}
                                     start={[40, 110]}
                                     onUpdate={priceSlider}
                                     className="text-primary"
-                                    connect
-                                />
+                                    connect />
                                 <div className="nouislider-values">
                                     <div className="min">From $<span id="slider-snap-value-from">{priceMin}</span></div>
                                     <div className="max">To $<span id="slider-snap-value-to">{priceMax}</span></div>
                                 </div>
                             </div>
                             <div className="mb-4">
-                                <Label
-                                    className="form-label"
-                                >
+                                <Label className="form-label">
                                     Host and booking
-                                        </Label>
+                                </Label>
                                 <ul className="list-inline mb-0 mt-1">
                                     <li className="list-inline-item mb-2">
                                         <CustomInput
                                             id="instantBook"
                                             type="switch"
-                                            label={<span className="text-sm">Instant book</span>}
-                                        />
+                                            label={<span className="text-sm">Instant book</span>} />
                                     </li>
                                     <li className="list-inline-item">
                                         <CustomInput
                                             id="superhost"
                                             type="switch"
-                                            label={<span className="text-sm">Superhost</span>}
-                                        />
+                                            label={<span className="text-sm">Superhost</span>} />
                                     </li>
                                 </ul>
                             </div>
@@ -179,13 +153,12 @@ const Category3Rooms = () => {
                                     <div className="filter-block">
                                         <h6 className="mb-3">
                                             Location
-                                            </h6>
+                                        </h6>
                                         <FormGroup className="mb-4">
                                             <Label
-                                                for="form_neighbourhood" className="form-label"
-                                            >
+                                                for="form_neighbourhood" className="form-label">
                                                 Neighbourhood
-                                                    </Label>
+                                            </Label>
                                             <Select
                                                 name="neighbourhood"
                                                 inputId="form_neighbourhood"
@@ -193,8 +166,7 @@ const Category3Rooms = () => {
                                                 isMulti
                                                 isSearchable
                                                 className="form-control dropdown bootstrap-select"
-                                                classNamePrefix="selectpicker"
-                                            />
+                                                classNamePrefix="selectpicker" />
                                         </FormGroup>
                                         {data.tags &&
                                             <FormGroup className="mb-0">
@@ -208,8 +180,7 @@ const Category3Rooms = () => {
                                                                 type="checkbox"
                                                                 id={tag.value}
                                                                 name={tag.value}
-                                                                label={tag.label}
-                                                            />
+                                                                label={tag.label} />
                                                         </li>
                                                     )}
                                                 </ul>
@@ -223,89 +194,80 @@ const Category3Rooms = () => {
                                         <FormGroup className="mb-2">
                                             <Label className="form-label">
                                                 Beds
-                                                    </Label>
+                                            </Label>
                                             <div className="d-flex align-items-center">
                                                 <Button
                                                     color="items"
                                                     className="btn-items-decrease"
-                                                    onClick={() => beds > 1 && setBeds(beds - 1)}
-                                                >
+                                                    onClick={() => beds > 1 && setBeds(beds - 1)}>
                                                     -
-                                                        </Button>
+                                                </Button>
                                                 <Input
                                                     type="text"
                                                     value={`${beds}+`}
                                                     disabled
-                                                    className="input-items input-items-greaterthan"
-                                                />
+                                                    className="input-items input-items-greaterthan"/>
                                                 <Button
                                                     color="items"
                                                     className="btn-items-increase"
-                                                    onClick={() => setBeds(beds + 1)}
-                                                >
+                                                    onClick={() => setBeds(beds + 1)}>
                                                     +
-                                                        </Button>
+                                                </Button>
                                             </div>
                                         </FormGroup>
                                         <FormGroup className="mb-2">
                                             <Label className="form-label">
                                                 Bedrooms
-                                                    </Label>
+                                            </Label>
                                             <div className="d-flex align-items-center">
                                                 <Button
                                                     color="items"
                                                     className="btn-items-decrease"
-                                                    onClick={() => bedrooms > 1 && setBedrooms(bedrooms - 1)}
-                                                >
+                                                    onClick={() => bedrooms > 1 && setBedrooms(bedrooms - 1)}>
                                                     -
-                                                        </Button>
+                                                </Button>
                                                 <Input
                                                     type="text"
                                                     value={`${bedrooms}+`}
                                                     disabled
-                                                    className="input-items input-items-greaterthan"
-                                                />
+                                                    className="input-items input-items-greaterthan" />
                                                 <Button
                                                     color="items"
                                                     className="btn-items-increase"
-                                                    onClick={() => setBedrooms(bedrooms + 1)}
-                                                >
+                                                    onClick={() => setBedrooms(bedrooms + 1)}>
                                                     +
-                                                        </Button>
+                                                </Button>
                                             </div>
                                         </FormGroup>
                                         <FormGroup className="mb-2">
                                             <Label className="form-label">
                                                 Bathrooms
-                                                    </Label>
+                                            </Label>
                                             <div className="d-flex align-items-center">
                                                 <Button
                                                     color="items"
                                                     className="btn-items-decrease"
-                                                    onClick={() => bathrooms > 1 && setBathrooms(bathrooms - 1)}
-                                                >
+                                                    onClick={() => bathrooms > 1 && setBathrooms(bathrooms - 1)}>
                                                     -
-                                                        </Button>
+                                                </Button>
                                                 <Input
                                                     type="text"
                                                     value={`${bathrooms}+`}
                                                     disabled
-                                                    className="input-items input-items-greaterthan"
-                                                />
+                                                    className="input-items input-items-greaterthan" />
                                                 <Button
                                                     color="items"
                                                     className="btn-items-increase"
-                                                    onClick={() => setBathrooms(bathrooms + 1)}
-                                                >
+                                                    onClick={() => setBathrooms(bathrooms + 1)}>
                                                     +
-                                                        </Button>
+                                                </Button>
                                             </div>
                                         </FormGroup>
                                     </div>
                                     <div className="filter-block">
                                         <h6 className="mb-3">
                                             Trip type
-                                            </h6>
+                                        </h6>
                                         <FormGroup className="mb-0">
                                             <CustomInput
                                                 id="forfamilies"
@@ -313,14 +275,12 @@ const Category3Rooms = () => {
                                                 name="forfamilies"
                                                 aria-describedby="forfamiliesHelp"
                                                 className="mb-2"
-                                                label={<span className="text-sm">For Families</span>}
-                                            />
+                                                label={<span className="text-sm">For Families</span>} />
                                             <small
                                                 id="forfamiliesHelp"
-                                                className="text-muted form-text"
-                                            >
+                                                className="text-muted form-text">
                                                 Explore entire homes with 5-star reviews from families and essentials like a kitchen and TV
-                                                    </small>
+                                            </small>
                                         </FormGroup>
                                         <FormGroup className="mb-0">
                                             <CustomInput
@@ -329,23 +289,19 @@ const Category3Rooms = () => {
                                                 name="forwork"
                                                 aria-describedby="forworkHelp"
                                                 className="mb-2"
-                                                label={<span className="text-sm">For work</span>}
-                                            />
+                                                label={<span className="text-sm">For work</span>} />
                                             <small
                                                 id="forworkHelp"
-                                                className="text-muted form-text"
-                                            >
+                                                className="text-muted form-text">
                                                 Explore top-rated homes with essentials like a workspace, wifi, and self check-in
-                                                    </small>
+                                            </small>
                                         </FormGroup>
-
                                     </div>
                                     {data.amenities &&
                                         <div className="filter-block">
                                             <h6 className="mb-3">
                                                 {data.amenities.title}
                                             </h6>
-
                                             <ul className="list-unstyled mb-0">
                                                 {data.amenities.items.map(amenity =>
                                                     <li key={amenity.value}>
@@ -353,12 +309,10 @@ const Category3Rooms = () => {
                                                             type="checkbox"
                                                             id={amenity.value}
                                                             name={amenity.value}
-                                                            label={amenity.label}
-                                                        />
+                                                            label={amenity.label} />
                                                     </li>
                                                 )}
                                             </ul>
-
                                         </div>
                                     }
                                     {data.facilities &&
@@ -373,8 +327,7 @@ const Category3Rooms = () => {
                                                             type="checkbox"
                                                             id={facility.value}
                                                             name={facility.value}
-                                                            label={facility.label}
-                                                        />
+                                                            label={facility.label} />
                                                     </li>
                                                 )}
                                             </ul>
@@ -386,23 +339,19 @@ const Category3Rooms = () => {
                                         aria-expanded={filterCollapse}
                                         onClick={() => setFilterCollapse(!filterCollapse)}
                                         color="link"
-                                        className="btn-collapse pl-0 text-secondary"
-                                    >
+                                        className="btn-collapse pl-0 text-secondary">
                                         {filterCollapse ? 'Less filters' : 'More filters'}
-
                                     </Button>
                                 </div>
                                 <div className="mb-4">
                                     <Button
                                         type="submit"
-                                        color="primary"
-                                    >
+                                        color="primary">
                                         <i className="fas fa-search mr-1" />
                                         Search
                                     </Button>
                                 </div>
                             </div>
-
                         </Form>
                     </Col>
                     <Col lg="9">
@@ -413,7 +362,6 @@ const Category3Rooms = () => {
             </Container>
         </React.Fragment>
     )
-};
+}
 
-
-export default Category3Rooms;
+export default Auctions
