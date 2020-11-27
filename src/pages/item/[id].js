@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import 'react-dates/initialize'
-import { Container, Row, Col, Form, Label, Input, Button, FormGroup, Media } from 'reactstrap'
+import { Badge, Container, Row, Col, Form, Label, Input, Button, FormGroup, Media } from 'reactstrap'
 import GalleryAbsolute from 'components/GalleryAbsolute'
 import { connectToDatabase } from 'services/mongodb'
 import { ObjectID } from 'mongodb'
@@ -107,40 +107,53 @@ const ItemDetail = (props) => {
                             }
                         </Col>
                         <Col lg="4">
-                            <div
-                                style={{ top: "100px" }}
-                                className="p-4 shadow ml-lg-4 rounded sticky-top">
-                                <p className="text-muted">Ends at {new Date(auction.endAt).toLocaleString()}</p>
-                                <span className="text-primary h2">
-                                    ${auction.startPrice / 100}
-                                </span>
-                                <Form
-                                    id="booking-form"
-                                    method="get"
-                                    action="#"
-                                    autoComplete="off"
-                                    className="form">
-                                    <FormGroup>
-                                        <Label className="form-label">Your bid</Label>
-                                        <br />
-                                        <Input type="text" name="bid" id="bid" />
-                                        <p className="text-muted text-sm">Enter ${((auction.startPrice / 100) + 1).toFixed(2)} or more to bid.</p>
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <Button type="submit" color="primary" block>Place your bid</Button>
-                                    </FormGroup>
-                                </Form>
-                                <p className="text-muted text-sm text-center">Bidding means you're committing to buy this item if you're the winning bidder.</p>
-                                <hr className="my-4" />
-                                <div className="text-center">
-                                    <p>
-                                        <a href="#" className="text-secondary text-sm">
-                                            <i className="fa fa-heart" /> &nbsp;Watch this auction
-                                        </a>
-                                    </p>
-                                    <p className="text-muted text-sm">79 people are watching this auction.</p>
+                            {auction.active ?
+                                <div
+                                    style={{ top: "100px" }}
+                                    className="p-4 shadow ml-lg-4 rounded sticky-top">
+                                    <p className="text-muted">Ends at {new Date(auction.endAt).toLocaleString()}</p>
+                                    <span className="text-primary h2">
+                                        ${auction.startPrice / 100}
+                                    </span>
+                                    <Form
+                                        id="booking-form"
+                                        method="get"
+                                        action="#"
+                                        autoComplete="off"
+                                        className="form">
+                                        <FormGroup>
+                                            <Label className="form-label">Your bid</Label>
+                                            <br />
+                                            <Input type="text" name="bid" id="bid" />
+                                            <p className="text-muted text-sm">Enter ${((auction.startPrice / 100) + 1).toFixed(2)} or more to bid.</p>
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <Button type="submit" color="primary" block>Place your bid</Button>
+                                        </FormGroup>
+                                    </Form>
+                                    <p className="text-muted text-sm text-center">Bidding means you're committing to buy this item if you're the winning bidder.</p>
+                                    <hr className="my-4" />
+                                    <div className="text-center">
+                                        <p>
+                                            <a href="#" className="text-secondary text-sm">
+                                                <i className="fa fa-heart" /> &nbsp;Watch this auction
+                                            </a>
+                                        </p>
+                                        <p className="text-muted text-sm">79 people are watching this auction.</p>
+                                    </div>
                                 </div>
-                            </div>
+                                :
+                                <div
+                                    style={{ top: "100px" }}
+                                    className="p-4 shadow ml-lg-4 rounded sticky-top">
+                                    <p className="text-muted">Ended at {new Date(auction.endAt).toLocaleString()}</p>
+                                    <Badge color="danger-light" className="ml-1">Sold</Badge>
+                                    &nbsp;
+                                    <span className="text-danger h2">
+                                        ${auction.startPrice / 100}
+                                    </span>
+                                </div>
+                            }
                         </Col>
                     </Row>
                 </Container>

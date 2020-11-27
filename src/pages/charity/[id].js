@@ -9,19 +9,21 @@ export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
     const charity = await docs.charities().findOne({ _id: id })
-    const auctions = await docs.auctions().find({ "charities.id": id }).toArray()
+
+    const activeAuctions = charity === null ? [] : await docs.auctions().find({ "charities.id": id, active: true }).toArray()
+    const recentAuctions = charity === null ? [] : await docs.auctions().find({ "charities.id": id, active: false }).sort({ endedAt: -1 }).toArray()
 
     return {
-        props: {            
+        props: {
             nav: {
                 light: true,
                 classes: "shadow",
                 color: "white",
             },
-            loggedUser: true,
             title: charity ? charity.name : "404 Not Found",
             charity: JSON.parse(JSON.stringify(charity)),
-            auctions: JSON.parse(JSON.stringify(auctions))
+            activeAuctions: JSON.parse(JSON.stringify(activeAuctions)),
+            recentAuctions: JSON.parse(JSON.stringify(recentAuctions))
         },
     }
 }
@@ -29,7 +31,6 @@ export async function getServerSideProps(context) {
 const CharityProfile = (props) => {
     const charity = props.charity
     if (charity == null) return <Error404 />
-    const auctions = props.auctions
 
     return (
         <section className="py-5">
@@ -57,24 +58,24 @@ const CharityProfile = (props) => {
                                         <p className="mb-0">{charity.verified ? "Verified" : "Unverified"} Charity</p>
                                     </Media>
                                 </Media>
-                                <hr/>
+                                <hr />
                                 {charity.joined &&
-                                <Badge color="secondary-light">
-                                    Joined in {new Date(charity.joined).getFullYear()}
-                                </Badge>
+                                    <Badge color="secondary-light">
+                                        Joined in {new Date(charity.joined).getFullYear()}
+                                    </Badge>
                                 }
                                 {charity.social &&
                                     <React.Fragment>
                                         <hr />
                                         <h6>
-                                            Follow them on
+                                            Follow them at
                                         </h6>
                                         <CardText tag="ul" className="list-unstyled">
-                                            {charity.officialSite && <li className="text-primary"><i className="fas fa-globe"/> <a href={charity.officialSite} title={`${charity.name} official site`}>Website</a></li>}
-                                            {charity.social.twitter && <li className="text-primary"><i className="fab fa-twitter"/> <a href={`https://twitter.com/${charity.social.twitter}`} title={`${charity.name} on Twitter`} target="_blank">{charity.social.twitter}</a></li>}
-                                            {charity.social.facebook && <li className="text-primary"><i className="fab fa-facebook"/> <a href={`https://facebook.com/${charity.social.facebook}`} title={`${charity.name} on Facebook`} target="_blank">{charity.social.facebook}</a></li>}
-                                            {charity.social.instagram && <li className="text-primary"><i className="fab fa-instagram"/> <a href={`https://instagram.com/${charity.social.instagram}`} title={`${charity.name} on Instagram`} target="_blank">{charity.social.instagram}</a></li>}
-                                            {charity.social.youtube && <li className="text-primary"><i className="fab fa-youtube"/> <a href={`https://youtube.com/user/${charity.social.youtube}`} title={`${charity.name} on YouTube`} target="_blank">{charity.social.youtube}</a></li>}
+                                            {charity.officialSite && <li className="text-primary"><i className="fas fa-globe" /> <a href={charity.officialSite} title={`${charity.name} official site`}>Website</a></li>}
+                                            {charity.social.twitter && <li className="text-primary"><i className="fab fa-twitter" /> <a href={`https://twitter.com/${charity.social.twitter}`} title={`${charity.name} on Twitter`} target="_blank">{charity.social.twitter}</a></li>}
+                                            {charity.social.facebook && <li className="text-primary"><i className="fab fa-facebook" /> <a href={`https://facebook.com/${charity.social.facebook}`} title={`${charity.name} on Facebook`} target="_blank">{charity.social.facebook}</a></li>}
+                                            {charity.social.instagram && <li className="text-primary"><i className="fab fa-instagram" /> <a href={`https://instagram.com/${charity.social.instagram}`} title={`${charity.name} on Instagram`} target="_blank">{charity.social.instagram}</a></li>}
+                                            {charity.social.youtube && <li className="text-primary"><i className="fab fa-youtube" /> <a href={`https://youtube.com/user/${charity.social.youtube}`} title={`${charity.name} on YouTube`} target="_blank">{charity.social.youtube}</a></li>}
                                         </CardText>
                                     </React.Fragment>
                                 }
@@ -98,25 +99,39 @@ const CharityProfile = (props) => {
                                 />
                             </div>
                         }
-                        { auctions ?
+                        {props.activeAuctions ?
                             <div className="text-block">
                                 <h3 className="mb-5">
-                                    Auction items benefiting {charity.name}
+                                    Auctions benefiting {charity.name}
                                 </h3>
                                 <Row>
-                                    {auctions.map(auction =>
+                                    {props.activeAuctions.map(auction =>
                                         <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
                                             <CardAuction data={auction} />
                                         </Col>
                                     )}
                                 </Row>
-                            </div>                        
-                        :
+                            </div>
+                            :
                             <div className="text-block">
                                 <h4 className="mb-3">
                                     No items up for auction right now
                                 </h4>
                                 <p>Check back again soon!</p>
+                            </div>
+                        }
+                        {props.recentAuctions.length > 0 &&
+                            <div className="text-block">
+                                <h3 className="mb-5">
+                                    Recent auctions for {charity.name}
+                                </h3>
+                                <Row>
+                                    {props.recentAuctions.map(auction =>
+                                        <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
+                                            <CardAuction data={auction} />
+                                        </Col>
+                                    )}
+                                </Row>
                             </div>
                         }
                     </Col>
