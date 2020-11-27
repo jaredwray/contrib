@@ -38,7 +38,8 @@
           {
             "label": "Game played in",
             "name": "form_game",
-            "type": "text"
+            "type": "text",
+            "help": "If this item was played in a game please enter the details here, otherwise leave blank."
           },
           {
             "label": "Short social description",
@@ -67,7 +68,9 @@
             "content": "Provide a number of photos that show the item off from a couple of angles as well as any standout markings, endorsements etc.",
             "inputs": [
                 {
-                    "type": "upload"
+                    "type": "upload",
+                    "name": "photos",
+                    "accept": "image/*"
                 }
             ]
         },
@@ -76,8 +79,10 @@
           "content": "Provide a single video (preferably in portrait mode) that shows the item off and talks to what makes it special.",
           "inputs": [
               {
-                  "type": "upload"
-              }
+                  "type": "upload",
+                  "name": "video",
+                  "accept": "video/*"
+                }
           ]
       }
     ]
@@ -95,8 +100,8 @@
         ]
       },
       {
-        "title": "Start time & duration",
-        "content": "When the auction should start and how long it should run for.",
+        "title": "Duration",
+        "content": "How long the auction should run for.",
         "inputs": [
           {
             "type": "text"

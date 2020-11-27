@@ -9,20 +9,6 @@ const ListingForm = props => {
     const data = props.data
     const [formInputs, setFormInputs] = React.useContext(FormContext)
 
-    // TODO: Figure out how to split photo/video
-    const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
-        onDrop: acceptedFiles => {
-            setFormInputs({
-                ...formInputs,
-                ["files"]: acceptedFiles.map(file =>
-                    Object.assign(file, {
-                        preview: URL.createObjectURL(file)
-                    }))
-            })
-        }
-    })
-
     const onChange = (e) => {
         const value = e.target.value;
         setFormInputs({ ...formInputs, [e.target.name]: value })
@@ -46,6 +32,8 @@ const ListingForm = props => {
         setFormInputs({ ...formInputs, [name]: value + 1 })
     }
 
+    let dropZone;
+
     return (
         <Form>
             {data.formBlocks.map(block =>
@@ -62,8 +50,20 @@ const ListingForm = props => {
                         lg="7"
                         className="ml-auto"
                     >
-                        {block.inputs.map((input, index) =>
-                            <React.Fragment key={index}>
+                        {block.inputs.map((input, index) => {
+                            if (input.type == 'upload') {
+                                dropZone = useDropzone({
+                                    accept: input.accept,
+                                    onDrop: acceptedFiles => {
+                                        setFormInputs({
+                                            ...formInputs,
+                                            [input.name]: acceptedFiles.map(file =>
+                                                Object.assign(file, { preview: URL.createObjectURL(file) }))
+                                        })
+                                    }
+                                })
+                            }
+                            return <React.Fragment key={index}>
                                 {input.type === "text" &&
                                     <FormGroup>
                                         <Label
@@ -233,28 +233,36 @@ const ListingForm = props => {
                                 }
                                 {input.type === "upload" &&
                                     <FormGroup>
-                                        <div {...getRootProps({ className: 'dropzone dz-clickable' })}>
-                                            <input {...getInputProps()} />
+                                        <div {...dropZone.getRootProps({ className: 'dropzone dz-clickable' })}>
+                                            <input {...dropZone.getInputProps()} />
                                             <div className="dz-message text-muted">
                                                 <p>Drop files here or click to upload.</p>
                                             </div>
                                         </div>
                                         <Row className="mt-4">
-                                            {formInputs["files"] && formInputs["files"].map(file =>
-                                                <div key={file.name} className="col-lg-4">
-                                                    <div>
-                                                        <img
-                                                            src={file.preview}
-                                                            className="img-fluid rounded shadow mb-4"
-                                                        />
-                                                    </div>
-                                                </div>
+                                            {formInputs[input.name] && formInputs[input.name].map(file =>
+                                                <ol key={file.name} className="col-lg-4 list-unstyled">
+                                                    <li>
+                                                        {file.type.indexOf('video/') == 0
+                                                            ?
+                                                            <video controls className="preview-fluid rounded shadow mb-4">
+                                                                <source src={file.preview} type={file.type} />
+                                                            </video>
+                                                            :
+                                                            <img
+                                                                src={file.preview}
+                                                                alt={file.name}
+                                                                className="preview-fluid rounded shadow mb-4"
+                                                            />
+                                                        }
+                                                    </li>
+                                                </ol>
                                             )}
                                         </Row>
                                     </FormGroup>
                                 }
                             </React.Fragment>
-
+                        }
                         )}
                     </Col>
                 </Row>
