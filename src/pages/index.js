@@ -28,7 +28,6 @@ const Index = (props) => {
   return (
     <React.Fragment>
       <section className="hero-home" style={{ backgroundImage: `url(content/img/photo/${data.swiperPoster})` }}>
-
         <Swiper
           className="hero-slider"
           wrapperClasses="dark-overlay"
@@ -41,7 +40,6 @@ const Index = (props) => {
           autoplay={true}
           delay={10000}
         />
-
         <Container className="py-6 py-md-7 text-white z-index-20">
           <Row>
             <Col xl="10">
@@ -64,7 +62,6 @@ const Index = (props) => {
           </Row>
         </Container>
       </section>
-
       {data.topBlocks &&
         <section className="py-6 bg-gray-100">
           <Container>
@@ -77,8 +74,7 @@ const Index = (props) => {
                 <Col
                   key={block.title}
                   lg="4"
-                  className="mb-3 mb-lg-0 text-center"
-                >
+                  className="mb-3 mb-lg-0 text-center">
                   <div className="px-0 px-lg-3">
                     <div className="icon-rounded bg-primary-light mb-3">
                       <svg className="svg-icon text-primary w-2rem h-2rem">
@@ -95,7 +91,6 @@ const Index = (props) => {
         </section>
       }
       <LastMinute greyBackground data={props.auctions} />
-
       {data.testimonials &&
         <section className="py-7">
           <Container>

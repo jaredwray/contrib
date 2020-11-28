@@ -5,10 +5,15 @@ import { Container, Row, Col, Form, Input, Label, Collapse, Button, FormGroup, C
 import Nouislider from 'nouislider-react'
 import Pagination from 'components/Pagination'
 import ResultsTopBar from 'components/ResultsTopBar'
-import data from 'data/auctions.json'
-import sportsCategories from 'data/sports-categories'
+import CardAuction from 'components/CardAuction'
+import { connectToDatabase } from 'services/mongodb'
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
+    const { docs } = await connectToDatabase()
+    const filter = buildAuctionFilter(context.query)
+    console.log('filter', filter)
+    const auctions = await docs.auctions().find(filter).toArray()
+
     return {
         props: {
             nav: {
@@ -16,12 +21,25 @@ export async function getStaticProps() {
                 classes: "shadow",
                 color: "white",
             },
-            title: 'Auction search'
+            title: 'Auction search',
+            auctions: JSON.parse(JSON.stringify(auctions))
         },
     }
 }
 
-const Auctions = () => {
+function buildAuctionFilter(query) {
+    const filter = { }
+
+    if (query.status && !Array.isArray(query.status))
+        filter['active'] = query.status === 'active'
+
+    if (query.sports)
+        filter['sport'] = query.sports
+
+    return filter
+}
+
+const Auctions = (props) => {
     const [filterCollapse, setFilterCollapse] = React.useState(false)
 
     const [priceMin, setPriceMin] = React.useState(40)
@@ -31,12 +49,15 @@ const Auctions = () => {
         setPriceMin(value[0].toFixed(0))
         setPriceMax(value[1].toFixed(0))
     }
+
+    const auctions = props.auctions || []
+    const statusOptions = [{ label: "Active", value: "active" }, { label: "Complete", value: "complete" }]
+
     return (
         <React.Fragment>
             <Container
                 fluid
-                className="pt-5 pb-3 border-bottom px-lg-5"
-            >
+                className="pt-5 pb-3 border-bottom px-lg-5">
                 <Row>
                     <Col xl="8">
                         <h1 className="mb-4">Search auctions</h1>
@@ -56,31 +77,30 @@ const Auctions = () => {
                         <Form className="pr-xl-3">
                             <div className="mb-4">
                                 <Label
-                                    for="form_category"
+                                    for="form_text"
                                     className="form-label">
                                     Keywords
                                 </Label>
                                 <div>
                                     <Input
                                         name="text"
-                                        inputId="form_text"
+                                        id="form_text"
                                         placeholder="Type search text"
                                         className="form-control" />
                                 </div>
                             </div>
                             <div className="mb-4">
                                 <Label
-                                    for="form_category"
+                                    for="form_sports"
                                     className="form-label">
                                     Sports category
                                 </Label>
                                 <div>
                                     <Select
-                                        name="category"
-                                        inputId="form_category"
-                                        options={sportsCategories.map(s => ({ label: s, value: s.toLowerCase() }))}
+                                        name="sports"
+                                        id="form_sports"
+                                        options={["Soccer", "Basketball", "Baseball", "Football"].map(c => ({ label: c, value: c }))}
                                         isMulti
-                                        isSearchable
                                         className="form-control dropdown bootstrap-select"
                                         classNamePrefix="selectpicker" />
                                 </div>
@@ -103,7 +123,7 @@ const Auctions = () => {
                             <div className="pb-4">
                                 <Collapse isOpen={filterCollapse}>
                                     <div className="filter-block">
-                                    <h6>Additional filtering</h6>
+                                        <h6>Additional filtering</h6>
                                         <FormGroup className="mb-4">
                                             <Label
                                                 for="form_team" className="form-label">
@@ -111,7 +131,7 @@ const Auctions = () => {
                                             </Label>
                                             <Select
                                                 name="team"
-                                                inputId="form_team"
+                                                id="form_team"
                                                 isMulti
                                                 isSearchable
                                                 className="form-control dropdown bootstrap-select"
@@ -124,7 +144,7 @@ const Auctions = () => {
                                             </Label>
                                             <Select
                                                 name="game"
-                                                inputId="form_game"
+                                                id="form_game"
                                                 isMulti
                                                 isSearchable
                                                 className="form-control dropdown bootstrap-select"
@@ -132,24 +152,44 @@ const Auctions = () => {
                                         </FormGroup>
                                         <FormGroup className="mb-4">
                                             <Label className="form-label">
-                                                Options
+                                                Features
                                             </Label>
                                             <ul className="list-inline mb-0 mt-1">
                                                 <li className="mb-3">
                                                     <CustomInput
-                                                        id="instantBook"
+                                                        id="gameworn"
                                                         type="switch"
-                                                        checked
+                                                        defaultChecked
                                                         label={<span className="text-sm">Game-worn</span>} />
+                                                </li>
+                                                <li className="mb-3">
+                                                    <CustomInput
+                                                        id="signed"
+                                                        type="switch"
+                                                        label={<span className="text-sm">Signed</span>} />
                                                 </li>
                                                 <li>
                                                     <CustomInput
-                                                        id="superhost"
+                                                        id="authenticity"
                                                         type="switch"
-                                                        checked
                                                         label={<span className="text-sm">Certificate of authenticity</span>} />
                                                 </li>
                                             </ul>
+                                        </FormGroup>
+                                        <FormGroup className="mb-4">
+                                            <Label
+                                                for="form_status" className="form-label">
+                                                Status
+                                            </Label>
+                                            <Select
+                                                name="status"
+                                                id="form_status"
+                                                isMulti
+                                                isSearchable
+                                                defaultValue={statusOptions[0]}
+                                                options={statusOptions}
+                                                className="form-control dropdown bootstrap-select"
+                                                classNamePrefix="selectpicker" />
                                         </FormGroup>
                                     </div>
                                 </Collapse>
@@ -174,7 +214,18 @@ const Auctions = () => {
                         </Form>
                     </Col>
                     <Col lg="9">
-                        <ResultsTopBar sortBy={data.sortby} />
+                        <ResultsTopBar count={auctions.length} sortBy={["Best match", "Most popular", "Lowest price", "Newly listed", "Ending soonest"].map(c => ({ label: c, value: c.toLowerCase().replace(/[ ]/g, '') }))} />
+                        <Row>
+                            {auctions.map(auction =>
+                                <Col
+                                    key={auction._id}
+                                    sm="6"
+                                    xl="4"
+                                    className="mb-5 hover-animate">
+                                    <CardAuction data={auction} />
+                                </Col>
+                            )}
+                        </Row>
                         <Pagination />
                     </Col>
                 </Row>

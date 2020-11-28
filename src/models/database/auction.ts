@@ -23,12 +23,20 @@ export type Auction = {
     active: boolean,        // Index
     videos: Video[],
     photos: Photo[],
-    charities: CharityRef[]
+    charities: CharityRef[],
+    sport: 'Soccer' | 'Football' | 'Basketball' | 'Baseball',
+    features: ItemFeatures
 }
 
 export type AuctionRef = {
     id: AuctionId,
     title: string
+}
+
+export type ItemFeatures = {
+    gameWorn: boolean,
+    signed: boolean,
+    certificate: boolean
 }
 
 export type SellerRef = AthleteRef

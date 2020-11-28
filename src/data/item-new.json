@@ -23,15 +23,37 @@
             "options": [
               {
                 "label": "Soccer",
-                "value": "type_0"
+                "value": "soccer"
               },
               {
                 "label": "Basketball",
-                "value": "type_1"
+                "value": "baksetball"
               },
               {
                 "label": "Baseball",
-                "value": "type_2"
+                "value": "baseball"
+              },
+              {
+                "label": "Football",
+                "value": "football"
+              }
+            ]
+          },
+          {
+            "type": "checkboxes",
+            "label": "Features",
+            "checkboxes": [
+                {
+                    "label": "Game-worn",
+                    "id": "gameworn"
+                },
+                {
+                  "label": "Signed",
+                  "id": "signed"
+                },
+                {
+                  "label": "Certificate",
+                  "id": "certificate"
               }
             ]
           },
@@ -104,11 +126,9 @@
         "content": "How long the auction should run for.",
         "inputs": [
           {
-            "type": "text"
-          },
-          {
             "type": "select",
             "name": "form_duration",
+            "text": "The auction will start moments after completing these steps.",
             "options": [
               {
                 "label": "3 days",

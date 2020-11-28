@@ -48,8 +48,7 @@ const ListingForm = props => {
                     </Col>
                     <Col
                         lg="7"
-                        className="ml-auto"
-                    >
+                        className="ml-auto">
                         {block.inputs.map((input, index) => {
                             if (input.type == 'upload') {
                                 dropZone = useDropzone({
@@ -109,8 +108,7 @@ const ListingForm = props => {
                                     <FormGroup>
                                         <Label
                                             className="form-label"
-                                            for={input.name}
-                                        >
+                                            for={input.name}>
                                             {input.label}
                                         </Label>
                                         <Select
@@ -120,14 +118,11 @@ const ListingForm = props => {
                                             className="selectpicker"
                                             classNamePrefix="selectpicker"
                                             value={formInputs[input.name] || ''}
-                                            onChange={(e) => onSelectChange(input.name, e)}
-
-                                        />
+                                            onChange={(e) => onSelectChange(input.name, e)} />
                                         {input.text &&
                                             <small
                                                 id="propertyTypeHelp"
-                                                className="form-text text-muted"
-                                            >
+                                                className="form-text text-muted">
                                                 {input.text}
                                             </small>
                                         }
@@ -138,7 +133,6 @@ const ListingForm = props => {
                                         <Label className="form-label">
                                             {input.label}
                                         </Label>
-
                                         {input.radios.map(radio =>
                                             <CustomInput
                                                 key={radio.label}
@@ -148,8 +142,7 @@ const ListingForm = props => {
                                                 value={radio.id}
                                                 onChange={(e) => onChange(e)}
                                                 checked={formInputs[radio.name] === radio.id}
-                                                label={radio.label}
-                                            />
+                                                label={radio.label} />
                                         )}
                                     </FormGroup>
                                 }
@@ -228,7 +221,6 @@ const ListingForm = props => {
                                                 </li>
                                             )}
                                         </ul>
-
                                     </FormGroup>
                                 }
                                 {input.type === "upload" &&

@@ -12,19 +12,19 @@
         "photo-1534850336045-c6c6d287f89e.jpg"
     ],
     "searchOptions": [{
-            "value": "small",
+            "value": "soccer",
             "label": "Soccer"
         },
         {
-            "value": "medium",
+            "value": "baseball",
             "label": "Baseball"
         },
         {
-            "value": "large",
+            "value": "basketball",
             "label": "Basketball"
         },
         {
-            "value": "x-large",
+            "value": "football",
             "label": "Football"
         }
     ],
