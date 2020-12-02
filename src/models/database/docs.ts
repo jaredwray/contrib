@@ -2,10 +2,11 @@ import { Collection, Db } from 'mongodb'
 import { Account } from './account'
 import { Athlete } from './athlete'
 import { Auction } from './auction'
-import { Bid } from './bid'
+import { MaxBid } from './maxbid'
 import { Charity } from './charity'
 import { User } from './user'
 import { Watch } from './watch'
+import { HighBid as HighBid } from './highbid'
 
 // Primary strongly-typed version of MongoDB 'Db' option to facilitate TypeScript.
 export class ContribDocuments {
@@ -27,12 +28,16 @@ export class ContribDocuments {
     return this._db.collection('auctions') as Collection<Auction>
   }
 
-  bids(): Collection<Bid> {
-    return this._db.collection('bids') as Collection<Bid>
+  highBids(): Collection<HighBid> {
+    return this._db.collection('highBids') as Collection<HighBid>
   }
 
   charities(): Collection<Charity> {
     return this._db.collection('charities') as Collection<Charity>
+  }
+
+  maxBids(): Collection<MaxBid> {
+    return this._db.collection('maxBids') as Collection<MaxBid>
   }
 
   users(): Collection<User> {
