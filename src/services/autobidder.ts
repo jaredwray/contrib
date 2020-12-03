@@ -43,17 +43,8 @@ export class AutoBidder {
     // however record the maximum bid there is no guarantee the user is now winning.
     public async PlaceMaxBid(auctionId: AuctionId, maxPrice: Price, buyerUserId: UserId): Promise<MaxBid | MaxBidError> {
         const now = new Date()
-        const error = await this.ValidateMaxBid(auctionId, maxPrice, now)
+        const error = await this.ValidateMaxBid(auctionId, maxPrice, now, buyerUserId)
         if (error) return error
-
-        // Make sure we don't let a user put in a lower max bid than they already have
-        const existingHighestMaxBid = await this.docs
-            .maxBids()
-            .find({ auctionId, buyerUserId })
-            .sort({ maxPrice: 2})
-            .limit(1)
-            .toArray()
-        if (maxPrice <= existingHighestMaxBid[0].maxPrice) return MaxBidError.AmountBelowMax
 
         // Clear to place the maximum bid
         const maxBid: MaxBid = {
@@ -74,12 +65,12 @@ export class AutoBidder {
     // Right now we call this interactively to avoid having to run background services
     // however it would probably be better to call this on a background task in the future.
     public async ResolveMaxBids(auctionId: AuctionId): Promise<void> {
-        const highBid = await this.CreateHighBid(auctionId)
-        if (highBid !== null)
-            await this.docs.highBids().insertOne(highBid)
+        const highestBid = await this.CreateHighestBid(auctionId)
+        if (highestBid !== null)
+            await this.docs.highBids().insertOne(highestBid)
     }
 
-    public async CreateHighBid(auctionId: AuctionId): Promise<HighBid> {
+    public async CreateHighestBid(auctionId: AuctionId): Promise<HighBid> {
         // Get the highest two bids ordered by maxPrice (earliest first when the same)
         const maxBids = await this.docs
             .maxBids()
@@ -92,7 +83,7 @@ export class AutoBidder {
         if (maxBids.length === 0)
             return null
 
-        const auction = await this.GetAuction(auctionId)    
+        const auction = await this.GetAuction(auctionId)
         const highestBid = await this.GetHighestBid(auctionId)
 
         // If we only have one max bid then the high bid should be at the starting price
@@ -108,7 +99,8 @@ export class AutoBidder {
             : auction.startPrice
     
         // Should never happen but with concurrency we want to be sure
-        if (maxBids[0].maxPrice < minBidAllowed) return highestBid
+        if (maxBids[0].maxPrice < minBidAllowed)
+            return null
 
         // The second maxBid we have should be who currently has the highest bid but... concurrency
         if (highestBid.buyerUserId !== maxBids[1].buyerUserId)
@@ -133,14 +125,23 @@ export class AutoBidder {
     }
 
     // Ensure a max bid is valid before we record and process it.
-    private async ValidateMaxBid(auctionId: AuctionId, maxPrice: Price, now: Date): Promise<MaxBidError | null> {
+    private async ValidateMaxBid(auctionId: AuctionId, maxPrice: Price, now: Date, buyerUserId: UserId): Promise<MaxBidError | null> {
         const auction = await this.GetAuction(auctionId)
         if (auction.startPrice > maxPrice) return MaxBidError.AmountBelowHighest
         if (auction.startAt < now) return MaxBidError.AuctionNotStarted
         if (auction.endAt >= now) return MaxBidError.AuctionEnded
 
         const highest = await this.GetHighestBid(auctionId)
-        if (maxPrice < highest.price) return MaxBidError.AmountBelowHighest
+        if (highest !== null && maxPrice < highest.price) return MaxBidError.AmountBelowHighest
+        
+        // Make sure we don't let a user put in a lower max bid than they already have
+        const existingUserMaxBid = await this.docs
+            .maxBids()
+            .find({ auctionId, buyerUserId })
+            .sort({ maxPrice: 2})
+            .limit(1)
+            .toArray()
+        if (existingUserMaxBid.length === 1 && maxPrice <= existingUserMaxBid[0].maxPrice) return MaxBidError.AmountBelowMax
     }
 
     // Figure out the minimum bid price based on the current price and the min increment table.
@@ -161,7 +162,7 @@ export class AutoBidder {
     }
 
     // The very first high bid on an item will always be at starting price.
-    private async CreateOpeningHighBid(maxBid: MaxBid, startPrice: Price): Promise<HighBid> {
+    private CreateOpeningHighBid(maxBid: MaxBid, startPrice: Price): HighBid {
         return {
             _id: new ObjectId(),
             auctionId: maxBid.auctionId,
@@ -173,7 +174,7 @@ export class AutoBidder {
     }
 
     // Get an Auction by id. Ideally this would be a method on Collection<T> in MongoDb.
-    private async GetAuction(auctionId: AuctionId): Promise<Auction> {
+    private GetAuction(auctionId: AuctionId): Promise<Auction> {
         return this.docs.auctions().findOne({ _id: auctionId })
     }
 
