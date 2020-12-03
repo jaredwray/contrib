@@ -46,7 +46,7 @@ export class AutoBidder {
         const error = await this.ValidateMaxBid(auctionId, maxPrice, now, buyerUserId)
         if (error) return error
 
-        // Clear to place the maximum bid
+        // Now place the maximum bid
         const maxBid: MaxBid = {
             _id: new ObjectId,
             auctionId,
@@ -88,7 +88,7 @@ export class AutoBidder {
 
         // If we only have one max bid then the high bid should be at the starting price
         if (maxBids.length === 1) 
-            return this.CreateOpeningHighBid(maxBids[0], auction.startPrice)        
+            return this.CreateHighBid(maxBids[0], auction.startPrice)        
 
         // We have more than one bid so really there should already be a high bid
         if (highestBid == null)
@@ -114,14 +114,7 @@ export class AutoBidder {
         if (maxBids[0].buyerUserId === highestBid.buyerUserId)
             console.warn(`Auction ${auctionId} is finding user ${highestBid.buyerUserId} competing at ${highPrice} and ${highestBid.price}`)
 
-        return {
-            _id: new ObjectId(),
-            buyerUserId: maxBids[0].buyerUserId,
-            auctionId: maxBids[0].auctionId,
-            placedAt: new Date(),
-            originatingMaxBidId: maxBids[0]._id,
-            price: highPrice
-        }
+        return this.CreateHighBid(maxBids[0], highPrice)
     }
 
     // Ensure a max bid is valid before we record and process it.
@@ -162,14 +155,14 @@ export class AutoBidder {
     }
 
     // The very first high bid on an item will always be at starting price.
-    private CreateOpeningHighBid(maxBid: MaxBid, startPrice: Price): HighBid {
+    private CreateHighBid(maxBid: MaxBid, price: Price): HighBid {
         return {
             _id: new ObjectId(),
             auctionId: maxBid.auctionId,
             buyerUserId: maxBid.buyerUserId,
             placedAt: new Date(),
             originatingMaxBidId: maxBid._id,
-            price: startPrice
+            price: price
         }
     }
 
