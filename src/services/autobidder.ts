@@ -2,7 +2,7 @@ import { Auction, AuctionId, Price } from 'models/database/auction'
 import { MaxBid } from 'models/database/maxbid'
 import { HighBid } from 'models/database/highbid'
 import { ContribDocuments } from 'models/database/docs'
-import { ObjectId } from 'mongodb'
+import { Db, ObjectId } from 'mongodb'
 import { UserId } from 'models/database/user'
 
 // Reasons why a MaxBid might be rejected.
@@ -71,50 +71,50 @@ export class AutoBidder {
     }
 
     public async CreateHighestBid(auctionId: AuctionId): Promise<HighBid> {
-        // Get the highest two bids ordered by maxPrice (earliest first when the same)
+        // Start by figuring how what the minimum bid allowed is.
+        const currentHighestBid = await this.GetHighestBid(auctionId)
+        const auction = await this.GetAuction(auctionId)
+        const minBidAllowed = currentHighestBid !== null
+            ? this.GetMinBidPrice(currentHighestBid.price)
+            : auction.startPrice
+
+        // Retrieve the top two maximum bids that are over the minimum bid allowed with
+        // earliest max bid as a tie-breaker when they are the same max price.
         const maxBids = await this.docs
             .maxBids()
-            .find({ auctionId })
+            .find({ auctionId, maxPrice: { $gte: minBidAllowed } })
             .sort({ maxPrice: 2, receivedAt: 1 })
-            .limit(2)
             .toArray()
 
-        // Should never be no bids but could happen if called on a background task
+        // If this is running on a background task or because of currency we may
+        // not have any max bids to process.
         if (maxBids.length === 0)
             return null
 
-        const auction = await this.GetAuction(auctionId)
-        const highestBid = await this.GetHighestBid(auctionId)
+        // If we only have one viable max bid then just meet the min bid allowed.
+        if (maxBids.length === 1)
+            return this.CreateHighBid(maxBids[0], minBidAllowed)
 
-        // If we only have one max bid then the high bid should be at the starting price
-        if (maxBids.length === 1) 
-            return this.CreateHighBid(maxBids[0], auction.startPrice)        
+        // If we have two or more high bids then the largest max bid should be the increment above
+        // the next largest. If that is still below their max bid all is good.
+        const highBidPrice = this.GetMinBidPrice(maxBids[1].maxPrice)
+        if (highBidPrice <= maxBids[0].maxPrice)
+            return this.CreateHighBid(maxBids[0], minBidAllowed)
 
-        // We have more than one bid so really there should already be a high bid
-        if (highestBid == null)
-            console.warn(`Auction ${auctionId} has multiple bids but none highest.`)
+        // The highest bid can't beat the next highest by the increment necessary so who wins?
+        // Well the earliest max bid that can't be beat by the relevant increment.
+        maxBids.sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime())
 
-        const minBidAllowed = highestBid !== null
-            ? this.GetMinBidPrice(highestBid.price)
-            : auction.startPrice
-    
-        // Should never happen but with concurrency we want to be sure
-        if (maxBids[0].maxPrice < minBidAllowed)
-            return null
+        let winMaxBid = maxBids.shift()
+        let bidPrice = this.GetMinBidPrice(winMaxBid.maxPrice)
+        for(const maxBid of maxBids) {
+            if (maxBid.maxPrice >= bidPrice) {
+                winMaxBid = maxBid
+                bidPrice = this.GetMinBidPrice(winMaxBid.maxPrice)
+            }
+        }
 
-        // The second maxBid we have should be who currently has the highest bid but... concurrency
-        if (highestBid.buyerUserId !== maxBids[1].buyerUserId)
-            console.warn(`Auction ${auctionId} has two bids but lower one does not match high bid user`)
-
-        // Figure out the new high bid price
-        const highPrice = maxBids[1].maxPrice <= minBidAllowed
-            ? minBidAllowed 
-            : maxBids[1].maxPrice // Auto-bidding!
-       
-        if (maxBids[0].buyerUserId === highestBid.buyerUserId)
-            console.warn(`Auction ${auctionId} is finding user ${highestBid.buyerUserId} competing at ${highPrice} and ${highestBid.price}`)
-
-        return this.CreateHighBid(maxBids[0], highPrice)
+        return this.CreateHighBid(winMaxBid, winMaxBid.maxPrice)
     }
 
     // Ensure a max bid is valid before we record and process it.
@@ -126,12 +126,12 @@ export class AutoBidder {
 
         const highest = await this.GetHighestBid(auctionId)
         if (highest !== null && maxPrice < highest.price) return MaxBidError.AmountBelowHighest
-        
+
         // Make sure we don't let a user put in a lower max bid than they already have
         const existingUserMaxBid = await this.docs
             .maxBids()
             .find({ auctionId, buyerUserId })
-            .sort({ maxPrice: 2})
+            .sort({ maxPrice: 2 })
             .limit(1)
             .toArray()
         if (existingUserMaxBid.length === 1 && maxPrice <= existingUserMaxBid[0].maxPrice) return MaxBidError.AmountBelowMax
@@ -155,14 +155,14 @@ export class AutoBidder {
     }
 
     // The very first high bid on an item will always be at starting price.
-    private CreateHighBid(maxBid: MaxBid, price: Price): HighBid {
+    private CreateHighBid(maxBid: MaxBid, startPrice: Price): HighBid {
         return {
             _id: new ObjectId(),
             auctionId: maxBid.auctionId,
             buyerUserId: maxBid.buyerUserId,
             placedAt: new Date(),
             originatingMaxBidId: maxBid._id,
-            price: price
+            price: startPrice
         }
     }
 
