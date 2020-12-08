@@ -6,6 +6,7 @@ import GalleryAbsolute from 'components/GalleryAbsolute'
 import { connectToDatabase } from 'services/mongodb'
 import { ObjectID } from 'mongodb'
 import Error404 from 'pages/404'
+import { getAuctionStatus, AuctionStatus } from 'models/database/auction'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -34,6 +35,7 @@ const ItemDetail = (props) => {
     const seller = props.seller
     const charity = props.charity
     if (auction == null) return <Error404 />
+    const auctionStatus = getAuctionStatus(auction)
 
     return (
         <React.Fragment>
@@ -92,7 +94,7 @@ const ItemDetail = (props) => {
                                         </Media>
                                     </Media>
                                 </div>
-                            }
+                        }
                             {auction.photos &&
                                 <div className="text-block">
                                     <h3 className="mb-4">Gallery</h3>
@@ -107,7 +109,7 @@ const ItemDetail = (props) => {
                             }
                         </Col>
                         <Col lg="4">
-                            {auction.active ?
+                            {auctionStatus !== AuctionStatus.Ended ?
                                 <div
                                     style={{ top: "100px" }}
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
@@ -147,7 +149,7 @@ const ItemDetail = (props) => {
                                     style={{ top: "100px" }}
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
                                     <p className="text-muted">Ended at {new Date(auction.endAt).toLocaleString()}</p>
-                                    <Badge color="danger-light" className="ml-1">Sold</Badge>
+                                    <Badge color="danger-light" className="ml-1">Ended</Badge>
                                     &nbsp;
                                     <span className="text-danger h2">
                                         ${auction.startPrice / 100}

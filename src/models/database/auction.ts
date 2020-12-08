@@ -28,6 +28,19 @@ export type Auction = {
     features: ItemFeatures
 }
 
+export enum AuctionStatus {
+    NotStarted,
+    Active,
+    Ended
+}
+
+export function getAuctionStatus(auction: Auction): AuctionStatus {
+    const now = new Date()
+    if (new Date(auction.startAt) > now) return AuctionStatus.NotStarted
+    if (new Date(auction.endAt) <= now) return AuctionStatus.Ended
+    return AuctionStatus.Active
+}
+
 export type AuctionRef = {
     id: AuctionId,
     title: string

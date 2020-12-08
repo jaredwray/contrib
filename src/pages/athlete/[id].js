@@ -8,8 +8,10 @@ export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
     const athlete = await docs.athletes().findOne({ _id: id })
-    const activeAuctions = athlete === null ? [] : await docs.auctions().find({ "seller.id": id, active: true }).toArray()
-    const recentAuctions = athlete === null ? [] : await docs.auctions().find({ "seller.id": id, active: false }).sort({ endedAt: -1 }).toArray()
+
+    const now = new Date()
+    const activeAuctions = athlete === null ? [] : await docs.auctions().find({ "seller.id": id, endAt: { $gt: now } }).toArray()
+    const recentAuctions = athlete === null ? [] : await docs.auctions().find({ "seller.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
 
     return {
         props: {

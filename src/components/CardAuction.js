@@ -1,11 +1,13 @@
 import React from 'react'
 import Link from 'next/link'
 import { Badge, Card, CardBody, CardTitle, CardSubtitle, CardText } from 'reactstrap'
+import { AuctionStatus, getAuctionStatus } from 'models/database/auction'
 
 const CardAuction = props => {
     const auction = props.data
+    const auctionStatus = getAuctionStatus(auction)    
     return (
-        <Card className="h-100 border-0 shadow" style={{ opacity: auction.active ? 1 : 0.5 }}>
+        <Card className="h-100 border-0 shadow" style={{ opacity: auctionStatus == AuctionStatus.Active ? 1 : 0.5 }}>
             <div className="card-img-top overflow-hidden gradient-overlay">
                 <img src={auction.photos[0].url} alt={auction.title} className="img-fluid" />
                 <Link href={`/item/${auction._id}`}>
@@ -34,11 +36,11 @@ const CardAuction = props => {
                         </p>
                     </CardSubtitle>
                     <CardText className="text-muted text-right">
-                        {!auction.active &&
-                            <Badge color="danger-light" className="ml-1">Sold</Badge>
+                        {auctionStatus === AuctionStatus.Ended &&
+                            <Badge color="danger-light" className="ml-1">Ended</Badge>
                         }
                         &nbsp;
-                        <span className={`h4 ${auction.active ? 'text-primary' : 'text-danger'}`}>
+                        <span className={`h4 ${auctionStatus !== AuctionStatus.Ended ? 'text-primary' : 'text-danger'}`}>
                             ${auction.startPrice / 100}
                         </span>
                     </CardText>
