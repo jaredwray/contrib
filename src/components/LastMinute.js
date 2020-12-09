@@ -15,7 +15,7 @@ const LastMinute = (props) => {
           <Col
             md="4"
             className="d-lg-flex align-items-center justify-content-end">
-            <Link href="/auctions">
+            <Link href="/auctions?status=active">
               <a className="text-muted text-sm">
                 See more auctions
                 <i className="fas fa-angle-double-right ml-2" />
