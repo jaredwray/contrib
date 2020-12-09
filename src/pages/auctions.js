@@ -11,7 +11,6 @@ import { connectToDatabase } from 'services/mongodb'
 export async function getServerSideProps(context) {
     const { docs } = await connectToDatabase()
     const filter = buildAuctionFilter(context.query)
-    console.log('filter', filter)
     const auctions = await docs.auctions().find(filter).toArray()
 
     return {

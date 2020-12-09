@@ -3,16 +3,17 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge
 import CardAuction from 'components/CardAuction'
 import GalleryAbsolute from 'components/GalleryAbsolute'
 import { connectToDatabase } from 'services/mongodb'
-import Error404 from 'pages/404'
+import { Error404, getStaticProps } from 'pages/404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
     const charity = await docs.charities().findOne({ _id: id })
+    if (!charity) return getStaticProps()
 
     const now = new Date()
-    const activeAuctions = charity === null ? [] : await docs.auctions().find({ "charities.id": id, endAt: { $gt: now } }).toArray()
-    const recentAuctions = charity === null ? [] : await docs.auctions().find({ "charities.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
+    const activeAuctions = await docs.auctions().find({ "charities.id": id, endAt: { $gt: now } }).toArray()
+    const recentAuctions = await docs.auctions().find({ "charities.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
 
     return {
         props: {
@@ -21,7 +22,7 @@ export async function getServerSideProps(context) {
                 classes: "shadow",
                 color: "white",
             },
-            title: charity ? charity.name : "404 Not Found",
+            title: charity.name,
             charity: JSON.parse(JSON.stringify(charity)),
             activeAuctions: JSON.parse(JSON.stringify(activeAuctions)),
             recentAuctions: JSON.parse(JSON.stringify(recentAuctions))

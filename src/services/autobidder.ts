@@ -2,7 +2,7 @@ import { Auction, AuctionId, Price } from 'models/database/auction'
 import { MaxBid } from 'models/database/maxbid'
 import { HighBid } from 'models/database/highbid'
 import { ContribDocuments } from 'models/database/docs'
-import { Db, ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { UserId } from 'models/database/user'
 
 // Reasons why a MaxBid might be rejected.
@@ -26,12 +26,11 @@ export class AutoBidder {
 
     // Get the minimum bid price - this is the current HighBid plus a minimum increment amount.
     // We do not return the underlying MaxBid because that is private to the bidder.
-    public async GetMinBidPriceForAuction(auctionId: AuctionId): Promise<Price> {
-        const highest = await this.GetHighestBid(auctionId)
+    public async GetMinBidPriceForAuction(auction: Auction): Promise<Price> {
+        const highest = await this.GetHighestBid(auction._id)
         if (highest !== null)
-            return this.GetMinBidPrice(highest.price)
+            return AutoBidder.GetMinBidPrice(highest.price)
 
-        const auction = await this.GetAuction(auctionId)
         return auction.startPrice
     }
 
@@ -75,7 +74,7 @@ export class AutoBidder {
         const currentHighestBid = await this.GetHighestBid(auctionId)
         const auction = await this.GetAuction(auctionId)
         const minBidAllowed = currentHighestBid !== null
-            ? this.GetMinBidPrice(currentHighestBid.price)
+            ? AutoBidder.GetMinBidPrice(currentHighestBid.price)
             : auction.startPrice
 
         // Retrieve the top two maximum bids that are over the minimum bid allowed with
@@ -97,7 +96,7 @@ export class AutoBidder {
 
         // If we have two or more high bids then the largest max bid should be the increment above
         // the next largest. If that is still below their max bid all is good.
-        const highBidPrice = this.GetMinBidPrice(maxBids[1].maxPrice)
+        const highBidPrice = AutoBidder.GetMinBidPrice(maxBids[1].maxPrice)
         if (highBidPrice <= maxBids[0].maxPrice)
             return this.CreateHighBid(maxBids[0], minBidAllowed)
 
@@ -106,11 +105,11 @@ export class AutoBidder {
         maxBids.sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime())
 
         let winMaxBid = maxBids.shift()
-        let bidPrice = this.GetMinBidPrice(winMaxBid.maxPrice)
+        let bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
         for(const maxBid of maxBids) {
             if (maxBid.maxPrice >= bidPrice) {
                 winMaxBid = maxBid
-                bidPrice = this.GetMinBidPrice(winMaxBid.maxPrice)
+                bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
             }
         }
 
@@ -138,12 +137,12 @@ export class AutoBidder {
     }
 
     // Figure out the minimum bid price based on the current price and the min increment table.
-    private GetMinBidPrice(highestBidPrice: Price): Price {
-        return highestBidPrice + this.GetMinIncrement(highestBidPrice)
+    public static GetMinBidPrice(highestBidPrice: Price): Price {
+        return highestBidPrice + AutoBidder.GetMinIncrement(highestBidPrice)
     }
 
     // Get the highest bid... not sure this is concurrent-friendly yet.
-    private async GetHighestBid(auctionId: AuctionId): Promise<HighBid> {
+    public async GetHighestBid(auctionId: AuctionId): Promise<HighBid> {
         const highestBid = await this.docs
             .highBids()
             .find({ auctionId })
@@ -172,7 +171,7 @@ export class AutoBidder {
     }
 
     // Price increment table (USD). All values are in cents to avoid rounding issues in JavaScript.
-    private GetMinIncrement(price: Price): Price {
+    private static GetMinIncrement(price: Price): Price {
         // Taken from eBay https://www.ebay.com/help/buying/bidding/automatic-bidding?id=4014#section3
         if (price < 100) return 5
         if (price < 500) return 25

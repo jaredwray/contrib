@@ -2,16 +2,17 @@ import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
 import CardAuction from 'components/CardAuction'
 import { connectToDatabase } from 'services/mongodb'
-import Error404 from 'pages/404'
+import { Error404, getStaticProps } from 'pages/404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
     const athlete = await docs.athletes().findOne({ _id: id })
+    if (!athlete) return getStaticProps()
 
     const now = new Date()
-    const activeAuctions = athlete === null ? [] : await docs.auctions().find({ "seller.id": id, endAt: { $gt: now } }).toArray()
-    const recentAuctions = athlete === null ? [] : await docs.auctions().find({ "seller.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
+    const activeAuctions = await docs.auctions().find({ "seller.id": id, endAt: { $gt: now } }).toArray()
+    const recentAuctions = await docs.auctions().find({ "seller.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
 
     return {
         props: {
@@ -20,7 +21,7 @@ export async function getServerSideProps(context) {
                 classes: "shadow",
                 color: "white",
             },
-            title: athlete ? athlete.name : "404 Not Found",
+            title: athlete.name,
             athlete: JSON.parse(JSON.stringify(athlete)),
             activeAuctions: JSON.parse(JSON.stringify(activeAuctions)),
             recentAuctions: JSON.parse(JSON.stringify(recentAuctions))
@@ -31,6 +32,9 @@ export async function getServerSideProps(context) {
 const AthleteProfile = (props) => {
     const athlete = props.athlete
     if (athlete == null) return <Error404 />
+
+    const activeAuctions = props.activeAuctions
+    const recentAuctions = props.recentAuctions
 
     return (
         <section className="py-5">
@@ -91,13 +95,13 @@ const AthleteProfile = (props) => {
                         <div className="text-block">
                             <div dangerouslySetInnerHTML={{ __html: athlete.description }} />
                         </div>
-                        {props.activeAuctions ?
+                        {activeAuctions ?
                             <div className="text-block">
                                 <h3 className="mb-5">
                                     {athlete.firstName}'s current auctions
                                 </h3>
                                 <Row>
-                                    {props.activeAuctions.map(auction =>
+                                    {activeAuctions.map(auction =>
                                         <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
                                             <CardAuction data={auction} />
                                         </Col>
@@ -112,13 +116,13 @@ const AthleteProfile = (props) => {
                                 <p>Check back again soon!</p>
                             </div>
                         }
-                        {props.recentAuctions.length > 0 &&
+                        {recentAuctions.length > 0 &&
                             <div className="text-block">
                                 <h3 className="mb-5">
                                     Recently completed auctions
                                 </h3>
                                 <Row>
-                                    {props.recentAuctions.map(auction =>
+                                    {recentAuctions.map(auction =>
                                         <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
                                             <CardAuction data={auction} />
                                         </Col>

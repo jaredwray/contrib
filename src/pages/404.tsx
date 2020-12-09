@@ -15,7 +15,7 @@ export async function getStaticProps() {
     }
 }
 
-const Error404 = () => {
+export const Error404 = () => {
     return (
         <React.Fragment>
             <p className="mh-full-screen d-flex align-items-center dark-overlay">

@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { Badge, Card, CardBody, CardTitle, CardSubtitle, CardText } from 'reactstrap'
 import { AuctionStatus, getAuctionStatus } from 'models/database/auction'
+import { formatPrice } from 'services/formatting'
 
 const CardAuction = props => {
     const auction = props.data
@@ -41,7 +42,7 @@ const CardAuction = props => {
                         }
                         &nbsp;
                         <span className={`h4 ${auctionStatus !== AuctionStatus.Ended ? 'text-primary' : 'text-danger'}`}>
-                            ${auction.startPrice / 100}
+                            ${formatPrice(auction.startPrice)}
                         </span>
                     </CardText>
                 </div>

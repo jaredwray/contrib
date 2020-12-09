@@ -1,19 +1,33 @@
 import React from 'react'
 import Link from 'next/link'
-import 'react-dates/initialize'
 import { Badge, Container, Row, Col, Form, Label, Input, Button, FormGroup, Media } from 'reactstrap'
 import GalleryAbsolute from 'components/GalleryAbsolute'
 import { connectToDatabase } from 'services/mongodb'
 import { ObjectID } from 'mongodb'
-import Error404 from 'pages/404'
+import { Error404, getStaticProps } from 'pages/404'
 import { getAuctionStatus, AuctionStatus } from 'models/database/auction'
+import { getSession } from 'next-auth/client'
+import { AutoBidder } from 'services/autobidder'
+import { formatPrice, formatDate } from 'services/formatting'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
-    const auction = await docs.auctions().findOne({ _id: new ObjectID(id.toString()) })
-    const athlete = await docs.athletes().findOne({ _id: auction.seller.id })
-    const charity = await docs.charities().findOne({ _id: auction.charities[0].id })
+
+    if (!ObjectID.isValid(id)) return getStaticProps()
+    const auction = await docs.auctions().findOne({ _id: new ObjectID(id) })
+    if (!auction) return getStaticProps()
+
+    const autobidder = new AutoBidder(docs)
+    const session = await getSession(context)
+
+    const [athlete, charity, watchCount, watch, bidCount] = await Promise.all([
+        docs.athletes().findOne({ _id: auction.seller.id }),
+        docs.charities().findOne({ _id: auction.charities[0].id }),
+        docs.watches().count({ auctionId: id }),
+        docs.watches().findOne({ auctionId: id, buyerId: session.user.id }),
+        docs.highBids().count({ auctionId: id}) ?? 0
+    ])
 
     return {
         props: {
@@ -22,19 +36,31 @@ export async function getServerSideProps(context) {
                 classes: 'shadow',
                 color: 'white',
             },
-            title: auction ? auction.title : '404 Not Found',
+            title: auction.title,
             auction: JSON.parse(JSON.stringify(auction)),
             charity: JSON.parse(JSON.stringify(charity)),
-            seller: JSON.parse(JSON.stringify(athlete))
-        },
+            seller: JSON.parse(JSON.stringify(athlete)),
+            bids: {
+                minToPlace: await autobidder.GetMinBidPriceForAuction(auction),
+                highest: await autobidder.GetHighestBid(auction._id),
+                count: bidCount 
+            },
+            activity: {
+                watchCount: watchCount,
+                watching: watch !== null
+            }
+        }
     }
 }
 
 const ItemDetail = (props) => {
     const auction = props.auction
+    if (auction == null) return <Error404 />
+
     const seller = props.seller
     const charity = props.charity
-    if (auction == null) return <Error404 />
+    const activity = props.activity
+    const bids = props.bids
     const auctionStatus = getAuctionStatus(auction)
 
     return (
@@ -44,9 +70,7 @@ const ItemDetail = (props) => {
                     <Row>
                         <Col lg="8">
                             <div className="text-block">
-                                <h1>
-                                    {auction.title}
-                                </h1>
+                                <h1>{auction.title}</h1>
                                 {auction.category &&
                                     <div className="text-muted text-uppercase mb-4">
                                         {auction.category}
@@ -94,7 +118,7 @@ const ItemDetail = (props) => {
                                         </Media>
                                     </Media>
                                 </div>
-                        }
+                            }
                             {auction.photos &&
                                 <div className="text-block">
                                     <h3 className="mb-4">Gallery</h3>
@@ -113,10 +137,11 @@ const ItemDetail = (props) => {
                                 <div
                                     style={{ top: "100px" }}
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
-                                    <p className="text-muted">Ends at {new Date(auction.endAt).toLocaleString()}</p>
+                                    <p className="text-muted">Ends at {formatDate(auction.endAt)}</p>
                                     <span className="text-primary h2">
-                                        ${auction.startPrice / 100}
+                                        ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
+                                    <span className="text-muted text-sm float-right">[{bids.count} bids]</span>
                                     <Form
                                         id="booking-form"
                                         method="get"
@@ -127,7 +152,7 @@ const ItemDetail = (props) => {
                                             <Label className="form-label">Your bid</Label>
                                             <br />
                                             <Input type="text" name="bid" id="bid" />
-                                            <p className="text-muted text-sm">Enter ${((auction.startPrice / 100) + 1).toFixed(2)} or more to bid.</p>
+                                            <p className="text-muted text-sm">Enter <span className="text-primary">${formatPrice(bids.minToPlace)}</span> or more to bid.</p>
                                         </FormGroup>
                                         <FormGroup>
                                             <Button type="submit" color="primary" block>Place your bid</Button>
@@ -137,22 +162,23 @@ const ItemDetail = (props) => {
                                     <hr className="my-4" />
                                     <div className="text-center">
                                         <p>
-                                            <a href="#" className="text-secondary text-sm">
-                                                <i className="fa fa-heart" /> &nbsp;Watch this auction
-                                            </a>
+                                            {activity.watching
+                                                ? <a href="#" className="text-secondary text-sm"><i className="fas fa-heart" /> &nbsp;Unwatch this auction</a>
+                                                : <a href="#" className="text-secondary text-sm"><i className="far fa-heart" /> &nbsp;Watch this auction</a>
+                                            }
                                         </p>
-                                        <p className="text-muted text-sm">79 people are watching this auction.</p>
+                                        <p className="text-muted text-sm">{activity.watchCount} people are watching this auction.</p>
                                     </div>
                                 </div>
                                 :
                                 <div
                                     style={{ top: "100px" }}
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
-                                    <p className="text-muted">Ended at {new Date(auction.endAt).toLocaleString()}</p>
+                                    <p className="text-muted">Ended at {formatDate(auction.endAt)}</p>
                                     <Badge color="danger-light" className="ml-1">Ended</Badge>
-                                    &nbsp;
+                                    &nbsp; 
                                     <span className="text-danger h2">
-                                        ${auction.startPrice / 100}
+                                        ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
                                 </div>
                             }
