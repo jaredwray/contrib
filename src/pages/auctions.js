@@ -21,16 +21,26 @@ export async function getServerSideProps(context) {
                 color: "white",
             },
             title: 'Auction search',
-            auctions: JSON.parse(JSON.stringify(auctions))
+            auctions: JSON.parse(JSON.stringify(auctions)),
+            query: context.query
         },
     }
 }
 
 function buildAuctionFilter(query) {
     const filter = { }
+    const now = new Date()
 
-    if (query.status && !Array.isArray(query.status))
-        filter['active'] = query.status === 'active'
+    const active = query.status == 'active' || Array.isArray(query.status) && query.status.includes('active')
+    const complete = query.status == 'complete' || Array.isArray(query.status) && query.status.includes('complete')
+    if (active && !complete) {
+        filter['startAt'] = { $lte: now }
+        filter['endAt'] = { $gt: now }
+    }
+    if (!active && complete) {
+        filter['endAt'] = { $lt: now }
+    }
+    // Active & complete or no filter just means all
 
     if (query.sports)
         filter['sport'] = query.sports
@@ -185,7 +195,7 @@ const Auctions = (props) => {
                                                 id="form_status"
                                                 isMulti
                                                 isSearchable
-                                                defaultValue={statusOptions[0]}
+                                                defaultValue={statusOptions.filter(s => props.query.status && props.query.status.includes(s.value))}
                                                 options={statusOptions}
                                                 className="form-control dropdown bootstrap-select"
                                                 classNamePrefix="selectpicker" />
