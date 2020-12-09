@@ -9,7 +9,7 @@ import data from 'data/index.json'
 
 export async function getServerSideProps() {
   const { docs } = await connectToDatabase() 
-  const auctions = await docs.auctions().find({ "active": true }).toArray()
+  const auctions = await docs.auctions().find({ endAt: { $gt: new Date() } }).toArray()
 
   return {
     props: {
