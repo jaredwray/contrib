@@ -8,7 +8,7 @@ import { Error404, getStaticProps } from 'pages/404'
 import { getAuctionStatus, AuctionStatus } from 'models/database/auction'
 import { getSession } from 'next-auth/client'
 import { AutoBidder } from 'services/autobidder'
-import { formatPrice, formatDate } from 'services/formatting'
+import { formatPrice, formatDate, formatRemaining } from 'services/formatting'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -26,7 +26,7 @@ export async function getServerSideProps(context) {
         docs.charities().findOne({ _id: auction.charities[0].id }),
         docs.watches().count({ auctionId: id }),
         docs.watches().findOne({ auctionId: id, buyerId: session.user.id }),
-        docs.highBids().count({ auctionId: id}) ?? 0
+        docs.highBids().count({ auctionId: id }) ?? 0
     ])
 
     return {
@@ -43,7 +43,7 @@ export async function getServerSideProps(context) {
             bids: {
                 minToPlace: await autobidder.GetMinBidPriceForAuction(auction),
                 highest: await autobidder.GetHighestBid(auction._id),
-                count: bidCount 
+                count: bidCount
             },
             activity: {
                 watchCount: watchCount,
@@ -137,7 +137,8 @@ const ItemDetail = (props) => {
                                 <div
                                     style={{ top: "100px" }}
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
-                                    <p className="text-muted">Ends at {formatDate(auction.endAt)}</p>
+                                    <p className="text-muted">Ends in <span class="text-secondary">{formatRemaining(auction.endAt)}</span> on <span class="text-primary" title={new Date(auction.endAt).toLocaleString()}>{formatDate(auction.endAt)}</span>
+                                    </p>
                                     <span className="text-primary h2">
                                         ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
@@ -147,11 +148,16 @@ const ItemDetail = (props) => {
                                         method="get"
                                         action="#"
                                         autoComplete="off"
-                                        className="form">
+                                        className="form mt-3">
                                         <FormGroup>
                                             <Label className="form-label">Your bid</Label>
                                             <br />
-                                            <Input type="text" name="bid" id="bid" />
+                                            <div className="input-group mb-1">
+                                                <div className="input-group-prepend">
+                                                    <span className="input-group-text">$</span>
+                                                </div>
+                                                <Input type="text" name="bid" id="bid" />
+                                            </div>
                                             <p className="text-muted text-sm">Enter <span className="text-primary">${formatPrice(bids.minToPlace)}</span> or more to bid.</p>
                                         </FormGroup>
                                         <FormGroup>
@@ -163,11 +169,11 @@ const ItemDetail = (props) => {
                                     <div className="text-center">
                                         <p>
                                             {activity.watching
-                                                ? <a href="#" className="text-secondary text-sm"><i className="fas fa-heart" /> &nbsp;Unwatch this auction</a>
-                                                : <a href="#" className="text-secondary text-sm"><i className="far fa-heart" /> &nbsp;Watch this auction</a>
+                                                ? <a href="#" className="text-secondary"><i className="fas fa-heart" /> &nbsp;Unwatch this auction</a>
+                                                : <a href="#" className="text-secondary"><i className="far fa-heart" /> &nbsp;Watch this auction</a>
                                             }
                                         </p>
-                                        <p className="text-muted text-sm">{activity.watchCount} people are watching this auction.</p>
+                                        <p className="text-muted text-sm"><span className="text-secondary">{activity.watchCount}</span> other people are watching.</p>
                                     </div>
                                 </div>
                                 :
@@ -176,7 +182,7 @@ const ItemDetail = (props) => {
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
                                     <p className="text-muted">Ended at {formatDate(auction.endAt)}</p>
                                     <Badge color="danger-light" className="ml-1">Ended</Badge>
-                                    &nbsp; 
+                                    &nbsp;
                                     <span className="text-danger h2">
                                         ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
