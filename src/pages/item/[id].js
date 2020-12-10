@@ -1,4 +1,3 @@
-import React from 'react'
 import Link from 'next/link'
 import { Badge, Container, Row, Col, Form, Label, Input, Button, FormGroup, Media } from 'reactstrap'
 import GalleryAbsolute from 'components/GalleryAbsolute'
@@ -10,6 +9,7 @@ import { getSession } from 'next-auth/client'
 import { AutoBidder } from 'services/autobidder'
 import { formatPrice, formatDate, formatRemaining } from 'services/formatting'
 import { ObjectId } from 'mongodb'
+import Router from 'next/router'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -30,7 +30,7 @@ export async function getServerSideProps(context) {
         session ? docs.watches().findOne({ auctionId, buyerId: session.user.id }) : null,
         docs.highBids().count({ auctionId }) ?? 0,
         autobidder.GetHighestBid(auctionId),
-        autobidder.GetMinBidPriceForAuctionUser(auction, new ObjectId(session.user.id))
+        autobidder.GetMinBidPriceForAuctionUser(auction, new ObjectId(session?.user?.id))
     ])
 
     return {
@@ -40,6 +40,7 @@ export async function getServerSideProps(context) {
                 classes: 'shadow',
                 color: 'white',
             },
+            isSignedIn: session !== null,
             title: auction.title,
             auction: JSON.parse(JSON.stringify(auction)),
             charity: JSON.parse(JSON.stringify(charity)),
@@ -148,8 +149,7 @@ const ItemDetail = (props) => {
                                     <span className="text-primary h2">
                                         ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
-                                    <div className="text-muted text-sm">{bids.count} bids {winning && <span className="badge badge-secondary-light">You are winning</span>}
-                                    </div>
+                                    <div className="text-muted text-sm">{bids.count} bids {winning && <span className="badge badge-secondary-light">You are winning</span>}</div>
                                     <Form
                                         id="booking-form"
                                         method="get"
@@ -164,15 +164,18 @@ const ItemDetail = (props) => {
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">$</span>
                                                 </div>
-                                                <Input type="text" name="maxPrice" id="maxPrice" />
+                                                <Input type="text" name="maxPrice" id="maxPrice" disabled={!props.isSignedIn} />
                                             </div>
                                             <p className="text-muted text-sm">Enter <span className="text-primary">${formatPrice(bids.minToPlace)}</span> or more to bid.</p>
                                         </FormGroup>
                                         <FormGroup>
-                                            <Button onClick={submitBid} color="primary" block>{winning ? 'Increase' : 'Place'} your bid</Button>
+                                            {props.isSignedIn
+                                                ? <Button onClick={submitBid} color="primary" block>{winning ? 'Increase' : 'Place'} your bid</Button>
+                                                : <Button href="/user/signin" color="primary" block>Sign in to bid</Button>
+                                            }
                                         </FormGroup>
                                     </Form>
-                                    <p className="text-muted text-sm text-center">Bidding means you're committing to buy this item if you're the winning bidder.</p>
+                                    <p className="text-muted text-sm text-center">Bidding is a commitment to buy this item if you win the auction.</p>
                                     <hr className="my-4" />
                                     <div className="text-center">
                                         <p>
@@ -181,7 +184,7 @@ const ItemDetail = (props) => {
                                                 : <a href="#" className="text-secondary"><i className="far fa-heart" /> &nbsp;Watch this auction</a>
                                             }
                                         </p>
-                                        <p className="text-muted text-sm"><span className="text-secondary">{activity.watchCount}</span> other people are watching.</p>
+                                        <p className="text-muted text-sm"><span className="text-secondary">{activity.watchCount}</span> people are watching this.</p>
                                     </div>
                                 </div>
                                 :
@@ -204,6 +207,10 @@ const ItemDetail = (props) => {
     )
 }
 
+function refreshData() {
+    Router.replace(window.location.pathname)
+}
+
 function submitBid() {
     // TODO: Some client-side validation
     const requestOptions = {
@@ -217,8 +224,11 @@ function submitBid() {
 
     fetch('/api/bids', requestOptions)
         .then(response => response.json())
-        .then(data => window.location.reload())
-    // TODO reflect changes in the UI
+        .then(data => {
+            maxPrice.value = ''
+            refreshData()
+        })
+    // TODO: Some UX on status
 }
 
 export default ItemDetail

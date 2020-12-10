@@ -36,8 +36,8 @@ export class AutoBidder {
     constructor(private docs: ContribDocuments) {
     }
 
-    public async GetMinBidPriceForAuctionUser(auction: Auction, userId: ObjectID): Promise<Price> {
-        const maxBid = await this.GetMaxBidForUser(auction._id, userId)        
+    public async GetMinBidPriceForAuctionUser(auction: Auction, userId: ObjectID | null): Promise<Price> {
+        const maxBid = userId !== null ? await this.GetMaxBidForUser(auction._id, userId) : null
         const highest = await this.GetMinBidPriceForAuction(auction)
         return maxBid === null
             ? highest
@@ -47,7 +47,7 @@ export class AutoBidder {
     }
 
     public async GetMaxBidForUser(auctionId: ObjectID, userId: ObjectID): Promise<MaxBid> {
-        const maxBids = await this.docs.maxBids().find({ auctionId: auctionId, buyerUserId: userId }).sort({maxPrice: -1}).limit(1).toArray()
+        const maxBids = await this.docs.maxBids().find({ auctionId: auctionId, buyerUserId: userId }).sort({ maxPrice: -1 }).limit(1).toArray()
         return (maxBids.length > 0) ? maxBids[0] : null
     }
 
@@ -82,7 +82,7 @@ export class AutoBidder {
             maxPrice,
             receivedAt: now
         }
-       
+
         await this.docs.maxBids().insertOne(maxBid)
 
         // See how the max bid plays out with other bidders
