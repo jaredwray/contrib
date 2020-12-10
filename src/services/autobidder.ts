@@ -7,11 +7,23 @@ import { UserId } from 'models/database/user'
 
 // Reasons why a MaxBid might be rejected.
 export enum MaxBidError {
-    AuctionNotStarted = "AuctionNotStarted",      // The auction hasn't yet started
-    AuctionEnded = "AuctionEnded",                // The auction is over
-    AmountBelowStarting = "AmountBelowStarting",  // The bid amount is below the starting bid price
-    AmountBelowHighest = "AmountBelowHigest",     // The bid amount is below the current highest bid price
-    AmountBelowMax = "AmountBelowYourMax"         // The bid amount is below your current max bid price
+    AuctionNotStarted = "AuctionNotStarted",
+    AuctionEnded = "AuctionEnded",
+    AmountBelowStarting = "AmountBelowStarting",
+    AmountBelowHighest = "AmountBelowHigest",
+    AmountBelowMax = "AmountBelowYourMax"
+}
+
+// Descriptions returned to users as to why their bid failed
+export function getMaxBidErrorMessage(error: MaxBidError): string {
+    switch (error) {
+        case MaxBidError.AuctionNotStarted: return "Auction not yet started"
+        case MaxBidError.AuctionEnded: return "Auction has already ended"
+        case MaxBidError.AmountBelowStarting: return "New max bid is below the auction starting price"
+        case MaxBidError.AmountBelowHighest: return "New max bid is below the current winning bid"
+        case MaxBidError.AmountBelowMax: return "New max bid is below your existing max bid"
+        default: return "Unknown bid error"
+    }
 }
 
 // Auto bidding allows you to specify a MaxBid rather than multiple bids because of the
@@ -47,12 +59,13 @@ export class AutoBidder {
 
         // Now place the maximum bid
         const maxBid: MaxBid = {
-            _id: new ObjectId,
+            _id: new ObjectId(),
             auctionId,
             buyerUserId,
             maxPrice,
             receivedAt: now
         }
+       
         await this.docs.maxBids().insertOne(maxBid)
 
         // See how the max bid plays out with other bidders
@@ -82,7 +95,7 @@ export class AutoBidder {
         const maxBids = await this.docs
             .maxBids()
             .find({ auctionId, maxPrice: { $gte: minBidAllowed } })
-            .sort({ maxPrice: 2, receivedAt: 1 })
+            .sort({ maxPrice: -1, receivedAt: 1 })
             .toArray()
 
         // If this is running on a background task or because of currency we may
@@ -94,11 +107,13 @@ export class AutoBidder {
         if (maxBids.length === 1)
             return this.CreateHighBid(maxBids[0], minBidAllowed)
 
-        // If we have two or more high bids then the largest max bid should be the increment above
-        // the next largest. If that is still below their max bid all is good.
+        // TODO: Ensure a user does not bid-war with themselves due to concurrency
+
+        // If we have two or more max bids then the largest high bid should be the increment above
+        // the next larges max. If that is still below their max bid all is good.
         const highBidPrice = AutoBidder.GetMinBidPrice(maxBids[1].maxPrice)
         if (highBidPrice <= maxBids[0].maxPrice)
-            return this.CreateHighBid(maxBids[0], minBidAllowed)
+            return this.CreateHighBid(maxBids[0], highBidPrice)
 
         // The highest bid can't beat the next highest by the increment necessary so who wins?
         // Well the earliest max bid that can't be beat by the relevant increment.
@@ -106,7 +121,7 @@ export class AutoBidder {
 
         let winMaxBid = maxBids.shift()
         let bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
-        for(const maxBid of maxBids) {
+        for (const maxBid of maxBids) {
             if (maxBid.maxPrice >= bidPrice) {
                 winMaxBid = maxBid
                 bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
@@ -119,9 +134,9 @@ export class AutoBidder {
     // Ensure a max bid is valid before we record and process it.
     private async ValidateMaxBid(auctionId: AuctionId, maxPrice: Price, now: Date, buyerUserId: UserId): Promise<MaxBidError | null> {
         const auction = await this.GetAuction(auctionId)
-        if (auction.startPrice > maxPrice) return MaxBidError.AmountBelowHighest
-        if (auction.startAt < now) return MaxBidError.AuctionNotStarted
-        if (auction.endAt >= now) return MaxBidError.AuctionEnded
+        if (auction.startPrice > maxPrice) return MaxBidError.AmountBelowStarting
+        if (auction.startAt > now) return MaxBidError.AuctionNotStarted
+        if (auction.endAt <= now) return MaxBidError.AuctionEnded
 
         const highest = await this.GetHighestBid(auctionId)
         if (highest !== null && maxPrice < highest.price) return MaxBidError.AmountBelowHighest
@@ -130,7 +145,7 @@ export class AutoBidder {
         const existingUserMaxBid = await this.docs
             .maxBids()
             .find({ auctionId, buyerUserId })
-            .sort({ maxPrice: 2 })
+            .sort({ maxPrice: -1 })
             .limit(1)
             .toArray()
         if (existingUserMaxBid.length === 1 && maxPrice <= existingUserMaxBid[0].maxPrice) return MaxBidError.AmountBelowMax
@@ -146,7 +161,7 @@ export class AutoBidder {
         const highestBid = await this.docs
             .highBids()
             .find({ auctionId })
-            .sort({ placedAt: 1 })
+            .sort({ placedAt: -1 })
             .limit(1)
             .toArray()
 

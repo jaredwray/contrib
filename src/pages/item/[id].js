@@ -15,18 +15,21 @@ export async function getServerSideProps(context) {
     const { docs } = await connectToDatabase()
 
     if (!ObjectID.isValid(id)) return getStaticProps()
-    const auction = await docs.auctions().findOne({ _id: new ObjectID(id) })
+    const auctionId = new ObjectID(id) 
+    const auction = await docs.auctions().findOne({ _id: auctionId })
     if (!auction) return getStaticProps()
 
     const autobidder = new AutoBidder(docs)
     const session = await getSession(context)
 
-    const [athlete, charity, watchCount, watch, bidCount] = await Promise.all([
+    const [athlete, charity, watchCount, watch, bidCount, highest, minToPlace] = await Promise.all([
         docs.athletes().findOne({ _id: auction.seller.id }),
         docs.charities().findOne({ _id: auction.charities[0].id }),
-        docs.watches().count({ auctionId: id }),
-        session ? docs.watches().findOne({ auctionId: id, buyerId: session.user.id }) : null,
-        docs.highBids().count({ auctionId: id }) ?? 0
+        docs.watches().count({ auctionId }),
+        session ? docs.watches().findOne({ auctionId, buyerId: session.user.id }) : null,
+        docs.highBids().count({ auctionId }) ?? 0,
+        autobidder.GetHighestBid(auctionId),
+        autobidder.GetMinBidPriceForAuction(auction)
     ])
 
     return {
@@ -41,8 +44,8 @@ export async function getServerSideProps(context) {
             charity: JSON.parse(JSON.stringify(charity)),
             seller: JSON.parse(JSON.stringify(athlete)),
             bids: {
-                minToPlace: await autobidder.GetMinBidPriceForAuction(auction),
-                highest: await autobidder.GetHighestBid(auction._id),
+                minToPlace: minToPlace,
+                highest: JSON.parse(JSON.stringify(highest)),
                 count: bidCount
             },
             activity: {
@@ -137,7 +140,7 @@ const ItemDetail = (props) => {
                                 <div
                                     style={{ top: "100px" }}
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
-                                    <p className="text-muted">Ends in <span class="text-secondary">{formatRemaining(auction.endAt)}</span> on <span class="text-primary" title={new Date(auction.endAt).toLocaleString()}>{formatDate(auction.endAt)}</span>
+                                    <p className="text-muted">Ends in <span className="text-secondary">{formatRemaining(auction.endAt)}</span> on <span className="text-primary" title={new Date(auction.endAt).toLocaleString()}>{formatDate(auction.endAt)}</span>
                                     </p>
                                     <span className="text-primary h2">
                                         ${formatPrice(bids.highest?.price ?? auction.startPrice)}
@@ -149,6 +152,7 @@ const ItemDetail = (props) => {
                                         action="#"
                                         autoComplete="off"
                                         className="form mt-3">
+                                        <Input type="hidden" name="auctionId" id="auctionId" value={auction._id} />
                                         <FormGroup>
                                             <Label className="form-label">Your bid</Label>
                                             <br />
@@ -156,12 +160,12 @@ const ItemDetail = (props) => {
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">$</span>
                                                 </div>
-                                                <Input type="text" name="bid" id="bid" />
+                                                <Input type="text" name="maxPrice" id="maxPrice" />
                                             </div>
                                             <p className="text-muted text-sm">Enter <span className="text-primary">${formatPrice(bids.minToPlace)}</span> or more to bid.</p>
                                         </FormGroup>
                                         <FormGroup>
-                                            <Button type="submit" color="primary" block>Place your bid</Button>
+                                            <Button onClick={submitBid} color="primary" block>Place your bid</Button>
                                         </FormGroup>
                                     </Form>
                                     <p className="text-muted text-sm text-center">Bidding means you're committing to buy this item if you're the winning bidder.</p>
@@ -194,6 +198,23 @@ const ItemDetail = (props) => {
             </section>
         </React.Fragment>
     )
+}
+
+function submitBid() {
+    // TODO: Some client-side validation
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            auctionId: document.getElementById('auctionId').value,
+            maxPrice: parseFloat(document.getElementById('maxPrice').value) * 100
+        })
+    }
+
+    fetch('/api/bids', requestOptions)
+        .then(response => response.json())
+        .then(data => console.log(data))
+    // TODO reflect changes in the UI
 }
 
 export default ItemDetail

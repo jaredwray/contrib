@@ -12,7 +12,6 @@ function getRandomEntry<T>(values: T[]) {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { docs } = await connectToDatabase()
-
   const auctions = await docs.auctions().find().toArray()
   
   // Make all auctions still running by some amount
@@ -24,7 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     auction.startAt = new Date()
     auction.startAt.setDate(auction.startAt.getDate() - auctionLength)
     console.log(endingInHours, auction.startAt, auction.endAt)
-    const result = await docs.auctions().replaceOne({ _id: auction._id }, auction)
+    await docs.auctions().replaceOne({ _id: auction._id }, auction)
   }
 
   // Specifically end just one for now for testing
