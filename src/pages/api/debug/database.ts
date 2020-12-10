@@ -12,5 +12,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   for(const collection of collections)
     collection.count = await docs._db.collection(collection.name).count()
 
-  res.status(200).json(collections)
+  return res.status(200).json(collections)
 }

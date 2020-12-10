@@ -3,5 +3,5 @@ import { getSession } from 'next-auth/client'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req })
-  res.status(200).json(session)
+  return res.status(200).json(session)
 }

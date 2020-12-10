@@ -32,5 +32,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   closedAuction.endAt = new Date()
   await docs.auctions().replaceOne({ _id: closedAuction._id }, closedAuction)
   
-  res.status(200).json(auctions)
+  return res.status(200).json(auctions)
 }
