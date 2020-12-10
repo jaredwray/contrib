@@ -12,8 +12,10 @@ export async function getServerSideProps(context) {
     if (!charity) return getStaticProps()
 
     const now = new Date()
-    const activeAuctions = await docs.auctions().find({ "charities.id": id, endAt: { $gt: now } }).toArray()
-    const recentAuctions = await docs.auctions().find({ "charities.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
+    const [activeAuctions, recentAuctions] = await Promise.all([
+        docs.auctions().find({ "charities.id": id, endAt: { $gt: now } }).toArray(),
+        docs.auctions().find({ "charities.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
+    ])
 
     return {
         props: {
@@ -32,6 +34,8 @@ export async function getServerSideProps(context) {
 
 const CharityProfile = (props) => {
     const charity = props.charity
+    const activeAuctions = props.activeAuctions
+    const recentAuctions = props.recentAuctions
     if (charity == null) return <Error404 />
 
     return (
@@ -101,13 +105,13 @@ const CharityProfile = (props) => {
                                 />
                             </div>
                         }
-                        {props.activeAuctions ?
+                        {activeAuctions ?
                             <div className="text-block">
                                 <h3 className="mb-5">
                                     Auctions benefiting {charity.name}
                                 </h3>
                                 <Row>
-                                    {props.activeAuctions.map(auction =>
+                                    {activeAuctions.map(auction =>
                                         <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
                                             <CardAuction data={auction} />
                                         </Col>
@@ -122,13 +126,13 @@ const CharityProfile = (props) => {
                                 <p>Check back again soon!</p>
                             </div>
                         }
-                        {props.recentAuctions.length > 0 &&
+                        {recentAuctions.length > 0 &&
                             <div className="text-block">
                                 <h3 className="mb-5">
                                     Recent auctions for {charity.name}
                                 </h3>
                                 <Row>
-                                    {props.recentAuctions.map(auction =>
+                                    {recentAuctions.map(auction =>
                                         <Col sm="6" lg="4" className="mb-30px hover-animate" key={auction._id}>
                                             <CardAuction data={auction} />
                                         </Col>

@@ -25,7 +25,7 @@ export async function getServerSideProps(context) {
         docs.athletes().findOne({ _id: auction.seller.id }),
         docs.charities().findOne({ _id: auction.charities[0].id }),
         docs.watches().count({ auctionId: id }),
-        docs.watches().findOne({ auctionId: id, buyerId: session.user.id }),
+        session ? docs.watches().findOne({ auctionId: id, buyerId: session.user.id }) : null,
         docs.highBids().count({ auctionId: id }) ?? 0
     ])
 

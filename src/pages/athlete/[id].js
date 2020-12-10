@@ -11,8 +11,10 @@ export async function getServerSideProps(context) {
     if (!athlete) return getStaticProps()
 
     const now = new Date()
-    const activeAuctions = await docs.auctions().find({ "seller.id": id, endAt: { $gt: now } }).toArray()
-    const recentAuctions = await docs.auctions().find({ "seller.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
+    const [activeAuctions, recentAuctions] = await Promise.all([
+        docs.auctions().find({ "seller.id": id, endAt: { $gt: now } }).toArray(),
+        docs.auctions().find({ "seller.id": id, endAt: { $lt: now } }).sort({ endAt: -1 }).toArray()
+    ])
 
     return {
         props: {
