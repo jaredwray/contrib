@@ -1,3 +1,4 @@
+import { useEffect, } from 'react'
 import Link from 'next/link'
 import { Badge, Container, Row, Col, Form, Label, Input, Button, FormGroup, Media } from 'reactstrap'
 import GalleryAbsolute from 'components/GalleryAbsolute'
@@ -9,7 +10,7 @@ import { getSession } from 'next-auth/client'
 import { AutoBidder } from 'services/autobidder'
 import { formatPrice, formatDate, formatRemaining } from 'services/formatting'
 import { ObjectId } from 'mongodb'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -40,6 +41,7 @@ export async function getServerSideProps(context) {
                 classes: 'shadow',
                 color: 'white',
             },
+            hideProgress: true,
             isSignedIn: session !== null,
             title: auction.title,
             auction: JSON.parse(JSON.stringify(auction)),
@@ -69,6 +71,38 @@ const ItemDetail = (props) => {
     const bids = props.bids
     const winning = props.bids.winning
     const auctionStatus = getAuctionStatus(auction)
+
+    const router = useRouter()
+    function refreshData() {
+        router.replace(router.asPath)
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            refreshData()
+        }, 1000);
+        return () => clearInterval(interval);
+    })
+
+    function submitBid() {
+        // TODO: Some client-side validation
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                auctionId: document.getElementById('auctionId').value,
+                maxPrice: parseFloat(document.getElementById('maxPrice').value) * 100
+            })
+        }
+
+        fetch('/api/bids', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                maxPrice.value = ''
+                refreshData()
+                // TODO: Some UX on status
+            })
+    }
 
     return (
         <React.Fragment>
@@ -205,30 +239,6 @@ const ItemDetail = (props) => {
             </section>
         </React.Fragment>
     )
-}
-
-function refreshData() {
-    Router.replace(window.location.pathname)
-}
-
-function submitBid() {
-    // TODO: Some client-side validation
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            auctionId: document.getElementById('auctionId').value,
-            maxPrice: parseFloat(document.getElementById('maxPrice').value) * 100
-        })
-    }
-
-    fetch('/api/bids', requestOptions)
-        .then(response => response.json())
-        .then(data => {
-            maxPrice.value = ''
-            refreshData()
-        })
-    // TODO: Some UX on status
 }
 
 export default ItemDetail

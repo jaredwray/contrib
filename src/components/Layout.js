@@ -30,7 +30,7 @@ const Layout = pageProps => {
         <link rel="icon" href="/favicon.png" />
         <title>{pageProps.title} - Contrib</title>
       </Head>
-      <NextNProgress color="#4E66F8" options={{ showSpinner: false }} />
+      {!pageProps.hideProgress && <NextNProgress color="#4E66F8" options={{ showSpinner: false }} />}
       {!pageProps.hideHeader &&
         <Header {...headerProps} />
       }
