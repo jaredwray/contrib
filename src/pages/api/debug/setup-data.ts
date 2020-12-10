@@ -22,7 +22,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const auctionLength = getRandomEntry([3,5,7])
     auction.startAt = new Date()
     auction.startAt.setDate(auction.startAt.getDate() - auctionLength)
-    console.log(endingInHours, auction.startAt, auction.endAt)
     await docs.auctions().replaceOne({ _id: auction._id }, auction)
   }
 

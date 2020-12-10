@@ -37,7 +37,7 @@ export class AutoBidder {
     }
 
     public async GetMinBidPriceForAuctionUser(auction: Auction, userId: ObjectID): Promise<Price> {
-        const maxBid = await this.GetMaxBidForUser(auction._id, userId)
+        const maxBid = await this.GetMaxBidForUser(auction._id, userId)        
         const highest = await this.GetMinBidPriceForAuction(auction)
         return maxBid === null
             ? highest
@@ -47,7 +47,7 @@ export class AutoBidder {
     }
 
     public async GetMaxBidForUser(auctionId: ObjectID, userId: ObjectID): Promise<MaxBid> {
-        const maxBids = await this.docs.maxBids().find({ auctionId: auctionId, buyingUserId: new ObjectId(userId) }).sort({maxPrice: -1}).limit(1).toArray()
+        const maxBids = await this.docs.maxBids().find({ auctionId: auctionId, buyerUserId: userId }).sort({maxPrice: -1}).limit(1).toArray()
         return (maxBids.length > 0) ? maxBids[0] : null
     }
 

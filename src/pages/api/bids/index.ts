@@ -15,6 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const session = await getSession({ req })
         if (session === null)
             return res.status(401).json({ statusCode: 422, message: 'User not authenticated'})
+        const buyerUserId = new ObjectId(session.user['id'])
 
         // Check parameters
         const { auctionId, maxPrice } = req.body 
@@ -26,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Place bid
         const { docs } = await connectToDatabase()
         const autoBidder = new AutoBidder(docs)    
-        const result = autoBidder.PlaceMaxBid(new ObjectId(auctionId), Number.parseInt(maxPrice, 10), session.user.id)
+        const result = autoBidder.PlaceMaxBid(new ObjectId(auctionId), Number.parseInt(maxPrice, 10), buyerUserId)
         if (typeof result === 'string')
             return res.status(400).json({ statusCode: 400, message: getMaxBidErrorMessage(result) })
 

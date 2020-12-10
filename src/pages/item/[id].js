@@ -48,7 +48,7 @@ export async function getServerSideProps(context) {
                 minToPlace: minToPlace,
                 highest: JSON.parse(JSON.stringify(highest)),
                 count: bidCount,
-                winning: highest?.buyerUserId === session?.user.id,
+                winning: highest?.buyerUserId == session?.user.id,
             },
             activity: {
                 watchCount: watchCount,

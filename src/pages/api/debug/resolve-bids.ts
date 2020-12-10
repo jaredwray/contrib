@@ -11,9 +11,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: { id }
   } = req
 
-  console.log(id)
-
   const result = autoBidder.ResolveMaxBids(new ObjectId(id.toString()))
-
   return res.status(200).json(result)
 }
