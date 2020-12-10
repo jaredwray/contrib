@@ -20,7 +20,14 @@ const options = {
   ],
   secret: process.env.SESSION_SECRET,
   session: {
-    jwt: true
+    jwt: false
+  },
+  callbacks: {
+    session: async (session, user) => {
+      console.log(session, user)
+      session.user.id = user.id
+      return Promise.resolve(session)
+    }
   }
 }
 
