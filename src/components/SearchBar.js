@@ -26,6 +26,7 @@ const SearchBar = props => {
                     <Col
                         lg="5"
                         className="d-flex align-items-center form-group">
+                        <Input type="hidden" name="status" value="active" />
                         <Input
                             type="text"
                             name="text"

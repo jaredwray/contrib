@@ -108,7 +108,7 @@ const Auctions = (props) => {
                                     <Select
                                         name="sports"
                                         id="form_sports"
-                                        options={["Soccer", "Basketball", "Baseball", "Football"].map(c => ({ label: c, value: c }))}
+                                        options={["Soccer", "Basketball", "Baseball", "Football"].map(c => ({ label: c, value: c.toLowerCase() }))}
                                         isMulti
                                         className="form-control dropdown bootstrap-select"
                                         classNamePrefix="selectpicker" />
