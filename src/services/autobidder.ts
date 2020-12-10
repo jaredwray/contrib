@@ -121,20 +121,20 @@ export class AutoBidder {
             return null
 
         // If we only have one viable max bid then just meet the min bid allowed.
-        if (maxBids.length === 1)
+        if (maxBids.length === 1 && maxBids[0].buyerUserId.toHexString() !== currentHighestBid.buyerUserId.toHexString())
             return this.CreateHighBid(maxBids[0], minBidAllowed)
 
         // If we have two or more max bids then the largest high bid should be the increment above
         // the next larges max providing not same user. If that is still below their max bid all is good.
-        const highBidPrice = AutoBidder.GetMinBidPrice(maxBids[1].maxPrice)
-        if (highBidPrice <= maxBids[0].maxPrice && maxBids[0].buyerUserId !== maxBids[1].buyerUserId)
-            return this.CreateHighBid(maxBids[0], highBidPrice)
+        if (maxBids.length === 2) {
+            const highBidPrice = AutoBidder.GetMinBidPrice(maxBids[1].maxPrice)
+            if (highBidPrice <= maxBids[0].maxPrice && maxBids[0].buyerUserId.toHexString() !== maxBids[1].buyerUserId.toHexString())
+                return this.CreateHighBid(maxBids[0], highBidPrice)
+        }
 
         // The highest bid can't beat the next highest by the increment necessary so who wins?
         // Well the earliest max bid that can't be beat by the relevant increment.
         maxBids.sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime())
-
-        // TODO: We need to ensure a user does not bid war with themselves here
 
         let winMaxBid = maxBids.shift()
         let bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
@@ -144,6 +144,10 @@ export class AutoBidder {
                 bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
             }
         }
+
+        // A user increasing their max bid should not count as a bid against themselves
+        if (winMaxBid.buyerUserId.toHexString() === currentHighestBid.buyerUserId.toHexString())
+            return null
 
         return this.CreateHighBid(winMaxBid, winMaxBid.maxPrice)
     }
