@@ -9,13 +9,14 @@ import { getAuctionStatus, AuctionStatus } from 'models/database/auction'
 import { getSession } from 'next-auth/client'
 import { AutoBidder } from 'services/autobidder'
 import { formatPrice, formatDate, formatRemaining } from 'services/formatting'
+import { ObjectId } from 'mongodb'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
     const { docs } = await connectToDatabase()
 
     if (!ObjectID.isValid(id)) return getStaticProps()
-    const auctionId = new ObjectID(id) 
+    const auctionId = new ObjectID(id)
     const auction = await docs.auctions().findOne({ _id: auctionId })
     if (!auction) return getStaticProps()
 
@@ -29,7 +30,7 @@ export async function getServerSideProps(context) {
         session ? docs.watches().findOne({ auctionId, buyerId: session.user.id }) : null,
         docs.highBids().count({ auctionId }) ?? 0,
         autobidder.GetHighestBid(auctionId),
-        autobidder.GetMinBidPriceForAuction(auction)
+        autobidder.GetMinBidPriceForAuctionUser(auction, new ObjectId(session.user.id))
     ])
 
     return {
@@ -46,7 +47,8 @@ export async function getServerSideProps(context) {
             bids: {
                 minToPlace: minToPlace,
                 highest: JSON.parse(JSON.stringify(highest)),
-                count: bidCount
+                count: bidCount,
+                winning: highest?.buyerUserId === session?.user.id,
             },
             activity: {
                 watchCount: watchCount,
@@ -64,6 +66,7 @@ const ItemDetail = (props) => {
     const charity = props.charity
     const activity = props.activity
     const bids = props.bids
+    const winning = props.bids.winning
     const auctionStatus = getAuctionStatus(auction)
 
     return (
@@ -145,7 +148,8 @@ const ItemDetail = (props) => {
                                     <span className="text-primary h2">
                                         ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
-                                    <span className="text-muted text-sm float-right">[{bids.count} bids]</span>
+                                    <div className="text-muted text-sm">{bids.count} bids {winning && <span className="badge badge-secondary-light">You are winning</span>}
+                                    </div>
                                     <Form
                                         id="booking-form"
                                         method="get"
@@ -165,7 +169,7 @@ const ItemDetail = (props) => {
                                             <p className="text-muted text-sm">Enter <span className="text-primary">${formatPrice(bids.minToPlace)}</span> or more to bid.</p>
                                         </FormGroup>
                                         <FormGroup>
-                                            <Button onClick={submitBid} color="primary" block>Place your bid</Button>
+                                            <Button onClick={submitBid} color="primary" block>{winning ? 'Increase' : 'Place'} your bid</Button>
                                         </FormGroup>
                                     </Form>
                                     <p className="text-muted text-sm text-center">Bidding means you're committing to buy this item if you're the winning bidder.</p>
@@ -213,7 +217,7 @@ function submitBid() {
 
     fetch('/api/bids', requestOptions)
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => window.location.reload())
     // TODO reflect changes in the UI
 }
 

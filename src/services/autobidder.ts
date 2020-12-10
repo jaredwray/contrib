@@ -2,7 +2,7 @@ import { Auction, AuctionId, Price } from 'models/database/auction'
 import { MaxBid } from 'models/database/maxbid'
 import { HighBid } from 'models/database/highbid'
 import { ContribDocuments } from 'models/database/docs'
-import { ObjectId } from 'mongodb'
+import { ObjectID, ObjectId } from 'mongodb'
 import { UserId } from 'models/database/user'
 
 // Reasons why a MaxBid might be rejected.
@@ -36,9 +36,26 @@ export class AutoBidder {
     constructor(private docs: ContribDocuments) {
     }
 
+    public async GetMinBidPriceForAuctionUser(auction: Auction, userId: ObjectID): Promise<Price> {
+        const maxBid = await this.GetMaxBidForUser(auction._id, userId)
+        const highest = await this.GetMinBidPriceForAuction(auction)
+        return maxBid === null
+            ? highest
+            : highest > maxBid.maxPrice
+                ? highest
+                : AutoBidder.GetMinBidPrice(maxBid.maxPrice)
+    }
+
+    public async GetMaxBidForUser(auctionId: ObjectID, userId: ObjectID): Promise<MaxBid> {
+        const maxBids = await this.docs.maxBids().find({ auctionId: auctionId, buyingUserId: new ObjectId(userId) }).sort({maxPrice: -1}).limit(1).toArray()
+        return (maxBids.length > 0) ? maxBids[0] : null
+    }
+
+
     // Get the minimum bid price - this is the current HighBid plus a minimum increment amount.
-    // We do not return the underlying MaxBid because that is private to the bidder.
-    public async GetMinBidPriceForAuction(auction: Auction): Promise<Price> {
+    // We do not return the underlying MaxBid because that is private to the bidder. This does not
+    // take into account a user might already have a max bid - use GetMinBidPriceForAuctionUser really.
+    private async GetMinBidPriceForAuction(auction: Auction): Promise<Price> {
         const highest = await this.GetHighestBid(auction._id)
         if (highest !== null)
             return AutoBidder.GetMinBidPrice(highest.price)
@@ -107,17 +124,17 @@ export class AutoBidder {
         if (maxBids.length === 1)
             return this.CreateHighBid(maxBids[0], minBidAllowed)
 
-        // TODO: Ensure a user does not bid-war with themselves due to concurrency
-
         // If we have two or more max bids then the largest high bid should be the increment above
-        // the next larges max. If that is still below their max bid all is good.
+        // the next larges max providing not same user. If that is still below their max bid all is good.
         const highBidPrice = AutoBidder.GetMinBidPrice(maxBids[1].maxPrice)
-        if (highBidPrice <= maxBids[0].maxPrice)
+        if (highBidPrice <= maxBids[0].maxPrice && maxBids[0].buyerUserId !== maxBids[1].buyerUserId)
             return this.CreateHighBid(maxBids[0], highBidPrice)
 
         // The highest bid can't beat the next highest by the increment necessary so who wins?
         // Well the earliest max bid that can't be beat by the relevant increment.
         maxBids.sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime())
+
+        // TODO: We need to ensure a user does not bid war with themselves here
 
         let winMaxBid = maxBids.shift()
         let bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
