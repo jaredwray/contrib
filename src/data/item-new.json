@@ -117,7 +117,8 @@
         "content": "The starting price for the item which determines the minimum amount that can be bid. The item will not sell if no bids at or above this price are received.",
         "inputs": [
           {
-            "type": "text"
+            "type": "price",
+            "name": "form_price"
           }
         ]
       },

@@ -81,6 +81,29 @@ const ListingForm = props => {
                                         />
                                     </FormGroup>
                                 }
+                                {input.type === "price" &&
+                                    <FormGroup>
+                                        <Label
+                                            className="form-label"
+                                            for={input.name}
+                                        >
+                                            {input.label}
+                                        </Label>
+                                        <div className="input-group mb-1">
+                                                <div className="input-group-prepend">
+                                                    <span className="input-group-text">$</span>
+                                                </div>
+                                        <Input
+                                            type={input.type}
+                                            input={input.name}
+                                            name={input.name}
+                                            id={input.name}
+                                            value={formInputs[input.name] || ''}
+                                            onChange={(e) => onChange(e)}
+                                        />
+                                        </div>
+                                    </FormGroup>
+                                }
                                 {input.type === "textarea" &&
                                     <FormGroup className="mb-3">
                                         <Label
