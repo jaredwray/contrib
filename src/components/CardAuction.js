@@ -14,6 +14,7 @@ const CardAuction = props => {
                 <Link href={`/item/${auction._id}`}>
                     <a className="tile-link" />
                 </Link>
+                {auctionStatus !== AuctionStatus.Ended &&
                 <div className="card-img-overlay-top text-right">
                     <a className="card-fav-icon position-relative z-index-40" href="#">
                         <svg className="svg-icon text-white">
@@ -21,6 +22,7 @@ const CardAuction = props => {
                         </svg>
                     </a>
                 </div>
+                }
             </div>
             <CardBody className="d-flex align-items-center">
                 <div className="w-100">
