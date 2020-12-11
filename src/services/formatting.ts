@@ -16,6 +16,15 @@ export function formatDate(date: Date | string):string {
     )
 }
 
+export function formatTime(date: Date | string):string {
+    date = (date instanceof Date) ? date : new Date(date)
+    return date.toLocaleTimeString('en-us',
+    {
+        hour: '2-digit',
+        minute: '2-digit'
+    })
+}
+
 export function formatRemaining(date: Date | string): string {
     date = (date instanceof Date) ? date : new Date(date)
     const t = date.getTime() - new Date().getTime()

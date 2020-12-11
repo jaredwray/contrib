@@ -8,7 +8,7 @@ import { Error404, getStaticProps } from 'pages/404'
 import { getAuctionStatus, AuctionStatus } from 'models/database/auction'
 import { getSession } from 'next-auth/client'
 import { AutoBidder } from 'services/autobidder'
-import { formatPrice, formatDate, formatRemaining } from 'services/formatting'
+import { formatPrice, formatDate, formatRemaining, formatTime } from 'services/formatting'
 import { ObjectId } from 'mongodb'
 import { useRouter } from 'next/router'
 
@@ -225,12 +225,22 @@ const ItemDetail = (props) => {
                                 <div
                                     style={{ top: "100px" }}
                                     className="p-4 shadow ml-lg-4 rounded sticky-top">
-                                    <p className="text-muted">Ended at {formatDate(auction.endAt)}</p>
-                                    <Badge color="danger-light" className="ml-1">Ended</Badge>
-                                    &nbsp;
-                                    <span className="text-danger h2">
+                                    <p className="text-muted">
+                                        Ended on <span className="text-primary">{formatDate(auction.endAt)}</span> at <span className="text-primary">{formatTime(auction.endAt)}</span>
+                                    </p>
+                                    <span className="text-primary h2">
                                         ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
+                                    {bids.highest
+                                        ? <Badge color="success-light" className="ml-1">Sold</Badge>
+                                        : <Badge color="info-light" className="ml-1">Unsold</Badge>
+                                    }
+                                    {winning &&
+                                        <React.Fragment>
+                                            <p className="text-muted text-sm my-3">You won this auction. You should complete the purchase as soon as possible.</p>
+                                            <Button href="#" color="primary" block>Pay for your item</Button>
+                                        </React.Fragment>
+                                    }
                                 </div>
                             }
                         </Col>
