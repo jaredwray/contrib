@@ -24,7 +24,7 @@ env:
   RUN_REGION: us-central1
   SERVICE_NAME: contrib-app
   MONGODB_USER: ${{ secrets.MONGO_DEV_USER }}
-  MONGODB_PASS: ${{ secrets.MONGO_DEV_PASS }}
+  MONGODB_PASS: ${{ secrets.MONGO_DEV_PASSWORD }}
   MONGODB_URI: mongodb+srv://$MONGODB_USER:$MONGODB_PASS@contrib-dev-cluster-1.l2blb.mongodb.net/contrib?retryWrites=true&w=majority
   MONGODB_DB: contrib
   GOOGLE_CLIENT_ID: 291088030422-ijfkbe7ctr126emfckv6rl4cd28h57hf.apps.googleusercontent.com
