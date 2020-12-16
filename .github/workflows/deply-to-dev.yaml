@@ -47,13 +47,13 @@ jobs:
         service_account_key: ${{ secrets.DEV_GCP_SA_KEY }}
         project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
 
-
     # Build and push image to Google Container Registry
     - name: Build
       run: |-
         gcloud builds submit \
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+          
     # Deploy image to Cloud Run
     - name: Deploy
       run: |-
@@ -63,5 +63,14 @@ jobs:
           --platform=managed \
           --region=us-central1 \
           --allow-unauthenticated \
-          --set-env-vars=NEXTAUTH_URL=$NEXTAUTH_URL,MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
+          --service-account=cloudrun@contrib-dev.iam.gserviceaccount.com \
+          --set-env-vars=NEXTAUTH_URL=$NEXTAUTH_URL, \
+            MONGODB_URI=$MONGODB_URI, \
+            GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID, \
+            GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET, \
+            FB_CLIENT_ID=$FB_CLIENT_ID, \ 
+            FB_CLIENT_SECRET=$FB_CLIENT_SECRET, \
+            TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID, \
+            TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET, \ 
+            SESSION_SECRET=$SESSION_SECRET
           --port=3000
