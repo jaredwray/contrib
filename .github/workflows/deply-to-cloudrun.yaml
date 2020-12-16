@@ -25,7 +25,7 @@ env:
   SERVICE_NAME: contrib-app
   MONGODB_USER: ${{ secrets.MONGO_DEV_USER }}
   MONGODB_PASS: ${{ secrets.MONGO_DEV_PASSWORD }}
-  MONGODB_URI: mongodb+srv://$MONGODB_USER:$MONGODB_PASS@contrib-dev-cluster-1.l2blb.mongodb.net/contrib?retryWrites=true&w=majority
+  MONGODB_URI: mongodb+srv://contribdev:sDY22peUktWAzIhG@contrib-dev-cluster-1.l2blb.mongodb.net/contrib?authSource=admin&replicaSet=atlas-k0nwrx-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true&synchronize=true
   MONGODB_DB: contrib
   GOOGLE_CLIENT_ID: 291088030422-ijfkbe7ctr126emfckv6rl4cd28h57hf.apps.googleusercontent.com
   GOOGLE_CLIENT_SECRET: Ou-uADP82suHP5YITNycgcu7
@@ -34,7 +34,6 @@ env:
   TWITTER_CLIENT_ID: u7vSsbfrv2pAqirAmjDOe9ORl
   TWITTER_CLIENT_SECRET: DyRpkbkCn6XgMJP2aTIF4Y3T8Cv9rkOJ6oIpPVHbmjDeQitSsb
   SESSION_SECRET: rfcMJwupOXot9VqI9mkO9OOEVNFrQSmBX0SpakqbxI0FTBl7YDRfFmscPGC7JogxXBgoxRg0Uhr7PclwR2SBSWdzz4gUldspna1BBsvLbmo6Oiyn97MYQTlzLWEP1pPbMA
-  URL: http://dev.contrib.org:80
 
 jobs:
   setup-build-deploy:
@@ -67,5 +66,5 @@ jobs:
         project_id: $PROJECT_ID
         credentials: ${{ secrets.GCP_SA_KEY }}
         region: $RUN_REGION
-        env_vars: NEXTAUTH_URL=$URL,MONGODB_URI=$MONGODB_URI,MONGODB_DB=$MONGODB,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET
+        env_vars: MONGODB_URI=$MONGODB_URI,MONGODB_DB=$MONGODB,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET
         
