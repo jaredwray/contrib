@@ -56,12 +56,11 @@ jobs:
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     # Deploy image to Cloud Run
     - name: Deploy
-      uses: google-github-actions/deploy-cloudrun@main
-      with:
-        image: gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
-        service: $SERVICE_NAME
-        project_id: $PROJECT_ID
-        credentials: ${{ secrets.GCP_SA_KEY }}
-        region: $RUN_REGION
-        env_vars: NEXTAUTH_URL="https://dev.contrib.org:443",MONGODB_URI=$MONGODB_URI,MONGODB_DB=$MONGODB,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET
-        
+      run: gcloud run deploy $SERVICE_NAME \
+        --image=gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+        --cpu=1 --memory=512Mi \
+        --platform=managed \
+        --region=us-central1 \
+        --allow-unauthenticated \
+        --set-env-vars= NEXTAUTH_URL="https://dev.contrib.org:443",MONGODB_URI=$MONGODB_URI,MONGODB_DB=$MONGODB,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
+        --port=3000
