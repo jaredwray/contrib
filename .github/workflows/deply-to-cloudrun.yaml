@@ -20,7 +20,7 @@ on:
     - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: contrib-dev
   RUN_REGION: us-central1
   SERVICE_NAME: contrib-app
   MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
