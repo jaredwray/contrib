@@ -59,7 +59,7 @@ jobs:
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     # Deploy image to Cloud Run
     - name: Deploy
-      uses: GoogleCloudPlatform/github-actions/deploy-cloudrun@master
+      uses: google-github-actions/deploy-cloudrun@main
       with:
         image: gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
         service: $SERVICE_NAME
