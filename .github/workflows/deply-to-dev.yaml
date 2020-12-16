@@ -53,7 +53,11 @@ jobs:
         gcloud builds submit \
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
-          
+    
+    #Set IAM Permissions
+    - name: Set Service Permissions
+      run: gcloud beta run services add-iam-policy-binding --region=us-central1 --member=allUsers --role=roles/run.invoker contrib-app    
+
     # Deploy image to Cloud Run
     - name: Deploy
       run: |-
@@ -63,6 +67,5 @@ jobs:
           --platform=managed \
           --region=us-central1 \
           --allow-unauthenticated \
-          --service-account=cloudrun@contrib-dev.iam.gserviceaccount.com \
           --set-env-vars=NEXTAUTH_URL=$NEXTAUTH_URL,MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
           --port=3000
