@@ -7,11 +7,6 @@ export class MongoConnection {
   docs: ContribDocuments
 }
 
-const uri = process.env.MONGODB_URI
-if (!uri) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
-}
-
 const clientOptions: MongoClientOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -21,6 +16,11 @@ let cached: MongoConnection | null = null
 
 export async function connectToDatabase(): Promise<MongoConnection> {
   if (!cached) {
+    const uri = process.env.MONGODB_URI
+    if (!uri) {
+      throw new Error('Please define the MONGODB_URI environment variable')
+    }
+    
     const client = await MongoClient.connect(uri, clientOptions)
     const db = client.db()
     const docs = new ContribDocuments(db)
