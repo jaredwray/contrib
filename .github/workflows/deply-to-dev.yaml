@@ -54,10 +54,6 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     
-    #Set IAM Permissions
-    - name: Set Service Permissions
-      run: gcloud beta run services add-iam-policy-binding --quiet --region=us-central1 --member=allUsers --role=roles/run.invoker contrib-app 
-
     # Deploy image to Cloud Run
     - name: Deploy
       run: |-
