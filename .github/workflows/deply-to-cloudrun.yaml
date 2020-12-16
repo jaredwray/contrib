@@ -59,7 +59,6 @@ jobs:
     - name: Deploy
       run: gcloud run deploy $SERVICE_NAME \
         --image=gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
-        --cpu=1 --memory=512Mi \
         --platform=managed \
         --region=us-central1 \
         --allow-unauthenticated \
