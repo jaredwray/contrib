@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Build and Deploy to Cloud Run
+name: Build and Deploy to Dev
 
 on:
   push:
@@ -20,18 +20,17 @@ on:
     - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  RUN_REGION: us-central1
+  PROJECT_ID: ${{ secrets.DEV_GCP_PROJECT_ID }}
   SERVICE_NAME: contrib-app
   MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
-  GOOGLE_CLIENT_ID: 291088030422-ijfkbe7ctr126emfckv6rl4cd28h57hf.apps.googleusercontent.com
-  GOOGLE_CLIENT_SECRET: Ou-uADP82suHP5YITNycgcu7
-  FB_CLIENT_ID: 790121715109028
-  FB_CLIENT_SECRET: d67993c8b7cd12ff30db9c9de916277b
-  TWITTER_CLIENT_ID: u7vSsbfrv2pAqirAmjDOe9ORl
-  TWITTER_CLIENT_SECRET: DyRpkbkCn6XgMJP2aTIF4Y3T8Cv9rkOJ6oIpPVHbmjDeQitSsb
-  SESSION_SECRET: rfcMJwupOXot9VqI9mkO9OOEVNFrQSmBX0SpakqbxI0FTBl7YDRfFmscPGC7JogxXBgoxRg0Uhr7PclwR2SBSWdzz4gUldspna1BBsvLbmo6Oiyn97MYQTlzLWEP1pPbMA
-  AUTH_URL: https://dev.contrib.org:443
+  GOOGLE_CLIENT_ID: ${{ secrets.DEV_GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.DEV_GOOGLE_CLIENT_SECRET }}
+  FB_CLIENT_ID: ${{ secrets.DEV_FB_CLIENT_ID }}
+  FB_CLIENT_SECRET: ${{ secrets.DEV_FB_CLIENT_SECRET }}
+  TWITTER_CLIENT_ID: ${{ secrets.DEV_TWITTER_CLIENT_ID }}
+  TWITTER_CLIENT_SECRET: ${{ secrets.DEV_TWITTER_CLIENT_SECRET }}
+  SESSION_SECRET: ${{ secrets.DEV_SESSION_SECRET }}
+  NEXTAUTH_URL: https://dev.contrib.org:443
 
 jobs:
   setup-build-deploy:
@@ -45,8 +44,8 @@ jobs:
     # Setup gcloud CLI
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.DEV_GCP_SA_KEY }}
+        project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
 
 
     # Build and push image to Google Container Registry
@@ -64,5 +63,5 @@ jobs:
           --platform=managed \
           --region=us-central1 \
           --allow-unauthenticated \
-          --set-env-vars=NEXTAUTH_URL=$AUTH_URL,MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
+          --set-env-vars=NEXTAUTH_URL=$NEXTAUTH_URL,MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
           --port=3000
