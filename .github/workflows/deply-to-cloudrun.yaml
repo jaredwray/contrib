@@ -25,6 +25,15 @@ env:
   SERVICE_NAME: contrib-app
   MONGODB_USER: ${{ secrets.MONGO_DEV_USER }}
   MONGODB_PASS: ${{ secrets.MONGO_DEV_PASS }}
+  MONGODB_URI: mongodb+srv://$MONGODB_USER:$MONGODB_PASS@contrib-dev-cluster-1.l2blb.mongodb.net/contrib?retryWrites=true&w=majority
+  MONGODB_DB: contrib
+  GOOGLE_CLIENT_ID: 291088030422-ijfkbe7ctr126emfckv6rl4cd28h57hf.apps.googleusercontent.com
+  GOOGLE_CLIENT_SECRET: Ou-uADP82suHP5YITNycgcu7
+  FB_CLIENT_ID: 790121715109028
+  FB_CLIENT_SECRET: d67993c8b7cd12ff30db9c9de916277b
+  TWITTER_CLIENT_ID: u7vSsbfrv2pAqirAmjDOe9ORl
+  TWITTER_CLIENT_SECRET: DyRpkbkCn6XgMJP2aTIF4Y3T8Cv9rkOJ6oIpPVHbmjDeQitSsb
+  SESSION_SECRET: rfcMJwupOXot9VqI9mkO9OOEVNFrQSmBX0SpakqbxI0FTBl7YDRfFmscPGC7JogxXBgoxRg0Uhr7PclwR2SBSWdzz4gUldspna1BBsvLbmo6Oiyn97MYQTlzLWEP1pPbMA
 
 jobs:
   setup-build-deploy:
@@ -41,6 +50,7 @@ jobs:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+
     # Build and push image to Google Container Registry
     - name: Build
       run: |-
@@ -48,20 +58,21 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     # Deploy image to Cloud Run
-    - name: Deploy
-      run: |-
-        gcloud run deploy "$SERVICE_NAME" \
-          --quiet \
-          --region "$RUN_REGION" \
-          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-          --platform "managed" \
-          --set-env-vars "MONGODB_URI=mongodb+srv://$MONGODB_USER:$MONGODB_PASS@contrib-dev-cluster-1.l2blb.mongodb.net/contrib?retryWrites=true&w=majority" \
-          --set-env-vars "MONGODB_DB=contrib" \
-          --set-env-vars "GOOGLE_CLIENT_ID=291088030422-ijfkbe7ctr126emfckv6rl4cd28h57hf.apps.googleusercontent.com" \
-          --set-env-vars "GOOGLE_CLIENT_SECRET=Ou-uADP82suHP5YITNycgcu7" \
-          --set-env-vars "FB_CLIENT_ID=790121715109028" \
-          --set-env-vars "FB_CLIENT_SECRET=d67993c8b7cd12ff30db9c9de916277b" \
-          --set-env-vars "TWITTER_CLIENT_ID=u7vSsbfrv2pAqirAmjDOe9ORl" \
-          --set-env-vars "TWITTER_CLIENT_SECRET=DyRpkbkCn6XgMJP2aTIF4Y3T8Cv9rkOJ6oIpPVHbmjDeQitSsb" \
-          --set-env-vars "SESSION_SECRET=rfcMJwupOXot9VqI9mkO9OOEVNFrQSmBX0SpakqbxI0FTBl7YDRfFmscPGC7JogxXBgoxRg0Uhr7PclwR2SBSWdzz4gUldspna1BBsvLbmo6Oiyn97MYQTlzLWEP1pPbMA"
-          --allow-unauthenticated 
+    steps:
+    - id: deploy
+      uses: GoogleCloudPlatform/github-actions/deploy-cloudrun@master
+      with:
+        image: gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+        service: $SERVICE_NAME
+        project_id: $PROJECT_ID
+        credentials: ${{ secrets.GCP_SA_KEY }}
+        region: $RUN_REGION
+        env_vars: MONGODB_URI=$MONGODB_URI, \ 
+        MONGODB_DB=$MONGODB, \ 
+        GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID, \
+        GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET, \
+        FB_CLIENT_ID=$FB_CLIENT_ID, \
+        FB_CLIENT_SECRET=$FB_CLIENT_SECRET, \
+        TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID, \
+        TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET, \
+        SESSION_SECRET=$SESSION_SECRET
