@@ -24,7 +24,7 @@ const options = {
   },
   callbacks: {
     session: async (session, user) => {
-      session.user.id = user.id
+      session.user['id'] = user['id']
       return Promise.resolve(session)
     }
   }

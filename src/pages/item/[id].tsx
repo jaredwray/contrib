@@ -30,10 +30,10 @@ export async function getServerSideProps(context) {
         docs.athletes().findOne({ _id: auction.seller.id }),
         docs.charities().findOne({ _id: auction.charities[0].id }),
         docs.watches().count({ auctionId }),
-        session ? docs.watches().findOne({ auctionId, buyerId: session.user.id }) : null,
+        session ? docs.watches().findOne({ auctionId, buyerId: session.user['id'] }) : null,
         docs.highBids().count({ auctionId }) ?? 0,
         autobidder.GetHighestBid(auctionId),
-        autobidder.GetMinBidPriceForAuctionUser(auction, new ObjectId(session?.user?.id))
+        autobidder.GetMinBidPriceForAuctionUser(auction, new ObjectId(session?.user?.['id']))
     ])
 
     return {
@@ -53,7 +53,7 @@ export async function getServerSideProps(context) {
                 minToPlace: minToPlace,
                 highest: JSON.parse(JSON.stringify(highest)),
                 count: bidCount,
-                winning: highest?.buyerUserId == session?.user.id,
+                winning: highest?.buyerUserId == session?.user['id'],
             },
             activity: {
                 watchCount: watchCount,
