@@ -11,6 +11,7 @@ import { AutoBidder } from 'services/autobidder'
 import { formatPrice, formatDate, formatRemaining, formatTime } from 'services/formatting'
 import { ObjectId } from 'mongodb'
 import { useRouter } from 'next/router'
+import * as React from 'react'
 
 export async function getServerSideProps(context) {
     const { id } = context.query

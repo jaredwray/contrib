@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Col, Badge } from 'reactstrap'
 import UseWindowSize from 'hooks/UseWindowSize'
 import menu from 'data/menu.json'
+import * as React from 'react'
 
 const MegaMenu = (props) => {
     const size = UseWindowSize()
