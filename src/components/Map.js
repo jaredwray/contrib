@@ -4,7 +4,6 @@ import { Map, Marker, Popup, TileLayer, Tooltip, Circle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import MarkerIcon from '../../public/content/svg/marker.svg'
 import MarkerIconHighlight from '../../public/content/svg/marker-hover.svg'
-import Stars from './Stars'
 
 const MapComponent = props => {
     let tileLayers = []
@@ -163,9 +162,6 @@ const MapComponent = props => {
                                                 </Link>
                                             </h6>
                                         }
-                                        <div className="text-xs">
-                                            <Stars stars={data.stars} />
-                                        </div>
                                     </div>
                                 </div>
                             </Popup>

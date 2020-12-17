@@ -66,8 +66,3 @@
     background: rgba(0, 40, 100, 0.12);
     @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
 }
-
-.card-stars {
-    min-width: 65px;
-    margin-top: 2px;
-}

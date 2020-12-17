@@ -1,7 +1,6 @@
 import React from "react"
 import Link from 'next/link'
 import { Container, Row, Col, Button, Card, CardBody, CardTitle, CardSubtitle, Badge } from 'reactstrap'
-import Stars from './Stars'
 import ReactIdSwiper from 'react-id-swiper'
 
 const RichSwiper = (props) => {
@@ -162,9 +161,6 @@ const RichSwiper = (props) => {
                                                             <CardSubtitle className="d-flex">
                                                                 <p className="flex-grow-1 mb-0 text-muted text-sm">
                                                                     {block.location}
-                                                                </p>
-                                                                <p className="flex-shrink-1 mb-0 card-stars text-xs text-right">
-                                                                    <Stars stars={block.stars} />
                                                                 </p>
                                                             </CardSubtitle>
                                                         </div>

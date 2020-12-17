@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { Media, Card, CardBody, CardFooter } from 'reactstrap'
-import Stars from 'components/Stars'
 
 const BookingColumn = props => {
     const from = props.from
@@ -19,13 +18,6 @@ const BookingColumn = props => {
                             </h6>
                             <p className="text-muted text-sm mb-0">
                                 Entire home in New York
-                                <span className="mt-n1 d-block">
-                                    <Stars
-                                        stars={4}
-                                        size="sm"
-                                        color="text-primary"
-                                    />
-                                </span>
                             </p>
                         </Media>
                         <Link href="detail-rooms">
