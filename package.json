@@ -17,7 +17,7 @@
     "next": "^10.0.3",
     "next-auth": "^3.1.0",
     "next-images": "^1.6.2",
-    "nouislider-react": "^3.3.8",
+    "nouislider-react": "^3.3.9",
     "nprogress": "^0.2.0",
     "react": "^17.0.1",
     "react-dates": "^21.8.0",
