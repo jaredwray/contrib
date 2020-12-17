@@ -53,19 +53,19 @@
                "links": [
                   {
                      "title": "Fans",
-                     "link": "#"
+                     "link": "/user/sign-up"
                   },
                   {
                      "title": "Athletes",
-                     "link": "#"
+                     "link": "/info/athletes"
                   },
                   {
                      "title": "Charities",
-                     "link": "#"
+                     "link": "/info/charities"
                   },
                   {
                      "title": "Staff",
-                     "link": "#"
+                     "link": "/info/staff"
                   }
                ]
             }

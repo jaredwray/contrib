@@ -69,7 +69,7 @@ const UserMenu = (props) => {
                 </Link>
             </DropdownMenu>
         </Dropdown>
-    || ''
+    || <React.Fragment></React.Fragment>
 }
 
 export default UserMenu

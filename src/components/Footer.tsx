@@ -1,15 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import {
-    Container,
-    Row,
-    Col,
-    Form,
-    Input,
-    Button,
-    Badge
-} from 'reactstrap'
-
+import { Container, Row, Col, Form, Input, Button, Badge } from 'reactstrap'
 import footerContent from 'data/footer.json'
 
 const Footer = () => {
@@ -56,8 +47,7 @@ const Footer = () => {
                                 }
                                 {item.form &&
                                     <Form
-                                        id="newsletter-form"
-                                    >
+                                        id="newsletter-form">
                                         <div className="input-group mb-3">
                                             <Input type="email" placeholder={item.form.placeholder} aria-label={item.form.placeholder} className="bg-transparent border-dark border-right-0" />
                                             <div className="input-group-append">
@@ -70,7 +60,6 @@ const Footer = () => {
                                 }
                             </Col>
                         )}
-
                     </Row>
                 </Container>
             </div>
@@ -89,6 +78,6 @@ const Footer = () => {
             </div>
         </footer >
     )
-};
+}
 
-export default Footer;
+export default Footer

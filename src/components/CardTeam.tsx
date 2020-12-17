@@ -7,10 +7,10 @@ const CardTeam = props => {
     return (
         <Card className="border-0 hover-animate bg-transparent">
             <Link href={data.link}>
-                <a className="position-relative">
+                <React.Fragment>
                     <CardImg top src={`/content/img/avatar/${data.img}`} alt={data.title} className="team-img" />
                     <div className="team-circle false" />
-                </a>
+                </React.Fragment>
             </Link>
             <CardBody className="team-body text-center">
                 <CardTitle tag="h6">

@@ -94,7 +94,7 @@ const Team = () => {
                 </section>
             }
             {data.teams.map(team => (
-                <section className="py-6">
+                <section key={team.title} className="py-6">
                     <Container>
                         <h6 className="subtitle text-center mb-4">
                             {team.title}
