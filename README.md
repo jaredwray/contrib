@@ -51,6 +51,7 @@ Social sign-in support is supported for:
 
 - [ ] Componentize bid UI to allow refresh etc.
 - [ ] Auction creation UX should actually upload files and create mongo entries
+- [ ] Convert remaining pages and components to TypeScript
 
 ## Done
 
