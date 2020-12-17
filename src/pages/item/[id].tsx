@@ -11,6 +11,7 @@ import { AutoBidder } from 'services/autobidder'
 import { formatPrice, formatDate, formatRemaining, formatTime } from 'services/formatting'
 import { ObjectId } from 'mongodb'
 import { useRouter } from 'next/router'
+import { getTypedElementById } from 'services/document'
 import * as React from 'react'
 
 export async function getServerSideProps(context) {
@@ -86,20 +87,22 @@ const ItemDetail = (props) => {
     })
 
     function submitBid() {
+        const maxPriceInput = getTypedElementById<HTMLInputElement>('maxPrice')
+
         // TODO: Some client-side validation
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                auctionId: document.getElementById('auctionId').value,
-                maxPrice: parseFloat(document.getElementById('maxPrice').value) * 100
+                auctionId: getTypedElementById<HTMLInputElement>('auctionId')?.value,
+                maxPrice: parseFloat(maxPriceInput?.value ?? "0") * 100
             })
         }
 
         fetch('/api/bids', requestOptions)
             .then(response => response.json())
             .then(data => {
-                maxPrice.value = ''
+                maxPriceInput.value = ''
                 refreshData()
                 // TODO: Some UX on status
             })

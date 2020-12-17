@@ -3,7 +3,6 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Container, Row, Col, Form, FormGroup, Input, Label, Button, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 import UseWindowSize from 'hooks/UseWindowSize'
-import data from 'data/contact.json'
 
 export async function getStaticProps() {
     return {
@@ -32,7 +31,6 @@ const Contact = () => {
             { ssr: false }
         )
         setMapLoaded(true)
-
         setTap(size.width > 700 ? true : false)
         setDragging(size.width > 700 ? true : false)
     }, [])
@@ -40,7 +38,7 @@ const Contact = () => {
     return (
         <React.Fragment>
             <section className="hero py-6 py-lg-7 text-white dark-overlay">
-                {data.img && <img src={`/content/img/photo/${data.img}`} className="bg-image" alt={data.title} />}
+                <img src="/content/img/photo/seattle-skyline.webp" className="bg-image" alt="A view of the Seattle skyline."/>
                 <Container className="overlay-content">
                     <Breadcrumb listClassName="text-white justify-content-center no-border mb-0">
                         <BreadcrumbItem>
@@ -49,74 +47,65 @@ const Contact = () => {
                             </Link>
                         </BreadcrumbItem>
                         <BreadcrumbItem active>
-                            {data.subtitle}
+                            Contact
                         </BreadcrumbItem>
                     </Breadcrumb>
-
-                    <h1 className="hero-heading">{data.title}</h1>
+                    <h1 className="hero-heading">How can we help you today?</h1>
                 </Container>
             </section>
             <section className="py-6">
                 <Container>
                     <Row>
-                        {data.address &&
-                            <Col
-                                md="4"
-                                className="text-center text-md-left mb-4 mb-md-0">
-                                <div className="icon-rounded mb-4 bg-primary-light">
-                                    <svg className="svg-icon w-2rem h-2rem text-primary">
-                                        <use xlinkHref="content/svg/orion-svg-sprite.svg#map-location-1" />
-                                    </svg>
-                                </div>
-                                <h3 className="h5">{data.address.title}</h3>
-                                <p className="text-muted">{data.address.row1}
-                                    <br />
-                                    {data.address.row2}
-                                    <br />
-                                    <span dangerouslySetInnerHTML={{ __html: data.address.row3 }} />
-                                </p>
-                            </Col>
-                        }
-                        {data.callcenter &&
-                            <Col
-                                md="4"
-                                className="text-center text-md-left mb-4 mb-md-0"
-                            >
-                                <div className="icon-rounded mb-4 bg-primary-light">
-                                    <svg className="svg-icon w-2rem h-2rem text-primary">
-                                        <use xlinkHref="content/svg/orion-svg-sprite.svg#mail-1" />
-                                    </svg>
-                                </div>
-                                <h3 className="h5">{data.callcenter.title}</h3>
-                                <p className="text-muted">
-                                    {data.callcenter.content}
-                                </p>
-                                <p className="text-muted">
-                                    <strong>{data.callcenter.phone}</strong>
-                                </p>
-                            </Col>
-                        }
-                        {data.electronicsupport &&
-                            <Col
-                                md="4"
-                                className="text-center text-md-left mb-4 mb-md-0"
-                            >
-                                <div className="icon-rounded mb-4 bg-primary-light">
-                                    <svg className="svg-icon w-2rem h-2rem text-primary">
-                                        <use xlinkHref="content/svg/orion-svg-sprite.svg#map-location-1" />
-                                    </svg>
-                                </div>
-                                <h3 className="h5">{data.electronicsupport.title}</h3>
-                                <p className="text-muted">
-                                    {data.electronicsupport.content}
-                                </p>
-                                <ul className="list-unstyled text-muted">
-                                    {data.electronicsupport.emails.map(email =>
-                                        <li key={email}>{email}</li>
-                                    )}
-                                </ul>
-                            </Col>
-                        }
+                        <Col
+                            md="4"
+                            className="text-center text-md-left mb-4 mb-md-0">
+                            <div className="icon-rounded mb-4 bg-primary-light">
+                                <svg className="svg-icon w-2rem h-2rem text-primary">
+                                    <use xlinkHref="content/svg/orion-svg-sprite.svg#map-location-1" />
+                                </svg>
+                            </div>
+                            <h3 className="h5">Address</h3>
+                            <p className="text-muted">110 6th Ave. North
+                                <br />
+                                Seattle
+                                <br />
+                                WA 98109
+                            </p>
+                        </Col>
+                        <Col
+                            md="4"
+                            className="text-center text-md-left mb-4 mb-md-0">
+                            <div className="icon-rounded mb-4 bg-primary-light">
+                                <svg className="svg-icon w-2rem h-2rem text-primary">
+                                    <use xlinkHref="content/svg/orion-svg-sprite.svg#mail-1" />
+                                </svg>
+                            </div>
+                            <h3 className="h5">Call center</h3>
+                            <p className="text-muted">
+                                For technical issues or to talk about becoming a signed athlete or registered charity.
+                            </p>
+                            <p className="text-muted">
+                                <strong>+1 206 441 6041</strong>
+                            </p>
+                        </Col>
+                        <Col
+                            md="4"
+                            className="text-center text-md-left mb-4 mb-md-0"
+                        >
+                            <div className="icon-rounded mb-4 bg-primary-light">
+                                <svg className="svg-icon w-2rem h-2rem text-primary">
+                                    <use xlinkHref="content/svg/orion-svg-sprite.svg#map-location-1" />
+                                </svg>
+                            </div>
+                            <h3 className="h5">Electronic support</h3>
+                            <p className="text-muted">
+                                Please feel free to write an email to us or to use our electronic ticketing system.
+                            </p>
+                            <ul className="list-unstyled text-muted">
+                                <li><a href="mailto:info@contrib.org"></a>info@contrib.org</li>
+                                <li><a href="mailto:support@contrib.org"></a>support@contrib.org</li>
+                            </ul>
+                        </Col>
                     </Row>
                 </Container>
             </section>
@@ -195,26 +184,6 @@ const Contact = () => {
                                     </Button>
                                 </div>
                             </Form>
-                        </Col>
-                        <Col md="5">
-                            <div className="pl-lg-4">
-                                {data.content &&
-                                    <div dangerouslySetInnerHTML={{ __html: data.content }} />
-                                }
-                                {data.social &&
-                                    <div className="social">
-                                        <ul className="list-inline">
-                                            {data.social.map(icon =>
-                                                <li key={icon.icon} className="list-inline-item">
-                                                    <a href={icon.link} target="_blank">
-                                                        <i className={`fab fa-${icon.icon}`} />
-                                                    </a>
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                }
-                            </div>
                         </Col>
                     </Row>
                 </Container>

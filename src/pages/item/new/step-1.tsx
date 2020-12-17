@@ -28,7 +28,7 @@ const NewAuction1 = () => {
                         Auction an item
                     </p>
                     <h1 className="h2 mb-5">
-                        {data.title}
+                        {data[1].title}
                         <span className="text-muted float-right">Step 1</span>
                     </h1>
                     <ListingForm data={data[1]} nextStep="step-2" />

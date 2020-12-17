@@ -80,7 +80,7 @@ const Swiper = (props) => {
             )}
 
         </ReactIdSwiper>
-            : 'loading'
+            : <React.Fragment>Loading</React.Fragment>
     )
 }
 

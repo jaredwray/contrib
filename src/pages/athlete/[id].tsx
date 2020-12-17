@@ -85,7 +85,7 @@ const AthleteProfile = (props) => {
                                             {athlete.social.twitter && <li className="text-primary"><i className="fab fa-twitter" /> <a href={`https://twitter.com/${athlete.social.twitter}`} title={`${athlete.name} on Twitter`} target="_blank">{athlete.social.twitter}</a></li>}
                                             {athlete.social.facebook && <li className="text-primary"><i className="fab fa-facebook" /> <a href={`https://facebook.com/${athlete.social.facebook}`} title={`${athlete.name} on Facebook`} target="_blank">{athlete.social.facebook}</a></li>}
                                             {athlete.social.instagram && <li className="text-primary"><i className="fab fa-instagram" /> <a href={`https://instagram.com/${athlete.social.instagram}`} title={`${athlete.name} on Instagram`} target="_blank">{athlete.social.instagram}</a></li>}
-                                            {athlete.social.youtube && <li className="text-primary"><i className="fab fa-youtube" /> <a href={`https://youtube.com/user/${athele.social.youtube}`} title={`${athlete.name} on YouTube`} target="_blank">{athlete.social.youtube}</a></li>}
+                                            {athlete.social.youtube && <li className="text-primary"><i className="fab fa-youtube" /> <a href={`https://youtube.com/user/${athlete.social.youtube}`} title={`${athlete.name} on YouTube`} target="_blank">{athlete.social.youtube}</a></li>}
                                         </CardText>
                                     </React.Fragment>
                                 }

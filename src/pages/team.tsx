@@ -25,8 +25,7 @@ const Team = () => {
                     <Col
                         key={item.title}
                         sm={12 / data.length}
-                        className="mb-3 mb-lg-0"
-                    >
+                        className="mb-3 mb-lg-0">
                         <CardTeam data={item} />
                     </Col>
                 )}
@@ -47,7 +46,6 @@ const Team = () => {
                             {data.subtitle}
                         </BreadcrumbItem>
                     </Breadcrumb>
-
                     <h1 className="hero-heading">{data.title && data.title}</h1>
                     {data.content &&
                         <Row>
@@ -82,8 +80,7 @@ const Team = () => {
                             </Col>
                             <Col
                                 lg="6"
-                                className="d-flex align-items-center"
-                            >
+                                className="d-flex align-items-center">
                                 <div>
                                     <blockquote className="blockquote-icon">
                                         <p className="text-lg text-gray-700 mb-4">Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.   </p>
@@ -96,28 +93,16 @@ const Team = () => {
                     </Container>
                 </section>
             }
-            {data.sales &&
+            {data.teams.map(team => (
                 <section className="py-6">
                     <Container>
                         <h6 className="subtitle text-center mb-4">
-                            {data.sales.title}
+                            {team.title}
                         </h6>
-                        {Team(data.sales.items)}
-
+                        {Team(team.items)}
                     </Container>
-                </section>
-            }
-            {data.marketing &&
-                <section className="py-6">
-                    <Container>
-                        <h6 className="subtitle text-center mb-4">
-                            {data.marketing.title}
-                        </h6>
-                        {Team(data.marketing.items)}
-
-                    </Container>
-                </section>
-            }
+                </section>)
+            )}
         </React.Fragment>
     )
 }

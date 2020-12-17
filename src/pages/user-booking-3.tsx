@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Container, Row, Col, Button, Alert, Media } from 'reactstrap'
+import { Container, Row, Col, Button, Alert, Media, } from 'reactstrap'
 import ProgressBar from 'components/ProgressBar'
 import data from 'data/user-booking.json'
 import BookingForm from 'components/BookingForm'
@@ -20,21 +20,21 @@ export async function getStaticProps() {
     }
 }
 
-const UserBooking2 = () => {
+const UserBooking3 = () => {
     return (
         <React.Fragment>
-            <ProgressBar progress={50} />
+            <ProgressBar progress={75} />
             <section className="py-5">
                 <Container>
                     <Row>
                         <Col lg="7">
                             <p className="subtitle text-primary">
-                                {data.steps[1].subtitle}
+                                {data.steps[2].subtitle}
                             </p>
                             <h1 className="h2 mb-5">
-                                {data.steps[1].title}
+                                {data.steps[2].title}
                                 <span className="text-muted float-right">
-                                    Step 2
+                                    Step 3
                                 </span>
                             </h1>
                             <div className="text-block">
@@ -47,31 +47,28 @@ const UserBooking2 = () => {
                                             dangerouslySetInnerHTML={{ __html: data.steps[0].badge }}
                                             body
                                         />
-
                                     </Media>
                                 </Alert>
                             </div>
                             <BookingForm
-                                data={data.steps[1].formBlocks}
+                                data={data.steps[2].formBlocks}
                             />
                             <Row className="form-block flex-column flex-sm-row">
                                 <Col className="text-center text-sm-left">
-                                    <Link href="/user-booking-1" passHref>
+                                    <Link href="/user-booking-2" passHref>
                                         <Button
                                             color="link"
-                                            className="text-muted"
-                                        >
+                                            className="text-muted">
                                             <i className="fa-chevron-left fa mr-2" />
                                             Back
                                         </Button>
                                     </Link>
                                 </Col>
                                 <Col className="text-center text-sm-right">
-                                    <Link href="/user-booking-3" passHref>
+                                    <Link href="/user-booking-4" passHref>
                                         <Button
                                             color="primary"
-                                            className="px-3"
-                                        >
+                                            className="px-3">
                                             Next step<i className="fa-chevron-right fa ml-2" />
                                         </Button>
                                     </Link>
@@ -91,4 +88,4 @@ const UserBooking2 = () => {
     )
 }
 
-export default UserBooking2
+export default UserBooking3
