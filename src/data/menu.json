@@ -49,20 +49,6 @@
                      "link": "/faq"
                   }
                ]
-            },            
-            {
-               "title": "Blog",
-               "links": [
-                  {
-                     "title": "Blog",
-                     "link": "/blog"
-                  },
-                  {
-                     "title": "Post",
-                     "link": "/blog/[slug]",
-                     "as": "/blog/autumn-fashion-tips-and-tricks"
-                  }
-               ]
             }
          ],
          [
