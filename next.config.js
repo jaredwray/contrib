@@ -1,2 +1,6 @@
 const withImages = require('next-images')
-module.exports = withImages()
+const nextBuildId = require('next-build-id')
+
+module.exports = withImages(), {
+    generateBuildId: () => nextBuildId({ dir: __dirname })
+}
