@@ -19,7 +19,7 @@ export const Error404 = () => {
     return (
         <React.Fragment>
             <p className="mh-full-screen d-flex align-items-center dark-overlay">
-                <img src="/content/img/photo/aron-visuals-3jBU9TbKW7o-unsplash.jpg" alt="Not found" className="bg-image" />
+                <img src="/content/img/photo/compass-in-hand.jpg" alt="Not found" className="bg-image" />
                 <Container className="text-white text-lg overlay-content py-6 py-lg-0">
                     <h1 className="display-3 font-weight-bold mb-5">Oops, we couldn't find that.</h1>
                     <p className="font-weight-light mb-5">Sorry we're still building out the site right now. It's possible there should have been something here.</p>
