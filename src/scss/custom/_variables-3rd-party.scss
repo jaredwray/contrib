@@ -25,9 +25,6 @@ $switch-transition: .2s all !default;
 // Swiper
 $swiperColor: theme-color('primary');
 
-// Magnific Popup - This colour needs to be escaped (%23 = #)
-$mfpColor: $white;
-
 // React Dates
 $datePickerPrimary: theme-color('primary');
 $datePickerLight: theme-color-level('primary', -7);
