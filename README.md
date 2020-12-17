@@ -22,6 +22,10 @@ To start:
 2. In the status bar ensure `Debug with Chrome (website)` is selected
 3. Use `Run > Start Debugging` from the menu or press <kbd>F5</kbd>
 
+Testing:
+
+1. Go to `/api/debug/setup-data` to reset auction states
+
 ## Technology used
 
 - [x] TypeScript
@@ -30,7 +34,7 @@ To start:
 - [x] React + React/DOM
 - [x] NextAuth
 - [ ] Stripe
-- [ ] Google Cloud
+- [x] Google Cloud
 - [x] [Directory NextJS theme](https://directory-rose.now.sh/docs/docs-next)
 - [ ] NewRelic
 
@@ -45,11 +49,16 @@ Social sign-in support is supported for:
 
 ## Next steps
 
+- [ ] Componentize bid UI to allow refresh etc.
+- [ ] Auction creation UX should actually upload files and create mongo entries
+
+## Done
+
 - [x] Allow fans to sign in
 - [x] Work on the Athlete, Fan and Auction models & get some realistic sample data setup
 - [x] Create pages to show the Auctions
 - [x] Create charity pages
-- [ ] Allow fans to bid
+- [x] Allow fans to bid
 - [x] Stub auction creation UI
 
 ## Docker
