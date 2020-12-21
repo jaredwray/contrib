@@ -1,8 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap'
-import data from 'data/team.json'
-import CardTeam from 'components/CardTeam'
+import data from 'src/data/team.json'
+import CardTeam from 'src/components/CardTeam'
 
 export async function getStaticProps() {
     return {

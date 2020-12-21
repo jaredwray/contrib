@@ -1,17 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
-import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    Nav,
-    Container,
-    Form,
-    Label,
-    Input,
-    Button,
-} from 'reactstrap'
-import Logo from '../../public/content/svg/logo.svg'
+import { Collapse, Navbar, NavbarToggler, Nav, Container, Form, Label, Input, Button } from 'reactstrap'
+import Logo from 'public/content/svg/logo.svg'
 import MegaMenu from './MegaMenu'
 import UserMenu from './UserMenu'
 

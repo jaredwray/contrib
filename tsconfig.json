@@ -7,7 +7,7 @@
       "esnext"
     ],
     "allowJs": true,
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "skipLibCheck": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,

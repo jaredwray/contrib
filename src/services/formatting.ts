@@ -1,4 +1,4 @@
-import { Price } from 'models/database/auction'
+import { Price } from 'src/models/database/auction'
 
 export function formatPrice(price: Price):string {
     return (price / 100).toFixed(2)

@@ -1,10 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
 import { Container, Button, Row, Col } from 'reactstrap'
-import { BookingContext } from 'components/BookingContext'
-import ProgressBar from 'components/ProgressBar'
-import data from 'data/user-booking.json'
-import BookingColumn from 'components/BookingColumn'
+import { BookingContext } from 'src/components/BookingContext'
+import ProgressBar from 'src/components/ProgressBar'
+import data from 'src/data/user-booking.json'
+import BookingColumn from 'src/components/BookingColumn'
 
 export async function getStaticProps() {
     return {

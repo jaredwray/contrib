@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Container, Row, Col, Form, Input, Button, Badge } from 'reactstrap'
-import footerContent from 'data/footer.json'
+import footerContent from 'src/data/footer.json'
 
 const Footer = () => {
     return (

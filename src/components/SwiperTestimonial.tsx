@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactIdSwiper from 'react-id-swiper'
-import CardTestimonial from 'components/CardTestimonial'
+import CardTestimonial from 'src/components/CardTestimonial'
 
 const SwiperTestimonial = props => {
     const data = props.data

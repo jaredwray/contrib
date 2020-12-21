@@ -2,9 +2,9 @@ import React from 'react'
 import Link from 'next/link'
 import Select from 'react-select'
 import { Container, Row, Col, Button, Collapse, Form, Input, Label, Media, Card, CardHeader, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap'
-import data from 'data/user-personal.json'
-import countries from 'data/countries.json'
-import states from 'data/regions/us.json'
+import data from 'src/data/user-personal.json'
+import countries from 'src/data/countries.json'
+import states from 'src/data/regions/us.json'
 import { getSession } from 'next-auth/client'
 
 export async function getServerSideProps(context) {

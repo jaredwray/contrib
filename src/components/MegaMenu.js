@@ -1,8 +1,8 @@
 import Router from 'next/router'
 import Link from 'next/link'
 import { NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Col, Badge } from 'reactstrap'
-import UseWindowSize from 'hooks/UseWindowSize'
-import menu from 'data/menu.json'
+import UseWindowSize from 'src/hooks/UseWindowSize'
+import menu from 'src/data/menu.json'
 import * as React from 'react'
 
 const MegaMenu = (props) => {

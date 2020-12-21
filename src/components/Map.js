@@ -2,8 +2,8 @@ import React from "react"
 import Link from 'next/link'
 import { Map, Marker, Popup, TileLayer, Tooltip, Circle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import MarkerIcon from '../../public/content/svg/marker.svg'
-import MarkerIconHighlight from '../../public/content/svg/marker-hover.svg'
+import MarkerIcon from 'public/content/svg/marker.svg'
+import MarkerIconHighlight from 'public/content/svg/marker-hover.svg'
 
 const MapComponent = props => {
     let tileLayers = []

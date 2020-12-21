@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Container, Row, Col, Form, FormGroup, Input, Label, Button, Breadcrumb, BreadcrumbItem } from 'reactstrap'
-import UseWindowSize from 'hooks/UseWindowSize'
+import UseWindowSize from 'src/hooks/UseWindowSize'
 
 export async function getStaticProps() {
     return {
@@ -27,7 +27,7 @@ const Contact = () => {
     const size = UseWindowSize()
     React.useEffect(() => {
         Map = dynamic(
-            () => import('components/Map'),
+            () => import('src/components/Map'),
             { ssr: false }
         )
         setMapLoaded(true)

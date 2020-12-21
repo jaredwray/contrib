@@ -1,5 +1,5 @@
 import { Db, MongoClient, MongoClientOptions } from 'mongodb'
-import { ContribDocuments } from 'models/database/docs'
+import { ContribDocuments } from 'src/models/database/docs'
 
 export class MongoConnection {
   client: MongoClient

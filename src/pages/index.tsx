@@ -1,11 +1,11 @@
 import React from 'react'
 import { Container, Row, Col } from 'reactstrap'
-import Swiper from 'components/Swiper'
-import SearchBar from 'components/SearchBar'
-import LastMinute from 'components/LastMinute'
-import SwiperTestimonial from 'components/SwiperTestimonial'
-import { connectToDatabase } from 'services/mongodb'
-import data from 'data/index.json'
+import Swiper from 'src/components/Swiper'
+import SearchBar from 'src/components/SearchBar'
+import LastMinute from 'src/components/LastMinute'
+import SwiperTestimonial from 'src/components/SwiperTestimonial'
+import { connectToDatabase } from 'src/services/mongodb'
+import data from 'src/data/index.json'
 
 export async function getServerSideProps() {
   const { docs } = await connectToDatabase() 

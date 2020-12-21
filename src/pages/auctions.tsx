@@ -3,10 +3,10 @@ import 'react-dates/initialize'
 import Select from 'react-select'
 import { Container, Row, Col, Form, Input, Label, Collapse, Button, FormGroup, CustomInput } from 'reactstrap'
 import Nouislider from 'nouislider-react'
-import Pagination from 'components/Pagination'
-import ResultsTopBar from 'components/ResultsTopBar'
-import CardAuction from 'components/CardAuction'
-import { connectToDatabase } from 'services/mongodb'
+import Pagination from 'src/components/Pagination'
+import ResultsTopBar from 'src/components/ResultsTopBar'
+import CardAuction from 'src/components/CardAuction'
+import { connectToDatabase } from 'src/services/mongodb'
 
 export async function getServerSideProps(context) {
     const { docs } = await connectToDatabase()

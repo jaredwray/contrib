@@ -1,8 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { Badge, Card, CardBody, CardTitle, CardSubtitle, CardText } from 'reactstrap'
-import { AuctionStatus, getAuctionStatus } from 'models/database/auction'
-import { formatPrice } from 'services/formatting'
+import { AuctionStatus, getAuctionStatus } from 'src/models/database/auction'
+import { formatPrice } from 'src/services/formatting'
 
 const CardAuction = props => {
     const auction = props.data

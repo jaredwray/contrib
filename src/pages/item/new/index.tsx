@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Container, Row, Col, Button } from 'reactstrap'
-import ProgressBar from 'components/ProgressBar'
+import ProgressBar from 'src/components/ProgressBar'
 
 export async function getStaticProps() {
     return {

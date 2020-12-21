@@ -1,10 +1,10 @@
 import React from 'react'
 import Head from 'next/head'
-import NextNProgress from 'components/NextNProgress';
+import NextNProgress from 'src/components/NextNProgress';
 import Header from './Header'
 import Footer from './Footer'
-import { FormProvider } from 'components/FormContext'
-import { BookingProvider } from 'components/BookingContext'
+import { FormProvider } from 'src/components/FormContext'
+import { BookingProvider } from 'src/components/BookingContext'
 import { useSession } from 'next-auth/client'
 
 const Layout = pageProps => {

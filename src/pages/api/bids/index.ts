@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase } from 'services/mongodb'
-import { AutoBidder, getMaxBidErrorMessage } from 'services/autobidder'
+import { connectToDatabase } from 'src/services/mongodb'
+import { AutoBidder, getMaxBidErrorMessage } from 'src/services/autobidder'
 import { getSession } from 'next-auth/client'
 import { ObjectId } from 'mongodb'
 

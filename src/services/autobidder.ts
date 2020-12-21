@@ -1,9 +1,9 @@
-import { Auction, AuctionId, Price } from 'models/database/auction'
-import { MaxBid } from 'models/database/maxbid'
-import { HighBid } from 'models/database/highbid'
-import { ContribDocuments } from 'models/database/docs'
+import { Auction, AuctionId, Price } from 'src/models/database/auction'
+import { MaxBid } from 'src/models/database/maxbid'
+import { HighBid } from 'src/models/database/highbid'
+import { ContribDocuments } from 'src/models/database/docs'
 import { ObjectID, ObjectId } from 'mongodb'
-import { UserId } from 'models/database/user'
+import { UserId } from 'src/models/database/user'
 
 // Reasons why a MaxBid might be rejected.
 export enum MaxBidError {
@@ -38,7 +38,7 @@ export class AutoBidder {
 
     public async GetMinBidPriceForAuctionUser(auction: Auction, userId: ObjectID | null): Promise<Price> {
         const maxBid = userId !== null ? await this.GetMaxBidForUser(auction._id, userId) : null
-        const highest = await this.GetMinBidPriceForAuction(auction)
+        const highest = await this.GetMinPublicBidPriceForAuction(auction)
         return maxBid === null
             ? highest
             : highest > maxBid.maxPrice
@@ -51,11 +51,10 @@ export class AutoBidder {
         return (maxBids.length > 0) ? maxBids[0] : null
     }
 
-
     // Get the minimum bid price - this is the current HighBid plus a minimum increment amount.
     // We do not return the underlying MaxBid because that is private to the bidder. This does not
     // take into account a user might already have a max bid - use GetMinBidPriceForAuctionUser really.
-    private async GetMinBidPriceForAuction(auction: Auction): Promise<Price> {
+    public async GetMinPublicBidPriceForAuction(auction: Auction): Promise<Price> {
         const highest = await this.GetHighestBid(auction._id)
         if (highest !== null)
             return AutoBidder.GetMinBidPrice(highest.price)

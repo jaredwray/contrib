@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AutoBidder } from 'services/autobidder'
-import { connectToDatabase } from 'services/mongodb'
+import { AutoBidder } from 'src/services/autobidder'
+import { connectToDatabase } from 'src/services/mongodb'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { docs } = await connectToDatabase()

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Media, CardText, Badge } from 'reactstrap'
-import CardAuction from 'components/CardAuction'
-import { connectToDatabase } from 'services/mongodb'
-import { Error404, getStaticProps } from 'pages/404'
+import CardAuction from 'src/components/CardAuction'
+import { connectToDatabase } from 'src/services/mongodb'
+import { Error404, getStaticProps } from 'src/pages/404'
 
 export async function getServerSideProps(context) {
     const { id } = context.query
@@ -97,7 +97,7 @@ const AthleteProfile = (props) => {
                         <div className="text-block">
                             <div dangerouslySetInnerHTML={{ __html: athlete.description }} />
                         </div>
-                        {activeAuctions ?
+                        {activeAuctions.length > 0 ?
                             <div className="text-block">
                                 <h3 className="mb-5">
                                     {athlete.firstName}'s current auctions
