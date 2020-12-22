@@ -45,19 +45,6 @@ const Footer = () => {
                                         )}
                                     </ul>
                                 }
-                                {item.form &&
-                                    <Form
-                                        id="newsletter-form">
-                                        <div className="input-group mb-3">
-                                            <Input type="email" placeholder={item.form.placeholder} aria-label={item.form.placeholder} className="bg-transparent border-dark border-right-0" />
-                                            <div className="input-group-append">
-                                                <Button className="btn-outline-dark border-left-0" color="deoco">
-                                                    <i className="fa fa-paper-plane text-lg" />
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </Form>
-                                }
                             </Col>
                         )}
                     </Row>

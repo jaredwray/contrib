@@ -17,57 +17,5 @@
             }
         ],
         "lg": "4"
-    },
-    {
-        "title": "Join us",
-        "links": [
-            {
-                "title": "Fans",
-                "link": "/"
-            },
-            {
-                "title": "Athletes",
-                "link": "/"
-            },
-            {
-                "title": "Charities",
-                "link": "/"
-            },
-            {
-                "title": "Staff",
-                "link": "/"
-            }
-        ],
-        "lg": "2",
-        "md": "6"
-    },
-    {
-        "title": "About us",
-        "links": [
-            {
-                "title": "Team",
-                "link": "/team",
-                "new": true
-            },
-            {
-                "title": "Contact",
-                "link": "/contact"
-            },
-            {
-                "title": "Help",
-                "link": "/faq"
-            }
-        ],
-        "lg": "2",
-        "md": "6"
-    },
-    {
-        "title": "Stay in touch",
-        "content": "Keep up to date with what Contrib is doing.",
-        "contentBottomMargin": "3",
-        "form": {
-            "placeholder": "Your Email Address"
-        },
-        "lg": "4"
     }
 ]
