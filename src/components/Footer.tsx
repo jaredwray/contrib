@@ -1,6 +1,5 @@
 import React from 'react'
-import Link from 'next/link'
-import { Container, Row, Col, Form, Input, Button, Badge } from 'reactstrap'
+import { Container, Row, Col } from 'reactstrap'
 import footerContent from 'src/data/footer.json'
 
 const Footer = () => {
@@ -10,12 +9,12 @@ const Footer = () => {
                 <Container>
                     <Row>
                         {footerContent && footerContent.map(item =>
-                            <Col key={item.title} lg={item.lg && item.lg} md={item.md && item.md} className="mb-5 mb-lg-0">
+                            <Col key={item.title} lg={item.lg && item.lg} className="mb-5 mb-lg-0">
                                 <div className="font-weight-bold text-uppercase text-dark mb-3">
                                     {item.title}
                                 </div>
                                 {item.content &&
-                                    <p className={item.contentBottomMargin ? `mb-${item.contentBottomMargin}` : ''}>{item.content}</p>
+                                    <p>{item.content}</p>
                                 }
                                 {item.social &&
                                     <ul className="list-inline">
@@ -27,22 +26,6 @@ const Footer = () => {
                                             </li>
                                         )}
 
-                                    </ul>
-                                }
-                                {item.links &&
-                                    <ul className="list-unstyled">
-                                        {item.links.map(link =>
-                                            <li key={link.title}>
-                                                <Link href={link.link}>
-                                                    <a className="text-muted">
-                                                        {link.title}
-                                                        {link.new &&
-                                                            <Badge color="info-light" className="ml-1">New</Badge>
-                                                        }
-                                                    </a>
-                                                </Link>
-                                            </li>
-                                        )}
                                     </ul>
                                 }
                             </Col>
