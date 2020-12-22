@@ -14,25 +14,28 @@ const UserMenu = (props) => {
     const user = props.user
     const title = 'user'
 
-    return user &&
-        <Dropdown
+    return <Dropdown
+        nav
+        tag='div'
+        inNavbar
+        key={title}
+        className="ml-lg-3"
+        isOpen={dropdownOpen[title]}
+        toggle={() => toggleDropdown(title)}>
+        <DropdownToggle
             nav
-            tag='div'
-            inNavbar
-            key={title}
-            className="ml-lg-3"
-            isOpen={dropdownOpen[title]}
-            toggle={() => toggleDropdown(title)}>
-            <DropdownToggle
-                nav
-                style={{ padding: 0 }}
-                onClick={() => setDropdownAnimate({ ...dropdownAnimate, [title]: !dropdownOpen[user.image] })}>
-                <img src={user.image} alt={user.name} title={user.name} className="avatar avatar-sm avatar-border-white mr-2" />
-            </DropdownToggle>
+            style={{ padding: 0 }}
+            onClick={() => setDropdownAnimate({ ...dropdownAnimate, [title]: !dropdownOpen[user?.image] })}>
+            {user
+                ? <img src={user.image} alt={user.name} title={user.name} className="avatar avatar-sm avatar-border-white mr-2" />
+                : <i className="avatar avatar-sm fas fa fa-2x fa-user mr-2" />
+            }
+        </DropdownToggle>
+        {user &&
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
                 <Link key="userMenu-profile" activeClassName="active" href="/user/personal" passHref>
                     <DropdownItem onClick={() => onLinkClick("Personal")}>
-                    <b>{user.name}</b>
+                        <b>{user.name}</b>
                     </DropdownItem>
                 </Link>
                 <Link key="userMenu-account" activeClassName="active" href="/user/account" passHref>
@@ -40,7 +43,7 @@ const UserMenu = (props) => {
                         Account
                     </DropdownItem>
                 </Link>
-                <hr/>
+                <hr />
                 <Link key="userMenu-bids" activeClassName="active" href="/user/account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Bids")}>
                         Bids
@@ -59,18 +62,31 @@ const UserMenu = (props) => {
                 <hr />
                 <Link key="userMenu-auctions" activeClassName="active" href="/user-list" passHref>
                     <DropdownItem onClick={() => onLinkClick("Manage auctions")}>
-                       Manage auctions
+                        Manage auctions
                     </DropdownItem>
                 </Link>
-                <hr/>
+                <hr />
                 <Link key="signout" activeClassName="active" href="/" passHref>
                     <DropdownItem onClick={() => signOut()}>
                         Sign out
                     </DropdownItem>
                 </Link>
             </DropdownMenu>
-        </Dropdown>
-    || <React.Fragment></React.Fragment>
+            ||
+            <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
+                <Link key="signIn" activeClassName="active" href="/user/signin" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Sign in")}>
+                        Sign in
+                    </DropdownItem>
+                </Link>
+                <Link key="signIn" activeClassName="active" href="/user/signup" passHref>
+                    <DropdownItem onClick={() => onLinkClick("Sign up")}>
+                        Sign up
+                    </DropdownItem>
+                </Link>
+            </DropdownMenu>
+        }
+    </Dropdown>
 }
 
 export default UserMenu
