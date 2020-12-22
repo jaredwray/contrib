@@ -14,20 +14,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Check session
         const session = await getSession({ req })
         if (session === null)
-            return res.status(401).json({ statusCode: 422, message: 'User not authenticated'})
+            return res.status(401).json({ statusCode: 422, message: 'User not authenticated' })
         const buyerUserId = new ObjectId(session.user['id'])
 
         // Check parameters
-        const { auctionId, maxPrice } = req.body 
+        const { auctionId, maxPrice } = req.body
         if (Array.isArray(auctionId) || !ObjectId.isValid(auctionId))
-            return res.status(422).json({ statusCode: 422, message: 'Malformed auctionId (expected 24 character hex)'})
+            return res.status(422).json({ statusCode: 422, message: 'Malformed auctionId (expected 24 character hex)' })
         if (Array.isArray(maxPrice) || !Number.isInteger(maxPrice))
-            return res.status(422).json({ statusCode: 422, message: 'Malformed maxPrice (expected integer)'})        
+            return res.status(422).json({ statusCode: 422, message: 'Malformed maxPrice (expected integer)' })
 
         // Place bid
         const { docs } = await connectToDatabase()
-        const autoBidder = new AutoBidder(docs)    
-        const result = autoBidder.PlaceMaxBid(new ObjectId(auctionId), Number.parseInt(maxPrice, 10), buyerUserId)
+        const autoBidder = new AutoBidder(docs)
+        const auction = await docs.auctions().findOne({ _id: auctionId })
+        const result = autoBidder.PlaceMaxBid(auction, Number.parseInt(maxPrice, 10), buyerUserId)
         if (typeof result === 'string')
             return res.status(400).json({ statusCode: 400, message: getMaxBidErrorMessage(result) })
 

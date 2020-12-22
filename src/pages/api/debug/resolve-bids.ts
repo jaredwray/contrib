@@ -11,6 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: { id }
   } = req
 
-  const result = autoBidder.ResolveMaxBids(new ObjectId(id.toString()))
+  const auction = await docs.auctions().findOne({ _id: new ObjectId(id.toString()) })
+  const result = autoBidder.ResolveMaxBids(auction)
   return res.status(200).json(result)
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Collapse, Navbar, Container } from 'reactstrap'
-import Logo from 'public/content/svg/logo.svg'
+const Logo = require('public/content/svg/logo.svg') as string
 import UserMenu from './UserMenu'
 
 const Header = props => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Row, Col } from 'reactstrap'
 import footerContent from 'src/data/footer.json'
-import Logo from 'public/content/svg/logo-light.svg'
+const Logo = require('public/content/svg/logo-light.svg') as string
 
 const Footer = () => {
     return (
