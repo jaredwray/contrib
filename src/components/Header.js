@@ -1,14 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
-import { Collapse, Navbar, NavbarToggler, Nav, Container, Form, Label, Input, Button } from 'reactstrap'
+import { Collapse, Navbar, Container } from 'reactstrap'
 import Logo from 'public/content/svg/logo.svg'
 import UserMenu from './UserMenu'
 
 const Header = props => {
-    const [collapsed, setCollapsed] = React.useState(false)
-    const [searchFocus, setSearchFocus] = React.useState(false)
-    const onFocus = () => setSearchFocus(!searchFocus)
-
     return (
         <header className={`header ${props.headerClasses ? props.headerClasses : ''}`}>
             <Navbar
