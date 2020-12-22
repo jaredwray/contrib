@@ -44,6 +44,16 @@ $green:   #28a745 !default;
 $teal:    #20c997 !default;
 $cyan:    #17a2b8 !default;
 
+$sage:     #5a7864 !default;
+$ochre:    #dcd28c !default;
+$darkgrey: #323432 !default;
+$darksage: #375541 !default;
+$mint:     #59966d !default;
+$lightsage:#96af9b !default;
+$darkochre:#b2aa66 !default;
+$lightochre: #e6de7d !default;
+$sky:     #82aad2 !default;
+
 $colors: () !default;
 $colors: map-merge(
   (
@@ -59,7 +69,7 @@ $colors: map-merge(
     "cyan":       $cyan,
     "white":      $white,
     "gray":       $gray-600,
-    "gray-dark":  $gray-800
+    "gray-dark":  $gray-800,
   ),
   $colors
 );
@@ -83,7 +93,16 @@ $theme-colors: map-merge(
     "warning":    $warning,
     "danger":     $danger,
     "light":      $light,
-    "dark":       $dark
+    "dark":       $dark,
+    "sage":       $sage,
+    "ochre":      $ochre,
+    "darkgrey":   $darkgrey,
+    "darksage":   $darksage,
+    "mint":       $mint,
+    "lightsage":  $lightsage,
+    "darkochre":  $darkochre,
+    "lightochre": $lightochre,
+    "sky": $sky,
   ),
   $theme-colors
 );
