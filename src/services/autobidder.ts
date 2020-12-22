@@ -19,9 +19,9 @@ export function getMaxBidErrorMessage(error: MaxBidError): string {
     switch (error) {
         case MaxBidError.AuctionNotStarted: return "Auction not yet started"
         case MaxBidError.AuctionEnded: return "Auction has already ended"
-        case MaxBidError.AmountBelowStarting: return "New max bid is below the auction starting price"
-        case MaxBidError.AmountBelowHighest: return "New max bid is below the current winning bid"
-        case MaxBidError.AmountBelowMax: return "New max bid is below your existing max bid"
+        case MaxBidError.AmountBelowStarting: return "Max bid is below the auction starting price"
+        case MaxBidError.AmountBelowHighest: return "Max bid is below current winning bid + increment"
+        case MaxBidError.AmountBelowMax: return "Max bid is below your existing max bid + increment"
         default: return "Unknown bid error"
     }
 }
@@ -36,28 +36,20 @@ export class AutoBidder {
     constructor(private docs: ContribDocuments) {
     }
 
-    public async GetMinBidPriceForAuctionUser(auction: Auction, userId: ObjectID | null): Promise<Price> {
-        const maxBid = userId !== null ? await this.GetMaxBidForUser(auction._id, userId) : null
-        const highest = await this.GetMinPublicBidPriceForAuction(auction)
-        return maxBid === null
-            ? highest
-            : highest > maxBid.maxPrice
-                ? highest
-                : AutoBidder.GetMinBidPrice(maxBid.maxPrice)
-    }
-
-    public async GetMaxBidForUser(auctionId: ObjectID, userId: ObjectID): Promise<MaxBid> {
-        const maxBids = await this.docs.maxBids().find({ auctionId: auctionId, buyerUserId: userId }).sort({ maxPrice: -1 }).limit(1).toArray()
-        return (maxBids.length > 0) ? maxBids[0] : null
-    }
-
-    // Get the minimum bid price - this is the current HighBid plus a minimum increment amount.
-    // We do not return the underlying MaxBid because that is private to the bidder. This does not
-    // take into account a user might already have a max bid - use GetMinBidPriceForAuctionUser really.
-    public async GetMinPublicBidPriceForAuction(auction: Auction): Promise<Price> {
+    // Get the minimum bid price for an auction. If a user is specified it will base it on their max
+    // bid. If not it will base it on the current highest bid. Failing that it's the start price.
+    public async GetMinBidPrice(auction: Auction, userId: ObjectID | null = null): Promise<Price> {
         const highest = await this.GetHighestBid(auction._id)
+        const maxBid = userId !== null ? await this.GetMaxBidForUser(auction._id, userId) : null
+        
+        if (maxBid != null && highest != null)
+            return AutoBidder.AddMinIncrement(highest.price > maxBid.maxPrice ? highest.price : maxBid.maxPrice)
+
+        if (maxBid !== null)
+            return AutoBidder.AddMinIncrement(maxBid.maxPrice)
+
         if (highest !== null)
-            return AutoBidder.GetMinBidPrice(highest.price)
+            return AutoBidder.AddMinIncrement(highest.price)
 
         return auction.startPrice
     }
@@ -68,15 +60,15 @@ export class AutoBidder {
     // bidder or for another bidder who already has a higher max bid price than the one given here.
     // Getting an error indicates we did not record the MaxBid at all as it was unacceptable. Even if we do
     // however record the maximum bid there is no guarantee the user is now winning.
-    public async PlaceMaxBid(auctionId: AuctionId, maxPrice: Price, buyerUserId: UserId): Promise<MaxBid | MaxBidError> {
+    public async PlaceMaxBid(auction: Auction, maxPrice: Price, buyerUserId: UserId): Promise<MaxBid | MaxBidError> {
         const now = new Date()
-        const error = await this.ValidateMaxBid(auctionId, maxPrice, now, buyerUserId)
+        const error = await this.ValidateMaxBid(auction, maxPrice, now, buyerUserId)
         if (error) return error
 
         // Now place the maximum bid
         const maxBid: MaxBid = {
             _id: new ObjectId(),
-            auctionId,
+            auctionId: auction._id,
             buyerUserId,
             maxPrice,
             receivedAt: now
@@ -85,32 +77,31 @@ export class AutoBidder {
         await this.docs.maxBids().insertOne(maxBid)
 
         // See how the max bid plays out with other bidders
-        await this.ResolveMaxBids(auctionId)
+        await this.ResolveMaxBids(auction)
 
         return maxBid
     }
 
     // Right now we call this interactively to avoid having to run background services
     // however it would probably be better to call this on a background task in the future.
-    public async ResolveMaxBids(auctionId: AuctionId): Promise<void> {
-        const highestBid = await this.CreateHighestBid(auctionId)
+    public async ResolveMaxBids(auction: Auction): Promise<void> {
+        const highestBid = await this.CreateHighestBid(auction)
         if (highestBid !== null)
             await this.docs.highBids().insertOne(highestBid)
     }
 
-    public async CreateHighestBid(auctionId: AuctionId): Promise<HighBid> {
+    public async CreateHighestBid(auction: Auction): Promise<HighBid> {
         // Start by figuring how what the minimum bid allowed is.
-        const currentHighestBid = await this.GetHighestBid(auctionId)
-        const auction = await this.GetAuction(auctionId)
+        const currentHighestBid = await this.GetHighestBid(auction._id)
         const minBidAllowed = currentHighestBid !== null
-            ? AutoBidder.GetMinBidPrice(currentHighestBid.price)
+            ? AutoBidder.AddMinIncrement(currentHighestBid.price)
             : auction.startPrice
 
         // Retrieve the top two maximum bids that are over the minimum bid allowed with
         // earliest max bid as a tie-breaker when they are the same max price.
         const maxBids = await this.docs
             .maxBids()
-            .find({ auctionId, maxPrice: { $gte: minBidAllowed } })
+            .find({ auctionId: auction._id, maxPrice: { $gte: minBidAllowed } })
             .sort({ maxPrice: -1, receivedAt: 1 })
             .toArray()
 
@@ -126,7 +117,7 @@ export class AutoBidder {
         // If we have two or more max bids then the largest high bid should be the increment above
         // the next larges max providing not same user. If that is still below their max bid all is good.
         if (maxBids.length === 2) {
-            const highBidPrice = AutoBidder.GetMinBidPrice(maxBids[1].maxPrice)
+            const highBidPrice = AutoBidder.AddMinIncrement(maxBids[1].maxPrice)
             if (highBidPrice <= maxBids[0].maxPrice && maxBids[0].buyerUserId.toHexString() !== maxBids[1].buyerUserId.toHexString())
                 return this.CreateHighBid(maxBids[0], highBidPrice)
         }
@@ -136,11 +127,11 @@ export class AutoBidder {
         maxBids.sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime())
 
         let winMaxBid = maxBids.shift()
-        let bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
+        let bidPrice = AutoBidder.AddMinIncrement(winMaxBid.maxPrice)
         for (const maxBid of maxBids) {
             if (maxBid.maxPrice >= bidPrice) {
                 winMaxBid = maxBid
-                bidPrice = AutoBidder.GetMinBidPrice(winMaxBid.maxPrice)
+                bidPrice = AutoBidder.AddMinIncrement(winMaxBid.maxPrice)
             }
         }
 
@@ -152,31 +143,38 @@ export class AutoBidder {
     }
 
     // Ensure a max bid is valid before we record and process it.
-    private async ValidateMaxBid(auctionId: AuctionId, maxPrice: Price, now: Date, buyerUserId: UserId): Promise<MaxBidError | null> {
-        const auction = await this.GetAuction(auctionId)
+    public async ValidateMaxBid(auction: Auction, maxPrice: Price, now: Date, buyerUserId: UserId): Promise<MaxBidError | null> {
+        // Basic validation against the auction itself
         if (auction.startPrice > maxPrice) return MaxBidError.AmountBelowStarting
         if (auction.startAt > now) return MaxBidError.AuctionNotStarted
         if (auction.endAt <= now) return MaxBidError.AuctionEnded
 
-        const highest = await this.GetHighestBid(auctionId)
+        // Do not allow a user to place a bid that's below current known high (public) bid
+        const highest = await this.GetHighestBid(auction._id)
         if (highest !== null && maxPrice < highest.price) return MaxBidError.AmountBelowHighest
 
-        // Make sure we don't let a user put in a lower max bid than they already have
-        const existingUserMaxBid = await this.docs
-            .maxBids()
-            .find({ auctionId, buyerUserId })
-            .sort({ maxPrice: -1 })
-            .limit(1)
-            .toArray()
-        if (existingUserMaxBid.length === 1 && maxPrice <= existingUserMaxBid[0].maxPrice) return MaxBidError.AmountBelowMax
+        // Make sure we don't allow a user to place a lower max bid than they already have
+        const existingUserMaxBid = await this.GetMaxBidForUser(auction._id, buyerUserId)
+        if (existingUserMaxBid !== null && maxPrice <= existingUserMaxBid.maxPrice) return MaxBidError.AmountBelowMax
     }
 
     // Figure out the minimum bid price based on the current price and the min increment table.
-    public static GetMinBidPrice(highestBidPrice: Price): Price {
-        return highestBidPrice + AutoBidder.GetMinIncrement(highestBidPrice)
+    public static AddMinIncrement(highestBidPrice: Price): Price {
+        return highestBidPrice + GetMinIncrement(highestBidPrice)
     }
 
-    // Get the highest bid... not sure this is concurrent-friendly yet.
+    // Get the largest (private) max bid for an auction and specific user.
+    public async GetMaxBidForUser(auctionId: ObjectID, userId: ObjectID): Promise<MaxBid> {
+        const maxBids = await this.docs
+            .maxBids()
+            .find({ auctionId: auctionId, buyerUserId: userId })
+            .sort({ maxPrice: -1 })
+            .limit(1)
+            .toArray()
+        return maxBids.length > 0 ? maxBids[0] : null
+    }
+
+    // Get the highest (public) bid for an auction.
     public async GetHighestBid(auctionId: AuctionId): Promise<HighBid> {
         const highestBid = await this.docs
             .highBids()
@@ -184,39 +182,32 @@ export class AutoBidder {
             .sort({ placedAt: -1 })
             .limit(1)
             .toArray()
-
         return highestBid.length === 0 ? null : highestBid[0]
     }
 
-    // The very first high bid on an item will always be at starting price.
-    private CreateHighBid(maxBid: MaxBid, startPrice: Price): HighBid {
+    private CreateHighBid(maxBid: MaxBid, price: Price): HighBid {
         return {
             _id: new ObjectId(),
             auctionId: maxBid.auctionId,
             buyerUserId: maxBid.buyerUserId,
             placedAt: new Date(),
             originatingMaxBidId: maxBid._id,
-            price: startPrice
+            price: price
         }
     }
+}
 
-    // Get an Auction by id. Ideally this would be a method on Collection<T> in MongoDb.
-    private GetAuction(auctionId: AuctionId): Promise<Auction> {
-        return this.docs.auctions().findOne({ _id: auctionId })
-    }
-
-    // Price increment table (USD). All values are in cents to avoid rounding issues in JavaScript.
-    private static GetMinIncrement(price: Price): Price {
-        // Taken from eBay https://www.ebay.com/help/buying/bidding/automatic-bidding?id=4014#section3
-        if (price < 100) return 5
-        if (price < 500) return 25
-        if (price < 2500) return 50
-        if (price < 10000) return 100
-        if (price < 25000) return 250
-        if (price < 50000) return 500
-        if (price < 100000) return 1000
-        if (price < 250000) return 2500
-        if (price < 500000) return 5000
-        return 100
-    }
+// Price increment table (USD). All values are in cents to avoid rounding issues in JavaScript.
+function GetMinIncrement(price: Price): Price {
+    // Taken from eBay https://www.ebay.com/help/buying/bidding/automatic-bidding?id=4014#section3
+    if (price < 100) return 5
+    if (price < 500) return 25
+    if (price < 2500) return 50
+    if (price < 10000) return 100
+    if (price < 25000) return 250
+    if (price < 50000) return 500
+    if (price < 100000) return 1000
+    if (price < 250000) return 2500
+    if (price < 500000) return 5000
+    return 100
 }

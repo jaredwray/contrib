@@ -33,7 +33,7 @@ export async function getServerSideProps(context) {
         session ? docs.watches().findOne({ auctionId, buyerId: session.user['id'] }) : null,
         docs.highBids().count({ auctionId }) ?? 0,
         autobidder.GetHighestBid(auctionId),
-        autobidder.GetMinBidPriceForAuctionUser(auction, new ObjectId(session?.user?.['id']))
+        autobidder.GetMinBidPrice(auction, new ObjectId(session?.user?.['id']))
     ])
 
     return {
