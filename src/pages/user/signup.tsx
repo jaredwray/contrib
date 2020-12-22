@@ -25,9 +25,8 @@ const Signup = (props) => {
                     <div className="w-100 py-5 px-md-5 px-xl-6 position-relative">
                         <div className="mb-4">
                             <img
-                                src="/content/svg/logo-square.svg"
+                                src="/content/svg/logo.svg"
                                 alt="Contrib logo"
-                                style={{ maxWidth: "4rem" }}
                                 className="img-fluid mb-3" />
                             <h2>Sign up</h2>
                             <p className="text-muted">You're just a few steps away from scoring gear and doing some good.</p>
@@ -38,7 +37,7 @@ const Signup = (props) => {
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3">
+                                className="btn-social mb-3 bg-secondary">
                                 <i className="fa-2x fa-facebook-f fab btn-social-icon" />
                                 Sign up&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -52,7 +51,7 @@ const Signup = (props) => {
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3">
+                                className="btn-social mb-3 bg-secondary">
                                 <i className="fa-2x fa-twitter fab btn-social-icon" />
                                 Sign up&nbsp;
                                 <span className="d-none d-sm-inline">
@@ -66,7 +65,7 @@ const Signup = (props) => {
                             <Button
                                 color="outline-primary"
                                 block
-                                className="btn-social mb-3">
+                                className="btn-social mb-3 bg-secondary">
                                 <i className="fa-2x fa-google fab btn-social-icon" />
                                 Sign up&nbsp;
                                 <span className="d-none d-sm-inline">

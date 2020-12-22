@@ -159,7 +159,6 @@ const ItemDetail = (props) => {
                                                     <a href={`/charity/${charity._id}`}>{charity.name}</a>
                                                 </strong>
                                             </p>
-                                            <div dangerouslySetInnerHTML={{ __html: charity.shortDescription }} />
                                         </Media>
                                     </Media>
                                 </div>
@@ -187,7 +186,7 @@ const ItemDetail = (props) => {
                                     <span className="text-primary h2">
                                         ${formatPrice(bids.highest?.price ?? auction.startPrice)}
                                     </span>
-                                    <div className="text-muted text-sm">{bids.count} bids {winning && <span className="badge badge-secondary-light">You are winning</span>}</div>
+                                    <div className="text-muted text-sm">{bids.count} bids {winning && <span className="badge badge-secondary">You are winning</span>}</div>
                                     <Form
                                         id="booking-form"
                                         method="get"
