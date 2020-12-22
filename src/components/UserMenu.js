@@ -17,6 +17,7 @@ const UserMenu = (props) => {
     return user &&
         <Dropdown
             nav
+            tag='div'
             inNavbar
             key={title}
             className="ml-lg-3"

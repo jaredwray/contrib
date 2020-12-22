@@ -124,16 +124,14 @@ const MegaMenu = (props) => {
                 :
                 ''
             :
-            props.isLoggedIn && !item.hideToLoggedUser || !props.isLoggedIn ?
-                <NavItem
-                    key={item.title}
-                    className={item.button ? 'mt-3 mt-lg-0 ml-lg-3 d-lg-none d-xl-inline-block' : ''}>
+            (props.isLoggedIn && !item.hideToLoggedUser || !props.isLoggedIn) ?
+                <React.Fragment>
                     {item.button ?
                         item.showToLoggedUser !== false && <Link activeClassName="active" href={item.link}><a className='btn btn-primary' onClick={() => onLinkClick(item.title)}>{item.title}</a></Link>
                         :
                         <Link activeClassName="active" href={item.link} passHref><NavLink onClick={() => onLinkClick(item.title)}>{item.title}</NavLink></Link>
                     }
-                </NavItem>
+                </React.Fragment>
                 :
                 ''
     )
