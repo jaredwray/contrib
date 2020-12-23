@@ -34,11 +34,9 @@ const UserMenu = (props) => {
         {user
             ?
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
-                <Link key="userMenu-profile" activeClassName="active" href="/user/personal" passHref>
-                    <DropdownItem onClick={() => onLinkClick("Personal")}>
-                        <b>{user.name}</b>
-                    </DropdownItem>
-                </Link>
+                <DropdownItem header className="text-primary">
+                    <b>{user.name}</b>
+                </DropdownItem>
                 <Link key="userMenu-account" activeClassName="active" href="/user/account" passHref>
                     <DropdownItem onClick={() => onLinkClick("Account")}>
                         Account
@@ -77,7 +75,7 @@ const UserMenu = (props) => {
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
                 <Link key="signIn" activeClassName="active" href="/user/signin" passHref>
                     <DropdownItem onClick={() => onLinkClick("Sign in")}>
-                        Sign in*
+                        Sign in
                     </DropdownItem>
                 </Link>
                 <Link key="signUp" activeClassName="active" href="/user/signup" passHref>
