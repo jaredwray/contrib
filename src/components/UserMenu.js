@@ -31,7 +31,8 @@ const UserMenu = (props) => {
                 : <i className="avatar avatar-sm fas fa fa-2x fa-user mr-2" />
             }
         </DropdownToggle>
-        {user &&
+        {user
+            ?
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
                 <Link key="userMenu-profile" activeClassName="active" href="/user/personal" passHref>
                     <DropdownItem onClick={() => onLinkClick("Personal")}>
@@ -66,20 +67,20 @@ const UserMenu = (props) => {
                     </DropdownItem>
                 </Link>
                 <hr />
-                <Link key="signout" activeClassName="active" href="/" passHref>
+                <Link key="signOut" activeClassName="active" href="/" passHref>
                     <DropdownItem onClick={() => signOut()}>
                         Sign out
                     </DropdownItem>
                 </Link>
             </DropdownMenu>
-            ||
+            :
             <DropdownMenu className={dropdownAnimate[title] === false ? 'hide' : ''} right>
                 <Link key="signIn" activeClassName="active" href="/user/signin" passHref>
                     <DropdownItem onClick={() => onLinkClick("Sign in")}>
-                        Sign in
+                        Sign in*
                     </DropdownItem>
                 </Link>
-                <Link key="signIn" activeClassName="active" href="/user/signup" passHref>
+                <Link key="signUp" activeClassName="active" href="/user/signup" passHref>
                     <DropdownItem onClick={() => onLinkClick("Sign up")}>
                         Sign up
                     </DropdownItem>
