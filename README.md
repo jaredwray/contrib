@@ -37,6 +37,7 @@ Testing:
 - [x] Google Cloud
 - [x] [Directory NextJS theme](https://directory-rose.now.sh/docs/docs-next)
 - [ ] NewRelic
+- [ ] Twilio (SMS & Email)
 
 ## Social support
 
@@ -47,22 +48,13 @@ Social sign-in support is supported for:
 - [x] Google
 - [ ] Apple
 
-## Next steps
-
-- [ ] Componentize bid UI to allow refresh etc.
-- [ ] Auction creation UX should actually upload files and create mongo entries
-- [ ] Convert remaining pages and components to TypeScript
-
-## Done
-
-- [x] Allow fans to sign in
-- [x] Work on the Athlete, Fan and Auction models & get some realistic sample data setup
-- [x] Create pages to show the Auctions
-- [x] Create charity pages
-- [x] Allow fans to bid
-- [x] Stub auction creation UI
-
 ## Docker
 
 * Build: `docker build --rm --pull -f "./Dockerfile" -t "contrib:latest" "./"`
 * Run: `docker run --rm -d  -p 3000:3000/tcp contrib:latest`
+
+# Deploy to [dev] and [live] environments
+
+There are two environments that we have for deployment. By default checking your source code into `main` will deploy to https://dev.contrib.org which runs out of the [us-central1] region in Google Cloud and uses the Mongo Atlas cluster [contrib-dev-cluster-1] that is also based in that region. It is deployed on Cloud Run wich will scale automatically and also goes across availability zones for the runtime and database engine (MongoDB). 
+
+The `live` environment is deployed across two regions and in each region across two availability zones. The regions are [us-west1] as primary and [us-central1] as secondary or based on geo location. The MongoDB is a Global cluster that spans across the two regions in Google Cloud. To deploy to production you most create a release in Github. Once you do that it will auto deploy all code to both regions and configuration. That simple!
