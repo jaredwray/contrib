@@ -1,0 +1,15 @@
+{
+  "name": "contrib-app",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build-client": "cd ./client && yarn && yarn build",
+    "build-server": "cd ./server && yarn && yarn build",
+    "test-client": "cd ./client && yarn test",
+    "test-server": "cd ./server && yarn test:cov",
+    "start": "cd ./server && yarn start"
+  }
+}

@@ -42,23 +42,19 @@ jobs:
 
     # Build Client
     - name: Build Client
-      run: cd ./client && yarn build
+      run: yarn build-client
 
     # Test Client
     - name: Test Client
-      run: cd ./client && yarn test
-
-    # Server
-    - name: Server
-      run: cd ../server    
+      run: yarn test-client
 
     # Build Server
     - name: Build Server
-      run: yarn build
+      run: yarn build-server
 
     # Test Server
     - name: Test Server and Coverage
-      run: yarn test:cov      
+      run: yarn test-server     
 
     # NEED TO ADD CODE COV HERE      
 
