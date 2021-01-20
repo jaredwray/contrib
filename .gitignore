@@ -36,3 +36,7 @@ yarn-error.log*
 .vscode
 .idea
 debug.log
+
+# react files
+.eslintcache
+react-app-env.d.ts

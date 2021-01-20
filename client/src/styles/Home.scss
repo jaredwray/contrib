@@ -1,0 +1,59 @@
+.home {
+  button {
+    background: #DCD28C;
+    border-radius: 10px;
+    color: #5A7864;
+    border: 0;
+  }
+
+  .banner {
+    color: white;
+    text-align: left;
+    background-image: url("../images/player.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: #5A7864;
+    background-size: contain;
+
+    button:hover {
+      background: #DCD28C;
+    }
+
+    .row {
+      height: 505px;
+
+      .separator {
+        display: block;
+        height: 12px;
+        width: 102px;
+        background-color: #323432;
+      }
+
+      .signature {
+        font-family: Montserrat;
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 14px;
+        position: absolute;
+        bottom: 10px;
+      }
+    }
+  }
+
+  .aboutUs {
+    color: #323432;
+    padding: 20px 0;
+
+    button:hover {
+      background: #5A7864;
+    }
+
+    .separator {
+      margin: 20px 0;
+      display: block;
+      height: 6px;
+      width: 54px;
+      background-color: #DCD28C;
+    }
+  }
+}
