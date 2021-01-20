@@ -42,7 +42,7 @@ jobs:
 
     # Client
     - name: Client
-      run: cd ./client    
+      run: cd /client    
 
     # Build Client
     - name: Build Client
@@ -54,7 +54,7 @@ jobs:
 
     # Server
     - name: Server
-      run: cd ./server    
+      run: cd ../server    
 
     # Build Server
     - name: Build Server
