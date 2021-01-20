@@ -30,7 +30,6 @@ env:
   TWITTER_CLIENT_ID: ${{ secrets.DEV_TWITTER_CLIENT_ID }}
   TWITTER_CLIENT_SECRET: ${{ secrets.DEV_TWITTER_CLIENT_SECRET }}
   SESSION_SECRET: ${{ secrets.DEV_SESSION_SECRET }}
-  NEXTAUTH_URL: https://dev.contrib.org:443
 
 jobs:
   setup-build-deploy:
@@ -40,6 +39,32 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    # Client
+    - name: Client
+      run: cd ./client    
+
+    # Build Client
+    - name: Build Client
+      run: yarn build
+
+    # Test Client
+    - name: Test Client
+      run: yarn test
+
+    # Server
+    - name: Server
+      run: cd ./server    
+
+    # Build Server
+    - name: Build Server
+      run: yarn build
+
+    # Test Server
+    - name: Test Server and Coverage
+      run: yarn test:cov      
+
+    # NEED TO ADD CODE COV HERE      
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@master
@@ -64,9 +89,9 @@ jobs:
       run: |-
         gcloud run deploy $SERVICE_NAME \
           --image=gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
-          --cpu=1 --memory=512Mi \
+          --cpu=1 --memory=1Gi \
           --platform=managed \
           --region=us-central1 \
           --allow-unauthenticated \
-          --set-env-vars=NEXTAUTH_URL=$NEXTAUTH_URL,MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
+          --set-env-vars=MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
           --port=3000
