@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 
 # Copying source files
 COPY . /usr/src/app
-RUN yarn
+RUN yarn build-server
 
 # Open the port
 EXPOSE 3000
