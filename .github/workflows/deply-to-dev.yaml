@@ -40,17 +40,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # Client
-    - name: Client
-      run: cd /client    
-
     # Build Client
     - name: Build Client
-      run: yarn build
+      run: cd ./client && yarn build
 
     # Test Client
     - name: Test Client
-      run: yarn test
+      run: cd ./client && yarn test
 
     # Server
     - name: Server
