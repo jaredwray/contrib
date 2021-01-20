@@ -22,6 +22,8 @@ on:
 env:
   PROJECT_ID: ${{ secrets.DEV_GCP_PROJECT_ID }}
   SERVICE_NAME: contrib-app
+  NEW_RELIC_APP_NAME: contrib-app-dev
+  NEWRELIC_LICENSE_KEY: ${{ secrets.NEWRELIC_LICENSE_KEY }}
   MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
   GOOGLE_CLIENT_ID: ${{ secrets.DEV_GOOGLE_CLIENT_ID }}
   GOOGLE_CLIENT_SECRET: ${{ secrets.DEV_GOOGLE_CLIENT_SECRET }}
@@ -55,8 +57,10 @@ jobs:
     # Test Server
     - name: Test Server and Coverage
       run: yarn test-server     
-
-    # NEED TO ADD CODE COV HERE      
+    - name: Code Coverage
+      uses: codecov/codecov-action@v1.0.15
+      with:
+        token: ${{ secrets.CODECOV_KEY }}  
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@master
