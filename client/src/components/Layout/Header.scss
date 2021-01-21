@@ -1,0 +1,12 @@
+.hamburger-menu {
+  &.navbar-toggler {
+    border: none;
+  }
+  .menu-icon {
+    background-image: url("./hamburger.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 14px;
+  }
+}

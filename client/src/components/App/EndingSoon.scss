@@ -1,0 +1,80 @@
+.ending-soon {
+  color: #5A7864;
+  background-color: #F0F0EE;
+
+  .header {
+    padding: 20px 0;
+
+    a {
+      color: #323432;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      float: right;
+      text-transform: uppercase;
+    }
+  }
+
+  .picture {
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .auctions {
+    padding-bottom: 40px;
+
+    .auction {
+      width: 280px;
+      display: inline-block;
+      margin-right: 40px;
+      background-color: #FFFFFF;
+
+      .picture {
+        width: 280px;
+        height: 280px;
+      }
+
+      .info {
+        padding: 20px;
+
+        .owner {
+          .picture {
+            width: 32px;
+            height: 32px;
+          }
+
+          .name {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 16px;
+            color: #323432;
+          }
+        }
+
+        .description, .price {
+          font-size: 20px;
+          font-weight: 700;
+          line-height: 25px;
+        }
+
+        .description {
+          padding-top: 10px;
+        }
+
+        .price, .statistics {
+          color: #323432;
+        }
+
+        .statistics {
+          padding-top: 10px;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 16px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+      }
+    }
+  }
+}

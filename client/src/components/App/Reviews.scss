@@ -1,0 +1,67 @@
+.reviews {
+  padding: 20px 0;
+
+  .separator {
+    margin: 20px 0;
+    display: block;
+    height: 6px;
+    width: 54px;
+    background-color: #DCD28C;
+  }
+
+  .quotes {
+    padding: 90px 0 20px 0;
+
+    .review {
+      max-width: 522px;
+      display: inline-block;
+      background-color: #F0F0EE;
+      margin-right: 20px;
+      padding: 20px 20px 20px 20px;
+    }
+
+    .quote {
+      font-family: Montserrat;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 25px;
+      margin-bottom: 30px;
+    }
+
+    .avatar {
+      position: relative;
+      top: -100px;
+      text-align: center;
+      height: 20px;
+
+      .reviewer {
+        height: 150px;
+      }
+    }
+
+    .name {
+      font-family: Montserrat;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 25px;
+    }
+
+    .quotes-sign {
+      background-image: url("./quotes.png");
+      background-repeat: no-repeat;
+      height: 36px;
+      width: 36px;
+    }
+
+    .badge {
+      background-image: url("./badge-verified.png");
+      background-repeat: no-repeat;
+      height: 22px;
+      padding-left: 30px;
+      line-height: 22px;
+      color: #5A7864;
+    }
+  }
+}
+
+

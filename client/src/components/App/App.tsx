@@ -1,17 +1,18 @@
-import Footer from './Footer'
-import Header from './Header'
-import Home from './Home'
-
-import 'bootstrap/dist/css/bootstrap.min.css'
+import Layout from '../Layout/Layout'
+import Banner from './Banner'
+import AboutUs from './AboutUs'
+import EndingSoon from './EndingSoon'
+import Reviews from './Reviews'
 
 export default function App() {
   return (
-    <div>
-      <Header/>
-      <main role='main'>
-        <Home/>
-      </main>
-      <Footer/>
-    </div>
+    <>
+      <Layout>
+        <Banner/>
+        <AboutUs/>
+        <EndingSoon/>
+        <Reviews/>
+      </Layout>
+    </>
   )
 }

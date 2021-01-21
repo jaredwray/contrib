@@ -1,0 +1,48 @@
+.banner {
+  color: white;
+  text-align: left;
+  background-image: url("./player.png");
+  background-repeat: no-repeat;
+  background-position: right;
+  background-color: #5A7864;
+  background-size: contain;
+
+  button:hover {
+    background: #DCD28C;
+  }
+
+  .row {
+    height: 505px;
+
+    .title {
+      padding: 40px 0;
+      font-weight: bold;
+      font-size: 72px;
+      line-height: 76px;
+    }
+
+    .separator {
+      display: block;
+      height: 12px;
+      width: 102px;
+      background-color: #323432;
+    }
+
+    .description {
+      padding-top: 20px;
+      font-weight: bold;
+      font-size: 32px;
+      line-height: 40px;
+    }
+
+    .signature {
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      position: absolute;
+      bottom: 10px;
+    }
+  }
+}

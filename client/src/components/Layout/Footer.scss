@@ -1,0 +1,56 @@
+footer {
+  background-color: #323432;
+  padding: 20px;
+
+  .info {
+    font-family: Montserrat;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    color: white;
+    padding: 20px 0;
+  }
+
+  .social-media {
+    padding: 20px 0;
+
+    a {
+      display: inline-block;
+      margin-right: 20px;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 36px;
+      height: 36px;
+    }
+
+    .twitter {
+      background-image: url("./twitter.png");
+    }
+
+    .instagram {
+      background-image: url("./instagram.png");
+    }
+
+    .facebook {
+      background-image: url("./facebook.png");
+    }
+  }
+
+  .info, .bottom {
+    a {
+      color: #5A7864;
+      float: right;
+    }
+
+    div {
+      display: inline-block;
+    }
+  }
+
+  .bottom {
+    color: #5A7864;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+  }
+}
