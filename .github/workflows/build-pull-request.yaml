@@ -1,0 +1,40 @@
+name: Build on Pull Request
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  SERVICE_NAME: contrib-app
+
+jobs:
+  setup-build-deploy:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Build Client
+    - name: Build Client
+      run: yarn build-client
+
+    # Test Client
+    - name: Test Client
+      run: yarn test-client
+
+    # Build Server
+    - name: Build Server
+      run: yarn build-server
+
+    # Test Server
+    - name: Test Server and Coverage
+      run: yarn test-server     
+    - name: Code Coverage
+      uses: codecov/codecov-action@v1.0.15
+      with:
+        token: ${{ secrets.CODECOV_KEY }}  
+
+
+
