@@ -22,14 +22,9 @@ on:
 env:
   PROJECT_ID: ${{ secrets.DEV_GCP_PROJECT_ID }}
   SERVICE_NAME: contrib-app
+  NEW_RELIC_APP_NAME: contrib-app-dev
+  NEWRELIC_LICENSE_KEY: ${{ secrets.NEWRELIC_LICENSE_KEY }}
   MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
-  GOOGLE_CLIENT_ID: ${{ secrets.DEV_GOOGLE_CLIENT_ID }}
-  GOOGLE_CLIENT_SECRET: ${{ secrets.DEV_GOOGLE_CLIENT_SECRET }}
-  FB_CLIENT_ID: ${{ secrets.DEV_FB_CLIENT_ID }}
-  FB_CLIENT_SECRET: ${{ secrets.DEV_FB_CLIENT_SECRET }}
-  TWITTER_CLIENT_ID: ${{ secrets.DEV_TWITTER_CLIENT_ID }}
-  TWITTER_CLIENT_SECRET: ${{ secrets.DEV_TWITTER_CLIENT_SECRET }}
-  SESSION_SECRET: ${{ secrets.DEV_SESSION_SECRET }}
 
 jobs:
   setup-build-deploy:
@@ -55,8 +50,10 @@ jobs:
     # Test Server
     - name: Test Server and Coverage
       run: yarn test-server     
-
-    # NEED TO ADD CODE COV HERE      
+    - name: Code Coverage
+      uses: codecov/codecov-action@v1.0.15
+      with:
+        token: ${{ secrets.CODECOV_KEY }}  
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@master
@@ -85,5 +82,5 @@ jobs:
           --platform=managed \
           --region=us-central1 \
           --allow-unauthenticated \
-          --set-env-vars=MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
+          --set-env-vars=MONGODB_URI=$MONGODB_URI,NEW_RELIC_APP_NAME=$NEW_RELIC_APP_NAME,NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY \
           --port=3000
