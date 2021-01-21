@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
 
+  //New Relic
   if(process.env.NEWRELIC_LICENSE_KEY !== undefined && process.env.NEW_RELIC_APP_NAME !== undefined) {
     require("newrelic");
   }
