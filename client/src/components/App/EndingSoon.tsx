@@ -28,8 +28,8 @@ export default function EndingSoon() {
     <section className="ending-soon">
       <Container className="header pt-4 pb-4 homepage-container">
         <Row>
-          <Col lg="6" className="title">Ending soon</Col>
-          <Col lg="6" className="align-self-end">
+          <Col md="9" className="title">Ending soon</Col>
+          <Col md="3" className="align-self-end ml-1 ml-md-0">
             <a href="/" className="see-all text-uppercase float-lg-right">See all auctions &gt;&gt;</a>
           </Col>
         </Row>
@@ -47,7 +47,7 @@ export default function EndingSoon() {
         <div className="auction">
           <div className="like" />
           <Image className="picture" src="/content/img/auctions/auction-item-1.png" />
-          <div className="info">
+          <div className="info p-3">
             <div className="owner">
               <Image className="picture" src="/content/img/users/auction-owner-1.png" roundedCircle />
               <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">De’aaron Fox</div>
@@ -61,7 +61,7 @@ export default function EndingSoon() {
         <div className="auction">
           <div className="like" />
           <Image className="picture" src="/content/img/auctions/auction-item-2.png" />
-          <div className="info">
+          <div className="info p-3">
             <div className="owner">
               <Image className="picture" src="/content/img/users/auction-owner-2.png" roundedCircle />
               <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">Diego Rossi</div>
@@ -75,7 +75,7 @@ export default function EndingSoon() {
         <div className="auction">
           <div className="like" />
           <Image className="picture" src="/content/img/auctions/auction-item-1.png" />
-          <div className="info">
+          <div className="info p-3">
             <div className="owner">
               <Image className="picture" src="/content/img/users/auction-owner-1.png" roundedCircle />
               <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">De’aaron Fox</div>
@@ -89,7 +89,7 @@ export default function EndingSoon() {
         <div className="auction">
           <div className="like" />
           <Image className="picture" src="/content/img/auctions/auction-item-2.png" />
-          <div className="info">
+          <div className="info p-3">
             <div className="owner">
               <Image className="picture" src="/content/img/users/auction-owner-2.png" roundedCircle />
               <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">Diego Rossi</div>
