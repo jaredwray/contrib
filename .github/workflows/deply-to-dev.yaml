@@ -14,7 +14,7 @@ env:
 
 jobs:
   setup-build-deploy:
-    name: Setup, Build, and Deploy
+    name: Build and Deploy to Dev
     runs-on: ubuntu-latest
 
     steps:

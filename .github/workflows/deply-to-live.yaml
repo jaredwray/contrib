@@ -7,24 +7,38 @@ on:
 env:
   PROJECT_ID: ${{ secrets.LIVE_GCP_PROJECT_ID }}
   SERVICE_NAME: contrib-app
+  NEW_RELIC_APP_NAME: contrib-app-live
+  NEWRELIC_LICENSE_KEY: ${{ secrets.NEWRELIC_LICENSE_KEY }}
   MONGODB_URI: ${{ secrets.LIVE_MONGODB_URI }}
-  GOOGLE_CLIENT_ID: ${{ secrets.LIVE_GOOGLE_CLIENT_ID }}
-  GOOGLE_CLIENT_SECRET: ${{ secrets.LIVE_GOOGLE_CLIENT_SECRET }}
-  FB_CLIENT_ID: ${{ secrets.LIVE_FB_CLIENT_ID }}
-  FB_CLIENT_SECRET: ${{ secrets.LIVE_FB_CLIENT_SECRET }}
-  TWITTER_CLIENT_ID: ${{ secrets.LIVE_TWITTER_CLIENT_ID }}
-  TWITTER_CLIENT_SECRET: ${{ secrets.LIVE_TWITTER_CLIENT_SECRET }}
-  SESSION_SECRET: ${{ secrets.LIVE_SESSION_SECRET }}
-  NEXTAUTH_URL: https://live.contrib.org:443
 
 jobs:
   setup-build-deploy:
-    name: Setup, Build, and Deploy
+    name: Build and Deploy to Live
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    # Build Client
+    - name: Build Client
+      run: yarn build-client
+
+    # Test Client
+    - name: Test Client
+      run: yarn test-client
+
+    # Build Server
+    - name: Build Server
+      run: yarn build-server
+
+    # Test Server
+    - name: Test Server and Coverage
+      run: yarn test-server     
+    - name: Code Coverage
+      uses: codecov/codecov-action@v1.0.15
+      with:
+        token: ${{ secrets.CODECOV_KEY }}  
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@master
@@ -45,26 +59,24 @@ jobs:
     
     
     # Deploy image to Cloud Run
-    - name: Deploy [us-central1]
+    - name: Deploy to [us-west1]
       run: |-
         gcloud run deploy $SERVICE_NAME \
           --image=gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
-          --cpu=1 --memory=512Mi \
-          --platform=managed \
-          --region=us-central1 \
-          --allow-unauthenticated \
-          --set-env-vars=NEXTAUTH_URL=$NEXTAUTH_URL,MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
-          --port=3000
-
-    # Deploy image to Cloud Run
-    - name: Deploy [us-west1]
-      run: |-
-        gcloud run deploy $SERVICE_NAME \
-          --image=gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
-          --cpu=1 --memory=512Mi \
+          --cpu=1 --memory=1Gi \
           --platform=managed \
           --region=us-west1 \
           --allow-unauthenticated \
-          --set-env-vars=NEXTAUTH_URL=$NEXTAUTH_URL,MONGODB_URI=$MONGODB_URI,GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,FB_CLIENT_ID=$FB_CLIENT_ID,FB_CLIENT_SECRET=$FB_CLIENT_SECRET,TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID,TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET,SESSION_SECRET=$SESSION_SECRET \
+          --set-env-vars=MONGODB_URI=$MONGODB_URI,NEW_RELIC_APP_NAME=$NEW_RELIC_APP_NAME,NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY \
           --port=3000
 
+    - name: Deploy to [us-central1]
+      run: |-
+        gcloud run deploy $SERVICE_NAME \
+          --image=gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+          --cpu=1 --memory=1Gi \
+          --platform=managed \
+          --region=us-central1 \
+          --allow-unauthenticated \
+          --set-env-vars=MONGODB_URI=$MONGODB_URI,NEW_RELIC_APP_NAME=$NEW_RELIC_APP_NAME,NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY \
+          --port=3000
