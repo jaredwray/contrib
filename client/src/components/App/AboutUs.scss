@@ -1,0 +1,37 @@
+.about-us {
+  color: #323432;
+  padding: 20px 0;
+
+  button:hover {
+    background: #5A7864;
+  }
+
+  .title {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .separator {
+    height: 6px;
+    background-color: #DCD28C;
+  }
+
+  .description {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .title {
+      font-size: 11px;
+      line-height: 14px;
+    }
+
+    .description {
+      font-size: 26px;
+      line-height: 30px;
+    }
+  }
+}

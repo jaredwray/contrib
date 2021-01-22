@@ -1,0 +1,119 @@
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.dropdown {
+  .dropdown-toggle {
+    width: 36px;
+    height: 36px;
+    display: inline;
+  }
+
+  .menu-icon {
+    background-image: url("./hamburger.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 14px;
+  }
+
+  &.show {
+    .menu-icon {
+      background-image: url("./close.png");
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .nav-link {
+    padding: 0;
+  }
+
+  .dropdown-menu {
+    left: auto !important;
+    right: 2px !important;
+    margin-top: 20px !important;
+
+    &.show {
+      margin: 0 !important;
+
+      @media (max-width: 576px) {
+        right: -40px !important;
+        margin-top: 2px !important;
+        border: none;
+      }
+    }
+  }
+
+  .nav-dropdown-menu {
+    width: 385px;
+
+    .user-info {
+      padding: 20px 25px 0 25px;
+
+      .name {
+        font-size: 18px;
+        line-height: 22px;
+        color: #CACCC6;
+      }
+
+      .avatar {
+        float: right;
+      }
+
+      .name, .avatar {
+        display: inline-block;
+      }
+    }
+
+    .dropdown-item {
+      padding: 10px 25px;
+      font-size: 18px;
+      line-height: 22px;
+      color: #5A7864;
+
+      &:hover {
+        background-color: #F0F0EE;
+      }
+    }
+
+    .footer {
+      .social-media {
+        a {
+          background-repeat: no-repeat;
+          background-size: contain;
+          width: 36px;
+          height: 36px;
+        }
+
+        .twitter {
+          background-image: url("./twitter.png");
+        }
+
+        .instagram {
+          background-image: url("./instagram.png");
+        }
+
+        .facebook {
+          background-image: url("./facebook.png");
+        }
+      }
+
+      .bottom {
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+
+        .copyright {
+          color: #CACCC6;
+        }
+
+        .privacy {
+          color: #5A7864;
+        }
+      }
+    }
+  }
+}
