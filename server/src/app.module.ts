@@ -1,40 +1,37 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { EnvironmentVariables } from './environment-variables';
+import { MongoModule } from './mongo/mongo.module';
 
 @Module({
   imports: [
     /**
-     * Load env variables based on .env files and value of CONTRIB_ENV.
-     * If CONTRIB_ENV is set to "live", .env.live is loaded;
-     * Otherwise, uses .env.dev;
+     * Load env variables based on .env files
      */
-    ConfigModule.forRoot({
-      envFilePath: [
-        '.env',
-        process.env.CONTRIB_ENV === 'live' ? '.env.live' : '.env.dev',
-      ],
-    }),
+    ConfigModule.forRoot(),
     /**
-     * If SERVE_CLIENT_FROM_PATH env variable is present,
-     * serves client app from that folder.
+     * If SERVE_CLIENT_APP env variable is set,
+     * serves client app from ./client folder.
+     *
+     * Build script is responsible to put client distribution there.
+     * Not used when developing locally.
      */
     ServeStaticModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        const clientAssetsPath = configService.get<string>(
-          'SERVE_CLIENT_FROM_PATH',
-        );
-        if (!clientAssetsPath) {
+      useFactory: (configService: ConfigService<EnvironmentVariables>) => {
+        const serveClient = configService.get<boolean>('SERVE_CLIENT_APP');
+        if (!serveClient) {
           return [];
         }
-        return [{ rootPath: clientAssetsPath }];
+        return [{ rootPath: join(__dirname, 'client') }];
       },
       inject: [ConfigService],
     }),
-    // MongoModule,
+    MongoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
