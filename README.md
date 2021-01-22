@@ -1,7 +1,20 @@
 # Contrib
 
 
-### Development
+## Developing locally
+
+Yarn is used as a package manager. Therefore, npm commands are not used.
+
+1. Install dependencies:
+   - `yarn --cwd client install`
+   - `yarn --cwd server install`
+2. Get configuration properties for the backend:
+   - create `./server/.env` file with contents from 1Password
+3. Start up frontend:
+   - `yarn --cwd client start`
+4. Start up backend is separate tab:
+   - `yarn --cwd server start`
+
 
 
 ## Technology used
