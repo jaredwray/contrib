@@ -19,7 +19,7 @@ FROM node:15 as run
 WORKDIR /usr/app
 EXPOSE 3000
 ENV PORT 3000
-ENV SERVE_CLIENT_FROM_PATH /usr/app/client
+ENV SERVE_CLIENT_APP true
 
 COPY --from=build-server /usr/app/build/server/dist ./
 COPY --from=build-server /usr/app/build/server/node_modules ./node_modules/
