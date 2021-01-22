@@ -1,26 +1,42 @@
 import React from 'react'
+import { Container, Row, Col } from 'react-bootstrap'
 
 import Logo from './logo-light.svg'
 import './Footer.scss'
 
 export default function Footer() {
   return (
-    <footer className="d-print-none" >
-      <img src={Logo} alt="Contrib" />
-      <div className="info">
-        <div>Direct athlete-to-fan charity auctions.</div>
-        <a href="/" >About Contrib</a>
-      </div>
-      <div className="social-media">
-        <a href="/" className="twitter" rel="external"/>
-        <a href="/" className="instagram" rel="external"/>
-        <a href="/" className="facebook" rel="external"/>
-      </div>
-
-      <div className="bottom">
-        <div className="text-uppercase copyright">Copyright {new Date().getFullYear()} Contrib Inc.</div>
-        <a href="/" className="privacy">Privacy and Terms &gt;&gt;</a>
-      </div>
+    <footer className="d-print-none p-4">
+      <Container fluid>
+        <Row className="top">
+          <Col md className="p-0 pl-md-4">
+            <img src={Logo} alt="Contrib" />
+          </Col>
+        </Row>
+        <Row className="info pt-4 pb-4">
+          <Col md className="p-0 pl-md-4 pr-md-4">
+            Direct athlete-to-fan charity auctions.
+          </Col>
+          <Col md className="p-0 pr-md-4 pt-3 pt-md-0">
+            <a href="/" className="float-md-right">About Contrib</a>
+          </Col>
+        </Row>
+        <Row className="social-media">
+          <Col md className="p-0 pl-md-4 pr-md-4 pt-4 pb-4">
+            <a href="/" className="twitter d-inline-block mr-4" rel="external"><i className="d-none"/></a>
+            <a href="/" className="instagram d-inline-block mr-4" rel="external"><i className="d-none"/></a>
+            <a href="/" className="facebook d-inline-block" rel="external"><i className="d-none"/></a>
+          </Col>
+        </Row>
+        <Row className="bottom">
+          <Col md className="p-0 pl-md-4 pr-md-4 text-uppercase copyright">
+            Copyright {new Date().getFullYear()} Contrib Inc.
+          </Col>
+          <Col md className="pt-2 p-0 pt-md-0 pr-md-4">
+            <a href="/" className="privacy float-md-right">Privacy and Terms &gt;&gt;</a>
+          </Col>
+        </Row>
+      </Container>
     </footer>
   )
 }

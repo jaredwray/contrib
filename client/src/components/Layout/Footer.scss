@@ -1,6 +1,5 @@
 footer {
   background-color: #323432;
-  padding: 20px;
 
   .info {
     font-family: Montserrat;
@@ -8,15 +7,10 @@ footer {
     font-weight: 700;
     line-height: 40px;
     color: white;
-    padding: 20px 0;
   }
 
   .social-media {
-    padding: 20px 0;
-
     a {
-      display: inline-block;
-      margin-right: 20px;
       background-repeat: no-repeat;
       background-size: contain;
       width: 36px;
@@ -39,11 +33,6 @@ footer {
   .info, .bottom {
     a {
       color: #5A7864;
-      float: right;
-    }
-
-    div {
-      display: inline-block;
     }
   }
 

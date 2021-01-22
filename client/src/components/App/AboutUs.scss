@@ -6,11 +6,32 @@
     background: #5A7864;
   }
 
+  .title {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
   .separator {
-    margin: 20px 0;
-    display: block;
     height: 6px;
-    width: 54px;
     background-color: #DCD28C;
+  }
+
+  .description {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .title {
+      font-size: 11px;
+      line-height: 14px;
+    }
+
+    .description {
+      font-size: 26px;
+      line-height: 30px;
+    }
   }
 }

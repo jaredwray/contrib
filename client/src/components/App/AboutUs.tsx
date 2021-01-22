@@ -8,14 +8,18 @@ export default function AboutUs() {
     <section className="about-us">
       <Container>
         <Row>
-          <Col xl="12">
-            <div className="title">Who we are</div>
-            <div className="separator"/>
-            <div className="description">
-              <h2>Contrib is a digital fundraising platform that empowers athletes to engage with their fans, raise money for important charities, and make direct and meaningful impact in their communities.</h2>
-              <Button>How does it work? &gt;&gt;</Button>
-            </div>
+          <Col className="title pt-4">Who we are</Col>
+        </Row>
+        <Row>
+          <Col xs="1" className="mt-3 mb-3 ml-3 separator"/>
+        </Row>
+        <Row>
+          <Col className="description">
+            Contrib is a digital fundraising platform that empowers athletes to engage with their fans, raise money for important charities, and make direct and meaningful impact in their communities.
           </Col>
+        </Row>
+        <Row>
+          <Col className="pt-3 pb-4"><Button>How does it work? &gt;&gt;</Button></Col>
         </Row>
       </Container>
     </section>
