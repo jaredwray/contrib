@@ -11,5 +11,9 @@
     "test-client": "cd ./client && yarn test",
     "test-server": "cd ./server && yarn test:cov",
     "start": "cd ./server && yarn start"
+  },
+  "dependencies": {
+    "@nestjs/mongoose": "^7.2.2",
+    "mongoose": "^5.11.13"
   }
 }

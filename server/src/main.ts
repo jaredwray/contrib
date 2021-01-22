@@ -1,14 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+const port = process.env.PORT || 3000;
 
+async function bootstrap() {
   //New Relic
-  if(process.env.NEWRELIC_LICENSE_KEY !== undefined && process.env.NEW_RELIC_APP_NAME !== undefined) {
-    require("newrelic");
+  if (
+    process.env.NEWRELIC_LICENSE_KEY !== undefined &&
+    process.env.NEW_RELIC_APP_NAME !== undefined
+  ) {
+    require('newrelic');
   }
 
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  await app.listen(port);
 }
-bootstrap();
+
+bootstrap().then(
+  () => {
+    console.log(`application bootstrapped and listening at port ${port}`);
+  },
+  (error) => {
+    console.error(`failed bootstrapping application`, error);
+  },
+);
