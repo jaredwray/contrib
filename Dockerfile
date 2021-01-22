@@ -1,17 +1,29 @@
-FROM node:12
+### CLIENT BUILD IMAGE
+FROM node:15 as build-client
+WORKDIR /usr/app/build/client
 
-ENV PORT 3000
+COPY client ./
+RUN yarn --non-interactive --no-progress --frozen-lockfile install
+RUN yarn build
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+### SERVER BUILD IMAGE
+FROM node:15 as build-server
+WORKDIR /usr/app/build/server
 
-# Copying source files
-COPY . /usr/src/app
-RUN yarn build-server
+COPY server ./
+RUN yarn --non-interactive --no-progress --frozen-lockfile install
+RUN yarn build
 
-# Open the port
+### ASSEMBLE FINAL IMAGE
+FROM node:15 as run
+WORKDIR /usr/app
 EXPOSE 3000
+ENV PORT 3000
+ENV SERVE_CLIENT_FROM_PATH /usr/app/client
+
+COPY --from=build-server /usr/app/build/server/dist ./
+COPY --from=build-server /usr/app/build/server/node_modules ./node_modules/
+COPY --from=build-client /usr/app/build/client/build ./client/
 
 # Running the app
-CMD "yarn" "start"
+CMD "node" "main.js"
