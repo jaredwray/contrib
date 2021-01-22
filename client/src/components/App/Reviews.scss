@@ -1,23 +1,55 @@
 .reviews {
-  padding: 20px 0;
+  .title {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+  }
 
   .separator {
-    margin: 20px 0;
-    display: block;
     height: 6px;
-    width: 54px;
     background-color: #DCD28C;
+  }
+
+  .description {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .title {
+      font-size: 11px;
+      line-height: 14px;
+    }
+
+    .description {
+      font-size: 26px;
+      line-height: 30px;
+    }
   }
 
   .quotes {
     padding: 90px 0 20px 0;
+
+    .react-multi-carousel-track {
+      padding: 0 160px;
+    }
+
+    .react-multiple-carousel__arrow {
+      background: #5A7864;
+
+      &::before {
+        color: #CACCC6;
+        font-weight: bold;
+      }
+    }
 
     .review {
       max-width: 522px;
       display: inline-block;
       background-color: #F0F0EE;
       margin-right: 20px;
-      padding: 20px 20px 20px 20px;
+      padding: 20px;
     }
 
     .quote {

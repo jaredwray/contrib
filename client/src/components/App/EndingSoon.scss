@@ -2,26 +2,38 @@
   color: #5A7864;
   background-color: #F0F0EE;
 
-  .header {
-    padding: 20px 0;
-
-    a {
-      color: #323432;
-      font-size: 12px;
-      font-weight: 500;
-      line-height: 16px;
-      float: right;
-      text-transform: uppercase;
-    }
+  .title {
+    font-size: 72px;
+    line-height: 76px;
   }
 
-  .picture {
-    background-repeat: no-repeat;
-    background-size: contain;
+  .see-all {
+    color: #323432;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+  }
+
+  .react-multi-carousel-track {
+    padding: 0 160px;
+  }
+
+  .react-multiple-carousel__arrow {
+    background: #5A7864;
+
+    &::before {
+      color: #CACCC6;
+      font-weight: bold;
+    }
   }
 
   .auctions {
     padding-bottom: 40px;
+
+    .picture {
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
 
     .auction {
       width: 280px;
@@ -29,9 +41,40 @@
       margin-right: 40px;
       background-color: #FFFFFF;
 
-      .picture {
+      .like {
+        display: block;
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        border-radius: 36px;
+        background-color: #FFFFFF;
+        text-align: center;
+        left: 235px;
+        top: 5px;
+        cursor: pointer;
+
+        &:hover::before {
+          content: "\2665";
+          color: #96AF9B;
+          font-size: 22px;
+        }
+
+        &::before {
+          content: "\2661";
+          color: #96AF9B;
+          font-size: 18px;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      img.picture {
         width: 280px;
         height: 280px;
+        background-color: #F0F0EE;
       }
 
       .info {
