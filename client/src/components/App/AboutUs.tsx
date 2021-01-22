@@ -6,7 +6,7 @@ import './AboutUs.scss'
 export default function AboutUs() {
   return (
     <section className="about-us">
-      <Container>
+      <Container className="homepage-container">
         <Row>
           <Col className="title pt-4">Who we are</Col>
         </Row>

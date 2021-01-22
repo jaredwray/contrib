@@ -26,7 +26,7 @@ const responsive = {
 export default function EndingSoon() {
   return (
     <section className="ending-soon">
-      <Container className="header pt-4 pb-4">
+      <Container className="header pt-4 pb-4 homepage-container">
         <Row>
           <Col lg="6" className="title">Ending soon</Col>
           <Col lg="6" className="align-self-end">

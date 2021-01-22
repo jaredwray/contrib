@@ -26,7 +26,7 @@ const responsive = {
 export default function Reviews() {
   return (
     <section className="reviews pb-3 pb-md-5">
-      <Container>
+      <Container className="homepage-container">
         <Row>
           <Col className="title pt-4">Testimonials</Col>
         </Row>

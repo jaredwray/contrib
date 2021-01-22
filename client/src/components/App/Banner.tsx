@@ -6,7 +6,7 @@ import './Banner.scss'
 export default function Banner() {
   return (
     <section className="banner">
-      <Container fluid="sm" className="wrapper">
+      <Container fluid="sm" className="wrapper homepage-container">
         <Row>
           <Col xs="4" sm="3" md="6" lg="7" className="pt-5 pb-3 pb-md-5">
             <h1 className="title m-0">Make An Impact</h1>
