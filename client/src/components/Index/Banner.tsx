@@ -1,5 +1,6 @@
 import React from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { Container, Row, Col } from 'react-bootstrap'
 
 import './Banner.scss'
 
@@ -22,7 +23,7 @@ export default function Banner() {
         </Row>
         <Row>
           <Col xs="6">
-            <Button>Sign Up &gt;&gt;</Button>
+            <Link to="/sign-up" className="btn btn-primary">Sign Up &gt;&gt;</Link>
           </Col>
         </Row>
         <Row>

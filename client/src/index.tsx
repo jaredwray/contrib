@@ -1,11 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Router, Route } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 
-import App from './components/App/App';
+import Index from './components/Index/Index'
+import SignUp from './components/SignUp/SignUp'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Router history={createBrowserHistory()}>
+    <Route path="/" exact component={Index} />
+    <Route path="/sign-up" exact component={SignUp} />
+  </Router>,
   document.getElementById('root')
 )

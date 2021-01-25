@@ -4,17 +4,15 @@ import AboutUs from './AboutUs'
 import EndingSoon from './EndingSoon'
 import Reviews from './Reviews'
 
-import './App.scss'
+import './Index.scss'
 
-export default function App() {
+export default function Index() {
   return (
-    <>
-      <Layout>
-        <Banner/>
-        <AboutUs/>
-        <EndingSoon/>
-        <Reviews/>
-      </Layout>
-    </>
+    <Layout>
+      <Banner/>
+      <AboutUs/>
+      <EndingSoon/>
+      <Reviews/>
+    </Layout>
   )
 }
