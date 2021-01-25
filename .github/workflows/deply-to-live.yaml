@@ -9,6 +9,7 @@ env:
   SERVICE_NAME: contrib-app
   NEW_RELIC_APP_NAME: contrib-app-live
   NEWRELIC_LICENSE_KEY: ${{ secrets.NEWRELIC_LICENSE_KEY }}
+  NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: true
   MONGODB_URI: ${{ secrets.LIVE_MONGODB_URI }}
 
 jobs:
@@ -67,7 +68,7 @@ jobs:
           --platform=managed \
           --region=us-west1 \
           --allow-unauthenticated \
-          --set-env-vars=MONGODB_URI=$MONGODB_URI,NEW_RELIC_APP_NAME=$NEW_RELIC_APP_NAME,NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY \
+          --set-env-vars=MONGODB_URI=$MONGODB_URI,NEW_RELIC_APP_NAME=$NEW_RELIC_APP_NAME,NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY,NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=$NEW_RELIC_DISTRIBUTED_TRACING_ENABLED \
           --port=3000
 
     - name: Deploy to [us-central1]
@@ -78,5 +79,5 @@ jobs:
           --platform=managed \
           --region=us-central1 \
           --allow-unauthenticated \
-          --set-env-vars=MONGODB_URI=$MONGODB_URI,NEW_RELIC_APP_NAME=$NEW_RELIC_APP_NAME,NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY \
+          --set-env-vars=MONGODB_URI=$MONGODB_URI,NEW_RELIC_APP_NAME=$NEW_RELIC_APP_NAME,NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY,NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=$NEW_RELIC_DISTRIBUTED_TRACING_ENABLED \
           --port=3000
