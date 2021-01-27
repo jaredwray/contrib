@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { Container, Row, Col } from 'react-bootstrap'
 
 import './Banner.scss'
@@ -23,7 +22,7 @@ export default function Banner() {
         </Row>
         <Row>
           <Col xs="6">
-            <Link to="/" className="btn btn-primary btn-with-arrows">Sign Up</Link>
+            <a href="/" className="btn btn-primary btn-with-arrows">Sign Up</a>
           </Col>
         </Row>
         <Row>
