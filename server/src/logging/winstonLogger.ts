@@ -1,5 +1,5 @@
 import winston, { createLogger, format, transports as wts } from 'winston';
-import * as newrelicFormatter from '@newrelic/winston-enricher';
+import { NewrelicConfig } from '../newrelic';
 
 const consoleTransport: wts.ConsoleTransportInstance = new wts.Console({
   level: 'debug',
@@ -15,17 +15,16 @@ const consoleTransport: wts.ConsoleTransportInstance = new wts.Console({
 });
 
 const transports: winston.transport[] = [consoleTransport];
-if (
-  process.env.NEWRELIC_LICENSE_KEY !== undefined &&
-  process.env.NEW_RELIC_APP_NAME !== undefined
-) {
+if (NewrelicConfig) {
+  // eslint-disable-next-line
+  const newrelicFormatter = require('@newrelic/winston-enricher');
   const newrelicTransport = new wts.Http({
     level: 'debug',
     format: newrelicFormatter(),
     ssl: true,
     host: 'log-api.newrelic.com',
     path: 'log/v1',
-    headers: { 'X-License-Key': process.env.NEWRELIC_LICENSE_KEY },
+    headers: { 'X-License-Key': NewrelicConfig.licenseKey },
   });
   transports.push(newrelicTransport);
 }
