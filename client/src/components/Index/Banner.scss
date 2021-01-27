@@ -1,0 +1,35 @@
+@import '../../variables.scss';
+
+.banner {
+  height: 505px;
+  color: $white-color;
+  text-align: left;
+  background-image: url("./player-md.png");
+  background-repeat: no-repeat;
+  background-position: right;
+  background-color: $sage-color;
+  background-size: contain;
+
+  .btn:hover {
+    background: $ochre-color;
+  }
+
+  .banner-separator {
+    height: 12px;
+    width: 102px;
+    background-color: $dark-gray-color;
+  }
+
+  .banner-signature {
+    bottom: 0;
+  }
+
+  @media (max-width: $medium-weight) {
+    background-image: url("./player-sm.png");
+
+    .banner-separator {
+      height: 8px;
+      width: 68px;
+    }
+  }
+}

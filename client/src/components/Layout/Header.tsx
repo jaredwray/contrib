@@ -16,33 +16,29 @@ export default function Header() {
                 <img src={Logo} alt="Contrib" />
               </Navbar.Brand>
               <NavDropdown title={<div className="menu-icon"/>} id="basic-nav-dropdown">
-                <section className="nav-dropdown-menu">
-                  <div className="user-info">
-                    <div className="name">Julian Strait</div>
-                    <Image className="avatar" src="/content/img/users/avatar.png" roundedCircle />
+                <section className="nav-dropdown-menu text-subhead">
+                  <div>
+                    <div className="dropdown-menu-user-name d-inline-block">Julian Strait</div>
+                    <Image className="float-right d-inline-block" src="/content/img/users/avatar.png" roundedCircle />
                   </div>
-
-                  <NavDropdown.Item href="/">Account</NavDropdown.Item>
-                  <NavDropdown.Item href="/">Bids</NavDropdown.Item>
-                  <NavDropdown.Item href="/">Watch list</NavDropdown.Item>
-                  <NavDropdown.Item href="/">Purchase history</NavDropdown.Item>
-                  <NavDropdown.Item href="/">Manage auctons</NavDropdown.Item>
+                  <NavDropdown.Item href="/"><span>Account</span></NavDropdown.Item>
+                  <NavDropdown.Item href="/"><span>Bids</span></NavDropdown.Item>
+                  <NavDropdown.Item href="/"><span>Watch list</span></NavDropdown.Item>
+                  <NavDropdown.Item href="/"><span>Purchase history</span></NavDropdown.Item>
+                  <NavDropdown.Item href="/"><span>Manage auctons</span></NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="/">Sign Out</NavDropdown.Item>
-
-                  <div className="footer">
-                    <div className="social-media">
-                      <div className="pl-4 pt-4 pr-4 pb-2">
-                        <a href="/" className="twitter d-inline-block mr-4" rel="external"><i className="d-none"/></a>
-                        <a href="/" className="instagram d-inline-block mr-4" rel="external"><i className="d-none"/></a>
-                        <a href="/" className="facebook d-inline-block" rel="external"><i className="d-none"/></a>
-                      </div>
+                  <NavDropdown.Item href="/"><span>Sign Out</span></NavDropdown.Item>
+                  <div>
+                    <div className="dropdown-menu-social-media pt-4 pb-2">
+                      <a href="/" className="twitter d-inline-block mr-4" rel="external"><i className="d-none"/></a>
+                      <a href="/" className="instagram d-inline-block mr-4" rel="external"><i className="d-none"/></a>
+                      <a href="/" className="facebook d-inline-block" rel="external"><i className="d-none"/></a>
                     </div>
-                    <div className="bottom pl-4 pr-4">
-                      <div className="text-uppercase copyright">
+                    <div>
+                      <div className="text-label text-all-cups dropdown-menu-copyright">
                         Copyright {new Date().getFullYear()} Contrib Inc.
                       </div>
-                      <a href="/" className="privacy text-uppercase">Privacy and Terms &gt;&gt;</a>
+                      <a href="/" className="dropdown-menu-privacy text-label text-all-cups">Privacy and Terms &gt;&gt;</a>
                     </div>
                   </div>
                 </section>

@@ -1,0 +1,106 @@
+@import './variables.scss';
+
+body {
+  color: $dark-gray-color;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-weight: bold;
+}
+
+.btn {
+  background: $ochre-color;
+  border-radius: 10px;
+  color: $sage-color;
+  border: 0;
+  height: 50px;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  letter-spacing: 0.1em;
+
+  &.btn-with-arrows:after {
+    content: '»';
+    font-size: 25px;
+    font-weight: normal;
+    vertical-align: sub;
+    margin-left: 10px;
+  }
+
+  &:hover {
+    background: $sage-color;
+  }
+}
+
+.btn-arrows {
+  font-size: 25px;
+  font-weight: normal;
+  vertical-align: sub;
+  margin-left: 10px;
+}
+
+section {
+  padding: 30px 0;
+}
+
+a.btn {
+  display: table-cell;
+}
+
+.text-super {
+  font-size: 72px;
+  line-height: 76px;
+}
+.text-headline {
+  font-size: 32px;
+  line-height: 40px;
+}
+.text-subhead {
+  font-size: 20px;
+  line-height: 25px;
+}
+.text-body {
+  font-size: 14px;
+  line-height: 18px;
+}
+.text-label {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
+}
+.text-all-cups {
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+
+@media (max-width: $medium-weight) {
+  .btn {
+    height: 40px;
+  }
+  .text-super {
+    font-size: 50px;
+    line-height: 50px;
+  }
+  .text-headline {
+    font-size: 26px;
+    line-height: 30px;
+  }
+  .text-subhead {
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .text-body {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .text-label {
+    font-size: 11px;
+    line-height: 14px;
+    letter-spacing: 0.1em;
+  }
+  .text-all-cups {
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+}

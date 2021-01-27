@@ -1,3 +1,4 @@
+@import '../../variables.scss';
 
 .dropdown-toggle::after {
   display: none !important;
@@ -33,12 +34,13 @@
   .dropdown-menu {
     left: auto !important;
     right: 2px !important;
-    margin-top: 20px !important;
+    margin: 0 !important;
+    padding: 0 !important;
 
     &.show {
       margin: 0 !important;
 
-      @media (max-width: 576px) {
+      @media (max-width: $small-weight) {
         right: -40px !important;
         margin-top: 2px !important;
         border: none;
@@ -48,72 +50,54 @@
 
   .nav-dropdown-menu {
     width: 385px;
+    padding: 20px 40px;
 
-    .user-info {
-      padding: 20px 25px 0 25px;
-
-      .name {
-        font-size: 18px;
-        line-height: 22px;
-        color: #CACCC6;
-      }
-
-      .avatar {
-        float: right;
-      }
-
-      .name, .avatar {
-        display: inline-block;
-      }
+    .dropdown-menu-user-name {
+      color: $light-gray-color;
     }
 
     .dropdown-item {
-      padding: 10px 25px;
-      font-size: 18px;
-      line-height: 22px;
-      color: #5A7864;
+      color: $sage-color;
+      padding: 10px 0;
+      margin-left: -40px;
+      width: 385px;
+
+      span {
+        margin-left: 40px;
+      }
 
       &:hover {
-        background-color: #F0F0EE;
+        background-color: $barely-gray-color;
       }
     }
 
-    .footer {
-      .social-media {
-        a {
-          background-repeat: no-repeat;
-          background-size: contain;
-          width: 36px;
-          height: 36px;
-        }
-
-        .twitter {
-          background-image: url("./twitter.png");
-        }
-
-        .instagram {
-          background-image: url("./instagram.png");
-        }
-
-        .facebook {
-          background-image: url("./facebook.png");
-        }
+    .dropdown-menu-social-media {
+      a {
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 36px;
+        height: 36px;
       }
 
-      .bottom {
-        font-size: 12px;
-        line-height: 16px;
-        font-weight: 500;
-        letter-spacing: 0.1em;
-
-        .copyright {
-          color: #CACCC6;
-        }
-
-        .privacy {
-          color: #5A7864;
-        }
+      .twitter {
+        background-image: url("./twitter.png");
       }
+
+      .instagram {
+        background-image: url("./instagram.png");
+      }
+
+      .facebook {
+        background-image: url("./facebook.png");
+      }
+    }
+
+    .dropdown-menu-copyright {
+      color: $light-gray-color;
+    }
+
+    .dropdown-menu-privacy {
+      color: $sage-color;
     }
   }
 }

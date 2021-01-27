@@ -1,11 +1,14 @@
+@import '../../variables.scss';
+
 footer {
-  background-color: #323432;
+  background-color: $dark-gray-color;
+
+  &, a, a:hover {
+    color: $sage-color;
+  }
 
   .info {
-    font-family: Montserrat;
-    font-size: 32px;
-    line-height: 40px;
-    color: white;
+    color: $white-color;
   }
 
   .social-media {
@@ -27,18 +30,5 @@ footer {
     .facebook {
       background-image: url("./facebook.png");
     }
-  }
-
-  .info, .bottom {
-    a {
-      color: #5A7864;
-    }
-  }
-
-  .bottom {
-    color: #5A7864;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 16px;
   }
 }
