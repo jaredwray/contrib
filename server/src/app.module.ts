@@ -5,6 +5,7 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EnvironmentVariables } from './environment-variables';
+import { LoggingModule } from './logging/logging.module';
 import { MongoModule } from './mongo/mongo.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { MongoModule } from './mongo/mongo.module';
       inject: [ConfigService],
     }),
     MongoModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

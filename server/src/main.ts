@@ -1,26 +1,26 @@
+import './newrelic';
+
 import { NestFactory } from '@nestjs/core';
+
 import { AppModule } from './app.module';
+import { AppLogger } from './logging/app-logger.service';
 
 const port = process.env.PORT || 3000;
 
-async function bootstrap() {
-  //New Relic
-  if (
-    process.env.NEWRELIC_LICENSE_KEY !== undefined &&
-    process.env.NEW_RELIC_APP_NAME !== undefined
-  ) {
-    require('newrelic');
-  }
+const appLogger = new AppLogger('app');
 
-  const app = await NestFactory.create(AppModule);
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    logger: appLogger,
+  });
   await app.listen(port);
 }
 
 bootstrap().then(
   () => {
-    console.log(`application bootstrapped and listening at port ${port}`);
+    appLogger.log(`application bootstrapped and listening at port ${port}`);
   },
   (error) => {
-    console.error(`failed bootstrapping application`, error);
+    appLogger.error(`failed bootstrapping application`, error);
   },
 );
