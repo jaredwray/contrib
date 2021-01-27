@@ -13,8 +13,9 @@ async function bootstrap() {
     require('newrelic');
   }
 
-  const app = await NestFactory.create(AppModule);
-  app.useLogger(new AppLogger('app'));
+  const app = await NestFactory.create(AppModule, {
+    logger: new AppLogger('app'),
+  });
   await app.listen(port);
 }
 

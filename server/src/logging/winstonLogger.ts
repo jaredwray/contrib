@@ -25,7 +25,7 @@ if (
     ssl: true,
     host: 'log-api.newrelic.com',
     path: 'log/v1',
-    headers: { 'X-License-Key': 'b9e03c47498ad937b02b33b266580947FFFFNRAL' },
+    headers: { 'X-License-Key': process.env.NEWRELIC_LICENSE_KEY },
   });
   transports.push(newrelicTransport);
 }
