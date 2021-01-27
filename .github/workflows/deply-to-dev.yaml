@@ -12,6 +12,8 @@ env:
   NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
   NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: true
   MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
+  REACT_APP_AUTH0_DOMAIN: contrib.us.auth0.com
+  REACT_APP_AUTH0_CLIENT_ID: ${{ secrets.DEV_AUTH0_CLIENT_ID }}
 
 jobs:
   setup-build-deploy:
@@ -24,7 +26,7 @@ jobs:
 
     # Build Client
     - name: Build Client
-      run: yarn build-client
+      run: REACT_APP_AUTH0_DOMAIN=$REACT_APP_AUTH0_DOMAIN REACT_APP_AUTH0_CLIENT_ID=$REACT_APP_AUTH0_CLIENT_ID yarn build-client
 
     # Test Client
     - name: Test Client
