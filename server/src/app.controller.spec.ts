@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggingModule } from './logging/logging.module';
 
+jest.useFakeTimers();
+
 describe('AppController', () => {
   let appController: AppController;
 
