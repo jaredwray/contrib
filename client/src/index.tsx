@@ -4,12 +4,14 @@ import { Router, Route } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 
 import Index from './components/Index/Index'
-import SignUp from './components/SignUp/SignUp'
+
+import './index.scss'
+
+export const history = createBrowserHistory()
 
 ReactDOM.render(
-  <Router history={createBrowserHistory()}>
+  <Router history={history}>
     <Route path="/" exact component={Index} />
-    <Route path="/sign-up" exact component={SignUp} />
   </Router>,
   document.getElementById('root')
 )

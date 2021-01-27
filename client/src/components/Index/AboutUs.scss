@@ -1,19 +1,12 @@
+@import '../../variables.scss';
+
 .about-us {
-  color: #323432;
-  padding: 20px 0;
+  color: $dark-gray-color;
 
-  button:hover {
-    background: #5A7864;
-  }
-
-  .title {
-    font-size: 12px;
-    line-height: 16px;
-  }
-
-  .separator {
+  .about-us-separator {
+    width: 54px;
     height: 6px;
-    background-color: #DCD28C;
+    background-color: $ochre-color;
   }
 
   .description {
@@ -21,15 +14,10 @@
     line-height: 40px;
   }
 
-  @media (max-width: 768px) {
-    .title {
-      font-size: 11px;
-      line-height: 14px;
-    }
-
-    .description {
-      font-size: 26px;
-      line-height: 30px;
+  @media (max-width: $medium-weight) {
+    .about-us-separator {
+      width: 36px;
+      height: 4px;
     }
   }
 }

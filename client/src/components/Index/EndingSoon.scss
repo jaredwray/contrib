@@ -1,17 +1,11 @@
+@import '../../variables.scss';
+
 .ending-soon {
-  color: #5A7864;
-  background-color: #F0F0EE;
+  color: $sage-color;
+  background-color: $barely-gray-color;
 
-  .title {
-    font-size: 72px;
-    line-height: 76px;
-  }
-
-  .see-all {
-    color: #323432;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 16px;
+  .see-all-link {
+    color: $dark-gray-color;
   }
 
   .react-multi-carousel-track {
@@ -19,88 +13,50 @@
   }
 
   .react-multiple-carousel__arrow {
-    background: #5A7864;
+    background: $sage-color;
 
     &::before {
-      color: #CACCC6;
+      color: $light-gray-color;
       font-weight: bold;
     }
   }
 
   .auctions {
-    padding-bottom: 40px;
-
-    .picture {
-      background-repeat: no-repeat;
-      background-size: contain;
-    }
-
     .auction {
       width: 280px;
       display: inline-block;
       margin-right: 40px;
-      background-color: #FFFFFF;
+      color: $dark-gray-color;
+      background-color: $white-color;
 
       .like {
-        display: block;
         position: absolute;
         width: 36px;
         height: 36px;
-        border-radius: 36px;
-        background-color: #FFFFFF;
-        text-align: center;
         left: 235px;
         top: 5px;
+        border-radius: 36px;
+        background-color: $white-color;
         cursor: pointer;
-
         background-image: url("./like.png");
         background-repeat: no-repeat;
         background-position: center;
       }
 
-      img.picture {
+      .auction-picture {
         width: 280px;
         height: 280px;
-        background-color: #F0F0EE;
+        background-color: $barely-gray-color;
       }
 
-      .info {
-        .owner {
-          .picture {
-            width: 32px;
-            height: 32px;
-          }
+      .auction-title {
+        color: $sage-color;
+        height: 85px;
+      }
 
-          .name {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 500;
-            line-height: 16px;
-            color: #323432;
-          }
-        }
-
-        .description, .price {
-          font-size: 20px;
-          line-height: 25px;
-        }
-
-        .description {
-          padding-top: 10px;
-        }
-
-        .price, .statistics {
-          color: #323432;
-        }
-
-        .statistics {
-          padding-top: 10px;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 16px;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-        }
+      .owner-picture {
+        width: 32px;
+        height: 32px;
       }
     }
   }

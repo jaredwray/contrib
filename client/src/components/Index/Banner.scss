@@ -1,75 +1,35 @@
+@import '../../variables.scss';
+
 .banner {
   height: 505px;
-  color: white;
+  color: $white-color;
   text-align: left;
   background-image: url("./player-md.png");
   background-repeat: no-repeat;
   background-position: right;
-  background-color: #5A7864;
+  background-color: $sage-color;
   background-size: contain;
 
   .btn:hover {
-    background: #DCD28C;
+    background: $ochre-color;
   }
 
-  .wrapper {
-    position: relative;
-    height: 100%;
-
-    .title {
-      font-weight: bold;
-      font-size: 72px;
-      line-height: 76px;
-    }
-
-    .separator {
-      height: 12px;
-      background-color: #323432;
-    }
-
-    .description {
-      font-weight: bold;
-      font-size: 32px;
-      line-height: 40px;
-    }
-
-    .signature {
-      position: absolute;
-      bottom: 20px;
-
-      * {
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 16px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-      }
-    }
+  .banner-separator {
+    height: 12px;
+    width: 102px;
+    background-color: $dark-gray-color;
   }
 
-  @media (max-width: 768px) {
+  .banner-signature {
+    bottom: 0;
+  }
+
+  @media (max-width: $medium-weight) {
     background-image: url("./player-sm.png");
 
-    .wrapper {
-
-      .title {
-        font-size: 50px;
-        line-height: 50px;
-      }
-
-      .separator {
-        height: 8px;
-      }
-
-      .description {
-        font-size: 18px;
-        line-height: 22px;
-      }
-
-      .signature {
-        font-size: 11px;
-        line-height: 14px;
-      }
+    .banner-separator {
+      height: 8px;
+      width: 68px;
     }
   }
 }

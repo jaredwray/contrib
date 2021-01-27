@@ -1,30 +1,10 @@
+@import '../../variables.scss';
+
 .reviews {
-  .title {
-    font-weight: 700;
-    font-size: 12px;
-    line-height: 16px;
-  }
-
-  .separator {
+  .reviews-separator {
+    width: 54px;
     height: 6px;
-    background-color: #DCD28C;
-  }
-
-  .description {
-    font-size: 32px;
-    line-height: 40px;
-  }
-
-  @media (max-width: 768px) {
-    .title {
-      font-size: 11px;
-      line-height: 14px;
-    }
-
-    .description {
-      font-size: 26px;
-      line-height: 30px;
-    }
+    background-color: $ochre-color;
   }
 
   .quotes {
@@ -35,28 +15,21 @@
     }
 
     .react-multiple-carousel__arrow {
-      background: #5A7864;
+      background: $sage-color;
 
       &::before {
-        color: #CACCC6;
+        color: $light-gray-color;
         font-weight: bold;
       }
     }
 
     .review {
       max-width: 522px;
+      height: 347px;
       display: inline-block;
-      background-color: #F0F0EE;
+      background-color: $barely-gray-color;
       margin-right: 20px;
-      padding: 20px;
-    }
-
-    .quote {
-      font-family: Montserrat;
-      font-size: 20px;
-      font-weight: 800;
-      line-height: 25px;
-      margin-bottom: 30px;
+      padding: 40px;
     }
 
     .avatar {
@@ -67,14 +40,8 @@
 
       .reviewer {
         height: 150px;
+        pointer-events: none;
       }
-    }
-
-    .name {
-      font-family: Montserrat;
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 25px;
     }
 
     .quotes-sign {
@@ -84,13 +51,16 @@
       width: 36px;
     }
 
+    .reviews-quote {
+      height: 180px;
+    }
+
     .badge {
       background-image: url("./badge-verified.png");
       background-repeat: no-repeat;
       height: 22px;
       padding-left: 30px;
-      line-height: 22px;
-      color: #5A7864;
+      color: $sage-color;
     }
   }
 }

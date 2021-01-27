@@ -28,13 +28,13 @@ export default function Reviews() {
     <section className="reviews pb-3 pb-md-5">
       <Container className="homepage-container">
         <Row>
-          <Col className="title pt-4">Testimonials</Col>
+          <Col className="text-label">Testimonials</Col>
         </Row>
         <Row>
-          <Col xs="1" className="mt-3 mb-3 ml-3 separator"/>
+          <Col className="mt-4 mb-3"><div className="reviews-separator" /></Col>
         </Row>
         <Row>
-          <Col className="description">What’s being said about Contrib.</Col>
+          <Col className="text-headline">What’s being said about Contrib.</Col>
         </Row>
       </Container>
 
@@ -42,7 +42,6 @@ export default function Reviews() {
         swipeable
         partialVisible
         infinite
-        itemClass=""
         responsive={responsive}
         containerClass="carousel-container-with-scrollbar"
         className="quotes"
@@ -51,40 +50,40 @@ export default function Reviews() {
           <div className="avatar">
             <Image className="reviewer" src="/content/img/users/reviewer-1.png" roundedCircle/>
           </div>
-          <div className="quotes-sign" />
-          <div className="quote">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
-          <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">De’aaron Fox</div>
-          <div className="badge">Verified Athlete</div>
+          <div className="quotes-sign"/>
+          <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
+          <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">De’aaron Fox</div>
+          <div className="badge text-label">Verified Athlete</div>
         </div>
 
         <div className="review">
           <div className="avatar">
             <Image className="reviewer" src="/content/img/users/reviewer-2.png" roundedCircle/>
           </div>
-          <div className="quotes-sign" />
-          <div className="quote">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
-          <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">Diego Rossi</div>
-          <div className="badge">Verified Athlete</div>
+          <div className="quotes-sign"/>
+          <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
+          <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">Diego Rossi</div>
+          <div className="badge text-label">Verified Athlete</div>
         </div>
 
         <div className="review">
           <div className="avatar">
             <Image className="reviewer" src="/content/img/users/reviewer-1.png" roundedCircle/>
           </div>
-          <div className="quotes-sign" />
-          <div className="quote">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
-          <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">De’aaron Fox</div>
-          <div className="badge">Verified Athlete</div>
+          <div className="quotes-sign"/>
+          <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
+          <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">De’aaron Fox</div>
+          <div className="badge text-label">Verified Athlete</div>
         </div>
 
         <div className="review">
           <div className="avatar">
             <Image className="reviewer" src="/content/img/users/reviewer-2.png" roundedCircle/>
           </div>
-          <div className="quotes-sign" />
-          <div className="quote">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
-          <div className="name text-sm text-sage font-bold text-uppercase mb-md-0">Diego Rossi</div>
-          <div className="badge">Verified Athlete</div>
+          <div className="quotes-sign"/>
+          <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
+          <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">Diego Rossi</div>
+          <div className="badge text-label">Verified Athlete</div>
         </div>
       </Carousel>
     </section>
