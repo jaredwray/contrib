@@ -68,3 +68,16 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Auth0
+
+1. create `.env` file with follow variables:
+```
+REACT_APP_AUTH0_DOMAIN=AUTH0_DOMAIN
+REACT_APP_AUTH0_CLIENT_ID=AUTH0_CLIENT_ID
+```
+AUTH0_DOMAIN should not contain the protocol. An example: `contrib.us.auth0.com`
+
+2. change Universal Login page (https://manage.auth0.com/dashboard/us/contrib/login_page) using code from client/src/data/auth0/login.html file
+
+3. change Password Reset page (https://manage.auth0.com/dashboard/us/contrib/password_reset) using code from client/src/data/auth0/password_reset.html file
