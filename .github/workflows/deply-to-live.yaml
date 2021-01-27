@@ -23,6 +23,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    # Setup Node
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
     # Build Client
     - name: Build Client
       run: REACT_APP_AUTH0_DOMAIN=$REACT_APP_AUTH0_DOMAIN REACT_APP_AUTH0_CLIENT_ID=$REACT_APP_AUTH0_CLIENT_ID yarn build-client
