@@ -14,13 +14,7 @@ import { MongoModule } from './mongo/mongo.module';
      * Load env variables based on .env files
      */
     ConfigModule.forRoot(),
-    /**
-     * If SERVE_CLIENT_APP env variable is set,
-     * serves client app from ./client folder.
-     *
-     * Build script is responsible to put client distribution there.
-     * Not used when developing locally.
-     */
+
     ServeStaticModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService<EnvironmentVariables>) => {
