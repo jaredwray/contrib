@@ -24,11 +24,7 @@ import { MongoModule } from './mongo/mongo.module';
     ServeStaticModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService<EnvironmentVariables>) => {
-        const serveClient = configService.get<boolean>('SERVE_CLIENT_APP');
-        if (!serveClient) {
-          return [];
-        }
-        return [{ rootPath: join(__dirname, 'client') }];
+        return [{ rootPath: join(__dirname, '../../../client/build') }];
       },
       inject: [ConfigService],
     }),
