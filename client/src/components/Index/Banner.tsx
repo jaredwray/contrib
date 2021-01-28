@@ -1,14 +1,17 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
+import { useAuth0 } from '@auth0/auth0-react'
 
 import './Banner.scss'
 
 export default function Banner() {
+  const { isAuthenticated, loginWithRedirect } = useAuth0()
+
   return (
     <section className="banner">
       <Container fluid="sm" className="wrapper homepage-container position-relative h-100">
         <Row>
-          <Col xs="6" lg="9" className="pt-5 pb-3 pb-md-5 text-super">
+          <Col xs="6" lg="8" className="pt-5 pt-md-4 pt-lg-5 pb-3 pb-md-4 pb-lg-4 text-super">
             Make An Impact
           </Col>
         </Row>
@@ -20,11 +23,15 @@ export default function Banner() {
             Auction your memorabelia quickly and hassle free
           </Col>
         </Row>
-        <Row>
-          <Col xs="6">
-            <a href="/" className="btn btn-primary btn-with-arrows">Sign Up</a>
-          </Col>
-        </Row>
+       {!isAuthenticated && (
+          <Row>
+            <Col xs="6">
+              <a href="/" className="btn btn-primary btn-with-arrows" onClick={() => loginWithRedirect({page_type: 'sign_up'})}>
+                Sign Up
+              </a>
+            </Col>
+          </Row>)
+        }
         <Row>
           <Col xs="9" sm="6" className="text-label text-all-cups position-absolute banner-signature">
             Stephan Frei<br/>Total raised: $248,000

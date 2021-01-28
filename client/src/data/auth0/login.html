@@ -22,29 +22,34 @@
     #error-message {
       display: none;
     }
-    .btn, .btn:focus, .btn:hover {
+    .logo {
+      display: block;
+      width: 150px;
+      height: 50px;
+    }
+    .btn, .btn:focus {
       background: #dcd28c;
       color: #5a7864;
       border: 0;
       box-shadow: none !important;
     }
-    .btn:active {
+    .btn:active, .auth-buttons:hover .btn {
       color: #ffffff !important;
       background-color: #5A7864 !important;
       border: none !important;
     }
-    .login-buttons {
+    .auth-buttons {
       padding-top: 10px;
     }
     .btn-icon {
       width: 50px;
       height: 50px;
-      background-color: #5A7864;
       border-radius: 10px 0 0 10px;
-      background-repeat: no-repeat;
-      background-position: center;
+      background-color: #5A7864  !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
     }
-    .btn-text {
+    .btn-text, .btn-text span {
       border-radius: 0 10px 10px 0;
       width: calc(100% - 50px);
       height: 50px;
@@ -58,7 +63,7 @@
       width: 54px;
       height: 6px;
       background-color: #323432;
-      margin:  50px 0 20px 0;
+      margin: 50px 0 20px 0;
     }
     .back-link, .back-link:hover {
       display: block;
@@ -82,14 +87,14 @@
       font-size: 17px;
       line-height: 21px;
     }
-    .sign-up-button, .sign-up-button:hover {
+    .sign-up-link, .sign-up-link:hover {
       color: #5a7864;
       font-weight: bold;
       font-size: 20px;
       line-height: 25px;
     }
     .right-block {
-      background: no-repeat #5A7864 url(https://dev.contrib.org/static/media/player-md.479a5e02.png);
+      background: no-repeat #5A7864 url(https://dev.contrib.org/content/img/auth0-page-bg.png);
       background-size: cover;
       position: relative;
       width: 100%;
@@ -104,7 +109,7 @@
       color: #FFFFFF;
       position: absolute;
       bottom: 20px;
-      left:  50px;
+      left: 50px;
     }
   </style>
 <body>
@@ -112,38 +117,42 @@
     <div class="row m-0 h-100">
       <div class="col p-0 pt-4 login-box">
         <div class="p-0 login-container container col-md-9 col-11">
-          <img src="https://dev.contrib.org/static/media/logo.97274cce.svg" alt="Contrib" style="display: block"/>
-          <a href="#" id="backLink" target="_self" class="back-link pt-5">
+          <img src="https://dev.contrib.org/static/media/logo.97274cce.svg" alt="Contrib" class="logo"/>
+          <a href="#" id="backLink" target="_self" class="back-link pt-5" title="Back">
             <span class="arrows">&#171;&#32;&#32;</span>back
           </a>
-          <h1>Log in</h1>
+          <h1 class="log-in-block">Log in</h1>
+          <h1 class="sign-up-block d-none">Sign up</h1>
           <div id="error-message" class="alert alert-danger"></div>
           <form onsubmit="return false;" method="post">
-            <div id="facebook-buttons" class="login-buttons">
+            <div id="facebook-buttons" class="auth-buttons" title="Authorize With Facebook">
               <button type="button" class="btn btn-icon btn-primary" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQkSURBVHgBzVhNbBNHFP7eZIniRJWMGg6pCjG9VKRSm8hc2qg0ERxyKC0CJBAiqlGLqHppVFUih0pxD1WtqlKTSwWlVVKRFhD/PxIcQJjwdyFgQIDgAA5IcCAIH8ABYu8wb+0YO+zOrB2D+KS1x7Pf7H6e9+a9eUMoE6t7vw1ZIvulbaMVsDuIKCglgnyPCClpIwlBSUGIZ+ya/dtjm5LlPJ/8Etf0ro8Q5FcS6EA5kEiQEP3//frXv37oRkFre7/psEGD6skhzAiUVLMZNQnzFBSJ9gQnJx71SUIPqgiS6J8VyPw8FB1Kud5364woP3kms3vV6Fa8ElDSRk2nm3+Rqxhkj8/cRJWJEsU/2EyvRwxDhoTM7I1EI0F4CWKfeT1i8iC0Tk5YfaVdefCyVmIG/Tynvq4ei8Ifo+W999HcNBeNsxud/vGH4xi7dwfnriQwcv4M/ELNSudw7O84t62i/j4/gxeFP8Haz1ehQYmaDhbGV7ilDcuXfIE9Rw/4EpYLK5jP7Rr+yM9OxDSwWwlZ3bUCtdYsExUNgXos/KDN+b5044qJHvzw04XJy6dGL+Z8iOT3phEspqt9iZbz+Eka95XZisFjeKwJtrQjjpTcMs/c0pHZTBtWrvO8f//hA2zeNYhrN68X+jasjKhx7YXfm3cOGs1nw5ovnlJmGQxYvngpdGJ+2fJ7iRg3dC9d5SwGHcjOLFNJmT7TkXh25uRXkRtYSLGZwi2tzh9obppXwptamVpBgj6yTHEnvECfPUrFtOGH7u88uRwmjpw+Bm/YHezUIQ0Dze/MhV7Qgxfcpne13HnTZu0lSAoK5DdXXtCZq1zMmf22nkAIWqgAPCs9v/W+1L/n2EHnYvy0/kcsUCYqF0KpSkH78nFUgkaX2Sg2ryskUhakVILI02xjd++4mq0xmHth+smEutJOm1dSfV1AReeA65jb925DC4GkJUEnSOPY125dd1JAMdgXBjbGnPYmFfBO5gNeV/tirFA5zAucdHWwJcbYZFrWyOhZJyXMFGwuU6QmG3EhpbVPR2JzDB/agZmCM78JUlj7BG8hVWkT1xFHRs/gsDag6cHB0LgNUZZiLSLXJmPNNHxoO3bnl3S5YraqsSYQRD9/O4L+j20Z4k23aRBPO2d1P6GA/e6PrX/6EsPvnqrXCoFRhex1NnDcNJTNxxcnXU6k46kXsYX97dzVCxi9mnBWVNrnYuACstAuvrFm49f96q5xs1ZNSMiBbbF/CsVoSdVRG8hGTWGguqDkRN1b0ZKe6RQ+3RBvSqHIYAIT/Th5xZCU8CqlhRufibV1k20qzw2g2lqUz6QDDZ1e50bG45hciYS+ahzH8EqeKgg9WfAJRxiXSxJlnYgQZwESQ1U7sJqOwpFeVp2kCRninULJkZ6znRFxIZCo5EjvOTBVr2aryFQoAAAAAElFTkSuQmCC);"/>
               <button type="button" class="btn btn-text btn-primary text-left text-sm-center">
-                Log In With Facebook
+                <span class='log-in-block'>Log In</span><span class='sign-up-block d-none'>Sign Up</span>&#32;With Facebook
               </button>
             </div>
 
-            <div id="twitter-buttons" class="login-buttons">
+            <div id="twitter-buttons" class="auth-buttons" title="Authorize With Twitter">
               <button type="button" class="btn btn-icon btn-primary" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQDSURBVHgBzZhPaBxVHMe/v7eTkE0QtjQeFEq3HipNKc0aFbX+2WAPPYgW9dBKxS001oNgD/4JKGQFISsIbg+KsYGkUIOH2lZ7sIeUxGD10tTFQ4MiZtJAezBiDma3mt15/n6zu6G7zuy8yW6jH1jmzZvfm/3O7733+733CCE5MPhK3FKlZxwHvYCTJKKY1ojJMyIsawc2FNmKMF10Il9+nvnEDvN+MjV8YXAgRdAvaSCJMGjkSKnsZ8OfnjQxDxR0aPBI0gGN8ZvjaAqy2ZvpIGG+glLpY7HVwp9DmnAMLYQ0sm3R4rvj6fFlz+delSkeJ3/r0llu3YvbAtkOIv1e44s8xaA01XwXrU+UuvVGumljxAg6rnTxbCqdisFPkIyZjRFTgdC7WrCGaqsqyLRmMWP4D2Cv9J/KjE5XymsMoUV0xzajs6PT2L4cVsq4Hgryzp2bNuO3P35HEPv2PIln9z6NroqYheuL+PDUx1gp5LHjnu1Y4ncs3Fj0bEukUhKjyh4i/VqjP3p74A1svWsLgsS8+NSBNTHC1ru3IPvmMLJvDfPzvQ0/ytFOSq4RmeYlOBk/Q/HOc/zVD+9+AMXiKn5ZnPe0e/Xgy+iKendTu9Xmeqe9zfJtz10V3/nogyfVX1TcjwasFAruVcbEIfbA0ecPs8juGpsd27b/q66eq/M/4+tLFxvakFPcbxHoCcmAfuRv5jH36088Bu517x/ve8T9Sd3lqz+446Qz2oUgzkx+FWhDinZbQXFHPPPFxfM4yl13qxdEYFVkEPJRZjhJFoR4kNk7A6+jGezri2aGmmIKlcWVH9Uua4ZrpoIIMWViN3J6jKfsEtbL5bmcsa1iVctBRhI/Rk6PY2b2O4RF2hp7WGOZu0wHChIkMMrsCovJ7FpDwVYa9I2J7YVLk+5sC8MFjjszV8y96mgsRHY9dl+co+Q+kwbi+jkOcIKkhUaU89hHCIWDEaW1dc7UXmJSD0flvp2NV7YSMN878QHCopV1zs32BwePTJHP9ub+ngT6enrdMRTklRUOEWcmz7vdGxpCbmJ4NGGVy8RbE530snPTw41rrqi+mwn01EVnESHdM8t2M7Pfh4jK9XpUtnytwGuiedPla3clheR5nbNeAXVy7InMiW1SsqpVPP8PO8CUSfOlJoKkpxzeQFbLkWrhx2+v2Lv2JDbx04ewgWjo4xOZ0fer9zWpoz1aSsvgwoZBdqHjjnRNTb2JnG6o/8tGURADMZQGuF1oyvltpT2zvRi2d6wmOM8dR6u18JjJR7v6/c6NAo9jylskDLXiOEZmcnVD6GsFQ1xhsl3SCHUiwn8wzYvl8ZYdWNWzdqRX4lSjtCTmeM2RnrucUdNKIbeeI71/APl0nifGogzFAAAAAElFTkSuQmCC);"/>
               <button type="button" class="btn btn-text btn-primary text-left text-sm-center">
-                Log In With Twitter
+                <span class='log-in-block'>Log In</span><span class='sign-up-block d-none'>Sign Up</span>&#32;With Twitter
               </button>
             </div>
 
-            <div id="google-buttons" class="login-buttons">
+            <div id="google-buttons" class="auth-buttons" title="Authorize With Google">
               <button type="button" class="btn btn-icon btn-primary" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADzSURBVHgBrZXREYIwDIaj57uO0BFwAzfBDXQD2UA2UCfQDRgBNihOwAgxkd7Zy6UEkO/ufyCX/m16aQBQQMQd6UR6kjz+6EIsh7FQ8jEstPCmMSVccTr5kmY1aZcqU8JlFyQX5WWkctAsJHphxt/ZwNVkQ2ba6RzMBfs2iLnBH2xITsQeoG/swaZgQ3lXbSLZgc1+DcuyZcMWpp8kxZsNGxFUO3+lQOGXSGtSbXMAA24ttd2wnyyd0tjOMPNiTRUnaKf89iRGLyYYXVCfRrnctcT5lKlS5pjewbhsLt+PMOKyzzCWYMzvvI5MPKnC/vegTpsP7ymgBjssYNoAAAAASUVORK5CYII=);"/>
               <button type="button" class="btn btn-text btn-primary text-left text-sm-center">
-                Log In With Google
+                <span class='log-in-block'>Log In</span><span class='sign-up-block d-none'>Sign Up</span>&#32;With Google
               </button>
             </div>
           </form>
 
           <div class="hr" ></div>
-          <p>Dont’ have an account?</p>
-          <a href="#" class="sign-up-button">Sign up</a>
+          <p class='log-in-block'>Dont’ have an account?</p>
+          <p class='sign-up-block d-none'>Already have an account?</p>
+
+          <a href="#" class="sign-up-link log-in-block" title="Sign up">Sign up</a>
+          <a href="#" class="sign-up-link sign-up-block d-none" title="Log In">Log In</a>
         </div>
       </div>
       <div class="col p-0 h-100 d-none d-md-block right-block">
@@ -168,6 +177,32 @@
   <script src="https://cdn.auth0.com/js/polyfills/1.0/object-assign.min.js"></script>
   <script>
     window.addEventListener('load', function() {
+     function hideShowElements(class_name, action) {
+        var elements = document.getElementsByClassName(class_name);
+
+        for (var i = 0; i < elements.length; i ++) {
+          if (action == 'show') {
+            elements[i].classList.remove("d-none");
+          } else if (action == 'hide') {
+            elements[i].classList.add("d-none");
+          }
+        }
+      }
+
+      const url = new URL(window.location.href);
+
+      if (url.searchParams.get('page_type') == 'sign_up') {
+        hideShowElements('sign-up-block', 'show');
+        hideShowElements('log-in-block', 'hide');
+
+        var signUpLink = document.getElementsByClassName('sign-up-link sign-up-block')[0];
+        url.searchParams.delete('page_type');
+      } else {
+        var signUpLink = document.getElementsByClassName('sign-up-link log-in-block')[0];
+        url.searchParams.append('page_type', 'sign_up');
+      }
+
+      signUpLink.href = url;
 
       var config = JSON.parse(
         decodeURIComponent(escape(window.atob('@@config@@')))
