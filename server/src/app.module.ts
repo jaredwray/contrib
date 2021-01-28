@@ -17,10 +17,9 @@ import { MongoModule } from './mongo/mongo.module';
 
     ServeStaticModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService<EnvironmentVariables>) => {
+      useFactory: () => {
         return [{ rootPath: join(__dirname, '../../../client/build') }];
       },
-      inject: [ConfigService],
     }),
     MongoModule,
     LoggingModule,
