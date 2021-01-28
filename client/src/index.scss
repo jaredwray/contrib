@@ -7,16 +7,17 @@ body {
   font-weight: bold;
 }
 
-.btn {
+.btn, .btn:focus {
   background: $ochre-color;
   border-radius: 10px;
   color: $sage-color;
-  border: 0;
   height: 50px;
   font-size: 12px;
   line-height: 16px;
   white-space: nowrap;
   letter-spacing: 0.1em;
+  border: none !important;
+  box-shadow: none !important;
 
   &.btn-with-arrows:after {
     content: '»';
@@ -26,8 +27,9 @@ body {
     margin-left: 10px;
   }
 
-  &:hover {
-    background: $sage-color;
+  &:hover, &:active {
+    background: $sage-color !important;
+    color: $white-color;
   }
 }
 

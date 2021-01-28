@@ -10,8 +10,8 @@
   background-color: $sage-color;
   background-size: contain;
 
-  .btn:hover {
-    background: $ochre-color;
+  .btn:hover, .btn:active:focus {
+    background: $ochre-color !important;
   }
 
   .banner-separator {

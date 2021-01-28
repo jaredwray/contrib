@@ -10,26 +10,25 @@
   .quotes {
     padding: 90px 0 20px 0;
 
-    .react-multi-carousel-track {
-      padding: 0 160px;
-    }
-
-    .react-multiple-carousel__arrow {
-      background: $sage-color;
-
-      &::before {
-        color: $light-gray-color;
-        font-weight: bold;
-      }
-    }
-
     .review {
-      max-width: 522px;
-      height: 347px;
+      width: 522px;
+      min-height: 347px;
       display: inline-block;
       background-color: $barely-gray-color;
       margin-right: 20px;
       padding: 40px;
+    }
+
+    @media (max-width: $medium-weight) {
+     .review {
+        width: 422px;
+      }
+    }
+
+    @media (max-width: $small-weight) {
+     .review {
+        width: 278px;
+      }
     }
 
     .avatar {
@@ -52,15 +51,24 @@
     }
 
     .reviews-quote {
-      height: 180px;
+      min-height: 180px;
     }
 
-    .badge {
-      background-image: url("./badge-verified.png");
-      background-repeat: no-repeat;
+    .users-badge {
       height: 22px;
-      padding-left: 30px;
       color: $sage-color;
+
+      .users-badge-verified {
+        border-radius: 100%;
+        display: inline-block;
+        height: 22px;
+        width: 22px;
+        line-height: 22px;
+        vertical-align: bottom;
+        background-image: url("./badge-verified.jpg");
+        background-repeat: no-repeat;
+        margin-right: 10px;
+      }
     }
   }
 }

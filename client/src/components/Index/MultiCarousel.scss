@@ -1,0 +1,42 @@
+@import '../../variables.scss';
+
+.react-multi-carousel-list {
+  position: static;
+  margin-right: calc(10px - 0.5 * (100vw - 100%));
+}
+.react-multiple-carousel__arrow--left {
+  left: 20px;
+}
+
+@media (max-width: $small-weight) {
+  .react-multi-carousel-list {
+    position: relative;
+  }
+  .react-multiple-carousel__arrow {
+    display: none;
+  }
+}
+
+.react-multi-carousel-item[aria-hidden=true] {
+  opacity: .3;
+}
+
+.react-multiple-carousel__arrow {
+  height: 60px;
+  width: 60px;
+  background-image: url('./carousel_arrow-left.png');
+  background-color: none;
+  transition: transform 0s;
+
+  &:hover {
+    background-image: url('./carousel-arrow-hover-left.png');
+  }
+
+  &.react-multiple-carousel__arrow--right {
+    transform: rotate(-180deg);
+  }
+
+  &::before {
+    display: none;
+  }
+}
