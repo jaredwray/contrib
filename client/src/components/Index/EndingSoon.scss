@@ -7,57 +7,41 @@
   .see-all-link {
     color: $dark-gray-color;
   }
+  .auction {
+    width: 280px;
+    display: inline-block;
+    margin-right: 40px;
+    color: $dark-gray-color;
+    background-color: $white-color;
 
-  .react-multi-carousel-track {
-    padding: 0 160px;
-  }
-
-  .react-multiple-carousel__arrow {
-    background: $sage-color;
-
-    &::before {
-      color: $light-gray-color;
-      font-weight: bold;
-    }
-  }
-
-  .auctions {
-    .auction {
-      width: 280px;
-      display: inline-block;
-      margin-right: 40px;
-      color: $dark-gray-color;
+    .like {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      left: 235px;
+      top: 5px;
+      border-radius: 36px;
       background-color: $white-color;
+      cursor: pointer;
+      background-image: url("./like.jpg");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
 
-      .like {
-        position: absolute;
-        width: 36px;
-        height: 36px;
-        left: 235px;
-        top: 5px;
-        border-radius: 36px;
-        background-color: $white-color;
-        cursor: pointer;
-        background-image: url("./like.png");
-        background-repeat: no-repeat;
-        background-position: center;
-      }
+    .auction-picture {
+      width: 280px;
+      height: 280px;
+      background-color: $barely-gray-color;
+    }
 
-      .auction-picture {
-        width: 280px;
-        height: 280px;
-        background-color: $barely-gray-color;
-      }
+    .auction-title {
+      color: $sage-color;
+      height: 85px;
+    }
 
-      .auction-title {
-        color: $sage-color;
-        height: 85px;
-      }
-
-      .owner-picture {
-        width: 32px;
-        height: 32px;
-      }
+    .auction-owner-picture {
+      width: 32px;
+      height: 32px;
     }
   }
 }
