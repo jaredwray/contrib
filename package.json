@@ -10,7 +10,8 @@
     "build-server": "cd ./server && yarn && yarn build",
     "test-client": "cd ./client && yarn test",
     "test-server": "cd ./server && yarn test:cov",
-    "build": "yarn build-client && yarn build-server"
+    "build": "yarn build-client && yarn build-server",
+    "start": "cd ./server && yarn start"
   },
   "dependencies": {
     "@nestjs/mongoose": "^7.2.2",
