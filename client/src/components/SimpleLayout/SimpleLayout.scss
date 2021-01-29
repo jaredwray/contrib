@@ -1,0 +1,33 @@
+@import '../../variables.scss';
+
+.logo {
+  display: block;
+  width: 150px;
+  height: 50px;
+}
+.hr {
+  width: 54px;
+  height: 6px;
+  background-color: #323432;
+  margin: 50px 0 20px 0;
+}
+.back-link, .back-link:hover {
+  display: block;
+  color: #323432;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.right-block {
+  background: no-repeat #5A7864 url(./right-block-bg.png);
+  background-size: cover;
+  position: relative;
+  width: 100%;
+  height: 50vw!important;
+}
+.right-block-signature {
+  color: $white-color;
+  left: 50px;
+  bottom: 20px;
+}
