@@ -18,6 +18,7 @@
     "react-bootstrap": "^1.4.3",
     "react-dom": "^17.0.1",
     "react-multi-carousel": "^2.6.1",
+    "react-phone-input-2": "^2.13.9",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "redux-bundler": "^28.0.0",

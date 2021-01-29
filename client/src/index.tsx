@@ -5,6 +5,8 @@ import { createBrowserHistory } from 'history'
 import { Auth0Provider, AppState } from '@auth0/auth0-react';
 
 import Index from './components/Index/Index'
+import PhoneNumberVerification from './components/PhoneNumberVerification/PhoneNumberVerification'
+import PhoneNumberConfirmation from './components/PhoneNumberConfirmation/PhoneNumberConfirmation'
 
 import './index.scss'
 
@@ -23,6 +25,8 @@ ReactDOM.render(
   >
     <Router history={history}>
       <Route path="/" exact component={Index} />
+      <Route path="/phone-verification" exact component={PhoneNumberVerification} />
+      <Route path="/phone-confirmation" exact component={PhoneNumberConfirmation} />
     </Router>
   </Auth0Provider>,
   document.getElementById('root')
