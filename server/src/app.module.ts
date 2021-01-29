@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EnvironmentVariables } from './environment-variables';
 import { LoggingModule } from './logging/logging.module';
 import { MongoModule } from './mongo/mongo.module';
+import { AccountingModule } from './accounting/accounting.module';
 
 @Module({
   imports: [
@@ -21,8 +22,13 @@ import { MongoModule } from './mongo/mongo.module';
         return [{ rootPath: join(__dirname, '../../../client/build') }];
       },
     }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+    }),
     MongoModule,
     LoggingModule,
+    AccountingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
