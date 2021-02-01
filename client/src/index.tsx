@@ -22,6 +22,7 @@ ReactDOM.render(
     clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
     redirectUri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
+    cacheLocation={'localstorage'}
   >
     <Router history={history}>
       <Route path="/" exact component={Index} />
