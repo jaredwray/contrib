@@ -21,7 +21,7 @@ export class AccountService {
     this.logger.log('finding account by Auth0 id');
 
     const dummy_acc: UserAccount = new UserAccount();
-    dummy_acc.id = 'dummy_id';
+    dummy_acc.id = authId;
     dummy_acc.status = UserAccountStatus.PHONE_NUMBER_REQUIRED;
     return new Promise((res) => res(dummy_acc));
   }
@@ -33,7 +33,7 @@ export class AccountService {
     this.logger.log('generating confirmation code to verify phone number');
 
     const dummy_acc: UserAccount = new UserAccount();
-    dummy_acc.id = 'dummy_id';
+    dummy_acc.id = authId;
     dummy_acc.phoneNumber = '+375331234567';
     dummy_acc.status = UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED;
     return new Promise((res) => res(dummy_acc));
@@ -46,7 +46,7 @@ export class AccountService {
     this.logger.log('creating account with verified phone number');
 
     const dummy_acc: UserAccount = new UserAccount();
-    dummy_acc.id = 'dummy_id';
+    dummy_acc.id = authId;
     dummy_acc.phoneNumber = '+375331234567';
     dummy_acc.status = UserAccountStatus.COMPLETED;
     return new Promise((res) => res(dummy_acc));
