@@ -11,7 +11,9 @@ export default function SimpleLayout({children}: {children: any}) {
       <Row className="m-0 h-100">
         <Col className="p-0 pt-4">
           <Container fluid className="p-0 login-container container col-md-9 col-11">
-            <img src={Logo} alt="Contrib" className="logo"/>
+            <a href="/">
+              <img src={Logo} alt="Contrib" className="logo"/>
+            </a>
             <main role='main'>{children}</main>
           </Container>
         </Col>
