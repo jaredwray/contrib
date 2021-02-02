@@ -1,17 +1,18 @@
-import { Form as BsForm, FormControl as BsFormControl } from 'react-bootstrap';
+import { useCallback, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useHistory } from 'react-router-dom';
+import { Form as BsForm } from 'react-bootstrap';
 import PhoneInput from 'react-phone-input-2';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { Form, Field } from 'react-final-form';
+import { Field, Form } from 'react-final-form';
 
 import SimpleLayout from '../SimpleLayout/SimpleLayout';
 
+import { UserAccount, UserAccountStatus } from '../../model/UserAccount';
+import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
+
 import './PhoneNumberVerification.scss';
 import 'react-phone-input-2/lib/style.css';
-import { useCallback, useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { UserAccount, UserAccountStatus } from '../../model/UserAccount';
-import { useHistory } from 'react-router-dom';
-import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
 
 const EnterPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!) {

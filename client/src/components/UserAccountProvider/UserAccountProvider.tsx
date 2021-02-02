@@ -39,7 +39,7 @@ export function UserAccountProvider({ children }: PropTypes) {
     if (targetPathname !== null && targetPathname !== currentPathname) {
       history.push(targetPathname);
     }
-  }, [targetPathname, currentPathname]);
+  }, [targetPathname, currentPathname, history]);
 
   if ((userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) {
     return null;
