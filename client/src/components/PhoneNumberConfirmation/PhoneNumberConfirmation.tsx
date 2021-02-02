@@ -57,7 +57,7 @@ export default function PhoneNumberConfirmation() {
       console.log(`data = `, myAccountData);
       history.replace('/');
     }
-  }, [myAccountData?.myAccount?.status, history]);
+  }, [myAccountData, history]);
 
   if (!myAccountData) {
     return null;

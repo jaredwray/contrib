@@ -49,10 +49,9 @@ export default function PhoneNumberVerification() {
 
   useEffect(() => {
     if (myAccountsData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_REQUIRED) {
-      console.log(`data = `, myAccountsData);
       history.replace('/');
     }
-  }, [myAccountsData?.myAccount?.status, history]);
+  }, [myAccountsData, history]);
 
   return (
     <SimpleLayout>
