@@ -33,8 +33,12 @@ export default function PhoneNumberVerification() {
   const [enterPhoneNumber, { loading: formSubmitting }] = useMutation(EnterPhoneNumberMutation);
 
   const handleSubmit = useCallback(
-    (variables) => {
-      enterPhoneNumber({ variables }).catch((error) => console.error('error submitting phone number', error));
+    ({ phoneNumber }) => {
+      enterPhoneNumber({
+        variables: {
+          phoneNumber: `+${phoneNumber}`,
+        },
+      }).catch((error) => console.error('error submitting phone number', error));
     },
     [enterPhoneNumber],
   );
