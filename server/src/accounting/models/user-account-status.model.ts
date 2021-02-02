@@ -1,9 +1,9 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum UserAccountStatus {
-  PHONE_NUMBER_REQUIRED,
-  PHONE_NUMBER_CONFIRMATION_REQUIRED,
-  COMPLETED,
+  PHONE_NUMBER_REQUIRED = 'PHONE_NUMBER_REQUIRED',
+  PHONE_NUMBER_CONFIRMATION_REQUIRED = 'PHONE_NUMBER_CONFIRMATION_REQUIRED',
+  COMPLETED = 'COMPLETED',
 }
 
 registerEnumType(UserAccountStatus, {

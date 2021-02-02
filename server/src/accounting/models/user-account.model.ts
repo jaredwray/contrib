@@ -6,7 +6,7 @@ export class UserAccount {
   @Field({
     description: 'ID is the user_id received from Auth0.',
   })
-  id: string;
+  id?: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Field((type) => UserAccountStatus, {

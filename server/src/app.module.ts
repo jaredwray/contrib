@@ -8,6 +8,18 @@ import { AppService } from './app.service';
 import { LoggingModule } from './logging/logging.module';
 import { MongoModule } from './mongo/mongo.module';
 import { AccountingModule } from './accounting/accounting.module';
+import { appLogger } from './logging/appLogger';
+
+let cors = null;
+if (process.env.NODE_ENV !== 'production') {
+  appLogger.warn(
+    'enabling lax CORS policies for local development; should not happen in production',
+  );
+  cors = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  };
+}
 
 @Module({
   imports: [
@@ -25,6 +37,7 @@ import { AccountingModule } from './accounting/accounting.module';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      cors,
     }),
     MongoModule,
     LoggingModule,
