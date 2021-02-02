@@ -24,10 +24,9 @@ const ConfirmPhoneNumberMutation = gql`
 export default function PhoneNumberConfirmation() {
   const { logout } = useAuth0();
   const history = useHistory();
-  const { data: myAccountData, loading: myAccountsLoading } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
+  const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
     fetchPolicy: 'cache-only',
   });
-
   const phoneNumber = myAccountData?.myAccount?.phoneNumber;
 
   const [confirmPhoneNumber, { loading: formSubmitting }] = useMutation(ConfirmPhoneNumberMutation);
@@ -54,13 +53,15 @@ export default function PhoneNumberConfirmation() {
   );
 
   useEffect(() => {
-    if (
-      !myAccountsLoading &&
-      myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED
-    ) {
+    if (myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
+      console.log(`data = `, myAccountData);
       history.replace('/');
     }
-  }, [myAccountData?.myAccount?.status, history, myAccountsLoading]);
+  }, [myAccountData?.myAccount?.status, history]);
+
+  if (!myAccountData) {
+    return null;
+  }
 
   return (
     <SimpleLayout>
