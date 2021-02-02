@@ -51,7 +51,7 @@ export default function PhoneNumberVerification() {
     if (!myAccountsLoading && myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_REQUIRED) {
       history.replace('/');
     }
-  }, [myAccountData?.myAccount?.status, history]);
+  }, [myAccountData?.myAccount?.status, history, myAccountsLoading]);
 
   return (
     <SimpleLayout>

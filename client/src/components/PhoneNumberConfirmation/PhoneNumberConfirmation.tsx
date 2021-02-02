@@ -60,7 +60,7 @@ export default function PhoneNumberConfirmation() {
     ) {
       history.replace('/');
     }
-  }, [myAccountData?.myAccount?.status, history]);
+  }, [myAccountData?.myAccount?.status, history, myAccountsLoading]);
 
   return (
     <SimpleLayout>
