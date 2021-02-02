@@ -10,45 +10,59 @@ import { Account, AccountDocument } from './schemas/account.schema';
 
 @Injectable()
 export class AccountService {
-  constructor(
-    @InjectModel(Account.name) private accountModel: Model<AccountDocument>,
-    private logger: AppLogger,
-  ) {
+  constructor(@InjectModel(Account.name) private accountModel: Model<AccountDocument>, private logger: AppLogger) {
     this.logger.setContext('AccountingService');
   }
 
-  async findOneById(authId: string): Promise<UserAccount> {
-    this.logger.log('finding account by Auth0 id');
-
-    const dummy_acc: UserAccount = new UserAccount();
-    dummy_acc.id = authId;
-    dummy_acc.status = UserAccountStatus.PHONE_NUMBER_REQUIRED;
-    return new Promise((res) => res(dummy_acc));
+  async findOneById(authzId: string): Promise<UserAccount> {
+    const account = await this.accountModel.findOne({ authzId }).exec();
+    return AccountService.makeAccountDto(authzId, account);
   }
 
-  async sendConfirmationCode(
-    authId: string,
-    phoneInput: PhoneInput,
-  ): Promise<UserAccount> {
-    this.logger.log('generating confirmation code to verify phone number');
+  async sendConfirmationCode(authzId: string, { phoneNumber }: PhoneInput): Promise<UserAccount> {
+    const account = await this.accountModel.findOne({ authzId }).exec();
+    if (account) {
+      this.logger.warn(`attempting to re-send confirmation code for account ${authzId}`);
+      return AccountService.makeAccountDto(authzId, account);
+    }
 
-    const dummy_acc: UserAccount = new UserAccount();
-    dummy_acc.id = authId;
-    dummy_acc.phoneNumber = '+375331234567';
-    dummy_acc.status = UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED;
-    return new Promise((res) => res(dummy_acc));
+    // TODO: actually send confirmation code
+    this.logger.log(`... mocking sending an otp to ${phoneNumber}`);
+
+    const responseDto: UserAccount = new UserAccount();
+    responseDto.id = authzId;
+    responseDto.phoneNumber = phoneNumber;
+    responseDto.status = UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED;
+    return responseDto;
   }
 
   async createAccountWithConfirmation(
-    authId: string,
-    phoneConfirmationInput: PhoneConfirmationInput,
+    authzId: string,
+    { phoneNumber, otp }: PhoneConfirmationInput,
   ): Promise<UserAccount> {
-    this.logger.log('creating account with verified phone number');
+    const account = await this.accountModel.findOne({ authzId }).exec();
+    if (account) {
+      this.logger.warn(`attempting to confirm otp code for account ${authzId}`);
+      return AccountService.makeAccountDto(authzId, account);
+    }
 
-    const dummy_acc: UserAccount = new UserAccount();
-    dummy_acc.id = authId;
-    dummy_acc.phoneNumber = '+375331234567';
-    dummy_acc.status = UserAccountStatus.COMPLETED;
-    return new Promise((res) => res(dummy_acc));
+    // TODO: actually confirm the code
+    this.logger.log(`... mocking otp confirmation with ${phoneNumber} and code ${otp}`);
+
+    const newAccount = await this.accountModel.create({
+      authzId,
+      phoneNumber,
+      status: UserAccountStatus.COMPLETED,
+    });
+
+    return AccountService.makeAccountDto(authzId, newAccount);
+  }
+
+  private static makeAccountDto(authzId: string, account: Account): UserAccount {
+    const accountDto = new UserAccount();
+    accountDto.id = authzId;
+    accountDto.phoneNumber = account?.phoneNumber || null;
+    accountDto.status = account?.status || UserAccountStatus.PHONE_NUMBER_REQUIRED;
+    return accountDto;
   }
 }
