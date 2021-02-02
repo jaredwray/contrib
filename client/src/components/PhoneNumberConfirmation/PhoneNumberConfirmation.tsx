@@ -24,7 +24,9 @@ const ConfirmPhoneNumberMutation = gql`
 export default function PhoneNumberConfirmation() {
   const { logout } = useAuth0();
   const history = useHistory();
-  const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, { fetchPolicy: 'cache-only' });
+  const { data: myAccountData, loading: myAccountsLoading } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
+    fetchPolicy: 'cache-only',
+  });
 
   const phoneNumber = myAccountData?.myAccount?.phoneNumber;
 
@@ -52,7 +54,10 @@ export default function PhoneNumberConfirmation() {
   );
 
   useEffect(() => {
-    if (myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
+    if (
+      !myAccountsLoading &&
+      myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED
+    ) {
       history.replace('/');
     }
   }, [myAccountData?.myAccount?.status, history]);
@@ -70,9 +75,7 @@ export default function PhoneNumberConfirmation() {
             <Field name="otp">
               {(props) => (
                 <BsForm.Group>
-                  <BsForm.Label>
-                    Verification code has been sent to: {phoneNumber}
-                  </BsForm.Label>
+                  <BsForm.Label>Verification code has been sent to: {phoneNumber}</BsForm.Label>
                   <BsForm.Control {...props.input} disabled={formSubmitting} placeholder="Confirmation number" />
                 </BsForm.Group>
               )}

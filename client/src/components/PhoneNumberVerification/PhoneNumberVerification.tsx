@@ -27,7 +27,9 @@ const EnterPhoneNumberMutation = gql`
 export default function PhoneNumberVerification() {
   const { logout } = useAuth0();
   const history = useHistory();
-  const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, { fetchPolicy: 'cache-only' });
+  const { data: myAccountData, loading: myAccountsLoading } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
+    fetchPolicy: 'cache-only',
+  });
   const [enterPhoneNumber, { loading: formSubmitting }] = useMutation(EnterPhoneNumberMutation);
 
   const handleSubmit = useCallback(
@@ -46,7 +48,7 @@ export default function PhoneNumberVerification() {
   );
 
   useEffect(() => {
-    if (myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_REQUIRED) {
+    if (!myAccountsLoading && myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_REQUIRED) {
       history.replace('/');
     }
   }, [myAccountData?.myAccount?.status, history]);

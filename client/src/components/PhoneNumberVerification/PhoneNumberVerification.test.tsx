@@ -1,7 +1,28 @@
 import { render } from '@testing-library/react';
+import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
+import { UserAccountStatus } from '../../model/UserAccount';
+import { MockedProvider } from '@apollo/client/testing';
+import PhoneNumberConfirmation from '../PhoneNumberConfirmation/PhoneNumberConfirmation';
 
-import PhoneNumberVerification from './PhoneNumberVerification'
+const mocks = [
+  {
+    request: { query: MyAccountQuery },
+    result: {
+      data: {
+        myAccount: {
+          id: '123',
+          phoneNumber: '123',
+          status: UserAccountStatus.PHONE_NUMBER_REQUIRED,
+        },
+      },
+    },
+  },
+];
 
 test('renders without crashing', () => {
-  render(<PhoneNumberVerification />)
-})
+  render(
+    <MockedProvider mocks={mocks} addTypename>
+      <PhoneNumberConfirmation />
+    </MockedProvider>,
+  );
+});
