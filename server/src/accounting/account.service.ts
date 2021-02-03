@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BaseError } from 'src/errors/base-error';
 import { AppLogger } from 'src/logging/app-logger.service';
 import { PhoneConfirmationInput } from './dto/phone-confirmation.input';
 import { PhoneInput } from './dto/phone.input';
@@ -20,52 +21,45 @@ export class AccountService {
   }
 
   async findOneById(authzId: string): Promise<UserAccount> {
-    const account = await this.accountModel.findOne({ authzId }).exec();
-    return AccountService.makeAccountDto(authzId, account);
+    const acc: AccountDocument = await this.accountModel.findOne({ authzId }).exec();
+
+    return UserAccount.build({
+      id: authzId,
+      phoneNumber: acc?.phoneNumber || null,
+      status: acc?.status || UserAccountStatus.PHONE_NUMBER_REQUIRED,
+    });
   }
 
   async sendConfirmationCode(authzId: string, { phoneNumber }: PhoneInput): Promise<UserAccount> {
-    const account = await this.accountModel.findOne({ authzId }).exec();
-    if (account) {
-      this.logger.warn(`attempting to re-send confirmation code for account ${authzId}`);
-      return AccountService.makeAccountDto(authzId, account);
-    }
-
+    await this.checkAccountAvailability(authzId, phoneNumber);
     await this.phoneVerificationService.createVerification(phoneNumber);
 
-    const responseDto: UserAccount = new UserAccount();
-    responseDto.id = authzId;
-    responseDto.phoneNumber = phoneNumber;
-    responseDto.status = UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED;
-    return responseDto;
+    return UserAccount.build({
+      id: authzId,
+      phoneNumber: phoneNumber,
+      status: UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED,
+    });
   }
 
   async createAccountWithConfirmation(
     authzId: string,
     { phoneNumber, otp }: PhoneConfirmationInput,
   ): Promise<UserAccount> {
-    const account = await this.accountModel.findOne({ authzId }).exec();
-    if (account) {
-      this.logger.warn(`attempting to confirm otp code for account ${authzId}`);
-      return AccountService.makeAccountDto(authzId, account);
-    }
-
+    await this.checkAccountAvailability(authzId, phoneNumber);
     await this.phoneVerificationService.confirmVerification(phoneNumber, otp);
+    const newAcc = await this.accountModel.create({ authzId, phoneNumber, status: UserAccountStatus.COMPLETED });
 
-    const newAccount = await this.accountModel.create({
-      authzId,
-      phoneNumber,
-      status: UserAccountStatus.COMPLETED,
+    return UserAccount.build({
+      id: newAcc.authzId,
+      phoneNumber: newAcc.phoneNumber,
+      status: newAcc.status,
     });
-
-    return AccountService.makeAccountDto(authzId, newAccount);
   }
 
-  private static makeAccountDto(authzId: string, account: Account): UserAccount {
-    const accountDto = new UserAccount();
-    accountDto.id = authzId;
-    accountDto.phoneNumber = account?.phoneNumber || null;
-    accountDto.status = account?.status || UserAccountStatus.PHONE_NUMBER_REQUIRED;
-    return accountDto;
+  private async checkAccountAvailability(authzId: string, phoneNumber: string) {
+    const account: AccountDocument = await this.accountModel.findOne({ authzId }).exec();
+    if (account) throw new BaseError('user with auth id already registered', 'auth_id_already_exists');
+    const accWithSamePhone: AccountDocument = await this.accountModel.findOne({ phoneNumber }).exec();
+    if (accWithSamePhone) throw new BaseError(`phone: ${phoneNumber} is already in use`, 'phone_reserved');
   }
 }

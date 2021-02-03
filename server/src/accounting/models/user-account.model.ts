@@ -1,6 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { UserAccountStatus } from './user-account-status.model';
 
+interface UserAccountBuildOptions {
+  id?: string;
+  phoneNumber?: string;
+  status?: UserAccountStatus;
+}
 @ObjectType()
 export class UserAccount {
   @Field({
@@ -19,4 +24,12 @@ export class UserAccount {
     description: 'Account verified phone number.',
   })
   phoneNumber?: string;
+
+  static build({ id, phoneNumber, status }: UserAccountBuildOptions): UserAccount {
+    const acc = new UserAccount();
+    acc.id = id;
+    acc.phoneNumber = phoneNumber;
+    acc.status = status || UserAccountStatus.PHONE_NUMBER_REQUIRED;
+    return acc;
+  }
 }

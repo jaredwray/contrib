@@ -1,15 +1,16 @@
-import { UseGuards } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/authz/auth-user';
 import { CurrentUser } from 'src/authz/current-user';
 import { GqlJwtAuthGuard } from 'src/authz/gql-jwt-auth.guart';
-// import { AuthGuard } from '@nestjs/passport';
+import { AllGqlExceptionFilter } from 'src/errors/all-gql-exception.filter';
 import { AccountService } from './account.service';
 import { PhoneConfirmationInput } from './dto/phone-confirmation.input';
 import { PhoneInput } from './dto/phone.input';
 import { UserAccount } from './models/user-account.model';
 
 @Resolver(() => UserAccount)
+@UseFilters(AllGqlExceptionFilter)
 export class AccountResolver {
   constructor(private accountService: AccountService) {}
 
@@ -35,9 +36,6 @@ export class AccountResolver {
     @Args('phoneConfirmationInput')
     phoneConfirmationInput: PhoneConfirmationInput,
   ): Promise<UserAccount> {
-    return this.accountService.createAccountWithConfirmation(
-      user.sub,
-      phoneConfirmationInput,
-    );
+    return this.accountService.createAccountWithConfirmation(user.sub, phoneConfirmationInput);
   }
 }
