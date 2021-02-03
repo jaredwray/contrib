@@ -1,0 +1,63 @@
+@import '../../variables.scss';
+
+.welcome-page {
+  background: no-repeat center url('./logo.svg') $sage-color;
+  background-size: auto 120%;
+
+  .container {
+    color: $white-color;
+    min-height: calc(100vh - 369px);
+
+    .welcome-page-congratulation-img {
+      width: 108px;
+      height: 108px;
+      background: no-repeat center url('./done.png');
+      background-size: cover;
+
+      @media (max-width: $medium-weight) {
+        width: 70px;
+        height: 70px;
+      }
+    }
+
+    .welcome-page-congratulation-title {
+      margin: auto 0 auto 20px;
+    }
+
+    .welcome-page-separator {
+      width: 102px;
+      height: 12px;
+      background-color: $ochre-color;
+
+      @media (max-width: $medium-weight) {
+        width: 68px;
+        height: 8px;
+      }
+    }
+
+    .welcome-page-right-block {
+      background-color: $barely-gray-color;
+      padding: 40px;
+      border-radius: 10px;
+
+      @media (max-width: $medium-weight) {
+        padding: 20px;
+      }
+
+      &, a {
+        color: $dark-gray-color;
+      }
+
+      .welcome-page-create-btn {
+        color: $sage-color;
+        font-size: 20px;
+        line-height: 25px;
+
+
+        &:after {
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}

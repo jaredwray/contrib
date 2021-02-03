@@ -8,10 +8,7 @@ export default function AboutUs() {
     <section className="about-us">
       <Container className="homepage-container">
         <Row>
-          <Col className="text-label">Who we are</Col>
-        </Row>
-        <Row>
-          <Col className="mt-4 mb-3"><div className="about-us-separator" /></Col>
+          <Col className="text-label label-with-separator">Who we are</Col>
         </Row>
         <Row>
           <Col className="text-headline">

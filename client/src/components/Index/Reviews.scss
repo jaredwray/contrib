@@ -1,12 +1,6 @@
 @import '../../variables.scss';
 
 .reviews {
-  .reviews-separator {
-    width: 54px;
-    height: 6px;
-    background-color: $ochre-color;
-  }
-
   .quotes {
     padding: 90px 0 20px 0;
 
@@ -39,7 +33,6 @@
 
       .reviewer {
         height: 150px;
-        pointer-events: none;
       }
     }
 
