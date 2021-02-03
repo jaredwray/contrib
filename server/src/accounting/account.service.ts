@@ -6,11 +6,16 @@ import { PhoneConfirmationInput } from './dto/phone-confirmation.input';
 import { PhoneInput } from './dto/phone.input';
 import { UserAccountStatus } from './models/user-account-status.model';
 import { UserAccount } from './models/user-account.model';
+import { PhoneVerificationService } from './phone-verification.service';
 import { Account, AccountDocument } from './schemas/account.schema';
 
 @Injectable()
 export class AccountService {
-  constructor(@InjectModel(Account.name) private accountModel: Model<AccountDocument>, private logger: AppLogger) {
+  constructor(
+    @InjectModel(Account.name) private accountModel: Model<AccountDocument>,
+    private logger: AppLogger,
+    private phoneVerificationService: PhoneVerificationService,
+  ) {
     this.logger.setContext('AccountingService');
   }
 
@@ -26,8 +31,7 @@ export class AccountService {
       return AccountService.makeAccountDto(authzId, account);
     }
 
-    // TODO: actually send confirmation code
-    this.logger.log(`... mocking sending an otp to ${phoneNumber}`);
+    await this.phoneVerificationService.createVerification(phoneNumber);
 
     const responseDto: UserAccount = new UserAccount();
     responseDto.id = authzId;
@@ -46,8 +50,7 @@ export class AccountService {
       return AccountService.makeAccountDto(authzId, account);
     }
 
-    // TODO: actually confirm the code
-    this.logger.log(`... mocking otp confirmation with ${phoneNumber} and code ${otp}`);
+    await this.phoneVerificationService.confirmVerification(phoneNumber, otp);
 
     const newAccount = await this.accountModel.create({
       authzId,
