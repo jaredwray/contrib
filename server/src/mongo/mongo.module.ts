@@ -7,9 +7,7 @@ import { EnvironmentVariables } from '../environment-variables';
   imports: [
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (
-        configService: ConfigService<EnvironmentVariables>,
-      ) => {
+      useFactory: async (configService: ConfigService<EnvironmentVariables>) => {
         return {
           uri: configService.get<string>('MONGODB_URI'),
         };

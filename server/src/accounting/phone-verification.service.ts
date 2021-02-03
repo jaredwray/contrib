@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from 'src/environment-variables';
 import { AppLogger } from 'src/logging/app-logger.service';
+import { BaseError } from 'src/errors/base-error';
 
 @Injectable()
 export class PhoneVerificationService {
@@ -32,7 +33,7 @@ export class PhoneVerificationService {
     this.logger.debug(JSON.stringify(verificationResult));
 
     if (verificationResult.status !== 'approved') {
-      throw new Error(`failed confirming phone number: verification status ${verificationResult.status}`);
+      throw new BaseError(`wrong confirmation code for: ${phone}`, 'phone_confirmation_exception');
     }
   }
 }
