@@ -12,7 +12,7 @@ import { appLogger } from './logging/appLogger';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 let cors = null;
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'live') {
   appLogger.warn('enabling lax CORS policies for local development; should not happen in production');
   cors = {
     origin: 'http://localhost:3000',
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
   };
 }
 let formatError = null;
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'live') {
   formatError = (error: GraphQLError) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { exception, ...rest } = error.extensions;
