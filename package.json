@@ -6,15 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build-client": "cd ./client && yarn && yarn build",
-    "build-server": "cd ./server && yarn && yarn build",
-    "test-client": "cd ./client && yarn test",
-    "test-server": "cd ./server && yarn test:cov",
+    "build-client": "yarn --cwd client install && yarn --cwd client build",
+    "build-server": "yarn --cwd server install && yarn --cwd server build",
+    "test-client": "yarn --cwd client test",
+    "test-server": "yarn --cwd server test:cov",
     "build": "yarn build-client && yarn build-server",
-    "start": "cd ./server && yarn start"
-  },
-  "dependencies": {
-    "@nestjs/mongoose": "^7.2.2",
-    "mongoose": "^5.11.13"
+    "start": "yarn --cwd server start"
   }
 }
