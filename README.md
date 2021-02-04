@@ -1,5 +1,8 @@
 # Contrib
 
+![deploy-to-dev](https://github.com/contriborg/contrib-app/workflows/deploy-to-dev/badge.svg)
+![deploy-to-live](https://github.com/contriborg/contrib-app/workflows/deploy-to-live/badge.svg)
+[![codecov](https://codecov.io/gh/contriborg/contrib-app/branch/main/graph/badge.svg?token=2LIYGRVN4F)](https://codecov.io/gh/contriborg/contrib-app)
 
 ## Developing locally
 
@@ -19,24 +22,23 @@ Yarn is used as a package manager. Therefore, npm commands are not used.
 
 ## Technology used
 
-- [ ] TypeScript
-- [ ] Jest
-- [ ] MongoDB
-- [ ] React + React/DOM
-- [ ] Auth0
-- [ ] Stripe
-- [ ] Google Cloud
-- [ ] NewRelic
-- [ ] DotEnv (Config Management)
-- [ ] Twilio (SMS & Email)
+* TypeScript
+* Jest
+* MongoDB
+* React + React/DOM
+* Auth0
+* Google Cloud
+* NewRelic
+* DotEnv (Config Management)
+* Twilio (SMS & Email)
 
 ## Social support
 
 Social sign-in support is supported for:
 
 - [ ] FaceBook
-- [ ] Twitter
-- [ ] Google
+- [x] Twitter
+- [x] Google
 - [ ] Apple
 
 ## Docker
