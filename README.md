@@ -36,10 +36,10 @@ Yarn is used as a package manager. Therefore, npm commands are not used.
 
 Social sign-in support is supported for:
 
-- [ ] FaceBook
-- [x] Twitter
-- [x] Google
-- [ ] Apple
+* FaceBook
+* Twitter
+* Google
+* Apple
 
 ## Docker
 
