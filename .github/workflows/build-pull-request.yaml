@@ -7,6 +7,12 @@ on:
 env:
   SERVICE_NAME: contrib-app
 
+  ENV_REACT_APP_AUTH0_DOMAIN: "auth.contrib.org"
+  ENV_REACT_APP_AUTH0_CLIENT_ID: ${{ secrets.DEV_AUTH0_CLIENT_ID }}
+  ENV_REACT_APP_PLATFORM_URL: "https://dev.contrib.org/"
+  ENV_REACT_APP_API_URL: "https://dev.contrib.org/graphql"
+  ENV_REACT_APP_API_AUDIENCE: "https://dev.contrib.org/"
+
 jobs:
   setup-build-deploy:
     name: Build and Test
@@ -24,7 +30,7 @@ jobs:
 
     # Build Client
     - name: Build Client
-      run: yarn build-client
+      run: REACT_APP_AUTH0_DOMAIN=$ENV_REACT_APP_AUTH0_DOMAIN REACT_APP_AUTH0_CLIENT_ID=$ENV_REACT_APP_AUTH0_CLIENT_ID REACT_APP_PLATFORM_URL=$ENV_REACT_APP_PLATFORM_URL REACT_APP_API_URL=$ENV_REACT_APP_API_URL REACT_APP_API_AUDIENCE=$ENV_REACT_APP_API_AUDIENCE yarn build-client
 
     # Test Client
     - name: Test Client
