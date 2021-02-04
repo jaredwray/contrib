@@ -1,4 +1,4 @@
-name: Build and Deploy to Live
+name: deploy-to-live
 
 on:
   release:
