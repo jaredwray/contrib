@@ -5,57 +5,57 @@ import Carousel from 'react-multi-carousel'
 import './EndingSoon.scss'
 
 const responsive = {
-  size_11: {
-    breakpoint: { max: 3000, min: 1260 },
+  size_1261_6000: {
+    breakpoint: { max: 6000, min: 1261 },
     items: 3,
     partialVisibilityGutter: 80
   },
-  size_10: {
-    breakpoint: { max: 1260, min: 1065 },
+  size_1066_1260: {
+    breakpoint: { max: 1260, min: 1066 },
     items: 3,
     partialVisibilityGutter: 20
   },
-  size_9: {
-    breakpoint: { max: 1065, min: 890 },
+  size_891_1065: {
+    breakpoint: { max: 1065, min: 891 },
     items: 2,
     partialVisibilityGutter: 90
   },
-  size_8: {
-    breakpoint: { max: 890, min: 800 },
+  size_801_890: {
+    breakpoint: { max: 890, min: 801 },
     items: 2,
     partialVisibilityGutter: 20
   },
-  size_7: {
-    breakpoint: { max: 800, min: 700 },
+  size_701_800: {
+    breakpoint: { max: 800, min: 701 },
     items: 2,
     partialVisibilityGutter: 0
   },
-  size_6: {
-    breakpoint: { max: 700, min: 620 },
+  size_621_700: {
+    breakpoint: { max: 700, min: 621 },
     items: 1,
     partialVisibilityGutter: 250
   },
-  size_5: {
-    breakpoint: { max: 620, min: 576 },
+  size_577_620: {
+    breakpoint: { max: 620, min: 577 },
     items: 1,
     partialVisibilityGutter: 200
   },
-  size_4: {
-    breakpoint: { max: 576, min: 500 },
+  size_501_576: {
+    breakpoint: { max: 576, min: 501 },
     items: 1,
     partialVisibilityGutter: 180
   },
-  size_3: {
-    breakpoint: { max: 500, min: 450 },
+  size_451_500: {
+    breakpoint: { max: 500, min: 451 },
     items: 1,
     partialVisibilityGutter: 60
   },
-  size_2: {
-    breakpoint: { max: 450, min: 420 },
+  size_421_450: {
+    breakpoint: { max: 450, min: 421 },
     items: 1,
     partialVisibilityGutter: 50
   },
-  size_1: {
+  size_0_420: {
     breakpoint: { max: 420, min: 0 },
     items: 1,
     partialVisibilityGutter: 40

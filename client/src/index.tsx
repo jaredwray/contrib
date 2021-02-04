@@ -4,9 +4,12 @@ import { Route, Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { AppState, Auth0Provider } from '@auth0/auth0-react';
 
+import Charities from './components/Charities/Charities';
 import Index from './components/Index/Index';
 import PhoneNumberVerification from './components/PhoneNumberVerification/PhoneNumberVerification';
 import PhoneNumberConfirmation from './components/PhoneNumberConfirmation/PhoneNumberConfirmation';
+import Profile from './components/Profile/Profile'
+import WelcomePage from './components/WelcomePage/WelcomePage'
 import { UserAccountProvider } from './components/UserAccountProvider';
 
 import './index.scss';
@@ -31,8 +34,11 @@ ReactDOM.render(
       <ContribApolloProvider>
         <UserAccountProvider>
           <Route path="/" exact component={Index} />
+          <Route path="/charities" exact component={Charities} />
           <Route path="/phone-verification" exact component={PhoneNumberVerification} />
           <Route path="/phone-confirmation" exact component={PhoneNumberConfirmation} />
+          <Route path="/profile" exact component={Profile} />
+          <Route path="/welcome" exact component={WelcomePage} />
         </UserAccountProvider>
       </ContribApolloProvider>
     </Router>

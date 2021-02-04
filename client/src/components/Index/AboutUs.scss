@@ -3,21 +3,8 @@
 .about-us {
   color: $dark-gray-color;
 
-  .about-us-separator {
-    width: 54px;
-    height: 6px;
-    background-color: $ochre-color;
-  }
-
   .description {
     font-size: 32px;
     line-height: 40px;
-  }
-
-  @media (max-width: $medium-weight) {
-    .about-us-separator {
-      width: 36px;
-      height: 4px;
-    }
   }
 }

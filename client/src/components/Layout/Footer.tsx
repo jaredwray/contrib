@@ -17,12 +17,12 @@ export default function Footer() {
           <Col xs="12" lg="8" className="p-0 pl-md-4 pr-md-4 text-headline">
             Direct athlete-to-fan charity auctions.
           </Col>
-          <Col xs="12" lg="4" className="p-0 pl-md-4 pr-md-4 ">
+          <Col xs="12" lg="4" className="p-0 pt-4 pt-lg-0 pl-md-4 pr-md-4 ">
             <a href="/" className="float-lg-right text-headline">About Contrib</a>
           </Col>
         </Row>
         <Row className="social-media">
-          <Col md className="p-0 pl-md-4 pr-md-4 pt-4 pb-4">
+          <Col md className="p-0 pl-md-4 pr-md-4 pt-lg-4 pb-4">
             <a href="/" className="twitter d-inline-block mr-4" rel="external"><i className="d-none"/></a>
             <a href="/" className="instagram d-inline-block mr-4" rel="external"><i className="d-none"/></a>
             <a href="/" className="facebook d-inline-block" rel="external"><i className="d-none"/></a>

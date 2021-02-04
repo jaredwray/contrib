@@ -13,12 +13,12 @@ export default function Header() {
     <header className="pl-4 pr-4">
       <Container fluid>
         <Row className="top">
-          <Col md className="p-0 pl-md-4">
+          <Col md className="p-0">
             <Navbar collapseOnSelect expand={false}>
               <Navbar.Brand href="/">
                 <img src={Logo} alt="Contrib" />
               </Navbar.Brand>
-              <NavDropdown title={<div className="menu-icon"/>} id="basic-nav-dropdown">
+              <NavDropdown title="" id="headerNavDropdown" className="header-nav-dropdown">
                 <section className="nav-dropdown-menu text-subhead">
                   {isAuthenticated && (
                       <>
@@ -28,7 +28,7 @@ export default function Header() {
                     )
                   }
 
-                  <NavDropdown.Item href="/"><span>Account</span></NavDropdown.Item>
+                  <NavDropdown.Item href="/profile"><span>Account</span></NavDropdown.Item>
                   <NavDropdown.Item href="/"><span>Bids</span></NavDropdown.Item>
                   <NavDropdown.Item href="/"><span>Watch list</span></NavDropdown.Item>
                   <NavDropdown.Item href="/"><span>Purchase history</span></NavDropdown.Item>

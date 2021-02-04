@@ -5,6 +5,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-weight: bold;
+  height: 100%;
 }
 
 .btn, .btn:focus {
@@ -16,20 +17,22 @@ body {
   line-height: 16px;
   white-space: nowrap;
   letter-spacing: 0.1em;
+  font-weight: bold;
   border: none !important;
   box-shadow: none !important;
 
   &.btn-with-arrows:after {
     content: '»';
     font-size: 25px;
+    line-height: 13px;
     font-weight: normal;
-    vertical-align: sub;
     margin-left: 10px;
+    float: right;
   }
 
   &:hover, &:active {
     background: $sage-color !important;
-    color: $white-color;
+    color: $white-color !important;
   }
 }
 
@@ -44,8 +47,51 @@ section {
   padding: 30px 0;
 }
 
+.form-control {
+  color: $sage-color;
+  font-size: 20px;
+  line-height: 25px;
+  border-color: $sage-color;
+  border-radius: 10px;
+
+  &:focus {
+    color: $sage-color;
+    border-width: 2px;
+    border-color: $sage-color;
+    box-shadow: none;
+  }
+}
+
+.progress {
+  height: 8px;
+
+  .progress-bar {
+    background-color: $sage-color;
+  }
+}
+
 a.btn {
   display: table-cell;
+}
+
+img {
+  pointer-events: none;
+}
+
+.label-with-separator:after {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 6px;
+  background-color: $ochre-color;
+  margin: 20px 0;
+
+  @media (max-width: $medium-weight) {
+    & {
+      width: 36px;
+      height: 4px;
+    }
+  }
 }
 
 .text-super {
@@ -61,10 +107,11 @@ a.btn {
   line-height: 25px;
 }
 .text-body {
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 17px;
+  line-height: 21px;
+  font-weight: 500;
 }
-.text-label {
+.text-label, label {
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.1em;
@@ -94,9 +141,9 @@ a.btn {
   }
   .text-body {
     font-size: 14px;
-    line-height: 18px;
+    line-height: 19px;
   }
-  .text-label {
+  .text-label, label {
     font-size: 11px;
     line-height: 14px;
     letter-spacing: 0.1em;
