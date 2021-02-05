@@ -1,4 +1,17 @@
-.back-link-arrows {
-  font-size: 18px;
-  line-height: 20px;
+@import '../../variables.scss';
+
+.phone-number-verification-page {
+  .error-message {
+    min-height: 20px;
+  }
+
+  .react-tel-input {
+    width: auto;
+    display: inline-block;
+    padding-right: 20px;
+  }
+
+  .submit-btn {
+    height: 35px;
+  }
 }

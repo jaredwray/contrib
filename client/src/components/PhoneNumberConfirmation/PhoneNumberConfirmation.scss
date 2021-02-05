@@ -1,0 +1,15 @@
+@import '../../variables.scss';
+
+.phone-number-confirmation-page {
+  .phone-number-confirmation-message {
+    color: $sage-color;
+  }
+
+  input {
+    width: 150px;
+  }
+
+  .submit-btn {
+    height: 44px;
+  }
+}

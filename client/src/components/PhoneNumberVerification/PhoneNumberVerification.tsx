@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory } from 'react-router-dom';
 import { Form as BsForm } from 'react-bootstrap';
@@ -31,14 +31,15 @@ export default function PhoneNumberVerification() {
     fetchPolicy: 'cache-only',
   });
   const [enterPhoneNumber, { loading: formSubmitting }] = useMutation(EnterPhoneNumberMutation);
+  const [error, setError] = useState();
 
   const handleSubmit = useCallback(
     ({ phoneNumber }) => {
-      enterPhoneNumber({
+      phoneNumber && enterPhoneNumber({
         variables: {
           phoneNumber: `+${phoneNumber}`,
         },
-      }).catch((error) => console.error('error submitting phone number', error));
+      }).catch((error) => setError(error.message));
     },
     [enterPhoneNumber],
   );
@@ -59,28 +60,29 @@ export default function PhoneNumberVerification() {
 
   return (
     <SimpleLayout>
-      <a href="/" onClick={handleBack} className="back-link pt-5 text-label text-all-cups" title="Back">
-        <span className="back-link-arrows">&#171;&#32;&#32;</span>back
-      </a>
-      <div className="text-headline pt-3">Please, enter your phone number</div>
+      <section className="phone-number-verification-page">
+        <a href="/" onClick={handleBack} className="back-link pt-5 text-label text-all-cups" title="Back">
+          <span className="back-link-arrows">&#171;&#32;&#32;</span>back
+        </a>
+        <div className="text-headline pt-3">Please, enter your phone number</div>
 
-      <Form onSubmit={handleSubmit}>
-        {(formProps) => (
-          <BsForm className="pt-3" onSubmit={formProps.handleSubmit}>
-            <Field name="phoneNumber">
-              {(props) => (
-                <BsForm.Group>
-                  <PhoneInput disabled={formSubmitting} {...props.input} country={'us'} copyNumbersOnly={false} />
-                </BsForm.Group>
-              )}
-            </Field>
+        <Form onSubmit={handleSubmit}>
+          {(formProps) => (
+            <BsForm onSubmit={formProps.handleSubmit}>
+              <div className='pt-1 error-message text-label'>{error}</div>
 
-            <button disabled={formSubmitting} type="submit" className="btn submit-btn">
-              Confirm
-            </button>
-          </BsForm>
-        )}
-      </Form>
+              <Field name="phoneNumber">
+                {(props) => (
+                  <PhoneInput disabled={formSubmitting} {...props.input} country={'us'} copyNumbersOnly={false} specialLabel="" placeholder=""/>
+                )}
+              </Field>
+              <button disabled={formSubmitting} type="submit" className="btn submit-btn">
+                Confirm
+              </button>
+            </BsForm>
+          )}
+        </Form>
+      </section>
     </SimpleLayout>
   );
 }
