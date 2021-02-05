@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { Form as BsForm } from 'react-bootstrap';
@@ -28,6 +28,7 @@ export default function PhoneNumberConfirmation() {
     fetchPolicy: 'cache-only',
   });
   const phoneNumber = myAccountData?.myAccount?.phoneNumber;
+  const [error, setError] = useState();
 
   const [confirmPhoneNumber, { loading: formSubmitting }] = useMutation(ConfirmPhoneNumberMutation);
 
@@ -44,9 +45,7 @@ export default function PhoneNumberConfirmation() {
       if (otp && phoneNumber) {
         confirmPhoneNumber({
           variables: { otp, phoneNumber },
-        }).catch((error) => {
-          console.error('error confirming phone number', error);
-        });
+        }).catch((error) => setError(error.message));
       }
     },
     [confirmPhoneNumber, phoneNumber],
@@ -65,29 +64,34 @@ export default function PhoneNumberConfirmation() {
 
   return (
     <SimpleLayout>
-      <a href="/" onClick={handleBack} className="back-link pt-5 text-label text-all-cups" title="Back">
-        <span className="back-link-arrows">&#171;&#32;&#32;</span>back
-      </a>
-      <div className="text-headline pt-3">Please, confirm your phone number</div>
+      <section className="phone-number-confirmation-page">
+        <a href="/" onClick={handleBack} className="back-link pt-5 text-label text-all-cups" title="Back">
+          <span className="back-link-arrows">&#171;&#32;&#32;</span>back
+        </a>
+        <div className="text-headline pt-3">Please, confirm your phone number</div>
 
-      <Form onSubmit={handleSubmit} className="pt-3">
-        {(formProps) => (
-          <BsForm onSubmit={formProps.handleSubmit}>
-            <Field name="otp">
-              {(props) => (
-                <BsForm.Group>
-                  <BsForm.Label>Verification code has been sent to: {phoneNumber}</BsForm.Label>
-                  <BsForm.Control {...props.input} disabled={formSubmitting} placeholder="Confirmation number" />
-                </BsForm.Group>
-              )}
-            </Field>
-
-            <button type="submit" disabled={formSubmitting} className="btn submit-btn">
-              Confirm
-            </button>
-          </BsForm>
-        )}
-      </Form>
+        <Form onSubmit={handleSubmit} className="pt-3">
+          {(formProps) => (
+            <BsForm onSubmit={formProps.handleSubmit} className="phone-number-confirmation-form">
+              <div className="phone-number-confirmation-message pt-3">
+                Verification code has been sent to: {phoneNumber}
+              </div>
+              <div className='pt-1 error-message text-label'>{error}</div>
+              <Field name="otp">
+                {(props) => (
+                  <BsForm.Group className="d-inline-block">
+                    <BsForm.Label>Confirmation number</BsForm.Label>
+                    <BsForm.Control {...props.input} disabled={formSubmitting}/>
+                  </BsForm.Group>
+                )}
+              </Field>
+              <button type="submit" disabled={formSubmitting} className="ml-2 d-inline-block btn submit-btn">
+                Confirm
+              </button>
+            </BsForm>
+          )}
+        </Form>
+      </section>
     </SimpleLayout>
   );
 }
