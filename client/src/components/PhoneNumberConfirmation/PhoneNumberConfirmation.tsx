@@ -1,3 +1,4 @@
+import { Duration, DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { gql, useMutation, useQuery } from '@apollo/client';
@@ -11,9 +12,21 @@ import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
 import { UserAccount, UserAccountStatus } from '../../model/UserAccount';
 import { useHistory } from 'react-router-dom';
 
+const OtpResendDuration = Duration.fromObject({ seconds: 5 });
+
 const ConfirmPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!, $otp: String!) {
     confirmAccountWithPhoneNumber(phoneConfirmationInput: { phoneNumber: $phoneNumber, otp: $otp }) {
+      id
+      phoneNumber
+      status
+    }
+  }
+`;
+
+const ResendOtpMutation = gql`
+  mutation ResendOtp($phoneNumber: String!) {
+    createAccountWithPhoneNumber(phoneInput: { phoneNumber: $phoneNumber }) {
       id
       phoneNumber
       status
@@ -28,9 +41,14 @@ export default function PhoneNumberConfirmation() {
     fetchPolicy: 'cache-only',
   });
   const phoneNumber = myAccountData?.myAccount?.phoneNumber;
-  const [error, setError] = useState();
 
-  const [confirmPhoneNumber, { loading: formSubmitting }] = useMutation(ConfirmPhoneNumberMutation);
+  const [confirmPhoneNumber, { loading: formSubmitting, error: confirmError }] = useMutation(
+    ConfirmPhoneNumberMutation,
+  );
+  const [resendConfirmationCode, { loading: otpIsResending, error: resendError }] = useMutation(ResendOtpMutation);
+
+  const [otpSentAt, setOtpSentAt] = useState(DateTime.local());
+  const [canResendOtp, setCanResendOtp] = useState(false);
 
   const handleBack = useCallback(
     (e) => {
@@ -45,11 +63,22 @@ export default function PhoneNumberConfirmation() {
       if (otp && phoneNumber) {
         confirmPhoneNumber({
           variables: { otp, phoneNumber },
-        }).catch((error) => setError(error.message));
+        }).catch((error) => console.error(`error confirming phone number: `, error));
       }
     },
     [confirmPhoneNumber, phoneNumber],
   );
+
+  const handleResendCode = useCallback(() => {
+    resendConfirmationCode({ variables: { phoneNumber } }).then(
+      () => {
+        setOtpSentAt(DateTime.local());
+      },
+      (error) => {
+        console.error(`error resending confirmation code: `, error);
+      },
+    );
+  }, [phoneNumber, resendConfirmationCode]);
 
   useEffect(() => {
     if (myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
@@ -57,6 +86,24 @@ export default function PhoneNumberConfirmation() {
       history.replace('/');
     }
   }, [myAccountData, history]);
+
+  useEffect(() => {
+    const refreshCanResendOtp = () => {
+      const durationSinceOtpSent = otpSentAt.diffNow().negate();
+      const nextCanResendOtp = durationSinceOtpSent > OtpResendDuration;
+      if (nextCanResendOtp !== canResendOtp) {
+        setCanResendOtp(nextCanResendOtp);
+      }
+    };
+
+    refreshCanResendOtp();
+    const interval = setInterval(refreshCanResendOtp, 1000);
+
+    return () => clearInterval(interval);
+  }, [otpSentAt, canResendOtp]);
+
+  const isLoading = formSubmitting || otpIsResending;
+  const error = confirmError ?? resendError;
 
   if (!myAccountData) {
     return null;
@@ -76,18 +123,28 @@ export default function PhoneNumberConfirmation() {
               <div className="phone-number-confirmation-message pt-3">
                 Verification code has been sent to: {phoneNumber}
               </div>
-              <div className='pt-1 error-message text-label'>{error}</div>
+              {error && <div className="pt-1 error-message text-label">{error.message}</div>}
               <Field name="otp">
                 {(props) => (
                   <BsForm.Group className="d-inline-block">
                     <BsForm.Label>Confirmation number</BsForm.Label>
-                    <BsForm.Control {...props.input} disabled={formSubmitting}/>
+                    <BsForm.Control {...props.input} disabled={isLoading} />
                   </BsForm.Group>
                 )}
               </Field>
-              <button type="submit" disabled={formSubmitting} className="ml-2 d-inline-block btn submit-btn">
+              <button type="submit" disabled={isLoading} className="ml-2 d-inline-block btn submit-btn">
                 Confirm
               </button>
+              {canResendOtp && (
+                <button
+                  type="button"
+                  onClick={handleResendCode}
+                  disabled={isLoading}
+                  className="ml-2 d-inline-block btn btn-link"
+                >
+                  Resend code
+                </button>
+              )}
             </BsForm>
           )}
         </Form>

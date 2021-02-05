@@ -1,9 +1,12 @@
+import { Twilio } from 'twilio';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EnvironmentVariables } from '../environment-variables';
-import { AppLogger } from '../logging/app-logger.service';
-import { BaseError } from '../errors/base-error';
-import { Twilio } from 'twilio';
+import { EnvironmentVariables } from 'src/environment-variables';
+import { AppLogger } from 'src/logging/app-logger.service';
+import { BaseError } from 'src/errors/base-error';
+import { VerificationCheckInstance } from 'twilio/lib/rest/verify/v2/service/verificationCheck';
+
+const TwilioBadRequestErrorCode = 60200;
 
 @Injectable()
 export class PhoneVerificationService {
@@ -19,21 +22,37 @@ export class PhoneVerificationService {
 
   async createVerification(phone: string): Promise<void> {
     this.logger.log(`generating sms verification for ${phone}`);
-    const verificationRequest = await this.twilio.verify
-      .services(this.configService.get<string>('VERIFICATION_SID'))
-      .verifications.create({ to: phone, channel: 'sms' });
-    this.logger.debug(JSON.stringify(verificationRequest));
+    try {
+      const verificationRequest = await this.twilio.verify
+        .services(this.configService.get<string>('VERIFICATION_SID'))
+        .verifications.create({ to: phone, channel: 'sms' });
+      this.logger.debug(JSON.stringify(verificationRequest));
+    } catch (error) {
+      console.log(`error: ${JSON.stringify(error)} / ${JSON.stringify(error.code)}`);
+      if (error.code === TwilioBadRequestErrorCode) {
+        throw new BaseError('Invalid phone number');
+      }
+      throw error;
+    }
   }
 
   async confirmVerification(phone: string, otp: string): Promise<void> {
     this.logger.log(`confirming sms verification for ${phone}`);
-    const verificationResult = await this.twilio.verify
-      .services(this.configService.get<string>('VERIFICATION_SID'))
-      .verificationChecks.create({ to: phone, code: otp });
-    this.logger.debug(JSON.stringify(verificationResult));
+    let verificationResult: VerificationCheckInstance;
+    try {
+      verificationResult = await this.twilio.verify
+        .services(this.configService.get<string>('VERIFICATION_SID'))
+        .verificationChecks.create({ to: phone, code: otp });
+      this.logger.debug(JSON.stringify(verificationResult));
+    } catch (error) {
+      if (error.code === TwilioBadRequestErrorCode) {
+        throw new BaseError('Incorrect verification code');
+      }
+      throw error;
+    }
 
     if (verificationResult.status !== 'approved') {
-      throw new BaseError(`wrong confirmation code for: ${phone}`, 'phone_confirmation_exception');
+      throw new BaseError('Incorrect verification code');
     }
   }
 }

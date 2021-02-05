@@ -1,7 +1,9 @@
 import { Catch, Injectable } from '@nestjs/common';
 import { GqlExceptionFilter } from '@nestjs/graphql';
-import { AppLogger } from '../logging/app-logger.service';
+
+import { AppLogger } from 'src/logging/app-logger.service';
 import { BaseError } from './base-error';
+import { ApolloError } from 'apollo-server-express';
 
 @Injectable()
 @Catch(BaseError)
@@ -11,11 +13,7 @@ export class InternalGqlExceptionFilter implements GqlExceptionFilter {
   }
 
   catch(exception: BaseError) {
-    this.logger.log(
-      `handling exception: '${exception.name}', identifier: '${exception.getIdentifier()}', message: ${
-        exception.message
-      }`,
-    );
-    return exception;
+    this.logger.log(`handling exception: '${exception.name}', message: ${exception.message}`);
+    return new ApolloError(exception.message, exception.code);
   }
 }

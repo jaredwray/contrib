@@ -18,6 +18,7 @@
     "enzyme-adapter-react-16": "^1.15.6",
     "final-form": "^4.20.1",
     "graphql": "^15.5.0",
+    "luxon": "^1.25.0",
     "node-sass": "4.14.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
@@ -61,6 +62,7 @@
   "devDependencies": {
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/react-router-dom": "^5.1.7",
-    "react-test-renderer": "^17.0.1"
+    "react-test-renderer": "^17.0.1",
+    "@types/luxon": "^1.25.1"
   }
 }

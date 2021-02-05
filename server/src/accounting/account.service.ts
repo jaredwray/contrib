@@ -34,7 +34,6 @@ export class AccountService {
   }
 
   async sendConfirmationCode(authzId: string, { phoneNumber }: PhoneInput): Promise<UserAccount> {
-    await this.checkAccountAvailability(authzId, phoneNumber);
     await this.phoneVerificationService.createVerification(phoneNumber);
 
     return UserAccount.build({
@@ -61,9 +60,11 @@ export class AccountService {
   }
 
   private async checkAccountAvailability(authzId: string, phoneNumber: string) {
-    const account: AccountDocument = await this.accountModel.findOne({ authzId }).exec();
-    if (account) throw new BaseError('user with auth id already registered', 'auth_id_already_exists');
-    const accWithSamePhone: AccountDocument = await this.accountModel.findOne({ phoneNumber }).exec();
-    if (accWithSamePhone) throw new BaseError(`phone: ${phoneNumber} is already in use`, 'phone_reserved');
+    if (await this.accountModel.exists({ authzId })) {
+      throw new BaseError('Account already exists');
+    }
+    if (await this.accountModel.exists({ phoneNumber })) {
+      throw new BaseError('${phoneNumber} is already in use');
+    }
   }
 }
