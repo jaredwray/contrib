@@ -22,7 +22,7 @@ export default function WelcomePage() {
                 <div className="text-headline pt-4">Do you have something to auction?</div>
               </Col>
               <Col lg="6" className="pt-5 pt-lg-0 pb-4 pb-lg-0">
-                <div className="welcome-page-right-block">
+                <div className="welcome-page-right-block p-4 p-md-5">
                   <div className="d-table w-100">
                     <a href="/" className="btn btn-primary btn-with-arrows d-table-cell align-middle w-100 welcome-page-create-btn">
                       Create an auction

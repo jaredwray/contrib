@@ -11,7 +11,7 @@
     .welcome-page-congratulation-img {
       width: 108px;
       height: 108px;
-      background: no-repeat center url('./done.png');
+      background: no-repeat center url('./done.webp');
       background-size: cover;
 
       @media (max-width: $medium-weight) {
@@ -37,12 +37,7 @@
 
     .welcome-page-right-block {
       background-color: $barely-gray-color;
-      padding: 40px;
       border-radius: 10px;
-
-      @media (max-width: $medium-weight) {
-        padding: 20px;
-      }
 
       &, a {
         color: $dark-gray-color;

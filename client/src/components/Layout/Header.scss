@@ -6,7 +6,7 @@
     width: 36px;
     height: 36px;
     display: inline-block;
-    background: no-repeat center url("./hamburger.png");
+    background: no-repeat center url("./hamburger.webp");
 
     &::after {
       display: none !important;
@@ -14,7 +14,7 @@
   }
 
   &.show .dropdown-toggle {
-    background-image: url("./close.png");
+    background-image: url("./close.webp");
     width: 30px;
     height: 30px;
   }
@@ -77,15 +77,15 @@
       }
 
       .twitter {
-        background-image: url("./twitter.png");
+        background-image: url("./twitter.webp");
       }
 
       .instagram {
-        background-image: url("./instagram.png");
+        background-image: url("./instagram.webp");
       }
 
       .facebook {
-        background-image: url("./facebook.png");
+        background-image: url("./facebook.webp");
       }
     }
 

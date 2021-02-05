@@ -81,10 +81,10 @@ export default function EndingSoon() {
         >
           <div className="auction">
             <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-1.png" />
+            <Image className="auction-picture" src="/content/img/auctions/auction-item-1.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-1.png" roundedCircle />
+                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-1.webp" roundedCircle />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">De’aaron Fox</div>
               </div>
               <div className="auction-title text-subhead pt-2">De'Aaron Fox Autographed Game Worn Jersey</div>
@@ -95,10 +95,10 @@ export default function EndingSoon() {
 
           <div className="auction">
             <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-2.png" />
+            <Image className="auction-picture" src="/content/img/auctions/auction-item-2.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-2.png" roundedCircle />
+                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-2.webp" roundedCircle />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">Diego Rossi</div>
               </div>
               <div className="auction-title text-subhead pt-2">Diego Rossi Fox Signed Game Worn Jersey</div>
@@ -109,10 +109,10 @@ export default function EndingSoon() {
 
           <div className="auction">
             <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-1.png" />
+            <Image className="auction-picture" src="/content/img/auctions/auction-item-1.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-1.png" roundedCircle />
+                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-1.webp" roundedCircle />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">De’aaron Fox</div>
               </div>
               <div className="auction-title text-subhead pt-2">De'Aaron Fox Autographed Game Worn Jersey</div>
@@ -123,10 +123,10 @@ export default function EndingSoon() {
 
           <div className="auction">
             <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-2.png" />
+            <Image className="auction-picture" src="/content/img/auctions/auction-item-2.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-2.png" roundedCircle />
+                <Image className="auction-owner-picture" src="/content/img/users/auction-owner-2.webp" roundedCircle />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">Diego Rossi</div>
               </div>
               <div className="auction-title text-subhead pt-2">Diego Rossi Fox Signed Game Worn Jersey</div>

@@ -78,7 +78,7 @@ export default function Reviews() {
         >
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-1.png" roundedCircle/>
+              <Image className="reviewer" src="/content/img/users/reviewer-1.webp" roundedCircle/>
             </div>
             <div className="quotes-sign"/>
             <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
@@ -88,7 +88,7 @@ export default function Reviews() {
 
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-2.png" roundedCircle/>
+              <Image className="reviewer" src="/content/img/users/reviewer-2.webp" roundedCircle/>
             </div>
             <div className="quotes-sign"/>
             <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
@@ -98,7 +98,7 @@ export default function Reviews() {
 
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-1.png" roundedCircle/>
+              <Image className="reviewer" src="/content/img/users/reviewer-1.webp" roundedCircle/>
             </div>
             <div className="quotes-sign"/>
             <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
@@ -108,7 +108,7 @@ export default function Reviews() {
 
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-2.png" roundedCircle/>
+              <Image className="reviewer" src="/content/img/users/reviewer-2.webp" roundedCircle/>
             </div>
             <div className="quotes-sign"/>
             <div className="text-subhead reviews-quote pt-2">With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman, all for charity.</div>
