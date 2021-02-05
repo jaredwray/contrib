@@ -7,4 +7,5 @@ export class AuthUser {
   azp: string;
   gty?: string;
   scope?: string;
+  permissions: string[];
 }
