@@ -4,13 +4,14 @@ import { AuthUser } from 'src/authz/auth-user';
 import { CurrentUser } from 'src/authz/current-user';
 import { GqlJwtAuthGuard } from 'src/authz/gql-jwt-auth.guart';
 import { AllGqlExceptionFilter } from 'src/errors/all-gql-exception.filter';
+import { InternalGqlExceptionFilter } from 'src/errors/internal-gql-exception.filter';
 import { AccountService } from './account.service';
 import { PhoneConfirmationInput } from './dto/phone-confirmation.input';
 import { PhoneInput } from './dto/phone.input';
 import { UserAccount } from './models/user-account.model';
 
 @Resolver(() => UserAccount)
-@UseFilters(AllGqlExceptionFilter)
+@UseFilters(AllGqlExceptionFilter, InternalGqlExceptionFilter)
 export class AccountResolver {
   constructor(private accountService: AccountService) {}
 

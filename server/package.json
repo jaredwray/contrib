@@ -32,6 +32,7 @@
     "@nestjs/serve-static": "^2.1.4",
     "@newrelic/winston-enricher": "^1.0.0",
     "apollo-server-express": "^2.19.2",
+    "auth0": "^2.32.0",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.2",
     "jwks-rsa": "^1.12.2",

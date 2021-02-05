@@ -5,6 +5,9 @@ export interface EnvironmentVariables {
   // Auth0
   AUTH0_AUDIENCE: string;
   AUTH0_ISSUER_URL: string;
+  AUTH0_MANAGEMENT_DOMAIN: string;
+  AUTH0_MANAGEMENT_CLIENT_ID: string;
+  AUTH0_MANAGEMENT_CLIENT_SECRET: string;
   // Twilio
   TWILIO_ACCOUNT_SID: string;
   TWILIO_AUTH_TOKEN: string;
