@@ -61,18 +61,19 @@ We use google cloud storage and there are two users for each environment (`dev` 
 * storage uri: content-dev.contrib.org
 * storage writer: `content-writer@contrib-dev.iam.gserviceaccount.com`
 * storage owner: `content-owner@contrib-dev.iam.gserviceaccount.com`
+* content-writer `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gg3iaanezncldb3d3yasco4n7a&h=contrib.1password.com
+* content-owner `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=iatusb6hubb2pozq4qfamwecgm&h=contrib.1password.com
 
 ## `live` environment:
 * url: content.contrib.org
 * storage uri: content-live.contrib.org
 * storage writer: `content-writer@contrib-live.iam.gserviceaccount.com`
 * storage owner: `content-owner@contrib-live.iam.gserviceaccount.com`
-
-For the service accounts you can find their keys in 1Password: 
-* content-writer `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gg3iaanezncldb3d3yasco4n7a&h=contrib.1password.com
-* content-owner `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=iatusb6hubb2pozq4qfamwecgm&h=contrib.1password.com
 * content-writer `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gp42f74tfzg4vhsk5ifeamkd2i&h=contrib.1password.com 
 * content-owner `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=unlptfa6jbaixeodiwtk22vkay&h=contrib.1password.com
-d 
+
+
+
+
 
 
