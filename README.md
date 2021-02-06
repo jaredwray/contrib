@@ -51,3 +51,28 @@ Social sign-in support is supported for:
 There are two environments that we have for deployment. By default checking your source code into `main` will deploy to https://dev.contrib.org which runs out of the [us-central1] region in Google Cloud and uses the Mongo Atlas cluster [contrib-dev-cluster-1] that is also based in that region. It is deployed on Cloud Run wich will scale automatically and also goes across availability zones for the runtime and database engine (MongoDB). 
 
 The `live` environment is deployed across two regions and in each region across two availability zones. The regions are [us-west1] as primary and [us-central1] as secondary or based on geo location. The MongoDB is a Global cluster that spans across the two regions in Google Cloud named [contrib-dev-cluster-1]. To deploy to production you most create a release in Github. Once you do that it will auto deploy all code to both regions and configuration. That simple!
+
+# Content / Object Storagea
+
+We use google cloud storage and there are two users for each environment (`dev` and `live`):
+
+## `dev` environment:
+* url: content-dev.contrib.org
+* storage uri: content-dev.contrib.org
+* storage writer: `content-writer@contrib-dev.iam.gserviceaccount.com`
+* storage owner: `content-owner@contrib-dev.iam.gserviceaccount.com`
+
+## `live` environment:
+* url: content.contrib.org
+* storage uri: content-live.contrib.org
+* storage writer: `content-writer@contrib-live.iam.gserviceaccount.com`
+* storage owner: `content-owner@contrib-live.iam.gserviceaccount.com`
+
+For the service accounts you can find their keys in 1Password: 
+* content-writer `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gg3iaanezncldb3d3yasco4n7a&h=contrib.1password.com
+* content-owner `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=iatusb6hubb2pozq4qfamwecgm&h=contrib.1password.com
+* content-writer `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gp42f74tfzg4vhsk5ifeamkd2i&h=contrib.1password.com 
+* content-owner `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=unlptfa6jbaixeodiwtk22vkay&h=contrib.1password.com
+d 
+
+
