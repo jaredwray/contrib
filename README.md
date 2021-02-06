@@ -52,7 +52,7 @@ There are two environments that we have for deployment. By default checking your
 
 The `live` environment is deployed across two regions and in each region across two availability zones. The regions are [us-west1] as primary and [us-central1] as secondary or based on geo location. The MongoDB is a Global cluster that spans across the two regions in Google Cloud named [contrib-dev-cluster-1]. To deploy to production you most create a release in Github. Once you do that it will auto deploy all code to both regions and configuration. That simple!
 
-# Content / Object Storagea
+# Content / Object Storage
 
 We use google cloud storage and there are two users for each environment (`dev` and `live`):
 
