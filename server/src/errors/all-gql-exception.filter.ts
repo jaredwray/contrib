@@ -1,6 +1,6 @@
 import { Catch, Injectable } from '@nestjs/common';
 import { GqlExceptionFilter } from '@nestjs/graphql';
-import { AppLogger } from 'src/logging/app-logger.service';
+import { AppLogger } from '../logging/app-logger.service';
 import { BaseError } from './base-error';
 
 @Injectable()

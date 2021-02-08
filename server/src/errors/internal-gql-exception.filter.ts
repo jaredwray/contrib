@@ -1,6 +1,6 @@
 import { Catch, Injectable } from '@nestjs/common';
 import { GqlExceptionFilter } from '@nestjs/graphql';
-import { AppLogger } from 'src/logging/app-logger.service';
+import { AppLogger } from '../logging/app-logger.service';
 import { BaseError } from './base-error';
 
 @Injectable()
@@ -10,8 +10,12 @@ export class InternalGqlExceptionFilter implements GqlExceptionFilter {
     this.logger.setContext('InternalGqlExceptionFilter');
   }
 
-  catch(exception: Error) {
-    this.logger.log(`handling exception: '${exception.name}', message: ${exception.message}`);
+  catch(exception: BaseError) {
+    this.logger.log(
+      `handling exception: '${exception.name}', identifier: '${exception.getIdentifier()}', message: ${
+        exception.message
+      }`,
+    );
     return exception;
   }
 }
