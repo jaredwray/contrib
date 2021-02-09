@@ -1,17 +1,17 @@
-import * as twilio from 'twilio';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EnvironmentVariables } from 'src/environment-variables';
-import { AppLogger } from 'src/logging/app-logger.service';
-import { BaseError } from 'src/errors/base-error';
+import { EnvironmentVariables } from '../environment-variables';
+import { AppLogger } from '../logging/app-logger.service';
+import { BaseError } from '../errors/base-error';
+import { Twilio } from 'twilio';
 
 @Injectable()
 export class PhoneVerificationService {
-  private twilio: twilio.Twilio;
+  private twilio: Twilio;
 
   constructor(private logger: AppLogger, private configService: ConfigService<EnvironmentVariables>) {
     this.logger.setContext('PhoneVerificationService');
-    this.twilio = twilio(
+    this.twilio = new Twilio(
       configService.get<string>('TWILIO_ACCOUNT_SID'),
       configService.get<string>('TWILIO_AUTH_TOKEN'),
     );
