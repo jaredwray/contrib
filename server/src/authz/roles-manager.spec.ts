@@ -1,4 +1,3 @@
-// import ManagementClient, { mockRoles, mockUsers } from './__mocks__/management-client';
 import { ConfigService } from '@nestjs/config';
 import { ManagementClient } from 'auth0';
 import { AuthRole, RolesManager } from './roles-manager';
