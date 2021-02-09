@@ -1,7 +1,6 @@
 import { ExecutionContext } from '@nestjs/common';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
-import { GqlArgumentsHost, GqlExecutionContext, Resolver } from '@nestjs/graphql';
-import { AuthUser } from './auth-user';
+import { Resolver } from '@nestjs/graphql';
 import { RolesGuard } from './roles.guard';
 
 class ReturnObjClass {}
