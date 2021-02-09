@@ -57,8 +57,9 @@ jobs:
       run: yarn build-server
 
     # Test Server
-    - name: Test Server and Coverage
+    - name: Test Server
       run: yarn test-server     
+    
     - name: Code Coverage
       uses: codecov/codecov-action@v1.0.15
       with:
