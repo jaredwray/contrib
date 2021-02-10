@@ -26,7 +26,7 @@ export default function Banner() {
        {!isAuthenticated && (
           <Row>
             <Col xs="6">
-              <a href="/" className="btn btn-primary btn-with-arrows" onClick={() => loginWithRedirect({page_type: 'sign_up'})}>
+              <a href="/" className="btn btn-primary btn-with-arrows" data-test-id="sign-up-button" onClick={() => loginWithRedirect({page_type: 'sign_up'})}>
                 Sign Up
               </a>
             </Col>
