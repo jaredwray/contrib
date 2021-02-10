@@ -10,7 +10,9 @@
     "build-server": "yarn --cwd server install && yarn --cwd server build",
     "test-client": "yarn --cwd client test",
     "test-server": "yarn --cwd server test:cov",
-    "build": "yarn build-client && yarn build-server",
-    "start": "yarn --cwd server start"
+    "build": "yarn build-client && yarn build-server && yarn docker-build",
+    "start": "yarn --cwd server start",
+    "docker-build": "docker build --pull --rm -f \"Dockerfile\" -t contrib-app:latest \".\"",
+		"docker-run": "docker run --rm -d -p 3000:3000/tcp --env-file ./server/.env contrib-app:latest"
   }
 }
