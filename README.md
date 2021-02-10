@@ -18,7 +18,12 @@ Yarn is used as a package manager. Therefore, npm commands are not used.
 4. Start up backend is separate tab:
    - `yarn --cwd server start`
 
-
+## Using Docker Locally
+1. Install Client / Server and Create Docker Image:
+   - `yarn build`
+2. Run Docker with Local `./server/.env`
+   - make sure your PORT in `./server/.env` is set to 3000
+   - `yarn docker-run`
 
 ## Technology used
 
