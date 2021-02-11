@@ -32,14 +32,12 @@ export const fetchAuthUser = async (req: Request): Promise<AuthUser> => {
     verify(token, getKey, options, (err: VerifyErrors, decoded: any): void => {
       if (err) {
         // make work playground web UI
-        console.log(`request method: ${req.method}`);
         if (req.method == 'GET') {
           resolve(<AuthUser>{ sub: 'playground', permissions: [] });
         } else {
           reject(new AuthenticationError('Your session expired. Sign in again.'));
         }
       } else {
-        console.log(decoded);
         const user: AuthUser = <AuthUser>decoded;
         resolve(user);
       }

@@ -8,17 +8,19 @@ import { Connection } from 'mongoose';
  * @param id auth id
  * @returns {IAccount | null} user or null
  */
-export const getAccount = async (connection: Connection, id: string): Promise<IAccount> => {
+export const getAccountByAuthzId = async (conn: Connection, authzId: string): Promise<IAccount> => {
   let account: IAccount | null;
 
+  await AccountModel(conn).findOne({ authzId }).exec();
+
   try {
-    account = await AccountModel(connection).findById(id);
+    // account = await AccountModel(conn).findById(id);
+    account = await AccountModel(conn).findOne({ authzId }).exec();
     if (account != null) {
       account = account.transform();
     }
   } catch (error) {
     console.error('> getUser error: ', error);
-    throw new ApolloError('Error retrieving user with id: ' + id);
   }
 
   return account;
