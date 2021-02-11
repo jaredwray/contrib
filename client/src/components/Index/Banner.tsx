@@ -1,11 +1,11 @@
-import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
-import { useAuth0 } from '@auth0/auth0-react'
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useAuth0 } from "@auth0/auth0-react";
 
-import './Banner.scss'
+import "./Banner.scss"
 
 export default function Banner() {
-  const { isAuthenticated, loginWithRedirect } = useAuth0()
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   return (
     <section className="banner">
@@ -26,7 +26,7 @@ export default function Banner() {
        {!isAuthenticated && (
           <Row>
             <Col xs="6">
-              <a href="/" className="btn btn-primary btn-with-arrows" data-test-id="sign-up-button" onClick={() => loginWithRedirect({page_type: 'sign_up'})}>
+              <a href="/" className="btn btn-ochre btn-with-arrows banner-sign-up-button" onClick={() => loginWithRedirect({ page_type: "sign_up" })}>
                 Sign Up
               </a>
             </Col>
