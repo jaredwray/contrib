@@ -4,7 +4,7 @@
   height: 505px;
   color: $white-color;
   text-align: left;
-  background-image: url("./player-md.png");
+  background-image: url("./player-md.webp");
   background-repeat: no-repeat;
   background-position: right;
   background-color: $sage-color;
@@ -25,7 +25,7 @@
   }
 
   @media (max-width: $medium-weight) {
-    background-image: url("./player-sm.png");
+    background-image: url("./player-sm.webp");
 
     .banner-separator {
       height: 8px;

@@ -28,7 +28,7 @@ export default function Profile() {
           <Row className="pt-3 pt-md-0">
             <Col md="6">
               <div className="profile-page-avatar w-100">
-                <Image src="/content/img/users/reviewer-1.png" roundedCircle/>
+                <Image src="/content/img/users/reviewer-1.webp" roundedCircle/>
                 <button className="picture-upload-btn text-label text-all-cups">change photo</button>
               </div>
             </Col>

@@ -17,7 +17,7 @@ export default function SimpleLayout({children}: {children: any}) {
             <main role='main'>{children}</main>
           </Container>
         </Col>
-        <Col className="p-0 h-100 d-none d-md-block right-block">
+        <Col className="p-0 h-100 d-none d-md-block right-block w-100">
           <div className="text-label text-all-cups position-absolute right-block-signature">
             Stephan Frei<br/>
             Total raised: $248,000

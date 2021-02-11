@@ -24,12 +24,12 @@
 .react-multiple-carousel__arrow {
   height: 60px;
   width: 60px;
-  background-image: url('./carousel_arrow-left.png');
+  background-image: url('./carousel_arrow-left.webp');
   background-color: none;
   transition: transform 0s;
 
   &:hover {
-    background-image: url('./carousel-arrow-hover-left.png');
+    background-image: url('./carousel-arrow-hover-left.webp');
   }
 
   &.react-multiple-carousel__arrow--right {
