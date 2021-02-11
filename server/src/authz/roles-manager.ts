@@ -16,8 +16,8 @@ export class RolesManager {
   constructor(private configService: ConfigService<EnvironmentVariables>) {
     this.auth0 = new ManagementClient({
       domain: configService.get<string>('AUTH0_MANAGEMENT_DOMAIN'),
-      clientId: configService.get<string>('AUTH0_MANAGEMENT_CLIENT_ID'),
-      clientSecret: configService.get<string>('AUTH0_MANAGEMENT_CLIENT_SECRET'),
+      clientId: configService.get<string>('AUTH0_CLIENT_ID'),
+      clientSecret: configService.get<string>('AUTH0_CLIENT_SECRET'),
     });
   }
 
