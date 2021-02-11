@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Document, SchemaDefinition, SchemaTypes, Schema, Connection, Model } from 'mongoose';
 
 /**
  * @description holds account model
@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 /**
  * IAccount interface
  */
-export interface IAccount extends mongoose.Document {
+export interface IAccount extends Document {
   id: string;
   authzId: string;
   phoneNumber: string;
@@ -17,15 +17,15 @@ export interface IAccount extends mongoose.Document {
 /**
  * account schema
  */
-const schema: mongoose.SchemaDefinition = {
-  authzId: { type: mongoose.SchemaTypes.String, required: true, index: true, unique: true },
-  phoneNumber: { type: mongoose.SchemaTypes.String, required: true, unique: true },
+const schema: SchemaDefinition = {
+  authzId: { type: SchemaTypes.String, required: true, index: true, unique: true },
+  phoneNumber: { type: SchemaTypes.String, required: true, unique: true },
 };
 
 // account collection name
 const collectionName = 'account';
 
-const accountSchema: mongoose.Schema<IAccount> = new mongoose.Schema<IAccount>(schema);
+const accountSchema: Schema<IAccount> = new Schema<IAccount>(schema);
 
 /**
  * transforms account object
@@ -45,6 +45,6 @@ accountSchema.methods.transform = function () {
  * @param conn database connection
  * @returns account model
  */
-export const AccountModel = (conn: mongoose.Connection): mongoose.Model<IAccount> => {
+export const AccountModel = (conn: Connection): Model<IAccount> => {
   return conn.model<IAccount>(collectionName, accountSchema);
 };

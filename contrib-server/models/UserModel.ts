@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Document, SchemaDefinition, SchemaTypes, Schema, Connection, Model } from 'mongoose';
 
 /**
  * @description holds user model
@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 /**
  * User interface
  */
-export interface IUser extends mongoose.Document {
+export interface IUser extends Document {
   id: string;
   name: string;
   password: string;
@@ -18,26 +18,26 @@ export interface IUser extends mongoose.Document {
 /**
  * user schema
  */
-const schema: mongoose.SchemaDefinition = {
-  name: { type: mongoose.SchemaTypes.String, required: true, unique: true },
-  password: { type: mongoose.SchemaTypes.String, required: true },
-  email: { type: mongoose.SchemaTypes.String, required: true },
+const schema: SchemaDefinition = {
+  name: { type: SchemaTypes.String, required: true, unique: true },
+  password: { type: SchemaTypes.String, required: true },
+  email: { type: SchemaTypes.String, required: true },
 };
 
 // user collection name
-const collectionName: string = 'user';
+const collectionName = 'user';
 
-const userSchema: mongoose.Schema = new mongoose.Schema(schema);
+const userSchema: Schema<IUser> = new Schema<IUser>(schema);
 
 /**
  * transforms user object, removes password and
  * changes _id to id
  */
 userSchema.methods.transform = function () {
-  var obj = this.toObject();
+  const obj = this.toObject();
   delete obj.password;
 
-  var id = obj._id;
+  const id = obj._id;
   delete obj._id;
   obj.id = id;
 
@@ -49,6 +49,8 @@ userSchema.methods.transform = function () {
  * @param conn database connection
  * @returns user model
  */
-const UserModel = (conn: mongoose.Connection): mongoose.Model<IUser> => conn.model(collectionName, userSchema);
+const UserModel = (conn: Connection): Model<IUser> => {
+  return conn.model<IUser>(collectionName, userSchema);
+};
 
 export default UserModel;

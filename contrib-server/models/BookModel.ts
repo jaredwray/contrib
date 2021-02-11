@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Document, SchemaDefinition, SchemaTypes, Schema, Connection, Model } from 'mongoose';
 
 /**
  * @description holds book model
@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 /**
  * Book interface
  */
-export interface IBook extends mongoose.Document {
+export interface IBook extends Document {
   id: string;
   name: string;
   description: string;
@@ -17,15 +17,15 @@ export interface IBook extends mongoose.Document {
 /**
  * book schema
  */
-const schema: mongoose.SchemaDefinition = {
-  name: { type: mongoose.SchemaTypes.String, required: true, unique: true },
-  description: { type: mongoose.SchemaTypes.String, required: true },
+const schema: SchemaDefinition = {
+  name: { type: SchemaTypes.String, required: true, unique: true },
+  description: { type: SchemaTypes.String, required: true },
 };
 
 // book collection name
-const collectionName: string = 'book';
+const collectionName = 'book';
 
-const bookSchema: mongoose.Schema = new mongoose.Schema(schema);
+const bookSchema: Schema<IBook> = new Schema<IBook>(schema);
 
 /**
  * transforms book object,
@@ -46,6 +46,8 @@ bookSchema.methods.transform = function () {
  * @param conn database connection
  * @returns book model
  */
-const BookModel = (conn: mongoose.Connection): mongoose.Model<IBook> => conn.model(collectionName, bookSchema);
+const BookModel = (conn: Connection): Model<IBook> => {
+  return conn.model(collectionName, bookSchema);
+};
 
 export default BookModel;

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Connection, createConnection } from 'mongoose';
 
 /**
  * @description holds database connection provider
@@ -8,15 +8,15 @@ import mongoose from 'mongoose';
 const uri: string = process.env.MONGODB_URI as string;
 
 // mongoose connection
-let conn: mongoose.Connection | null = null;
+let conn: Connection | null = null;
 
 /**
  * creates database connection
  * @returns mongodb connection
  */
-export const getConnection = async (): Promise<mongoose.Connection> => {
+export const getConnection = async (): Promise<Connection> => {
   if (conn == null) {
-    conn = await mongoose.createConnection(uri, {
+    conn = await createConnection(uri, {
       bufferCommands: false,
       bufferMaxEntries: 0,
       useNewUrlParser: true,

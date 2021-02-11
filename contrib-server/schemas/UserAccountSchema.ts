@@ -42,7 +42,7 @@ export const UserAccountSchema = gql`
     status: UserAccountStatus!
   }
 
-  type Query {
+  extend type Query {
     myAccount: UserAccount!
   }
 
@@ -55,7 +55,7 @@ export const UserAccountSchema = gql`
     phoneNumber: String!
   }
 
-  type Mutation {
+  extend type Mutation {
     confirmAccountWithPhoneNumber(phoneConfirmationInput: PhoneConfirmationInput!): UserAccount!
     createAccountWithPhoneNumber(phoneInput: PhoneInput!): UserAccount!
   }

@@ -7,4 +7,5 @@ import { UserAccountSchema } from './UserAccountSchema';
  * @description holds all schemas
  */
 
-export const schema = [DefaultSchema, UserSchema, BookSchema, UserAccountSchema];
+// export const schema = [DefaultSchema, UserSchema, BookSchema, UserAccountSchema];
+export const schema = [DefaultSchema, UserAccountSchema];
