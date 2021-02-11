@@ -1,10 +1,10 @@
-import React from 'react'
-import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap'
-import { useAuth0 } from '@auth0/auth0-react'
+import React from "react";
+import { Container, Image, Row, Col, Navbar, NavDropdown } from "react-bootstrap";
+import { useAuth0 } from "@auth0/auth0-react";
 
-import Logo from './logo.svg'
+import Logo from "./logo.svg";
 
-import './Header.scss'
+import "./Header.scss";
 
 export default function Header() {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0()
@@ -35,9 +35,9 @@ export default function Header() {
                   <NavDropdown.Item href="/"><span>Manage auctons</span></NavDropdown.Item>
                   <NavDropdown.Divider />
                   {isAuthenticated ? (
-                      <NavDropdown.Item onClick={() => logout()}><span>Sign Out</span></NavDropdown.Item>
+                      <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={() => logout()}><span>Sign Out</span></NavDropdown.Item>
                     ) : (
-                      <NavDropdown.Item onClick={() => loginWithRedirect()}><span>Log In</span></NavDropdown.Item>
+                      <NavDropdown.Item data-test-id="dropdown-menu-login-button" onClick={() => loginWithRedirect()}><span>Log In</span></NavDropdown.Item>
                     )
                   }
                   <div>
