@@ -4,7 +4,8 @@
 
 // configuring environment variables
 import { config as configureEnv } from 'dotenv';
-configureEnv();
+if (process.env.NODE_ENV === 'development') configureEnv();
+import './services/newrelic';
 
 // creating apollo server
 import apolloServer from './graphql';
