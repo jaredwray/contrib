@@ -39,6 +39,7 @@ export const fetchAuthUser = async (req: Request): Promise<AuthUser> => {
         }
       } else {
         const user: AuthUser = <AuthUser>decoded;
+        console.log(user);
         resolve(user);
       }
     });
