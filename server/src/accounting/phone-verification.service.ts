@@ -28,7 +28,7 @@ export class PhoneVerificationService {
         .verifications.create({ to: phone, channel: 'sms' });
       this.logger.debug(JSON.stringify(verificationRequest));
     } catch (error) {
-      console.log(`error: ${JSON.stringify(error)} / ${JSON.stringify(error.code)}`);
+      this.logger.error(`error: ${JSON.stringify(error)} / ${JSON.stringify(error.code)}`);
       if (error.code === TwilioBadRequestErrorCode) {
         throw new BaseError('Invalid phone number');
       }
@@ -43,7 +43,7 @@ export class PhoneVerificationService {
       verificationResult = await this.twilio.verify
         .services(this.configService.get<string>('VERIFICATION_SID'))
         .verificationChecks.create({ to: phone, code: otp });
-      this.logger.debug(JSON.stringify(verificationResult));
+      this.logger.debug(`verification result = ${JSON.stringify(verificationResult)}`);
     } catch (error) {
       if (error.code === TwilioBadRequestErrorCode) {
         throw new BaseError('Incorrect verification code');
