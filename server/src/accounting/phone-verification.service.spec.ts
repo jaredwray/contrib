@@ -4,6 +4,7 @@ import { Twilio } from 'twilio';
 import { PhoneVerificationService } from './phone-verification.service';
 import { mocked } from 'ts-jest/utils';
 import { BaseError } from '../errors/base-error';
+import { ErrorCode } from '../errors/error-code';
 
 const mockedCreateVerification = jest.fn();
 const mockedCheckVerification = jest.fn();
@@ -76,7 +77,9 @@ describe('confirmVerification', () => {
       } catch (e) {
         expect(mockedCheckVerification).toHaveBeenCalledWith({ to: phoneNumber, code: otp });
         console.log(e);
-        expect(e).toEqual(new BaseError(`wrong confirmation code for: ${phoneNumber}`, 'phone_confirmation_exception'));
+        expect(e).toEqual(
+          new BaseError('Incorrect verification code', ErrorCode.BAD_REQUEST),
+        );
       }
     });
   });

@@ -12,7 +12,7 @@ import { appLogger } from './logging/appLogger';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 let cors = null;
-if (process.env.NODE_ENV !== 'live') {
+if (process.env.NODE_ENV === 'local') {
   appLogger.warn('enabling lax CORS policies for local development; should not happen in production');
   cors = {
     origin: 'http://localhost:3000',
