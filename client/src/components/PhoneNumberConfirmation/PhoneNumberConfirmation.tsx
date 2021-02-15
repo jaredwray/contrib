@@ -16,7 +16,7 @@ const OtpResendDuration = Duration.fromObject({ seconds: 5 });
 
 const ConfirmPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!, $otp: String!) {
-    confirmAccountWithPhoneNumber(phoneConfirmationInput: { phoneNumber: $phoneNumber, otp: $otp }) {
+    confirmAccountWithPhoneNumber(input: { phoneNumber: $phoneNumber, otp: $otp }) {
       id
       phoneNumber
       status

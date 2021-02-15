@@ -1,18 +1,23 @@
-/**
- * @description holds server main
- */
+import { config as loadDotEnvFile } from 'dotenv';
+if (process.env.NODE_ENV === 'local') {
+  loadDotEnvFile();
+}
 
-// configuring environment variables
-import { config as configureEnv } from 'dotenv';
-if (process.env.NODE_ENV === 'development') configureEnv();
-import './services/newrelic';
+import { AppConfig } from './config';
+if (AppConfig.newRelic.enabled) {
+  require('newrelic');
+}
 
-// creating apollo server
-import apolloServer from './graphql';
+import { createGraphqlServer } from './graphql';
+import { AppLogger } from './logger';
 
-const port: string = process.env.PORT as string;
-
-// start listening
-apolloServer.listen(port).then(({ url }) => {
-  console.log(`Apollo Server is running on ${url} `);
-});
+createGraphqlServer()
+  .listen(AppConfig.app.port)
+  .then(
+    ({ url }) => {
+      AppLogger.info(`server is listening on ${url}`);
+    },
+    (error) => {
+      AppLogger.error(`error starting server on port ${AppConfig.app.port}:`, error);
+    },
+  );
