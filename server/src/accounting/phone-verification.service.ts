@@ -1,9 +1,9 @@
 import { Twilio } from 'twilio';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EnvironmentVariables } from 'src/environment-variables';
-import { AppLogger } from 'src/logging/app-logger.service';
-import { BaseError } from 'src/errors/base-error';
+import { EnvironmentVariables } from '../environment-variables';
+import { AppLogger } from '../logging/app-logger.service';
+import { BaseError } from '../errors/base-error';
 import { VerificationCheckInstance } from 'twilio/lib/rest/verify/v2/service/verificationCheck';
 
 const TwilioBadRequestErrorCode = 60200;

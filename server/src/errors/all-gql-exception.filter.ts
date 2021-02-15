@@ -2,7 +2,7 @@ import { Catch, Injectable } from '@nestjs/common';
 import { GqlExceptionFilter } from '@nestjs/graphql';
 import { ApolloError } from 'apollo-server-express';
 
-import { AppLogger } from 'src/logging/app-logger.service';
+import { AppLogger } from '../logging/app-logger.service';
 import { ErrorCode } from './error-code';
 
 @Injectable()
