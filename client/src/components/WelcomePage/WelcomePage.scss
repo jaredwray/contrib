@@ -43,15 +43,8 @@
         color: $dark-gray-color;
       }
 
-      .welcome-page-create-btn {
-        color: $sage-color;
-        font-size: 20px;
-        line-height: 25px;
-
-
-        &:after {
-          line-height: 20px;
-        }
+      .welcome-page-create-btn:after {
+        line-height: 20px;
       }
     }
   }

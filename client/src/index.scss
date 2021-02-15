@@ -9,9 +9,7 @@ body {
 }
 
 .btn, .btn:focus {
-  background: $ochre-color;
   border-radius: 10px;
-  color: $sage-color;
   height: 50px;
   font-size: 12px;
   line-height: 16px;
@@ -21,6 +19,26 @@ body {
   border: none !important;
   box-shadow: none !important;
 
+  &.btn-ochre {
+    background: $ochre-color;
+    color: $sage-color;
+
+    &:hover, &:active {
+      background: $sage-color !important;
+      color: $white-color !important;
+    }
+  }
+
+  &.btn-dark-gray {
+    background: $dark-gray-color;
+    color: $white-color;
+
+    &:hover, &:active {
+      background: $sage-color !important;
+      color: $white-color !important;
+    }
+  }
+
   &.btn-with-arrows:after {
     content: '»';
     font-size: 25px;
@@ -28,11 +46,6 @@ body {
     font-weight: normal;
     margin-left: 10px;
     float: right;
-  }
-
-  &:hover, &:active {
-    background: $sage-color !important;
-    color: $white-color !important;
   }
 }
 

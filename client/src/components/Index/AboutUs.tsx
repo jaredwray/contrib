@@ -16,7 +16,7 @@ export default function AboutUs() {
           </Col>
         </Row>
         <Row>
-          <Col className="pt-3"><Button className="btn-with-arrows">How does it work?</Button></Col>
+          <Col className="pt-3"><Button className="btn-with-arrows btn-ochre">How does it work?</Button></Col>
         </Row>
       </Container>
     </section>

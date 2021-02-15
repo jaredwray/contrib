@@ -8,7 +8,7 @@ describe("Banner", () => {
       withAuthenticatedUser();
 
       let wrapper = shallow(<Banner />);
-      expect(wrapper.find("[data-test-id='sign-up-button']")).toHaveLength(0);
+      expect(wrapper.find(".banner-sign-up-button")).toHaveLength(0);
     });
   });
 
@@ -17,7 +17,7 @@ describe("Banner", () => {
       withNotAuthenticatedUser();
 
       let wrapper = shallow(<Banner />);
-      let signUpButton = wrapper.find("[data-test-id='sign-up-button']");
+      let signUpButton = wrapper.find(".banner-sign-up-button");
       expect(signUpButton).toHaveLength(1);
 
       signUpButton.simulate("click");

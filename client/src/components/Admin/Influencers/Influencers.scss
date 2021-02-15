@@ -1,0 +1,126 @@
+@import '../../../variables.scss';
+
+.admin-invitations-page {
+  background-color: $barely-gray-color;
+
+  .form-control {
+    padding: 20px 10px;
+    background-color: $barely-gray-color;
+  }
+
+  .influencer-actions-dropdown {
+    text-align: right;
+
+    .dropdown-toggle {
+      background: none;
+      color: $light-gray-color;
+      font-size: 20px;
+      height: 30px;
+      line-height: 8px;
+      display: inline-flex;
+
+      &[aria-expanded="true"] {
+        color: $sage-color;
+      }
+
+      &:after {
+        display: none;
+      }
+    }
+
+    .dropdown-item {
+      font-weight: bold;
+      color: $black-color;
+
+      &:hover {
+        background-color: $barely-gray-color;
+      }
+
+      i {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-size: 9px !important;
+        background-size: 9px;
+        margin-right: 10px;
+
+        &.icon-add {
+          transform: rotate(45deg);
+          background: no-repeat url('./icon-delete.webp');
+        }
+      }
+    }
+  }
+
+  .admin-invitations-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    th {
+      height: 49px;
+      padding: 7px;
+      border: none;
+    }
+
+    tbody {
+      tr {
+        cursor: pointer;
+        background-color: $white-color;
+
+        &:hover, &.tr-selected {
+          background: $sage-color;
+          color: $white-color;
+
+          .dropdown-toggle {
+            &[aria-expanded="true"] {
+              color: $light-sage-color;
+            }
+          }
+        }
+      }
+
+      td {
+        vertical-align: middle;
+        padding: 7px;
+
+        &:first-child {
+          border-top-left-radius: 10px;
+          border-bottom-left-radius: 10px;
+        }
+        &:last-child {
+          border-bottom-right-radius: 10px;
+          border-top-right-radius: 10px;
+        }
+      }
+    }
+  }
+}
+
+.pagination {
+  .pagination-btn {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    background-image: url('./pagination-btn-left.webp');
+    background-color: none;
+    transition: transform 0s;
+    cursor: pointer;
+
+    &:hover {
+      background-image: url('./pagination-btn-left-hover.webp');
+    }
+
+    &.pagination-btn-next {
+      transform: rotate(-180deg);
+    }
+  }
+  .pagination-status {
+    margin: auto 0;
+
+    .pagination-status-info {
+      color: $light-gray-color;
+    }
+  }
+}

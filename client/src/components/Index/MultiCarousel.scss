@@ -4,6 +4,7 @@
   position: static;
   margin-right: calc(10px - 0.5 * (100vw - 100%));
 }
+
 .react-multiple-carousel__arrow--left {
   left: 20px;
 }
@@ -12,6 +13,7 @@
   .react-multi-carousel-list {
     position: relative;
   }
+
   .react-multiple-carousel__arrow {
     display: none;
   }
@@ -24,7 +26,7 @@
 .react-multiple-carousel__arrow {
   height: 60px;
   width: 60px;
-  background-image: url('./carousel_arrow-left.webp');
+  background-image: url('./carousel-arrow-left.webp');
   background-color: none;
   transition: transform 0s;
 
