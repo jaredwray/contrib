@@ -4,8 +4,10 @@ export const AppConfig = {
     url: requireEnvVar('APP_URL'),
   },
   environment: {
-    isProduction: process.env.NODE_ENV !== 'local',
+    isProduction: process.env.NODE_ENV === 'live',
+    isDev: process.env.NODE_ENV === 'dev',
     isLocal: process.env.NODE_ENV === 'local',
+    serveClient: Boolean(process.env.SERVE_CLIENT || process.env.NODE_ENV !== 'local'),
   },
   newRelic: {
     appName: process.env.NEW_RELIC_APP_NAME,

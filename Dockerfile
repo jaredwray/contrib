@@ -7,9 +7,11 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Copying source files
-COPY . /usr/src/app
+COPY ./client/build /usr/src/app/client/build
+COPY ./server/package.json /usr/src/app/server/package.json
+COPY ./server/dist /usr/src/app/server/dist
 
-# Installing dependencies
+# Install Server Dependencies
 WORKDIR /usr/src/app/server
 RUN yarn
 
@@ -17,4 +19,4 @@ RUN yarn
 EXPOSE 3000
 
 # Running the app
-CMD "yarn" "start"
+CMD "node" "./dist/index.js"
