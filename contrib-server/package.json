@@ -9,9 +9,9 @@
     "build": "tsc --build tsconfig.build.json",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch --passWithNoTests",
+    "test:cov": "jest --coverage --passWithNoTests"
   },
   "dependencies": {
     "@newrelic/winston-enricher": "^1.0.0",
