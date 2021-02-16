@@ -1,0 +1,4 @@
+export enum InfluencerStatus {
+  INVITATION_PENDING = 'INVITATION_PENDING',
+  ONBOARDED = 'ONBOARDED',
+}

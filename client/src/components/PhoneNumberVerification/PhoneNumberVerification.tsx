@@ -16,7 +16,7 @@ import 'react-phone-input-2/lib/style.css';
 
 const EnterPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!) {
-    createAccountWithPhoneNumber(phoneInput: { phoneNumber: $phoneNumber }) {
+    createAccountWithPhoneNumber(input: { phoneNumber: $phoneNumber }) {
       id
       phoneNumber
       status
