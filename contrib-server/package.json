@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@newrelic/winston-enricher": "^1.0.0",
-    "apollo-server": "^2.5.0",
+    "apollo-server-express": "^2.21.0",
     "asoiaf-api": "^1.0.1",
     "auth0": "^2.33.0",
     "dataloader": "^2.0.0",
@@ -28,10 +28,10 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/mongoose": "^5.8.2",
     "@types/auth0": "^2.33.0",
     "@types/dotenv": "^8.2.0",
     "@types/jest": "^26.0.20",
+    "@types/mongoose": "^5.8.2",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
     "eslint": "^7.19.0",

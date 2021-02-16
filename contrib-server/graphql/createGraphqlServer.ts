@@ -1,4 +1,4 @@
-import { ApolloError, ApolloServer, gql } from 'apollo-server';
+import { ApolloError, ApolloServer, gql } from 'apollo-server-express';
 
 import { createGraphqlContext } from './createGraphqlContext';
 import { UserAccountSchema, UserAccountResolvers } from '../app/UserAccount';
