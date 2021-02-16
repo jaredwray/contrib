@@ -30,7 +30,7 @@ export class Auth0Service {
       return null;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const options = {
         audience: process.env.AUTH0_AUDIENCE,
         issuer: process.env.AUTH0_ISSUER_URL,

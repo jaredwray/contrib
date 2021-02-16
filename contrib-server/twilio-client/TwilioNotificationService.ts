@@ -3,7 +3,7 @@ import { AppLogger } from '../logger';
 import { AppConfig } from '../config';
 
 export class TwilioNotificationService {
-  async sendMessage(phoneNumber: string, text: string) {
+  async sendMessage(phoneNumber: string, text: string): Promise<void> {
     const result = await twilioMessages.create({
       body: text,
       to: phoneNumber,

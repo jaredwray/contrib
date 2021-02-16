@@ -5,19 +5,28 @@ import { GraphqlContext } from '../../../graphql/GraphqlContext';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateInfluencerProfileInput } from './model/UpdateInfluencerProfileInput';
+import { Invitation } from '../dto/Invitation';
 
 export const InfluencerResolvers = {
   Query: {
-    invitation: async (parent: unknown, { slug }: { slug: string }, { invitation }: GraphqlContext) => {
+    invitation: async (
+      parent: unknown,
+      { slug }: { slug: string },
+      { invitation }: GraphqlContext,
+    ): Promise<Invitation | null> => {
       const foundInvitation = await invitation.findInvitationBySlug(slug);
       if (foundInvitation?.accepted) {
         return null;
       }
-      return invitation;
+      return foundInvitation;
     },
     influencers: requirePermission(
       UserPermission.MANAGE_INFLUENCERS,
-      async (parent, { size, skip }: { size: number; skip: number }, { influencer }) => {
+      async (
+        parent,
+        { size, skip }: { size: number; skip: number },
+        { influencer },
+      ): Promise<{ items: InfluencerProfile[]; totalItems: number; size: number; skip: number }> => {
         return {
           items: await influencer.listInfluencers(skip, size),
           totalItems: await influencer.countInfluencers(),
@@ -34,7 +43,7 @@ export const InfluencerResolvers = {
     ),
     updateMyInfluencerProfile: requirePermission(
       UserPermission.INFLUENCER,
-      async (_, { input }: { input: UpdateInfluencerProfileInput }, { user, influencer, userAccount }) => {
+      async (_: unknown, { input }: { input: UpdateInfluencerProfileInput }, { user, influencer, userAccount }) => {
         const account = await userAccount.getAccountByAuthzId(user.id);
         return influencer.updateInfluencerProfileByUserId(account.mongodbId, input);
       },
@@ -52,7 +61,11 @@ export const InfluencerResolvers = {
     ),
   },
   UserAccount: {
-    influencerProfile: async (parent: UserAccount, _, { user, influencerLoader }: GraphqlContext) => {
+    influencerProfile: async (
+      parent: UserAccount,
+      _: unknown,
+      { user, influencerLoader }: GraphqlContext,
+    ): Promise<InfluencerProfile | null> => {
       const hasAccess = user?.hasPermission(UserPermission.MANAGE_INFLUENCERS) || user?.id === parent.id;
       if (!parent.mongodbId || !hasAccess) {
         return null;

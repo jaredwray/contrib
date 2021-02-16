@@ -17,7 +17,7 @@ export const DefaultSchema = gql`
   }
 `;
 
-export function createGraphqlServer() {
+export function createGraphqlServer(): ApolloServer {
   return new ApolloServer({
     typeDefs: [DefaultSchema, UserAccountSchema, InfluencerSchema],
     resolvers: [UserAccountResolvers, InfluencerResolvers],

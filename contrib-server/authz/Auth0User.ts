@@ -4,7 +4,7 @@ import { UserPermission } from './UserPermission';
 export class Auth0User {
   constructor(private readonly tokenPayload: Auth0TokenPayload) {}
 
-  get id() {
+  get id(): string {
     return this.tokenPayload.sub;
   }
 
