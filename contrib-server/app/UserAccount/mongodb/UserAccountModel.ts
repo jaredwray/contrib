@@ -5,7 +5,7 @@ export interface IUserAccount extends Document {
   phoneNumber: string;
 }
 
-const CollectionName = 'account';
+export const UserAccountCollectionName = 'account';
 
 const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   authzId: { type: SchemaTypes.String, required: true, index: true, unique: true },
@@ -13,5 +13,5 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
 });
 
 export const UserAccountModel = (connection: Connection): Model<IUserAccount> => {
-  return connection.model<IUserAccount>(CollectionName, UserAccountSchema);
+  return connection.model<IUserAccount>(UserAccountCollectionName, UserAccountSchema);
 };

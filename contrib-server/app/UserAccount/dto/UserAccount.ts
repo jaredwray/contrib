@@ -4,4 +4,5 @@ export interface UserAccount {
   id: string;
   phoneNumber?: string;
   status: UserAccountStatus;
+  mongodbId?: string;
 }

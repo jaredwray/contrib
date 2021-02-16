@@ -1,6 +1,7 @@
 export const AppConfig = {
   app: {
     port: Number(process.env.PORT ?? 3000),
+    url: requireEnvVar('APP_URL'),
   },
   environment: {
     isProduction: process.env.NODE_ENV !== 'local',
@@ -26,6 +27,7 @@ export const AppConfig = {
   twilio: {
     accountSid: requireEnvVar('TWILIO_ACCOUNT_SID'),
     authToken: requireEnvVar('TWILIO_AUTH_TOKEN'),
+    senderNumber: requireEnvVar('TWILIO_SENDER_NUMBER'),
     verificationService: {
       sid: requireEnvVar('TWILIO_VERIFICATION_SERVICE_SID'),
     },

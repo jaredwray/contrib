@@ -21,6 +21,7 @@
     "apollo-server": "^2.5.0",
     "asoiaf-api": "^1.0.1",
     "auth0": "^2.33.0",
+    "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.3.0",
     "mongoose": "^5.8.2",

@@ -1,21 +1,21 @@
 import { Connection, Model } from 'mongoose';
+import { EventEmitter } from 'events';
 
-import { UserAccount } from '../graphql/model/UserAccount';
+import { UserAccount } from '../dto/UserAccount';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
-import { UserAccountStatus } from '../graphql/model/UserAccountStatus';
+import { UserAccountStatus } from '../dto/UserAccountStatus';
 import { TwilioVerificationService } from '../../../twilio-client';
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
-import { Auth0Service } from '../../../authz';
-import { UserRole } from '../../../authz/UserRole';
+import { Events } from '../../Events';
 
 export class UserAccountService {
   private readonly accountModel: Model<IUserAccount> = UserAccountModel(this.connection);
 
   constructor(
     private readonly connection: Connection,
-    private readonly auth0Service: Auth0Service,
     private readonly twilioVerificationService: TwilioVerificationService,
+    private readonly eventHub: EventEmitter,
   ) {}
 
   async getAccountByAuthzId(authzId: string): Promise<UserAccount> {
@@ -25,6 +25,7 @@ export class UserAccountService {
         id: account.authzId,
         phoneNumber: account.phoneNumber,
         status: UserAccountStatus.COMPLETED,
+        mongodbId: account._id.toString(),
       };
     }
 
@@ -33,6 +34,29 @@ export class UserAccountService {
       phoneNumber: null,
       status: UserAccountStatus.PHONE_NUMBER_REQUIRED,
     };
+  }
+
+  async getAccountByPhoneNumber(phoneNumber: string): Promise<UserAccount> {
+    const account = await this.accountModel.findOne({ phoneNumber }).exec();
+    if (account != null) {
+      return {
+        id: account.authzId,
+        phoneNumber: account.phoneNumber,
+        status: UserAccountStatus.COMPLETED,
+        mongodbId: account._id.toString(),
+      };
+    }
+    return null;
+  }
+
+  async listAccountsById(ids: readonly string[]): Promise<UserAccount[]> {
+    const models = await this.accountModel.find({ _id: { $in: ids } });
+    return models.map((model) => ({
+      id: model.authzId,
+      phoneNumber: model.phoneNumber,
+      status: UserAccountStatus.COMPLETED,
+      mongodbId: model._id.toString(),
+    }));
   }
 
   async createAccountWithPhoneNumber(authzId: string, phoneNumber: string): Promise<UserAccount> {
@@ -58,13 +82,16 @@ export class UserAccountService {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
 
-    const account = await this.accountModel.create({ authzId, phoneNumber });
-    await this.auth0Service.assignUserRole(authzId, UserRole.PLAIN_USER);
-
-    return {
-      id: account.authzId,
-      phoneNumber: account.phoneNumber,
+    const accountModel = await this.accountModel.create({ authzId, phoneNumber });
+    const account = {
+      id: accountModel.authzId,
+      phoneNumber: accountModel.phoneNumber,
       status: UserAccountStatus.COMPLETED,
+      mongodbId: accountModel._id.toString(),
     };
+
+    this.eventHub.emit(Events.USER_ACCOUNT_CREATED, account);
+
+    return account;
   }
 }

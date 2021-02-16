@@ -2,8 +2,6 @@ import { twilioVerify } from './twilioClient';
 import { AppLogger } from '../logger';
 
 export class TwilioVerificationService {
-  constructor() {}
-
   async createVerification(phoneNumber: string): Promise<void> {
     const verification = await twilioVerify.verifications.create({ to: phoneNumber, channel: 'sms' });
     AppLogger.debug(`created twilio verification: ${JSON.stringify(verification)}`);

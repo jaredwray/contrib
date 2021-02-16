@@ -5,6 +5,7 @@ import { UserAccountSchema, UserAccountResolvers } from '../app/UserAccount';
 import { AppLogger } from '../logger';
 import { ErrorCode } from '../errors/ErrorCode';
 import { AppError } from '../errors/AppError';
+import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
 
 export const DefaultSchema = gql`
   type Query {
@@ -18,8 +19,8 @@ export const DefaultSchema = gql`
 
 export function createGraphqlServer() {
   return new ApolloServer({
-    typeDefs: [DefaultSchema, UserAccountSchema],
-    resolvers: UserAccountResolvers,
+    typeDefs: [DefaultSchema, UserAccountSchema, InfluencerSchema],
+    resolvers: [UserAccountResolvers, InfluencerResolvers],
     context: createGraphqlContext,
     playground: {
       endpoint: '/graphql',
@@ -36,9 +37,14 @@ export function createGraphqlServer() {
         throw new ApolloError(originalError.message, originalError.code);
       }
 
-      AppLogger.error(`unhandled exception "${originalError.name}": ${originalError.message}`, {
-        stack: originalError.stack,
-      });
+      if (originalError) {
+        AppLogger.error(`unhandled exception "${originalError.name}": ${originalError.message}`, {
+          stack: originalError.stack,
+        });
+        throw new ApolloError('Something went wrong. Please try again later.', ErrorCode.INTERNAL_ERROR);
+      }
+
+      AppLogger.error(`unhandled graphql failure: ${JSON.stringify(error)}`);
       throw new ApolloError('Something went wrong. Please try again later.', ErrorCode.INTERNAL_ERROR);
     },
   });
