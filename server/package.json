@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "@types/auth0": "^2.33.0",
-    "@types/dotenv": "^8.2.0",
     "@types/jest": "^26.0.20",
     "@types/mongoose": "^5.8.2",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
