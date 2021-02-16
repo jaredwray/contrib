@@ -21,7 +21,7 @@ export class Auth0Service {
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 5,
-      jwksUri: `${process.env.AUTH0_ISSUER_URL}.well-known/jwks.json`,
+      jwksUri: `${AppConfig.auth0.issuerUrl}.well-known/jwks.json`,
     });
   }
 
@@ -32,8 +32,8 @@ export class Auth0Service {
 
     return new Promise((resolve) => {
       const options = {
-        audience: process.env.AUTH0_AUDIENCE,
-        issuer: process.env.AUTH0_ISSUER_URL,
+        audience: AppConfig.auth0.audience,
+        issuer: AppConfig.auth0.issuerUrl,
         algorithms: ['RS256'],
       };
 
