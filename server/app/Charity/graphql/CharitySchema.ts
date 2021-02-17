@@ -18,7 +18,7 @@ export const CharitySchema = gql`
   }
 
   extend type Query {
-    searchForCharities(inpit: CharityInput!): [Charity]!
+    charitiesSearch(query: String!): [Charity!]!
     charities(size: Int!, skip: Int!): CharitiesPage!
   }
 

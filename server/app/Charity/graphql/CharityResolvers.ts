@@ -7,12 +7,12 @@ type CharityInput = {
 
 export const CharityResolvers = {
   Query: {
-    searchForCharities: async (
+    charitiesSearch: async (
       parent: unknown,
-      input: CharityInput,
+      { query }: { query: string },
       { charity }: GraphqlContext,
     ): Promise<Charity[] | null> => {
-      return await charity.searchForCharity(input);
+      return await charity.searchForCharity(query);
     },
     charities: async (
       parent: unknown,

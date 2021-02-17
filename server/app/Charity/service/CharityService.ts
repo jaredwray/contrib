@@ -12,8 +12,8 @@ export class CharityService {
     return CharityService.makeCharity(charity);
   }
 
-  async searchForCharity({ name }: CharityInput): Promise<Charity[] | null> {
-    const charities = await this.CharityModel.find({ $text: { $search: name } }).exec();
+  async searchForCharity(query: string): Promise<Charity[] | null> {
+    const charities = await this.CharityModel.find({ $text: { $search: query } }).exec();
     return charities.map(CharityService.makeCharity);
   }
 
