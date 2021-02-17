@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.7",
     "@auth0/auth0-react": "^1.2.0",
+    "@hookform/error-message": "^0.0.5",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -24,6 +25,7 @@
     "react-bootstrap": "^1.4.3",
     "react-dom": "^17.0.1",
     "react-final-form": "^6.5.2",
+    "react-hook-form": "^6.15.1",
     "react-multi-carousel": "^2.6.1",
     "react-phone-input-2": "^2.13.9",
     "react-router-dom": "^5.2.0",
@@ -61,8 +63,8 @@
   },
   "devDependencies": {
     "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/luxon": "^1.25.1",
     "@types/react-router-dom": "^5.1.7",
-    "react-test-renderer": "^17.0.1",
-    "@types/luxon": "^1.25.1"
+    "react-test-renderer": "^17.0.1"
   }
 }

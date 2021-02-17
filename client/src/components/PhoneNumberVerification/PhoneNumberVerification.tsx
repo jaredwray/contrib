@@ -12,7 +12,6 @@ import { UserAccount, UserAccountStatus } from '../../model/UserAccount';
 import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
 
 import './PhoneNumberVerification.scss';
-import 'react-phone-input-2/lib/style.css';
 
 const EnterPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!) {
