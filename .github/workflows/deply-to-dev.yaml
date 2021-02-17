@@ -98,13 +98,18 @@ jobs:
           --set-env-vars=NEW_RELIC_APP_NAME=$ENV_NEW_RELIC_APP_NAME \
           --set-env-vars=NEW_RELIC_LICENSE_KEY=$ENV_NEW_RELIC_LICENSE_KEY \
           --set-env-vars=MONGODB_URI=$ENV_MONGODB_URI \
-          --set-env-vars=AUTH0_ISSUER_URL=$ENV_AUTH0_ISSUER_URL \
-          --set-env-vars=AUTH0_AUDIENCE=$ENV_AUTH0_AUDIENCE \
-          --set-env-vars=UTH0_MANAGEMENT_DOMAIN=$ENV_AUTH0_MANAGEMENT_DOMAIN \
-          --set-env-vars=AUTH0_MANAGEMENT_CLIENT_ID=$ENV_AUTH0_CLIENT_ID \
-          --set-env-vars=AUTH0_MANAGEMENT_CLIENT_SECRET=$ENV_AUTH0_CLIENT_SECRET \
+          --set-env-vars=APP_URL=$ENV_APP_URL \
           --set-env-vars=TWILIO_ACCOUNT_SID=$ENV_TWILIO_ACCOUNT_SID \
           --set-env-vars=TWILIO_AUTH_TOKEN=$ENV_TWILIO_AUTH_TOKEN \
-          --set-env-vars=TWILIO_VERIFICATION_SID=$ENV_TWILIO_VERIFICATION_SID \
-          --set-env-vars=APP_URL=$ENV_APP_URL \
-          --set-env-vars=TWILIO_SENDER_NUMBER=$ENV_TWILIO_SENDER_NUMBER
+          --set-env-vars=TWILIO_VERIFICATION_SERVICE_SID=$ENV_TWILIO_VERIFICATION_SERVICE_SID \
+          --set-env-vars=TWILIO_SENDER_NUMBER=$ENV_TWILIO_SENDER_NUMBER \
+          --set-env-vars=AUTH0_ISSUER_URL=$ENV_AUTH0_ISSUER_URL \
+          --set-env-vars=AUTH0_AUDIENCE=$ENV_AUTH0_AUDIENCE \
+          --set-env-vars=AUTH0_MANAGEMENT_DOMAIN=$ENV_AUTH0_MANAGEMENT_DOMAIN \
+          --set-env-vars=AUTH0_MANAGEMENT_CLIENT_ID=$ENV_AUTH0_MANAGEMENT_CLIENT_ID \
+          --set-env-vars=AUTH0_MANAGEMENT_CLIENT_SECRET=$ENV_AUTH0_MANAGEMENT_CLIENT_SECRET
+          
+          
+          
+
+          
