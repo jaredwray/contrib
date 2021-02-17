@@ -9,7 +9,7 @@ env:
   SERVICE_NAME: contrib-app
 
   #Server Env
-  ENV_NEW_RELIC_APP_NAME: contrib-app-dev
+  ENV_NEW_RELIC_APP_NAME: contrib-app-live
   ENV_NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
   ENV_MONGODB_URI: ${{ secrets.LIVE_MONGODB_URI }}
   ENV_AUTH0_ISSUER_URL: https://auth.contrib.org
