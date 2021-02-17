@@ -13,6 +13,7 @@ import { UserAccountLoader } from '../app/UserAccount/service/UserAccountLoader'
 import { InvitationLoader } from '../app/Influencer/service/InvitationLoader';
 import { InfluencerLoader } from '../app/Influencer/service/InfluencerLoader';
 import { UserAccountRolesManagementService } from '../app/UserAccount/service/UserAccountRolesManagementService';
+import { CharityService } from '../app/Charity/service/CharityService';
 
 export async function createGraphqlContext(ctx: ExpressContext): Promise<GraphqlContext> {
   const eventHub = new EventEmitter();
@@ -27,6 +28,7 @@ export async function createGraphqlContext(ctx: ExpressContext): Promise<Graphql
   const influencerLoader = new InfluencerLoader(influencer);
   const invitation = new InvitationService(connection, userAccount, influencer, twilioNotification, eventHub);
   const invitationLoader = new InvitationLoader(invitation);
+  const charity = new CharityService(connection);
 
   const userAccountRolesManagement = new UserAccountRolesManagementService(auth0, eventHub);
 
@@ -41,6 +43,7 @@ export async function createGraphqlContext(ctx: ExpressContext): Promise<Graphql
     influencerLoader,
     invitation,
     invitationLoader,
+    charity,
     userAccountRolesManagement,
   };
 }

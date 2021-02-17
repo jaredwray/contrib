@@ -6,6 +6,7 @@ import { AppLogger } from '../logger';
 import { ErrorCode } from '../errors/ErrorCode';
 import { AppError } from '../errors/AppError';
 import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
+import { CharityResolvers, CharitySchema } from '../app/Charity';
 
 export const DefaultSchema = gql`
   type Query {
@@ -19,8 +20,8 @@ export const DefaultSchema = gql`
 
 export function createGraphqlServer(): ApolloServer {
   return new ApolloServer({
-    typeDefs: [DefaultSchema, UserAccountSchema, InfluencerSchema],
-    resolvers: [UserAccountResolvers, InfluencerResolvers],
+    typeDefs: [DefaultSchema, UserAccountSchema, InfluencerSchema, CharitySchema],
+    resolvers: [UserAccountResolvers, InfluencerResolvers, CharityResolvers],
     context: createGraphqlContext,
     playground: {
       endpoint: '/graphql',
