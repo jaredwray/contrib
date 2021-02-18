@@ -2,7 +2,7 @@ import { Button, Spinner } from "react-bootstrap";
 
 import "./Pagination.scss";
 
-export const PER_PAGE = 2;
+export const PER_PAGE = 25;
 
 export default function Pagination(props: { loading: boolean, skip: number, total: number, showPrevPage: any, showNextPage: any }) {
   const hasPev = (props.skip > 0);

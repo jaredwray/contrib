@@ -32,7 +32,7 @@ export default function InvitationModal(props: any) {
     ({ firstName, lastName, phoneNumber, welcomeMessage }: { firstName: string, lastName: string, phoneNumber: string, welcomeMessage: string }) => {
       if (firstName && lastName && phoneNumber && welcomeMessage) {
         inviteInfliencer({
-          variables: { firstName, lastName, phoneNumber, welcomeMessage },
+          variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage },
         })
         .then(() => window.location.reload(false))
         .catch((error) => setInvitationError(error.message));

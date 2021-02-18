@@ -72,7 +72,15 @@ export default function PhoneNumberVerification() {
 
               <Field name="phoneNumber">
                 {(props) => (
-                  <PhoneInput disabled={formSubmitting} {...props.input} country={'us'} copyNumbersOnly={false} specialLabel="" placeholder=""/>
+                  <PhoneInput
+                    disabled={formSubmitting}
+                    {...props.input}
+                    country={'us'}
+                    copyNumbersOnly={false}
+                    specialLabel=""
+                    placeholder=""
+                    inputProps={{ required: true }}
+                  />
                 )}
               </Field>
               <button disabled={formSubmitting} type="submit" className="btn submit-btn">

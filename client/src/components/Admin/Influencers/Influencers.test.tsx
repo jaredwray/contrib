@@ -1,5 +1,5 @@
 import { MockedProvider } from '@apollo/client/testing';
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { InMemoryCache } from "@apollo/client";
 
 import Influencers, { AllInfliencersQuery } from "./Influencers";

@@ -42,7 +42,7 @@ ReactDOM.render(
           <Route path="/profile" exact component={Profile} />
           <Route path="/welcome" exact component={WelcomePage} />
           <Route path="/admin/influencers" exact component={Influencers} />
-          <Route path="/invitation" exact component={InvitationPage} />
+          <Route path="/invitation/:slug" exact component={InvitationPage} />
         </UserAccountProvider>
       </ContribApolloProvider>
     </Router>
