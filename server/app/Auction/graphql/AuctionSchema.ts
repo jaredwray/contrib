@@ -22,10 +22,11 @@ export const AuctionSchema = gql`
     title: String!
     status: AuctionStatus!
     attachments: AuctionAttachments
-    charity: Charity!
+    charities: [Charity!]!
     bids: [AuctionBid]
     maxBid: AuctionBid
     startDate: Date!
+    initialPrice: String!
     endDate: Date!
   }
 
