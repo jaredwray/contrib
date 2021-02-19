@@ -3,6 +3,9 @@ import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
+import { Storage } from '@google-cloud/storage';
+import { AppConfig } from '../../../config';
+import { v4 as uuidv4 } from 'uuid';
 
 interface InfluencerInput {
   name: string;
@@ -90,6 +93,42 @@ export class InfluencerService {
     Object.assign(influencer, input);
 
     await influencer.save();
+
+    return InfluencerService.makeInfluencerProfile(influencer);
+  }
+
+  async updateInfluencerProfileAvatarByUserId(
+    userAccount: string,
+    image: any,
+  ): Promise<InfluencerProfile> {
+    const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
+    if (!influencer) {
+      throw new Error(`influencer record not found for user account ${userAccount}`);
+    }
+
+    const { filename: originalFilename, createReadStream } = await image
+
+    const extension = originalFilename.split('.').pop();
+    const filename = `${uuidv4()}.${extension}`;
+    const bucketName = AppConfig.googleCloud.bucketName;
+    const path = require('path');
+    const storage = new Storage({ keyFilename: path.join(__dirname, '../../../.secrets-google-cloud.json') });
+
+    await createReadStream().pipe(
+      storage.bucket(bucketName).file(filename).createWriteStream().on("finish", () => {
+        storage.bucket(bucketName).file(filename).makePublic()
+          .then(() => {
+            let oldFileName = influencer.avatarUrl.split('/').pop();
+
+            influencer.avatarUrl = `https://storage.googleapis.com/${bucketName}/${filename}`;
+            influencer.save();
+
+            storage.bucket(bucketName).file(oldFileName).delete()
+              .catch((e : any) => console.log(`cannot delete https://storage.googleapis.com/${bucketName}/${oldFileName} file : ${e}`) );
+          })
+          .catch((e : any) => console.log(`exec error : ${e}`) );
+      })
+    );
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }

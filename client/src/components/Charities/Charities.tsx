@@ -1,12 +1,15 @@
 import React from 'react';
 import { Container, Row, Col, ProgressBar, Form } from 'react-bootstrap';
 
+import SearchParam from "../../helpers/SearchParam";
 import Layout from '../Layout/Layout';
 
 import './Charities.scss';
 import '../Layout/Steps.scss';
 
 export default function Charities() {
+  const stepByStep = SearchParam("sbs");
+
   return (
     <Layout>
       <ProgressBar now={66} />
@@ -53,20 +56,22 @@ export default function Charities() {
           <Row className="buffer d-none d-md-block"/>
         </Container>
 
-        <Container fluid className="steps-navigation-container">
-          <Row className="pl-4 pr-4">
-            <Col xs="6" className="steps-navigation-items">
-              <a href="/profile" className="steps-prev-btn text-subhead">
-                Prev
-              </a>
-            </Col>
-            <Col xs="6" className="steps-navigation-items">
-              <a href="/welcome" className="btn btn-with-arrows steps-next-btn float-right">
-                Finish
-              </a>
-            </Col>
-          </Row>
-        </Container>
+        {stepByStep &&
+          <Container fluid className="steps-navigation-container">
+            <Row className="pl-4 pr-4">
+              <Col xs="6" className="steps-navigation-items">
+                <a href="/profile?sbs=true" className="steps-prev-btn text-subhead">
+                  Prev
+                </a>
+              </Col>
+              <Col xs="6" className="steps-navigation-items">
+                <a href="/welcome" className="btn btn-with-arrows steps-next-btn float-right">
+                  Finish
+                </a>
+              </Col>
+            </Row>
+          </Container>
+        }
       </section>
     </Layout>
   );

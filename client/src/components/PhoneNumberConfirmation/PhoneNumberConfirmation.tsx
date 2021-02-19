@@ -2,7 +2,7 @@ import { Duration, DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { Form as BsForm } from 'react-bootstrap';
+import { Form as BsForm, Button } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 
 import SimpleLayout from '../SimpleLayout/SimpleLayout';
@@ -20,6 +20,9 @@ const ConfirmPhoneNumberMutation = gql`
       id
       phoneNumber
       status
+      influencerProfile {
+        id
+      }
     }
   }
 `;
@@ -30,6 +33,9 @@ const ResendOtpMutation = gql`
       id
       phoneNumber
       status
+      influencerProfile {
+        id
+      }
     }
   }
 `;
@@ -131,18 +137,18 @@ export default function PhoneNumberConfirmation() {
                   </BsForm.Group>
                 )}
               </Field>
-              <button type="submit" disabled={isLoading} className="ml-2 d-inline-block btn submit-btn">
+              <Button type="submit" disabled={isLoading} className="ml-2 d-inline-block btn-ochre">
                 Confirm
-              </button>
+              </Button>
               {canResendOtp && (
-                <button
-                  type="button"
+                <Button
+                  variant="link"
                   onClick={handleResendCode}
                   disabled={isLoading}
-                  className="ml-2 d-inline-block btn btn-link"
+                  className="ml-2 d-inline-block"
                 >
                   Resend code
-                </button>
+                </Button>
               )}
             </BsForm>
           )}

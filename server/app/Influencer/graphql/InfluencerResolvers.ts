@@ -48,6 +48,13 @@ export const InfluencerResolvers = {
         return influencer.updateInfluencerProfileByUserId(account.mongodbId, input);
       },
     ),
+    updateMyInfluencerProfileAvatar: requirePermission(
+      UserPermission.INFLUENCER,
+      async (_: unknown, { image }: { image: any }, { user, influencer, userAccount }) => {
+        const account = await userAccount.getAccountByAuthzId(user.id);
+        return influencer.updateInfluencerProfileAvatarByUserId(account.mongodbId, image);
+      },
+    ),
   },
   InfluencerProfile: {
     userAccount: requirePermission(

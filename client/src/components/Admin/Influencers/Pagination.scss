@@ -9,6 +9,7 @@
     background-color: none;
     transition: transform 0s;
     cursor: pointer;
+    margin: auto;
 
     &:disabled, &:not([disabled]):hover {
       background-image: url('./pagination-btn-left-hover.webp');

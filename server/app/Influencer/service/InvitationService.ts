@@ -124,7 +124,7 @@ export class InvitationService {
     const influencerProfile = this.influencerService.createInfluencer(
       {
         name: `${firstName} ${lastName}`,
-        avatarUrl: 'https://placekitten.com/500/500',
+        avatarUrl: 'https://picsum.photos/200',
         userAccount: userAccount.mongodbId,
       },
       session,
@@ -145,7 +145,7 @@ export class InvitationService {
     const influencerProfile = await this.influencerService.createInfluencer(
       {
         name: `${firstName} ${lastName}`,
-        avatarUrl: 'https://placekitten.com/500/500',
+        avatarUrl: 'https://picsum.photos/200',
         userAccount: null,
       },
       session,

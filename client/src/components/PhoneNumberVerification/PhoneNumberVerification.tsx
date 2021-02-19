@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory } from 'react-router-dom';
-import { Form as BsForm } from 'react-bootstrap';
+import { Button, Form as BsForm } from 'react-bootstrap';
 import PhoneInput from 'react-phone-input-2';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { Field, Form } from 'react-final-form';
 
 import SimpleLayout from '../SimpleLayout/SimpleLayout';
-
 import { UserAccount, UserAccountStatus } from '../../model/UserAccount';
 import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
 
@@ -80,12 +79,13 @@ export default function PhoneNumberVerification() {
                     specialLabel=""
                     placeholder=""
                     inputProps={{ required: true }}
+                    containerClass="mb-3"
                   />
                 )}
               </Field>
-              <button disabled={formSubmitting} type="submit" className="btn submit-btn">
+              <Button disabled={formSubmitting} type="submit" className="submit-btn btn-ochre mb-2">
                 Confirm
-              </button>
+              </Button>
             </BsForm>
           )}
         </Form>
