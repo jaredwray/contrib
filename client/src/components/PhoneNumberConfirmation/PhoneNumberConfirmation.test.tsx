@@ -4,7 +4,7 @@ import PhoneNumberConfirmation from './PhoneNumberConfirmation';
 import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
 import { UserAccountStatus } from '../../model/UserAccount';
 import { MockedProvider } from '@apollo/client/testing';
-import {InMemoryCache} from "@apollo/client";
+import { InMemoryCache } from "@apollo/client";
 
 const cache = new InMemoryCache();
 cache.writeQuery({

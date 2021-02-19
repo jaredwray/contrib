@@ -7,7 +7,7 @@ import Logo from "./logo.svg";
 import "./Header.scss";
 
 export default function Header() {
-  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0()
+  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   return (
     <header className="pl-4 pr-4">

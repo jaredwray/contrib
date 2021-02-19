@@ -12,7 +12,6 @@ import { UserAccount, UserAccountStatus } from '../../model/UserAccount';
 import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
 
 import './PhoneNumberVerification.scss';
-import 'react-phone-input-2/lib/style.css';
 
 const EnterPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!) {
@@ -73,7 +72,15 @@ export default function PhoneNumberVerification() {
 
               <Field name="phoneNumber">
                 {(props) => (
-                  <PhoneInput disabled={formSubmitting} {...props.input} country={'us'} copyNumbersOnly={false} specialLabel="" placeholder=""/>
+                  <PhoneInput
+                    disabled={formSubmitting}
+                    {...props.input}
+                    country={'us'}
+                    copyNumbersOnly={false}
+                    specialLabel=""
+                    placeholder=""
+                    inputProps={{ required: true }}
+                  />
                 )}
               </Field>
               <button disabled={formSubmitting} type="submit" className="btn submit-btn">
