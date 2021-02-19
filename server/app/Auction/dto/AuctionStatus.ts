@@ -1,5 +1,5 @@
 export enum AuctionStatus {
+  DRAFT = 'DRAFT',
   ACTIVE = 'ACTIVE',
-  ACTIVE_BID = 'ACTIVE_BID',
   SETTLED = 'SETTLED',
 }

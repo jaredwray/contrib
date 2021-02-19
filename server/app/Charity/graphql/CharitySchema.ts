@@ -6,6 +6,10 @@ export const CharitySchema = gql`
     name: String!
   }
 
+  input CharityInputID {
+    id: String!
+  }
+
   input CharityInput {
     name: String!
   }

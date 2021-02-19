@@ -14,6 +14,7 @@ import { InvitationLoader } from '../app/Influencer/service/InvitationLoader';
 import { InfluencerLoader } from '../app/Influencer/service/InfluencerLoader';
 import { UserAccountRolesManagementService } from '../app/UserAccount/service/UserAccountRolesManagementService';
 import { CharityService } from '../app/Charity/service/CharityService';
+import { AuctionService } from '../app/Auction/service/AuctionService';
 
 export async function createGraphqlContext(ctx: ExpressContext): Promise<GraphqlContext> {
   const eventHub = new EventEmitter();
@@ -29,6 +30,7 @@ export async function createGraphqlContext(ctx: ExpressContext): Promise<Graphql
   const invitation = new InvitationService(connection, userAccount, influencer, twilioNotification, eventHub);
   const invitationLoader = new InvitationLoader(invitation);
   const charity = new CharityService(connection);
+  const auction = new AuctionService(connection);
 
   const userAccountRolesManagement = new UserAccountRolesManagementService(auth0, eventHub);
 
@@ -44,6 +46,7 @@ export async function createGraphqlContext(ctx: ExpressContext): Promise<Graphql
     invitation,
     invitationLoader,
     charity,
+    auction,
     userAccountRolesManagement,
   };
 }

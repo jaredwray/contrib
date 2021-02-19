@@ -1,4 +1,9 @@
-export interface AuctionAssets {
-  pictures: string[];
-  video: string;
+export enum AssetType {
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
 }
+
+export type AuctionAssets = {
+  url: string;
+  type: AssetType;
+};

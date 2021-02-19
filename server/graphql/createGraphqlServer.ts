@@ -5,14 +5,14 @@ import { UserAccountSchema, UserAccountResolvers } from '../app/UserAccount';
 import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
 import { CharityResolvers, CharitySchema } from '../app/Charity';
 import { AuctionResolvers, AuctionSchema } from '../app/Auction';
+import { DateTimeResolver, DateTimeTypeDefs } from './scalars/dateTime';
+import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
 
 import { AppLogger } from '../logger';
 import { ErrorCode } from '../errors/ErrorCode';
 import { AppError } from '../errors/AppError';
 
 export const DefaultSchema = gql`
-  scalar Date
-
   type Query {
     _empty: String
   }
@@ -24,8 +24,23 @@ export const DefaultSchema = gql`
 
 export function createGraphqlServer(): ApolloServer {
   return new ApolloServer({
-    typeDefs: [DefaultSchema, UserAccountSchema, InfluencerSchema, CharitySchema, AuctionSchema],
-    resolvers: [UserAccountResolvers, InfluencerResolvers, CharityResolvers, AuctionResolvers],
+    typeDefs: [
+      DefaultSchema,
+      DateTimeTypeDefs,
+      MoneyTypeDefs,
+      UserAccountSchema,
+      InfluencerSchema,
+      CharitySchema,
+      AuctionSchema,
+    ],
+    resolvers: [
+      DateTimeResolver,
+      MoneyResolver,
+      UserAccountResolvers,
+      InfluencerResolvers,
+      CharityResolvers,
+      AuctionResolvers,
+    ],
     context: createGraphqlContext,
     playground: {
       endpoint: '/graphql',

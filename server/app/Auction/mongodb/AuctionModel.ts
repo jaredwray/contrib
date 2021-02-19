@@ -1,32 +1,42 @@
+import * as dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
+
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionBidCollectionName, IAuctionBidModel } from './AuctionBidModel';
-import { Dayjs } from 'dayjs';
+import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 
 export interface IAuctionModel extends Document {
   title: string;
   status: AuctionStatus;
-  charity: ICharityModel['_id'];
+  autographed: boolean;
+  sport: string;
+  gameWorn: boolean;
+  assets: IAuctionAssetModel[];
   bids: IAuctionBidModel['_id'][];
-  startsAt: Dayjs;
-  endsAt: Dayjs;
+  charity: ICharityModel['_id'];
+  startsAt: dayjs.Dayjs;
+  endsAt: dayjs.Dayjs;
 }
 
 export const AuctionCollectionName = 'auction';
 
 const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>({
   title: { type: SchemaTypes.String, required: true },
-  status: { type: SchemaTypes.String, required: true },
-  charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName, required: true },
-  bids: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
-  startsAt: { type: SchemaTypes.String, required: true },
-  endsAt: { type: SchemaTypes.String, required: true },
+  sport: { type: SchemaTypes.String, default: '' },
+  description: { type: SchemaTypes.String, default: '' },
+  fullpageDescription: { type: SchemaTypes.String, default: '' },
+  status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
+  charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
+  autographed: { type: SchemaTypes.Boolean, default: false },
+  gameWorn: { type: SchemaTypes.Boolean, default: false },
+  bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
+  assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
+  startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
+  endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
 });
 
-AuctionSchema.post('init', (doc) => {
-  console.log(doc);
-});
+AuctionSchema.index({ startsAt: 1, endsAt: 1 });
 
 export const AuctionModel = (connection: Connection): Model<IAuctionModel> =>
   connection.model<IAuctionModel>(AuctionCollectionName, AuctionSchema);

@@ -1,33 +1,43 @@
 import { gql } from 'apollo-server-express';
 
 export const AuctionSchema = gql`
-  type AuctionAttachments {
-    assets: [String]!
-    videos: [String]!
+  type AuctionAttachment {
+    url: String!
+    type: String!
   }
 
   enum AuctionStatus {
+    DRAFT
     ACTIVE
-    ACTIVE_BID
     SETTLED
+  }
+
+  type AuctionStatusResponse {
+    status: String!
   }
 
   type AuctionBid {
     user: UserAccount
-    bid: Float!
+    bid: Money!
   }
 
   type Auction {
     id: String!
     title: String!
+    description: String
+    fullpageDescription: String
     status: AuctionStatus!
-    attachments: AuctionAttachments
-    charities: [Charity!]!
+    attachments: [AuctionAttachment]
     bids: [AuctionBid]
+    charity: Charity
+    gameWorn: Boolean!
+    autographed: Boolean!
+    authenticityCertificate: Boolean!
+    sport: String!
     maxBid: AuctionBid
-    startDate: Date!
-    initialPrice: String!
-    endDate: Date!
+    startDate: DateTime!
+    initialPrice: Money!
+    endDate: DateTime!
   }
 
   extend type Query {
@@ -35,31 +45,41 @@ export const AuctionSchema = gql`
     auction(id: String!): Auction!
   }
 
-  input AttachmentAuctionInput {
-    videos: [Upload]
-    assets: [Upload]
+  input BidParticipantUser {
+    id: String!
   }
 
   input CreateAuctionInput {
     title: String!
-    startDate: Date!
-    duration: String!
-    attachments: AttachmentAuctionInput
+    description: String
+    fullpageDescription: String
   }
 
   input EditAuctionInput {
-    attachments: AttachmentAuctionInput
+    title: String
+    description: String
+    fullpageDescription: String
+    startDate: DateTime
+    endDate: DateTime
+    initiaPrice: Money
+    charity: String
+    authenticityCertificate: Boolean
+    gameWorn: Boolean
+    autographed: Boolean
   }
 
   input CreateAuctionBidInput {
     id: String!
-    user: UserAccount
-    bid: Float!
+    user: BidParticipantUser!
+    bid: Money!
   }
 
   extend type Mutation {
     createAuction(input: CreateAuctionInput!): Auction!
     updateAuction(id: String, input: EditAuctionInput): Auction!
+    updateAuctionStatus(id: String!, status: AuctionStatus!): Auction!
     createAuctionBid(input: CreateAuctionBidInput!): Auction!
+    addAuctionAttachment(id: String!, attachment: Upload!): Auction!
+    deleteAuction(id: String!): AuctionStatusResponse!
   }
 `;
