@@ -1,6 +1,5 @@
 import { ClientSession, Connection, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { EventEmitter } from 'events';
 
 import { IInvitation, InvitationModel } from '../mongodb/InvitationModel';
 import { InfluencerService } from './InfluencerService';
@@ -16,6 +15,7 @@ import { UserAccountService } from '../../UserAccount';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { Events } from '../../Events';
 import { AppLogger } from '../../../logger';
+import { EventHub } from '../../EventHub';
 
 export class InvitationService {
   private readonly InvitationModel = InvitationModel(this.connection);
@@ -25,9 +25,9 @@ export class InvitationService {
     private readonly userAccountService: UserAccountService,
     private readonly influencerService: InfluencerService,
     private readonly twilioNotificationService: TwilioNotificationService,
-    private readonly eventHub: EventEmitter,
+    private readonly eventHub: EventHub,
   ) {
-    eventHub.on(Events.USER_ACCOUNT_CREATED, (userAccount) => {
+    eventHub.subscribe(Events.USER_ACCOUNT_CREATED, (userAccount) => {
       this.maybeFinalizeInvitation(userAccount).catch((error) => {
         AppLogger.error(`error finalizing invitation for user account: ${error.name}: ${error.message}`, {
           stack: error.stack,
@@ -97,7 +97,7 @@ export class InvitationService {
             userAccount.mongodbId,
             session,
           );
-          this.eventHub.emit(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
+          await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
         });
       } else {
         AppLogger.error(`unexpected parent entity type ${invitation.parentEntityType} for invitation ${invitation.id}`);
@@ -133,7 +133,7 @@ export class InvitationService {
     const message = `Hello, ${firstName}. You have been invited to Contrib at ${AppConfig.app.url}. Sign in with your phone number to begin.`;
     await this.twilioNotificationService.sendMessage(userAccount.phoneNumber, message);
 
-    this.eventHub.emit(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
+    await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
 
     return influencerProfile;
   }

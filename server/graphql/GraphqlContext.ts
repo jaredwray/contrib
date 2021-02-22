@@ -8,6 +8,7 @@ import { InvitationLoader } from '../app/Influencer/service/InvitationLoader';
 import { InfluencerLoader } from '../app/Influencer/service/InfluencerLoader';
 import { UserAccountRolesManagementService } from '../app/UserAccount/service/UserAccountRolesManagementService';
 import { CharityService } from '../app/Charity/service/CharityService';
+import { AuctionService } from '../app/Auction/service/AuctionService';
 
 export interface GraphqlContext {
   user: Auth0User;
@@ -19,6 +20,7 @@ export interface GraphqlContext {
   invitation: InvitationService;
   invitationLoader: InvitationLoader;
   charity: CharityService;
+  auction: AuctionService;
   twilioVerification: TwilioVerificationService;
   twilioNotification: TwilioNotificationService;
   userAccountRolesManagement: UserAccountRolesManagementService;

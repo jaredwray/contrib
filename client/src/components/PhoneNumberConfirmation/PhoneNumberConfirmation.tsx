@@ -82,7 +82,6 @@ export default function PhoneNumberConfirmation() {
 
   useEffect(() => {
     if (myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
-      console.log(`data = `, myAccountData);
       history.replace('/');
     }
   }, [myAccountData, history]);

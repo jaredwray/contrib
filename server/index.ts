@@ -1,5 +1,5 @@
 import { config as loadDotEnvFile } from 'dotenv';
-import * as fs from "fs-extra";
+import * as fs from 'fs-extra';
 
 if (fs.pathExistsSync(`./.env`)) {
   loadDotEnvFile();
@@ -24,9 +24,9 @@ if (AppConfig.environment.serveClient) {
   const clientBundlePath = path.join(__dirname, '../../client/build');
   AppLogger.info(`serving client from: ${clientBundlePath}`);
   app.use(express.static(clientBundlePath));
-  app.get("*", (req, res) => {
-      res.sendFile(clientBundlePath + "/index.html", { acceptRanges: false });
-    });
+  app.get('*', (req, res) => {
+    res.sendFile(clientBundlePath + '/index.html', { acceptRanges: false });
+  });
 }
 createGraphqlServer().applyMiddleware({ app });
 

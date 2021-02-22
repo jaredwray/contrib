@@ -8,6 +8,7 @@ import { TwilioVerificationService } from '../../../twilio-client';
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
 import { Events } from '../../Events';
+import {EventHub} from "../../EventHub";
 
 export class UserAccountService {
   private readonly accountModel: Model<IUserAccount> = UserAccountModel(this.connection);
@@ -15,7 +16,7 @@ export class UserAccountService {
   constructor(
     private readonly connection: Connection,
     private readonly twilioVerificationService: TwilioVerificationService,
-    private readonly eventHub: EventEmitter,
+    private readonly eventHub: EventHub,
   ) {}
 
   async getAccountByAuthzId(authzId: string): Promise<UserAccount> {
@@ -90,7 +91,7 @@ export class UserAccountService {
       mongodbId: accountModel._id.toString(),
     };
 
-    this.eventHub.emit(Events.USER_ACCOUNT_CREATED, account);
+    await this.eventHub.broadcast(Events.USER_ACCOUNT_CREATED, account);
 
     return account;
   }

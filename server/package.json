@@ -14,12 +14,16 @@
     "test:cov": "jest --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@google-cloud/scheduler": "^2.2.0",
     "@newrelic/winston-enricher": "^1.0.0",
+    "@types/dinero.js": "^1.6.5",
     "@types/fs-extra": "^9.0.7",
     "apollo-server-express": "^2.21.0",
     "asoiaf-api": "^1.0.1",
     "auth0": "^2.33.0",
     "dataloader": "^2.0.0",
+    "dayjs": "^1.10.4",
+    "dinero.js": "^1.8.1",
     "dotenv": "^8.2.0",
     "fs-extra": "^9.1.0",
     "graphql": "^14.3.0",

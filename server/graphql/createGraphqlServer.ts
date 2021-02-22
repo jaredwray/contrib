@@ -2,11 +2,15 @@ import { ApolloError, ApolloServer, gql } from 'apollo-server-express';
 
 import { createGraphqlContext } from './createGraphqlContext';
 import { UserAccountSchema, UserAccountResolvers } from '../app/UserAccount';
+import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
+import { CharityResolvers, CharitySchema } from '../app/Charity';
+import { AuctionResolvers, AuctionSchema } from '../app/Auction';
+import { DateTimeResolver, DateTimeTypeDefs } from './scalars/dateTime';
+import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
+
 import { AppLogger } from '../logger';
 import { ErrorCode } from '../errors/ErrorCode';
 import { AppError } from '../errors/AppError';
-import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
-import { CharityResolvers, CharitySchema } from '../app/Charity';
 
 export const DefaultSchema = gql`
   type Query {
@@ -20,8 +24,23 @@ export const DefaultSchema = gql`
 
 export function createGraphqlServer(): ApolloServer {
   return new ApolloServer({
-    typeDefs: [DefaultSchema, UserAccountSchema, InfluencerSchema, CharitySchema],
-    resolvers: [UserAccountResolvers, InfluencerResolvers, CharityResolvers],
+    typeDefs: [
+      DefaultSchema,
+      DateTimeTypeDefs,
+      MoneyTypeDefs,
+      UserAccountSchema,
+      InfluencerSchema,
+      CharitySchema,
+      AuctionSchema,
+    ],
+    resolvers: [
+      DateTimeResolver,
+      MoneyResolver,
+      UserAccountResolvers,
+      InfluencerResolvers,
+      CharityResolvers,
+      AuctionResolvers,
+    ],
     context: createGraphqlContext,
     playground: {
       endpoint: '/graphql',

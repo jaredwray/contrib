@@ -1,3 +1,5 @@
+import { InfluencerProfile } from './InfluencerProfile';
+
 export enum UserAccountStatus {
   PHONE_NUMBER_REQUIRED = 'PHONE_NUMBER_REQUIRED',
   PHONE_NUMBER_CONFIRMATION_REQUIRED = 'PHONE_NUMBER_CONFIRMATION_REQUIRED',
@@ -8,4 +10,5 @@ export interface UserAccount {
   id: string;
   phoneNumber: string | null;
   status: UserAccountStatus;
+  influencerProfile?: InfluencerProfile;
 }

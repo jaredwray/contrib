@@ -13,6 +13,7 @@ cache.writeQuery({
       id: '123',
       phoneNumber: '123',
       status: UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED,
+      influencerProfile: null,
     },
   },
 });
