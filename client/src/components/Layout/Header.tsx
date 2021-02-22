@@ -9,9 +9,7 @@ import { UserAccountContext } from '../UserAccountProvider/UserAccountContext';
 
 export default function Header() {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
-  const { permissions, account } = useContext(UserAccountContext);
-
-  console.log(permissions, account);
+  const { permissions } = useContext(UserAccountContext);
 
   return (
     <header className="pl-4 pr-4">

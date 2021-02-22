@@ -1,14 +1,14 @@
-import Footer from './Footer'
-import Header from './Header'
+import Footer from './Footer';
+import Header from './Header';
 
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function Layout({children}: {children: any}) {
+export default function Layout({ children }: { children: any }) {
   return (
     <>
-      <Header/>
-      <main role='main'>{children}</main>
-      <Footer/>
+      <Header />
+      <main role="main">{children}</main>
+      <Footer />
     </>
-  )
+  );
 }

@@ -8,7 +8,8 @@ body {
   height: 100%;
 }
 
-.btn, .btn:focus {
+.btn,
+.btn:focus {
   border-radius: 10px;
   height: 50px;
   font-size: 12px;
@@ -23,7 +24,8 @@ body {
     background: $ochre-color;
     color: $sage-color;
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       background: $sage-color !important;
       color: $white-color !important;
     }
@@ -33,7 +35,8 @@ body {
     background: $dark-gray-color;
     color: $white-color;
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       background: $sage-color !important;
       color: $white-color !important;
     }
@@ -92,7 +95,7 @@ img {
 }
 
 .label-with-separator:after {
-  content: "";
+  content: '';
   display: block;
   width: 54px;
   height: 6px;
@@ -128,7 +131,8 @@ img {
   line-height: 21px;
   font-weight: 500;
 }
-.text-label, label {
+.text-label,
+label {
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.1em;
@@ -159,7 +163,8 @@ img {
     font-size: 14px;
     line-height: 19px;
   }
-  .text-label, label {
+  .text-label,
+  label {
     font-size: 11px;
     line-height: 14px;
     letter-spacing: 0.1em;

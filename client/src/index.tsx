@@ -1,21 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { Route, Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
-import { AppState, Auth0Provider } from "@auth0/auth0-react";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Route, Router } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import { AppState, Auth0Provider } from '@auth0/auth0-react';
 
-import Charities from "./components/Charities/Charities";
-import Index from "./components/Index/Index";
-import Influencers from "./components/Admin/Influencers/Influencers";
-import InvitationPage from "./components/InvitationPage/InvitationPage";
-import PhoneNumberConfirmation from "./components/PhoneNumberConfirmation/PhoneNumberConfirmation";
-import PhoneNumberVerification from "./components/PhoneNumberVerification/PhoneNumberVerification";
-import Profile from "./components/Profile/Profile";
-import WelcomePage from "./components/WelcomePage/WelcomePage";
-import { UserAccountProvider } from "./components/UserAccountProvider";
+import Charities from './components/Charities/Charities';
+import Index from './components/Index/Index';
+import Influencers from './components/Admin/Influencers/Influencers';
+import InvitationPage from './components/InvitationPage/InvitationPage';
+import PhoneNumberConfirmation from './components/PhoneNumberConfirmation/PhoneNumberConfirmation';
+import PhoneNumberVerification from './components/PhoneNumberVerification/PhoneNumberVerification';
+import Profile from './components/Profile/Profile';
+import WelcomePage from './components/WelcomePage/WelcomePage';
+import { UserAccountProvider } from './components/UserAccountProvider';
 
-import "./index.scss";
-import { ContribApolloProvider } from "./apollo/ContribApolloProvider";
+import './index.scss';
+import { ContribApolloProvider } from './apollo/ContribApolloProvider';
 
 export const history = createBrowserHistory();
 
@@ -30,7 +30,7 @@ ReactDOM.render(
     redirectUri={process.env.REACT_APP_PLATFORM_URL}
     audience={process.env.REACT_APP_API_AUDIENCE}
     onRedirectCallback={onRedirectCallback}
-    cacheLocation={"localstorage"}
+    cacheLocation={'localstorage'}
   >
     <Router history={history}>
       <ContribApolloProvider>
@@ -47,5 +47,5 @@ ReactDOM.render(
       </ContribApolloProvider>
     </Router>
   </Auth0Provider>,
-  document.getElementById("root"),
+  document.getElementById('root'),
 );
