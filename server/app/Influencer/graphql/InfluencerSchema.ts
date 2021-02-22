@@ -52,11 +52,13 @@ export const InfluencerSchema = gql`
     sport: String!
     team: String!
     profileDescription: String!
+    image: Upload
   }
 
   extend type Mutation {
     inviteInfluencer(input: InviteInfluencerInput!): InfluencerProfile!
     updateMyInfluencerProfile(input: UpdateInfluencerProfileInput!): InfluencerProfile!
+    updateMyInfluencerProfileAvatar(image: Upload!): InfluencerProfile!
   }
 
   extend type UserAccount {

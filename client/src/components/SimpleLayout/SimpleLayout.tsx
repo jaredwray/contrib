@@ -1,9 +1,9 @@
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col } from "react-bootstrap";
 
-import Logo from './logo.svg'
+import Logo from "./logo.svg";
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './SimpleLayout.scss'
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./SimpleLayout.scss";
 
 export default function SimpleLayout({children}: {children: any}) {
   return (
@@ -14,7 +14,7 @@ export default function SimpleLayout({children}: {children: any}) {
             <a href="/">
               <img src={Logo} alt="Contrib" className="logo"/>
             </a>
-            <main role='main'>{children}</main>
+            <main role="main">{children}</main>
           </Container>
         </Col>
         <Col className="p-0 h-100 d-none d-md-block right-block w-100">

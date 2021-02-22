@@ -34,6 +34,9 @@ export const AppConfig = {
       sid: requireEnvVar('TWILIO_VERIFICATION_SERVICE_SID'),
     },
   },
+  googleCloud: {
+    bucketName: requireEnvVar('GOOGLE_CLOUD_BUCKET_NAME_FOR_PICTURES')
+  }
 };
 
 function requireEnvVar(name) {

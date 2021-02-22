@@ -45,6 +45,10 @@
 
     .dropdown-menu-user-name {
       color: $light-gray-color;
+      max-width: 350px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .dropdown-menu-user-picture {

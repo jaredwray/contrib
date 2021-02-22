@@ -19,6 +19,14 @@ cache.writeQuery({
   },
 });
 
+const mockHistoryReplace = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    replace: mockHistoryReplace,
+  }),
+}));
+
 test('renders without crashing', () => {
   render(
     <MockedProvider cache={cache}>

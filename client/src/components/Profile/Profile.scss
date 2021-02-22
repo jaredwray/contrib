@@ -1,6 +1,12 @@
 @import '../../variables.scss';
 
 .profile-page {
+  .alert {
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+  }
+
   .profile-page-avatar {
     height: 100px;
     display: inline-block;
@@ -13,24 +19,31 @@
       width: 120px;
       height: 120px;
       position: relative;
+      cursor: pointer;
+      pointer-events: auto;
       top: 40px;
+      object-fit: contain;
+      background-color: $gray-color;
     }
 
     .picture-upload-btn {
-      height: 25px;
-      background: rgba(50, 52, 50, 0.5) no-repeat url(picture-sign.webp);
-      background-position: 15px;
-      position: absolute;
-      display: block;
-      left: 0;
-      right: 0;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0 16px 0 40px;
-      margin-top: 18px;
-      color: $white-color;
-      border-radius: 12.5px;
-      border: none;
+      &, &:active, &:focus {
+        height: 25px;
+        background: rgba(50, 52, 50, 0.5) no-repeat url(picture-sign.webp);
+        background-position: 15px;
+        position: absolute;
+        display: block;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 16px 0 40px;
+        margin-top: 30px;
+        color: $white-color;
+        border-radius: 12.5px;
+        border: none;
+        font-weight: normal;
+      }
     }
   }
 
@@ -65,26 +78,9 @@
     }
   }
 
-  .sports-list-dropdown {
-    .nav-link {
-      padding: 0;
-    }
-
-    .dropdown-menu {
+  @media (max-width: $medium-weight) {
+    button[type="submit"] {
       width: 100%;
-      max-height: 225px;
-      overflow: auto;
-      padding: 0;
-    }
-
-    .dropdown-item {
-      height: 50px;
-      padding-top: 12px;
-      color: $sage-color;
-    }
-
-    .dropdown-toggle::after {
-      display: none !important;
     }
   }
 }

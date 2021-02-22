@@ -10,8 +10,10 @@
   background-color: $sage-color;
   background-size: contain;
 
-  .btn.banner-sign-up-button:hover {
-    background: $ochre-color !important;
+  .btn.banner-sign-up-button {
+    &:hover, &:active, &:active:focus {
+      background: $ochre-color !important;
+    }
   }
 
   .banner-separator {

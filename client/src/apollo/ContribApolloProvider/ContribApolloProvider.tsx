@@ -1,7 +1,9 @@
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { useMemo } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { setContext } from '@apollo/client/link/context';
+import { createUploadLink } from 'apollo-upload-client';
+import { ApolloLink } from 'apollo-link';
 
 interface PropTypes {
   children: any;
@@ -11,7 +13,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
   const { getAccessTokenSilently } = useAuth0();
 
   const apolloClient = useMemo(() => {
-    const httpLink = createHttpLink({ uri: process.env.REACT_APP_API_URL });
+    const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_URL });
 
     const authLink = setContext(async (_, { headers }) => {
       try {
@@ -29,7 +31,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
     });
 
     return new ApolloClient({
-      link: authLink.concat(httpLink),
+      link: ApolloLink.from([authLink as any, httpLink as any]) as any,
       cache: new InMemoryCache(),
     });
   }, [getAccessTokenSilently]);

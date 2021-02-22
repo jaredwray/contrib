@@ -10,7 +10,7 @@ export default function Pagination(props: { loading: boolean, skip: number, tota
   const itemsOnPage = (hasNext ? (PER_PAGE + props.skip) : props.total);
 
   return (
-    <div className="pagination float-left">
+    <div className="pagination float-left h-100">
       <Button className="pagination-btn pagination-btn-prev" variant="" disabled={!hasPev} onClick={props.showPrevPage} />
       <Button className="pagination-btn pagination-btn-next ml-3 mr-2" variant="" disabled={!hasNext} onClick={props.showNextPage} />
 

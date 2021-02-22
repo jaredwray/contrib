@@ -1,15 +1,15 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { mocked } from "ts-jest/utils";
+import { useAuth0 } from '@auth0/auth0-react';
+import { mocked } from 'ts-jest/utils';
 
-jest.mock("@auth0/auth0-react");
+jest.mock('@auth0/auth0-react');
 
 const mockedUseAuth0 = mocked(useAuth0, true);
 const verifiedUser = {
-  email: "johndoe@me.com",
+  email: 'johndoe@me.com',
   email_verified: true,
-  name: "Julian Strait",
-  picture: "link-to-a-picture",
-  sub: "google-oauth2|12345678901234",
+  name: 'Julian Strait',
+  picture: 'link-to-a-picture',
+  sub: 'google-oauth2|12345678901234',
 };
 
 export function withAuthenticatedUser() {
@@ -22,9 +22,11 @@ export function withAuthenticatedUser() {
     getAccessTokenWithPopup: jest.fn(),
     getIdTokenClaims: jest.fn(),
     loginWithPopup: jest.fn(),
-    isLoading: false
+    isLoading: false,
+    buildAuthorizeUrl: jest.fn(),
+    buildLogoutUrl: jest.fn(),
   });
-};
+}
 
 export function withNotAuthenticatedUser() {
   mockedUseAuth0.mockReturnValue({
@@ -36,8 +38,10 @@ export function withNotAuthenticatedUser() {
     getAccessTokenWithPopup: jest.fn(),
     getIdTokenClaims: jest.fn(),
     loginWithPopup: jest.fn(),
-    isLoading: false
+    isLoading: false,
+    buildAuthorizeUrl: jest.fn(),
+    buildLogoutUrl: jest.fn(),
   });
-};
+}
 
 export { mockedUseAuth0, verifiedUser };
