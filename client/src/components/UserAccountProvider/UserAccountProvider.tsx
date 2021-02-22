@@ -123,9 +123,9 @@ function getOnboardingPath(userAccount: UserAccount) {
     return '/phone-verification';
   }
 
-  // if (userAccount && userAccount.influencerProfile && !userAccount.influencerProfile.profileDescription) {
-  //   return '/account';
-  // }
+  if (userAccount && userAccount.influencerProfile && !userAccount.influencerProfile.profileDescription) {
+    return '/profile?sbs=true';
+  }
 
   if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
     return '/phone-confirmation';
