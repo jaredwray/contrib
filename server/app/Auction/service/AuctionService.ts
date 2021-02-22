@@ -27,8 +27,10 @@ export class AuctionService {
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection);
   constructor(private readonly connection: Connection, private readonly stripeService: StripeService) {}
 
-  public async createAuctionDraft(input: ICreateAuctionInput): Promise<Auction> {
-    const [auction] = await this.AuctionModel.create([input]);
+  public async createAuctionDraft(auctionOrganizerId: string, input: ICreateAuctionInput): Promise<Auction> {
+    const [auction] = await this.AuctionModel.create([
+      { ...input, auctionOrganizer: Types.ObjectId(auctionOrganizerId) },
+    ]);
     return AuctionService.makeAuction(auction);
   }
 
@@ -36,6 +38,7 @@ export class AuctionService {
     const auctions = await this.AuctionModel.find()
       .populate({ path: 'charity', model: this.CharityModel })
       .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
+      .populate({ path: 'auctionOrganizer', mode: this.UserAccountModel, select: ['_id'] })
       .populate({
         path: 'bids',
         model: this.AuctionBidModel,
@@ -55,27 +58,24 @@ export class AuctionService {
   }
 
   private async _handleGetAuction(id: string): Promise<IAuctionModel> {
-    const res = await this.AuctionModel.findById(id)
-      .populate({ path: 'charity', model: this.CharityModel })
-      .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
-      .populate({
-        path: 'bids',
-        model: this.AuctionBidModel,
-        populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
-      })
-      .populate({ path: 'maxBid', model: this.AuctionBidModel })
-      .exec();
-    if (!res) {
+    try {
+      const res = await this.AuctionModel.findById(id).exec();
+      await this._populateAuction(res).execPopulate();
+      return res;
+    } catch (e) {
       throw new AppError('Auction was not found', ErrorCode.NOT_FOUND);
     }
-    return res;
   }
 
-  public async updateAuctionStatus(id: string, status: AuctionStatus): Promise<Auction> {
-    const auction = await this._handleGetAuction(id);
+  public async updateAuctionStatus(id: string, userId: string, status: AuctionStatus): Promise<Auction> {
+    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+    }
     auction.status = status;
-    await auction.save();
-    return AuctionService.makeAuction(auction);
+    const updatedAuction = await auction.save();
+    await this._populateAuction(updatedAuction).execPopulate();
+    return AuctionService.makeAuction(updatedAuction);
   }
 
   private _populateAuction(model: IAuctionModel): IAuctionModel {
@@ -83,6 +83,7 @@ export class AuctionService {
       .populate({ path: 'charity', model: this.CharityModel })
       .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
       .populate({ path: 'maxBid', model: this.AuctionBidModel })
+      .populate({ path: 'auctionOrganizer', model: this.UserAccountModel })
       .populate({
         path: 'bids',
         model: this.AuctionBidModel,
@@ -90,10 +91,14 @@ export class AuctionService {
       });
   }
 
-  public async updateAuction(id: string, input: IUpdateAuctionInput): Promise<Auction> {
-    const auction = await this._handleGetAuction(id);
-    const isDrafted = auction.status === AuctionStatus.DRAFT && !auction.bids.length;
+  public async updateAuction(id: string, userId: string, input: IUpdateAuctionInput): Promise<Auction> {
+    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+    }
+
     const { startDate, endDate, charity, ...rest } = input;
+    const isDrafted = auction.status === AuctionStatus.DRAFT;
     const charityObject = charity ? { charity: Types.ObjectId(charity) } : {};
 
     Object.assign(auction, {
@@ -102,8 +107,9 @@ export class AuctionService {
       ...rest,
       ...charityObject,
     });
-    await (await this._populateAuction(auction).save()).execPopulate();
-    return AuctionService.makeAuction(auction);
+    const updatedAuction = await auction.save();
+    await this._populateAuction(updatedAuction).execPopulate();
+    return AuctionService.makeAuction(updatedAuction);
   }
 
   public async addAuctionBid(
