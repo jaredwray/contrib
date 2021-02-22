@@ -33,11 +33,12 @@ export default function PhoneNumberVerification() {
 
   const handleSubmit = useCallback(
     ({ phoneNumber }) => {
-      phoneNumber && enterPhoneNumber({
-        variables: {
-          phoneNumber: `+${phoneNumber}`,
-        },
-      }).catch((error) => setError(error.message));
+      phoneNumber &&
+        enterPhoneNumber({
+          variables: {
+            phoneNumber: `+${phoneNumber}`,
+          },
+        }).catch((error) => setError(error.message));
     },
     [enterPhoneNumber],
   );
@@ -67,7 +68,7 @@ export default function PhoneNumberVerification() {
         <Form onSubmit={handleSubmit}>
           {(formProps) => (
             <BsForm onSubmit={formProps.handleSubmit}>
-              <div className='pt-1 error-message text-label'>{error}</div>
+              <div className="pt-1 error-message text-label">{error}</div>
 
               <Field name="phoneNumber">
                 {(props) => (

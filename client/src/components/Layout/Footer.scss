@@ -3,7 +3,9 @@
 footer {
   background-color: $dark-gray-color;
 
-  &, a, a:hover {
+  &,
+  a,
+  a:hover {
     color: $sage-color;
   }
 
@@ -20,15 +22,15 @@ footer {
     }
 
     .twitter {
-      background-image: url("./twitter.webp");
+      background-image: url('./twitter.webp');
     }
 
     .instagram {
-      background-image: url("./instagram.webp");
+      background-image: url('./instagram.webp');
     }
 
     .facebook {
-      background-image: url("./facebook.webp");
+      background-image: url('./facebook.webp');
     }
   }
 }

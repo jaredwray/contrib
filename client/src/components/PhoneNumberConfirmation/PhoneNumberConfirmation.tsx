@@ -141,12 +141,7 @@ export default function PhoneNumberConfirmation() {
                 Confirm
               </Button>
               {canResendOtp && (
-                <Button
-                  variant="link"
-                  onClick={handleResendCode}
-                  disabled={isLoading}
-                  className="ml-2 d-inline-block"
-                >
+                <Button variant="link" onClick={handleResendCode} disabled={isLoading} className="ml-2 d-inline-block">
                   Resend code
                 </Button>
               )}

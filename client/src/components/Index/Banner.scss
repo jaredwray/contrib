@@ -4,14 +4,16 @@
   height: 505px;
   color: $white-color;
   text-align: left;
-  background-image: url("./player-md.webp");
+  background-image: url('./player-md.webp');
   background-repeat: no-repeat;
   background-position: right;
   background-color: $sage-color;
   background-size: contain;
 
   .btn.banner-sign-up-button {
-    &:hover, &:active, &:active:focus {
+    &:hover,
+    &:active,
+    &:active:focus {
       background: $ochre-color !important;
     }
   }
@@ -27,7 +29,7 @@
   }
 
   @media (max-width: $medium-weight) {
-    background-image: url("./player-sm.webp");
+    background-image: url('./player-sm.webp');
 
     .banner-separator {
       height: 8px;

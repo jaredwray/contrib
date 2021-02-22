@@ -1,7 +1,7 @@
-import { render } from "@testing-library/react";
+import { render } from '@testing-library/react';
 
-import Checkbox from "./Checkbox";
+import Checkbox from './Checkbox';
 
-test("renders without crashing", () => {
-  render(<Checkbox />)
+test('renders without crashing', () => {
+  render(<Checkbox />);
 });
