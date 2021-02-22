@@ -1,6 +1,5 @@
 import Express from 'express';
 import { ExpressContext } from 'apollo-server-express';
-import { EventEmitter } from 'events';
 
 import { GraphqlContext } from './GraphqlContext';
 import { initMongodbConnection } from '../mongodb';
@@ -15,10 +14,11 @@ import { InfluencerLoader } from '../app/Influencer/service/InfluencerLoader';
 import { UserAccountRolesManagementService } from '../app/UserAccount/service/UserAccountRolesManagementService';
 import { CharityService } from '../app/Charity/service/CharityService';
 import { AuctionService } from '../app/Auction/service/AuctionService';
-import {StripeService} from "../payment/StripeService";
+import { StripeService } from '../payment/StripeService';
+import { EventHub } from '../app/EventHub';
 
 export async function createGraphqlContext(ctx: ExpressContext): Promise<GraphqlContext> {
-  const eventHub = new EventEmitter();
+  const eventHub = new EventHub();
   const auth0 = new Auth0Service();
   const twilioVerification = new TwilioVerificationService();
   const twilioNotification = new TwilioNotificationService();

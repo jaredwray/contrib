@@ -15,4 +15,8 @@ export enum ErrorCode {
    * User is either not signed in, or access token is invalid/expired, or he lacks permissions to perform given action.
    */
   UNAUTHORIZED = 'UNAUTHORIZED',
+  /**
+   * Requested entity not found
+   */
+  NOT_FOUND = 'NOT_FOUND',
 }

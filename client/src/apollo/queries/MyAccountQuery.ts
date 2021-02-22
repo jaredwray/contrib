@@ -6,6 +6,15 @@ export const MyAccountQuery = gql`
       id
       phoneNumber
       status
+      influencerProfile {
+        id
+        profileDescription
+        name
+        sport
+        team
+        avatarUrl
+        status
+      }
     }
   }
 `;

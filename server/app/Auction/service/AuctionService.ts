@@ -10,7 +10,7 @@ import { ICreateAuctionInput } from '../graphql/model/CreateAuctionInput';
 import { IUpdateAuctionInput } from '../graphql/model/UpdateAuctionInput';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionBidModel, IAuctionBidModel } from '../mongodb/AuctionBidModel';
-import { IUserAccount, UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 import { AuctionBid } from '../dto/AuctionBid';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
@@ -55,20 +55,20 @@ export class AuctionService {
   }
 
   private async _handleGetAuction(id: string): Promise<IAuctionModel> {
-    try {
-      return await this.AuctionModel.findById(id)
-        .populate({ path: 'charity', model: this.CharityModel })
-        .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
-        .populate({
-          path: 'bids',
-          model: this.AuctionBidModel,
-          populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
-        })
-        .populate({ path: 'maxBid', model: this.AuctionBidModel })
-        .exec();
-    } catch (e) {
-      throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
+    const res = await this.AuctionModel.findById(id)
+      .populate({ path: 'charity', model: this.CharityModel })
+      .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
+      .populate({
+        path: 'bids',
+        model: this.AuctionBidModel,
+        populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
+      })
+      .populate({ path: 'maxBid', model: this.AuctionBidModel })
+      .exec();
+    if (!res) {
+      throw new AppError('Auction was not found', ErrorCode.NOT_FOUND);
     }
+    return res;
   }
 
   public async updateAuctionStatus(id: string, status: AuctionStatus): Promise<Auction> {
@@ -113,6 +113,12 @@ export class AuctionService {
     const auction = await this._handleGetAuction(id);
     const appliedStatus = auction.status === AuctionStatus.DRAFT ? { status: AuctionStatus.ACTIVE } : {};
 
+    if (dayjs().utc().isAfter(auction.endsAt)) {
+      throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
+    }
+    if (auction.status !== AuctionStatus.ACTIVE) {
+      throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
+    }
     const [createdBid] = await this.AuctionBidModel.create([
       {
         user: user.mongodbId,
@@ -121,9 +127,6 @@ export class AuctionService {
         createdAt: dayjs().toISOString(),
       },
     ]);
-    if (auction.status == AuctionStatus.SETTLED || dayjs().utc().isAfter(auction.endsAt)) {
-      throw new AppError('Auction is already settled', ErrorCode.BAD_REQUEST);
-    }
     Object.assign(auction, {
       bids: [...auction.bids, createdBid._id],
       ...appliedStatus,

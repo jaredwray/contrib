@@ -5,6 +5,8 @@ import { ICreateAuctionInput } from './model/CreateAuctionInput';
 import { IUpdateAuctionInput } from './model/UpdateAuctionInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
+import { requirePermission } from '../../../graphql/middleware/requirePermission';
+import { UserPermission } from '../../../authz';
 
 export const AuctionResolvers = {
   Query: {
@@ -20,13 +22,12 @@ export const AuctionResolvers = {
     },
   },
   Mutation: {
-    createAuction: async (
-      _: unknown,
-      input: { input: ICreateAuctionInput },
-      { auction }: GraphqlContext,
-    ): Promise<any> => {
-      return auction.createAuctionDraft(input.input);
-    },
+    createAuction: requirePermission(
+      UserPermission.INFLUENCER,
+      async (_: unknown, input: { input: ICreateAuctionInput }, { auction }: GraphqlContext): Promise<any> => {
+        return auction.createAuctionDraft(input.input);
+      },
+    ),
     updateAuction: async (
       _: unknown,
       { id, input }: { id: string; input: IUpdateAuctionInput },
