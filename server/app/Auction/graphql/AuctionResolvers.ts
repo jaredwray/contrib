@@ -4,6 +4,7 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { ICreateAuctionInput } from './model/CreateAuctionInput';
 import { IUpdateAuctionInput } from './model/UpdateAuctionInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
+import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 
 export const AuctionResolvers = {
   Query: {
@@ -39,9 +40,12 @@ export const AuctionResolvers = {
     addAuctionAttachment: async (_: unknown, input: { id: string; attachment: any }): Promise<any> => {
       return Promise.resolve(null);
     },
-    createAuctionBid: async (_: unknown, input: { input: ICreateAuctionBidInput }): Promise<any> => {
-      return Promise.resolve(null);
-    },
+    createAuctionBid: requireAuthenticated(
+      async (parent: unknown, { id, bid }: { id: string } & ICreateAuctionBidInput, { user, auction, userAccount }) => {
+        const account = await userAccount.getAccountByAuthzId(user.id);
+        return auction.addAuctionBid(id, { bid, user: account });
+      },
+    ),
     updateAuctionStatus: async (
       _: unknown,
       { id, status }: { id: string; status: AuctionStatus },

@@ -14,6 +14,7 @@
     "test:cov": "jest --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@google-cloud/scheduler": "^2.2.0",
     "@newrelic/winston-enricher": "^1.0.0",
     "@types/dinero.js": "^1.6.5",
     "@types/fs-extra": "^9.0.7",

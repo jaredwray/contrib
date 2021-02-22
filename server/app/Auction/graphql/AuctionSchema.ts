@@ -17,8 +17,9 @@ export const AuctionSchema = gql`
   }
 
   type AuctionBid {
-    user: UserAccount
+    id: String!
     bid: Money!
+    createdAt: DateTime!
   }
 
   type Auction {
@@ -41,12 +42,8 @@ export const AuctionSchema = gql`
   }
 
   extend type Query {
-    auctions(size: Int!, skip: Int!): [Auction!]!
-    auction(id: String!): Auction!
-  }
-
-  input BidParticipantUser {
-    id: String!
+    auctions(size: Int!, skip: Int!): [Auction!]
+    auction(id: String!): Auction
   }
 
   input CreateAuctionInput {
@@ -67,18 +64,12 @@ export const AuctionSchema = gql`
     gameWorn: Boolean
     autographed: Boolean
   }
-
-  input CreateAuctionBidInput {
-    id: String!
-    user: BidParticipantUser!
-    bid: Money!
-  }
-
+ 
   extend type Mutation {
     createAuction(input: CreateAuctionInput!): Auction!
     updateAuction(id: String, input: EditAuctionInput): Auction!
     updateAuctionStatus(id: String!, status: AuctionStatus!): Auction!
-    createAuctionBid(input: CreateAuctionBidInput!): Auction!
+    createAuctionBid(id: String!, bid: Money!): AuctionBid!
     addAuctionAttachment(id: String!, attachment: Upload!): Auction!
     deleteAuction(id: String!): AuctionStatusResponse!
   }

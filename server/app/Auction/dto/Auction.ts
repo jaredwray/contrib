@@ -16,4 +16,6 @@ export interface Auction {
   status: AuctionStatus;
   bids: any[];
   maxBid: any;
+  description: string;
+  fullpageDescription: string;
 }

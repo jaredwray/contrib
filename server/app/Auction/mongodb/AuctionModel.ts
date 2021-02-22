@@ -1,10 +1,11 @@
 import * as dayjs from 'dayjs';
-import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
+import { Connection, Document, Model, Schema, SchemaTypes, Types } from 'mongoose';
 
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionBidCollectionName, IAuctionBidModel } from './AuctionBidModel';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
+import arrayMax from '../../../helpers/arrayMax';
 
 export interface IAuctionModel extends Document {
   title: string;
@@ -12,12 +13,17 @@ export interface IAuctionModel extends Document {
   autographed: boolean;
   sport: string;
   gameWorn: boolean;
+  description: string;
+  fullpageDescription: string;
   assets: IAuctionAssetModel[];
   bids: IAuctionBidModel['_id'][];
+  maxBid: IAuctionBidModel['_id'];
   charity: ICharityModel['_id'];
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
 }
+
+
 
 export const AuctionCollectionName = 'auction';
 
@@ -31,12 +37,24 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>({
   autographed: { type: SchemaTypes.Boolean, default: false },
   gameWorn: { type: SchemaTypes.Boolean, default: false },
   bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
+  maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
   assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
   startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
   endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
 });
 
-AuctionSchema.index({ startsAt: 1, endsAt: 1 });
+AuctionSchema.pre('save', async function (next) {
+  await this.populate({ path: 'bids' }).execPopulate();
+
+  if (this.bids.length) {
+    const maxBid = arrayMax<IAuctionBidModel>(this.bids, (currentBid, prevBid) =>
+      currentBid.bidMoney.greaterThan(prevBid.bidMoney),
+    );
+    this.maxBid = Types.ObjectId(maxBid._id);
+  }
+});
+
+AuctionSchema.index({ startsAt: 1, endsAt: 1, maxBid: 1 });
 
 export const AuctionModel = (connection: Connection): Model<IAuctionModel> =>
   connection.model<IAuctionModel>(AuctionCollectionName, AuctionSchema);

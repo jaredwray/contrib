@@ -3,7 +3,7 @@ import Maybe from 'graphql/tsutils/Maybe';
 import { Kind } from 'graphql/language/kinds';
 
 import { gql } from 'apollo-server-express';
-import Dinero, { Dinero as IDinero, DineroObject } from 'dinero.js';
+import * as Dinero from 'dinero.js';
 
 export const MoneyTypeDefs = gql`
   scalar Money
@@ -15,14 +15,20 @@ export const MoneyResolver = {
     description: 'Dinero.js money scalar type',
     parseLiteral(valueNode: any): Maybe<any> {
       if (valueNode.kind === Kind.INT) {
-        return { amount: valueNode.value, currency: 'USD' };
+        return Dinero({ amount: parseInt(valueNode.value, 10), currency: 'USD' });
       }
-      throw new TypeError(`Node kind should be INT, instead got ${valueNode.kind}`);
+      return null;
     },
-    parseValue(value: DineroObject): Maybe<IDinero> {
-      return Dinero(value);
+    parseValue(value: Dinero.DineroObject): Maybe<Dinero.Dinero> {
+      if (value) {
+        return Dinero(value);
+      }
+      return null;
     },
-    serialize(value: IDinero): Maybe<DineroObject> {
+    serialize(value: Dinero.Dinero): Maybe<Dinero.DineroObject> {
+      if (!value) {
+        return null;
+      }
       return value.toJSON();
     },
   }),
