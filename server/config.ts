@@ -35,8 +35,9 @@ export const AppConfig = {
     },
   },
   googleCloud: {
-    bucketName: requireEnvVar('GOOGLE_CLOUD_BUCKET_NAME_FOR_PICTURES')
-  }
+    bucketName: requireEnvVar('GOOGLE_CLOUD_BUCKET_NAME_FOR_PICTURES'),
+    keyDump: requireEnvVar('GOGLE_CLOUD_KEY_DUMP'),
+  },
 };
 
 function requireEnvVar(name) {
