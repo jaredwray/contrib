@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container, Row, Col, ProgressBar, Form } from 'react-bootstrap';
 
-import SearchParam from '../../helpers/SearchParam';
+import URLSearchParam from '../../helpers/URLSearchParam';
 import Layout from '../Layout/Layout';
 
 import './Charities.scss';
 import '../Layout/Steps.scss';
 
 export default function Charities() {
-  const stepByStep = SearchParam('sbs');
+  const stepByStep = URLSearchParam('sbs');
 
   return (
     <Layout>
