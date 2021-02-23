@@ -108,8 +108,7 @@ export class InfluencerService {
     const extension = originalFilename.split('.').pop();
     const filename = `${uuidv4()}.${extension}`;
     const bucketName = AppConfig.googleCloud.bucketName;
-    const path = require('path');
-    const storage = new Storage({ keyFilename: path.join(__dirname, '../../../.secrets-google-cloud.json') });
+    const storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
 
     await createReadStream().pipe(
       storage
@@ -117,6 +116,8 @@ export class InfluencerService {
         .file(filename)
         .createWriteStream()
         .on('finish', () => {
+          const bucketFullPath = `https://storage.googleapis.com/${bucketName}`;
+
           storage
             .bucket(bucketName)
             .file(filename)
@@ -124,16 +125,14 @@ export class InfluencerService {
             .then(() => {
               let oldFileName = influencer.avatarUrl.split('/').pop();
 
-              influencer.avatarUrl = `https://storage.googleapis.com/${bucketName}/${filename}`;
+              influencer.avatarUrl = `${bucketFullPath}/${filename}`;
               influencer.save();
 
               const oldFile = storage.bucket(bucketName).file(oldFileName);
               oldFile.exists().then((exists) => {
                 if (exists[0]) {
                   oldFile.delete().catch((e: any) => {
-                    console.log(
-                      `cannot delete https://storage.googleapis.com/${bucketName}/${oldFileName} file : ${e}`,
-                    );
+                    console.log(`cannot delete ${bucketFullPath}/${oldFileName} file : ${e}`);
                   });
                 }
               });
