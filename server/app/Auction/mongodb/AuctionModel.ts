@@ -5,6 +5,7 @@ import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/Char
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionBidCollectionName, IAuctionBidModel } from './AuctionBidModel';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
+import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
 import arrayMax from '../../../helpers/arrayMax';
 
 export interface IAuctionModel extends Document {
@@ -15,6 +16,7 @@ export interface IAuctionModel extends Document {
   gameWorn: boolean;
   description: string;
   fullpageDescription: string;
+  auctionOrganizer: IUserAccount['_id'];
   assets: IAuctionAssetModel[];
   bids: IAuctionBidModel['_id'][];
   maxBid: IAuctionBidModel['_id'];
@@ -22,8 +24,6 @@ export interface IAuctionModel extends Document {
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
 }
-
-
 
 export const AuctionCollectionName = 'auction';
 
@@ -39,19 +39,20 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>({
   bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
   maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
   assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
+  auctionOrganizer: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
   endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
 });
 
 AuctionSchema.pre('save', async function (next) {
   await this.populate({ path: 'bids' }).execPopulate();
-
   if (this.bids.length) {
     const maxBid = arrayMax<IAuctionBidModel>(this.bids, (currentBid, prevBid) =>
       currentBid.bidMoney.greaterThan(prevBid.bidMoney),
     );
     this.maxBid = Types.ObjectId(maxBid._id);
   }
+  next();
 });
 
 AuctionSchema.index({ startsAt: 1, endsAt: 1, maxBid: 1 });

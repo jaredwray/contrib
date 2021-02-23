@@ -39,6 +39,7 @@ export const AuctionSchema = gql`
     startDate: DateTime!
     initialPrice: Money!
     endDate: DateTime!
+    auctionOrganizer: String!
   }
 
   extend type Query {
