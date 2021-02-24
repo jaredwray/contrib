@@ -13,6 +13,7 @@
   .btn.banner-sign-up-button {
     &:hover,
     &:active,
+    &:hover:focus,
     &:active:focus {
       background: $ochre-color !important;
     }

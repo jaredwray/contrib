@@ -164,7 +164,6 @@
       </div>
     </div>
   </div>
-
   <!--[if IE 8]>
   <script src="//cdnjs.cloudflare.com/ajax/libs/ie8/0.2.5/ie8.js"></script>
   <![endif]-->
@@ -233,12 +232,24 @@
 
       document.getElementById('backLink').href = params.redirectUri;
 
-      function loginWithGoogle() {
+      function webAuthAuthorize(connectionClient) {
         webAuth.authorize({
-          connection: 'google-oauth2'
+          connection: connectionClient
         }, function(err) {
           if (err) displayError(err);
         });
+      }
+
+      function loginWithGoogle() {
+        webAuthAuthorize('google-oauth2');
+      }
+
+      function loginWithTwitter() {
+        webAuthAuthorize('twitter');
+      }
+
+      function loginWithFacebook() {
+        webAuthAuthorize('facebook');
       }
 
       function displayError(err) {
@@ -247,7 +258,9 @@
         errorMessage.style.display = 'block';
       }
 
+      document.getElementById('facebook-buttons').addEventListener('click', loginWithFacebook);
       document.getElementById('google-buttons').addEventListener('click', loginWithGoogle);
+      document.getElementById('twitter-buttons').addEventListener('click', loginWithTwitter);
     });
   </script>
 </body>
