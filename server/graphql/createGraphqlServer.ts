@@ -1,4 +1,5 @@
 import { ApolloError, ApolloServer, gql } from 'apollo-server-express';
+import { Connection } from 'mongoose';
 
 import { createGraphqlContext } from './createGraphqlContext';
 import { UserAccountSchema, UserAccountResolvers } from '../app/UserAccount';
@@ -11,6 +12,7 @@ import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
 import { AppLogger } from '../logger';
 import { ErrorCode } from '../errors/ErrorCode';
 import { AppError } from '../errors/AppError';
+import { IAppServices } from '../app/AppServices';
 
 export const DefaultSchema = gql`
   type Query {
@@ -22,7 +24,7 @@ export const DefaultSchema = gql`
   }
 `;
 
-export function createGraphqlServer(): ApolloServer {
+export function createGraphqlServer(appServices: IAppServices): ApolloServer {
   return new ApolloServer({
     typeDefs: [
       DefaultSchema,
@@ -41,7 +43,7 @@ export function createGraphqlServer(): ApolloServer {
       CharityResolvers,
       AuctionResolvers,
     ],
-    context: createGraphqlContext,
+    context: (ctx) => createGraphqlContext(ctx, appServices),
     playground: {
       endpoint: '/graphql',
     },
