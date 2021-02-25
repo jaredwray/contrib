@@ -72,6 +72,7 @@ export const AuctionSchema = gql`
     updateAuctionStatus(id: String!, status: AuctionStatus!): Auction!
     createAuctionBid(id: String!, bid: Money!): AuctionBid!
     addAuctionAttachment(id: String!, attachment: Upload!): Auction!
+    removeAuctionAttachment(id: String!, attachmentUrl: String!): Auction!
     deleteAuction(id: String!): AuctionStatusResponse!
   }
 `;

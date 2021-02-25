@@ -6,7 +6,7 @@ export interface IAuctionAssetModel extends Document {
   type: AssetType;
 }
 
-export const AuctionAssetCollectionName = 'auctionAsset';
+export const AuctionAssetCollectionName = 'auction_asset';
 
 const AuctionAssetSchema: Schema<IAuctionAssetModel> = new Schema<IAuctionAssetModel>({
   url: { type: SchemaTypes.String, required: true },
