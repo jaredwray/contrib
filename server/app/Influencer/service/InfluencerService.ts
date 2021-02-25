@@ -104,38 +104,34 @@ export class InfluencerService {
     }
 
     const { filename: originalFilename, createReadStream } = await image;
-
+    const ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg', 'webp'];
     const extension = originalFilename.split('.').pop();
-    const filename = `${uuidv4()}.${extension}`;
+
+    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+      console.error('File has unsupported extension: ', originalFilename);
+      return;
+    }
+
+    const filename = `${influencer._id}/avatar/avatar.webp`;
+    const filePath = `pending/${filename}`;
     const bucketName = AppConfig.googleCloud.bucketName;
     const storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
 
     await createReadStream().pipe(
       storage
         .bucket(bucketName)
-        .file(filename)
-        .createWriteStream()
+        .file(filePath)
+        .createWriteStream({ metadata: { cacheControl: 'no-store' } })
         .on('finish', () => {
           const bucketFullPath = `https://storage.googleapis.com/${bucketName}`;
 
           storage
             .bucket(bucketName)
-            .file(filename)
+            .file(filePath)
             .makePublic()
             .then(() => {
-              let oldFileName = influencer.avatarUrl.split('/').pop();
-
               influencer.avatarUrl = `${bucketFullPath}/${filename}`;
               influencer.save();
-
-              const oldFile = storage.bucket(bucketName).file(oldFileName);
-              oldFile.exists().then((exists) => {
-                if (exists[0]) {
-                  oldFile.delete().catch((e: any) => {
-                    console.log(`cannot delete ${bucketFullPath}/${oldFileName} file : ${e}`);
-                  });
-                }
-              });
             })
             .catch((e: any) => console.log(`exec error : ${e}`));
         }),

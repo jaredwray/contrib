@@ -5,7 +5,8 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
-import SearchParam from '../../helpers/SearchParam';
+import ResizedImageUrl from '../../helpers/ResizedImageUrl';
+import URLSearchParam from '../../helpers/URLSearchParam';
 import Layout from '../Layout/Layout';
 import { UserAccount } from '../../model/UserAccount';
 import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
@@ -38,8 +39,8 @@ export default function Profile() {
   const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
   const [updateInfluencerProfileAvatar] = useMutation(UpdateInfluencerProfileAvatarMutation);
 
-  let fileInput: HTMLInputElement | null;
-  const stepByStep = SearchParam('sbs');
+  let fileInput: HTMLInputElement | null = null;
+  const stepByStep = URLSearchParam('sbs');
   const history = useHistory();
   const [updateError, setUpdateError] = useState('');
   const [successUpdateMessage, setSuccessUpdateMessage] = useState('');
@@ -107,6 +108,7 @@ export default function Profile() {
   const onFileSelected = useCallback(
     (event: any) => {
       let image = event.target.files[0];
+
       if (!image) return;
 
       let fileSizeInMegaBytes = image.size / (1024 * 1024);
@@ -115,8 +117,14 @@ export default function Profile() {
         setUpdateError(`File is too big! Maximum allowed size is ${MAX_AVATAR_SIZE_MB}MB`);
         return;
       }
-      if (!image.type.startsWith('image')) {
-        setUpdateError('You can upload images only!');
+
+      const avatarFileInput = document.getElementById('avatarFileInput') as HTMLInputElement;
+      const imageExpansion = image.name.split('.').pop();
+      const acceptedTypes = avatarFileInput.getAttribute('accept');
+      const allovedExpansions = acceptedTypes?.replaceAll('.', '').split(',');
+
+      if (!allovedExpansions?.includes(imageExpansion)) {
+        setUpdateError(`You can upload only images with types: ${acceptedTypes}!`);
         return;
       }
 
@@ -166,11 +174,17 @@ export default function Profile() {
                   <input
                     type="file"
                     className="d-none"
-                    accept="image/*"
+                    id="avatarFileInput"
+                    accept=".png,.jpeg,.jpg,.webp"
                     ref={(ref) => (fileInput = ref)}
                     onChange={onFileSelected}
                   />
-                  <Image id="profileAvatar" src={influencerProfile?.avatarUrl} roundedCircle onClick={selectFile} />
+                  <Image
+                    id="profileAvatar"
+                    src={ResizedImageUrl(influencerProfile?.avatarUrl, 120)}
+                    roundedCircle
+                    onClick={selectFile}
+                  />
                   <Button className="picture-upload-btn text-label text-all-cups" onClick={selectFile}>
                     change photo
                   </Button>
