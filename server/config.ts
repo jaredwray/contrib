@@ -37,6 +37,7 @@ export const AppConfig = {
   googleCloud: {
     bucketName: requireEnvVar('CONTENT_STORAGE_NAME'),
     keyDump: requireEnvVar('CONTENT_STORAGE_KEY'),
+    schedulerSecretKey: requireEnvVar('AUCTION_SCHEDULER_SECRET'),
   },
 };
 

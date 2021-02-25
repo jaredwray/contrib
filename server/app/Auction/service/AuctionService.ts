@@ -17,6 +17,7 @@ import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
 import { StripeService } from '../../../payment/StripeService';
+import { AppLogger } from '../../../logger';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -143,21 +144,42 @@ export class AuctionService {
     return AuctionService.makeAuctionBid(createdBid);
   }
 
-  public async settleAuctionAndExec(id: string): Promise<Auction> {
-    const auction = await this.AuctionModel.findById(id)
-      .populate({
-        path: 'maxBid',
-        model: this.AuctionBidModel,
-        populate: { path: 'user', model: this.UserAccountModel },
-      })
-      .exec();
+  public scheduleAuctionJob(): { message: string } {
+    this.AuctionModel.find({ status: AuctionStatus.ACTIVE })
+      .exec()
+      .then(async (auctions) => {
+        for await (const auction of auctions) {
+          if (dayjs().utc().isAfter(auction.endsAt)) {
+            const currentAuction = await auction
+              .populate({
+                path: 'maxBid',
+                model: this.AuctionBidModel,
+                populate: { path: 'user', model: this.UserAccountModel },
+              })
+              .execPopulate();
+            await this.settleAuctionAndCharge(currentAuction);
+          }
+        }
+      });
+    return { message: 'Scheduled' };
+  }
+
+  public async settleAuctionAndCharge(auction: IAuctionModel): Promise<void> {
     if (!auction) {
       throw new AppError('Auction not found');
     }
-    await this.stripeService.chargePayment();
     auction.status = AuctionStatus.SETTLED;
-    const result = await auction.save();
-    return AuctionService.makeAuction(result);
+
+    if (auction.maxBid) {
+      try {
+        const result = await this.stripeService.chargePayment(auction.maxBid.user);
+        AppLogger.info(`Payment charged for user ${auction.maxBid.user._id.toString()} with result ${result}`);
+      } catch (e) {
+        throw new AppError('Cannot charge user', ErrorCode.INTERNAL_ERROR);
+      }
+    }
+    AppLogger.info(`Auction with id ${auction.id} has been settled`);
+    await auction.save();
   }
 
   private static makeAuctionBid(model: IAuctionBidModel): AuctionBid | null {

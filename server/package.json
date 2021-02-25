@@ -22,6 +22,7 @@
     "apollo-server-express": "^2.21.0",
     "asoiaf-api": "^1.0.1",
     "auth0": "^2.33.0",
+    "bcrypt": "^5.0.0",
     "dataloader": "^2.0.0",
     "dayjs": "^1.10.4",
     "dinero.js": "^1.8.1",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@types/auth0": "^2.33.0",
+    "@types/bcrypt": "^3.0.0",
     "@types/jest": "^26.0.20",
     "@types/mongoose": "^5.8.2",
     "@typescript-eslint/eslint-plugin": "^4.15.0",

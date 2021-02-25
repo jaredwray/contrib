@@ -12,9 +12,13 @@ if (AppConfig.newRelic.enabled) {
 }
 
 import * as express from 'express';
+import * as path from 'path';
 import { createGraphqlServer } from './graphql';
 import { AppLogger } from './logger';
-import * as path from 'path';
+import { initMongodbConnection } from './mongodb';
+import { IAppServices } from './app/AppServices';
+import createAppServices from './app/createAppServices';
+import appRouteHandlers from './routeHandlers';
 
 const app = express();
 
@@ -28,8 +32,15 @@ if (AppConfig.environment.serveClient) {
     res.sendFile(clientBundlePath + '/index.html', { acceptRanges: false });
   });
 }
-createGraphqlServer().applyMiddleware({ app });
 
-app.listen(AppConfig.app.port, () => {
-  AppLogger.info(`server is listening on ${AppConfig.app.port}`);
-});
+(async function () {
+  const connection = await initMongodbConnection();
+  const appServices: IAppServices = createAppServices(connection);
+
+  appRouteHandlers(app, appServices);
+  createGraphqlServer(appServices).applyMiddleware({ app });
+
+  app.listen(AppConfig.app.port, () => {
+    AppLogger.info(`server is listening on ${AppConfig.app.port}`);
+  });
+})();
