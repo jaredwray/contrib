@@ -3,7 +3,7 @@ import { useLazyQuery } from '@apollo/client';
 import { useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { UserAccount, UserAccountStatus } from '../../model/UserAccount';
+import { UserAccount, UserAccountStatus } from '../../types/UserAccount';
 import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
 import { UserAccountContext } from './UserAccountContext';
 

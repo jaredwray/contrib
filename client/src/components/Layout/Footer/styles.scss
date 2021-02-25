@@ -1,0 +1,36 @@
+@import '../../../variables.scss';
+
+footer {
+  background-color: $dark-gray-color;
+
+  &,
+  a,
+  a:hover {
+    color: $sage-color;
+  }
+
+  .info {
+    color: $white-color;
+  }
+
+  .social-media {
+    a {
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 36px;
+      height: 36px;
+    }
+
+    .twitter {
+      background-image: url('../../../assets/twitter.webp');
+    }
+
+    .instagram {
+      background-image: url('../../../assets/instagram.webp');
+    }
+
+    .facebook {
+      background-image: url('../../../assets/facebook.webp');
+    }
+  }
+}

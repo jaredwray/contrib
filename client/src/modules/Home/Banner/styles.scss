@@ -1,0 +1,40 @@
+@import '../../../variables.scss';
+
+.banner {
+  height: 505px;
+  color: $white-color;
+  text-align: left;
+  background-image: url('../../../assets/player-md.webp');
+  background-repeat: no-repeat;
+  background-position: right;
+  background-color: $sage-color;
+  background-size: contain;
+
+  .btn.banner-sign-up-button {
+    &:hover,
+    &:active,
+    &:hover:focus,
+    &:active:focus {
+      background: $ochre-color !important;
+    }
+  }
+
+  .banner-separator {
+    height: 12px;
+    width: 102px;
+    background-color: $dark-gray-color;
+  }
+
+  .banner-signature {
+    bottom: 0;
+  }
+
+  @media (max-width: $medium-weight) {
+    background-image: url('../../../assets/player-sm.webp');
+
+    .banner-separator {
+      height: 8px;
+      width: 68px;
+    }
+  }
+}

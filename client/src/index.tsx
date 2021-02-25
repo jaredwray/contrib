@@ -4,14 +4,14 @@ import { Route, Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { AppState, Auth0Provider } from '@auth0/auth0-react';
 
-import Charities from './components/Charities/Charities';
-import Index from './components/Index/Index';
-import Influencers from './components/Admin/Influencers/Influencers';
-import InvitationPage from './components/InvitationPage/InvitationPage';
-import PhoneNumberConfirmation from './components/PhoneNumberConfirmation/PhoneNumberConfirmation';
-import PhoneNumberVerification from './components/PhoneNumberVerification/PhoneNumberVerification';
-import Profile from './components/Profile/Profile';
-import WelcomePage from './components/WelcomePage/WelcomePage';
+import Charities from './modules/Charities';
+import HomePage from './modules/Home';
+import Influencers from './modules/admin/Influencers';
+import InvitationPage from './modules/Invitation/InvitationPage';
+import PhoneNumberConfirmation from './modules/phoneNumber/Confirmation';
+import PhoneNumberVerification from './modules/phoneNumber/Verification';
+import Profile from './modules/Profile';
+import WelcomePage from './modules/Welcome';
 import { UserAccountProvider } from './components/UserAccountProvider';
 
 import './index.scss';
@@ -35,7 +35,7 @@ ReactDOM.render(
     <Router history={history}>
       <ContribApolloProvider>
         <UserAccountProvider>
-          <Route path="/" exact component={Index} />
+          <Route path="/" exact component={HomePage} />
           <Route path="/charities" exact component={Charities} />
           <Route path="/phone-verification" exact component={PhoneNumberVerification} />
           <Route path="/phone-confirmation" exact component={PhoneNumberConfirmation} />

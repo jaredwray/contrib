@@ -1,0 +1,48 @@
+@import '../../../variables.scss';
+
+.ending-soon {
+  color: $sage-color;
+  background-color: $barely-gray-color;
+
+  .see-all-link {
+    color: $dark-gray-color;
+  }
+
+  .auction {
+    width: 280px;
+    display: inline-block;
+    margin-right: 40px;
+    color: $dark-gray-color;
+    background-color: $white-color;
+
+    .like {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      left: 235px;
+      top: 5px;
+      border-radius: 36px;
+      background-color: $white-color;
+      cursor: pointer;
+      background-image: url('../../../assets/like.webp');
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .auction-picture {
+      width: 280px;
+      height: 280px;
+      background-color: $barely-gray-color;
+    }
+
+    .auction-title {
+      color: $sage-color;
+      height: 85px;
+    }
+
+    .auction-owner-picture {
+      width: 32px;
+      height: 32px;
+    }
+  }
+}

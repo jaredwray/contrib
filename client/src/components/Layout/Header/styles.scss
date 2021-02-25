@@ -1,0 +1,103 @@
+@import '../../../variables.scss';
+
+.header-nav-dropdown {
+  .dropdown-toggle {
+    width: 36px;
+    height: 36px;
+    display: inline-block;
+    background: no-repeat center url('../../../assets/hamburger.webp');
+
+    &::after {
+      display: none !important;
+    }
+  }
+
+  &.show .dropdown-toggle {
+    background-image: url('../../../assets/close.webp');
+    width: 30px;
+    height: 30px;
+  }
+
+  .nav-link {
+    padding: 0;
+  }
+
+  .dropdown-menu {
+    left: auto !important;
+    right: 2px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    &.show {
+      margin: 0 !important;
+
+      @media (max-width: $small-weight) {
+        right: -40px !important;
+        margin-top: 2px !important;
+        border: none;
+      }
+    }
+  }
+
+  .nav-dropdown-menu {
+    width: 385px;
+    padding: 20px 40px;
+
+    .dropdown-menu-user-name {
+      color: $light-gray-color;
+      max-width: 350px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-menu-user-picture {
+      width: 36px;
+      height: 36px;
+    }
+
+    .dropdown-item {
+      color: $sage-color;
+      padding: 10px 0;
+      margin-left: -40px;
+      width: 385px;
+
+      span {
+        margin-left: 40px;
+      }
+
+      &:hover {
+        background-color: $barely-gray-color;
+      }
+    }
+
+    .dropdown-menu-social-media {
+      a {
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 36px;
+        height: 36px;
+      }
+
+      .twitter {
+        background-image: url('../../../assets/twitter.webp');
+      }
+
+      .instagram {
+        background-image: url('../../../assets/instagram.webp');
+      }
+
+      .facebook {
+        background-image: url('../../../assets/facebook.webp');
+      }
+    }
+
+    .dropdown-menu-copyright {
+      color: $light-gray-color;
+    }
+
+    .dropdown-menu-privacy {
+      color: $sage-color;
+    }
+  }
+}

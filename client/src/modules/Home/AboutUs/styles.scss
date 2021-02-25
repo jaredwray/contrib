@@ -1,0 +1,10 @@
+@import '../../../variables.scss';
+
+.about-us {
+  color: $dark-gray-color;
+
+  .description {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}

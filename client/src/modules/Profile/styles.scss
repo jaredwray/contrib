@@ -1,0 +1,88 @@
+@import '../../variables.scss';
+
+.profile-page {
+  .alert {
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+  }
+
+  .profile-page-avatar {
+    height: 100px;
+    display: inline-block;
+    background-color: $sage-color;
+    text-align: center;
+    margin-bottom: 60px;
+    user-select: none;
+
+    img {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      cursor: pointer;
+      pointer-events: auto;
+      top: 40px;
+      object-fit: cover;
+      background-color: $gray-color;
+    }
+
+    .picture-upload-btn {
+      &,
+      &:active,
+      &:focus {
+        height: 25px;
+        background: rgba(50, 52, 50, 0.5) no-repeat url(../../assets/picture-sign.webp);
+        background-position: 15px;
+        position: absolute;
+        display: block;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 16px 0 40px;
+        margin-top: 30px;
+        color: $white-color;
+        border-radius: 12.5px;
+        border: none;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .profile-sport-input-wrapper {
+    input {
+      background-color: $white-color;
+      width: calc(100% - 40px);
+      cursor: pointer;
+      border-radius: 10px 0 0 10px;
+    }
+
+    .profile-sport-input-btn {
+      display: inline-block;
+      width: 44px;
+      height: 44px;
+      vertical-align: top;
+      border-radius: 0 10px 10px 0;
+      border: 1px solid $sage-color;
+      text-align: center;
+      padding-top: 5px;
+
+      &:after {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        content: '';
+        transform: rotate(45deg);
+        border: 2px solid $sage-color;
+        border-left: none;
+        border-top: none;
+      }
+    }
+  }
+
+  @media (max-width: $medium-weight) {
+    button[type='submit'] {
+      width: 100%;
+    }
+  }
+}
