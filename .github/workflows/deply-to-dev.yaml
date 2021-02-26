@@ -47,7 +47,7 @@ jobs:
       run: yarn build-client
       env:
         REACT_APP_AUTH0_DOMAIN: "auth.contrib.org"
-        REACT_APP_AUTH0_CLIENT_ID: dj4DaWeggmOb7cbCOSxzSQAN5EYBwVqr
+        REACT_APP_AUTH0_CLIENT_ID: 2ySlxFOLW1Rw1ALES7cF3tH9Hz6zDO57
         REACT_APP_PLATFORM_URL: "https://dev.contrib.org/"
         REACT_APP_API_URL: "https://dev.contrib.org/graphql"
         REACT_APP_API_AUDIENCE: "https://dev.contrib.org/"
