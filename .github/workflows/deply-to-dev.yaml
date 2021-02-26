@@ -14,7 +14,7 @@ env:
   ENV_NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
   ENV_MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
   ENV_AUTH0_ISSUER_URL: https://auth.contrib.org
-  ENV_AUTH0_AUDIENCE: http://dev.contrib.org
+  ENV_AUTH0_AUDIENCE: https://dev.contrib.org/
   ENV_AUTH0_MANAGEMENT_DOMAIN: contrib.us.auth0.com
   ENV_AUTH0_MANAGEMENT_CLIENT_ID: dj4DaWeggmOb7cbCOSxzSQAN5EYBwVqr
   ENV_AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.DEV_AUTH0_MANAGEMENT_CLIENT_SECRET }}
@@ -46,7 +46,7 @@ jobs:
     - name: Build Client
       run: yarn build-client
       env:
-        REACT_APP_AUTH0_DOMAIN: "auth.contrib.org"
+        REACT_APP_AUTH0_DOMAIN: "contrib.us.auth0.com"
         REACT_APP_AUTH0_CLIENT_ID: 2ySlxFOLW1Rw1ALES7cF3tH9Hz6zDO57
         REACT_APP_PLATFORM_URL: "https://dev.contrib.org/"
         REACT_APP_API_URL: "https://dev.contrib.org/graphql"
