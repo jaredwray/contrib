@@ -27,13 +27,8 @@ export class InvitationService {
     private readonly twilioNotificationService: TwilioNotificationService,
     private readonly eventHub: EventHub,
   ) {
-    eventHub.subscribe(Events.USER_ACCOUNT_CREATED, (userAccount) => {
-      this.maybeFinalizeInvitation(userAccount).catch((error) => {
-        AppLogger.error(`error finalizing invitation for user account: ${error.name}: ${error.message}`, {
-          stack: error.stack,
-          userAccount: userAccount,
-        });
-      });
+    eventHub.subscribe(Events.USER_ACCOUNT_CREATED, async (userAccount) => {
+      await this.maybeFinalizeInvitation(userAccount);
     });
   }
 
@@ -209,6 +204,7 @@ export class InvitationService {
       firstName: model.firstName,
       lastName: model.lastName,
       welcomeMessage: model.welcomeMessage,
+      phoneNumber: model.phoneNumber,
       accepted: model.accepted,
       createdAt: model.createdAt.toISOString(),
       updatedAt: model.updatedAt.toISOString(),

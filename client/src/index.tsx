@@ -13,6 +13,7 @@ import PhoneNumberVerification from './components/PhoneNumberVerification/PhoneN
 import Profile from './components/Profile/Profile';
 import WelcomePage from './components/WelcomePage/WelcomePage';
 import { UserAccountProvider } from './components/UserAccountProvider';
+import { AfterLogin } from './components/AfterLogin';
 
 import './index.scss';
 import { ContribApolloProvider } from './apollo/ContribApolloProvider';
@@ -36,6 +37,7 @@ ReactDOM.render(
       <ContribApolloProvider>
         <UserAccountProvider>
           <Route path="/" exact component={Index} />
+          <Route path="/after-login" component={AfterLogin} />
           <Route path="/charities" exact component={Charities} />
           <Route path="/phone-verification" exact component={PhoneNumberVerification} />
           <Route path="/phone-confirmation" exact component={PhoneNumberConfirmation} />

@@ -10,12 +10,16 @@ interface PropTypes {
 }
 
 export function ContribApolloProvider({ children }: PropTypes) {
-  const { getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const apolloClient = useMemo(() => {
     const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_URL });
 
     const authLink = setContext(async (_, { headers }) => {
+      if (!isAuthenticated) {
+        return headers;
+      }
+
       try {
         const accessToken = await getAccessTokenSilently();
         return {
@@ -26,7 +30,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
         };
       } catch (error) {
         console.error('error getting access token', error);
-        return {};
+        return headers;
       }
     });
 
@@ -34,7 +38,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
       link: ApolloLink.from([authLink as any, httpLink as any]) as any,
       cache: new InMemoryCache(),
     });
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, isAuthenticated]);
 
   return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
 }

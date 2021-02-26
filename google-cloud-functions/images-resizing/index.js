@@ -58,8 +58,8 @@ exports.resizeUploadedImage = async (file, context) => {
     await bucket
       .file(thumbPath)
       .delete()
-      .catch((e) => {
-        console.log("cannot delete old file");
+      .catch((error) => {
+        console.error("cannot delete old file:", error);
       });
 
     // console.log("newFileName: ", newFileName);
@@ -82,8 +82,8 @@ exports.resizeUploadedImage = async (file, context) => {
     await bucket
       .file(`${fileFoldersPath}/${newFileName}`)
       .delete()
-      .catch((e) => {
-        console.log("cannot delete old file");
+      .catch((error) => {
+        console.error("cannot delete old file:", error);
       });
 
     // const contents = fs.readFileSync('/path/to/file.jpg', {encoding: 'base64'});
