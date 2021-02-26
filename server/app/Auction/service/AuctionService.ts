@@ -11,6 +11,7 @@ import { IUpdateAuctionInput } from '../graphql/model/UpdateAuctionInput';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionBidModel, IAuctionBidModel } from '../mongodb/AuctionBidModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { AuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 import { AuctionBid } from '../dto/AuctionBid';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
@@ -18,15 +19,21 @@ import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
 import { StripeService } from '../../../payment/StripeService';
 import { AppLogger } from '../../../logger';
+import { GCloudStorage, IFile } from '../../GCloudStorage';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
+  private readonly AuctionAssetModel = AuctionAssetModel(this.connection);
   private readonly AuctionBidModel = AuctionBidModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
+  private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
 
-  private readonly attachmentsService = new AuctionAttachmentsService(this.connection);
-  constructor(private readonly connection: Connection, private readonly stripeService: StripeService) {}
+  constructor(
+    private readonly connection: Connection,
+    private readonly stripeService: StripeService,
+    private readonly cloudStorage: GCloudStorage,
+  ) {}
 
   public async createAuctionDraft(auctionOrganizerId: string, input: ICreateAuctionInput): Promise<Auction> {
     const [auction] = await this.AuctionModel.create([
@@ -90,6 +97,39 @@ export class AuctionService {
         model: this.AuctionBidModel,
         populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
       });
+  }
+
+  public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<Auction> {
+    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+    }
+    try {
+      const asset = await this.attachmentsService.uploadFileAttachment(id, userId, attachment);
+
+      auction.assets.push(asset);
+      await auction.save();
+
+      const populatedAuction = await this._populateAuction(auction).execPopulate();
+      return AuctionService.makeAuction(populatedAuction);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<Auction> {
+    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+    }
+    try {
+      await this.attachmentsService.removeFileAttachment(attachmentUrl);
+      await auction.update({ $pull: { attachments: { url: attachmentUrl } } });
+      const updatedAuction = await this._populateAuction(auction).execPopulate();
+      return AuctionService.makeAuction(updatedAuction);
+    } catch (error) {
+      throw new AppError(error.message, ErrorCode.INTERNAL_ERROR);
+    }
   }
 
   public async updateAuction(id: string, userId: string, input: IUpdateAuctionInput): Promise<Auction> {

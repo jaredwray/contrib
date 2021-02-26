@@ -47,9 +47,28 @@ export const AuctionResolvers = {
     deleteAuction: async (_: unknown, input: { id: string }): Promise<any> => {
       return Promise.resolve(null);
     },
-    addAuctionAttachment: async (_: unknown, input: { id: string; attachment: any }): Promise<any> => {
-      return Promise.resolve(null);
-    },
+    addAuctionAttachment: requirePermission(
+      UserPermission.INFLUENCER,
+      async (
+        _: unknown,
+        { id, attachment }: { id: string; attachment: any },
+        { user, userAccount, auction },
+      ): Promise<any> => {
+        const account = await userAccount.getAccountByAuthzId(user.id);
+        return auction.addAuctionAttachment(id, account.mongodbId, attachment);
+      },
+    ),
+    removeAuctionAttachment: requirePermission(
+      UserPermission.INFLUENCER,
+      async (
+        _: unknown,
+        { id, attachmentUrl }: { id: string; attachmentUrl: string },
+        { user, userAccount, auction },
+      ) => {
+        const account = await userAccount.getAccountByAuthzId(user.id);
+        return auction.removeAuctionAttachment(id, account.mongodbId, attachmentUrl);
+      },
+    ),
     createAuctionBid: requireAuthenticated(
       async (parent: unknown, { id, bid }: { id: string } & ICreateAuctionBidInput, { user, auction, userAccount }) => {
         const account = await userAccount.getAccountByAuthzId(user.id);
