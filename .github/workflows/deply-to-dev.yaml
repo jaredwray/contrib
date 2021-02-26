@@ -13,7 +13,7 @@ env:
   ENV_NEW_RELIC_APP_NAME: contrib-app-dev
   ENV_NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
   ENV_MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
-  ENV_AUTH0_ISSUER_URL: https://auth.contrib.org
+  ENV_AUTH0_ISSUER_URL: https://contrib.us.auth0.com/
   ENV_AUTH0_AUDIENCE: https://dev.contrib.org/
   ENV_AUTH0_MANAGEMENT_DOMAIN: contrib.us.auth0.com
   ENV_AUTH0_MANAGEMENT_CLIENT_ID: dj4DaWeggmOb7cbCOSxzSQAN5EYBwVqr
