@@ -1,18 +1,19 @@
-import { Alert, Button, Container, Image, Row, Col, ProgressBar, Form } from 'react-bootstrap';
-import { gql, useMutation, useQuery } from '@apollo/client';
 import { useState, useCallback, useEffect } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
 
-import ResizedImageUrl from '../../helpers/ResizedImageUrl';
-import URLSearchParam from '../../helpers/URLSearchParam';
-import Layout from '../../components/Layout';
-import { UserAccount } from '../../types/UserAccount';
-import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { ErrorMessage } from '@hookform/error-message';
+import { Alert, Button, Container, Image, Row, Col, ProgressBar, Form } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
+import { Redirect, useHistory } from 'react-router-dom';
+
+import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import Layout from 'src/components/Layout';
+import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import URLSearchParam from 'src/helpers/URLSearchParam';
+import { UserAccount } from 'src/types/UserAccount';
 
 import './styles.scss';
-import '../../components/Layout/Steps.scss';
+import 'src/components/Layout/Steps.scss';
 
 const UpdateInfluencerProfileMutation = gql`
   mutation UpdateInfluencerProfile($name: String!, $sport: String!, $team: String!, $profileDescription: String!) {
@@ -35,7 +36,7 @@ const UpdateInfluencerProfileAvatarMutation = gql`
 const MAX_AVATAR_SIZE_MB = 2;
 const HIDE_ALERT_TIMEOUT_MS = 3500;
 
-export default function Profile() {
+export default function ProfilePage() {
   const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
   const [updateInfluencerProfileAvatar] = useMutation(UpdateInfluencerProfileAvatarMutation);
 
@@ -107,11 +108,11 @@ export default function Profile() {
 
   const onFileSelected = useCallback(
     (event: any) => {
-      let image = event.target.files[0];
+      const image = event.target.files[0];
 
       if (!image) return;
 
-      let fileSizeInMegaBytes = image.size / (1024 * 1024);
+      const fileSizeInMegaBytes = image.size / (1024 * 1024);
 
       if (fileSizeInMegaBytes > MAX_AVATAR_SIZE_MB) {
         setUpdateError(`File is too big! Maximum allowed size is ${MAX_AVATAR_SIZE_MB}MB`);
@@ -128,7 +129,7 @@ export default function Profile() {
         return;
       }
 
-      let avatar = document.getElementById('profileAvatar') as HTMLImageElement;
+      const avatar = document.getElementById('profileAvatar') as HTMLImageElement;
       avatar.src = URL.createObjectURL(image);
 
       updateInfluencerProfileAvatar({
@@ -163,7 +164,7 @@ export default function Profile() {
             </Row>
             <Row className="text-headline">
               <Col xs="9">Your Profile</Col>
-              <Col xs="3" className="text-right step-title">
+              <Col className="text-right step-title" xs="3">
                 Step 1
               </Col>
             </Row>
@@ -172,17 +173,17 @@ export default function Profile() {
               <Col md="6">
                 <div className="profile-page-avatar w-100">
                   <input
-                    type="file"
+                    ref={(ref) => (fileInput = ref)}
+                    accept=".png,.jpeg,.jpg,.webp"
                     className="d-none"
                     id="avatarFileInput"
-                    accept=".png,.jpeg,.jpg,.webp"
-                    ref={(ref) => (fileInput = ref)}
+                    type="file"
                     onChange={onFileSelected}
                   />
                   <Image
+                    roundedCircle
                     id="profileAvatar"
                     src={ResizedImageUrl(influencerProfile?.avatarUrl, 120)}
-                    roundedCircle
                     onClick={selectFile}
                   />
                   <Button className="picture-upload-btn text-label text-all-cups" onClick={selectFile}>
@@ -194,54 +195,54 @@ export default function Profile() {
                 <Form.Group>
                   <Form.Label>Name</Form.Label>
                   <Form.Control
-                    placeholder="Enter your name"
+                    ref={register({ required: 'required' })}
                     className={formErrors.name && 'is-invalid'}
                     name="name"
-                    ref={register({ required: 'required' })}
+                    placeholder="Enter your name"
                   />
-                  <ErrorMessage className="invalid-feedback" name="name" as="div" errors={formErrors} />
+                  <ErrorMessage as="div" className="invalid-feedback" errors={formErrors} name="name" />
                 </Form.Group>
 
                 <Form.Group>
                   <Form.Label>Sport</Form.Label>
                   <Form.Control
-                    placeholder="Enter your sport"
+                    ref={register({ required: 'required' })}
                     className={formErrors.sport && 'is-invalid'}
                     name="sport"
-                    ref={register({ required: 'required' })}
+                    placeholder="Enter your sport"
                   />
-                  <ErrorMessage className="invalid-feedback" name="sport" as="div" errors={formErrors} />
+                  <ErrorMessage as="div" className="invalid-feedback" errors={formErrors} name="sport" />
                 </Form.Group>
 
                 <Form.Group>
                   <Form.Label>Team</Form.Label>
                   <Form.Control
-                    placeholder="Enter your team name"
+                    ref={register({ required: 'required' })}
                     className={formErrors.team && 'is-invalid'}
                     name="team"
-                    ref={register({ required: 'required' })}
+                    placeholder="Enter your team name"
                   />
-                  <ErrorMessage className="invalid-feedback" name="team" as="div" errors={formErrors} />
+                  <ErrorMessage as="div" className="invalid-feedback" errors={formErrors} name="team" />
                 </Form.Group>
 
                 <Form.Group>
                   <Form.Label>Why you are doing this (edit whenever)</Form.Label>
                   <Form.Control
-                    placeholder="Enter description"
+                    ref={register({ required: 'required' })}
                     as="textarea"
-                    rows={5}
                     className={formErrors.profileDescription && 'is-invalid'}
                     name="profileDescription"
-                    ref={register({ required: 'required' })}
+                    placeholder="Enter description"
+                    rows={5}
                   />
-                  <ErrorMessage className="invalid-feedback" name="profileDescription" as="div" errors={formErrors} />
+                  <ErrorMessage as="div" className="invalid-feedback" errors={formErrors} name="profileDescription" />
                 </Form.Group>
               </Col>
             </Row>
             {!stepByStep && (
               <Row>
                 <Col>
-                  <Button type="submit" className="btn-ochre float-right">
+                  <Button className="btn-ochre float-right" type="submit">
                     Submit
                   </Button>
                 </Col>
@@ -252,11 +253,11 @@ export default function Profile() {
           {stepByStep && (
             <Container fluid className="steps-navigation-container">
               <Row className="pl-4 pr-4">
-                <Col xs="6" className="steps-navigation-items">
+                <Col className="steps-navigation-items" xs="6">
                   <div className="steps-prev-btn disabled text-subhead">Prev</div>
                 </Col>
-                <Col xs="6" className="steps-navigation-items">
-                  <Button type="submit" className="btn-with-arrows steps-next-btn float-right">
+                <Col className="steps-navigation-items" xs="6">
+                  <Button className="btn-with-arrows steps-next-btn float-right" type="submit">
                     Next
                   </Button>
                 </Col>

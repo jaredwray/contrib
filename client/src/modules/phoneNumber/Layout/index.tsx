@@ -1,6 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap';
 
-import Logo from '../../../assets/logo.svg';
+import Logo from 'src/assets/images/logo.svg';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.scss';
@@ -12,7 +12,7 @@ export default function PhoneNumberLayout({ children }: { children: any }) {
         <Col className="p-0 pt-4">
           <Container fluid className="p-0 login-container container col-md-9 col-11">
             <a href="/">
-              <img src={Logo} alt="Contrib" className="logo" />
+              <img alt="Contrib" className="logo" src={Logo} />
             </a>
             <main role="main">{children}</main>
           </Container>

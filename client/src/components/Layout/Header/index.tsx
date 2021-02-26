@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
-import { useAuth0 } from '@auth0/auth0-react';
 
-import Logo from '../../../assets/logo.svg';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
+
+import Logo from 'src/assets/images/logo.svg';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import './styles.scss';
-import { UserAccountContext } from '../../UserAccountProvider/UserAccountContext';
 
 export default function Header() {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -18,17 +19,18 @@ export default function Header() {
           <Col md className="p-0">
             <Navbar collapseOnSelect expand={false}>
               <Navbar.Brand href="/">
-                <img src={Logo} alt="Contrib" />
+                <img alt="Contrib" src={Logo} />
               </Navbar.Brand>
-              <NavDropdown title="" id="headerNavDropdown" className="header-nav-dropdown">
+
+              <NavDropdown className="header-nav-dropdown" id="headerNavDropdown" title="">
                 <section className="nav-dropdown-menu text-subhead">
                   {isAuthenticated && (
                     <>
                       <div className="dropdown-menu-user-name d-inline-block">{user.name}</div>
                       <Image
+                        roundedCircle
                         className="dropdown-menu-user-picture float-right d-inline-block"
                         src={user.picture}
-                        roundedCircle
                       />
                     </>
                   )}
@@ -67,13 +69,13 @@ export default function Header() {
                   )}
                   <div>
                     <div className="dropdown-menu-social-media pt-4 pb-2">
-                      <a href="/" className="twitter d-inline-block mr-4" rel="external">
+                      <a className="twitter d-inline-block mr-4" href="/" rel="external">
                         <i className="d-none" />
                       </a>
-                      <a href="/" className="instagram d-inline-block mr-4" rel="external">
+                      <a className="instagram d-inline-block mr-4" href="/" rel="external">
                         <i className="d-none" />
                       </a>
-                      <a href="/" className="facebook d-inline-block" rel="external">
+                      <a className="facebook d-inline-block" href="/" rel="external">
                         <i className="d-none" />
                       </a>
                     </div>
@@ -81,7 +83,7 @@ export default function Header() {
                       <div className="text-label text-all-cups dropdown-menu-copyright">
                         Copyright {new Date().getFullYear()} Contrib Inc.
                       </div>
-                      <a href="/" className="dropdown-menu-privacy text-label text-all-cups">
+                      <a className="dropdown-menu-privacy text-label text-all-cups" href="/">
                         Privacy and Terms &gt;&gt;
                       </a>
                     </div>

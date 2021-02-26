@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { useHistory } from 'react-router-dom';
-import { Button, Form as BsForm } from 'react-bootstrap';
-import PhoneInput from 'react-phone-input-2';
+
 import { gql, useMutation, useQuery } from '@apollo/client';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
+import PhoneInput from 'react-phone-input-2';
+import { useHistory } from 'react-router-dom';
+
+import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
-import { UserAccount, UserAccountStatus } from '../../../types/UserAccount';
-import { MyAccountQuery } from '../../../apollo/queries/MyAccountQuery';
 
 import './styles.scss';
 
@@ -60,7 +62,7 @@ export default function PhoneNumberVerification() {
   return (
     <Layout>
       <section className="phone-number-verification-page">
-        <a href="/" onClick={handleBack} className="back-link pt-5 text-label text-all-cups" title="Back">
+        <a className="back-link pt-5 text-label text-all-cups" href="/" title="Back" onClick={handleBack}>
           <span className="back-link-arrows">&#171;&#32;&#32;</span>back
         </a>
         <div className="text-headline pt-3">Please, enter your phone number</div>
@@ -75,16 +77,16 @@ export default function PhoneNumberVerification() {
                   <PhoneInput
                     disabled={formSubmitting}
                     {...props.input}
-                    country={'us'}
-                    copyNumbersOnly={false}
-                    specialLabel=""
-                    placeholder=""
-                    inputProps={{ required: true }}
                     containerClass="mb-3"
+                    copyNumbersOnly={false}
+                    country={'us'}
+                    inputProps={{ required: true }}
+                    placeholder=""
+                    specialLabel=""
                   />
                 )}
               </Field>
-              <Button disabled={formSubmitting} type="submit" className="submit-btn btn-ochre mb-2">
+              <Button className="submit-btn btn-ochre mb-2" disabled={formSubmitting} type="submit">
                 Confirm
               </Button>
             </BsForm>

@@ -1,10 +1,10 @@
+import { InMemoryCache } from '@apollo/client';
+import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 
+import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { UserAccountStatus } from 'src/types/UserAccount';
 import PhoneNumberConfirmation from '../Confirmation';
-import { MyAccountQuery } from '../../../apollo/queries/MyAccountQuery';
-import { UserAccountStatus } from '../../../types/UserAccount';
-import { MockedProvider } from '@apollo/client/testing';
-import { InMemoryCache } from '@apollo/client';
 
 const cache = new InMemoryCache();
 cache.writeQuery({
@@ -21,7 +21,7 @@ cache.writeQuery({
 
 const mockHistoryReplace = jest.fn();
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+  ...(jest.requireActual('react-router-dom') as object),
   useHistory: () => ({
     replace: mockHistoryReplace,
   }),

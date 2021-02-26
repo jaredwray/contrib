@@ -2,20 +2,25 @@
   "name": "contrib-client",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --coverage --runInBand --watchAll=false",
+    "eject": "react-scripts eject",
+    "lint": "eslint  --cache --cache-location .eslintcache  --ext .js,.ts,.tsx .",
+    "test:lint": "yarn lint && yarn tsc"
+  },
   "dependencies": {
     "@apollo/client": "^3.3.7",
     "@auth0/auth0-react": "^1.2.0",
     "@hookform/error-message": "^0.0.5",
-    "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/apollo-upload-client": "^14.1.0",
     "@types/history": "^4.7.8",
-    "@types/jest": "^26.0.20",
     "@types/node": "^14.14.21",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
     "apollo-link": "^1.2.14",
     "apollo-upload-client": "^14.1.3",
     "bootstrap": "^4.6.0",
@@ -41,17 +46,31 @@
     "typescript": "^4.1.3",
     "web-vitals": "^0.2.4"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.9",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/jest": "^26.0.20",
+    "@types/jest-when": "^2.7.2",
+    "@types/luxon": "^1.25.1",
+    "@types/react-router-dom": "^5.1.7",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
+    "babel-eslint": "^10.1.0",
+    "babel-preset-react-app": "^10.0.0",
+    "eslint": "^7.20.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.3.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "^32.2.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.2.1",
+    "react-test-renderer": "^17.0.1"
   },
   "browserslist": {
     "production": [
@@ -64,11 +83,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/enzyme-adapter-react-16": "^1.0.6",
-    "@types/luxon": "^1.25.1",
-    "@types/react-router-dom": "^5.1.7",
-    "react-test-renderer": "^17.0.1"
   }
 }

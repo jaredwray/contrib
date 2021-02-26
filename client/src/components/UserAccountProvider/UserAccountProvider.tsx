@@ -1,10 +1,12 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import { useLazyQuery } from '@apollo/client';
 import { useEffect, useMemo, useState } from 'react';
+
+import { useLazyQuery } from '@apollo/client';
+import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { UserAccount, UserAccountStatus } from '../../types/UserAccount';
-import { MyAccountQuery } from '../../apollo/queries/MyAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
+
 import { UserAccountContext } from './UserAccountContext';
 
 interface PropTypes {

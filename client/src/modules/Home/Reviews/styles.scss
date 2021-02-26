@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@import 'src/variables.scss';
 
 .reviews {
   .quotes {
@@ -37,7 +37,7 @@
     }
 
     .quotes-sign {
-      background-image: url('../../../assets/quotes.webp');
+      background-image: url('/assets/images/quotes.webp');
       background-repeat: no-repeat;
       height: 36px;
       width: 36px;
@@ -58,7 +58,7 @@
         width: 22px;
         line-height: 22px;
         vertical-align: bottom;
-        background-image: url('../../../assets/badge-verified.webp');
+        background-image: url('/assets/images/badge-verified.webp');
         background-repeat: no-repeat;
         margin-right: 10px;
       }

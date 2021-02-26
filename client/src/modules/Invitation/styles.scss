@@ -1,12 +1,12 @@
-@import '../../variables.scss';
+@import 'src/variables.scss';
 
 .invitation-page {
-  background: no-repeat center url('./invitation-bg-lg.webp') $sage-color;
+  background: no-repeat center url('/assets/images/invitation-bg-lg.webp') $sage-color;
   background-size: cover;
   background-blend-mode: multiply;
 
   @media (max-width: $medium-weight) {
-    background-image: url('./invitation-bg-sm.webp');
+    background-image: url('/assets/images/invitation-bg-sm.webp');
   }
 
   .container {

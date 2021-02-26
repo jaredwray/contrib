@@ -1,6 +1,6 @@
+import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
-import { InMemoryCache } from '@apollo/client';
 
 import Influencers, { AllInfliencersQuery } from '..';
 

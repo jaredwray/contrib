@@ -1,16 +1,18 @@
-import { Duration, DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+
 import { gql, useMutation, useQuery } from '@apollo/client';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Duration, DateTime } from 'luxon';
 import { Form as BsForm, Button } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
+import { useHistory } from 'react-router-dom';
+
+import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
 
 import './styles.scss';
-import { MyAccountQuery } from '../../../apollo/queries/MyAccountQuery';
-import { UserAccount, UserAccountStatus } from '../../../types/UserAccount';
-import { useHistory } from 'react-router-dom';
 
 const OtpResendDuration = Duration.fromObject({ seconds: 5 });
 
@@ -117,14 +119,14 @@ export default function PhoneNumberConfirmation() {
   return (
     <Layout>
       <section className="phone-number-confirmation-page">
-        <a href="/" onClick={handleBack} className="back-link pt-5 text-label text-all-cups" title="Back">
+        <a className="back-link pt-5 text-label text-all-cups" href="/" title="Back" onClick={handleBack}>
           <span className="back-link-arrows">&#171;&#32;&#32;</span>back
         </a>
         <div className="text-headline pt-3">Please, confirm your phone number</div>
 
-        <Form onSubmit={handleSubmit} className="pt-3">
+        <Form className="pt-3" onSubmit={handleSubmit}>
           {(formProps) => (
-            <BsForm onSubmit={formProps.handleSubmit} className="phone-number-confirmation-form">
+            <BsForm className="phone-number-confirmation-form" onSubmit={formProps.handleSubmit}>
               <div className="phone-number-confirmation-message pt-3">
                 Verification code has been sent to: {phoneNumber}
               </div>
@@ -137,11 +139,11 @@ export default function PhoneNumberConfirmation() {
                   </BsForm.Group>
                 )}
               </Field>
-              <Button type="submit" disabled={isLoading} className="ml-2 d-inline-block btn-ochre">
+              <Button className="ml-2 d-inline-block btn-ochre" disabled={isLoading} type="submit">
                 Confirm
               </Button>
               {canResendOtp && (
-                <Button variant="link" onClick={handleResendCode} disabled={isLoading} className="ml-2 d-inline-block">
+                <Button className="ml-2 d-inline-block" disabled={isLoading} variant="link" onClick={handleResendCode}>
                   Resend code
                 </Button>
               )}

@@ -1,0 +1,4 @@
+{
+  "presets": [["react-app", { "absoluteRuntime": false }]],
+  "plugins": ["react-hot-loader/babel"]
+}

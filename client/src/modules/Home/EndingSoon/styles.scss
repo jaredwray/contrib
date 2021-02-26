@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@import 'src/variables.scss';
 
 .ending-soon {
   color: $sage-color;
@@ -24,7 +24,7 @@
       border-radius: 36px;
       background-color: $white-color;
       cursor: pointer;
-      background-image: url('../../../assets/like.webp');
+      background-image: url('/assets/images/like.webp');
       background-repeat: no-repeat;
       background-position: center;
     }

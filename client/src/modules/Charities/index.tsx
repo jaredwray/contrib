@@ -1,13 +1,14 @@
 import React from 'react';
+
 import { Container, Row, Col, ProgressBar, Form } from 'react-bootstrap';
 
-import URLSearchParam from '../../helpers/URLSearchParam';
-import Layout from '../../components/Layout';
+import Layout from 'src/components/Layout';
+import URLSearchParam from 'src/helpers/URLSearchParam';
 
 import './styles.scss';
-import '../../components/Layout/Steps.scss';
+import 'src/components/Layout/Steps.scss';
 
-export default function Charities() {
+export default function CharitiesPage() {
   const stepByStep = URLSearchParam('sbs');
 
   return (
@@ -19,10 +20,10 @@ export default function Charities() {
             <Col className="text-label label-with-separator">Create your account</Col>
           </Row>
           <Row className="charities-page-title text-headline">
-            <Col xs="8" sm="9">
+            <Col sm="9" xs="8">
               Your charities
             </Col>
-            <Col xs="4" sm="3" className="text-right step-title">
+            <Col className="text-right step-title" sm="3" xs="4">
               Step 2
             </Col>
           </Row>
@@ -35,7 +36,7 @@ export default function Charities() {
                 suscipit volutpat.
               </div>
             </Col>
-            <Col md="6" className="pt-2 pt-md-0">
+            <Col className="pt-2 pt-md-0" md="6">
               <Form.Group>
                 <Form.Label>Search</Form.Label>
                 <Form.Control placeholder="Search charities by name" />
@@ -51,7 +52,7 @@ export default function Charities() {
                 If your charity isn’t listed send us their info and we will add them to Contrib.
               </div>
             </Col>
-            <Col md="6" className="pt-2 pt-md-0">
+            <Col className="pt-2 pt-md-0" md="6">
               <Form.Group>
                 <Form.Label>Name</Form.Label>
                 <Form.Control placeholder="Enter charity name" />
@@ -68,13 +69,13 @@ export default function Charities() {
         {stepByStep && (
           <Container fluid className="steps-navigation-container">
             <Row className="pl-4 pr-4">
-              <Col xs="6" className="steps-navigation-items">
-                <a href="/profile?sbs=true" className="steps-prev-btn text-subhead">
+              <Col className="steps-navigation-items" xs="6">
+                <a className="steps-prev-btn text-subhead" href="/profile?sbs=true">
                   Prev
                 </a>
               </Col>
-              <Col xs="6" className="steps-navigation-items">
-                <a href="/welcome" className="btn btn-with-arrows steps-next-btn float-right">
+              <Col className="steps-navigation-items" xs="6">
+                <a className="btn btn-with-arrows steps-next-btn float-right" href="/welcome">
                   Finish
                 </a>
               </Col>

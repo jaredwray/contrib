@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Button, Col, Container, DropdownButton, Form, Row, Spinner, Table } from 'react-bootstrap';
-import { gql, useQuery } from '@apollo/client';
 
-import Layout from '../../../components/Layout';
+import { gql, useQuery } from '@apollo/client';
+import { Button, Col, Container, DropdownButton, Form, Row, Spinner, Table } from 'react-bootstrap';
+
+import Layout from 'src/components/Layout';
+
 import InvitationModal from './InvitationModal';
 import Pagination, { PER_PAGE } from './Pagination';
 
@@ -24,7 +26,7 @@ export const AllInfliencersQuery = gql`
   }
 `;
 
-export default function Influencers() {
+export default function InfluencersPage() {
   const [modalShow, setModalShow] = useState(false);
   const [pageSkip, setPageSkip] = useState(0);
 
@@ -52,19 +54,19 @@ export default function Influencers() {
       <section className="admin-influencers-page text-label pl-4 pr-4">
         <Container fluid>
           <Row>
-            <Col xs="12" md="6">
+            <Col md="6" xs="12">
               <Form.Control placeholder="Search influencer" />
             </Col>
-            <Col xs="8" md="4" className="pt-3 pt-md-0 pr-0">
+            <Col className="pt-3 pt-md-0 pr-0" md="4" xs="8">
               <Pagination
                 loading={loading}
+                showNextPage={showNextPage}
+                showPrevPage={showPrevPage}
                 skip={influencers.skip}
                 total={influencers.totalItems}
-                showPrevPage={showPrevPage}
-                showNextPage={showNextPage}
               />
             </Col>
-            <Col xs="4" md="2" className="pt-3 pt-md-0">
+            <Col className="pt-3 pt-md-0" md="2" xs="4">
               <Button className="btn-dark-gray w-100" onClick={() => setModalShow(true)}>
                 Invite +
               </Button>
@@ -99,11 +101,11 @@ export default function Influencers() {
                         <td>{influencer.status}</td>
                         <td>
                           <DropdownButton
-                            menuAlign="right"
-                            title="..."
-                            id="influencerActions"
                             className="influencer-actions-dropdown"
                             disabled={true}
+                            id="influencerActions"
+                            menuAlign="right"
+                            title="..."
                           ></DropdownButton>
                         </td>
                       </tr>

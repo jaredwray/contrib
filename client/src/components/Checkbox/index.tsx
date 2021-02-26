@@ -7,7 +7,7 @@ interface PropTypes {
 export default function Checkbox({ checked }: PropTypes) {
   return (
     <>
-      <input type="checkbox" checked={checked} onChange={() => {}} />
+      <input checked={checked} type="checkbox" onChange={() => {}} />
       <span />
     </>
   );

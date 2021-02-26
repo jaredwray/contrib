@@ -1,11 +1,12 @@
-import { mount, ReactWrapper } from 'enzyme';
-import { mockedUseAuth0, withNotAuthenticatedUser } from '../../helpers/testHelpers/auth0';
 import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { MemoryRouter } from 'react-router-dom';
+import { mount, ReactWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import { MemoryRouter } from 'react-router-dom';
 
-import InvitationPage, { GetInvitation } from './InvitationPage';
+import { mockedUseAuth0, withNotAuthenticatedUser } from 'src/helpers/testHelpers/auth0';
+
+import InvitationPage, { GetInvitation } from '..';
 
 const cache = new InMemoryCache();
 cache.writeQuery({
@@ -34,7 +35,7 @@ describe('InvitationPage', () => {
       );
     });
 
-    let signUpButton = wrapper.find('.invitation-page-create-btn');
+    const signUpButton = wrapper!.find('.invitation-page-create-btn');
     expect(signUpButton).toHaveLength(1);
 
     signUpButton.simulate('click');
@@ -56,10 +57,10 @@ describe('InvitationPage', () => {
       );
     });
 
-    let firstName = wrapper.find('.invitation-page-influencer');
+    const firstName = wrapper!.find('.invitation-page-influencer');
     expect(firstName.text()).toEqual('Bob');
 
-    let welcomeMessage = wrapper.find("[data-test-id='invitation-page-welcome-message']");
+    const welcomeMessage = wrapper!.find("[data-test-id='invitation-page-welcome-message']");
     expect(welcomeMessage.text()).toEqual('Welcome Bob!');
   });
 });

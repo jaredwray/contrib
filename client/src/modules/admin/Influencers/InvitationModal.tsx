@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
-import { Alert, Button, Form, Modal } from 'react-bootstrap';
+
 import { gql, useMutation } from '@apollo/client';
-import { Controller, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import { Alert, Button, Form, Modal } from 'react-bootstrap';
+import { Controller, useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 
 const InviteInfliencerMutation = gql`
@@ -44,7 +45,7 @@ export default function InvitationModal(props: any) {
   );
 
   return (
-    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} centered aria-labelledby="contained-modal-title-vcenter" size="md">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Create Invitation</Modal.Title>
       </Modal.Header>
@@ -56,41 +57,41 @@ export default function InvitationModal(props: any) {
           <Form.Group>
             <Form.Label>First Name</Form.Label>
             <Form.Control
-              placeholder="Enter First Name"
+              ref={register({ required: 'required' })}
               className={errors.firstName && 'is-invalid'}
               name="firstName"
-              ref={register({ required: 'required' })}
+              placeholder="Enter First Name"
             />
-            <ErrorMessage className="invalid-feedback" name="firstName" as="div" errors={errors} />
+            <ErrorMessage as="div" className="invalid-feedback" errors={errors} name="firstName" />
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Last Name</Form.Label>
             <Form.Control
-              placeholder="Enter Last Name"
+              ref={register({ required: 'required' })}
               className={errors.lastName && 'is-invalid'}
               name="lastName"
-              ref={register({ required: 'required' })}
+              placeholder="Enter Last Name"
             />
-            <ErrorMessage className="invalid-feedback" name="lastName" as="div" errors={errors} />
+            <ErrorMessage as="div" className="invalid-feedback" errors={errors} name="lastName" />
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Phone Number</Form.Label>
             <Controller
-              name="phoneNumber"
               control={control}
               defaultValue={''}
+              name="phoneNumber"
               render={({ onChange }) => {
                 return (
                   <PhoneInput
-                    country={'us'}
-                    onChange={(v) => onChange(v)}
-                    inputClass={errors.phoneNumber && 'is-invalid'}
                     copyNumbersOnly={false}
-                    specialLabel=""
-                    placeholder=""
+                    country={'us'}
+                    inputClass={errors.phoneNumber && 'is-invalid'}
                     inputProps={{ required: true, name: 'phoneNumber' }}
+                    placeholder=""
+                    specialLabel=""
+                    onChange={(v) => onChange(v)}
                   />
                 );
               }}
@@ -100,19 +101,19 @@ export default function InvitationModal(props: any) {
           <Form.Group>
             <Form.Label>Message on the Welcome page</Form.Label>
             <Form.Control
-              placeholder="Enter Message on the Welcome page"
+              ref={register({ required: 'required' })}
               as="textarea"
-              rows={5}
               className={errors.welcomeMessage && 'is-invalid'}
               name="welcomeMessage"
-              ref={register({ required: 'required' })}
+              placeholder="Enter Message on the Welcome page"
+              rows={5}
             />
-            <ErrorMessage className="invalid-feedback" name="welcomeMessage" as="div" errors={errors} />
+            <ErrorMessage as="div" className="invalid-feedback" errors={errors} name="welcomeMessage" />
           </Form.Group>
 
           <hr />
           <div className="text-right">
-            <Button type="submit" className="btn-ochre">
+            <Button className="btn-ochre" type="submit">
               Invite
             </Button>
           </div>

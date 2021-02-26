@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import Carousel from 'react-multi-carousel';
 
@@ -69,16 +70,16 @@ export default function Reviews() {
         </Row>
 
         <Carousel
-          swipeable
-          partialVisible
           infinite
-          responsive={responsive}
-          containerClass="carousel-container-with-scrollbar"
+          partialVisible
+          swipeable
           className="quotes"
+          containerClass="carousel-container-with-scrollbar"
+          responsive={responsive}
         >
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-1.webp" roundedCircle />
+              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-1.webp" />
             </div>
             <div className="quotes-sign" />
             <div className="text-subhead reviews-quote pt-2">
@@ -94,7 +95,7 @@ export default function Reviews() {
 
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-2.webp" roundedCircle />
+              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-2.webp" />
             </div>
             <div className="quotes-sign" />
             <div className="text-subhead reviews-quote pt-2">
@@ -110,7 +111,7 @@ export default function Reviews() {
 
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-1.webp" roundedCircle />
+              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-1.webp" />
             </div>
             <div className="quotes-sign" />
             <div className="text-subhead reviews-quote pt-2">
@@ -126,7 +127,7 @@ export default function Reviews() {
 
           <div className="review">
             <div className="avatar">
-              <Image className="reviewer" src="/content/img/users/reviewer-2.webp" roundedCircle />
+              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-2.webp" />
             </div>
             <div className="quotes-sign" />
             <div className="text-subhead reviews-quote pt-2">

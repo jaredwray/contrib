@@ -1,21 +1,22 @@
 import React from 'react';
+
+import { AppState, Auth0Provider } from '@auth0/auth0-react';
+import { createBrowserHistory } from 'history';
 import ReactDOM from 'react-dom';
 import { Route, Router } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
-import { AppState, Auth0Provider } from '@auth0/auth0-react';
 
-import Charities from './modules/Charities';
-import HomePage from './modules/Home';
-import Influencers from './modules/admin/Influencers';
-import InvitationPage from './modules/Invitation/InvitationPage';
-import PhoneNumberConfirmation from './modules/phoneNumber/Confirmation';
-import PhoneNumberVerification from './modules/phoneNumber/Verification';
-import Profile from './modules/Profile';
-import WelcomePage from './modules/Welcome';
-import { UserAccountProvider } from './components/UserAccountProvider';
+import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
+import { UserAccountProvider } from 'src/components/UserAccountProvider';
+import Influencers from 'src/modules/admin/Influencers';
+import Charities from 'src/modules/Charities';
+import HomePage from 'src/modules/Home';
+import InvitationPage from 'src/modules/Invitation';
+import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
+import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
+import Profile from 'src/modules/Profile';
+import WelcomePage from 'src/modules/Welcome';
 
-import './index.scss';
-import { ContribApolloProvider } from './apollo/ContribApolloProvider';
+import 'src/index.scss';
 
 export const history = createBrowserHistory();
 
@@ -25,24 +26,24 @@ const onRedirectCallback = (appState: AppState) => {
 
 ReactDOM.render(
   <Auth0Provider
-    domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
-    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
-    redirectUri={process.env.REACT_APP_PLATFORM_URL}
     audience={process.env.REACT_APP_API_AUDIENCE}
-    onRedirectCallback={onRedirectCallback}
     cacheLocation={'localstorage'}
+    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
+    domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
+    redirectUri={process.env.REACT_APP_PLATFORM_URL}
+    onRedirectCallback={onRedirectCallback}
   >
     <Router history={history}>
       <ContribApolloProvider>
         <UserAccountProvider>
-          <Route path="/" exact component={HomePage} />
-          <Route path="/charities" exact component={Charities} />
-          <Route path="/phone-verification" exact component={PhoneNumberVerification} />
-          <Route path="/phone-confirmation" exact component={PhoneNumberConfirmation} />
-          <Route path="/profile" exact component={Profile} />
-          <Route path="/welcome" exact component={WelcomePage} />
-          <Route path="/admin/influencers" exact component={Influencers} />
-          <Route path="/invitation/:slug" exact component={InvitationPage} />
+          <Route exact component={HomePage} path="/" />
+          <Route exact component={Charities} path="/charities" />
+          <Route exact component={PhoneNumberVerification} path="/phone-verification" />
+          <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
+          <Route exact component={Profile} path="/profile" />
+          <Route exact component={WelcomePage} path="/welcome" />
+          <Route exact component={Influencers} path="/admin/influencers" />
+          <Route exact component={InvitationPage} path="/invitation/:slug" />
         </UserAccountProvider>
       </ContribApolloProvider>
     </Router>

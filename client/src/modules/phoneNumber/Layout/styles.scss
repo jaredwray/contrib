@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@import 'src/variables.scss';
 
 .logo {
   display: block;
@@ -18,7 +18,7 @@
   line-height: 20px;
 }
 .right-block {
-  background: no-repeat #5a7864 url(../../../assets/right-block-bg.webp);
+  background: no-repeat #5a7864 url('/assets/images/right-block-bg.webp');
   background-size: cover;
   position: relative;
   height: 50vw !important;

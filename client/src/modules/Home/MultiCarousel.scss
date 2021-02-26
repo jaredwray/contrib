@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@import 'src/variables.scss';
 
 .react-multi-carousel-list {
   position: static;
@@ -26,12 +26,12 @@
 .react-multiple-carousel__arrow {
   height: 60px;
   width: 60px;
-  background-image: url('../../assets/carousel-arrow-left.webp');
+  background-image: url('/assets/images/carousel-arrow-left.webp');
   background-color: none;
   transition: transform 0s;
 
   &:hover {
-    background-image: url('../../assets/carousel-arrow-hover-left.webp');
+    background-image: url('/assets/images/carousel-arrow-hover-left.webp');
   }
 
   &.react-multiple-carousel__arrow--right {

@@ -1,4 +1,4 @@
-@import '../../../../variables.scss';
+@import 'src/variables.scss';
 
 .pagination {
   .pagination-btn,
@@ -6,7 +6,7 @@
     width: 40px;
     height: 40px;
     display: inline-block;
-    background-image: url('../../../../assets/pagination-btn-left.webp');
+    background-image: url('/assets/images/pagination-btn-left.webp');
     background-color: none;
     transition: transform 0s;
     cursor: pointer;
@@ -14,7 +14,7 @@
 
     &:disabled,
     &:not([disabled]):hover {
-      background-image: url('../../../../assets/pagination-btn-left-hover.webp');
+      background-image: url('/assets/images/pagination-btn-left-hover.webp');
     }
 
     &.pagination-btn-next {

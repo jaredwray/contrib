@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@import 'src/variables.scss';
 
 .admin-influencers-page {
   background-color: $barely-gray-color;
@@ -53,7 +53,7 @@
 
         &.icon-add {
           transform: rotate(45deg);
-          background: no-repeat url('../../../assets/icon-delete.webp');
+          background: no-repeat url('/assets/images/icon-delete.webp');
         }
       }
     }

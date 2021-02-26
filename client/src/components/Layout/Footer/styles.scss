@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@import 'src/variables.scss';
 
 footer {
   background-color: $dark-gray-color;
@@ -22,15 +22,15 @@ footer {
     }
 
     .twitter {
-      background-image: url('../../../assets/twitter.webp');
+      background-image: url('/assets/images/twitter.webp');
     }
 
     .instagram {
-      background-image: url('../../../assets/instagram.webp');
+      background-image: url('/assets/images/instagram.webp');
     }
 
     .facebook {
-      background-image: url('../../../assets/facebook.webp');
+      background-image: url('/assets/images/facebook.webp');
     }
   }
 }

@@ -1,9 +1,10 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { useMemo } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { createUploadLink } from 'apollo-upload-client';
+import { useAuth0 } from '@auth0/auth0-react';
 import { ApolloLink } from 'apollo-link';
+import { createUploadLink } from 'apollo-upload-client';
 
 interface PropTypes {
   children: any;

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+
 import { useAuth0 } from '@auth0/auth0-react';
+import { Container, Row, Col } from 'react-bootstrap';
 
 import './styles.scss';
 
@@ -9,9 +10,9 @@ export default function Banner() {
 
   return (
     <section className="banner">
-      <Container fluid="sm" className="wrapper homepage-container position-relative h-100">
+      <Container className="wrapper homepage-container position-relative h-100" fluid="sm">
         <Row>
-          <Col xs="6" lg="8" className="pt-5 pt-md-4 pt-lg-5 pb-3 pb-md-4 pb-lg-4 text-super">
+          <Col className="pt-5 pt-md-4 pt-lg-5 pb-3 pb-md-4 pb-lg-4 text-super" lg="8" xs="6">
             Make An Impact
           </Col>
         </Row>
@@ -21,7 +22,7 @@ export default function Banner() {
           </Col>
         </Row>
         <Row>
-          <Col xs="12" lg="8" className="pt-3 pb-3 text-headline">
+          <Col className="pt-3 pb-3 text-headline" lg="8" xs="12">
             Auction your memorabelia quickly and hassle free
           </Col>
         </Row>
@@ -29,8 +30,8 @@ export default function Banner() {
           <Row>
             <Col xs="6">
               <a
-                href="/"
                 className="btn btn-ochre btn-with-arrows banner-sign-up-button"
+                href="/"
                 onClick={() => loginWithRedirect({ page_type: 'sign_up' })}
               >
                 Sign Up
@@ -39,7 +40,7 @@ export default function Banner() {
           </Row>
         )}
         <Row>
-          <Col xs="9" sm="6" className="text-label text-all-cups position-absolute banner-signature">
+          <Col className="text-label text-all-cups position-absolute banner-signature" sm="6" xs="9">
             Stephan Frei
             <br />
             Total raised: $248,000

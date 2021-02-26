@@ -1,7 +1,7 @@
-@import '../../variables.scss';
+@import 'src/variables.scss';
 
 .welcome-page {
-  background: no-repeat center url('../../assets/logo.svg') $sage-color;
+  background: no-repeat center url('/assets/images/logo.svg') $sage-color;
   background-size: auto 120%;
 
   .container {
@@ -11,7 +11,7 @@
     .welcome-page-congratulation-img {
       width: 108px;
       height: 108px;
-      background: no-repeat center url('../../assets/done.webp');
+      background: no-repeat center url('/assets/images/done.webp');
       background-size: cover;
 
       @media (max-width: $medium-weight) {

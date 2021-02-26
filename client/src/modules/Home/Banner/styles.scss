@@ -1,10 +1,10 @@
-@import '../../../variables.scss';
+@import 'src/variables.scss';
 
 .banner {
   height: 505px;
   color: $white-color;
   text-align: left;
-  background-image: url('../../../assets/player-md.webp');
+  background-image: url('/assets/images/player-md.webp');
   background-repeat: no-repeat;
   background-position: right;
   background-color: $sage-color;
@@ -30,7 +30,7 @@
   }
 
   @media (max-width: $medium-weight) {
-    background-image: url('../../../assets/player-sm.webp');
+    background-image: url('/assets/images/player-sm.webp');
 
     .banner-separator {
       height: 8px;

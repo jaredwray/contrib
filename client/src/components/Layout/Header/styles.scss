@@ -1,11 +1,11 @@
-@import '../../../variables.scss';
+@import 'src/variables.scss';
 
 .header-nav-dropdown {
   .dropdown-toggle {
     width: 36px;
     height: 36px;
     display: inline-block;
-    background: no-repeat center url('../../../assets/hamburger.webp');
+    background: no-repeat center url('/assets/images/hamburger.webp');
 
     &::after {
       display: none !important;
@@ -13,7 +13,7 @@
   }
 
   &.show .dropdown-toggle {
-    background-image: url('../../../assets/close.webp');
+    background-image: url('/assets/images/close.webp');
     width: 30px;
     height: 30px;
   }
@@ -80,15 +80,15 @@
       }
 
       .twitter {
-        background-image: url('../../../assets/twitter.webp');
+        background-image: url('/assets/images/twitter.webp');
       }
 
       .instagram {
-        background-image: url('../../../assets/instagram.webp');
+        background-image: url('/assets/images/instagram.webp');
       }
 
       .facebook {
-        background-image: url('../../../assets/facebook.webp');
+        background-image: url('/assets/images/facebook.webp');
       }
     }
 

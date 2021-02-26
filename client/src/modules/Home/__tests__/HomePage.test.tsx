@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import HomePage from '../';
+import HomePage from '..';
 
 test('renders without crashing', () => {
   render(<HomePage />);

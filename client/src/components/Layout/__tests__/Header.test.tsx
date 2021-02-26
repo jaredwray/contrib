@@ -1,15 +1,18 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
+
 import {
   withAuthenticatedUser,
   withNotAuthenticatedUser,
   mockedUseAuth0,
   verifiedUser,
-} from '../../../helpers/testHelpers/auth0';
+} from 'src/helpers/testHelpers/auth0';
+
 import Header from '../Header';
 
 describe('Header', () => {
   describe('menu', () => {
-    let wrapper, menuButton;
+    let wrapper: ShallowWrapper;
+    let menuButton;
 
     describe('for logged in user', () => {
       beforeEach(() => {
@@ -30,7 +33,7 @@ describe('Header', () => {
       });
 
       it('displays logout button', () => {
-        let logoutButton = wrapper.find("[data-test-id='dropdown-menu-logout-button']");
+        const logoutButton = wrapper.find("[data-test-id='dropdown-menu-logout-button']");
 
         expect(logoutButton).toHaveLength(1);
         expect(logoutButton.text()).toEqual('Sign Out');
@@ -59,7 +62,7 @@ describe('Header', () => {
       });
 
       it('displays login button', () => {
-        let loginButton = wrapper.find("[data-test-id='dropdown-menu-login-button']");
+        const loginButton = wrapper.find("[data-test-id='dropdown-menu-login-button']");
 
         expect(loginButton).toHaveLength(1);
         expect(loginButton.text()).toEqual('Log In');
