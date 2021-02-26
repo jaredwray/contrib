@@ -5,6 +5,7 @@ export interface Invitation {
   slug: string;
   firstName: string;
   lastName: string;
+  phoneNumber: string;
   welcomeMessage: string;
   parentEntityType: InvitationParentEntityType;
   parentEntityId: string;

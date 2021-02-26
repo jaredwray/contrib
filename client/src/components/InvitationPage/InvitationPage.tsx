@@ -1,12 +1,13 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React, { useCallback, useEffect } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Redirect, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 
 import Layout from '../Layout/Layout';
 
 import './InvitationPage.scss';
+import { mergeUrlPath } from '../../helpers/mergeUrlPath';
 
 export const GetInvitation = gql`
   query GetInvitation($slug: String!) {
@@ -25,18 +26,27 @@ export default function InvitationPage() {
     variables: { slug: slug },
   });
 
-  if (loading) {
-    return <>Loading...</>;
-  }
-  if (error) {
-    console.error('Invitation loading error: ', error);
+  const history = useHistory();
+
+  const invitation = data?.invitation;
+
+  const handleSignUp = useCallback(() => {
+    loginWithRedirect({
+      redirectUri: mergeUrlPath(process.env.REACT_APP_PLATFORM_URL ?? '', `/after-login?invite=${slug}`),
+    }).catch((error) => {
+      console.error('login with redirect error: ', error);
+    });
+  }, [loginWithRedirect, slug]);
+
+  useEffect(() => {
+    if (!loading && !invitation) {
+      console.error('Invitation loading error: ', error);
+      history.push('/');
+    }
+  }, [invitation, loading, error, history]);
+
+  if (!invitation) {
     return null;
-  }
-
-  const invitation = data.invitation;
-
-  if (invitation === null) {
-    return <Redirect to="/" />;
   }
 
   return (
@@ -59,7 +69,7 @@ export default function InvitationPage() {
                     <a
                       href="/"
                       className="btn btn-ochre btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
-                      onClick={() => loginWithRedirect({ page_type: 'sign_up' })}
+                      onClick={handleSignUp}
                     >
                       Sign Up
                     </a>

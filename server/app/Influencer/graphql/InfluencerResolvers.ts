@@ -6,6 +6,9 @@ import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateInfluencerProfileInput } from './model/UpdateInfluencerProfileInput';
 import { Invitation } from '../dto/Invitation';
+import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
+import { AppError } from '../../../errors/AppError';
+import { ErrorCode } from '../../../errors/ErrorCode';
 
 export const InfluencerResolvers = {
   Query: {
@@ -55,29 +58,47 @@ export const InfluencerResolvers = {
         return influencer.updateInfluencerProfileAvatarByUserId(account.mongodbId, image);
       },
     ),
+    confirmAccountWithInvitation: requireAuthenticated(
+      async (parent, { code, otp }: { otp: string; code: string }, { user, userAccount, invitation }) => {
+        const invitationModel = await invitation.findInvitationBySlug(code);
+        if (!invitationModel || invitationModel.accepted) {
+          throw new AppError('Invitation code is outdated', ErrorCode.BAD_REQUEST);
+        }
+        return userAccount.confirmAccountWithPhoneNumber(user.id, invitationModel.phoneNumber, otp);
+      },
+    ),
+    createAccountWithInvitation: requireAuthenticated(
+      async (parent: unknown, { code }: { code: string }, { user, userAccount, invitation }) => {
+        const invitationModel = await invitation.findInvitationBySlug(code);
+        if (!invitationModel || invitationModel.accepted) {
+          throw new AppError('Invitation code is outdated', ErrorCode.BAD_REQUEST);
+        }
+        return userAccount.createAccountWithPhoneNumber(user.id, invitationModel.phoneNumber);
+      },
+    ),
   },
   InfluencerProfile: {
     userAccount: requirePermission(
       UserPermission.MANAGE_INFLUENCERS,
-      async (parent: InfluencerProfile, _, { userAccountLoader }) =>
-        (parent.userAccount && (await userAccountLoader.getById(parent.userAccount))) ?? null,
+      async (parent: InfluencerProfile, _, { loaders }) =>
+        (parent.userAccount && (await loaders.userAccount.getById(parent.userAccount))) ?? null,
     ),
     invitation: requirePermission(
       UserPermission.MANAGE_INFLUENCERS,
-      async (parent: InfluencerProfile, _, { invitationLoader }) => invitationLoader.getByInfluencerId(parent.id),
+      async (parent: InfluencerProfile, _, { loaders }) => loaders.invitation.getByInfluencerId(parent.id),
     ),
   },
   UserAccount: {
     influencerProfile: async (
       parent: UserAccount,
       _: unknown,
-      { user, influencerLoader }: GraphqlContext,
+      { user, loaders }: GraphqlContext,
     ): Promise<InfluencerProfile | null> => {
       const hasAccess = user?.hasPermission(UserPermission.MANAGE_INFLUENCERS) || user?.id === parent.id;
       if (!parent.mongodbId || !hasAccess) {
         return null;
       }
-      return influencerLoader.getByUserAccountId(parent.mongodbId);
+      return loaders.influencer.getByUserAccountId(parent.mongodbId);
     },
   },
 };
