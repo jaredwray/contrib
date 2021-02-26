@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
@@ -8,6 +8,7 @@ import PhoneInput from 'react-phone-input-2';
 import { useHistory } from 'react-router-dom';
 
 import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
@@ -16,7 +17,17 @@ import './styles.scss';
 
 const EnterPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!) {
-    createAccountWithPhoneNumber(input: { phoneNumber: $phoneNumber }) {
+    createAccountWithPhoneNumber(phoneNumber: $phoneNumber) {
+      id
+      phoneNumber
+      status
+    }
+  }
+`;
+
+const EnterInvitationCodeMutation = gql`
+  mutation EnterInvitationCode($code: String!) {
+    createAccountWithInvitation(code: $code) {
       id
       phoneNumber
       status
@@ -31,16 +42,14 @@ export default function PhoneNumberVerification() {
     fetchPolicy: 'cache-only',
   });
   const [enterPhoneNumber, { loading: formSubmitting }] = useMutation(EnterPhoneNumberMutation);
+  const [enterInvitationCode] = useMutation(EnterInvitationCodeMutation);
   const [error, setError] = useState();
+  const invitationToken = useReactiveVar(invitationTokenVar);
 
   const handleSubmit = useCallback(
     ({ phoneNumber }) => {
       phoneNumber &&
-        enterPhoneNumber({
-          variables: {
-            phoneNumber: `+${phoneNumber}`,
-          },
-        }).catch((error) => setError(error.message));
+        enterPhoneNumber({ variables: { phoneNumber: `+${phoneNumber}` } }).catch((error) => setError(error.message));
     },
     [enterPhoneNumber],
   );
@@ -58,6 +67,19 @@ export default function PhoneNumberVerification() {
       history.replace('/');
     }
   }, [myAccountsData, history]);
+
+  useEffect(() => {
+    if (invitationToken) {
+      enterInvitationCode({ variables: { code: invitationToken } }).catch((error) => {
+        console.error('error submitting invitation token', error);
+        invitationTokenVar(null);
+      });
+    }
+  }, [invitationToken, enterInvitationCode]);
+
+  if (invitationToken) {
+    return null;
+  }
 
   return (
     <Layout>

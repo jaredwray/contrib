@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
+import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import { UserAccountContext } from './UserAccountContext';
@@ -16,7 +18,7 @@ interface PropTypes {
 export function UserAccountProvider({ children }: PropTypes) {
   const history = useHistory();
   const location = useLocation();
-  const { user, getAccessTokenSilently } = useAuth0();
+  const { user, isLoading: userIsLoading, getAccessTokenSilently } = useAuth0();
   const userId = user?.sub;
 
   const [getMyAccount, { data: myAccountData, error: myAccountError }] = useLazyQuery(MyAccountQuery);
@@ -27,6 +29,8 @@ export function UserAccountProvider({ children }: PropTypes) {
     userPermissions: userId ? undefined : [],
     userPermissionsError: null,
   });
+
+  const queryParams = useUrlQueryParams();
 
   const userContextValue = useMemo(() => ({ permissions: userPermissions as string[], account: myAccountData }), [
     userPermissions,
@@ -40,65 +44,54 @@ export function UserAccountProvider({ children }: PropTypes) {
     }
   }, [userId, getMyAccount]);
 
+  const refreshUserPermissions = useCallback(
+    (forceRefreshSession = false) => {
+      if (!userId) {
+        setUserPermissions({ userPermissions: [], userPermissionsError: null });
+        return;
+      }
+
+      let active = true;
+      getAccessTokenSilently({ ignoreCache: forceRefreshSession }).then(
+        (token) => {
+          if (active) {
+            const { permissions } = JSON.parse(atob(token.split('.')[1]));
+            setUserPermissions({ userPermissions: permissions, userPermissionsError: null });
+          }
+        },
+        (error) => {
+          if (active) {
+            setUserPermissions({ userPermissions: undefined, userPermissionsError: error });
+          }
+        },
+      );
+      return () => {
+        active = false;
+      };
+    },
+    [getAccessTokenSilently, userId],
+  );
+
+  // if account data is showing user has an influencer profile, but token does not feature an "influencer" permission,
+  // this means the token is outdated, and session must be refreshed (this happens when influencer has just signed up)
   useEffect(() => {
-    let active = true;
     if (myAccountData?.influencerProfile && !userPermissions?.includes('influencer')) {
-      getAccessTokenSilently({ ignoreCache: true }).then(
-        (token) => {
-          if (active) {
-            const { permissions } = JSON.parse(atob(token.split('.')[1]));
-            setUserPermissions({ userPermissions: permissions, userPermissionsError: null });
-          }
-        },
-        (error) => {
-          if (active) {
-            setUserPermissions({ userPermissions: undefined, userPermissionsError: error });
-          }
-        },
-      );
+      return refreshUserPermissions(true);
     }
-    return () => {
-      active = false;
-    };
-  }, [myAccountData?.influencerProfile, userPermissions, getAccessTokenSilently]);
+  }, [myAccountData?.influencerProfile, userPermissions, refreshUserPermissions]);
 
-  useEffect(() => {
-    let active = true;
-    if (userId) {
-      getAccessTokenSilently().then(
-        (token) => {
-          if (active) {
-            const { permissions } = JSON.parse(atob(token.split('.')[1]));
-            setUserPermissions({ userPermissions: permissions, userPermissionsError: null });
-          }
-        },
-        (error) => {
-          if (active) {
-            setUserPermissions({ userPermissions: undefined, userPermissionsError: error });
-          }
-        },
-      );
-    } else {
-      setUserPermissions({ userPermissions: [], userPermissionsError: null });
-    }
-    return () => {
-      active = false;
-    };
-  }, [userId, getAccessTokenSilently]);
+  // parses user token for permissions - we use these to understand what he has access for
+  useEffect(() => refreshUserPermissions(), [refreshUserPermissions]);
 
-  // write error to console if permissions fetch fail
+  // write error to console if something went wrong
   useEffect(() => {
     if (userPermissionsError) {
       console.error('error fetching permissions', userPermissionsError);
     }
-  }, [userPermissionsError]);
-
-  // write error to console if profile fetch failed
-  useEffect(() => {
     if (myAccountError) {
       console.error('error fetching account data', myAccountError);
     }
-  }, [myAccountError]);
+  }, [userPermissionsError, myAccountError]);
 
   // redirect to onboarding if needed
   const targetPathname = getOnboardingPath(myAccountData?.myAccount);
@@ -113,7 +106,15 @@ export function UserAccountProvider({ children }: PropTypes) {
     }
   }, [targetPathname, currentPathname, history]);
 
+  const invitationToken = queryParams.get('invite');
+  useEffect(() => {
+    if (invitationToken) {
+      invitationTokenVar(invitationToken);
+    }
+  }, [invitationToken]);
+
   if (
+    userIsLoading ||
     (userId && !myAccountData) ||
     (userId && !userPermissions) ||
     (targetPathname && targetPathname !== currentPathname)

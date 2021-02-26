@@ -21,6 +21,12 @@ const UpdateInfluencerProfileMutation = gql`
       input: { name: $name, sport: $sport, team: $team, profileDescription: $profileDescription }
     ) {
       id
+      name
+      sport
+      team
+      profileDescription
+      avatarUrl
+      status
     }
   }
 `;
@@ -29,6 +35,12 @@ const UpdateInfluencerProfileAvatarMutation = gql`
   mutation UpdateInfluencerProfileAvatar($image: Upload!) {
     updateMyInfluencerProfileAvatar(image: $image) {
       id
+      name
+      sport
+      team
+      profileDescription
+      avatarUrl
+      status
     }
   }
 `;

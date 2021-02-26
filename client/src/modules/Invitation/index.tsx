@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { Redirect, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import Layout from 'src/components/Layout';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 
 import './styles.scss';
 
@@ -26,18 +27,27 @@ export default function InvitationPage() {
     variables: { slug: slug },
   });
 
-  if (loading) {
-    return <>Loading...</>;
-  }
-  if (error) {
-    console.error('Invitation loading error: ', error);
+  const history = useHistory();
+
+  const invitation = data?.invitation;
+
+  const handleSignUp = useCallback(() => {
+    loginWithRedirect({
+      redirectUri: mergeUrlPath(process.env.REACT_APP_PLATFORM_URL ?? '', `/after-login?invite=${slug}`),
+    }).catch((error) => {
+      console.error('login with redirect error: ', error);
+    });
+  }, [loginWithRedirect, slug]);
+
+  useEffect(() => {
+    if (!loading && !invitation) {
+      console.error('Invitation loading error: ', error);
+      history.push('/');
+    }
+  }, [invitation, loading, error, history]);
+
+  if (!invitation) {
     return null;
-  }
-
-  const invitation = data.invitation;
-
-  if (invitation === null) {
-    return <Redirect to="/" />;
   }
 
   return (
@@ -60,7 +70,7 @@ export default function InvitationPage() {
                     <a
                       className="btn btn-ochre btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
                       href="/"
-                      onClick={() => loginWithRedirect({ page_type: 'sign_up' })}
+                      onClick={handleSignUp}
                     >
                       Sign Up
                     </a>

@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 
 import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
 import { UserAccountStatus } from 'src/types/UserAccount';
+
 import PhoneNumberConfirmation from '../Confirmation';
 
 const cache = new InMemoryCache();

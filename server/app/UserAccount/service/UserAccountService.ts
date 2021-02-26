@@ -1,5 +1,4 @@
 import { Connection, Model } from 'mongoose';
-import { EventEmitter } from 'events';
 
 import { UserAccount } from '../dto/UserAccount';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
@@ -8,7 +7,7 @@ import { TwilioVerificationService } from '../../../twilio-client';
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
 import { Events } from '../../Events';
-import {EventHub} from "../../EventHub";
+import { EventHub } from '../../EventHub';
 
 export class UserAccountService {
   private readonly accountModel: Model<IUserAccount> = UserAccountModel(this.connection);

@@ -8,14 +8,11 @@ export const UserAccountResolvers = {
   },
   Mutation: {
     confirmAccountWithPhoneNumber: requireAuthenticated(
-      (
-        parent,
-        { input: { phoneNumber, otp } }: { input: { otp: string; phoneNumber: string } },
-        { user, userAccount },
-      ) => userAccount.confirmAccountWithPhoneNumber(user.id, phoneNumber, otp),
+      (parent, { phoneNumber, otp }: { otp: string; phoneNumber: string }, { user, userAccount }) =>
+        userAccount.confirmAccountWithPhoneNumber(user.id, phoneNumber, otp),
     ),
     createAccountWithPhoneNumber: requireAuthenticated(
-      (parent: unknown, { input: { phoneNumber } }: { input: { phoneNumber: string } }, { user, userAccount }) =>
+      (parent: unknown, { phoneNumber }: { phoneNumber: string }, { user, userAccount }) =>
         userAccount.createAccountWithPhoneNumber(user.id, phoneNumber),
     ),
   },

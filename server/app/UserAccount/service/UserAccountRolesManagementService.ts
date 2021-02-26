@@ -6,17 +6,12 @@ import { EventHub } from '../../EventHub';
 
 export class UserAccountRolesManagementService {
   constructor(private readonly auth0Service: Auth0Service, private readonly eventHub: EventHub) {
-    this.eventHub.subscribe(Events.USER_ACCOUNT_CREATED, (userAccount) => {
-      this.assignPlainUserRole(userAccount).catch((error) =>
-        AppLogger.error(`error assigning plain user role: ${error.name}: ${error.message}`, {
-          stack: error.stack,
-          userAccount,
-        }),
-      );
+    this.eventHub.subscribe(Events.USER_ACCOUNT_CREATED, async (userAccount) => {
+      await this.assignPlainUserRole(userAccount);
     });
 
-    this.eventHub.subscribe(Events.INFLUENCER_ONBOARDED, ({ influencerProfile, userAccount }) => {
-      this.assignInfluencerRole(userAccount).catch((error) =>
+    this.eventHub.subscribe(Events.INFLUENCER_ONBOARDED, async ({ influencerProfile, userAccount }) => {
+      await this.assignInfluencerRole(userAccount).catch((error) =>
         AppLogger.error(`error assigning influencer user role: ${error.name}: ${error.message}`, {
           stack: error.stack,
           userAccount,

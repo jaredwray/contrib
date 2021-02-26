@@ -13,8 +13,8 @@ env:
   ENV_NEW_RELIC_APP_NAME: contrib-app-dev
   ENV_NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
   ENV_MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
-  ENV_AUTH0_ISSUER_URL: https://auth.contrib.org
-  ENV_AUTH0_AUDIENCE: http://dev.contrib.org
+  ENV_AUTH0_ISSUER_URL: https://contrib.us.auth0.com/
+  ENV_AUTH0_AUDIENCE: https://dev.contrib.org
   ENV_AUTH0_MANAGEMENT_DOMAIN: contrib.us.auth0.com
   ENV_AUTH0_MANAGEMENT_CLIENT_ID: dj4DaWeggmOb7cbCOSxzSQAN5EYBwVqr
   ENV_AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.DEV_AUTH0_MANAGEMENT_CLIENT_SECRET }}
@@ -25,13 +25,7 @@ env:
   ENV_TWILIO_SENDER_NUMBER: +17726178791
   ENV_CONTENT_STORAGE_NAME: content-dev.contrib.org
   ENV_CONTENT_STORAGE_KEY: ${{ secrets.DEV_CONTENT_STORAGE_KEY }}
-
-  # Client Env
-  ENV_REACT_APP_AUTH0_DOMAIN: "auth.contrib.org"
-  ENV_REACT_APP_AUTH0_CLIENT_ID: dj4DaWeggmOb7cbCOSxzSQAN5EYBwVqr
-  ENV_REACT_APP_PLATFORM_URL: "https://dev.contrib.org/"
-  ENV_REACT_APP_API_URL: "https://dev.contrib.org/graphql"
-  ENV_REACT_APP_API_AUDIENCE: "https://dev.contrib.org/"
+  ENV_AUCTION_SCHEDULER_SECRET: secret_key_for_auctions_scheduler
 
 jobs:
   setup-build-deploy:
@@ -50,7 +44,17 @@ jobs:
 
     # Build Client
     - name: Build Client
-      run: REACT_APP_AUTH0_DOMAIN=$ENV_REACT_APP_AUTH0_DOMAIN REACT_APP_AUTH0_CLIENT_ID=$ENV_REACT_APP_AUTH0_CLIENT_ID REACT_APP_PLATFORM_URL=$ENV_REACT_APP_PLATFORM_URL REACT_APP_API_URL=$ENV_REACT_APP_API_URL REACT_APP_API_AUDIENCE=$ENV_REACT_APP_API_AUDIENCE yarn build-client
+      run: yarn build-client
+      env:
+        REACT_APP_AUTH0_DOMAIN: "contrib.us.auth0.com"
+        REACT_APP_AUTH0_CLIENT_ID: 2ySlxFOLW1Rw1ALES7cF3tH9Hz6zDO57
+        REACT_APP_PLATFORM_URL: "https://dev.contrib.org/"
+        REACT_APP_API_URL: "https://dev.contrib.org/graphql"
+        REACT_APP_API_AUDIENCE: "https://dev.contrib.org"
+        REACT_APP_USE_NEWRELIC: true
+        REACT_APP_NEWRELIC_LICENSE_KEY: "NRJS-d190c88daa27d216f3e"
+        REACT_APP_NEWRELIC_APPLICATION_ID: "916719636"
+        REACT_APP_NEWRELIC_ACCOUNT_ID: "2921752"
 
     # Test Client
     - name: Test Client
@@ -97,21 +101,22 @@ jobs:
           --region=us-central1 \
           --allow-unauthenticated \
           --port=3000 \
-          --set-env-vars=NEW_RELIC_APP_NAME=$ENV_NEW_RELIC_APP_NAME \
-          --set-env-vars=NEW_RELIC_LICENSE_KEY=$ENV_NEW_RELIC_LICENSE_KEY \
-          --set-env-vars=MONGODB_URI=$ENV_MONGODB_URI \
-          --set-env-vars=APP_URL=$ENV_APP_URL \
-          --set-env-vars=TWILIO_ACCOUNT_SID=$ENV_TWILIO_ACCOUNT_SID \
-          --set-env-vars=TWILIO_AUTH_TOKEN=$ENV_TWILIO_AUTH_TOKEN \
-          --set-env-vars=TWILIO_VERIFICATION_SERVICE_SID=$ENV_TWILIO_VERIFICATION_SERVICE_SID \
-          --set-env-vars=TWILIO_SENDER_NUMBER=$ENV_TWILIO_SENDER_NUMBER \
-          --set-env-vars=AUTH0_ISSUER_URL=$ENV_AUTH0_ISSUER_URL \
-          --set-env-vars=AUTH0_AUDIENCE=$ENV_AUTH0_AUDIENCE \
-          --set-env-vars=AUTH0_MANAGEMENT_DOMAIN=$ENV_AUTH0_MANAGEMENT_DOMAIN \
-          --set-env-vars=AUTH0_MANAGEMENT_CLIENT_ID=$ENV_AUTH0_MANAGEMENT_CLIENT_ID \
-          --set-env-vars=AUTH0_MANAGEMENT_CLIENT_SECRET=$ENV_AUTH0_MANAGEMENT_CLIENT_SECRET \
-          --set-env-vars=CONTENT_STORAGE_NAME=$ENV_CONTENT_STORAGE_NAME \
-          --set-env-vars=CONTENT_STORAGE_KEY=$ENV_CONTENT_STORAGE_KEY
+          --set-env-vars="^___^NEW_RELIC_APP_NAME=$ENV_NEW_RELIC_APP_NAME\
+          ___NEW_RELIC_LICENSE_KEY=$ENV_NEW_RELIC_LICENSE_KEY\
+          ___MONGODB_URI=$ENV_MONGODB_URI\
+          ___APP_URL=$ENV_APP_URL\
+          ___TWILIO_ACCOUNT_SID=$ENV_TWILIO_ACCOUNT_SID\
+          ___TWILIO_AUTH_TOKEN=$ENV_TWILIO_AUTH_TOKEN\
+          ___TWILIO_VERIFICATION_SERVICE_SID=$ENV_TWILIO_VERIFICATION_SERVICE_SID\
+          ___TWILIO_SENDER_NUMBER=$ENV_TWILIO_SENDER_NUMBER\
+          ___AUTH0_ISSUER_URL=$ENV_AUTH0_ISSUER_URL\
+          ___AUTH0_AUDIENCE=$ENV_AUTH0_AUDIENCE\
+          ___AUTH0_MANAGEMENT_DOMAIN=$ENV_AUTH0_MANAGEMENT_DOMAIN\
+          ___AUTH0_MANAGEMENT_CLIENT_ID=$ENV_AUTH0_MANAGEMENT_CLIENT_ID\
+          ___AUTH0_MANAGEMENT_CLIENT_SECRET=$ENV_AUTH0_MANAGEMENT_CLIENT_SECRET\
+          ___CONTENT_STORAGE_NAME=$ENV_CONTENT_STORAGE_NAME\
+          ___CONTENT_STORAGE_KEY=$ENV_CONTENT_STORAGE_KEY\
+          ___AUCTION_SCHEDULER_SECRET=$ENV_AUCTION_SCHEDULER_SECRET"
           
           
           

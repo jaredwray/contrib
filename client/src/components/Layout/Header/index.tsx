@@ -1,16 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
 
 import Logo from 'src/assets/images/logo.svg';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 
 import './styles.scss';
 
 export default function Header() {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const { permissions } = useContext(UserAccountContext);
+
+  const afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL ?? '', '/after-login');
+
+  const handleLogin = useCallback(() => loginWithRedirect({ redirectUri: afterLoginUri }), [
+    loginWithRedirect,
+    afterLoginUri,
+  ]);
+
+  const handleLogout = useCallback(() => logout(), [logout]);
 
   return (
     <header className="pl-4 pr-4">
@@ -59,11 +69,11 @@ export default function Header() {
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
                   {isAuthenticated ? (
-                    <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={() => logout()}>
+                    <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={handleLogout}>
                       <span>Sign Out</span>
                     </NavDropdown.Item>
                   ) : (
-                    <NavDropdown.Item data-test-id="dropdown-menu-login-button" onClick={() => loginWithRedirect()}>
+                    <NavDropdown.Item data-test-id="dropdown-menu-login-button" onClick={handleLogin}>
                       <span>Log In</span>
                     </NavDropdown.Item>
                   )}

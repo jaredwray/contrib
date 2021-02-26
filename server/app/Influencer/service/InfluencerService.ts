@@ -1,11 +1,11 @@
+import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
-import { Storage } from '@google-cloud/storage';
 import { AppConfig } from '../../../config';
-import { v4 as uuidv4 } from 'uuid';
+import { AppLogger } from '../../../logger';
 
 interface InfluencerInput {
   name: string;
@@ -108,7 +108,7 @@ export class InfluencerService {
     const extension = originalFilename.split('.').pop();
 
     if (!ALLOWED_EXTENSIONS.includes(extension)) {
-      console.error('File has unsupported extension: ', originalFilename);
+      AppLogger.error('File has unsupported extension: ', originalFilename);
       return;
     }
 
@@ -133,7 +133,7 @@ export class InfluencerService {
               influencer.avatarUrl = `${bucketFullPath}/${filename}`;
               influencer.save();
             })
-            .catch((e: any) => console.log(`exec error : ${e}`));
+            .catch((e: any) => AppLogger.error(`exec error : ${e}`));
         }),
     );
 

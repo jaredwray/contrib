@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Duration, DateTime } from 'luxon';
 import { Form as BsForm, Button } from 'react-bootstrap';
@@ -8,6 +8,7 @@ import { Field, Form } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
 
 import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
@@ -18,7 +19,20 @@ const OtpResendDuration = Duration.fromObject({ seconds: 5 });
 
 const ConfirmPhoneNumberMutation = gql`
   mutation EnterPhoneNumber($phoneNumber: String!, $otp: String!) {
-    confirmAccountWithPhoneNumber(input: { phoneNumber: $phoneNumber, otp: $otp }) {
+    confirmAccountWithPhoneNumber(phoneNumber: $phoneNumber, otp: $otp) {
+      id
+      phoneNumber
+      status
+      influencerProfile {
+        id
+      }
+    }
+  }
+`;
+
+const ConfirmPhoneNumberWithInvitationMutation = gql`
+  mutation EnterPhoneNumber($code: String!, $otp: String!) {
+    confirmAccountWithInvitation(code: $code, otp: $otp) {
       id
       phoneNumber
       status
@@ -31,7 +45,20 @@ const ConfirmPhoneNumberMutation = gql`
 
 const ResendOtpMutation = gql`
   mutation ResendOtp($phoneNumber: String!) {
-    createAccountWithPhoneNumber(phoneInput: { phoneNumber: $phoneNumber }) {
+    createAccountWithPhoneNumber(phoneNumber: $phoneNumber) {
+      id
+      phoneNumber
+      status
+      influencerProfile {
+        id
+      }
+    }
+  }
+`;
+
+const ResendOtpWithInvitationMutation = gql`
+  mutation ResendOtp($code: String!) {
+    createAccountWithInvitation(code: $code) {
       id
       phoneNumber
       status
@@ -50,13 +77,23 @@ export default function PhoneNumberConfirmation() {
   });
   const phoneNumber = myAccountData?.myAccount?.phoneNumber;
 
-  const [confirmPhoneNumber, { loading: formSubmitting, error: confirmError }] = useMutation(
+  const [confirmPhoneNumber, { loading: confirmLoading, error: confirmError }] = useMutation(
     ConfirmPhoneNumberMutation,
   );
+  const [
+    confirmPhoneNumberWithInvitation,
+    { loading: confirmInvitationLoading, error: confirmInvitationError },
+  ] = useMutation(ConfirmPhoneNumberWithInvitationMutation);
   const [resendConfirmationCode, { loading: otpIsResending, error: resendError }] = useMutation(ResendOtpMutation);
+  const [
+    resendConfirmationCodeWithInvitation,
+    { loading: invitationOtpIsResending, error: invitationResendError },
+  ] = useMutation(ResendOtpWithInvitationMutation);
 
   const [otpSentAt, setOtpSentAt] = useState(DateTime.local());
   const [canResendOtp, setCanResendOtp] = useState(false);
+
+  const invitationToken = useReactiveVar(invitationTokenVar);
 
   const handleBack = useCallback(
     (e) => {
@@ -68,17 +105,39 @@ export default function PhoneNumberConfirmation() {
 
   const handleSubmit = useCallback(
     ({ otp }: { otp: string }) => {
-      if (otp && phoneNumber) {
-        confirmPhoneNumber({
-          variables: { otp, phoneNumber },
+      if (!otp) {
+        return;
+      }
+
+      if (invitationToken) {
+        confirmPhoneNumberWithInvitation({
+          variables: {
+            otp,
+            code: invitationToken,
+          },
         }).catch((error) => console.error(`error confirming phone number: `, error));
+        return;
+      }
+
+      if (phoneNumber) {
+        confirmPhoneNumber({
+          variables: {
+            otp,
+            phoneNumber,
+          },
+        }).catch((error) => console.error(`error confirming phone number: `, error));
+        return;
       }
     },
-    [confirmPhoneNumber, phoneNumber],
+    [confirmPhoneNumber, confirmPhoneNumberWithInvitation, phoneNumber, invitationToken],
   );
 
   const handleResendCode = useCallback(() => {
-    resendConfirmationCode({ variables: { phoneNumber } }).then(
+    const promise = invitationToken
+      ? resendConfirmationCodeWithInvitation({ variables: { code: invitationToken } })
+      : resendConfirmationCode({ variables: { phoneNumber } });
+
+    promise.then(
       () => {
         setOtpSentAt(DateTime.local());
       },
@@ -86,7 +145,7 @@ export default function PhoneNumberConfirmation() {
         console.error(`error resending confirmation code: `, error);
       },
     );
-  }, [phoneNumber, resendConfirmationCode]);
+  }, [phoneNumber, invitationToken, resendConfirmationCode, resendConfirmationCodeWithInvitation]);
 
   useEffect(() => {
     if (myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
@@ -109,8 +168,8 @@ export default function PhoneNumberConfirmation() {
     return () => clearInterval(interval);
   }, [otpSentAt, canResendOtp]);
 
-  const isLoading = formSubmitting || otpIsResending;
-  const error = confirmError ?? resendError;
+  const isLoading = confirmLoading || confirmInvitationLoading || otpIsResending || invitationOtpIsResending;
+  const error = confirmError ?? confirmInvitationError ?? resendError ?? invitationResendError;
 
   if (!myAccountData) {
     return null;
