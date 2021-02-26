@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 import { gql, useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
-import { Alert, Button, Form, Modal } from 'react-bootstrap';
+import { Alert, Button, Form, Spinner, Modal } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 
@@ -18,6 +18,7 @@ const InviteInfliencerMutation = gql`
 
 export default function InvitationModal(props: any) {
   const [inviteInfliencer] = useMutation(InviteInfliencerMutation);
+  const [creating, setCreating] = useState(false);
   const [invitationError, setInvitationError] = useState();
   const { register, errors, handleSubmit, control } = useForm();
 
@@ -34,6 +35,7 @@ export default function InvitationModal(props: any) {
       welcomeMessage: string;
     }) => {
       if (firstName && lastName && phoneNumber && welcomeMessage) {
+        setCreating(true);
         inviteInfliencer({
           variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage },
         })
@@ -113,9 +115,13 @@ export default function InvitationModal(props: any) {
 
           <hr />
           <div className="text-right">
-            <Button className="btn-ochre" type="submit">
-              Invite
-            </Button>
+            {creating ? (
+              <Spinner animation="border" />
+            ) : (
+              <Button className="btn-ochre" type="submit">
+                Invite
+              </Button>
+            )}
           </div>
         </form>
       </Modal.Body>
