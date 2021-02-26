@@ -15,6 +15,8 @@ const SIZES = {
   avatar: [32, 120, 194],
 };
 
+sharp.cache(false);
+
 exports.resizeUploadedImage = async (file, context) => {
   const originalFilePath = file.name;
 
@@ -44,11 +46,9 @@ exports.resizeUploadedImage = async (file, context) => {
   // create tmp dir
   await fs.mkdirs(tmpDir);
   await fs.ensureDir(tmpDir);
+
   // Download file to temp location
   await bucket.file(originalFilePath).download({ destination: tmpFilePath });
-
-  // It's important!
-  sharp.cache(false);
 
   const resizePromises = sizes.map(async (size) => {
     const [name, expansion] = fileName.split(".");
@@ -62,9 +62,6 @@ exports.resizeUploadedImage = async (file, context) => {
         console.error("cannot delete old file:", error);
       });
 
-    // console.log("newFileName: ", newFileName);
-    // console.log("thumbPath: ", thumbPath);
-
     let content = await fs.readFile(tmpFilePath, { encoding: "base64" });
     console.log("tmpFile content: ", content);
 
@@ -77,7 +74,6 @@ exports.resizeUploadedImage = async (file, context) => {
     content = await fs.readFile(thumbPath, { encoding: "base64" });
     console.log("processed file content: ", content);
 
-    // console.log("old file: ", `${fileFoldersPath}/${newFileName}`);
     // Delete old file
     await bucket
       .file(`${fileFoldersPath}/${newFileName}`)
@@ -86,8 +82,6 @@ exports.resizeUploadedImage = async (file, context) => {
         console.error("cannot delete old file:", error);
       });
 
-    // const contents = fs.readFileSync('/path/to/file.jpg', {encoding: 'base64'});
-
     // Upload thumb image
     await bucket.upload(thumbPath, {
       destination: `${fileFoldersPath}/${newFileName}`,
@@ -95,8 +89,6 @@ exports.resizeUploadedImage = async (file, context) => {
         cacheControl: "no-store",
       },
     });
-
-    return true;
   });
 
   await Promise.all(resizePromises);
