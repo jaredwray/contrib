@@ -25,6 +25,7 @@ env:
   ENV_TWILIO_SENDER_NUMBER: +17726178791
   ENV_CONTENT_STORAGE_NAME: content-dev.contrib.org
   ENV_CONTENT_STORAGE_KEY: ${{ secrets.DEV_CONTENT_STORAGE_KEY }}
+  ENV_AUCTION_SCHEDULER_SECRET: secret_key_for_auctions_scheduler
 
 jobs:
   setup-build-deploy:
@@ -115,7 +116,7 @@ jobs:
           ___AUTH0_MANAGEMENT_CLIENT_SECRET=$ENV_AUTH0_MANAGEMENT_CLIENT_SECRET\
           ___CONTENT_STORAGE_NAME=$ENV_CONTENT_STORAGE_NAME\
           ___CONTENT_STORAGE_KEY=$ENV_CONTENT_STORAGE_KEY\
-          ___AUCTION_SCHEDULER_SECRET=secret_key_for_auctions_scheduler"
+          ___AUCTION_SCHEDULER_SECRET=$ENV_AUCTION_SCHEDULER_SECRET"
           
           
           
