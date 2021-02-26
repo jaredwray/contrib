@@ -111,7 +111,7 @@ jobs:
           --set-env-vars=AUTH0_MANAGEMENT_CLIENT_ID=$ENV_AUTH0_MANAGEMENT_CLIENT_ID \
           --set-env-vars=AUTH0_MANAGEMENT_CLIENT_SECRET=$ENV_AUTH0_MANAGEMENT_CLIENT_SECRET \
           --set-env-vars=CONTENT_STORAGE_NAME=$ENV_CONTENT_STORAGE_NAME \
-          --set-env-vars=CONTENT_STORAGE_KEY=$ENV_CONTENT_STORAGE_KEY
+          --set-env-vars="CONTENT_STORAGE_KEY=$ENV_CONTENT_STORAGE_KEY"
           
           
           
