@@ -46,17 +46,8 @@ export const UserAccountSchema = gql`
     myAccount: UserAccount!
   }
 
-  input PhoneConfirmationInput {
-    otp: String!
-    phoneNumber: String!
-  }
-
-  input PhoneInput {
-    phoneNumber: String!
-  }
-
   extend type Mutation {
-    confirmAccountWithPhoneNumber(input: PhoneConfirmationInput!): UserAccount!
-    createAccountWithPhoneNumber(input: PhoneInput!): UserAccount!
+    createAccountWithPhoneNumber(phoneNumber: String): UserAccount!
+    confirmAccountWithPhoneNumber(phoneNumber: String!, otp: String!): UserAccount!
   }
 `;

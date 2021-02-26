@@ -59,6 +59,9 @@ export const InfluencerSchema = gql`
     inviteInfluencer(input: InviteInfluencerInput!): InfluencerProfile!
     updateMyInfluencerProfile(input: UpdateInfluencerProfileInput!): InfluencerProfile!
     updateMyInfluencerProfileAvatar(image: Upload!): InfluencerProfile!
+
+    createAccountWithInvitation(code: String!): UserAccount!
+    confirmAccountWithInvitation(code: String!, otp: String!): UserAccount!
   }
 
   extend type UserAccount {

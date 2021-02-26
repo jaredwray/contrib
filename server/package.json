@@ -23,6 +23,7 @@
     "asoiaf-api": "^1.0.1",
     "auth0": "^2.33.0",
     "bcrypt": "^5.0.0",
+    "bitly": "^7.1.2",
     "dataloader": "^2.0.0",
     "dayjs": "^1.10.4",
     "dinero.js": "^1.8.1",
