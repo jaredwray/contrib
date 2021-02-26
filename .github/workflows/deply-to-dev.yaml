@@ -55,14 +55,6 @@ jobs:
     # Build Client
     - name: Build Client
       run: yarn build-client
-
-    # Test Client
-    - name: Test Client
-      run: yarn test-client
-
-    # Build Server
-    - name: Build Server
-      run: yarn build-server
       env:
         ENV_REACT_APP_AUTH0_DOMAIN: $ENV_REACT_APP_AUTH0_DOMAIN
         ENV_REACT_APP_AUTH0_CLIENT_ID: $ENV_REACT_APP_AUTH0_CLIENT_ID
@@ -73,6 +65,14 @@ jobs:
         REACT_APP_NEWRELIC_LICENSE_KEY: $REACT_APP_NEWRELIC_LICENSE_KEY
         REACT_APP_NEWRELIC_APPLICATION_ID: $REACT_APP_NEWRELIC_APPLICATION_ID
         REACT_APP_NEWRELIC_ACCOUNT_ID: $REACT_APP_NEWRELIC_ACCOUNT_ID
+
+    # Test Client
+    - name: Test Client
+      run: yarn test-client
+
+    # Build Server
+    - name: Build Server
+      run: yarn build-server
 
     # Test Server
     - name: Test Server
