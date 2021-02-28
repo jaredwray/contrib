@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@import 'src/variables.scss';
 
 .step-title {
   color: $ochre-color;
@@ -40,7 +40,8 @@
         line-height: 33px;
       }
 
-      &:hover, &:active {
+      &:hover,
+      &:active {
         background: $dark-gray-color !important;
         color: $sage-color;
       }

@@ -1,0 +1,67 @@
+@import 'src/variables.scss';
+
+.reviews {
+  .quotes {
+    padding: 90px 0 20px 0;
+
+    .review {
+      width: 522px;
+      min-height: 347px;
+      display: inline-block;
+      background-color: $barely-gray-color;
+      margin-right: 20px;
+      padding: 40px;
+    }
+
+    @media (max-width: $medium-weight) {
+      .review {
+        width: 422px;
+      }
+    }
+
+    @media (max-width: $small-weight) {
+      .review {
+        width: 278px;
+      }
+    }
+
+    .avatar {
+      position: relative;
+      top: -100px;
+      text-align: center;
+      height: 20px;
+
+      .reviewer {
+        height: 150px;
+      }
+    }
+
+    .quotes-sign {
+      background-image: url('/assets/images/quotes.webp');
+      background-repeat: no-repeat;
+      height: 36px;
+      width: 36px;
+    }
+
+    .reviews-quote {
+      min-height: 180px;
+    }
+
+    .users-badge {
+      height: 22px;
+      color: $sage-color;
+
+      .users-badge-verified {
+        border-radius: 100%;
+        display: inline-block;
+        height: 22px;
+        width: 22px;
+        line-height: 22px;
+        vertical-align: bottom;
+        background-image: url('/assets/images/badge-verified.webp');
+        background-repeat: no-repeat;
+        margin-right: 10px;
+      }
+    }
+  }
+}

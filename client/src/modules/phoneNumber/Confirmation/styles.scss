@@ -1,0 +1,16 @@
+@import 'src/variables.scss';
+
+.phone-number-confirmation-page {
+  .phone-number-confirmation-message {
+    color: $sage-color;
+  }
+
+  input {
+    width: 150px;
+  }
+
+  .btn {
+    height: 44px;
+    margin-bottom: 8px;
+  }
+}

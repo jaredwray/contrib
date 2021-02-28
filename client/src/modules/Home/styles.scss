@@ -1,0 +1,8 @@
+@import 'src/variables.scss';
+
+@media (min-width: $extra-large-weight) {
+  .homepage-container {
+    max-width: 100%;
+    padding: 0 150px;
+  }
+}

@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "target": "es2015",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -18,9 +14,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "types": ["jest"],
+    "typeRoots": ["node_modules/@types"],
+    "baseUrl": ".",
     "jsx": "react-jsx"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["**/*.tsx", "**/*.ts", "./src/setupTests.ts"],
+  "exclude": ["node_modules", "**/*.test.ts"]
 }

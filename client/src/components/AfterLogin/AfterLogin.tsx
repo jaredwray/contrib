@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { useHistory } from 'react-router-dom';
 
 /**
@@ -11,6 +12,7 @@ import { useHistory } from 'react-router-dom';
  *
  * @see UserAccountProvider
  */
+
 export function AfterLogin() {
   const history = useHistory();
 
