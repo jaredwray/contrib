@@ -14,7 +14,7 @@ export default function Header() {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const { permissions } = useContext(UserAccountContext);
 
-  const afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL ?? '', '/after-login');
+  const afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
 
   const handleLogin = useCallback(() => loginWithRedirect({ redirectUri: afterLoginUri }), [
     loginWithRedirect,

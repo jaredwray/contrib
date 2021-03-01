@@ -25,7 +25,7 @@ export default function InvitationPage() {
 
   const handleSignUp = useCallback(() => {
     loginWithRedirect({
-      redirectUri: mergeUrlPath(process.env.REACT_APP_PLATFORM_URL ?? '', `/after-login?invite=${slug}`),
+      redirectUri: mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, `/after-login?invite=${slug}`),
     }).catch((error) => {
       console.error('login with redirect error: ', error);
     });

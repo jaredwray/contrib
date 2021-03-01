@@ -18,6 +18,7 @@ import WelcomePage from 'src/modules/Welcome';
 
 import 'src/index.scss';
 import { AfterLogin } from './components/AfterLogin';
+import { mergeUrlPath } from './helpers/mergeUrlPath';
 
 export const history = createBrowserHistory();
 
@@ -31,7 +32,7 @@ ReactDOM.render(
     cacheLocation={'localstorage'}
     clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
     domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
-    redirectUri={process.env.REACT_APP_PLATFORM_URL}
+    redirectUri={mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login')}
     onRedirectCallback={onRedirectCallback}
   >
     <Router history={history}>
