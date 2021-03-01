@@ -20,12 +20,12 @@ export default function createAppServices(connection: Connection): IAppServices 
   const twilioNotification = new TwilioNotificationService();
   const stripeService = new StripeService();
 
+  const charity = new CharityService(connection);
   const userAccount = new UserAccountService(connection, twilioVerification, eventHub);
-  const influencer = new InfluencerService(connection);
+  const influencer = new InfluencerService(connection, charity);
   const invitation = new InvitationService(connection, userAccount, influencer, twilioNotification, eventHub);
   const cloudStorage = new GCloudStorage();
 
-  const charity = new CharityService(connection);
   const auction = new AuctionService(connection, stripeService, cloudStorage);
 
   const userAccountRolesManagement = new UserAccountRolesManagementService(auth0, eventHub);

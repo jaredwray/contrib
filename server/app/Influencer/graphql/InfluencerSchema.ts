@@ -16,7 +16,7 @@ export const InfluencerSchema = gql`
     status: InfluencerStatus!
     userAccount: UserAccount
     invitation: Invitation!
-    favoriteCharities: [Charity]!
+    favoriteCharities: [Charity!]!
   }
 
   type Invitation {

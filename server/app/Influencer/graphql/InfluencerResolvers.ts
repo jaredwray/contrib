@@ -9,6 +9,7 @@ import { Invitation } from '../dto/Invitation';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
+import { CharityModel } from '../../Charity/mongodb/CharityModel';
 
 export const InfluencerResolvers = {
   Query: {
@@ -93,6 +94,10 @@ export const InfluencerResolvers = {
     invitation: requirePermission(
       UserPermission.MANAGE_INFLUENCERS,
       async (parent: InfluencerProfile, _, { loaders }) => loaders.invitation.getByInfluencerId(parent.id),
+    ),
+    favoriteCharities: requirePermission(
+      UserPermission.INFLUENCER,
+      async (parent: InfluencerProfile, _, { loaders }) => await loaders.charity.getByIds(parent.favoriteCharities),
     ),
   },
   UserAccount: {

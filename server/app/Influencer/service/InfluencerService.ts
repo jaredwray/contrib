@@ -1,7 +1,7 @@
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
-import { CharityModel } from '../../Charity/mongodb/CharityModel';
+import { CharityService } from '../../Charity/service/CharityService';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
@@ -16,9 +16,11 @@ interface InfluencerInput {
 
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
-  private readonly CharityModel = CharityModel(this.connection);
 
-  constructor(private readonly connection: Connection) {}
+  constructor(
+    private readonly connection: Connection,
+    private readonly charityService: CharityService,
+  ) { }
 
   async createInfluencer(
     { name, avatarUrl, userAccount }: InfluencerInput,
@@ -152,12 +154,9 @@ export class InfluencerService {
       throw new Error(`influencer record not found for user account ${userAccount}`);
     }
 
-    const favoriteCharities = await this.CharityModel.find({ _id: { $in: charities } }).exec();
-    if (favoriteCharities.length === 0) {
-      throw new Error(`There are no passed charities: ${charities}`);
-    }
+    const favoriteCharities = await this.charityService.listCharitiesByIds(charities);
+    influencer.favoriteCharities = favoriteCharities.map((m) => m.id);
 
-    influencer.favoriteCharities = favoriteCharities.map((m) => m._id);
     await influencer.save();
 
     return InfluencerService.makeInfluencerProfile(influencer);

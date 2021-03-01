@@ -33,6 +33,15 @@ export class CharityService {
     return charities.map(CharityService.makeCharity);
   }
 
+  async listCharitiesByIds(charityIds: readonly string[]): Promise<Charity[]> {
+    if ( charityIds.length === 0 ) {
+      return []
+    }
+
+    const charities = await this.CharityModel.find({ _id: { $in: charityIds } }).exec();
+    return charities.map(CharityService.makeCharity);
+  }
+
   async countCharities(): Promise<number> {
     return this.CharityModel.countDocuments().exec();
   }

@@ -9,5 +9,5 @@ export interface InfluencerProfile {
   avatarUrl: string;
   status: InfluencerStatus;
   userAccount: string;
-  favoriteCharities: string[] | []
+  favoriteCharities: string[]
 }

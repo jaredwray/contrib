@@ -1,7 +1,7 @@
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
-import { ICharityModel, CharityModel, CharityCollectionName } from '../../Charity/mongodb/CharityModel';
+import { ICharityModel, CharityCollectionName } from '../../Charity/mongodb/CharityModel';
 
 export interface IInfluencer extends Document {
   name: string;
