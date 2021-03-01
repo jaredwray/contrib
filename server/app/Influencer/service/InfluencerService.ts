@@ -1,6 +1,7 @@
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
+import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
@@ -15,6 +16,7 @@ interface InfluencerInput {
 
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
+  private readonly CharityModel = CharityModel(this.connection);
 
   constructor(private readonly connection: Connection) {}
 
@@ -29,6 +31,7 @@ export class InfluencerService {
           avatarUrl,
           userAccount,
           status: userAccount ? InfluencerStatus.ONBOARDED : InfluencerStatus.INVITATION_PENDING,
+          favoriteCharities: [],
         },
       ],
       { session },
@@ -140,6 +143,26 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
+  async updateInfluencerProfileFavoriteCharitiesByUserId(
+    userAccount: string,
+    charities: [string],
+  ): Promise<InfluencerProfile> {
+    const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
+    if (!influencer) {
+      throw new Error(`influencer record not found for user account ${userAccount}`);
+    }
+
+    const favoriteCharities = await this.CharityModel.find({ _id: { $in: charities } }).exec();
+    if (favoriteCharities.length === 0) {
+      throw new Error(`There are no passed charities: ${charities}`);
+    }
+
+    influencer.favoriteCharities = favoriteCharities.map((m) => m._id);
+    await influencer.save();
+
+    return InfluencerService.makeInfluencerProfile(influencer);
+  }
+
   private static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
     return {
       id: model._id.toString(),
@@ -150,6 +173,7 @@ export class InfluencerService {
       avatarUrl: model.avatarUrl,
       status: model.status,
       userAccount: model.userAccount?.toString() ?? null,
+      favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
     };
   }
 }

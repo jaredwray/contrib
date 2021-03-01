@@ -58,6 +58,13 @@ export const InfluencerResolvers = {
         return influencer.updateInfluencerProfileAvatarByUserId(account.mongodbId, image);
       },
     ),
+    updateMyInfluencerProfileFavoriteCharities: requirePermission(
+      UserPermission.INFLUENCER,
+      async (_: unknown, { charities }: { charities: [string] }, { user, influencer, userAccount }) => {
+        const account = await userAccount.getAccountByAuthzId(user.id);
+        return influencer.updateInfluencerProfileFavoriteCharitiesByUserId(account.mongodbId, charities);
+      },
+    ),
     confirmAccountWithInvitation: requireAuthenticated(
       async (parent, { code, otp }: { otp: string; code: string }, { user, userAccount, invitation }) => {
         const invitationModel = await invitation.findInvitationBySlug(code);

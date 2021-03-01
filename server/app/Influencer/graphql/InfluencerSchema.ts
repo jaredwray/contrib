@@ -16,6 +16,7 @@ export const InfluencerSchema = gql`
     status: InfluencerStatus!
     userAccount: UserAccount
     invitation: Invitation!
+    favoriteCharities: [Charity]!
   }
 
   type Invitation {
@@ -59,6 +60,7 @@ export const InfluencerSchema = gql`
     inviteInfluencer(input: InviteInfluencerInput!): InfluencerProfile!
     updateMyInfluencerProfile(input: UpdateInfluencerProfileInput!): InfluencerProfile!
     updateMyInfluencerProfileAvatar(image: Upload!): InfluencerProfile!
+    updateMyInfluencerProfileFavoriteCharities(charities: [String!]!): InfluencerProfile!
 
     createAccountWithInvitation(code: String!): UserAccount!
     confirmAccountWithInvitation(code: String!, otp: String!): UserAccount!
