@@ -15,6 +15,21 @@
     "sourceType": "script"
   },
 
+  "overrides": [
+    {
+      "files": ["**/*.ts?(x)"],
+      "parserOptions": {
+        "sourceType": "module"
+      }
+    },
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "spaced-comment": "off"
+      }
+    }
+  ],
+
   "rules": {
     "react/prop-types": "off",
     "react/no-unknown-property": "error",
@@ -72,14 +87,5 @@
     "react-hooks/exhaustive-deps": "off",
     "new-cap": "off",
     "spaced-comment": "off"
-  },
-
-  "overrides": [
-    {
-      "files": ["**/*.js?(x)"],
-      "parserOptions": {
-        "sourceType": "module"
-      }
-    }
-  ]
+  }
 }
