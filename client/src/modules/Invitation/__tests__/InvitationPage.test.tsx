@@ -6,7 +6,8 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { mockedUseAuth0, withNotAuthenticatedUser } from 'src/helpers/testHelpers/auth0';
 
-import InvitationPage, { GetInvitation } from '..';
+import InvitationPage from '..';
+import { GetInvitation } from '../../../apollo/queries/getInvitation';
 
 const cache = new InMemoryCache();
 cache.writeQuery({
