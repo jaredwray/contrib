@@ -17,6 +17,7 @@ import Profile from 'src/modules/Profile';
 import WelcomePage from 'src/modules/Welcome';
 
 import 'src/index.scss';
+import { AfterLogin } from './components/AfterLogin';
 
 export const history = createBrowserHistory();
 
@@ -37,6 +38,7 @@ ReactDOM.render(
       <ContribApolloProvider>
         <UserAccountProvider>
           <Route exact component={HomePage} path="/" />
+          <Route exact component={AfterLogin} path="/after-login" />
           <Route exact component={Charities} path="/charities" />
           <Route exact component={PhoneNumberVerification} path="/phone-verification" />
           <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />

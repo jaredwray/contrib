@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
-
-import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 /**
  * A separate page where Auth0 callback leads to.
@@ -14,11 +12,5 @@ import { useHistory } from 'react-router-dom';
  */
 
 export function AfterLogin() {
-  const history = useHistory();
-
-  useEffect(() => {
-    history.replace('/');
-  }, [history]);
-
-  return null;
+  return <Redirect to="/" />;
 }
