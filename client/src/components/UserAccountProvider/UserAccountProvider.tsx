@@ -74,11 +74,12 @@ export function UserAccountProvider({ children }: PropTypes) {
 
   // if account data is showing user has an influencer profile, but token does not feature an "influencer" permission,
   // this means the token is outdated, and session must be refreshed (this happens when influencer has just signed up)
+  const influencerRoleOutdated = Boolean(myAccountData?.influencerProfile && !userPermissions?.includes('influencer'));
   useEffect(() => {
-    if (myAccountData?.influencerProfile && !userPermissions?.includes('influencer')) {
+    if (influencerRoleOutdated) {
       return refreshUserPermissions(true);
     }
-  }, [myAccountData?.influencerProfile, userPermissions, refreshUserPermissions]);
+  }, [influencerRoleOutdated, refreshUserPermissions]);
 
   // parses user token for permissions - we use these to understand what he has access for
   useEffect(() => refreshUserPermissions(), [refreshUserPermissions]);
@@ -94,7 +95,7 @@ export function UserAccountProvider({ children }: PropTypes) {
   }, [userPermissionsError, myAccountError]);
 
   // redirect to onboarding if needed
-  const targetPathname = getOnboardingPath(myAccountData?.myAccount);
+  const targetPathname = getOnboardingPath(myAccountData?.myAccount, userPermissions ?? []);
   const currentPathname = location.pathname;
   useEffect(() => {
     if (targetPathname !== null && targetPathname !== currentPathname) {
@@ -115,6 +116,7 @@ export function UserAccountProvider({ children }: PropTypes) {
 
   if (
     userIsLoading ||
+    influencerRoleOutdated ||
     (userId && !myAccountData) ||
     (userId && !userPermissions) ||
     (targetPathname && targetPathname !== currentPathname)
@@ -125,12 +127,16 @@ export function UserAccountProvider({ children }: PropTypes) {
   return <UserAccountContext.Provider value={userContextValue}>{children}</UserAccountContext.Provider>;
 }
 
-function getOnboardingPath(userAccount: UserAccount) {
+function getOnboardingPath(userAccount: UserAccount, permissions: string[]) {
   if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_REQUIRED) {
     return '/phone-verification';
   }
 
-  if (userAccount && userAccount.influencerProfile && !userAccount.influencerProfile.profileDescription) {
+  if (
+    userAccount?.influencerProfile &&
+    !userAccount.influencerProfile.profileDescription &&
+    permissions?.includes('influencer')
+  ) {
     return '/profile';
   }
 
