@@ -1,13 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Duration, DateTime } from 'luxon';
 import { Form as BsForm, Button } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
 
-import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
+import {
+  ConfirmPhoneNumberMutation,
+  ConfirmPhoneNumberWithInvitationMutation,
+  ResendOtpMutation,
+  ResendOtpWithInvitationMutation,
+} from 'src/apollo/queries/phoneNumberMutations';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
@@ -16,58 +22,6 @@ import Layout from '../Layout';
 import './styles.scss';
 
 const OtpResendDuration = Duration.fromObject({ seconds: 5 });
-
-const ConfirmPhoneNumberMutation = gql`
-  mutation EnterPhoneNumber($phoneNumber: String!, $otp: String!) {
-    confirmAccountWithPhoneNumber(phoneNumber: $phoneNumber, otp: $otp) {
-      id
-      phoneNumber
-      status
-      influencerProfile {
-        id
-      }
-    }
-  }
-`;
-
-const ConfirmPhoneNumberWithInvitationMutation = gql`
-  mutation EnterPhoneNumber($code: String!, $otp: String!) {
-    confirmAccountWithInvitation(code: $code, otp: $otp) {
-      id
-      phoneNumber
-      status
-      influencerProfile {
-        id
-      }
-    }
-  }
-`;
-
-const ResendOtpMutation = gql`
-  mutation ResendOtp($phoneNumber: String!) {
-    createAccountWithPhoneNumber(phoneNumber: $phoneNumber) {
-      id
-      phoneNumber
-      status
-      influencerProfile {
-        id
-      }
-    }
-  }
-`;
-
-const ResendOtpWithInvitationMutation = gql`
-  mutation ResendOtp($code: String!) {
-    createAccountWithInvitation(code: $code) {
-      id
-      phoneNumber
-      status
-      influencerProfile {
-        id
-      }
-    }
-  }
-`;
 
 export default function PhoneNumberConfirmation() {
   const { logout } = useAuth0();

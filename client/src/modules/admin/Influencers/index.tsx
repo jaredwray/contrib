@@ -1,30 +1,15 @@
 import { useState } from 'react';
 
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Button, Col, Container, DropdownButton, Form, Row, Spinner, Table } from 'react-bootstrap';
 
+import { AllInfluencersQuery } from 'src/apollo/queries/influencers';
 import Layout from 'src/components/Layout';
 
 import InvitationModal from './InvitationModal';
 import Pagination, { PER_PAGE } from './Pagination';
 
 import './styles.scss';
-
-export const AllInfliencersQuery = gql`
-  query GetInfliencers($size: Int!, $skip: Int!) {
-    influencers(size: $size, skip: $skip) {
-      totalItems
-      size
-      skip
-      items {
-        id
-        name
-        sport
-        status
-      }
-    }
-  }
-`;
 
 export default function InfluencersPage() {
   const [modalShow, setModalShow] = useState(false);
@@ -38,12 +23,12 @@ export default function InfluencersPage() {
     setPageSkip(pageSkip + PER_PAGE);
   };
 
-  const { loading, data, error } = useQuery(AllInfliencersQuery, {
+  const { loading, data, error } = useQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
 
   if (error) {
-    console.error('Infliencers loading error: ', error);
+    console.error('Influencers loading error: ', error);
     return null;
   }
 

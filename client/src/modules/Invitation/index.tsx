@@ -1,23 +1,15 @@
 import React, { useCallback, useEffect } from 'react';
 
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { GetInvitation } from 'src/apollo/queries/getInvitation';
 import Layout from 'src/components/Layout';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 
 import './styles.scss';
-
-export const GetInvitation = gql`
-  query GetInvitation($slug: String!) {
-    invitation(slug: $slug) {
-      firstName
-      welcomeMessage
-    }
-  }
-`;
 
 export default function InvitationPage() {
   const { loginWithRedirect } = useAuth0();

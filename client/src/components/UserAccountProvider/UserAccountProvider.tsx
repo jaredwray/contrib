@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
