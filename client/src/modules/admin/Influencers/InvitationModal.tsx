@@ -1,23 +1,15 @@
 import { useState, useCallback } from 'react';
 
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { Alert, Button, Form, Spinner, Modal } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 
-const InviteInfliencerMutation = gql`
-  mutation InviteInfliencer($firstName: String!, $lastName: String!, $phoneNumber: String!, $welcomeMessage: String!) {
-    inviteInfluencer(
-      input: { firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, welcomeMessage: $welcomeMessage }
-    ) {
-      id
-    }
-  }
-`;
+import { InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 
 export default function InvitationModal(props: any) {
-  const [inviteInfliencer] = useMutation(InviteInfliencerMutation);
+  const [inviteInfluencer] = useMutation(InviteInfluencerMutation);
   const [creating, setCreating] = useState(false);
   const [invitationError, setInvitationError] = useState();
   const { register, errors, handleSubmit, control } = useForm();
@@ -36,14 +28,14 @@ export default function InvitationModal(props: any) {
     }) => {
       if (firstName && lastName && phoneNumber && welcomeMessage) {
         setCreating(true);
-        inviteInfliencer({
+        inviteInfluencer({
           variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage },
         })
           .then(() => window.location.reload(false))
           .catch((error) => setInvitationError(error.message));
       }
     },
-    [inviteInfliencer],
+    [inviteInfluencer],
   );
 
   return (

@@ -1,12 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
 
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { Alert, Button, Container, Image, Row, Col, ProgressBar, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { Redirect, useHistory } from 'react-router-dom';
 
-import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
+import { UpdateInfluencerProfileAvatarMutation, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Layout from 'src/components/Layout';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import URLSearchParam from 'src/helpers/URLSearchParam';
@@ -14,36 +15,6 @@ import { UserAccount } from 'src/types/UserAccount';
 
 import './styles.scss';
 import 'src/components/Layout/Steps.scss';
-
-const UpdateInfluencerProfileMutation = gql`
-  mutation UpdateInfluencerProfile($name: String!, $sport: String!, $team: String!, $profileDescription: String!) {
-    updateMyInfluencerProfile(
-      input: { name: $name, sport: $sport, team: $team, profileDescription: $profileDescription }
-    ) {
-      id
-      name
-      sport
-      team
-      profileDescription
-      avatarUrl
-      status
-    }
-  }
-`;
-
-const UpdateInfluencerProfileAvatarMutation = gql`
-  mutation UpdateInfluencerProfileAvatar($image: Upload!) {
-    updateMyInfluencerProfileAvatar(image: $image) {
-      id
-      name
-      sport
-      team
-      profileDescription
-      avatarUrl
-      status
-    }
-  }
-`;
 
 const MAX_AVATAR_SIZE_MB = 2;
 const HIDE_ALERT_TIMEOUT_MS = 3500;

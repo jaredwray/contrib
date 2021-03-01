@@ -2,11 +2,13 @@ import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 
-import Influencers, { AllInfliencersQuery } from '..';
+import { AllInfluencersQuery } from 'src/apollo/queries/influencers';
+
+import Influencers from '..';
 
 const cache = new InMemoryCache();
 cache.writeQuery({
-  query: AllInfliencersQuery,
+  query: AllInfluencersQuery,
   data: {
     influencers: {
       size: 100,

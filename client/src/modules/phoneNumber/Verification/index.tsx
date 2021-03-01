@@ -1,39 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
 import { useHistory } from 'react-router-dom';
 
-import { MyAccountQuery } from 'src/apollo/queries/MyAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
+import { EnterPhoneNumberMutation, EnterInvitationCodeMutation } from 'src/apollo/queries/phoneNumberVerification';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
 
 import './styles.scss';
-
-const EnterPhoneNumberMutation = gql`
-  mutation EnterPhoneNumber($phoneNumber: String!) {
-    createAccountWithPhoneNumber(phoneNumber: $phoneNumber) {
-      id
-      phoneNumber
-      status
-    }
-  }
-`;
-
-const EnterInvitationCodeMutation = gql`
-  mutation EnterInvitationCode($code: String!) {
-    createAccountWithInvitation(code: $code) {
-      id
-      phoneNumber
-      status
-    }
-  }
-`;
 
 export default function PhoneNumberVerification() {
   const { logout } = useAuth0();
