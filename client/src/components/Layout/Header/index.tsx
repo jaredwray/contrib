@@ -2,6 +2,7 @@ import React, { useCallback, useContext } from 'react';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 
 import Logo from 'src/assets/images/logo.svg';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
@@ -44,30 +45,45 @@ export default function Header() {
                       />
                     </>
                   )}
+
                   {permissions.includes('influencers:manage') && (
-                    <NavDropdown.Item href="/admin/influencers">
-                      <span>Manage Influencers</span>
-                    </NavDropdown.Item>
+                    <NavLink to="/admin/influencers">
+                      <NavDropdown.Item href="/admin/influencers">
+                        <span>Manage Influencers</span>
+                      </NavDropdown.Item>
+                    </NavLink>
                   )}
                   {permissions.includes('influencer') && (
-                    <NavDropdown.Item href="/profile">
-                      <span>Account</span>
-                    </NavDropdown.Item>
+                    <NavLink to="/profile">
+                      <NavDropdown.Item href="/profile">
+                        <span>Account</span>
+                      </NavDropdown.Item>
+                    </NavLink>
                   )}
 
-                  <NavDropdown.Item href="/">
-                    <span>Bids</span>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/">
-                    <span>Watch list</span>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/">
-                    <span>Purchase history</span>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/">
-                    <span>Manage auctons</span>
-                  </NavDropdown.Item>
+                  <NavLink to="/">
+                    <NavDropdown.Item href="/">
+                      <span>Bids</span>
+                    </NavDropdown.Item>
+                  </NavLink>
+                  <NavLink to="/">
+                    <NavDropdown.Item href="/">
+                      <span>Watch list</span>
+                    </NavDropdown.Item>
+                  </NavLink>
+                  <NavLink to="/">
+                    <NavDropdown.Item href="/">
+                      <span>Purchase history</span>
+                    </NavDropdown.Item>
+                  </NavLink>
+                  <NavLink to="/">
+                    <NavDropdown.Item href="/">
+                      <span>Manage auctions</span>
+                    </NavDropdown.Item>
+                  </NavLink>
+
                   <NavDropdown.Divider />
+
                   {isAuthenticated ? (
                     <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={handleLogout}>
                       <span>Sign Out</span>
