@@ -4,27 +4,29 @@ import * as Dinero from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
-import { AuctionStatus } from '../dto/AuctionStatus';
-import { Auction } from '../dto/Auction';
-import { ICreateAuctionInput } from '../graphql/model/CreateAuctionInput';
-import { IUpdateAuctionInput } from '../graphql/model/UpdateAuctionInput';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionBidModel, IAuctionBidModel } from '../mongodb/AuctionBidModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
-import { AuctionAssetModel } from '../mongodb/AuctionAssetModel';
-import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
+
+import { AuctionStatus } from '../dto/AuctionStatus';
+import { Auction } from '../dto/Auction';
 import { AuctionBid } from '../dto/AuctionBid';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
+
+import { StripeService } from '../../../payment/StripeService';
+import { GCloudStorage, IFile } from '../../GCloudStorage';
+
+import { ICreateAuctionInput } from '../graphql/model/CreateAuctionInput';
+import { IUpdateAuctionInput } from '../graphql/model/UpdateAuctionInput';
+import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
+
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
-import { StripeService } from '../../../payment/StripeService';
 import { AppLogger } from '../../../logger';
-import { GCloudStorage, IFile } from '../../GCloudStorage';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
-  private readonly AuctionAssetModel = AuctionAssetModel(this.connection);
   private readonly AuctionBidModel = AuctionBidModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
@@ -37,7 +39,10 @@ export class AuctionService {
 
   public async createAuctionDraft(auctionOrganizerId: string, input: ICreateAuctionInput): Promise<Auction> {
     const [auction] = await this.AuctionModel.create([
-      { ...input, auctionOrganizer: Types.ObjectId(auctionOrganizerId) },
+      {
+        ...input,
+        auctionOrganizer: Types.ObjectId(auctionOrganizerId),
+      },
     ]);
     return AuctionService.makeAuction(auction);
   }
@@ -79,6 +84,9 @@ export class AuctionService {
     const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+    }
+    if (auction.status === AuctionStatus.ACTIVE && status === AuctionStatus.DRAFT) {
+      throw new AppError('Cannot set active auction to DRAFT status', ErrorCode.BAD_REQUEST);
     }
     auction.status = status;
     const updatedAuction = await auction.save();
@@ -137,16 +145,22 @@ export class AuctionService {
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }
+    if (auction.status !== AuctionStatus.DRAFT) {
+      throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
+    }
 
-    const { startDate, endDate, charity, ...rest } = input;
-    const isDrafted = auction.status === AuctionStatus.DRAFT;
+    const { startDate, endDate, charity, initialPrice, ...rest } = input;
     const charityObject = charity ? { charity: Types.ObjectId(charity) } : {};
 
+    console.log(input);
+
     Object.assign(auction, {
-      startsAt: isDrafted && startDate ? startDate : auction.startsAt.toISOString(),
-      endsAt: isDrafted && endDate ? endDate : auction.endsAt.toISOString(),
-      ...rest,
+      startsAt: startDate ? startDate : auction.startsAt.toISOString(),
+      endsAt: endDate ? endDate : auction.endsAt.toISOString(),
+      startPrice: initialPrice ? initialPrice.getAmount() : auction.startPrice,
+      startPriceCurrency: initialPrice ? initialPrice.getCurrency() : auction.startPriceCurrency,
       ...charityObject,
+      ...rest,
     });
     const updatedAuction = await auction.save();
     await this._populateAuction(updatedAuction).execPopulate();
@@ -157,29 +171,56 @@ export class AuctionService {
     id: string,
     { bid, user }: ICreateAuctionBidInput & { user: UserAccount },
   ): Promise<AuctionBid> {
-    const auction = await this._handleGetAuction(id);
-    const appliedStatus = auction.status === AuctionStatus.DRAFT ? { status: AuctionStatus.ACTIVE } : {};
+    const session = await this.connection.startSession();
+    session.startTransaction();
 
-    if (dayjs().utc().isAfter(auction.endsAt)) {
-      throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
-    }
+    const auction = await this.AuctionModel.findById(id)
+      .populate({ path: 'maxBid', model: this.AuctionBidModel })
+      .session(session)
+      .exec();
+
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
     }
-    const [createdBid] = await this.AuctionBidModel.create([
-      {
-        user: user.mongodbId,
-        bid: bid.getAmount(),
-        bidCurrency: bid.getCurrency(),
-        createdAt: dayjs().toISOString(),
-      },
-    ]);
+    if (dayjs().utc().isAfter(auction.endsAt)) {
+      throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
+    }
+    const initialPrice = Dinero({
+      amount: auction.startPrice,
+      currency: auction.startPriceCurrency as Dinero.Currency,
+    });
+    if (initialPrice.greaterThan(bid)) {
+      throw new AppError('Provided bid is lower than initial price', ErrorCode.BAD_REQUEST);
+    }
+
+    const maxBid = Dinero({ currency: auction.maxBid.bidCurrency as Dinero.Currency, amount: auction.maxBid.bid });
+
+    if (maxBid.greaterThan(bid)) {
+      throw new AppError(
+        'Provided bid is lower, than maximum bid that was encountered on the auction',
+        ErrorCode.BAD_REQUEST,
+      );
+    }
+
+    const [createdBid] = await this.AuctionBidModel.create(
+      [
+        {
+          user: user.mongodbId,
+          bid: bid.getAmount(),
+          bidCurrency: bid.getCurrency(),
+          createdAt: dayjs().toISOString(),
+        },
+      ],
+      { session },
+    );
     Object.assign(auction, {
       bids: [...auction.bids, createdBid._id],
-      ...appliedStatus,
     });
 
-    await auction.save();
+    await auction.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
 
     return AuctionService.makeAuctionBid(createdBid);
   }
@@ -238,7 +279,18 @@ export class AuctionService {
     if (!model) {
       return null;
     }
-    const { _id, startsAt, endsAt, charity, assets, bids, maxBid, ...rest } = model.toObject();
+    const {
+      _id,
+      startsAt,
+      endsAt,
+      charity,
+      assets,
+      bids,
+      maxBid,
+      startPrice,
+      startPriceCurrency,
+      ...rest
+    } = model.toObject();
 
     return {
       id: _id.toString(),
@@ -248,6 +300,7 @@ export class AuctionService {
       startDate: startsAt,
       charity: charity ? { id: charity?._id, name: charity.name } : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
+      initialPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
       ...rest,
     };
   }

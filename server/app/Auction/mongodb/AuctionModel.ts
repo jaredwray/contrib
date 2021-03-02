@@ -23,26 +23,33 @@ export interface IAuctionModel extends Document {
   charity: ICharityModel['_id'];
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
+  startPriceCurrency: string;
+  startPrice: number;
 }
 
 export const AuctionCollectionName = 'auction';
 
-const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>({
-  title: { type: SchemaTypes.String, required: true },
-  sport: { type: SchemaTypes.String, default: '' },
-  description: { type: SchemaTypes.String, default: '' },
-  fullpageDescription: { type: SchemaTypes.String, default: '' },
-  status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
-  charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
-  autographed: { type: SchemaTypes.Boolean, default: false },
-  gameWorn: { type: SchemaTypes.Boolean, default: false },
-  bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
-  maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
-  assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
-  auctionOrganizer: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
-  startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
-  endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
-});
+const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
+  {
+    title: { type: SchemaTypes.String, required: true },
+    sport: { type: SchemaTypes.String, default: '' },
+    description: { type: SchemaTypes.String, default: '' },
+    fullpageDescription: { type: SchemaTypes.String, default: '' },
+    status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
+    charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
+    autographed: { type: SchemaTypes.Boolean, default: false },
+    gameWorn: { type: SchemaTypes.Boolean, default: false },
+    bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
+    maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
+    startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
+    startPrice: { type: SchemaTypes.Number, default: 0 },
+    assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
+    auctionOrganizer: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+    startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
+    endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
+  },
+  { optimisticConcurrency: true },
+);
 
 AuctionSchema.pre('save', async function (next) {
   await this.populate({ path: 'bids' }).execPopulate();

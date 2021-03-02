@@ -30,6 +30,7 @@ export const AuctionSchema = gql`
     status: AuctionStatus!
     attachments: [AuctionAttachment]
     bids: [AuctionBid]
+    startPrice: Money!
     charity: Charity
     gameWorn: Boolean!
     autographed: Boolean!
@@ -59,13 +60,13 @@ export const AuctionSchema = gql`
     fullpageDescription: String
     startDate: DateTime
     endDate: DateTime
-    initiaPrice: Money
+    initialPrice: Money
     charity: String
     authenticityCertificate: Boolean
     gameWorn: Boolean
     autographed: Boolean
   }
- 
+
   extend type Mutation {
     createAuction(input: CreateAuctionInput!): Auction!
     updateAuction(id: String, input: EditAuctionInput): Auction!

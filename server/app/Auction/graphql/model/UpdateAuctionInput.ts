@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import Dinero from 'dinero.js';
 
 export type IUpdateAuctionInput = {
   id: string;
@@ -9,4 +10,5 @@ export type IUpdateAuctionInput = {
   charity: string;
   startDate?: Dayjs;
   endDate?: Dayjs;
+  initialPrice?: Dinero.Dinero;
 };
