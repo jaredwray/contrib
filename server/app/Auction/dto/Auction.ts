@@ -1,7 +1,8 @@
+import Dinero from 'dinero.js';
+import { Dayjs } from 'dayjs';
 import { AuctionAssets } from './AuctionAssets';
 import { Charity } from '../../Charity/dto/Charity';
 import { AuctionStatus } from './AuctionStatus';
-import { Dayjs } from 'dayjs';
 
 export interface Auction {
   id: string;
@@ -18,4 +19,5 @@ export interface Auction {
   maxBid: any;
   description: string;
   fullpageDescription: string;
+  initialPrice: Dinero.Dinero;
 }
