@@ -15,12 +15,6 @@
       text-decoration: none;
       font-weight: normal;
     }
-
-    @media (max-width: $medium-weight) {
-      & {
-        height: 50px;
-      }
-    }
   }
 
   .charities-search-input:focus {

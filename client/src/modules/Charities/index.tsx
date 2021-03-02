@@ -180,7 +180,7 @@ export default function CharitiesPage() {
                     {searchFilter && (
                       <InputGroup.Append>
                         <Button
-                          className="charities-search-cancel-btn text-all-cups text-label"
+                          className="charities-search-cancel-btn with-input text-all-cups text-label"
                           variant="link"
                           onClick={onCancelBtnClick}
                         >

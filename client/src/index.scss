@@ -150,7 +150,7 @@ input.form-control {
 }
 
 @media (max-width: $medium-weight) {
-  .btn {
+  .btn:not(.with-input) {
     height: 40px;
   }
   .text-super {
