@@ -176,7 +176,8 @@ export class AuctionService {
 
     const auction = await this.AuctionModel.findById(id)
       .populate({ path: 'maxBid', model: this.AuctionBidModel })
-      .session(session);
+      .session(session)
+      .exec();
 
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
