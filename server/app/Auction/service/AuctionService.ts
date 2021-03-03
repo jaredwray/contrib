@@ -152,6 +152,9 @@ export class AuctionService {
     if (auction.status !== AuctionStatus.DRAFT) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
+    if (!auction.charity && !input.charity) {
+      throw new AppError('Selected input and auction have no charities, please provide one', ErrorCode.BAD_REQUEST);
+    }
 
     const { startDate, endDate, charity, initialPrice, ...rest } = input;
     const charityObject = charity ? { charity: Types.ObjectId(charity) } : {};
