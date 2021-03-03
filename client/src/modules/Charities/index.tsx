@@ -19,16 +19,20 @@ const HIDE_ALERT_TIMEOUT_MS = 3500;
 export default function CharitiesPage() {
   const stepByStep = URLSearchParam('sbs');
   const history = useHistory();
-  const [updateError, setUpdateError] = useState('');
-  const [successUpdateMessage, setSuccessUpdateMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+
+  const [state, setState] = useState({
+    updateError: '',
+    successUpdateMessage: '',
+    searchQuery: '',
+    favoriteCharities: [] as Charity[],
+  });
+
   const { data: myAccountsData, error: favoriteCharitiesLoadingError } = useQuery<{
     favoriteCharities: Charity[];
     myAccount: UserAccount;
   }>(MyCharitiesQuery);
   const [updateMyFavoriteCarities] = useMutation(UpdateMyFavoriteCarities);
   const [executeSearch, { data: searchResult }] = useLazyQuery(CharitiesSearch);
-  const [favoriteCharities, setFavoriteCharities] = useState<Charity[] | []>([]);
   const influencerProfile = myAccountsData?.myAccount?.influencerProfile;
   const searchInput = useRef(null);
   const searchConteiner = useRef(null);
@@ -36,16 +40,22 @@ export default function CharitiesPage() {
   const clearAndCloseSearch = useCallback(() => {
     // @ts-ignore: Object is possibly 'null'.
     searchInput && (searchInput.current.value = '');
-    setSearchQuery('');
-  }, [searchQuery]);
+    updateState('searchQuery', '');
+  }, [state.searchQuery]);
 
   useOutsideClick(searchConteiner, clearAndCloseSearch);
+
+  const updateState = (key: string, value: string | Charity[]) => {
+    setState((prevState) => {
+      return { ...prevState, [key]: value };
+    });
+  };
 
   const onSubmit = useCallback(
     (e: SyntheticEvent) => {
       e.preventDefault();
 
-      const favoriteCharityIds = favoriteCharities.map((charity: Charity) => charity.id);
+      const favoriteCharityIds = state.favoriteCharities.map((charity: Charity) => charity.id);
       updateMyFavoriteCarities({
         variables: { charities: favoriteCharityIds },
       })
@@ -53,21 +63,28 @@ export default function CharitiesPage() {
           if (stepByStep) {
             history.replace('/welcome');
           } else {
-            setSuccessUpdateMessage('Your profile has been successfully updated.');
+            updateState('successUpdateMessage', 'Your profile has been successfully updated.');
           }
         })
-        .catch((error) => setUpdateError(error.message));
+        .catch((error) => updateState('updateError', error.message));
     },
-    [favoriteCharities, history],
+    [state.favoriteCharities, history],
   );
 
   const onInputSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
 
-    setSearchQuery(target.value);
+    updateState('searchQuery', target.value);
   }, []);
 
-  const selectedCharity = (charity: Charity) => favoriteCharities.some((e) => e.id === charity.id);
+  const selectedCharity = (charity: Charity) => state.favoriteCharities.some((e) => e.id === charity.id);
+
+  const removeFromFavoriteCharities = (charityId: string | undefined) => {
+    if (charityId) {
+      const filteredFavoriteCharities = state.favoriteCharities.filter((charity: Charity) => charity.id !== charityId);
+      updateState('favoriteCharities', filteredFavoriteCharities);
+    }
+  };
 
   const onSerchResultClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
@@ -82,19 +99,12 @@ export default function CharitiesPage() {
         if (target.parentElement?.classList.contains('selected')) {
           removeFromFavoriteCharities(target.dataset.charityId);
         } else {
-          setFavoriteCharities(favoriteCharities.concat(selectedCharity));
+          updateState('favoriteCharities', state.favoriteCharities.concat(selectedCharity));
         }
       }
     },
-    [searchResult, favoriteCharities],
+    [searchResult, state.favoriteCharities],
   );
-
-  const removeFromFavoriteCharities = (charityId: string | undefined) => {
-    if (charityId) {
-      const filteredFavoriteCharities = favoriteCharities.filter((charity: Charity) => charity.id !== charityId);
-      setFavoriteCharities(filteredFavoriteCharities);
-    }
-  };
 
   const onFavoriteCharityClick = useCallback(
     (e: MouseEvent<HTMLUListElement>) => {
@@ -103,30 +113,30 @@ export default function CharitiesPage() {
 
       removeFromFavoriteCharities(target.dataset.charityId);
     },
-    [favoriteCharities],
+    [state.favoriteCharities],
   );
 
   useEffect(() => {
-    executeSearch({ variables: { query: searchQuery } });
-  }, [searchQuery]);
+    executeSearch({ variables: { query: state.searchQuery } });
+  }, [state.searchQuery]);
 
   useEffect(() => {
-    influencerProfile && setFavoriteCharities(influencerProfile.favoriteCharities);
+    influencerProfile && updateState('favoriteCharities', influencerProfile.favoriteCharities);
   }, [myAccountsData]);
 
   useEffect(() => {
-    successUpdateMessage &&
+    state.successUpdateMessage &&
       setTimeout(() => {
-        setSuccessUpdateMessage('');
+        updateState('successUpdateMessage', '');
       }, HIDE_ALERT_TIMEOUT_MS);
-  }, [successUpdateMessage]);
+  }, [state.successUpdateMessage]);
 
   useEffect(() => {
-    updateError &&
+    state.updateError &&
       setTimeout(() => {
-        setUpdateError('');
+        updateState('updateError', '');
       }, HIDE_ALERT_TIMEOUT_MS);
-  }, [updateError]);
+  }, [state.updateError]);
 
   if (favoriteCharitiesLoadingError) {
     console.error('Data loading error: ', favoriteCharitiesLoadingError);
@@ -138,8 +148,8 @@ export default function CharitiesPage() {
       {stepByStep && <ProgressBar now={66} />}
       <section className="charities-page">
         <Form onSubmit={onSubmit}>
-          {updateError && <Alert variant="danger">{updateError}</Alert>}
-          {successUpdateMessage && <Alert variant="success">{successUpdateMessage}</Alert>}
+          {state.updateError && <Alert variant="danger">{state.updateError}</Alert>}
+          {state.successUpdateMessage && <Alert variant="success">{state.successUpdateMessage}</Alert>}
 
           <Container>
             <Row>
@@ -179,7 +189,7 @@ export default function CharitiesPage() {
                       placeholder="Search charities by name"
                       onChange={onInputSearchChange}
                     />
-                    {searchQuery && (
+                    {state.searchQuery && (
                       <InputGroup.Append>
                         <Button
                           className="charities-search-cancel-btn with-input text-all-cups text-label"
@@ -207,7 +217,7 @@ export default function CharitiesPage() {
                   </ul>
                 </Form.Group>
                 <ul className="charities-page-charities-list p-0 m-0" onClick={onFavoriteCharityClick}>
-                  {favoriteCharities.map((charity: Charity) => (
+                  {state.favoriteCharities.map((charity: Charity) => (
                     <li
                       key={'charity-item-' + charity.id}
                       className="charities-page-charity-item text-label align-middle"
