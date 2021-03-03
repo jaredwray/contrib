@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { MyCharitiesQuery, CharitiesSearch, UpdateMyFavoriteCarities } from 'src/apollo/queries/charities';
 import Layout from 'src/components/Layout';
 import URLSearchParam from 'src/helpers/URLSearchParam';
+import useOutsideClick from 'src/helpers/useOutsideClick';
 import { Charity } from 'src/types/Charity';
 import { UserAccount } from 'src/types/UserAccount';
 
@@ -20,7 +21,7 @@ export default function CharitiesPage() {
   const history = useHistory();
   const [updateError, setUpdateError] = useState('');
   const [successUpdateMessage, setSuccessUpdateMessage] = useState('');
-  const [searchFilter, setSearchFilter] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const { data: myAccountsData, error: favoriteCharitiesLoadingError } = useQuery<{
     favoriteCharities: Charity[];
     myAccount: UserAccount;
@@ -30,6 +31,15 @@ export default function CharitiesPage() {
   const [favoriteCharities, setFavoriteCharities] = useState<Charity[] | []>([]);
   const influencerProfile = myAccountsData?.myAccount?.influencerProfile;
   const searchInput = useRef(null);
+  const searchConteiner = useRef(null);
+
+  const clearAndCloseSearch = useCallback(() => {
+    // @ts-ignore: Object is possibly 'null'.
+    searchInput && (searchInput.current.value = '');
+    setSearchQuery('');
+  }, [searchQuery]);
+
+  useOutsideClick(searchConteiner, clearAndCloseSearch);
 
   const onSubmit = useCallback(
     (e: SyntheticEvent) => {
@@ -54,7 +64,7 @@ export default function CharitiesPage() {
   const onInputSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
 
-    setSearchFilter(target.value);
+    setSearchQuery(target.value);
   }, []);
 
   const selectedCharity = (charity: Charity) => favoriteCharities.some((e) => e.id === charity.id);
@@ -79,15 +89,6 @@ export default function CharitiesPage() {
     [searchResult, favoriteCharities],
   );
 
-  const onCancelBtnClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      // @ts-ignore: Object is possibly 'null'.
-      searchInput && (searchInput.current.value = '');
-      setSearchFilter('');
-    },
-    [searchFilter],
-  );
-
   const removeFromFavoriteCharities = (charityId: string | undefined) => {
     if (charityId) {
       const filteredFavoriteCharities = favoriteCharities.filter((charity: Charity) => charity.id !== charityId);
@@ -95,7 +96,7 @@ export default function CharitiesPage() {
     }
   };
 
-  const onFavoritecharityClick = useCallback(
+  const onFavoriteCharityClick = useCallback(
     (e: MouseEvent<HTMLUListElement>) => {
       e.preventDefault();
       const target = e.target as HTMLElement;
@@ -106,8 +107,8 @@ export default function CharitiesPage() {
   );
 
   useEffect(() => {
-    executeSearch({ variables: { query: searchFilter } });
-  }, [searchFilter]);
+    executeSearch({ variables: { query: searchQuery } });
+  }, [searchQuery]);
 
   useEffect(() => {
     influencerProfile && setFavoriteCharities(influencerProfile.favoriteCharities);
@@ -165,6 +166,7 @@ export default function CharitiesPage() {
               </Col>
               <Col className="pt-2 pt-md-0" md="6">
                 <Form.Group
+                  ref={searchConteiner}
                   className={
                     'charities-search-container mb-0 ' + (searchResult?.charitiesSearch?.length ? 'active' : '')
                   }
@@ -177,12 +179,12 @@ export default function CharitiesPage() {
                       placeholder="Search charities by name"
                       onChange={onInputSearchChange}
                     />
-                    {searchFilter && (
+                    {searchQuery && (
                       <InputGroup.Append>
                         <Button
                           className="charities-search-cancel-btn with-input text-all-cups text-label"
                           variant="link"
-                          onClick={onCancelBtnClick}
+                          onClick={clearAndCloseSearch}
                         >
                           Cancel
                         </Button>
@@ -204,7 +206,7 @@ export default function CharitiesPage() {
                     ))}
                   </ul>
                 </Form.Group>
-                <ul className="charities-page-charities-list p-0 m-0" onClick={onFavoritecharityClick}>
+                <ul className="charities-page-charities-list p-0 m-0" onClick={onFavoriteCharityClick}>
                   {favoriteCharities.map((charity: Charity) => (
                     <li
                       key={'charity-item-' + charity.id}
