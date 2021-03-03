@@ -15,9 +15,7 @@ import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
 import { StripeService } from '../../../payment/StripeService';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
-
-import { ICreateAuctionInput } from '../graphql/model/CreateAuctionInput';
-import { IUpdateAuctionInput } from '../graphql/model/UpdateAuctionInput';
+import { AuctionInput } from '../graphql/model/AuctionInput';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 
 import { AppError } from '../../../errors/AppError';
@@ -37,7 +35,13 @@ export class AuctionService {
     private readonly cloudStorage: GCloudStorage,
   ) {}
 
-  public async createAuctionDraft(auctionOrganizerId: string, input: ICreateAuctionInput): Promise<Auction> {
+  public async createAuctionDraft(
+    auctionOrganizerId: string,
+    { charity: _, ...input }: AuctionInput,
+  ): Promise<Auction> {
+    if (!input.title) {
+      throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
+    }
     const [auction] = await this.AuctionModel.create([
       {
         ...input,
@@ -140,7 +144,7 @@ export class AuctionService {
     }
   }
 
-  public async updateAuction(id: string, userId: string, input: IUpdateAuctionInput): Promise<Auction> {
+  public async updateAuction(id: string, userId: string, input: AuctionInput): Promise<Auction> {
     const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
@@ -151,8 +155,6 @@ export class AuctionService {
 
     const { startDate, endDate, charity, initialPrice, ...rest } = input;
     const charityObject = charity ? { charity: Types.ObjectId(charity) } : {};
-
-    console.log(input);
 
     Object.assign(auction, {
       startsAt: startDate ? startDate : auction.startsAt.toISOString(),
