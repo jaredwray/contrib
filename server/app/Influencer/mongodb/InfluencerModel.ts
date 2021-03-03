@@ -1,6 +1,7 @@
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
+import { ICharityModel, CharityCollectionName } from '../../Charity/mongodb/CharityModel';
 
 export interface IInfluencer extends Document {
   name: string;
@@ -10,6 +11,7 @@ export interface IInfluencer extends Document {
   sport: string | null;
   team: string | null;
   profileDescription: string | null;
+  favoriteCharities: ICharityModel['_id'][];
 }
 
 export const InfluencerCollectionName = 'influencer';
@@ -22,6 +24,7 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   sport: { type: SchemaTypes.String },
   team: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
+  favoriteCharities: [{ type: SchemaTypes.ObjectId, ref: CharityCollectionName }],
 });
 
 export const InfluencerModel = (connection: Connection): Model<IInfluencer> => {
