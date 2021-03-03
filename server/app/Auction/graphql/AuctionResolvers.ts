@@ -1,8 +1,7 @@
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
 import { Auction } from '../dto/Auction';
 import { AuctionStatus } from '../dto/AuctionStatus';
-import { ICreateAuctionInput } from './model/CreateAuctionInput';
-import { IUpdateAuctionInput } from './model/UpdateAuctionInput';
+import { AuctionInput } from './model/AuctionInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 import { requirePermission } from '../../../graphql/middleware/requirePermission';
@@ -26,7 +25,7 @@ export const AuctionResolvers = {
       UserPermission.INFLUENCER,
       async (
         _: unknown,
-        input: { input: ICreateAuctionInput },
+        input: { input: AuctionInput },
         { auction, user, userAccount }: GraphqlContext,
       ): Promise<any> => {
         const account = await userAccount.getAccountByAuthzId(user.id);
@@ -37,7 +36,7 @@ export const AuctionResolvers = {
       UserPermission.INFLUENCER,
       async (
         _: unknown,
-        { id, input }: { id: string; input: IUpdateAuctionInput },
+        { id, input }: { id: string; input: AuctionInput },
         { auction, user, userAccount }: GraphqlContext,
       ): Promise<any> => {
         const account = await userAccount.getAccountByAuthzId(user.id);

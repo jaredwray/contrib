@@ -43,6 +43,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
     startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     startPrice: { type: SchemaTypes.Number, default: 0 },
+    playedIn: { type: SchemaTypes.String },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
     startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
