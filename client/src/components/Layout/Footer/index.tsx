@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-import Logo from 'src/assets/images/logo.svg';
+import Logo from 'src/assets/images/logo-with-text-white.svg';
 
 import './styles.scss';
 
@@ -12,7 +12,7 @@ export default function Footer() {
       <Container fluid>
         <Row className="top">
           <Col md className="p-0 pl-md-4">
-            <img alt="Contrib" src={Logo} />
+            <img alt="Contrib" className="logo" src={Logo} />
           </Col>
         </Row>
         <Row className="info pt-4 pb-4">

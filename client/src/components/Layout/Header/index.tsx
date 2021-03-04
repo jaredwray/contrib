@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 
-import Logo from 'src/assets/images/logo.svg';
+import Logo from 'src/assets/images/logo-with-text.svg';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 
