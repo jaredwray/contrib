@@ -13,7 +13,11 @@ export class CharityService {
   }
 
   async searchForCharity(query: string): Promise<Charity[] | null> {
-    const charities = await this.CharityModel.find({ $text: { $search: query } }).exec();
+    if (!query) {
+      return [];
+    }
+
+    const charities = await this.CharityModel.find({ name: { $regex: query, $options: 'i' } }).exec();
     return charities.map(CharityService.makeCharity);
   }
 

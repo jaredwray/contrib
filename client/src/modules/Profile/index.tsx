@@ -135,7 +135,7 @@ export default function ProfilePage() {
 
   return (
     <Layout>
-      <ProgressBar now={33} />
+      {stepByStep && <ProgressBar now={33} />}
       <section className="profile-page">
         <Form onSubmit={handleSubmit(onSubmit)}>
           {updateError && <Alert variant="danger">{updateError}</Alert>}
@@ -147,9 +147,11 @@ export default function ProfilePage() {
             </Row>
             <Row className="text-headline">
               <Col xs="9">Your Profile</Col>
-              <Col className="text-right step-title" xs="3">
-                Step 1
-              </Col>
+              {stepByStep && (
+                <Col className="text-right step-title" xs="3">
+                  Step 1
+                </Col>
+              )}
             </Row>
             <hr className="d-none d-md-block" />
             <Row className="pt-3 pt-md-0">
@@ -174,7 +176,7 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               </Col>
-              <Col md="6">
+              <Col className="pt-4 pt-md-0" md="6">
                 <Form.Group>
                   <Form.Label>Name</Form.Label>
                   <Form.Control
