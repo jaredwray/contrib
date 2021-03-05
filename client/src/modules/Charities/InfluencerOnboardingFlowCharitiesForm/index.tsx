@@ -1,12 +1,14 @@
 import { FC, useCallback, useState } from 'react';
 
+import clsx from 'clsx';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 import { FormUpdateMessages } from 'src/components/FormUpdateMessages';
 import { Charity } from 'src/types/Charity';
 
-import { CharitiesSeacrhInput } from '../CharitiesSeacrhInput';
+import { CharitiesSearchInput } from '../CharitiesSearchInput';
 import { FavoriteCharitiesList } from '../FavoriteCharitiesList';
+import styles from './styles.module.scss';
 
 interface Props {
   isStepByStep: boolean;
@@ -84,7 +86,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
               </div>
             </Col>
             <Col className="pt-2 pt-md-0" md="6">
-              <CharitiesSeacrhInput
+              <CharitiesSearchInput
                 charities={favoriteCharities}
                 onCharityFavoriteChange={handleFavoriteCharityChange}
               />
@@ -95,7 +97,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
             </Col>
           </Row>
           <Row className="buffer d-none d-md-block" />
-          <hr />
+          <hr className="mt-0" />
           <Row className="pt-3 pt-md-0">
             <Col md="6">
               <div className="text-subhead">Don’t see your charity?</div>
@@ -118,7 +120,11 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
           {!isStepByStep && (
             <Row>
               <Col>
-                <Button className="btn-ochre float-right" disabled={isSubmitting} type="submit">
+                <Button
+                  className={clsx('btn-ochre float-right', styles.submitBtn)}
+                  disabled={isSubmitting}
+                  type="submit"
+                >
                   Submit
                 </Button>
               </Col>

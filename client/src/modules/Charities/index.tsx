@@ -18,8 +18,9 @@ export default function CharitiesPage() {
   const history = useHistory();
 
   const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
-  const { data: myFavoriteCharities } = useQuery(MyFavoriteCharitiesQuery);
+  const { data: myAccountsData } = useQuery(MyFavoriteCharitiesQuery);
   const [updateMyFavoriteCharities, { error: updateError }] = useMutation(UpdateMyFavoriteCharities);
+  const influencerProfile = myAccountsData?.myAccount?.influencerProfile;
 
   const handleSubmit = useCallback(
     async (favoriteCharities: Charity[]) => {
@@ -41,9 +42,9 @@ export default function CharitiesPage() {
   return (
     <Layout>
       {stepByStep && <ProgressBar now={66} />}
-      {myFavoriteCharities && (
+      {influencerProfile && (
         <InfluencerOnboardingFlowCharitiesForm
-          initialFavoriteCharities={myFavoriteCharities}
+          initialFavoriteCharities={influencerProfile.favoriteCharities}
           isStepByStep={stepByStep}
           submitErrorMessage={updateError?.message}
           submitSuccessMessage={successMessage}

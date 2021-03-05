@@ -10,8 +10,8 @@ import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { UpdateInfluencerProfileAvatarMutation, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Layout from 'src/components/Layout';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { UserAccount } from 'src/types/UserAccount';
 import { useUrlQueryParam } from 'src/helpers/useUrlQueryParam';
+import { UserAccount } from 'src/types/UserAccount';
 
 import './styles.scss';
 import 'src/components/Layout/Steps.scss';

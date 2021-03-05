@@ -15,16 +15,14 @@ interface Props {
   onCharityFavoriteChange: (charity: Charity, isFavorite: boolean) => void;
 }
 
-export const CharitiesSeacrhInput: FC<Props> = ({ charities, onCharityFavoriteChange }) => {
+export const CharitiesSearchInput: FC<Props> = ({ charities, onCharityFavoriteChange }) => {
   const [executeSearch, { data: searchResult }] = useLazyQuery(CharitiesSearch);
   const searchContainer = useRef(null);
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
-    setDropdownOpen(false);
   }, []);
 
   useOutsideClick(searchContainer, clearAndCloseSearch);
@@ -48,7 +46,7 @@ export const CharitiesSeacrhInput: FC<Props> = ({ charities, onCharityFavoriteCh
   }, [searchQuery]);
 
   return (
-    <Form.Group className={clsx('charities-search-container mb-0', { active: searchResult?.charitiesSearch?.length })}>
+    <Form.Group className={clsx('charities-search-container', { active: searchResult?.charitiesSearch?.length })}>
       <Form.Label>Search</Form.Label>
 
       <div ref={searchContainer}>
@@ -62,7 +60,7 @@ export const CharitiesSeacrhInput: FC<Props> = ({ charities, onCharityFavoriteCh
           {searchQuery && (
             <InputGroup.Append>
               <Button
-                className="charities-search-cancel-btn with-input text-all-cups text-label"
+                className="charities-search-cancel-btn btn-with-input text-all-cups text-label"
                 variant="link"
                 onClick={clearAndCloseSearch}
               >
@@ -72,19 +70,19 @@ export const CharitiesSeacrhInput: FC<Props> = ({ charities, onCharityFavoriteCh
           )}
         </InputGroup>
         <ul className="p-0 m-0 charities-search-result">
-          {dropdownOpen &&
-            (searchResult?.charitiesSearch || []).map((charity: Charity) => (
-              <li
-                key={'search-result-' + charity.id}
-                className={clsx('text-label', 'charities-search-result-item', {
-                  selected: isSelectedCharity(charity),
-                })}
-                title={charity.name}
-              >
-                <span>{charity.name}</span>
-                <Button variant="" onClick={() => handleToggleCharity(charity)} />
-              </li>
-            ))}
+          {(searchResult?.charitiesSearch || []).map((charity: Charity) => (
+            <li
+              key={charity.id}
+              className={clsx('text-label charities-search-result-item', {
+                selected: isSelectedCharity(charity),
+              })}
+              title={charity.name}
+              onClick={() => handleToggleCharity(charity)}
+            >
+              <span>{charity.name}</span>
+              <Button variant="" />
+            </li>
+          ))}
         </ul>
       </div>
     </Form.Group>
