@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { Alert } from 'react-bootstrap';
 
@@ -6,33 +6,42 @@ import styles from './styles.module.scss';
 
 const HIDE_ALERT_TIMEOUT_MS = 3500;
 
-export default function FormUpdateMessages({ state, updateState }: { state: any; updateState: any }) {
-  useEffect(() => {
-    state.successUpdateMessage &&
-      setTimeout(() => {
-        updateState('successUpdateMessage', '');
-      }, HIDE_ALERT_TIMEOUT_MS);
-  }, [state.successUpdateMessage]);
+interface PropTypes {
+  successMessage?: string;
+  errorMessage?: string;
+}
+
+export const FormUpdateMessages: FC<PropTypes> = ({ successMessage, errorMessage }) => {
+  const [alertHidden, setAlertHidden] = useState(true);
 
   useEffect(() => {
-    state.updateError &&
-      setTimeout(() => {
-        updateState('updateError', '');
+    if (successMessage || errorMessage) {
+      setAlertHidden(false);
+
+      const timeout = setTimeout(() => {
+        setAlertHidden(true);
       }, HIDE_ALERT_TIMEOUT_MS);
-  }, [state.updateError]);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [successMessage, errorMessage]);
+
+  if (alertHidden) {
+    return null;
+  }
 
   return (
     <>
-      {state.updateError && (
+      {errorMessage && (
         <Alert className={styles.alert} variant="danger">
-          {state.updateError}
+          {errorMessage}
         </Alert>
       )}
-      {state.successUpdateMessage && (
+      {successMessage && (
         <Alert className={styles.alert} variant="success">
-          {state.successUpdateMessage}
+          {successMessage}
         </Alert>
       )}
     </>
   );
-}
+};

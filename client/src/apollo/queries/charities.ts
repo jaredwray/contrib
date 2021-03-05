@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const MyCharitiesQuery = gql`
-  query GetMyCharitiesQuery {
+export const MyFavoriteCharitiesQuery = gql`
+  query GetMyFavoriteCharitiesQuery {
     myAccount {
       influencerProfile {
         favoriteCharities {
@@ -22,7 +22,7 @@ export const CharitiesSearch = gql`
   }
 `;
 
-export const UpdateMyFavoriteCarities = gql`
+export const UpdateMyFavoriteCharities = gql`
   mutation updateMyFavoriteCarities($charities: [String!]!) {
     updateMyInfluencerProfileFavoriteCharities(charities: $charities) {
       id

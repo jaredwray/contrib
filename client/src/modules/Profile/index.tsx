@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
-import { Alert, Button, Container, Image, Row, Col, ProgressBar, Form } from 'react-bootstrap';
+import { Alert, Button, Col, Container, Form, Image, ProgressBar, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { Redirect, useHistory } from 'react-router-dom';
 
@@ -10,8 +10,8 @@ import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { UpdateInfluencerProfileAvatarMutation, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Layout from 'src/components/Layout';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import URLSearchParam from 'src/helpers/URLSearchParam';
 import { UserAccount } from 'src/types/UserAccount';
+import { useUrlQueryParam } from 'src/helpers/useUrlQueryParam';
 
 import './styles.scss';
 import 'src/components/Layout/Steps.scss';
@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const [updateInfluencerProfileAvatar] = useMutation(UpdateInfluencerProfileAvatarMutation);
 
   let fileInput: HTMLInputElement | null = null;
-  const stepByStep = URLSearchParam('sbs');
+  const stepByStep = useUrlQueryParam('sbs');
   const history = useHistory();
   const [updateError, setUpdateError] = useState('');
   const [successUpdateMessage, setSuccessUpdateMessage] = useState('');
