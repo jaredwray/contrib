@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
+import clsx from 'clsx';
 import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
@@ -13,8 +14,7 @@ import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
-
-import './styles.scss';
+import styles from './styles.module.scss';
 
 export default function PhoneNumberVerification() {
   const { logout } = useAuth0();
@@ -64,7 +64,7 @@ export default function PhoneNumberVerification() {
 
   return (
     <Layout>
-      <section className="phone-number-verification-page">
+      <section>
         <a className="back-link pt-5 text-label text-all-cups" href="/" title="Back" onClick={handleBack}>
           <span className="back-link-arrows">&#171;&#32;&#32;</span>back
         </a>
@@ -73,14 +73,14 @@ export default function PhoneNumberVerification() {
         <Form onSubmit={handleSubmit}>
           {(formProps) => (
             <BsForm onSubmit={formProps.handleSubmit}>
-              <div className="pt-1 error-message text-label">{error}</div>
+              <div className={clsx('pt-1 text-label', styles.errorMessage)}>{error}</div>
 
               <Field name="phoneNumber">
                 {(props) => (
                   <PhoneInput
                     disabled={formSubmitting}
                     {...props.input}
-                    containerClass="mb-3"
+                    containerClass="mb-3 w-auto d-inline-block pr-3"
                     copyNumbersOnly={false}
                     country={'us'}
                     inputProps={{ required: true }}
@@ -89,7 +89,7 @@ export default function PhoneNumberVerification() {
                   />
                 )}
               </Field>
-              <Button className="submit-btn btn-ochre mb-2 with-input" disabled={formSubmitting} type="submit">
+              <Button className="submit-btn btn-ochre mb-2 btn-with-input" disabled={formSubmitting} type="submit">
                 Confirm
               </Button>
             </BsForm>

@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, MouseEvent, ChangeEvent } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
+import clsx from 'clsx';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 
 import { CharitiesSearch } from 'src/apollo/queries/charities';
-import FavoriteCharitiesList from 'src/components/FavoriteCharitiesList';
 import useOutsideClick from 'src/helpers/useOutsideClick';
 import { Charity } from 'src/types/Charity';
+
+import FavoriteCharitiesList from './FavoriteCharitiesList';
 
 import './styles.scss';
 
@@ -31,7 +33,8 @@ export default function CharitiesSeacrhInput({ state, updateState }: { state: an
     updateState('searchQuery', target.value);
   }, []);
 
-  const selectedCharity = (charity: Charity) => state.favoriteCharities.some((e: Charity) => e.id === charity.id);
+  const selectedCharity = (charity: Charity) =>
+    state.favoriteCharities.some((favoriteCharity: Charity) => favoriteCharity.id === charity.id);
 
   const removeFromFavoriteCharities = (charityId: string | undefined) => {
     if (charityId) {
@@ -61,13 +64,14 @@ export default function CharitiesSeacrhInput({ state, updateState }: { state: an
   );
 
   useEffect(() => {
-    executeSearch({ variables: { query: state.searchQuery } });
+    const query = state.searchQuery.length > 1 ? state.searchQuery : '';
+    executeSearch({ variables: { query } });
   }, [state.searchQuery]);
 
   return (
     <>
       <Form.Group
-        className={'charities-search-container mb-0 ' + (searchResult?.charitiesSearch?.length ? 'active' : '')}
+        className={clsx('charities-search-container mb-0', { active: searchResult?.charitiesSearch?.length })}
       >
         <Form.Label>Search</Form.Label>
 
@@ -91,15 +95,17 @@ export default function CharitiesSeacrhInput({ state, updateState }: { state: an
               </InputGroup.Append>
             )}
           </InputGroup>
-          <ul className="charities-search-result p-0 m-0" onClick={onSerchResultClick}>
+          <ul className="p-0 m-0 charities-search-result" onClick={onSerchResultClick}>
             {(searchResult?.charitiesSearch || []).map((charity: Charity) => (
               <li
                 key={'search-result-' + charity.id}
-                className={'charities-search-result-item text-label ' + (selectedCharity(charity) ? 'selected' : '')}
+                className={clsx('text-label', 'charities-search-result-item', {
+                  selected: selectedCharity(charity),
+                })}
                 title={charity.name}
               >
                 <span>{charity.name}</span>
-                <Button data-charity-id={charity.id} />
+                <Button data-charity-id={charity.id} variant="" />
               </li>
             ))}
           </ul>

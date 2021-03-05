@@ -2,6 +2,7 @@
 
 .btn.charities-search-cancel-btn {
   &,
+  &:active,
   &:focus {
     border: 1px solid $sage-color !important;
     color: $sage-color;
@@ -26,7 +27,6 @@
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
   }
-
   .charities-search-result {
     background-color: $white-color;
     border: 2px solid $sage-color;

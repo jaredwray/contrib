@@ -1,0 +1,40 @@
+@import 'src/variables.scss';
+
+.footer {
+  background-color: $dark-gray-color;
+
+  &,
+  a,
+  a:hover {
+    color: $sage-color;
+  }
+}
+
+.info {
+  color: $white-color;
+}
+
+.logo {
+  height: 35px;
+}
+
+.socialMedia {
+  a {
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.twitter {
+  background-image: url('/assets/images/twitter.webp');
+}
+
+.instagram {
+  background-image: url('/assets/images/instagram.webp');
+}
+
+.facebook {
+  background-image: url('/assets/images/facebook.webp');
+}

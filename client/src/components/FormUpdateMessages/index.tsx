@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { Alert } from 'react-bootstrap';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 const HIDE_ALERT_TIMEOUT_MS = 3500;
 
@@ -23,8 +23,16 @@ export default function FormUpdateMessages({ state, updateState }: { state: any;
 
   return (
     <>
-      {state.updateError && <Alert variant="danger">{state.updateError}</Alert>}
-      {state.successUpdateMessage && <Alert variant="success">{state.successUpdateMessage}</Alert>}
+      {state.updateError && (
+        <Alert className={styles.alert} variant="danger">
+          {state.updateError}
+        </Alert>
+      )}
+      {state.successUpdateMessage && (
+        <Alert className={styles.alert} variant="success">
+          {state.successUpdateMessage}
+        </Alert>
+      )}
     </>
   );
 }

@@ -1,13 +1,14 @@
 import { useCallback, useEffect, MouseEvent } from 'react';
 
 import { useQuery } from '@apollo/client';
+import clsx from 'clsx';
 import { Button } from 'react-bootstrap';
 
 import { MyCharitiesQuery } from 'src/apollo/queries/charities';
 import { Charity } from 'src/types/Charity';
 import { UserAccount } from 'src/types/UserAccount';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 export default function FavoriteCharitiesList({
   state,
@@ -16,7 +17,7 @@ export default function FavoriteCharitiesList({
 }: {
   state: any;
   updateState: any;
-  removeFromFavoriteCharities: any;
+  removeFromFavoriteCharities: (charityId: string | undefined) => void;
 }) {
   const { data: myAccountsData, error: favoriteCharitiesLoadingError } = useQuery<{
     favoriteCharities: Charity[];
@@ -43,15 +44,15 @@ export default function FavoriteCharitiesList({
   }
 
   return (
-    <ul className="charities-page-charities-list p-0 m-0" onClick={onFavoriteCharityClick}>
+    <ul className={clsx(`p-0 m-0`, styles.charitiesList)} onClick={onFavoriteCharityClick}>
       {state.favoriteCharities.map((charity: Charity) => (
         <li
           key={'charity-item-' + charity.id}
-          className="charities-page-charity-item text-label align-middle"
+          className={clsx(`text-label align-middle`, styles.charitiesItem)}
           title={charity.name}
         >
           <span>{charity.name}</span>
-          <Button data-charity-id={charity.id} />
+          <Button data-charity-id={charity.id} variant="" />
         </li>
       ))}
     </ul>
