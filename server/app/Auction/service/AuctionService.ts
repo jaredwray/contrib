@@ -10,6 +10,8 @@ import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { Auction } from '../dto/Auction';
+import { AuctionOrderBy } from '../dto/AuctionOrderBy';
+import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionBid } from '../dto/AuctionBid';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
@@ -51,8 +53,72 @@ export class AuctionService {
     return AuctionService.makeAuction(auction);
   }
 
-  public async listAuctions(skip: number, size: number): Promise<Auction[]> {
-    const auctions = await this.AuctionModel.find()
+  public async listAuctions({
+    size,
+    skip,
+    query,
+    filters,
+    orderBy,
+  }: {
+    size: number;
+    skip: number;
+    query?: string;
+    filters?: AuctionSearchFilters;
+    orderBy?: AuctionOrderBy;
+  }): Promise<{ items: Auction[]; totalItems: number; size: number; skip: number }> {
+    const items = await this.findAuctions({ size, skip, query, filters, orderBy });
+    const totalItems = await this.AuctionModel.find(this.searchFindOptions(query, filters)).countDocuments().exec();
+
+    return {
+      items,
+      totalItems,
+      size,
+      skip,
+    };
+  }
+
+  public async listSports(): Promise<string[]> {
+    return await this.AuctionModel.distinct('sport', { status: AuctionStatus.ACTIVE });
+  }
+
+  public async getAuctionPriceLimits(): Promise<{ min: Dinero.Dinero; max: Dinero.Dinero }> {
+    const result = await this.AuctionModel.aggregate([
+      {
+        $match: {
+          status: { $eq: AuctionStatus.ACTIVE },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          min: { $min: '$startPrice' },
+          max: { $max: '$startPrice' },
+        },
+      },
+    ]);
+
+    // TODO: "TypeError: Cannot read property 'min' of undefined" when there are no active
+
+    return {
+      min: Dinero({ amount: result[0]['min'], currency: 'USD' }),
+      max: Dinero({ amount: result[0]['max'], currency: 'USD' }),
+    };
+  }
+
+  private async findAuctions({
+    size,
+    skip,
+    query,
+    filters,
+    orderBy,
+  }: {
+    size: number;
+    skip: number;
+    query?: string;
+    filters?: AuctionSearchFilters;
+    orderBy?: AuctionOrderBy;
+  }): Promise<Auction[]> {
+    const auctions = await this.AuctionModel.find(this.searchFindOptions(query, filters))
       .populate({ path: 'charity', model: this.CharityModel })
       .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
       .populate({ path: 'auctionOrganizer', mode: this.UserAccountModel, select: ['_id'] })
@@ -64,9 +130,50 @@ export class AuctionService {
       .populate({ path: 'maxBid', model: this.AuctionBidModel })
       .skip(skip)
       .limit(size)
-      .sort({ id: 'asc' })
+      .sort(this.searchSortOptionsByName(orderBy))
       .exec();
+
     return auctions.map(AuctionService.makeAuction);
+  }
+
+  private searchSortOptionsByName(name: string): object {
+    return (
+      {
+        [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'desc' },
+        [AuctionOrderBy.TIME_ASC]: { endsAt: 'asc' },
+        [AuctionOrderBy.TIME_DESC]: { endsAt: 'desc' },
+        [AuctionOrderBy.SPORT]: { sport: 'asc' },
+        [AuctionOrderBy.PRICE_ASC]: { startPrice: 'asc' },
+        [AuctionOrderBy.PRICE_DESC]: { startPrice: 'desc' },
+      }[name] || { startsAt: 'desc' }
+    );
+  }
+
+  private searchFindOptions(query: string | null, filters: AuctionSearchFilters | null): object {
+    let options = { status: { $eq: AuctionStatus.ACTIVE } };
+
+    if (query) {
+      options['title'] = { $regex: query.trim(), $options: 'i' };
+    }
+
+    if (filters?.sports?.length) {
+      options['sport'] = { $in: filters.sports };
+    }
+
+    if (filters?.minPrice || filters?.maxPrice) {
+      options['startPrice'] = {};
+      // TODO: use maxBid.bid or use startPrice when the auction does not have bids
+    }
+
+    if (filters?.minPrice) {
+      options['startPrice'].$gte = filters.minPrice;
+    }
+
+    if (filters?.maxPrice) {
+      options['startPrice'].$lte = filters.maxPrice;
+    }
+
+    return options;
   }
 
   public async getAuction(id: string): Promise<Auction> {
