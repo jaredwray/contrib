@@ -1,0 +1,12 @@
+@import '~bootstrap/scss/bootstrap.scss';
+@import 'src/variables.scss';
+
+.divider:not(:last-child) {
+  border-bottom: 1px solid $barely-gray-color;
+  padding-bottom: 60px;
+  margin-bottom: 25px;
+
+  @include media-breakpoint-down(sm) {
+    padding-bottom: 30px;
+  }
+}
