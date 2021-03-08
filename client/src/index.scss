@@ -1,24 +1,59 @@
 @import 'src/variables.scss';
 
+$primary: $sage-color;
+$secondary: $ochre-color;
+$danger: $black-color;
+$light: $light-gray-color;
+$dark: $dark-gray-color;
+
+$link-hover-decoration: none;
+
+$input-color: $sage-color;
+$input-placeholder-color: $light-gray-color;
+$input-border-color: $light-sage-color;
+$input-focus-border-color: $sage-color;
+$input-border-radius: 10px;
+$input-font-size: 20px;
+$input-line-height: 1.25;
+$input-padding-y: 0.875rem;
+$input-padding-x: 0.625rem;
+$input-font-weight: bold;
+$input-btn-focus-box-shadow: 0 0 0 1px $sage-color;
+$input-height: 50px;
+$form-feedback-font-size: 12px;
+
+$custom-switch-width: 5rem;
+$custom-control-gutter: 0.625rem;
+$custom-switch-indicator-size: 2.125rem;
+
+$progress-border-radius: 0;
+
+$btn-font-weight: 700;
+$btn-white-space: nowrap;
+$btn-border-width: 0;
+$btn-border-radius: 10px;
+$btn-padding-y: 16px;
+$btn-padding-x: 16px;
+$btn-line-height: 18px !important;
+$btn-focus-box-shadow: none !important;
+$btn-active-box-shadow: none !important;
+
+@import '~bootstrap/scss/bootstrap';
+
 body {
   color: $dark-gray-color;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-weight: bold;
   height: 100%;
 }
 
 .btn,
 .btn:focus {
-  border-radius: 10px;
-  height: 50px;
-  font-size: 12px;
-  line-height: 16px;
-  white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   letter-spacing: 0.1em;
-  font-weight: bold;
-  border: none !important;
-  box-shadow: none !important;
 
   &.btn-ochre {
     background: $ochre-color;
@@ -44,19 +79,14 @@ body {
 
   &.btn-with-arrows:after {
     content: '»';
+    position: absolute;
+    right: 10%;
     font-size: 25px;
     line-height: 13px;
     font-weight: normal;
     margin-left: 10px;
-    float: right;
+    margin-top: -2px;
   }
-}
-
-.btn-arrows {
-  font-size: 25px;
-  font-weight: normal;
-  vertical-align: sub;
-  margin-left: 10px;
 }
 
 section {
@@ -64,17 +94,18 @@ section {
 }
 
 .form-control {
-  color: $sage-color;
-  font-size: 20px;
-  line-height: 25px;
-  border-color: $sage-color;
-  border-radius: 10px;
+  &.is-invalid {
+    background-image: none;
+    border-color: $sage-color !important;
 
-  &:focus {
-    color: $sage-color;
-    border-width: 2px;
-    border-color: $sage-color;
-    box-shadow: none;
+    &:focus {
+      box-shadow: 0 0 0 1px $sage-color;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    font-size: 18px;
+    line-height: 22px;
   }
 }
 
@@ -118,25 +149,30 @@ img {
   font-size: 72px;
   line-height: 76px;
 }
+
 .text-headline {
   font-size: 32px;
   line-height: 40px;
 }
+
 .text-subhead {
   font-size: 20px;
   line-height: 25px;
 }
+
 .text-body {
   font-size: 17px;
   line-height: 21px;
   font-weight: 500;
 }
+
 .text-label,
 label {
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.1em;
 }
+
 .text-all-cups {
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -147,28 +183,34 @@ label {
   .btn {
     height: 40px;
   }
+
   .text-super {
     font-size: 50px;
     line-height: 50px;
   }
+
   .text-headline {
     font-size: 26px;
     line-height: 30px;
   }
+
   .text-subhead {
     font-size: 18px;
     line-height: 22px;
   }
+
   .text-body {
     font-size: 14px;
     line-height: 19px;
   }
+
   .text-label,
   label {
     font-size: 11px;
     line-height: 14px;
     letter-spacing: 0.1em;
   }
+
   .text-all-cups {
     letter-spacing: 0.1em;
     text-transform: uppercase;
