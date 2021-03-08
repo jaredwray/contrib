@@ -18,6 +18,6 @@ export interface Auction {
   bids: any[];
   maxBid: any;
   description: string;
-  fullpageDescription: string;
+  fullPageDescription: string;
   initialPrice: Dinero.Dinero;
 }

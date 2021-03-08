@@ -26,7 +26,7 @@ export const AuctionSchema = gql`
     id: String!
     title: String!
     description: String
-    fullpageDescription: String
+    fullPageDescription: String
     playedIn: String
     status: AuctionStatus!
     attachments: [AuctionAttachment]
@@ -52,7 +52,7 @@ export const AuctionSchema = gql`
   input AuctionInput {
     title: String
     description: String
-    fullpageDescription: String
+    fullPageDescription: String
     startDate: DateTime
     endDate: DateTime
     initialPrice: Money
