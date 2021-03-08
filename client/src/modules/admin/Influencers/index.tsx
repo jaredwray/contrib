@@ -52,7 +52,7 @@ export default function InfluencersPage() {
               />
             </Col>
             <Col className="pt-3 pt-md-0" md="2" xs="4">
-              <Button className="btn-dark-gray w-100" onClick={() => setModalShow(true)}>
+              <Button className="btn-dark-gray w-100 text-label" onClick={() => setModalShow(true)}>
                 Invite +
               </Button>
               <InvitationModal show={modalShow} onHide={() => setModalShow(false)} />

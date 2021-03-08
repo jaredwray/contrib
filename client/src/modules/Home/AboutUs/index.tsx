@@ -19,7 +19,7 @@ export default function AboutUs() {
         </Row>
         <Row>
           <Col className="pt-3">
-            <Button className="btn-with-arrows btn-ochre">How does it work?</Button>
+            <Button className="btn-with-arrows btn-ochre text-label">How does it work?</Button>
           </Col>
         </Row>
       </Container>

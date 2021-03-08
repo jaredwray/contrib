@@ -110,7 +110,7 @@ export default function InvitationModal(props: any) {
             {creating ? (
               <Spinner animation="border" />
             ) : (
-              <Button className="btn-ochre" type="submit">
+              <Button className="btn-ochre text-label" type="submit">
                 Invite
               </Button>
             )}
