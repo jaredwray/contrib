@@ -1,0 +1,53 @@
+@import 'src/variables.scss';
+@import '~bootstrap/scss/bootstrap.scss';
+
+$custom-switch-indicator-border-radius: 20px;
+$custom-switch-width: 5rem;
+$custom-control-gutter: 0.625rem;
+$custom-control-indicator-size: 2.5rem;
+$custom-control-indicator-border-width: 3px;
+$custom-control-indicator-border-color: $white-color;
+
+.custom-switch2.custom-switch {
+  height: $custom-switch-width / 2;
+
+  .custom-control-label {
+    line-height: $custom-switch-width / 2;
+
+    &::before {
+      top: 0;
+      height: $custom-switch-width / 2;
+      border-radius: $custom-switch-indicator-border-radius;
+      border: $custom-control-indicator-border-width solid $light-gray-color;
+      background-color: $light-gray-color;
+    }
+
+    &::after {
+      top: $custom-control-indicator-border-width;
+      left: add(-($custom-switch-width + $custom-control-gutter), $custom-control-indicator-border-width);
+      background-color: $custom-control-indicator-border-color;
+      border-radius: $custom-switch-indicator-border-radius;
+    }
+  }
+
+  .custom-control-input {
+    &:checked ~ .custom-control-label {
+      &::after {
+        transform: translateX($custom-switch-width / 2);
+      }
+    }
+
+    &:focus ~ .custom-control-label::before {
+      box-shadow: none;
+    }
+
+    &:focus:not(:checked) ~ .custom-control-label::before {
+      border-color: $light-gray-color;
+    }
+
+    &.custom-control-input:checked ~ .custom-control-label::before {
+      border-color: $sage-color;
+      background-color: $sage-color;
+    }
+  }
+}
