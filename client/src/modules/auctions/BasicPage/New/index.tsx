@@ -27,9 +27,9 @@ const NewAuctionBasicPage = () => {
   const history = useHistory();
 
   const [createAuction, { loading }] = useMutation(createAuctionMutation, {
-    onCompleted({ auction }) {
-      if (auction.id) {
-        history.push(`/auctions/${auction.id}/media`);
+    onCompleted({ createAuction }) {
+      if (createAuction.id) {
+        history.push(`/auctions/${createAuction.id}/media`);
       }
     },
     onError(a) {

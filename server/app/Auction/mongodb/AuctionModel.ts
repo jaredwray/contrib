@@ -38,6 +38,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
     charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
     autographed: { type: SchemaTypes.Boolean, default: false },
+    authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
     gameWorn: { type: SchemaTypes.Boolean, default: false },
     bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
     maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
