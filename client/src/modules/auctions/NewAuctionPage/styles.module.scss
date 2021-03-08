@@ -1,0 +1,70 @@
+@import '~bootstrap/scss/bootstrap.scss';
+@import 'src/variables.scss';
+
+.root {
+  max-width: 1064px;
+}
+
+.section {
+  margin-bottom: 120px;
+
+  @include media-breakpoint-down(sm) {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+.buttonWrapper {
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
+}
+
+.mobileButton {
+  display: block;
+  height: 120px !important;
+  margin-top: 40px;
+
+  @include media-breakpoint-up(md) {
+    display: none !important;
+  }
+}
+
+.list {
+  counter-reset: item;
+}
+
+.listItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid $light-sage-color;
+  border-radius: 10px;
+  padding: 13px 31px;
+  box-sizing: border-box;
+  white-space: nowrap;
+
+  &::before {
+    content: counter(item);
+    counter-increment: item;
+    position: absolute;
+    left: -15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: $white-color;
+    background-color: $sage-color;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+
+    @include media-breakpoint-down(sm) {
+      margin-bottom: 10px;
+    }
+  }
+}
