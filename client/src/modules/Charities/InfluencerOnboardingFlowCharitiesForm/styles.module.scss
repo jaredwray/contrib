@@ -1,0 +1,7 @@
+@import 'src/variables.scss';
+
+@media (max-width: $small-weight) {
+  .submitBtn {
+    width: 100%;
+  }
+}

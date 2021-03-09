@@ -1,49 +1,50 @@
 import React from 'react';
 
+import clsx from 'clsx';
 import { Container, Row, Col } from 'react-bootstrap';
 
 import Logo from 'src/assets/images/logo-with-text-white.svg';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 export default function Footer() {
   return (
-    <footer className="d-print-none p-4">
+    <footer className={clsx('d-print-none p-4', styles.footer)}>
       <Container fluid>
-        <Row className="top">
+        <Row>
           <Col md className="p-0 pl-md-4">
-            <img alt="Contrib" className="logo" src={Logo} />
+            <img alt="Contrib" className={styles.logo} src={Logo} />
           </Col>
         </Row>
-        <Row className="info pt-4 pb-4">
+        <Row className={clsx('pt-4 pb-4', styles.info)}>
           <Col className="p-0 pl-md-4 pr-md-4 text-headline" lg="8" xs="12">
             Direct athlete-to-fan charity auctions.
           </Col>
           <Col className="p-0 pt-4 pt-lg-0 pl-md-4 pr-md-4 " lg="4" xs="12">
-            <a className="float-lg-right text-headline" href="/">
+            <a className={clsx('float-lg-right text-headline', styles.link)} href="/">
               About Contrib
             </a>
           </Col>
         </Row>
-        <Row className="social-media">
+        <Row className={styles.socialMedia}>
           <Col md className="p-0 pl-md-4 pr-md-4 pt-lg-4 pb-4">
-            <a className="twitter d-inline-block mr-4" href="/" rel="external">
+            <a className={clsx('d-inline-block mr-4', styles.twitter)} href="/" rel="external" title="twitter">
               <i className="d-none" />
             </a>
-            <a className="instagram d-inline-block mr-4" href="/" rel="external">
+            <a className={clsx('d-inline-block mr-4', styles.instagram)} href="/" rel="external" title="instagram">
               <i className="d-none" />
             </a>
-            <a className="facebook d-inline-block" href="/" rel="external">
+            <a className={clsx('d-inline-block mr-4', styles.facebook)} href="/" rel="external" title="facebook">
               <i className="d-none" />
             </a>
           </Col>
         </Row>
-        <Row className="bottom">
+        <Row>
           <Col md className="p-0 pl-md-4 pr-md-4 text-label text-all-cups">
             Copyright {new Date().getFullYear()} Contrib Inc.
           </Col>
           <Col md className="pt-2 p-0 pt-md-0 pr-md-4">
-            <a className="privacy float-md-right text-label text-all-cups" href="/">
+            <a className={clsx('privacy float-md-right text-label text-all-cups', styles.link)} href="/">
               Privacy and Terms &gt;&gt;
             </a>
           </Col>

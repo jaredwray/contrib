@@ -12,8 +12,12 @@ export class CharityService {
     return CharityService.makeCharity(charity);
   }
 
-  async searchForCharity(query: string): Promise<Charity[] | null> {
-    const charities = await this.CharityModel.find({ $text: { $search: query } }).exec();
+  async searchForCharity(query: string): Promise<Charity[]> {
+    if (!query) {
+      return [];
+    }
+
+    const charities = await this.CharityModel.find({ name: { $regex: query, $options: 'i' } }).exec();
     return charities.map(CharityService.makeCharity);
   }
 
@@ -34,8 +38,8 @@ export class CharityService {
   }
 
   async listCharitiesByIds(charityIds: readonly string[]): Promise<Charity[]> {
-    if ( charityIds.length === 0 ) {
-      return []
+    if (charityIds.length === 0) {
+      return [];
     }
 
     const charities = await this.CharityModel.find({ _id: { $in: charityIds } }).exec();

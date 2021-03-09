@@ -12,7 +12,7 @@ export const CharityResolvers = {
       { query }: { query: string },
       { charity }: GraphqlContext,
     ): Promise<Charity[] | null> => {
-      return await charity.searchForCharity(query);
+      return await charity.searchForCharity(query.trim());
     },
     charities: async (
       parent: unknown,
