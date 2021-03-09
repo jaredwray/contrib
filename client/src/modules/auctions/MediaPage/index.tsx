@@ -1,8 +1,13 @@
 import { useCallback } from 'react';
 
-import { Container, Form as RbForm, ProgressBar } from 'react-bootstrap';
+import { useMutation } from '@apollo/client';
+import { Container, ProgressBar } from 'react-bootstrap';
+import { useDropzone } from 'react-dropzone';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { updateAuctionMedia } from 'src/apollo/queries/auctions';
+import AddPhotoIcon from 'src/assets/images/ProtoIcon';
+import AddVideoIcon from 'src/assets/images/VideoIcon';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 
@@ -15,12 +20,22 @@ const EditAuctionMediaPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
+  const [updateAuction, { loading: updating }] = useMutation(updateAuctionMedia);
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    onDrop: (files) =>
+      updateAuction({
+        variables: {
+          id: auctionId,
+          file: files,
+        },
+      }),
+  });
+
   const handlePrevAction = useCallback(() => {
     history.push(`/auctions/${auctionId}/basic`);
   }, []);
 
   const handleSubmit = useCallback((values) => {
-    console.log(values);
     history.push(`/auctions/${auctionId}/details`);
   }, []);
 
@@ -34,36 +49,36 @@ const EditAuctionMediaPage = () => {
             <StepHeader step="2" title="Photos & video" />
 
             <Row
-              description="Provide a number of photos that show the item off from a couple of angles as well as any standout
-                  markings, signatures, etc."
+              description="Provide a number of photos that show the item off from a couple of angles as well as any standout markings, signatures, etc."
               title="Photos"
             >
-              <RbForm.File
-                feedbackTooltip
-                className="position-relative"
-                id="validationFormik107"
-                label="photo"
-                name="photo"
-                onChange={console.log}
-              />
+              <div {...getRootProps({ className: 'dropzone' })} className={styles.dropzone}>
+                <input {...getInputProps()} name="photo" />
+                <AddPhotoIcon className="mb-2" />
+                <p className="text-center">
+                  Drag photos here or
+                  <br />
+                  click to upload
+                </p>
+              </div>
             </Row>
             <Row
-              description="Provide a single video (perferably portrait mode) that shows the item off and talks to what makes it
-                  special."
+              description="Provide a single video (perferably portrait mode) that shows the item off and talks to what makes it special."
               title="Video"
             >
-              <RbForm.File
-                feedbackTooltip
-                className="position-relative"
-                id="validationFormik107"
-                label="video"
-                name="video"
-                onChange={console.log}
-              />
+              <div {...getRootProps({ className: 'dropzone' })} className={styles.dropzone}>
+                <input {...getInputProps()} name="video" />
+                <AddVideoIcon className="mb-2" />
+                <p className="text-center">
+                  Drag video here or
+                  <br />
+                  click to upload
+                </p>
+              </div>
             </Row>
           </Container>
 
-          <StepByStepRow loading={false} nextAction={handleSubmit} prevAction={handlePrevAction} />
+          <StepByStepRow loading={updating} nextAction={handleSubmit} prevAction={handlePrevAction} />
         </Form>
       </section>
     </Layout>

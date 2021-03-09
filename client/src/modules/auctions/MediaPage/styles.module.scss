@@ -13,3 +13,20 @@
     margin-bottom: 0;
   }
 }
+
+.dropzone {
+  cursor: pointer;
+  color: #5a7864;
+  height: 200px;
+  width: 100%;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 25px;
+  border: 1px dashed #96af9b;
+  box-sizing: border-box;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}

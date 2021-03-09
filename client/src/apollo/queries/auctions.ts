@@ -30,8 +30,7 @@ export const getAuctionDetails = gql`
       id
       startDate
       endDate
-      startPrice
-      duration
+      initialPrice
       charity {
         id
         name
@@ -89,6 +88,26 @@ export const updateAuctionBasics = gql`
         authenticityCertificate: $authenticityCertificate
       }
     ) {
+      id
+    }
+  }
+`;
+
+export const updateAuctionDetails = gql`
+  mutation updateAuction($id: String!, $startDate: String, $endDate: String, $initialPrice: Object) {
+    updateAuction(id: $id, input: { startDate: $startDate, endDate: $endDate, initialPrice: $initialPrice }) {
+      id
+    }
+  }
+`;
+
+export const updateAuctionMedia = gql`
+  mutation updateAuction($id: String!, $file: Upload!) {
+    addAuctionAttachment(id: $id, attachment: $file) {
+      attachments {
+        url
+        type
+      }
       id
     }
   }

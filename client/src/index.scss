@@ -92,6 +92,29 @@ body {
 section {
   padding: 30px 0;
 }
+input[type='date']::-webkit-calendar-picker-indicator {
+  visibility: hidden;
+}
+
+input[type='time']::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  // -webkit-appearance: none;
+  opacity: 1;
+  color: rgba(0, 0, 0, 0);
+  background-image: url('/assets/images/Calendar.svg') no-repeat;
+  height: 50px;
+  width: 50px;
+  border-left: 1px solid red;
+  top: 0;
+  z-index: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0px;
+}
 
 .form-control {
   &.is-invalid {

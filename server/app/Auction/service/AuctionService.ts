@@ -33,7 +33,7 @@ export class AuctionService {
     private readonly connection: Connection,
     private readonly stripeService: StripeService,
     private readonly cloudStorage: GCloudStorage,
-  ) {}
+  ) { }
 
   public async createAuctionDraft(
     auctionOrganizerId: string,
@@ -112,7 +112,7 @@ export class AuctionService {
   }
 
   public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<Auction> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    const auction = await this.AuctionModel.findOne({ _id: Types.ObjectId(id), auctionOrganizer: userId }).exec();
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }

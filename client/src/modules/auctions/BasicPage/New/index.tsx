@@ -32,8 +32,8 @@ const NewAuctionBasicPage = () => {
         history.push(`/auctions/${createAuction.id}/media`);
       }
     },
-    onError(a) {
-      console.log(a);
+    onError(error) {
+      console.log(error);
     },
   });
 
@@ -42,7 +42,6 @@ const NewAuctionBasicPage = () => {
   }, []);
 
   const handleSubmit = useCallback((values) => {
-    console.log(values);
     createAuction({ variables: values });
   }, []);
 

@@ -25,6 +25,9 @@ const EditAuctionBasicPage = () => {
     onCompleted() {
       history.push(`/auctions/${auctionId}/media`);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const handlePrevAction = useCallback(() => {
@@ -32,7 +35,6 @@ const EditAuctionBasicPage = () => {
   }, []);
 
   const handleSubmit = useCallback((values) => {
-    console.log(values);
     updateAuction({ variables: { id: auctionId, ...values } });
   }, []);
 

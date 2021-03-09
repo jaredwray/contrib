@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 
+import Dinero from 'dinero.js';
 import { Form as BsForm } from 'react-bootstrap';
 
 import useField from '../hooks/useField';
@@ -15,36 +16,38 @@ interface Props {
   disabled?: boolean;
   className?: string;
   constraints?: { [key: string]: any };
-  textarea?: boolean;
   externalText?: string;
-  type?: string;
 }
 
-const InputField: FC<Props> = ({
+const MoneyField: FC<Props> = ({
   name,
   title,
   placeholder,
   required,
   disabled,
   className,
-  textarea,
   constraints: inputConstraints,
   externalText,
-  type,
 }) => {
   const constraints = useFieldConstraints(inputConstraints, required);
-  const { hasError, errorMessage, ...inputProps } = useField(name, { constraints, disabled });
+  const { hasError, errorMessage, value, onChange, ...inputProps } = useField(name, { constraints, disabled });
+
+  const handleChange = useCallback((event) => {
+    const targetValue = event.target.value;
+    const number = targetValue.replace(/\$|,|\./g, '');
+    onChange({ ...value, amount: parseInt(number, 10) });
+  }, []);
 
   return (
     <Group>
       {title && <Label>{title}</Label>}
       <Control
         {...inputProps}
-        as={textarea ? 'textarea' : 'input'}
         className={className}
         isInvalid={hasError}
         placeholder={placeholder}
-        type={type}
+        value={Dinero(value).toFormat('$0,0.00')}
+        onChange={handleChange}
       />
       <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
       {externalText && <p className="text-body mt-2">{externalText}</p>}
@@ -52,4 +55,4 @@ const InputField: FC<Props> = ({
   );
 };
 
-export default InputField;
+export default MoneyField;
