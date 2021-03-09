@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
-import { Alert, Button, Container, Image, Row, Col, ProgressBar, Form } from 'react-bootstrap';
+import { Alert, Button, Col, Container, Form, Image, ProgressBar, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { Redirect, useHistory } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { UpdateInfluencerProfileAvatarMutation, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Layout from 'src/components/Layout';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import URLSearchParam from 'src/helpers/URLSearchParam';
+import { useUrlQueryParam } from 'src/helpers/useUrlQueryParam';
 import { UserAccount } from 'src/types/UserAccount';
 
 import './styles.scss';
@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const [updateInfluencerProfileAvatar] = useMutation(UpdateInfluencerProfileAvatarMutation);
 
   let fileInput: HTMLInputElement | null = null;
-  const stepByStep = URLSearchParam('sbs');
+  const stepByStep = useUrlQueryParam('sbs');
   const history = useHistory();
   const [updateError, setUpdateError] = useState('');
   const [successUpdateMessage, setSuccessUpdateMessage] = useState('');
@@ -135,7 +135,7 @@ export default function ProfilePage() {
 
   return (
     <Layout>
-      <ProgressBar now={33} />
+      {stepByStep && <ProgressBar now={33} />}
       <section className="profile-page">
         <Form onSubmit={handleSubmit(onSubmit)}>
           {updateError && <Alert variant="danger">{updateError}</Alert>}
@@ -147,9 +147,11 @@ export default function ProfilePage() {
             </Row>
             <Row className="text-headline">
               <Col xs="9">Your Profile</Col>
-              <Col className="text-right step-title" xs="3">
-                Step 1
-              </Col>
+              {stepByStep && (
+                <Col className="text-right step-title" xs="3">
+                  Step 1
+                </Col>
+              )}
             </Row>
             <hr className="d-none d-md-block" />
             <Row className="pt-3 pt-md-0">
@@ -174,7 +176,7 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               </Col>
-              <Col md="6">
+              <Col className="pt-4 pt-md-0" md="6">
                 <Form.Group>
                   <Form.Label>Name</Form.Label>
                   <Form.Control

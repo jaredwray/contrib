@@ -2,12 +2,12 @@
 
 .footer {
   background-color: $dark-gray-color;
-  color: $sage-color;
-}
 
-.link,
-.link:hover {
-  color: $sage-color;
+  &,
+  a,
+  a:hover {
+    color: $sage-color;
+  }
 }
 
 .info {
@@ -18,24 +18,23 @@
   height: 35px;
 }
 
-.social-media-link {
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 36px;
-  height: 36px;
+.socialMedia {
+  a {
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+  }
 }
 
 .twitter {
-  composes: social-media-link;
   background-image: url('/assets/images/twitter.webp');
 }
 
 .instagram {
-  composes: social-media-link;
   background-image: url('/assets/images/instagram.webp');
 }
 
 .facebook {
-  composes: social-media-link;
   background-image: url('/assets/images/facebook.webp');
 }

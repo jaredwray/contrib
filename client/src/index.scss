@@ -201,9 +201,15 @@ label {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+input.form-control {
+  height: 50px;
+}
+.form-control::placeholder {
+  color: $light-gray-color;
+}
 
 @media (max-width: $medium-weight) {
-  .btn {
+  .btn:not(.btn-with-input) {
     height: 40px;
   }
 

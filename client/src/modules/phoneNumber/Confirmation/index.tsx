@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
+import clsx from 'clsx';
 import { Duration, DateTime } from 'luxon';
 import { Form as BsForm, Button } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
@@ -18,8 +19,7 @@ import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
-
-import './styles.scss';
+import styles from './styles.module.scss';
 
 const OtpResendDuration = Duration.fromObject({ seconds: 5 });
 
@@ -131,28 +131,30 @@ export default function PhoneNumberConfirmation() {
 
   return (
     <Layout>
-      <section className="phone-number-confirmation-page">
-        <a className="back-link pt-5 text-label text-all-cups" href="/" title="Back" onClick={handleBack}>
+      <section>
+        <a className="back-link pt-5 text-label text-all-cups" href="" title="Back" onClick={handleBack}>
           <span className="back-link-arrows">&#171;&#32;&#32;</span>back
         </a>
         <div className="text-headline pt-3">Please, confirm your phone number</div>
 
         <Form className="pt-3" onSubmit={handleSubmit}>
           {(formProps) => (
-            <BsForm className="phone-number-confirmation-form" onSubmit={formProps.handleSubmit}>
-              <div className="phone-number-confirmation-message pt-3">
-                Verification code has been sent to: {phoneNumber}
-              </div>
+            <BsForm onSubmit={formProps.handleSubmit}>
+              <div className={clsx('pt-3', styles.message)}>Verification code has been sent to: {phoneNumber}</div>
               {error && <div className="pt-1 error-message text-label">{error.message}</div>}
               <Field name="otp">
                 {(props) => (
                   <BsForm.Group className="d-inline-block">
                     <BsForm.Label>Confirmation number</BsForm.Label>
-                    <BsForm.Control {...props.input} disabled={isLoading} />
+                    <BsForm.Control {...props.input} className={styles.input} disabled={isLoading} />
                   </BsForm.Group>
                 )}
               </Field>
-              <Button className="ml-2 d-inline-block btn-ochre text-label" disabled={isLoading} type="submit">
+              <Button
+                className="ml-2 mb-2 d-inline-block btn-ochre btn-with-input text-label"
+                disabled={isLoading}
+                type="submit"
+              >
                 Confirm
               </Button>
               {canResendOtp && (
