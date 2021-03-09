@@ -17,33 +17,29 @@
   display: flex;
   align-items: center;
   text-align: middle;
+}
 
-  span {
-    width: 100%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    padding-right: 10px;
-  }
+.charityName {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-right: 10px;
+}
 
-  button {
-    &,
-    &:active,
-    &:hover,
-    &:focus {
-      background-color: $light-sage-color;
-      border-radius: 6px;
-      height: 34px !important;
-      width: 34px;
-      float: right;
+.button {
+  background-color: $light-sage-color;
+  border-radius: 6px;
+  height: 34px;
+  width: 34px;
+  float: right;
+  border: none;
 
-      &:after {
-        content: 'L';
-        color: $white-color;
-        display: inline-block;
-        transform: scaleX(-1) rotate(320deg);
-        font-size: 15px;
-      }
-    }
+  &:after {
+    content: 'L';
+    color: $white-color;
+    display: inline-block;
+    transform: scaleX(-1) rotate(320deg);
+    font-size: 15px;
   }
 }

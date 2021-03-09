@@ -11,7 +11,7 @@ interface PropTypes {
   errorMessage?: string;
 }
 
-export const FormUpdateMessages: FC<PropTypes> = ({ successMessage, errorMessage }) => {
+const FormUpdateMessages: FC<PropTypes> = ({ successMessage, errorMessage }) => {
   const [alertHidden, setAlertHidden] = useState(true);
 
   useEffect(() => {
@@ -45,3 +45,5 @@ export const FormUpdateMessages: FC<PropTypes> = ({ successMessage, errorMessage
     </>
   );
 };
+
+export default FormUpdateMessages;

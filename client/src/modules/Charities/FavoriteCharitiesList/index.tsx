@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
 import clsx from 'clsx';
-import { Button } from 'react-bootstrap';
 
 import { Charity } from 'src/types/Charity';
 
@@ -17,8 +16,8 @@ export const FavoriteCharitiesList: FC<PropTypes> = ({ charities, onCharityFavor
     <ul className={clsx(`p-0 m-0`, styles.charitiesList)}>
       {charities.map((charity) => (
         <li key={charity.id} className={clsx(`text-label align-middle`, styles.charitiesItem)} title={charity.name}>
-          <span>{charity.name}</span>
-          <Button variant="" onClick={() => onCharityFavoriteChange(charity, false)} />
+          <span className={styles.charityName}>{charity.name}</span>
+          <button className={styles.button} onClick={() => onCharityFavoriteChange(charity, false)} />
         </li>
       ))}
     </ul>

@@ -3,7 +3,7 @@ import { FC, useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
-import { FormUpdateMessages } from 'src/components/FormUpdateMessages';
+import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import { Charity } from 'src/types/Charity';
 
 import { CharitiesSearchInput } from '../CharitiesSearchInput';
