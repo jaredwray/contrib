@@ -1,0 +1,23 @@
+@import 'src/variables.scss';
+
+.btn.search-cancel-btn {
+  &,
+  &:active,
+  &:focus {
+    border: 1px solid $sage-color !important;
+    color: $sage-color;
+    text-decoration: none;
+    font-weight: normal;
+  }
+}
+
+.search-input:focus {
+  &:has(+ .input-group-append) {
+    border-right-width: 1px !important;
+  }
+
+  & + .input-group-append > .btn {
+    border-width: 2px !important;
+    border-left-width: 1px !important;
+  }
+}
