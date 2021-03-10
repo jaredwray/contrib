@@ -11,6 +11,7 @@ import Influencers from 'src/modules/admin/Influencers';
 import EditAuctionBasicPage from 'src/modules/auctions/BasicPage/Edit';
 import NewAuctionBasicPage from 'src/modules/auctions/BasicPage/New';
 import EditAuctionDetailsPage from 'src/modules/auctions/DetailsPage';
+import AuctionDonePage from 'src/modules/auctions/DonePage';
 import EditAuctionMediaPage from 'src/modules/auctions/MediaPage';
 import NewAuctionWizardPage from 'src/modules/auctions/NewAuctionPage';
 import Charities from 'src/modules/Charities';
@@ -57,7 +58,7 @@ ReactDOM.render(
           <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />
           <Route exact component={EditAuctionMediaPage} path="/auctions/:auctionId/media" />
           <Route exact component={EditAuctionDetailsPage} path="/auctions/:auctionId/details" />
-          {/* <Route exact component={AuctionWizardDonePage} path="/auctions/:auctionId/done" /> */}
+          <Route exact component={AuctionDonePage} path="/auctions/:auctionId/done" />
         </UserAccountProvider>
       </ContribApolloProvider>
     </Router>

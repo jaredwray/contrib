@@ -94,7 +94,7 @@ export const updateAuctionBasics = gql`
 `;
 
 export const updateAuctionDetails = gql`
-  mutation updateAuction($id: String!, $startDate: String, $endDate: String, $initialPrice: Object) {
+  mutation updateAuction($id: String!, $startDate: DateTime, $endDate: DateTime, $initialPrice: Money) {
     updateAuction(id: $id, input: { startDate: $startDate, endDate: $endDate, initialPrice: $initialPrice }) {
       id
     }
@@ -108,6 +108,14 @@ export const updateAuctionMedia = gql`
         url
         type
       }
+      id
+    }
+  }
+`;
+
+export const updateAuctionStatusMutation = gql`
+  mutation updateAuctionStatus($id: String!, $status: String!) {
+    updateAuctionStatus(id: $id, status: $status) {
       id
     }
   }

@@ -21,7 +21,7 @@ const EditAuctionMediaPage = () => {
   const history = useHistory();
 
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionMedia);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop: ([file]) =>
       updateAuction({
         variables: { id: auctionId, file },

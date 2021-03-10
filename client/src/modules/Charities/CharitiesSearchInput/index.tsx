@@ -80,7 +80,7 @@ export const CharitiesSearchInput: FC<Props> = ({ charities, onCharityFavoriteCh
               onClick={() => handleToggleCharity(charity)}
             >
               <span>{charity.name}</span>
-              <Button variant="" />
+              <Button />
             </li>
           ))}
         </ul>

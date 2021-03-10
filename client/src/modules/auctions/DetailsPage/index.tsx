@@ -1,14 +1,17 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, ButtonGroup, Container, ProgressBar } from 'react-bootstrap';
+import { Container, ProgressBar } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { getAuctionDetails, updateAuctionDetails } from 'src/apollo/queries/auctions';
+import { getAuctionDetails, updateAuctionDetails, updateAuctionStatusMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
-import InputField from 'src/components/Form/InputField';
 import MoneyField from 'src/components/Form/MoneyField';
 import Layout from 'src/components/Layout';
+import SelectField from 'src/modules/auctions/DetailsPage/SelectField';
+import { CharitiesSearchInput } from 'src/modules/Charities/CharitiesSearchInput';
+import { FavoriteCharitiesList } from 'src/modules/Charities/FavoriteCharitiesList';
+import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
 import StepByStepRow from '../common/StepByStepRow';
@@ -20,12 +23,23 @@ const EditAuctionDetailsPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
+  const [charities, setCharities] = useState<Charity[]>([]);
+
   const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionDetails, {
     variables: { id: auctionId },
   });
-  const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
+  const [updateAuctionStatus, { loading: updatingStatus }] = useMutation(updateAuctionStatusMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+
+  const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
+    onCompleted() {
+      updateAuctionStatus({ variables: { id: auctionId, status: 'ACTIVE' } });
     },
     onError(error) {
       console.log(error);
@@ -37,8 +51,22 @@ const EditAuctionDetailsPage = () => {
   }, []);
 
   const handleSubmit = useCallback((values) => {
-    // updateAuction({ variables: { id: auctionId, ...values } });
+    updateAuction({ variables: { id: auctionId, ...values } });
   }, []);
+
+  const handleCharityChange = useCallback(
+    (charity: Charity, shouldBeFavorite: boolean) => {
+      const index = charities.findIndex((c: Charity) => c.id === charity.id);
+      const isFavorite = index >= 0;
+
+      if (isFavorite && !shouldBeFavorite) {
+        setCharities([...charities.slice(0, index), ...charities.slice(index + 1)]);
+      } else if (!isFavorite && shouldBeFavorite) {
+        setCharities([charity]);
+      }
+    },
+    [charities, setCharities],
+  );
 
   if (loadingQuery) {
     return null;
@@ -61,21 +89,29 @@ const EditAuctionDetailsPage = () => {
             </Row>
 
             <Row description="The day and time your auction will start." title="Start date & time">
-              {/* <InputField name="startDate" type="date" />
-              <div className="d-flex">
-                <InputField name="startDate" type="time" />
-
-                <ButtonGroup aria-label="First group" className="mr-2">
-                  <Button>AM</Button> <Button>PM</Button>
-                </ButtonGroup>
-              </div> */}
               <StartDateField name="startDate" />
             </Row>
-            <Row description="How long the auction should run for." title="Duration"></Row>
-            <Row description="What charity will benefit from the proceeds of this auction." title="Charity"></Row>
+            <Row description="How long the auction should run for." title="Duration">
+              <SelectField name="endDate">
+                <option value={1}>1 Day</option>
+                <option value={2}>2 Days</option>
+                <option value={3}>3 Days</option>
+                <option value={5}>5 Days</option>
+                <option value={8}>8 Days</option>
+              </SelectField>
+            </Row>
+            <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
+              <CharitiesSearchInput charities={charities} onCharityFavoriteChange={handleCharityChange} />
+              <FavoriteCharitiesList charities={charities} onCharityFavoriteChange={handleCharityChange} />
+            </Row>
           </Container>
-
-          <StepByStepRow last loading={updating} nextAction={handleSubmit} prevAction={handlePrevAction} />
+          {/* <input name="charity" type="hidden" value={favoriteCharities} /> */}
+          <StepByStepRow
+            last
+            loading={updating || updatingStatus}
+            nextAction={handleSubmit}
+            prevAction={handlePrevAction}
+          />
         </Form>
       </section>
     </Layout>

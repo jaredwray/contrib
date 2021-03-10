@@ -30,10 +30,6 @@ const EditAuctionBasicPage = () => {
     },
   });
 
-  const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}`);
-  }, []);
-
   const handleSubmit = useCallback((values) => {
     updateAuction({ variables: { id: auctionId, ...values } });
   }, []);
@@ -55,7 +51,7 @@ const EditAuctionBasicPage = () => {
             </Row>
           </Container>
 
-          <StepByStepRow loading={updating} nextAction={handleSubmit} prevAction={handlePrevAction} />
+          <StepByStepRow loading={updating} nextAction={handleSubmit} />
         </Form>
       </section>
     </Layout>

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Container, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import Layout from 'src/components/Layout';
 
@@ -25,12 +26,12 @@ export default function WelcomePage() {
               <Col className="pt-5 pt-lg-0 pb-4 pb-lg-0" lg="6">
                 <div className="welcome-page-right-block p-4 p-md-5">
                   <div className="d-table w-100">
-                    <a
+                    <Link
                       className="text-subhead btn btn-ochre btn-with-arrows d-table-cell align-middle w-100 welcome-page-create-btn"
-                      href="/"
+                      to="/auctions/new"
                     >
                       Create an auction
-                    </a>
+                    </Link>
                   </div>
                   <div className="text-label label-with-separator pt-4">Explore Contrib</div>
                   <a className="text-label text-all-cups d-block" href="/profile">

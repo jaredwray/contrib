@@ -15,8 +15,8 @@ $input-focus-border-color: $sage-color;
 $input-border-radius: 10px;
 $input-font-size: 20px;
 $input-line-height: 1.25;
-$input-padding-y: 0.875rem;
-$input-padding-x: 0.625rem;
+// $input-padding-y: 0.875rem;
+// $input-padding-x: 0.625rem;
 $input-font-weight: bold;
 $input-btn-focus-box-shadow: 0 0 0 1px $sage-color;
 $input-height: 50px;
@@ -27,6 +27,7 @@ $custom-control-gutter: 0.625rem;
 $custom-switch-indicator-size: 2.125rem;
 
 $progress-border-radius: 0;
+$progress-height: 8px;
 
 $btn-font-weight: 700;
 $btn-white-space: nowrap;
@@ -45,6 +46,28 @@ body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   height: 100%;
+}
+
+.btn-group.btn-group-toggle {
+  & > .btn.btn-outline-primary {
+    box-sizing: border-box;
+    border: 1px solid $light-sage-color;
+    color: $light-gray-color;
+
+    &:hover {
+      background-color: $barely-gray-color;
+    }
+  }
+
+  & > .btn.btn-outline-primary.active {
+    color: $white-color;
+    border: none;
+    z-index: 0;
+
+    &:hover {
+      background-color: $sage-color;
+    }
+  }
 }
 
 .btn,
@@ -92,28 +115,46 @@ body {
 section {
   padding: 30px 0;
 }
-input[type='date']::-webkit-calendar-picker-indicator {
-  visibility: hidden;
-}
 
 input[type='time']::-webkit-calendar-picker-indicator {
   display: none;
 }
 
-input[type='date']::-webkit-calendar-picker-indicator {
-  // -webkit-appearance: none;
-  opacity: 1;
-  color: rgba(0, 0, 0, 0);
-  background-image: url('/assets/images/Calendar.svg') no-repeat;
-  height: 50px;
-  width: 50px;
-  border-left: 1px solid red;
-  top: 0;
-  z-index: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0px;
+.react-datepicker-wrapper {
+  width: 100%;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    right: 30px;
+    top: 0;
+    width: 1px;
+    height: 50px;
+    margin-right: 16px;
+    background-color: $light-sage-color;
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 11px;
+    top: 0;
+    width: 26px;
+    height: 50px;
+    outline: none;
+    cursor: pointer;
+    background: url(/assets/images/Calendar.svg) center/80% no-repeat;
+  }
+}
+
+select.form-control {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: url(/assets/images/arrowDown.svg) no-repeat;
+  background-position: bottom 20px right 20px;
 }
 
 .form-control {
@@ -129,14 +170,6 @@ input[type='date']::-webkit-calendar-picker-indicator {
   @include media-breakpoint-down(sm) {
     font-size: 18px;
     line-height: 22px;
-  }
-}
-
-.progress {
-  height: 8px;
-
-  .progress-bar {
-    background-color: $sage-color;
   }
 }
 
@@ -201,9 +234,11 @@ label {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
 input.form-control {
   height: 50px;
 }
+
 .form-control::placeholder {
   color: $light-gray-color;
 }
