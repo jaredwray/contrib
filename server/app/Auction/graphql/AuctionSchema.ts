@@ -2,8 +2,11 @@ import { gql } from 'apollo-server-express';
 
 export const AuctionSchema = gql`
   type AuctionAttachment {
+    uid: String
     url: String!
     type: String!
+    cloudflareUrl: String
+    thumbnail: String
   }
 
   enum AuctionStatus {

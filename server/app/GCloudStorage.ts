@@ -3,6 +3,7 @@ import { Storage } from '@google-cloud/storage';
 import { AppConfig } from '../config';
 import { AppError } from '../errors/AppError';
 import { ErrorCode } from '../errors/ErrorCode';
+import { CloudflareStreaming } from './CloudflareStreaming';
 
 export type IFile = {
   createReadStream: () => Stream;
@@ -18,9 +19,11 @@ enum FileType {
 
 export class GCloudStorage {
   private readonly storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
-  private static cloudPath = 'https://storage.googleapis.com';
+  private static readonly cloudPath = 'https://storage.googleapis.com';
   private static readonly imageSupportedFormats = /png|jpeg|jpg|webp|svg/;
   private static readonly videoSupportedFormats = /mp4|webm|opgg/;
+
+  constructor(private readonly cloudflareStreaming: CloudflareStreaming) {}
 
   private static getBucketFullPath(bucketName: string = AppConfig.googleCloud.bucketName): string {
     return `${GCloudStorage.cloudPath}/${bucketName}`;
@@ -44,6 +47,7 @@ export class GCloudStorage {
     }
     return FileType.UNKNOWN;
   }
+
   async streamToBuffer(stream: Stream): Promise<Buffer> {
     return new Promise((resolve, reject) => {
       const data = [];
@@ -73,8 +77,12 @@ export class GCloudStorage {
 
   async uploadFile(
     file: Promise<IFile>,
-    { bucketName = AppConfig.googleCloud.bucketName, fileName }: { bucketName?: string; fileName: string },
-  ): Promise<{ fileType: FileType; url: string }> {
+    {
+      bucketName = AppConfig.googleCloud.bucketName,
+      fileName,
+      shouldResizeImage = false,
+    }: { bucketName?: string; fileName: string; shouldResizeImage?: boolean },
+  ): Promise<{ fileType: FileType; url: string; uid: string | undefined }> {
     const { createReadStream, filename } = await file;
 
     const extension = filename.split('.').pop();
@@ -85,9 +93,23 @@ export class GCloudStorage {
     }
     const formattedFileName = `${fileName}.${extension}`;
     const buffer = await this.streamToBuffer(createReadStream());
+    let assetUrl = formattedFileName;
+
+    if (fileType === FileType.IMAGE && shouldResizeImage) {
+      assetUrl = `pending/${formattedFileName}`;
+    }
+
     try {
-      await this.storage.bucket(bucketName).file(formattedFileName).save(buffer);
-      return { fileType, url: `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}` };
+      await this.storage.bucket(bucketName).file(assetUrl).save(buffer);
+      let uid = undefined;
+
+      if (fileType === FileType.VIDEO) {
+        uid = await this.cloudflareStreaming.uploadToCloudflare(
+          `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`,
+          { name: fileName },
+        );
+      }
+      return { fileType, url: `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`, uid: uid };
     } catch (error) {
       throw new AppError(`Cannot process the file, threw error ${error.message}`, ErrorCode.INTERNAL_ERROR);
     }

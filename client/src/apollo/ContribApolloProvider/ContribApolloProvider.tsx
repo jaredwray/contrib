@@ -38,6 +38,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
     return new ApolloClient({
       link: ApolloLink.from([authLink as any, httpLink as any]) as any,
       cache: new InMemoryCache(),
+      connectToDevTools: process.env.NODE_ENV === 'development',
     });
   }, [getAccessTokenSilently, isAuthenticated]);
 

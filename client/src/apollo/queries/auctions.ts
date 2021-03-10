@@ -107,6 +107,8 @@ export const updateAuctionMedia = gql`
       attachments {
         url
         type
+        cloudflareUrl
+        uid
       }
       id
     }
@@ -114,7 +116,7 @@ export const updateAuctionMedia = gql`
 `;
 
 export const updateAuctionStatusMutation = gql`
-  mutation updateAuctionStatus($id: String!, $status: String!) {
+  mutation updateAuctionStatus($id: String!, $status: AuctionStatus!) {
     updateAuctionStatus(id: $id, status: $status) {
       id
     }

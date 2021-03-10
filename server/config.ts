@@ -39,6 +39,10 @@ export const AppConfig = {
     keyDump: requireEnvVar('CONTENT_STORAGE_KEY'),
     schedulerSecretKey: requireEnvVar('AUCTION_SCHEDULER_SECRET'),
   },
+  cloudflare: {
+    token: requireEnvVar('CLOUDFLARE_STREAMING_KEY'),
+    user: requireEnvVar('CLOUDFLARE_USER_ID'),
+  },
 };
 
 function requireEnvVar(name) {
