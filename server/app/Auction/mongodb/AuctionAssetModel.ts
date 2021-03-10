@@ -1,12 +1,10 @@
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { AssetType } from '../dto/AuctionAssets';
-import { CloudflareStreaming } from '../../CloudflareStreaming';
 
 export interface IAuctionAssetModel extends Document {
   uid: string;
   url: string;
   thumbnail: string;
-  cloudflareUrl: string | null;
   type: AssetType;
 }
 
