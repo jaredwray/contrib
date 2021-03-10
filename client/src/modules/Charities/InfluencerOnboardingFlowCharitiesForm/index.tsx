@@ -40,7 +40,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
         setSubmitting(false);
       }
     },
-    [onSubmit],
+    [onSubmit, favoriteCharities],
   );
 
   const handleFavoriteCharityChange = useCallback(
