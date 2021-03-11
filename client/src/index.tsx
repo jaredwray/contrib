@@ -8,7 +8,7 @@ import { Route, Router } from 'react-router-dom';
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
 import Influencers from 'src/modules/admin/Influencers';
-import Auctions from 'src/modules/Auctions';
+import Auctions from 'src/modules/auctions';
 import Charities from 'src/modules/Charities';
 import HomePage from 'src/modules/Home';
 import InvitationPage from 'src/modules/Invitation';
