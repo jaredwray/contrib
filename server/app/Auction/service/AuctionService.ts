@@ -97,11 +97,9 @@ export class AuctionService {
       },
     ]);
 
-    // TODO: "TypeError: Cannot read property 'min' of undefined" when there are no active
-
     return {
-      min: Dinero({ amount: result[0]['min'], currency: 'USD' }),
-      max: Dinero({ amount: result[0]['max'], currency: 'USD' }),
+      min: Dinero({ amount: result[0]?.min || 0, currency: 'USD' }),
+      max: Dinero({ amount: result[0]?.max || 0, currency: 'USD' }),
     };
   }
 
