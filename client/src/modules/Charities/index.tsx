@@ -36,7 +36,7 @@ export default function CharitiesPage() {
         setSuccessMessage('Your profile has been successfully updated.');
       }
     },
-    [updateMyFavoriteCharities, history],
+    [updateMyFavoriteCharities, stepByStep, history],
   );
 
   return (

@@ -10,7 +10,7 @@ import Layout from 'src/components/Layout';
 
 import StepByStepRow from '../../common/StepByStepRow';
 import StepHeader from '../../common/StepHeader';
-import BasicForm from '../../Forms/BasicForm';
+import BasicForm from '../PageForm';
 import styles from './styles.module.scss';
 
 const initialValues = {
@@ -39,11 +39,14 @@ const NewAuctionBasicPage = () => {
 
   const handlePrevAction = useCallback(() => {
     history.push(`/auctions/new`);
-  }, []);
+  }, [history]);
 
-  const handleSubmit = useCallback((values) => {
-    createAuction({ variables: values });
-  }, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      createAuction({ variables: values });
+    },
+    [createAuction],
+  );
 
   return (
     <Layout>

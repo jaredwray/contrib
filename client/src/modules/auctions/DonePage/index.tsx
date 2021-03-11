@@ -41,7 +41,7 @@ const AuctionDonePage = () => {
                 <Button className={styles.buttonIcon}>
                   <InstagramIcon />
                 </Button>
-                <Button className="btn-ochre">Sign Up With Google</Button>
+                <Button className="btn-ochre">Share on Instagram</Button>
               </ButtonGroup>
             </div>
           </div>

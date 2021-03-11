@@ -37,11 +37,14 @@ const SelectField: FC<Props> = ({
 
   const duration = differenceInCalendarDays(new Date(values.endDate), new Date(values.startDate));
 
-  const handleChange = useCallback((event) => {
-    const count = parseInt(event.target.value, 10);
-    const newDate = addDays(new Date(values.startDate), count).toISOString();
-    onChange(newDate);
-  }, []);
+  const handleChange = useCallback(
+    (event) => {
+      const count = parseInt(event.target.value, 10);
+      const newDate = addDays(new Date(values.startDate), count).toISOString();
+      onChange(newDate);
+    },
+    [onChange, values.startDate],
+  );
 
   return (
     <Group>

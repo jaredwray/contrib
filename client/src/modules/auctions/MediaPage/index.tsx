@@ -20,7 +20,12 @@ const EditAuctionMediaPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
-  const [updateAuction, { loading: updating }] = useMutation(updateAuctionMedia);
+  const [updateAuction, { data, loading: updating }] = useMutation(updateAuctionMedia, {
+    onError(error) {
+      console.log(error);
+    },
+  });
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: ([file]) =>
       updateAuction({
@@ -30,11 +35,14 @@ const EditAuctionMediaPage = () => {
 
   const handlePrevAction = useCallback(() => {
     history.push(`/auctions/${auctionId}/basic`);
-  }, []);
+  }, [auctionId, history]);
 
-  const handleSubmit = useCallback((values) => {
-    history.push(`/auctions/${auctionId}/details`);
-  }, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      history.push(`/auctions/${auctionId}/details`);
+    },
+    [auctionId, history],
+  );
 
   return (
     <Layout>

@@ -11,7 +11,7 @@ import Layout from 'src/components/Layout';
 import Row from '../../common/Row';
 import StepByStepRow from '../../common/StepByStepRow';
 import StepHeader from '../../common/StepHeader';
-import BasicForm from '../../Forms/BasicForm';
+import BasicForm from '../PageForm';
 import styles from './styles.module.scss';
 
 const EditAuctionBasicPage = () => {
@@ -30,9 +30,12 @@ const EditAuctionBasicPage = () => {
     },
   });
 
-  const handleSubmit = useCallback((values) => {
-    updateAuction({ variables: { id: auctionId, ...values } });
-  }, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      updateAuction({ variables: { id: auctionId, ...values } });
+    },
+    [auctionId, updateAuction],
+  );
 
   return (
     <Layout>

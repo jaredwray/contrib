@@ -21,33 +21,45 @@ const StartDateField: FC<Props> = ({ name }) => {
   const dayPeriod = format(currentDate, 'aaa');
   const currentTimeZone = format(currentDate, 'xx');
 
-  const handleDateChange = useCallback((inputDate) => {
-    onChange(toDate(inputDate));
-  }, []);
+  const handleDateChange = useCallback(
+    (inputDate) => {
+      onChange(toDate(inputDate));
+    },
+    [onChange],
+  );
 
-  const handleTimeChange = useCallback((event) => {
-    const [hours, minutes] = event.target.value.split(':').map((a: string) => parseInt(a, 10));
+  const handleTimeChange = useCallback(
+    (event) => {
+      const [hours, minutes] = event.target.value.split(':').map((a: string) => parseInt(a, 10));
 
-    const filteredHours = dayPeriod === 'am' ? hours : hours + 12;
-    const newDate = set(currentDate, { hours: filteredHours, minutes });
+      const filteredHours = dayPeriod === 'am' ? hours : hours + 12;
+      const newDate = set(currentDate, { hours: filteredHours, minutes });
 
-    onChange(zonedTimeToUtc(newDate, currentTimeZone).toISOString());
-  }, []);
+      onChange(zonedTimeToUtc(newDate, currentTimeZone).toISOString());
+    },
+    [currentDate, currentTimeZone, dayPeriod, onChange],
+  );
 
-  const handleDayPeriodChange = useCallback((dayPeriod) => {
-    const hours = getHours(currentDate);
-    const changedHours = hours < 12 && dayPeriod === 'pm' ? hours - 12 : hours;
+  const handleDayPeriodChange = useCallback(
+    (dayPeriod) => {
+      const hours = getHours(currentDate);
+      const changedHours = hours < 12 && dayPeriod === 'pm' ? hours - 12 : hours;
 
-    const newDate = set(currentDate, { hours: changedHours });
+      const newDate = set(currentDate, { hours: changedHours });
 
-    onChange(zonedTimeToUtc(newDate, currentTimeZone).toISOString());
-  }, []);
+      onChange(zonedTimeToUtc(newDate, currentTimeZone).toISOString());
+    },
+    [currentDate, currentTimeZone, onChange],
+  );
 
-  const handleTimeZoneChange = useCallback((event) => {
-    const timeZone = event.target.value;
+  const handleTimeZoneChange = useCallback(
+    (event) => {
+      const timeZone = event.target.value;
 
-    onChange(zonedTimeToUtc(currentDate, timeZone).toISOString());
-  }, []);
+      onChange(zonedTimeToUtc(currentDate, timeZone).toISOString());
+    },
+    [currentDate, onChange],
+  );
 
   return (
     <>

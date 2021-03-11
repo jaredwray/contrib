@@ -5,12 +5,11 @@ import { Container, ProgressBar } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { getAuctionDetails, updateAuctionDetails, updateAuctionStatusMutation } from 'src/apollo/queries/auctions';
+import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
 import Layout from 'src/components/Layout';
-import SelectField from 'src/modules/auctions/DetailsPage/SelectField';
-import { CharitiesSearchInput } from 'src/modules/Charities/CharitiesSearchInput';
-import { FavoriteCharitiesList } from 'src/modules/Charities/FavoriteCharitiesList';
+import SelectDuration from 'src/modules/auctions/DetailsPage/SelectDuration';
 import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
@@ -48,11 +47,14 @@ const EditAuctionDetailsPage = () => {
 
   const handlePrevAction = useCallback(() => {
     history.push(`/auctions/${auctionId}/media`);
-  }, []);
+  }, [auctionId, history]);
 
-  const handleSubmit = useCallback((values) => {
-    updateAuction({ variables: { id: auctionId, ...values } });
-  }, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      updateAuction({ variables: { id: auctionId, ...values } });
+    },
+    [auctionId, updateAuction],
+  );
 
   const handleCharityChange = useCallback(
     (charity: Charity, shouldBeFavorite: boolean) => {
@@ -92,17 +94,16 @@ const EditAuctionDetailsPage = () => {
               <StartDateField name="startDate" />
             </Row>
             <Row description="How long the auction should run for." title="Duration">
-              <SelectField name="endDate">
+              <SelectDuration name="endDate">
                 <option value={1}>1 Day</option>
                 <option value={2}>2 Days</option>
                 <option value={3}>3 Days</option>
                 <option value={5}>5 Days</option>
                 <option value={8}>8 Days</option>
-              </SelectField>
+              </SelectDuration>
             </Row>
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
-              <CharitiesSearchInput charities={charities} onCharityFavoriteChange={handleCharityChange} />
-              <FavoriteCharitiesList charities={charities} onCharityFavoriteChange={handleCharityChange} />
+              <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
             </Row>
           </Container>
           {/* <input name="charity" type="hidden" value={favoriteCharities} /> */}

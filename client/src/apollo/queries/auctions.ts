@@ -42,6 +42,7 @@ export const getAuctionDetails = gql`
 export const createAuctionMutation = gql`
   mutation createAuction(
     $title: String!
+    $sport: String!
     $gameWorn: Boolean
     $autographed: Boolean
     $authenticityCertificate: Boolean
@@ -57,6 +58,7 @@ export const createAuctionMutation = gql`
         autographed: $autographed
         playedIn: $playedIn
         title: $title
+        sport: $sport
         authenticityCertificate: $authenticityCertificate
       }
     ) {

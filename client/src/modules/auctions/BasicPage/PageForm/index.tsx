@@ -9,6 +9,7 @@ const BasicForm: FC<{}> = () => {
   return (
     <div>
       <InputField required name="title" placeholder="Enter auction title" title="Auction title" />
+      <InputField name="sport" placeholder="Select a sport" title="Sport" />
       <SwitchField className="mb-2" name="gameWorn" title="Game worn" />
       <SwitchField className="mb-2" name="autographed" title="Autographed" />
       <SwitchField className="mb-4" name="authenticityCertificate" title="Certificate of authenticity" />

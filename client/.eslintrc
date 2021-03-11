@@ -84,7 +84,8 @@
     "require-jsdoc": "off",
     "no-prototype-builtins": "off",
     "no-async-promise-executor": "off",
-    "react-hooks/exhaustive-deps": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
     "new-cap": "off",
     "spaced-comment": "off"
   }

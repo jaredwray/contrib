@@ -63,6 +63,7 @@ export const AuctionSchema = gql`
     authenticityCertificate: Boolean
     gameWorn: Boolean
     autographed: Boolean
+    sport: String
     playedIn: String
   }
 

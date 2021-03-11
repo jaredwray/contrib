@@ -32,11 +32,14 @@ const MoneyField: FC<Props> = ({
   const constraints = useFieldConstraints(inputConstraints, required);
   const { hasError, errorMessage, value, onChange, ...inputProps } = useField(name, { constraints, disabled });
 
-  const handleChange = useCallback((event) => {
-    const targetValue = event.target.value;
-    const number = targetValue.replace(/\$|,|\./g, '');
-    onChange({ ...value, amount: parseInt(number, 10) });
-  }, []);
+  const handleChange = useCallback(
+    (event) => {
+      const targetValue = event.target.value;
+      const number = targetValue.replace(/\$|,|\./g, '');
+      onChange({ ...value, amount: parseInt(number, 10) });
+    },
+    [onChange, value],
+  );
 
   return (
     <Group>

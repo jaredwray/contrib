@@ -6,5 +6,5 @@ export interface InfluencerProfile {
   sport: string | null;
   team: string | null;
   profileDescription: string | null;
-  favoriteCharities: Charity[]
+  favoriteCharities: Charity[];
 }

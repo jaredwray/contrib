@@ -8,14 +8,14 @@ import { CharitiesSearch } from 'src/apollo/queries/charities';
 import useOutsideClick from 'src/helpers/useOutsideClick';
 import { Charity } from 'src/types/Charity';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 interface Props {
   charities: Charity[];
-  onCharityFavoriteChange: (charity: Charity, isFavorite: boolean) => void;
+  onChange: (charity: Charity, isFavorite: boolean) => void;
 }
 
-export const CharitiesSearchInput: FC<Props> = ({ charities, onCharityFavoriteChange }) => {
+const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
   const [executeSearch, { data: searchResult }] = useLazyQuery(CharitiesSearch);
   const searchContainer = useRef(null);
 
@@ -31,36 +31,38 @@ export const CharitiesSearchInput: FC<Props> = ({ charities, onCharityFavoriteCh
     setSearchQuery(e.target.value);
   }, []);
 
-  const isSelectedCharity = (charity: Charity) =>
-    charities.some((favoriteCharity: Charity) => favoriteCharity.id === charity.id);
+  const isSelectedCharity = useCallback(
+    (charity: Charity) => charities.some((favoriteCharity: Charity) => favoriteCharity.id === charity.id),
+    [charities],
+  );
 
   const handleToggleCharity = useCallback(
     (charity: Charity) => {
-      onCharityFavoriteChange(charity, !isSelectedCharity(charity));
+      onChange(charity, !isSelectedCharity(charity));
     },
-    [searchResult, onCharityFavoriteChange],
+    [onChange, isSelectedCharity],
   );
 
   useEffect(() => {
     executeSearch({ variables: { query: searchQuery } });
-  }, [searchQuery]);
+  }, [executeSearch, searchQuery]);
 
   return (
     <Form.Group className={clsx('charities-search-container', { active: searchResult?.charitiesSearch?.length })}>
       <Form.Label>Search</Form.Label>
 
-      <div ref={searchContainer}>
+      <div ref={searchContainer} className={styles.wrapper}>
         <InputGroup>
           <Form.Control
-            className="charities-search-input"
+            className={styles.input}
             placeholder="Search charities by name"
             value={searchQuery}
             onChange={onInputSearchChange}
           />
           {searchQuery && (
-            <InputGroup.Append>
+            <InputGroup.Append className={styles.appendBlock}>
               <Button
-                className="charities-search-cancel-btn btn-with-input text-all-cups text-label"
+                className={clsx(styles.cancelBtn, 'btn-with-input text-all-cups text-label')}
                 variant="link"
                 onClick={clearAndCloseSearch}
               >
@@ -69,13 +71,11 @@ export const CharitiesSearchInput: FC<Props> = ({ charities, onCharityFavoriteCh
             </InputGroup.Append>
           )}
         </InputGroup>
-        <ul className="p-0 m-0 charities-search-result">
+        <ul className={clsx('p-0 m-0', styles.searchResult)}>
           {(searchResult?.charitiesSearch || []).map((charity: Charity) => (
             <li
               key={charity.id}
-              className={clsx('text-label charities-search-result-item', {
-                selected: isSelectedCharity(charity),
-              })}
+              className={clsx('text-label', styles.resultItem, isSelectedCharity(charity) && styles.selected)}
               title={charity.name}
               onClick={() => handleToggleCharity(charity)}
             >
@@ -88,3 +88,5 @@ export const CharitiesSearchInput: FC<Props> = ({ charities, onCharityFavoriteCh
     </Form.Group>
   );
 };
+
+export default CharitiesSearchInput;
