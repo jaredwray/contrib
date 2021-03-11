@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from 'react';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import Logo from 'src/assets/images/logo-with-text.svg';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
@@ -29,9 +29,9 @@ export default function Header() {
         <Row className="top">
           <Col md className="p-0">
             <Navbar collapseOnSelect expand={false}>
-              <Navbar.Brand href="/">
+              <Link to="/">
                 <img alt="Contrib" src={Logo} />
-              </Navbar.Brand>
+              </Link>
 
               <NavDropdown className="header-nav-dropdown" id="headerNavDropdown" title="">
                 <section className="nav-dropdown-menu text-subhead">

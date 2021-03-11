@@ -1,6 +1,7 @@
 import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { AllInfluencersQuery } from 'src/apollo/queries/influencers';
 
@@ -21,8 +22,10 @@ cache.writeQuery({
 
 test('renders without crashing', () => {
   render(
-    <MockedProvider cache={cache}>
-      <Influencers />
-    </MockedProvider>,
+    <Router>
+      <MockedProvider cache={cache}>
+        <Influencers />
+      </MockedProvider>
+    </Router>,
   );
 });

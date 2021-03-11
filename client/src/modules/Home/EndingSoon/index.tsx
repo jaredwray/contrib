@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import Carousel from 'react-multi-carousel';
+import { Link } from 'react-router-dom';
 
 import './styles.scss';
 
@@ -72,9 +73,9 @@ export default function EndingSoon() {
             Ending soon
           </Col>
           <Col className="align-self-end pr-lg-0 ml-1 ml-lg-0" lg="3" xs="12">
-            <a className="see-all-link float-lg-right text-label text-all-cups" href="/">
+            <Link className="see-all-link float-lg-right text-label text-all-cups" to="/auctions">
               See all auctions &gt;&gt;
-            </a>
+            </Link>
           </Col>
         </Row>
         <Carousel

@@ -4425,6 +4425,16 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
+date-fns-tz@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-1.1.3.tgz#8783489c9d90e5785548869af5bb8c4642a03855"
+  integrity sha512-mD26WkejWz842RggjFrKsY6ehGgyBQSJ209mn83/vsjhgQ5WbdVvBzJ0CuosnGdklDxOvOppQ/wn1UgvTOPKPw==
+
+date-fns@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.19.0.tgz#65193348635a28d5d916c43ec7ce6fbd145059e1"
+  integrity sha512-X3bf2iTPgCAQp9wvjOQytnf5vO5rESYRXlPIVcgSbtT5OTScPcsf9eZU+B/YIkKAtYr5WeCii58BgATrNitlWg==
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -8644,6 +8654,18 @@ normalize-url@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
+nouislider-react@^3.3.9:
+  version "3.3.9"
+  resolved "https://registry.yarnpkg.com/nouislider-react/-/nouislider-react-3.3.9.tgz#db125b97e232f9e60be0c933a9430d1b3e27607e"
+  integrity sha512-KAguGDqUtsUFhIPAwva3+Mt8EVYKOtDgqM5Ghiy9bmavA962a6nPV6wzmUbMFQ+0j8lO653eyKzF/7970YuqBA==
+  dependencies:
+    nouislider "^14.6.2"
+
+nouislider@^14.6.2:
+  version "14.6.3"
+  resolved "https://registry.yarnpkg.com/nouislider/-/nouislider-14.6.3.tgz#4dad5b6651d6515f6e6829f8b8e3a1736a5c0ffb"
+  integrity sha512-/3tAqsWY2JYW9vd7bC14bFRA1P9A+pRHOtKmoMsyfnB0fQcd1UFx2pdY1Ey5wAUzTnXTesmYaEo/ecLVETijIQ==
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/npm-run-path/-/npm-run-path-2.0.2.tgz#35a9232dfa35d7067b4cb2ddf2357b1871536c5f"
@@ -10359,6 +10381,13 @@ react-multi-carousel@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/react-multi-carousel/-/react-multi-carousel-2.6.1.tgz#43871c8c50aab96f64769d59e2e3b88a77e0ea8b"
   integrity sha512-N0YfKqEYc9ElyGMrvukyVDMkYae76GDY4+1pXXPLvRj9uLFuaa4rCj31RWbNP8VEE2A2Sp3TSLV2yXVoLUUD8w==
+
+react-number-format@^4.4.4:
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.4.4.tgz#2a7f50be404f990ec15855cc6babfeae1be16351"
+  integrity sha512-/MuF1GOs1Z0xBaQie8+TTqCxUTT8xxjc6RqIFVWcWB6FM8GNIenSh2ayzN6Y1J2WMcXUDVwMdDXjweHKVjXm/w==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-overlays@^4.1.1:
   version "4.1.1"
