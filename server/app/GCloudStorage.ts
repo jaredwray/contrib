@@ -20,7 +20,7 @@ enum FileType {
 export class GCloudStorage {
   private readonly storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
   private static readonly cloudPath = 'https://storage.googleapis.com';
-  private static readonly imageSupportedFormats = /png|jpeg|jpg|webp|svg/;
+  private static readonly imageSupportedFormats = /png|jpeg|jpg|webp/;
   private static readonly videoSupportedFormats = /mp4|webm|opgg/;
 
   constructor(private readonly cloudflareStreaming: CloudflareStreaming) {}
@@ -32,7 +32,7 @@ export class GCloudStorage {
   private static getFileNameFromUrl(url: string) {
     const fullPathToBucket = GCloudStorage.getBucketFullPath();
     if (url.includes(fullPathToBucket)) {
-      const [fileName] = url.split(fullPathToBucket).filter((item: string) => Boolean(item));
+      const [fileName] = url.split(`${fullPathToBucket}/`).filter((item: string) => Boolean(item));
       return fileName;
     }
     return url;

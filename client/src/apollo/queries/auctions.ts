@@ -24,11 +24,16 @@ export const getAuctionBasics = gql`
   }
 `;
 
-export const getAuctionMedia = gql`
+export const GetAuctionMedia = gql`
   query getAuction($id: String!) {
     auction(id: $id) {
-      video
-      photo
+      attachments {
+        uid
+        url
+        type
+        cloudflareUrl
+        thumbnail
+      }
     }
   }
 `;
@@ -112,16 +117,30 @@ export const updateAuctionDetails = gql`
   }
 `;
 
-export const updateAuctionMedia = gql`
+export const UpdateAuctionMedia = gql`
   mutation updateAuction($id: String!, $file: Upload!) {
     addAuctionAttachment(id: $id, attachment: $file) {
       attachments {
         url
         type
         cloudflareUrl
+        thumbnail
         uid
       }
-      id
+    }
+  }
+`;
+
+export const RemoveAuctionMedia = gql`
+  mutation updateAuction($id: String!, $url: String!) {
+    removeAuctionAttachment(id: $id, attachmentUrl: $url) {
+      attachments {
+        url
+        type
+        cloudflareUrl
+        thumbnail
+        uid
+      }
     }
   }
 `;
