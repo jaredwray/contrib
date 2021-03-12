@@ -29,7 +29,7 @@ $progress-height: 8px;
 
 $btn-font-weight: 700;
 $btn-white-space: nowrap;
-$btn-border-width: 0;
+$btn-border-width: 1px;
 $btn-border-radius: 10px;
 $btn-padding-y: 16px;
 $btn-padding-x: 16px;
@@ -37,7 +37,14 @@ $btn-line-height: 18px !important;
 $btn-focus-box-shadow: none !important;
 $btn-active-box-shadow: none !important;
 
+$dropdown-item-padding-y: 14px;
+$dropdown-item-padding-x: 36px;
+$dropdown-link-color: $sage-color;
+$dropdown-link-hover-color: $sage-color;
+$font-weight-normal: 700;
+
 @import '~bootstrap/scss/bootstrap';
+@import 'react-datepicker/src/stylesheets/datepicker.scss';
 
 body {
   color: $dark-gray-color;
@@ -75,6 +82,17 @@ body {
   align-items: center;
   justify-content: center;
   letter-spacing: 0.1em;
+
+  &.btn-secondary {
+    color: $sage-color;
+
+    &:hover,
+    &:active {
+      background: $sage-color;
+      color: $white-color;
+      border-color: $sage-color;
+    }
+  }
 
   &.btn-ochre {
     background: $ochre-color;
@@ -154,6 +172,33 @@ select.form-control {
   background: url(/assets/images/arrowDown.svg) no-repeat;
   background-position: bottom 20px right 20px;
 }
+
+// .dropdown-toggle {
+//   &:hover,
+//   :active,
+//   :focus,
+//   .show > .btn-outline-primary.dropdown-toggle {
+//     background-color: $white-color;
+//     color: $sage-color;
+//   }
+//   // &.show > .btn-outline-primary.dropdown-toggle
+// }
+
+.dropdown-toggle::after {
+  margin: 0;
+  border: none;
+  display: none;
+}
+
+// .btn-group::after {
+//   margin: 0;
+//   border: none;
+//   -moz-appearance: none;
+//   -webkit-appearance: none;
+//   appearance: none;
+//   background: url(/assets/images/arrowDown.svg) no-repeat;
+//   background-position: bottom 20px right 20px;
+// }
 
 .form-control {
   &.is-invalid {

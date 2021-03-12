@@ -16,7 +16,7 @@ const StepByStepRow: FC<Props> = ({ nextAction, prevAction, loading, last }) => 
   return (
     <div className={styles.root}>
       <Container fluid className="d-flex h-100 justify-content-between align-items-center">
-        <Button className="text-subhead" disabled={loading} variant="link" onClick={prevAction}>
+        <Button className="text-subhead font-weight-bold" disabled={loading} variant="link" onClick={prevAction}>
           Prev
         </Button>
         <Button

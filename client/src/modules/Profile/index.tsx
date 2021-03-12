@@ -227,7 +227,7 @@ export default function ProfilePage() {
             {!stepByStep && (
               <Row>
                 <Col>
-                  <Button className="btn-ochre float-right text-label" type="submit">
+                  <Button className=" float-right text-label" type="submit" variant="secondary">
                     Submit
                   </Button>
                 </Col>

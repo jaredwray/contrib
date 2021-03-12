@@ -151,9 +151,10 @@ export default function PhoneNumberConfirmation() {
                 )}
               </Field>
               <Button
-                className="ml-2 mb-2 d-inline-block btn-ochre btn-with-input text-label"
+                className="ml-2 mb-2 d-inline-block  btn-with-input text-label"
                 disabled={isLoading}
                 type="submit"
+                variant="secondary"
               >
                 Confirm
               </Button>

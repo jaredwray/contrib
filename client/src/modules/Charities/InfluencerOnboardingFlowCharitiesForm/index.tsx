@@ -113,9 +113,10 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
             <Row>
               <Col>
                 <Button
-                  className={clsx('btn-ochre float-right', styles.submitBtn)}
+                  className={clsx('float-right', styles.submitBtn)}
                   disabled={isSubmitting}
                   type="submit"
+                  variant="secondary"
                 >
                   Submit
                 </Button>

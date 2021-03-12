@@ -29,19 +29,19 @@ const AuctionDonePage = () => {
                 <Button className={styles.buttonIcon}>
                   <TwitterIcon />
                 </Button>
-                <Button className="btn-ochre">Share on Twitter</Button>
+                <Button variant="secondary">Share on Twitter</Button>
               </ButtonGroup>
               <ButtonGroup className="mb-3 w-100">
                 <Button className={styles.buttonIcon}>
                   <FacebookIcon />
                 </Button>
-                <Button className="btn-ochre">Share on Facebook</Button>
+                <Button variant="secondary">Share on Facebook</Button>
               </ButtonGroup>
               <ButtonGroup className="w-100">
                 <Button className={styles.buttonIcon}>
                   <InstagramIcon />
                 </Button>
-                <Button className="btn-ochre">Share on Instagram</Button>
+                <Button variant="secondary">Share on Instagram</Button>
               </ButtonGroup>
             </div>
           </div>
