@@ -123,13 +123,7 @@ const EditAuctionDetailsPage = () => {
               <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
             </Row>
           </Container>
-          <Field name="charity">
-            {({ input }) => {
-              console.log('🚀 ~ file: index.tsx ~ line 127 ~ EditAuctionDetailsPage ~ input', input);
-
-              return <input type="hidden" {...input} />;
-            }}
-          </Field>
+          <Field name="charity">{({ input }) => <input type="hidden" {...input} />}</Field>
           <StepByStepRow
             last
             loading={updating || updatingStatus}
