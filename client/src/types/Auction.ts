@@ -5,8 +5,12 @@ export enum AuctionStatus {
 }
 
 export interface AuctionAttachment {
+  id: string;
+  uid: string;
   url: string;
   type: string;
+  cloudflareUrl: string;
+  thumbnail: string;
 }
 
 export interface AuctionBid {

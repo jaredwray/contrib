@@ -221,8 +221,9 @@ export class AuctionService {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }
     try {
+      await auction.update({ $pull: { attachments: { url: attachmentUrl } } }).exec();
+      await this.attachmentsService.AuctionAsset.find({ url: attachmentUrl }).remove().exec();
       await this.attachmentsService.removeFileAttachment(attachmentUrl);
-      await auction.update({ $pull: { attachments: { url: attachmentUrl } } });
       const updatedAuction = await this.populateAuction(auction).execPopulate();
       return AuctionService.makeAuction(updatedAuction);
     } catch (error) {
@@ -408,6 +409,7 @@ export class AuctionService {
       attachments: assets.map((item) => ({
         ...item,
         cloudflareUrl: item.uid ? CloudflareStreaming.getVideoStreamUrl(item.uid) : null,
+        thumbnail: item.uid ? CloudflareStreaming.getVideoPreviewUrl(item.uid) : null,
       })),
       maxBid: AuctionService.makeAuctionBid(maxBid),
       endDate: endsAt,
