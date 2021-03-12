@@ -1,5 +1,7 @@
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
 import { Auction } from '../dto/Auction';
+import { AuctionOrderBy } from '../dto/AuctionOrderBy';
+import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionInput } from './model/AuctionInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
@@ -11,12 +13,26 @@ export const AuctionResolvers = {
   Query: {
     auctions: async (
       _: unknown,
-      { size, skip }: { size: number; skip: number },
+      {
+        size,
+        skip,
+        query,
+        filters,
+        orderBy,
+      }: {
+        size: number;
+        skip: number;
+        query?: string;
+        filters?: AuctionSearchFilters;
+        orderBy?: AuctionOrderBy;
+      },
       { auction }: GraphqlContext,
-    ): Promise<any> => {
-      return auction.listAuctions(skip, size);
+    ): Promise<{ items: Auction[]; totalItems: number; size: number; skip: number }> => {
+      return await auction.listAuctions({ query, filters, orderBy, size, skip });
     },
-    auction: async (_: unknown, { id }: { id: string }, { auction }: GraphqlContext): Promise<any> => {
+    auctionPriceLimits: async (_: unknown, {}, { auction }: GraphqlContext) => auction.getAuctionPriceLimits(),
+    sports: async (_: unknown, {}, { auction }: GraphqlContext) => auction.listSports(),
+    auction: async (_: unknown, { id }: { id: string }, { auction }: GraphqlContext): Promise<Auction> => {
       return auction.getAuction(id);
     },
   },

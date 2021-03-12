@@ -1,0 +1,18 @@
+@import 'src/variables.scss';
+
+.paginationInfo {
+  height: 100%;
+}
+.pagesCount {
+  color: $light-gray-color;
+}
+
+@media (max-width: $small-weight) {
+  .paginationInfo {
+    width: 100%;
+  }
+
+  .paginationInfo {
+    height: auto;
+  }
+}

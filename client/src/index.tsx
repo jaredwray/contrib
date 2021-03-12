@@ -8,6 +8,7 @@ import { Route, Router } from 'react-router-dom';
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
 import Influencers from 'src/modules/admin/Influencers';
+import Auctions from 'src/modules/auctions';
 import EditAuctionBasicPage from 'src/modules/auctions/BasicPage/Edit';
 import NewAuctionBasicPage from 'src/modules/auctions/BasicPage/New';
 import EditAuctionDetailsPage from 'src/modules/auctions/DetailsPage';
@@ -47,6 +48,7 @@ ReactDOM.render(
           <Route exact component={HomePage} path="/" />
           <Route exact component={AfterLogin} path="/after-login" />
           <Route exact component={Charities} path="/charities" />
+          <Route exact component={Auctions} path="/auctions" />
           <Route exact component={PhoneNumberVerification} path="/phone-verification" />
           <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
           <Route exact component={Profile} path="/profile" />

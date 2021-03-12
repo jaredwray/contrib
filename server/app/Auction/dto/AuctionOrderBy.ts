@@ -1,0 +1,8 @@
+export enum AuctionOrderBy {
+  CREATED_AT_DESC = 'CREATED_AT_DESC',
+  TIME_ASC = 'TIME_ASC',
+  TIME_DESC = 'TIME_DESC',
+  SPORT = 'SPORT',
+  PRICE_ASC = 'PRICE_ASC',
+  PRICE_DESC = 'PRICE_DESC',
+}

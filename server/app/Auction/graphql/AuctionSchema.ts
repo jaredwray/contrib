@@ -47,9 +47,38 @@ export const AuctionSchema = gql`
     auctionOrganizer: String!
   }
 
+  input AuctionSearchFilters {
+    sports: [String]
+    minPrice: Int
+    maxPrice: Int
+  }
+
+  enum AuctionOrderBy {
+    CREATED_AT_DESC
+    TIME_ASC
+    TIME_DESC
+    SPORT
+    PRICE_ASC
+    PRICE_DESC
+  }
+
+  type AuctionsPage {
+    items: [Auction]!
+    totalItems: Int!
+    size: Int!
+    skip: Int!
+  }
+
+  type AuctionPriceLimits {
+    max: Money!
+    min: Money!
+  }
+
   extend type Query {
-    auctions(size: Int!, skip: Int!): [Auction!]
+    auctions(size: Int!, skip: Int!, query: String, filters: AuctionSearchFilters, orderBy: String): AuctionsPage!
+    auctionPriceLimits: AuctionPriceLimits!
     auction(id: String!): Auction
+    sports: [String]
   }
 
   input AuctionInput {
