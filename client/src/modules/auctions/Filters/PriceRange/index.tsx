@@ -15,12 +15,9 @@ interface Props {
 const PriceRange: FC<Props> = ({ initialBids, bids, changeFilters }) => {
   const [priceRange, setPriceRange] = useState(initialBids);
 
-  const onSliderUpdate = useCallback(
-    (values: string[]) => {
-      setPriceRange({ minPrice: values[0], maxPrice: values[1] });
-    },
-    [priceRange],
-  );
+  const onSliderUpdate = useCallback((values: string[]) => {
+    setPriceRange({ minPrice: values[0], maxPrice: values[1] });
+  }, []);
 
   const onSliderChange = useCallback(
     (values: string[]) => {

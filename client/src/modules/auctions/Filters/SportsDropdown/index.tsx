@@ -16,9 +16,12 @@ interface Props {
 const SportsDropdown: FC<Props> = ({ selectedSports, changeFilters }) => {
   const { data: sportsListData } = useQuery(SportsQuery);
 
-  const selectSport = useCallback((sport: string) => {
-    changeFilters('sports', [sport]);
-  }, []);
+  const selectSport = useCallback(
+    (sport: string) => {
+      changeFilters('sports', [sport]);
+    },
+    [changeFilters],
+  );
 
   const sportsInput = (
     <>

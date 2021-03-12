@@ -1,0 +1,62 @@
+import React, { FC, useCallback, useMemo } from 'react';
+
+import { FORM_ERROR } from 'final-form';
+import { Form as FinalForm } from 'react-final-form';
+import { validate as validateJs } from 'validate.js';
+
+interface Props {
+  constraints?: any;
+  initialValues?: object;
+  onSubmit(data: object): void;
+  className?: string;
+}
+
+const Form: FC<Props> = ({ constraints, children, initialValues = {}, onSubmit, className }) => {
+  const validate = useMemo(() => {
+    if (constraints) {
+      return (values: object) => {
+        let result = null;
+
+        if (constraints) {
+          result = validateJs(values, constraints);
+        }
+
+        return result;
+      };
+    }
+  }, [constraints]);
+
+  const handleSubmit = useCallback(
+    async (formData) => {
+      try {
+        await onSubmit(formData);
+      } catch (error) {
+        if (error.baseError || error.fieldErrors) {
+          return {
+            [FORM_ERROR]: error.baseError,
+            ...error.fieldErrors,
+          };
+        }
+
+        console.error('failed submitting form with unknown type of error: ', error);
+
+        return {
+          [FORM_ERROR]: 'Something went wrong, please try again later',
+        };
+      }
+    },
+    [onSubmit],
+  );
+
+  return (
+    <FinalForm initialValues={initialValues} validate={validate} onSubmit={handleSubmit}>
+      {({ handleSubmit }) => (
+        <form className={className} onSubmit={handleSubmit}>
+          {children}
+        </form>
+      )}
+    </FinalForm>
+  );
+};
+
+export default Form;

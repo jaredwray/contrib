@@ -12,6 +12,7 @@ import { CharityService } from './Charity/service/CharityService';
 import { AuctionService } from './Auction/service/AuctionService';
 import { UserAccountRolesManagementService } from './UserAccount/service/UserAccountRolesManagementService';
 import { GCloudStorage } from './GCloudStorage';
+import { CloudflareStreaming } from './CloudflareStreaming';
 
 export default function createAppServices(connection: Connection): IAppServices {
   const eventHub = new EventHub();
@@ -24,7 +25,9 @@ export default function createAppServices(connection: Connection): IAppServices 
   const userAccount = new UserAccountService(connection, twilioVerification, eventHub);
   const influencer = new InfluencerService(connection, charity);
   const invitation = new InvitationService(connection, userAccount, influencer, twilioNotification, eventHub);
-  const cloudStorage = new GCloudStorage();
+
+  const cloudflareStreaming = new CloudflareStreaming();
+  const cloudStorage = new GCloudStorage(cloudflareStreaming);
 
   const auction = new AuctionService(connection, stripeService, cloudStorage);
 

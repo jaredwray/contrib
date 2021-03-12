@@ -19,7 +19,7 @@ export interface Auction {
   id: string;
   title: string;
   description: string;
-  fullpageDescription: string;
+  fullPageDescription: string;
   playedIn: string;
   status: AuctionStatus;
   attachments: [AuctionAttachment];

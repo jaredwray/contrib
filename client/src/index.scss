@@ -1,24 +1,98 @@
 @import 'src/variables.scss';
 
+$primary: $sage-color;
+$secondary: $ochre-color;
+$danger: $black-color;
+$light: $light-gray-color;
+$dark: $dark-gray-color;
+
+$link-hover-decoration: none;
+
+$input-color: $sage-color;
+$input-placeholder-color: $light-gray-color;
+$input-border-color: $light-sage-color;
+$input-focus-border-color: $sage-color;
+$input-border-radius: 10px;
+$input-font-size: 20px;
+$input-line-height: 1.25;
+$input-font-weight: bold;
+$input-btn-focus-box-shadow: inset 0 0 0 1px;
+$input-height: 50px;
+$form-feedback-font-size: 12px;
+
+$custom-switch-width: 5rem;
+$custom-control-gutter: 0.625rem;
+$custom-switch-indicator-size: 2.125rem;
+
+$progress-border-radius: 0;
+$progress-height: 8px;
+
+$btn-font-weight: 700;
+$btn-white-space: nowrap;
+$btn-border-width: 1px;
+$btn-border-radius: 10px;
+$btn-padding-y: 16px;
+$btn-padding-x: 16px;
+$btn-line-height: 18px !important;
+$btn-focus-box-shadow: none !important;
+$btn-active-box-shadow: none !important;
+
+$dropdown-item-padding-y: 14px;
+$dropdown-item-padding-x: 36px;
+$dropdown-link-color: $sage-color;
+$dropdown-link-hover-color: $sage-color;
+$font-weight-normal: 700;
+
+@import '~bootstrap/scss/bootstrap';
+@import 'react-datepicker/src/stylesheets/datepicker.scss';
+
 body {
   color: $dark-gray-color;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-weight: bold;
   height: 100%;
+}
+
+.btn-group.btn-group-toggle {
+  & > .btn.btn-outline-primary {
+    box-sizing: border-box;
+    border: 1px solid $light-sage-color;
+    color: $light-gray-color;
+
+    &:hover {
+      background-color: $barely-gray-color;
+    }
+  }
+
+  & > .btn.btn-outline-primary.active {
+    color: $white-color;
+    border: none;
+    z-index: 0;
+
+    &:hover {
+      background-color: $sage-color;
+    }
+  }
 }
 
 .btn,
 .btn:focus {
-  border-radius: 10px;
-  height: 50px;
-  font-size: 12px;
-  line-height: 16px;
-  white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   letter-spacing: 0.1em;
-  font-weight: bold;
-  border: none !important;
-  box-shadow: none !important;
+
+  &.btn-secondary {
+    color: $sage-color;
+
+    &:hover,
+    &:active {
+      background: $sage-color;
+      color: $white-color;
+      border-color: $sage-color;
+    }
+  }
 
   &.btn-ochre {
     background: $ochre-color;
@@ -44,45 +118,101 @@ body {
 
   &.btn-with-arrows:after {
     content: '»';
+    position: absolute;
+    right: 10%;
     font-size: 25px;
     line-height: 13px;
     font-weight: normal;
     margin-left: 10px;
-    float: right;
+    margin-top: -2px;
   }
-}
-
-.btn-arrows {
-  font-size: 25px;
-  font-weight: normal;
-  vertical-align: sub;
-  margin-left: 10px;
 }
 
 section {
   padding: 30px 0;
 }
 
-.form-control {
-  color: $sage-color;
-  font-size: 20px;
-  line-height: 25px;
-  border-color: $sage-color;
-  border-radius: 10px;
+input[type='time']::-webkit-calendar-picker-indicator {
+  display: none;
+}
 
-  &:focus {
-    color: $sage-color;
-    border-width: 2px;
-    border-color: $sage-color;
-    box-shadow: none;
+.react-datepicker-wrapper {
+  width: 100%;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    right: 30px;
+    top: 0;
+    width: 1px;
+    height: 50px;
+    margin-right: 16px;
+    background-color: $light-sage-color;
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 11px;
+    top: 0;
+    width: 26px;
+    height: 50px;
+    outline: none;
+    cursor: pointer;
+    background: url(/assets/images/Calendar.svg) center/80% no-repeat;
   }
 }
 
-.progress {
-  height: 8px;
+select.form-control {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: url(/assets/images/arrowDown.svg) no-repeat;
+  background-position: bottom 20px right 20px;
+}
 
-  .progress-bar {
-    background-color: $sage-color;
+// .dropdown-toggle {
+//   &:hover,
+//   :active,
+//   :focus,
+//   .show > .btn-outline-primary.dropdown-toggle {
+//     background-color: $white-color;
+//     color: $sage-color;
+//   }
+//   // &.show > .btn-outline-primary.dropdown-toggle
+// }
+
+.dropdown-toggle::after {
+  margin: 0;
+  border: none;
+  display: none;
+}
+
+// .btn-group::after {
+//   margin: 0;
+//   border: none;
+//   -moz-appearance: none;
+//   -webkit-appearance: none;
+//   appearance: none;
+//   background: url(/assets/images/arrowDown.svg) no-repeat;
+//   background-position: bottom 20px right 20px;
+// }
+
+.form-control {
+  &.is-invalid {
+    background-image: none;
+    border-color: $sage-color !important;
+
+    &:focus {
+      box-shadow: 0 0 0 1px $sage-color;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    font-size: 18px;
+    line-height: 22px;
   }
 }
 
@@ -118,33 +248,40 @@ img {
   font-size: 72px;
   line-height: 76px;
 }
+
 .text-headline {
   font-size: 32px;
   line-height: 40px;
 }
+
 .text-subhead {
   font-size: 20px;
   line-height: 25px;
 }
+
 .text-body {
   font-size: 17px;
   line-height: 21px;
   font-weight: 500;
 }
+
 .text-label,
 label {
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.1em;
 }
+
 .text-all-cups {
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
 input.form-control {
   height: 50px;
 }
+
 .form-control::placeholder {
   color: $light-gray-color;
 }
@@ -153,28 +290,34 @@ input.form-control {
   .btn:not(.btn-with-input) {
     height: 40px;
   }
+
   .text-super {
     font-size: 50px;
     line-height: 50px;
   }
+
   .text-headline {
     font-size: 26px;
     line-height: 30px;
   }
+
   .text-subhead {
     font-size: 18px;
     line-height: 22px;
   }
+
   .text-body {
     font-size: 14px;
     line-height: 19px;
   }
+
   .text-label,
   label {
     font-size: 11px;
     line-height: 14px;
     letter-spacing: 0.1em;
   }
+
   .text-all-cups {
     letter-spacing: 0.1em;
     text-transform: uppercase;

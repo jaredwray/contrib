@@ -1,0 +1,22 @@
+@import 'src/variables.scss';
+@import '~bootstrap/scss/bootstrap.scss';
+
+.root {
+  margin-top: 54px;
+
+  @include media-breakpoint-down(sm) {
+    margin-top: 34px;
+  }
+}
+
+.title {
+  padding-bottom: 25px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid $barely-gray-color;
+  display: flex;
+  justify-content: space-between;
+}
+
+.step {
+  color: $ochre-color;
+}

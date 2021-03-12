@@ -3,11 +3,10 @@ import { FC, useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
+import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import { Charity } from 'src/types/Charity';
 
-import { CharitiesSearchInput } from '../CharitiesSearchInput';
-import { FavoriteCharitiesList } from '../FavoriteCharitiesList';
 import styles from './styles.module.scss';
 
 interface Props {
@@ -40,7 +39,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
         setSubmitting(false);
       }
     },
-    [onSubmit, favoriteCharities],
+    [favoriteCharities, onSubmit],
   );
 
   const handleFavoriteCharityChange = useCallback(
@@ -86,14 +85,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
               </div>
             </Col>
             <Col className="pt-2 pt-md-0" md="6">
-              <CharitiesSearchInput
-                charities={favoriteCharities}
-                onCharityFavoriteChange={handleFavoriteCharityChange}
-              />
-              <FavoriteCharitiesList
-                charities={favoriteCharities}
-                onCharityFavoriteChange={handleFavoriteCharityChange}
-              />
+              <CharitiesAutocomplete charities={favoriteCharities} onChange={handleFavoriteCharityChange} />
             </Col>
           </Row>
           <Row className="buffer d-none d-md-block" />
@@ -121,9 +113,10 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
             <Row>
               <Col>
                 <Button
-                  className={clsx('btn-ochre float-right', styles.submitBtn)}
+                  className={clsx('float-right', styles.submitBtn)}
                   disabled={isSubmitting}
                   type="submit"
+                  variant="secondary"
                 >
                   Submit
                 </Button>

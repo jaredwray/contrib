@@ -150,12 +150,17 @@ export default function PhoneNumberConfirmation() {
                   </BsForm.Group>
                 )}
               </Field>
-              <Button className="ml-2 mb-2 d-inline-block btn-ochre btn-with-input" disabled={isLoading} type="submit">
+              <Button
+                className="ml-2 mb-2 d-inline-block  btn-with-input text-label"
+                disabled={isLoading}
+                type="submit"
+                variant="secondary"
+              >
                 Confirm
               </Button>
               {canResendOtp && (
                 <Button
-                  className="ml-2 mb-2 d-inline-block"
+                  className="ml-2 d-inline-block text-label"
                   disabled={isLoading}
                   variant="link"
                   onClick={handleResendCode}

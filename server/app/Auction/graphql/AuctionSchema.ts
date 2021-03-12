@@ -2,8 +2,11 @@ import { gql } from 'apollo-server-express';
 
 export const AuctionSchema = gql`
   type AuctionAttachment {
+    uid: String
     url: String!
     type: String!
+    cloudflareUrl: String
+    thumbnail: String
   }
 
   enum AuctionStatus {
@@ -26,7 +29,7 @@ export const AuctionSchema = gql`
     id: String!
     title: String!
     description: String
-    fullpageDescription: String
+    fullPageDescription: String
     playedIn: String
     status: AuctionStatus!
     attachments: [AuctionAttachment]
@@ -81,7 +84,7 @@ export const AuctionSchema = gql`
   input AuctionInput {
     title: String
     description: String
-    fullpageDescription: String
+    fullPageDescription: String
     startDate: DateTime
     endDate: DateTime
     initialPrice: Money
@@ -89,6 +92,7 @@ export const AuctionSchema = gql`
     authenticityCertificate: Boolean
     gameWorn: Boolean
     autographed: Boolean
+    sport: String
     playedIn: String
   }
 

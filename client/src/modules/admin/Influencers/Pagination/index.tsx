@@ -18,13 +18,13 @@ export default function Pagination(props: {
   return (
     <div className="pagination float-left h-100">
       <Button
-        className="pagination-btn pagination-btn-prev"
+        className="text-label pagination-btn pagination-btn-prev"
         disabled={!hasPev}
         variant=""
         onClick={props.showPrevPage}
       />
       <Button
-        className="pagination-btn pagination-btn-next ml-3 mr-2"
+        className="text-label pagination-btn pagination-btn-next ml-3 mr-2"
         disabled={!hasNext}
         variant=""
         onClick={props.showNextPage}

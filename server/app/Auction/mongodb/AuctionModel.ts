@@ -15,7 +15,7 @@ export interface IAuctionModel extends Document {
   sport: string;
   gameWorn: boolean;
   description: string;
-  fullpageDescription: string;
+  fullPageDescription: string;
   auctionOrganizer: IUserAccount['_id'];
   assets: IAuctionAssetModel[];
   bids: IAuctionBidModel['_id'][];
@@ -34,10 +34,11 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     title: { type: SchemaTypes.String, required: true },
     sport: { type: SchemaTypes.String, default: '' },
     description: { type: SchemaTypes.String, default: '' },
-    fullpageDescription: { type: SchemaTypes.String, default: '' },
+    fullPageDescription: { type: SchemaTypes.String, default: '' },
     status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
     charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
     autographed: { type: SchemaTypes.Boolean, default: false },
+    authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
     gameWorn: { type: SchemaTypes.Boolean, default: false },
     bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
     maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },

@@ -23,6 +23,7 @@ import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
 import { AppLogger } from '../../../logger';
+import { CloudflareStreaming } from '../../CloudflareStreaming';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -175,22 +176,12 @@ export class AuctionService {
   }
 
   public async getAuction(id: string): Promise<Auction> {
-    const auction = await this._handleGetAuction(id);
+    const auction = await this.handleGetAuction(id);
     return AuctionService.makeAuction(auction);
   }
 
-  private async _handleGetAuction(id: string): Promise<IAuctionModel> {
-    try {
-      const res = await this.AuctionModel.findById(id).exec();
-      await this._populateAuction(res).execPopulate();
-      return res;
-    } catch (e) {
-      throw new AppError('Auction was not found', ErrorCode.NOT_FOUND);
-    }
-  }
-
   public async updateAuctionStatus(id: string, userId: string, status: AuctionStatus): Promise<Auction> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: Types.ObjectId(userId) }).exec();
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }
@@ -199,25 +190,15 @@ export class AuctionService {
     }
     auction.status = status;
     const updatedAuction = await auction.save();
-    await this._populateAuction(updatedAuction).execPopulate();
+    await this.populateAuction(updatedAuction).execPopulate();
     return AuctionService.makeAuction(updatedAuction);
   }
 
-  private _populateAuction(model: IAuctionModel): IAuctionModel {
-    return model
-      .populate({ path: 'charity', model: this.CharityModel })
-      .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
-      .populate({ path: 'maxBid', model: this.AuctionBidModel })
-      .populate({ path: 'auctionOrganizer', model: this.UserAccountModel })
-      .populate({
-        path: 'bids',
-        model: this.AuctionBidModel,
-        populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
-      });
-  }
-
   public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<Auction> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    const auction = await this.AuctionModel.findOne({
+      _id: id,
+      auctionOrganizer: Types.ObjectId(userId),
+    }).exec();
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }
@@ -227,7 +208,7 @@ export class AuctionService {
       auction.assets.push(asset);
       await auction.save();
 
-      const populatedAuction = await this._populateAuction(auction).execPopulate();
+      const populatedAuction = await this.populateAuction(auction).execPopulate();
       return AuctionService.makeAuction(populatedAuction);
     } catch (error) {
       throw error;
@@ -242,7 +223,7 @@ export class AuctionService {
     try {
       await this.attachmentsService.removeFileAttachment(attachmentUrl);
       await auction.update({ $pull: { attachments: { url: attachmentUrl } } });
-      const updatedAuction = await this._populateAuction(auction).execPopulate();
+      const updatedAuction = await this.populateAuction(auction).execPopulate();
       return AuctionService.makeAuction(updatedAuction);
     } catch (error) {
       throw new AppError(error.message, ErrorCode.INTERNAL_ERROR);
@@ -270,7 +251,7 @@ export class AuctionService {
       ...rest,
     });
     const updatedAuction = await auction.save();
-    await this._populateAuction(updatedAuction).execPopulate();
+    await this.populateAuction(updatedAuction).execPopulate();
     return AuctionService.makeAuction(updatedAuction);
   }
 
@@ -370,6 +351,29 @@ export class AuctionService {
     await auction.save();
   }
 
+  private populateAuction(model: IAuctionModel): IAuctionModel {
+    return model
+      .populate({ path: 'charity', model: this.CharityModel })
+      .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
+      .populate({ path: 'maxBid', model: this.AuctionBidModel })
+      .populate({ path: 'auctionOrganizer', model: this.UserAccountModel })
+      .populate({
+        path: 'bids',
+        model: this.AuctionBidModel,
+        populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
+      });
+  }
+
+  private async handleGetAuction(id: string): Promise<IAuctionModel> {
+    try {
+      const res = await this.AuctionModel.findById(id).exec();
+      await this.populateAuction(res).execPopulate();
+      return res;
+    } catch (e) {
+      throw new AppError('Auction was not found', ErrorCode.NOT_FOUND);
+    }
+  }
+
   private static makeAuctionBid(model: IAuctionBidModel): AuctionBid | null {
     if (!model) {
       return null;
@@ -401,7 +405,10 @@ export class AuctionService {
 
     return {
       id: _id.toString(),
-      attachments: assets,
+      attachments: assets.map((item) => ({
+        ...item,
+        cloudflareUrl: item.uid ? CloudflareStreaming.getVideoStreamUrl(item.uid) : null,
+      })),
       maxBid: AuctionService.makeAuctionBid(maxBid),
       endDate: endsAt,
       startDate: startsAt,

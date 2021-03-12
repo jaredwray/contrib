@@ -9,6 +9,12 @@ import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
 import Influencers from 'src/modules/admin/Influencers';
 import Auctions from 'src/modules/auctions';
+import EditAuctionBasicPage from 'src/modules/auctions/BasicPage/Edit';
+import NewAuctionBasicPage from 'src/modules/auctions/BasicPage/New';
+import EditAuctionDetailsPage from 'src/modules/auctions/DetailsPage';
+import AuctionDonePage from 'src/modules/auctions/DonePage';
+import EditAuctionMediaPage from 'src/modules/auctions/MediaPage';
+import NewAuctionWizardPage from 'src/modules/auctions/NewAuctionPage';
 import Charities from 'src/modules/Charities';
 import HomePage from 'src/modules/Home';
 import InvitationPage from 'src/modules/Invitation';
@@ -49,6 +55,12 @@ ReactDOM.render(
           <Route exact component={WelcomePage} path="/welcome" />
           <Route exact component={Influencers} path="/admin/influencers" />
           <Route exact component={InvitationPage} path="/invitation/:slug" />
+          <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
+          <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
+          <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />
+          <Route exact component={EditAuctionMediaPage} path="/auctions/:auctionId/media" />
+          <Route exact component={EditAuctionDetailsPage} path="/auctions/:auctionId/details" />
+          <Route exact component={AuctionDonePage} path="/auctions/:auctionId/done" />
         </UserAccountProvider>
       </ContribApolloProvider>
     </Router>

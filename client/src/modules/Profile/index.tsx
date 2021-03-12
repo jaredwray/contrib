@@ -227,7 +227,7 @@ export default function ProfilePage() {
             {!stepByStep && (
               <Row>
                 <Col>
-                  <Button className="btn-ochre float-right" type="submit">
+                  <Button className=" float-right text-label" type="submit" variant="secondary">
                     Submit
                   </Button>
                 </Col>
@@ -242,7 +242,7 @@ export default function ProfilePage() {
                   <div className="steps-prev-btn disabled text-subhead">Prev</div>
                 </Col>
                 <Col className="steps-navigation-items" xs="6">
-                  <Button className="btn-with-arrows steps-next-btn float-right" type="submit">
+                  <Button className="btn-with-arrows steps-next-btn float-right text-label" type="submit">
                     Next
                   </Button>
                 </Col>

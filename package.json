@@ -11,7 +11,7 @@
     "test-client": "yarn --cwd client test",
     "test-server": "yarn --cwd server test:cov",
     "build-docker": "docker build --pull --rm -f \"Dockerfile\" -t contrib-app:latest \".\"",
-		"run-docker": "docker run --rm -d -p 3000:3000/tcp --env-file ./server/.env contrib-app:latest",
+    "run-docker": "docker run --rm -d -p 3000:3000/tcp --env-file ./server/.env contrib-app:latest",
     "build": "yarn build-client && yarn build-server && yarn build-docker",
     "start": "yarn --cwd server start"
   }

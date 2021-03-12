@@ -89,7 +89,12 @@ export default function PhoneNumberVerification() {
                   />
                 )}
               </Field>
-              <Button className="submit-btn btn-ochre mb-2 btn-with-input" disabled={formSubmitting} type="submit">
+              <Button
+                className="submit-btn mb-2 btn-with-input text-label"
+                disabled={formSubmitting}
+                type="submit"
+                variant="secondary"
+              >
                 Confirm
               </Button>
             </BsForm>

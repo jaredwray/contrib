@@ -7,6 +7,11 @@ export class AuctionAttachmentsService {
   public readonly AuctionAsset = AuctionAssetModel(this.connection);
   constructor(private readonly connection: Connection, private readonly cloudStorage: GCloudStorage) {}
 
+  private static SIZE_MAP = {
+    thumbnail: 240,
+    original: null,
+  };
+
   public async uploadFileAttachment(
     id: string,
     userId: string,
@@ -14,8 +19,9 @@ export class AuctionAttachmentsService {
   ): Promise<IAuctionAssetModel> {
     const attachmentUrl = `${userId}/auctions/${id}/${uuid()}`;
     try {
-      const { fileType, url } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentUrl });
-      const asset = new this.AuctionAsset({ url, type: fileType });
+      const { fileType, url, uid } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentUrl });
+      const assetUid = Boolean(uid) ? { uid } : {};
+      const asset = new this.AuctionAsset({ url, type: fileType, ...assetUid });
       await asset.save();
       return asset;
     } catch (error) {
