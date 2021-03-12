@@ -20,7 +20,7 @@ const EditAuctionMediaPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
-  const [updateAuction, { data, loading: updating }] = useMutation(updateAuctionMedia, {
+  const [updateAuction, { loading: updating }] = useMutation(updateAuctionMedia, {
     onError(error) {
       console.log(error);
     },

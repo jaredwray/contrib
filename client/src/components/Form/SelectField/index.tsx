@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 
 import { addDays, differenceInCalendarDays, parseISO, toDate } from 'date-fns';
-import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
+import { ButtonGroup, DropdownButton } from 'react-bootstrap';
 import { useFormState } from 'react-final-form';
 
 import useField from 'src/components/Form/hooks/useField';

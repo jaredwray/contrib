@@ -19,9 +19,12 @@ enum SortByEnum {
 }
 
 const SortByInput: FC<Props> = ({ orderBy, changeFilters }) => {
-  const selectSortBy = useCallback((orderBy: string | null) => {
-    changeFilters('orderBy', orderBy);
-  }, []);
+  const selectSortBy = useCallback(
+    (orderBy: string | null) => {
+      changeFilters('orderBy', orderBy);
+    },
+    [changeFilters],
+  );
 
   const sortByInput = (
     <>

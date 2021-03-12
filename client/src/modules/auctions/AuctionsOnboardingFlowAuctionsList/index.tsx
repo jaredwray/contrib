@@ -1,4 +1,4 @@
-import { FC, useState, useCallback, useEffect } from 'react';
+import { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
 import { useQuery, useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -20,10 +20,15 @@ const AuctionsOnboardingFlowAuctionsList: FC = () => {
   const { data: auctionPriceLimitsData } = useQuery(AuctionPriceLimitsQuery);
   const auctionPriceLimits = auctionPriceLimitsData?.auctionPriceLimits;
 
-  const initialBids = auctionPriceLimits && {
-    minPrice: Math.floor(auctionPriceLimits.min.amount / 100),
-    maxPrice: Math.ceil(auctionPriceLimits.max.amount / 100),
-  };
+  const initialBids = useMemo(() => {
+    return (
+      auctionPriceLimits && {
+        minPrice: Math.floor(auctionPriceLimits.min.amount / 100),
+        maxPrice: Math.ceil(auctionPriceLimits.max.amount / 100),
+      }
+    );
+  }, [auctionPriceLimits]);
+
   const [filters, setFilters] = useState({
     query: '',
     bids: initialBids,
@@ -33,10 +38,15 @@ const AuctionsOnboardingFlowAuctionsList: FC = () => {
   });
   const [executeAuctionsSearch, { data: auctionsData }] = useLazyQuery(AuctionsListQuery);
   const auctions = auctionsData?.auctions;
+  const changeFilters = useCallback((key: string, value: any) => {
+    setFilters((prevState: any) => {
+      return { ...prevState, pageSkip: 0, [key]: value };
+    });
+  }, []);
 
   useEffect(() => {
     changeFilters('bids', initialBids);
-  }, [auctionPriceLimits]);
+  }, [auctionPriceLimits, changeFilters, initialBids]);
 
   useEffect(() => {
     const queryFilters = { sports: filters.sports } as any;
@@ -55,16 +65,7 @@ const AuctionsOnboardingFlowAuctionsList: FC = () => {
         filters: queryFilters,
       },
     });
-  }, [filters]);
-
-  const changeFilters = useCallback(
-    (key: string, value: any) => {
-      setFilters((prevState: any) => {
-        return { ...prevState, pageSkip: 0, [key]: value };
-      });
-    },
-    [filters],
-  );
+  }, [executeAuctionsSearch, filters]);
 
   return (
     <Row className="h-100 flex-grow-1">

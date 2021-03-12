@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Button, ButtonGroup, Col, ProgressBar, Row, Image } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 
 import FacebookIcon from 'src/assets/images/Facebook';
 import InstagramIcon from 'src/assets/images/Instagram';
@@ -10,7 +10,7 @@ import Layout from 'src/components/Layout';
 import styles from './styles.module.scss';
 
 const AuctionDonePage = () => {
-  const { auctionId } = useParams<{ auctionId: string }>();
+  // const { auctionId } = useParams<{ auctionId: string }>();
 
   return (
     <Layout>

@@ -24,7 +24,6 @@ const EditAuctionDetailsPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
   const [charities, setCharities] = useState<Charity[]>([]);
-  console.log('🚀 ~ file: index.tsx ~ line 28 ~ EditAuctionDetailsPage ~ charities', charities);
 
   const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionDetails, {
     variables: { id: auctionId },
@@ -39,9 +38,9 @@ const EditAuctionDetailsPage = () => {
   });
 
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
-    // onCompleted() {
-    //   updateAuctionStatus({ variables: { id: auctionId, status: 'ACTIVE' } });
-    // },
+    onCompleted() {
+      updateAuctionStatus({ variables: { id: auctionId, status: 'ACTIVE' } });
+    },
     onError(error) {
       console.log(error);
     },
@@ -56,7 +55,6 @@ const EditAuctionDetailsPage = () => {
       const { startDate, ...rest } = values;
       const clearValues = { ...rest, startDate: serializeStartDate(startDate), charity: charities[0] };
 
-      console.log('🚀 ~ file: index.tsx ~ line 60 ~ EditAuctionDetailsPage ~ clearValues', clearValues);
       updateAuction({ variables: { id: auctionId, ...clearValues } });
     },
     [auctionId, charities, updateAuction],
