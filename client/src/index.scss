@@ -41,7 +41,15 @@ $dropdown-item-padding-y: 14px;
 $dropdown-item-padding-x: 36px;
 $dropdown-link-color: $sage-color;
 $dropdown-link-hover-color: $sage-color;
-$font-weight-normal: 700;
+$dropdown-font-size: 18px;
+$dropdown-min-width: 105px;
+$dropdown-padding-y: 0;
+$dropdown-border-width: 2px;
+$dropdown-border-color: $sage-color;
+$dropdown-border-radius: 10px;
+$dropdown-link-active-color: $sage-color;
+$dropdown-link-active-bg: $barely-gray-color;
+$btn-padding-x-sm: 20px;
 
 @import '~bootstrap/scss/bootstrap';
 @import 'react-datepicker/src/stylesheets/datepicker.scss';
@@ -53,7 +61,73 @@ body {
   height: 100%;
 }
 
-.btn-group.btn-group-toggle {
+.dropdown.show > .dropdown-toggle {
+  box-shadow: inset 0 0 0 1px $sage-color !important;
+  background-color: $white-color;
+  color: $sage-color;
+  overflow: hidden;
+
+  &::after {
+    background-color: $sage-color;
+    border: none;
+  }
+  &::before {
+    background-image: url(/assets/images/arrowUp.svg);
+  }
+}
+
+.dropdown-toggle {
+  border-color: $light-sage-color;
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: $white-color !important;
+    color: $sage-color !important;
+  }
+  &.btn,
+  &.btn:focus {
+    justify-content: start;
+  }
+  &::after {
+    position: absolute;
+    color: $sage-color;
+    right: 0;
+    margin: 0;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-left: 1px solid $light-sage-color;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    color: $sage-color;
+    right: 0;
+    margin: 0;
+    background-image: url(/assets/images/arrowDown.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+  }
+}
+
+.dropdown-item {
+  font-weight: 700;
+  position: relative;
+
+  &.active::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    width: 100%;
+    height: 100%;
+    background: url(/assets/images/verified.svg) no-repeat;
+  }
+}
+
+.btn-group .btn-group.btn-group-toggle {
   & > .btn.btn-outline-primary {
     box-sizing: border-box;
     border: 1px solid $light-sage-color;
@@ -172,33 +246,6 @@ select.form-control {
   background: url(/assets/images/arrowDown.svg) no-repeat;
   background-position: bottom 20px right 20px;
 }
-
-// .dropdown-toggle {
-//   &:hover,
-//   :active,
-//   :focus,
-//   .show > .btn-outline-primary.dropdown-toggle {
-//     background-color: $white-color;
-//     color: $sage-color;
-//   }
-//   // &.show > .btn-outline-primary.dropdown-toggle
-// }
-
-.dropdown-toggle::after {
-  margin: 0;
-  border: none;
-  display: none;
-}
-
-// .btn-group::after {
-//   margin: 0;
-//   border: none;
-//   -moz-appearance: none;
-//   -webkit-appearance: none;
-//   appearance: none;
-//   background: url(/assets/images/arrowDown.svg) no-repeat;
-//   background-position: bottom 20px right 20px;
-// }
 
 .form-control {
   &.is-invalid {

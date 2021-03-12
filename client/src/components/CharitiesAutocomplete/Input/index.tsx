@@ -1,10 +1,10 @@
 import { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 
-import { CharitiesSearch } from 'src/apollo/queries/charities';
+import { CharitiesSearch, MyFavoriteCharitiesQuery } from 'src/apollo/queries/charities';
 import useOutsideClick from 'src/helpers/useOutsideClick';
 import { Charity } from 'src/types/Charity';
 
@@ -14,18 +14,31 @@ interface Props {
   charities: Charity[];
   onChange: (charity: Charity, isFavorite: boolean) => void;
 }
-
 const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
-  const [executeSearch, { data: searchResult }] = useLazyQuery(CharitiesSearch);
+  const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
+  const { data: myAccountsData } = useQuery(MyFavoriteCharitiesQuery);
+  const [executeSearch] = useLazyQuery(CharitiesSearch, {
+    onCompleted({ charitiesSearch }) {
+      setCharitiesSearch(charitiesSearch);
+    },
+  });
   const searchContainer = useRef(null);
-
+  const favoriteCharities = myAccountsData?.myAccount?.influencerProfile?.favoriteCharities;
   const [searchQuery, setSearchQuery] = useState('');
-
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
   }, []);
 
   useOutsideClick(searchContainer, clearAndCloseSearch);
+
+  const onClickSearch = useCallback(
+    (e: any) => {
+      if (!e.target.value) {
+        setCharitiesSearch(favoriteCharities);
+      }
+    },
+    [favoriteCharities],
+  );
 
   const onInputSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -48,9 +61,8 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
   }, [executeSearch, searchQuery]);
 
   return (
-    <Form.Group className={clsx('charities-search-container', { active: searchResult?.charitiesSearch?.length })}>
+    <Form.Group className={clsx('charities-search-container', { active: charitiesSearch!.length })}>
       <Form.Label>Search</Form.Label>
-
       <div ref={searchContainer} className={styles.wrapper}>
         <InputGroup>
           <Form.Control
@@ -58,6 +70,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
             placeholder="Search charities by name"
             value={searchQuery}
             onChange={onInputSearchChange}
+            onClick={onClickSearch}
           />
           {searchQuery && (
             <InputGroup.Append className={styles.appendBlock}>
@@ -72,7 +85,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
           )}
         </InputGroup>
         <ul className={clsx('p-0 m-0', styles.searchResult)}>
-          {(searchResult?.charitiesSearch || []).map((charity: Charity) => (
+          {(charitiesSearch || []).map((charity: Charity) => (
             <li
               key={charity.id}
               className={clsx('text-label', styles.resultItem, isSelectedCharity(charity) && styles.selected)}
@@ -88,5 +101,4 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
     </Form.Group>
   );
 };
-
 export default CharitiesSearchInput;

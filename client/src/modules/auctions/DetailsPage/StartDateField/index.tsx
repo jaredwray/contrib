@@ -4,6 +4,10 @@ import { Form, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { Field } from 'react-final-form';
 
+import SelectField from 'src/components/Form/SelectField';
+
+import { timeZoneOptions } from '../consts';
+
 interface Props {
   name: string;
 }
@@ -25,30 +29,17 @@ const StartDateField: FC<Props> = ({ name }) => {
         <Field name={`${name}.dayPeriod`}>
           {({ input }) => (
             <ToggleButtonGroup className="mr-3" {...input} type="radio">
-              <ToggleButton value="am" variant="outline-primary">
+              <ToggleButton className="h-100" value="am" variant="outline-primary">
                 AM
               </ToggleButton>
-              <ToggleButton value="pm" variant="outline-primary">
+              <ToggleButton className="h-100" value="pm" variant="outline-primary">
                 PM
               </ToggleButton>
             </ToggleButtonGroup>
           )}
         </Field>
 
-        <Field name={`${name}.timeZone`}>
-          {({ input }) => (
-            <Form.Control as="select" {...input}>
-              <option value="-1000">HST</option>
-              <option value="-0900">AKST</option>
-              <option value="-0800">PST</option>
-              <option value="-0700">MST</option>
-              <option value="-0600">CST</option>
-              <option value="-0500">EST</option>
-              <option value="+0800">888</option>
-              <option value="+0300">333</option>
-            </Form.Control>
-          )}
-        </Field>
+        <SelectField small name={`${name}.timeZone`} options={timeZoneOptions} />
       </div>
     </>
   );
