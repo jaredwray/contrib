@@ -13,6 +13,4 @@ export const timeZoneOptions = [
   { eventKey: '-0700', label: 'MST' },
   { eventKey: '-0600', label: 'CST' },
   { eventKey: '-0500', label: 'EST' },
-  { eventKey: '+0800', label: '888' },
-  { eventKey: '+0300', label: '333' },
 ];
