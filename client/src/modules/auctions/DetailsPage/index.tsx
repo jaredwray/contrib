@@ -2,7 +2,8 @@ import { useCallback, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { toDate, format } from 'date-fns-tz';
-import { Container, Dropdown, ProgressBar } from 'react-bootstrap';
+import { Container, ProgressBar } from 'react-bootstrap';
+import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { getAuctionDetails, updateAuctionDetails, updateAuctionStatusMutation } from 'src/apollo/queries/auctions';
@@ -16,6 +17,7 @@ import { Charity } from 'src/types/Charity';
 import Row from '../common/Row';
 import StepByStepRow from '../common/StepByStepRow';
 import StepHeader from '../common/StepHeader';
+import { durationOptions } from './consts';
 import StartDateField from './StartDateField';
 import styles from './styles.module.scss';
 import { serializeStartDate } from './utils';
@@ -115,19 +117,13 @@ const EditAuctionDetailsPage = () => {
               <StartDateField name="startDate" />
             </Row>
             <Row description="How long the auction should run for." title="Duration">
-              <SelectField name="endDate">
-                <Dropdown.Item eventKey="1">1 Day</Dropdown.Item>
-                <Dropdown.Item eventKey="2">2 Days</Dropdown.Item>
-                <Dropdown.Item eventKey="3">3 Days</Dropdown.Item>
-                <Dropdown.Item eventKey="5">5 Days</Dropdown.Item>
-                <Dropdown.Item eventKey="8">8 Days</Dropdown.Item>
-              </SelectField>
+              <SelectField name="endDate" options={durationOptions} placeholder="Choose length of time" />
             </Row>
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
               <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
             </Row>
           </Container>
-          {/* <Field name="charity">{({ input }) => <input type="hidden" value={favoriteCharities} {...input} />}</Field> */}
+          <Field name="charity">{({ input }) => <input type="hidden" {...input} />}</Field>
           <StepByStepRow
             last
             loading={updating || updatingStatus}
