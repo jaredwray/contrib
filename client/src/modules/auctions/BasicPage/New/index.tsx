@@ -15,7 +15,7 @@ import styles from './styles.module.scss';
 
 const initialValues = {
   title: null,
-  gameWorn: true,
+  gameWorn: false,
   autographed: false,
   authenticityCertificate: false,
   playedIn: null,

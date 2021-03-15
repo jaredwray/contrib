@@ -27,6 +27,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
+    setCharitiesSearch([]);
   }, []);
 
   useOutsideClick(searchContainer, clearAndCloseSearch);
@@ -72,7 +73,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
             onChange={onInputSearchChange}
             onClick={onClickSearch}
           />
-          {searchQuery && (
+          {(searchQuery || Boolean(charitiesSearch.length)) && (
             <InputGroup.Append className={styles.appendBlock}>
               <Button
                 className={clsx(styles.cancelBtn, 'btn-with-input text-all-cups text-label')}
