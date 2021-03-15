@@ -60,7 +60,7 @@ const NewAuctionBasicPage = () => {
             <Row className="flex-column flex-md-row">
               <Col className="pr-md-5">
                 <p className="text-subhead">Details</p>
-                <p className="text-body">
+                <p className="text--body">
                   Provide information about the item you are listing. This affects how the item is shown in social
                   networks and on search results.
                 </p>

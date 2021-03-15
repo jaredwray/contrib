@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { addDays, differenceInCalendarDays, parseISO } from 'date-fns';
 import { toDate, format } from 'date-fns-tz';
-import { Container, ProgressBar } from 'react-bootstrap';
+import { Button, Container, ProgressBar } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -139,6 +139,9 @@ const EditAuctionDetailsPage = () => {
             </Row>
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
               <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
+              <Button className="text--body" variant="secondary">
+                Suggest a charity
+              </Button>
             </Row>
           </Container>
           <Field name="charity">{({ input }) => <input type="hidden" {...input} />}</Field>

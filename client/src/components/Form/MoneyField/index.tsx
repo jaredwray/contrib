@@ -53,7 +53,7 @@ const MoneyField: FC<Props> = ({
         onChange={handleChange}
       />
       <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
-      {externalText && <p className="text-body mt-2">{externalText}</p>}
+      {externalText && <p className="text--body mt-2">{externalText}</p>}
     </Group>
   );
 };

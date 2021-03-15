@@ -19,29 +19,35 @@ const AuctionDonePage = () => {
         <Col className={styles.left}>
           <div className={styles.wrapper}>
             <p className="text-super">Done</p>
-            <p className="text-heading">Auction created.</p>
-            <p className="text-body">
+            <p className="text-headline">Auction created.</p>
+            <p className="text--body">
               Thank you! Your listing is now viewable and will start at the specified time. Now, let everyone know about
               the auction.
             </p>
             <div className={styles.buttonsGroup}>
               <ButtonGroup className="mb-3 w-100">
                 <Button className={styles.buttonIcon}>
-                  <TwitterIcon />
+                  <FacebookIcon />
                 </Button>
-                <Button variant="secondary">Share on Twitter</Button>
+                <Button className="text-label" variant="secondary">
+                  Share on Facebook
+                </Button>
               </ButtonGroup>
               <ButtonGroup className="mb-3 w-100">
                 <Button className={styles.buttonIcon}>
-                  <FacebookIcon />
+                  <TwitterIcon />
                 </Button>
-                <Button variant="secondary">Share on Facebook</Button>
+                <Button className="text-label" variant="secondary">
+                  Share on Twitter
+                </Button>
               </ButtonGroup>
               <ButtonGroup className="w-100">
                 <Button className={styles.buttonIcon}>
                   <InstagramIcon />
                 </Button>
-                <Button variant="secondary">Share on Instagram</Button>
+                <Button className="text-label" variant="secondary">
+                  Share on Instagram
+                </Button>
               </ButtonGroup>
             </div>
           </div>
@@ -61,7 +67,7 @@ const AuctionDonePage = () => {
               <div className={clsx(styles.auctionTitle, 'text-subhead pt-2')}>
                 Diego Rossi Fox Signed Game Worn Jersey
               </div>
-              <div className="price text-body-super">$11 000.00</div>
+              <div className="price text--body-super">$11 000.00</div>
               <div className="text-label text-all-cups pt-2">10 bids • 3d 1h</div>
             </div>
           </div>

@@ -36,10 +36,10 @@ const AuctionPreview: FC<Props> = ({ auction }) => {
             De’aaron Fox
           </div>
         </div>
-        <div className={clsx('text-body pt-2', styles.auctionTitle)} title={auction.title}>
+        <div className={clsx('text--body pt-2', styles.auctionTitle)} title={auction.title}>
           {auction.title}
         </div>
-        <div className="text-body-super">$400</div>
+        <div className="text--body-super">$400</div>
         <div className="text-label text-all-cups pt-2">
           1 bid • {daysLeft && `${daysLeft}d`} {hoursLeft && `${hoursLeft}h`}
         </div>

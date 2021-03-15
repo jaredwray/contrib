@@ -13,6 +13,7 @@ import './styles.scss';
 export default function Header() {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const { permissions } = useContext(UserAccountContext);
+  console.log('🚀 ~ file: index.tsx ~ line 16 ~ Header ~ permissions', permissions);
 
   const afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
 
@@ -48,6 +49,7 @@ export default function Header() {
 
                   {permissions.includes('influencers:manage') && (
                     <NavLink to="/admin/influencers">
+                      {console.log('🚀 ~ file: index.tsx ~ line 51 ~ Header ~ permissions', permissions)}
                       <NavDropdown.Item href="/admin/influencers">
                         <span>Manage Influencers</span>
                       </NavDropdown.Item>
