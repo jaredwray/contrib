@@ -14,6 +14,7 @@ export const getAuctionBasics = gql`
     auction(id: $id) {
       id
       title
+      sport
       gameWorn
       autographed
       authenticityCertificate
@@ -85,6 +86,7 @@ export const updateAuctionBasics = gql`
   mutation updateAuction(
     $id: String!
     $title: String!
+    $sport: String!
     $gameWorn: Boolean
     $autographed: Boolean
     $authenticityCertificate: Boolean
@@ -96,6 +98,7 @@ export const updateAuctionBasics = gql`
       id: $id
       input: {
         description: $description
+        sport: $sport
         fullPageDescription: $fullPageDescription
         gameWorn: $gameWorn
         autographed: $autographed
