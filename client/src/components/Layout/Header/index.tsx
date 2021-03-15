@@ -48,7 +48,6 @@ export default function Header() {
 
                   {permissions.includes('influencers:manage') && (
                     <NavLink to="/admin/influencers">
-                      {console.log('🚀 ~ file: index.tsx ~ line 51 ~ Header ~ permissions', permissions)}
                       <NavDropdown.Item href="/admin/influencers">
                         <span>Manage Influencers</span>
                       </NavDropdown.Item>
