@@ -61,6 +61,9 @@ body {
   height: 100%;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
 .btn-group.btn-group-toggle {
   height: 50px;
   & > .btn.btn-outline-primary {

@@ -11,6 +11,7 @@ export interface AuctionAttachment {
   type: string;
   cloudflareUrl: string;
   thumbnail: string;
+  originalFileName: string;
 }
 
 export interface AuctionBid {

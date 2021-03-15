@@ -3,6 +3,7 @@ import * as dayjs from 'dayjs';
 import * as Dinero from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
+import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionBidModel, IAuctionBidModel } from '../mongodb/AuctionBidModel';
@@ -10,6 +11,7 @@ import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { Auction } from '../dto/Auction';
+import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionBid } from '../dto/AuctionBid';
@@ -194,7 +196,7 @@ export class AuctionService {
     return AuctionService.makeAuction(updatedAuction);
   }
 
-  public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<Auction> {
+  public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
     const auction = await this.AuctionModel.findOne({
       _id: id,
       auctionOrganizer: Types.ObjectId(userId),
@@ -204,28 +206,28 @@ export class AuctionService {
     }
     try {
       const asset = await this.attachmentsService.uploadFileAttachment(id, userId, attachment);
+      const { filename } = await attachment;
 
-      auction.assets.push(asset);
-      await auction.save();
+      await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });
 
-      const populatedAuction = await this.populateAuction(auction).execPopulate();
-      return AuctionService.makeAuction(populatedAuction);
+      return AuctionService.makeAuctionAttachment(asset, filename);
     } catch (error) {
       throw error;
     }
   }
 
-  public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<Auction> {
+  public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<AuctionAssets> {
     const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }
     try {
-      await auction.update({ $pull: { attachments: { url: attachmentUrl } } }).exec();
-      await this.attachmentsService.AuctionAsset.find({ url: attachmentUrl }).remove().exec();
+      const attachment = await this.attachmentsService.AuctionAsset.findOne({ url: attachmentUrl });
+      await auction.update({ $pull: { assets: attachment._id } });
+      await attachment.remove();
       await this.attachmentsService.removeFileAttachment(attachmentUrl);
-      const updatedAuction = await this.populateAuction(auction).execPopulate();
-      return AuctionService.makeAuction(updatedAuction);
+
+      return AuctionService.makeAuctionAttachment(attachment);
     } catch (error) {
       throw new AppError(error.message, ErrorCode.INTERNAL_ERROR);
     }
@@ -387,6 +389,23 @@ export class AuctionService {
     };
   }
 
+  private static makeAuctionAttachment(model: IAuctionAssetModel, fileName?: string): AuctionAssets | null {
+    if (!model) {
+      return null;
+    }
+    const { url, type, uid } = model;
+
+    return {
+      id: model._id.toString(),
+      type,
+      url,
+      cloudflareUrl: model.uid ? CloudflareStreaming.getVideoStreamUrl(model.uid) : null,
+      thumbnail: model.uid ? CloudflareStreaming.getVideoPreviewUrl(model.uid) : null,
+      uid,
+      originalFileName: fileName,
+    };
+  }
+
   private static makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
       return null;
@@ -406,11 +425,7 @@ export class AuctionService {
 
     return {
       id: _id.toString(),
-      attachments: assets.map((item) => ({
-        ...item,
-        cloudflareUrl: item.uid ? CloudflareStreaming.getVideoStreamUrl(item.uid) : null,
-        thumbnail: item.uid ? CloudflareStreaming.getVideoPreviewUrl(item.uid) : null,
-      })),
+      attachments: assets.map((asset) => AuctionService.makeAuctionAttachment(asset)),
       maxBid: AuctionService.makeAuctionBid(maxBid),
       endDate: endsAt,
       startDate: startsAt,

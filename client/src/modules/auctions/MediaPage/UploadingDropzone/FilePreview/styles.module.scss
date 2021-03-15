@@ -1,0 +1,12 @@
+@import 'src/variables.scss';
+
+.spinner {
+  position: absolute;
+  right: 16px;
+  top: 4px;
+  height: 15px !important;
+  width: 15px !important;
+  border-top-color: $sage-color !important;
+  border-left-color: $sage-color !important;
+  border-bottom-color: $sage-color !important;
+}

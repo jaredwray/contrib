@@ -4,7 +4,7 @@ import { Alert } from 'react-bootstrap';
 
 import styles from './styles.module.scss';
 
-const HIDE_ALERT_TIMEOUT_MS = 3500;
+const HIDE_ALERT_TIMEOUT_MS = 5000;
 
 interface PropTypes {
   successMessage?: string;
@@ -12,21 +12,21 @@ interface PropTypes {
 }
 
 const FormUpdateMessages: FC<PropTypes> = ({ successMessage, errorMessage }) => {
-  const [alertHidden, setAlertHidden] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     if (successMessage || errorMessage) {
-      setAlertHidden(false);
+      setShowAlert(true);
 
       const timeout = setTimeout(() => {
-        setAlertHidden(true);
+        setShowAlert(false);
       }, HIDE_ALERT_TIMEOUT_MS);
 
       return () => clearTimeout(timeout);
     }
   }, [successMessage, errorMessage]);
 
-  if (alertHidden) {
+  if (!showAlert) {
     return null;
   }
 

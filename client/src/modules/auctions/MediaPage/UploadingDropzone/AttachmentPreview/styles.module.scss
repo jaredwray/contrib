@@ -1,0 +1,27 @@
+@import 'src/variables.scss';
+
+.mediaDeleteBnt {
+  position: absolute;
+  right: 16px;
+  top: 4px;
+  height: 15px;
+  width: 15px;
+  border-radius: 15px;
+  font-size: 13px;
+  line-height: 13px;
+  background-color: $white-color;
+  text-align: center;
+  cursor: pointer;
+  color: $sage-color;
+  padding-left: 1px;
+
+  @media (max-width: $medium-weight) {
+    & {
+      height: 25px;
+      width: 25px;
+      border-radius: 25px;
+      font-size: 23px;
+      line-height: 23px;
+    }
+  }
+}

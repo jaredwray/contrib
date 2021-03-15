@@ -10,25 +10,21 @@
   }
 }
 
-.dropzoneWrapper {
-  min-height: 200px;
-}
-
 .dropzone {
   cursor: pointer;
   color: $sage-color;
-  max-height: 100%;
+  height: 100%;
   width: 100%;
+  padding: 20px;
   font-weight: bold;
   font-size: 20px;
   line-height: 25px;
   border: 1px dashed $light-sage-color;
   box-sizing: border-box;
   border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
 
   &:focus {
     outline-color: $light-sage-color;

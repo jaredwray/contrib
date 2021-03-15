@@ -4,9 +4,11 @@ export enum AssetType {
 }
 
 export type AuctionAssets = {
-  url: string;
+  id: string;
   type: AssetType;
+  url: string;
   cloudflareUrl: string | null;
   thumbnail: string | undefined;
   uid: string | undefined;
+  originalFileName: string | undefined | null;
 };
