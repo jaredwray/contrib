@@ -1,4 +1,4 @@
-import { FC, ReactElement, useCallback } from 'react';
+import { FC, ReactElement, SetStateAction, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
@@ -6,20 +6,21 @@ import { useDropzone } from 'react-dropzone';
 import { AddAuctionMedia } from 'src/apollo/queries/auctions';
 import { AuctionAttachment } from 'src/types/Auction';
 
+import AttachmentsStateInterface from '../common/AttachmentsStateInterface';
 import AttachmentPreview from './AttachmentPreview';
 import FilePreview from './FilePreview';
 import styles from './styles.module.scss';
 
 interface Props {
   accepted: string;
-  attachmentsType: string;
+  attachmentsType: 'videos' | 'images';
   name: string;
   auctionId: string;
   icon: ReactElement;
   attachments: { uploaded: AuctionAttachment[]; loading: File[] };
-  setAttachments: (_: any) => void;
-  setErrorMessage: (_: any) => void;
-  setSelectedAttachment: (_: any) => void;
+  setAttachments: (_: SetStateAction<AttachmentsStateInterface>) => void;
+  setErrorMessage: (_: SetStateAction<string>) => void;
+  setSelectedAttachment: (_: SetStateAction<AuctionAttachment | null>) => void;
 }
 
 const UploadingDropzone: FC<Props> = ({
@@ -36,7 +37,7 @@ const UploadingDropzone: FC<Props> = ({
   const [addAuctionMedia] = useMutation(AddAuctionMedia, {
     onError(error) {
       setErrorMessage('We cannot upload one of your selected file. Please, try later.');
-      setAttachments((prevState: any) => {
+      setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
           [attachmentsType]: {
@@ -49,7 +50,7 @@ const UploadingDropzone: FC<Props> = ({
     onCompleted(data: any) {
       const attachment = data.addAuctionAttachment;
 
-      setAttachments((prevState: any) => {
+      setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
           [attachmentsType]: {
@@ -63,7 +64,7 @@ const UploadingDropzone: FC<Props> = ({
 
   const onDrop = useCallback(
     (files: File[]) => {
-      setAttachments((prevState: any) => {
+      setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
 

@@ -15,23 +15,24 @@ import { AuctionAttachment } from 'src/types/Auction';
 import Row from '../common/Row';
 import StepByStepRow from '../common/StepByStepRow';
 import StepHeader from '../common/StepHeader';
+import AttachmentsStateInterface from './common/AttachmentsStateInterface';
 import ModalWindow from './ModalWindow';
 import styles from './styles.module.scss';
 import UploadingDropzone from './UploadingDropzone';
 
 const EditAuctionMediaPage = () => {
-  const [selectedAttachment, setSelectedAttachment] = useState(null);
+  const [selectedAttachment, setSelectedAttachment] = useState<AuctionAttachment | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
-  const [attachments, setAttachments] = useState({
+  const [attachments, setAttachments] = useState<AttachmentsStateInterface>({
     images: {
-      uploaded: [] as AuctionAttachment[],
-      loading: [] as File[],
+      uploaded: [],
+      loading: [],
     },
     videos: {
-      uploaded: [] as AuctionAttachment[],
-      loading: [] as File[],
+      uploaded: [],
+      loading: [],
     },
   });
   const { data: auctionData } = useQuery(GetAuctionMedia, {

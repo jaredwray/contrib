@@ -5,7 +5,10 @@
   position: relative;
   display: inline-block;
   vertical-align: middle;
+  min-height: 50px;
+  min-width: 50px;
 }
+
 .preview {
   max-height: 80px;
   max-width: 100px;

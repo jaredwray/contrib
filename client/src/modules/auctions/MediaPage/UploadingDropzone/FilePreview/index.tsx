@@ -2,7 +2,7 @@ import { FC, ReactElement } from 'react';
 
 import { Spinner } from 'react-bootstrap';
 
-import previewStyles from '../common/preview.module.scss';
+import previewStyles from '../../common/preview.module.scss';
 import styles from './styles.module.scss';
 
 interface Props {

@@ -1,4 +1,4 @@
-import { FC, useState, useCallback, ReactElement } from 'react';
+import { FC, useState, useCallback, ReactElement, SetStateAction } from 'react';
 
 import { useMutation } from '@apollo/client';
 
@@ -7,16 +7,17 @@ import AddPhotoIcon from 'src/assets/images/ProtoIcon';
 import AddVideoIcon from 'src/assets/images/VideoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
-import previewStyles from '../common/preview.module.scss';
+import AttachmentsStateInterface from '../../common/AttachmentsStateInterface';
+import previewStyles from '../../common/preview.module.scss';
 import styles from './styles.module.scss';
 
 interface Props {
   auctionId: string;
   attachment: AuctionAttachment;
-  attachmentsType: string;
-  setAttachments: (_: any) => void;
-  setErrorMessage: (_: any) => void;
-  setSelectedAttachment: (_: any) => void;
+  attachmentsType: 'videos' | 'images';
+  setAttachments: (_: SetStateAction<AttachmentsStateInterface>) => void;
+  setErrorMessage: (_: SetStateAction<string>) => void;
+  setSelectedAttachment: (_: SetStateAction<AuctionAttachment | null>) => void;
 }
 
 const AttachementPreview: FC<Props> = ({
@@ -36,7 +37,7 @@ const AttachementPreview: FC<Props> = ({
 
   const removeMedia = useCallback(
     (attachment: AuctionAttachment) => {
-      setAttachments((prevState: any) => {
+      setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
           [attachmentsType]: {
