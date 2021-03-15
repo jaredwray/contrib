@@ -15,11 +15,12 @@
       color: $white-color !important;
       transition: none;
     }
+
     &::after {
       background-color: $sage-color;
       border: none;
-      background-color: transparent;
     }
+
     &::before {
       background-image: url(/assets/images/arrowUp.svg);
     }
@@ -29,6 +30,7 @@
     &.btn {
       letter-spacing: 0;
       color: $light-gray-color;
+
       &:hover,
       &:active,
       &:focus {
@@ -49,10 +51,12 @@
       background-color: $white-color !important;
       color: $sage-color !important;
     }
+
     &.btn,
     &.btn:focus {
       justify-content: start;
     }
+
     &::after {
       position: absolute;
       right: 0;
@@ -62,6 +66,7 @@
       height: 50px;
       border-left: 1px solid $light-sage-color;
     }
+
     &::before {
       content: '';
       position: absolute;
@@ -81,6 +86,7 @@
 
       &::after {
         border-left: none;
+        background-color: transparent;
       }
     }
   }

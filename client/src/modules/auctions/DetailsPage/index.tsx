@@ -37,7 +37,9 @@ const EditAuctionDetailsPage = () => {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
@@ -139,7 +141,7 @@ const EditAuctionDetailsPage = () => {
             </Row>
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
               <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
-              <Button className="text--body" variant="secondary">
+              <Button className={styles.suggestButton} variant="secondary">
                 Suggest a charity
               </Button>
             </Row>

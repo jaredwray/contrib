@@ -19,7 +19,7 @@ const StartDateField: FC<Props> = ({ name }) => {
     const { startDate } = values;
     const selected = timeZones.find((option) => option.value === startDate.timeZone);
 
-    return selected;
+    return selected || timeZones[0];
   };
 
   return (

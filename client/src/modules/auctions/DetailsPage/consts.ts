@@ -11,6 +11,4 @@ export const timeZones = [
   { value: '-07', label: 'MST' },
   { value: '-06', label: 'CST' },
   { value: '-05', label: 'EST' },
-  { value: '+08', label: '888' },
-  { value: '+03', label: '333' },
 ];

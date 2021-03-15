@@ -5,6 +5,14 @@
   max-width: 1064px;
 }
 
+.suggestButton {
+  font-size: 14px !important;
+
+  @include media-breakpoint-only(sm) {
+    font-style: 11px !important;
+  }
+}
+
 .divider {
   border-bottom: 1px solid $barely-gray-color;
   padding-bottom: 60px;
