@@ -1,0 +1,22 @@
+@import 'src/variables.scss';
+
+.previewWrapper {
+  padding: 0 10px 10px 0;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.preview {
+  max-height: 80px;
+  max-width: 100px;
+  border-radius: 15px;
+  border: 1px solid $sage-color;
+  display: inline-block;
+
+  @media (max-width: $medium-weight) {
+    & {
+      max-height: 160px;
+      max-width: 200px;
+    }
+  }
+}

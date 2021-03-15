@@ -2,11 +2,13 @@ import { gql } from 'apollo-server-express';
 
 export const AuctionSchema = gql`
   type AuctionAttachment {
-    uid: String
-    url: String!
+    id: String!
     type: String!
+    url: String!
+    uid: String
     cloudflareUrl: String
     thumbnail: String
+    originalFileName: String
   }
 
   enum AuctionStatus {
@@ -101,8 +103,8 @@ export const AuctionSchema = gql`
     updateAuction(id: String, input: AuctionInput): Auction!
     updateAuctionStatus(id: String!, status: AuctionStatus!): Auction!
     createAuctionBid(id: String!, bid: Money!): AuctionBid!
-    addAuctionAttachment(id: String!, attachment: Upload!): Auction!
-    removeAuctionAttachment(id: String!, attachmentUrl: String!): Auction!
+    addAuctionAttachment(id: String!, attachment: Upload!): AuctionAttachment!
+    removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
     deleteAuction(id: String!): AuctionStatusResponse!
   }
 `;

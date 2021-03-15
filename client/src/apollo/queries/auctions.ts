@@ -129,30 +129,27 @@ export const updateAuctionDetails = gql`
   }
 `;
 
-export const UpdateAuctionMedia = gql`
-  mutation updateAuction($id: String!, $file: Upload!) {
+export const AddAuctionMedia = gql`
+  mutation addAuctionAttachment($id: String!, $file: Upload!) {
     addAuctionAttachment(id: $id, attachment: $file) {
-      attachments {
-        url
-        type
-        cloudflareUrl
-        thumbnail
-        uid
-      }
+      url
+      type
+      cloudflareUrl
+      thumbnail
+      uid
+      originalFileName
     }
   }
 `;
 
 export const RemoveAuctionMedia = gql`
-  mutation updateAuction($id: String!, $url: String!) {
+  mutation removeAuctionAttachment($id: String!, $url: String!) {
     removeAuctionAttachment(id: $id, attachmentUrl: $url) {
-      attachments {
-        url
-        type
-        cloudflareUrl
-        thumbnail
-        uid
-      }
+      url
+      type
+      cloudflareUrl
+      thumbnail
+      uid
     }
   }
 `;

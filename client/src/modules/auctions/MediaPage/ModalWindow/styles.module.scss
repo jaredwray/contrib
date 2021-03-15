@@ -1,0 +1,26 @@
+@import 'src/variables.scss';
+
+.image {
+  max-width: 80vw;
+  max-height: 80vh;
+}
+
+.body {
+  min-height: 50px;
+  min-width: 50px;
+}
+
+.closeBtn {
+  position: absolute;
+  right: 20px;
+  border: none;
+  background-color: $white-color;
+  color: $dark-sage-color;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px $dark-sage-color;
+  border-radius: 25px;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  z-index: 100;
+}

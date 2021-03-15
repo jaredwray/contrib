@@ -12,25 +12,11 @@
 
 .dropzoneWrapper {
   min-height: 200px;
-}
+  display: table;
 
-.dropzone {
-  cursor: pointer;
-  color: $sage-color;
-  max-height: 100%;
-  width: 100%;
-  font-weight: bold;
-  font-size: 20px;
-  line-height: 25px;
-  border: 1px dashed $light-sage-color;
-  box-sizing: border-box;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  &:focus {
-    outline-color: $light-sage-color;
+  @media (max-width: $medium-weight) {
+    & {
+      display: contents;
+    }
   }
 }

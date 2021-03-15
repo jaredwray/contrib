@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-function AddVideo(props: React.SVGProps<SVGSVGElement>) {
+function AddVideo(props: React.SVGProps<SVGSVGElement> & { hideAddSign?: boolean }) {
+  const { hideAddSign, ...svgProps } = props;
+
   return (
-    <svg fill="none" height={50} viewBox="0 0 50 50" width={50} xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg fill="none" height={50} viewBox="0 0 50 50" width={50} xmlns="http://www.w3.org/2000/svg" {...svgProps}>
       <path
         d="M0 10C0 4.477 4.477 0 10 0h30c5.523 0 10 4.477 10 10v30c0 5.523-4.477 10-10 10H10C4.477 50 0 45.523 0 40V10z"
         fill="#F0F0EE"
@@ -14,9 +16,13 @@ function AddVideo(props: React.SVGProps<SVGSVGElement>) {
         strokeLinejoin="round"
         strokeWidth={3}
       />
-      <circle cx={14} cy={33} fill="#5A7864" r={7.75} stroke="#F0F0EE" strokeWidth={1.5} />
-      <path d="M13 29h2v8h-2z" fill="#fff" />
-      <path d="M18 32v2h-8v-2z" fill="#fff" />
+      {!props.hideAddSign && (
+        <>
+          <circle cx={14} cy={33} fill="#5A7864" r={7.75} stroke="#F0F0EE" strokeWidth={1.5} />
+          <path d="M13 29h2v8h-2z" fill="#fff" />
+          <path d="M18 32v2h-8v-2z" fill="#fff" />
+        </>
+      )}
     </svg>
   );
 }
