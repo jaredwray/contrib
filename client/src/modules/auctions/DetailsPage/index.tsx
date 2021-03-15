@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
+import { addDays, differenceInCalendarDays, parseISO } from 'date-fns';
 import { toDate, format } from 'date-fns-tz';
-import { Container, ProgressBar } from 'react-bootstrap';
+import { Button, Container, ProgressBar } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -26,26 +27,24 @@ const EditAuctionDetailsPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
   const [charities, setCharities] = useState<Charity[]>([]);
-
   const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionDetails, {
     variables: { id: auctionId },
+    onCompleted({ auction }) {
+      setCharities([auction.charity]);
+    },
   });
   const [updateAuctionStatus, { loading: updatingStatus }] = useMutation(updateAuctionStatusMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
 
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
     onCompleted() {
       updateAuctionStatus({ variables: { id: auctionId, status: 'ACTIVE' } });
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
 
   const handlePrevAction = useCallback(() => {
@@ -54,8 +53,12 @@ const EditAuctionDetailsPage = () => {
 
   const handleSubmit = useCallback(
     (values) => {
-      const { startDate, ...rest } = values;
-      const clearValues = { ...rest, startDate: serializeStartDate(startDate), charity: charities[0] };
+      const { startDate, duration, ...rest } = values;
+
+      const serializedStartDate = serializeStartDate(startDate);
+      const endDate = addDays(toDate(parseISO(serializedStartDate)), duration).toISOString();
+
+      const clearValues = { ...rest, startDate: serializedStartDate, endDate: endDate, charity: charities[0]?.id };
 
       updateAuction({ variables: { id: auctionId, ...clearValues } });
     },
@@ -76,16 +79,25 @@ const EditAuctionDetailsPage = () => {
     [charities, setCharities],
   );
 
+  const selectedOption = useCallback(() => {
+    const { startDate, endDate } = auctionData?.auction;
+    const duration = differenceInCalendarDays(toDate(parseISO(endDate)), toDate(parseISO(startDate)));
+
+    const selected = durationOptions.find(({ value }) => parseInt(value, 10) === duration);
+    return selected;
+  }, [auctionData?.auction]);
+
   if (loadingQuery) {
     return null;
   }
 
-  const { startDate, ...rest } = auctionData?.auction;
+  const { startDate, endDate, ...rest } = auctionData?.auction;
 
   const currentDate = toDate(startDate);
   const time = format(currentDate, 'hh:mm');
   const dayPeriod = format(currentDate, 'aaa');
-  const currentTimeZone = format(currentDate, 'xx');
+  const currentTimeZone = format(currentDate, 'x');
+  const duration = differenceInCalendarDays(toDate(parseISO(endDate)), toDate(parseISO(startDate)));
 
   const initialValues = {
     ...rest,
@@ -95,6 +107,7 @@ const EditAuctionDetailsPage = () => {
       dayPeriod: dayPeriod,
       timeZone: currentTimeZone,
     },
+    duration: duration,
   };
 
   return (
@@ -117,10 +130,18 @@ const EditAuctionDetailsPage = () => {
               <StartDateField name="startDate" />
             </Row>
             <Row description="How long the auction should run for." title="Duration">
-              <SelectField name="endDate" options={durationOptions} placeholder="Choose length of time" />
+              <SelectField
+                name="duration"
+                options={durationOptions}
+                placeholder="Choose length of time"
+                selected={selectedOption()}
+              />
             </Row>
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
               <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
+              <Button className="text--body" variant="secondary">
+                Suggest a charity
+              </Button>
             </Row>
           </Container>
           <Field name="charity">{({ input }) => <input type="hidden" {...input} />}</Field>

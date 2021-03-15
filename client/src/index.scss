@@ -61,73 +61,8 @@ body {
   height: 100%;
 }
 
-.dropdown.show > .dropdown-toggle {
-  box-shadow: inset 0 0 0 1px $sage-color !important;
-  background-color: $white-color;
-  color: $sage-color;
-  overflow: hidden;
-
-  &::after {
-    background-color: $sage-color;
-    border: none;
-  }
-  &::before {
-    background-image: url(/assets/images/arrowUp.svg);
-  }
-}
-
-.dropdown-toggle {
-  border-color: $light-sage-color;
-  &:hover,
-  &:active,
-  &:focus {
-    background-color: $white-color !important;
-    color: $sage-color !important;
-  }
-  &.btn,
-  &.btn:focus {
-    justify-content: start;
-  }
-  &::after {
-    position: absolute;
-    color: $sage-color;
-    right: 0;
-    margin: 0;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-left: 1px solid $light-sage-color;
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    color: $sage-color;
-    right: 0;
-    margin: 0;
-    background-image: url(/assets/images/arrowDown.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 50px;
-    height: 50px;
-    z-index: 1;
-  }
-}
-
-.dropdown-item {
-  font-weight: 700;
-  position: relative;
-
-  &.active::before {
-    content: '';
-    position: absolute;
-    left: 7px;
-    width: 100%;
-    height: 100%;
-    background: url(/assets/images/verified.svg) no-repeat;
-  }
-}
-
-.btn-group .btn-group.btn-group-toggle {
+.btn-group.btn-group-toggle {
+  height: 50px;
   & > .btn.btn-outline-primary {
     box-sizing: border-box;
     border: 1px solid $light-sage-color;
@@ -190,15 +125,19 @@ body {
     }
   }
 
-  &.btn-with-arrows:after {
-    content: '»';
-    position: absolute;
-    right: 10%;
-    font-size: 25px;
-    line-height: 13px;
-    font-weight: normal;
-    margin-left: 10px;
-    margin-top: -2px;
+  &.btn-with-arrows {
+    padding-right: 40px;
+
+    &:after {
+      content: '»';
+      position: absolute;
+      right: 15px;
+      font-size: 25px;
+      line-height: 13px;
+      font-weight: normal;
+      margin-left: 10px;
+      margin-top: -3px;
+    }
   }
 }
 
@@ -213,29 +152,129 @@ input[type='time']::-webkit-calendar-picker-indicator {
 .react-datepicker-wrapper {
   width: 100%;
   position: relative;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    right: 30px;
-    top: 0;
-    width: 1px;
-    height: 50px;
-    margin-right: 16px;
-    background-color: $light-sage-color;
-    z-index: 1;
+.react-datepicker-popper {
+  z-index: 2;
+}
+
+.react-datepicker {
+  border: 2px solid #5a7864;
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  background-color: #fff;
+  color: $sage-color;
+
+  &__input-container {
+    background-color: transparent;
+
+    & > .form-control {
+      z-index: 10;
+    }
+
+    &::after {
+      content: '';
+      cursor: pointer;
+      top: 0;
+      position: absolute;
+      color: $sage-color;
+      right: 0;
+      margin: 0;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-left: 1px solid $light-sage-color;
+    }
+
+    &::before {
+      z-index: -1;
+      content: '';
+      position: absolute;
+      color: $sage-color;
+      right: 0;
+      margin: 0;
+      background-image: url(/assets/images/Calendar.svg);
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 50px;
+      height: 50px;
+      z-index: 0;
+    }
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    right: 11px;
-    top: 0;
-    width: 26px;
-    height: 50px;
-    outline: none;
-    cursor: pointer;
-    background: url(/assets/images/Calendar.svg) center/80% no-repeat;
+  &__header {
+    background-color: $white-color;
+    border-bottom: none;
+    padding-top: 14px;
+  }
+
+  &__month {
+    margin-bottom: 30px !important;
+  }
+
+  &__current-month,
+  &-time__header,
+  &-year-header {
+    margin-top: 0;
+    color: $sage-color;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  &__triangle {
+    display: none;
+  }
+
+  &__day-name,
+  &__day,
+  &__time-name {
+    color: $sage-color;
+    display: inline-block;
+    width: 44px;
+    line-height: 22px;
+    padding: 11px 12px;
+  }
+
+  &__day--outside-month {
+    color: $light-gray-color;
+  }
+
+  &__day-name {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  &__day--selected,
+  &__day--selected:hover {
+    border-radius: 10px;
+    background-color: $barely-gray-color;
+  }
+
+  &__day--keyboard-selected {
+    background-color: $white-color;
+
+    &:hover {
+      background-color: $barely-gray-color;
+    }
+  }
+
+  &__navigation {
+    background: url(/assets/images/arrowRight.svg) no-repeat center;
+    line-height: 22px;
+    top: 20px;
+    border: none;
+    z-index: 1;
+    height: 12px;
+    width: 12px;
+    text-indent: -999em;
+    overflow: hidden;
+
+    &--previous {
+      transform: rotate(180deg);
+    }
   }
 }
 
@@ -306,7 +345,7 @@ img {
   line-height: 25px;
 }
 
-.text-body {
+.text--body {
   font-size: 17px;
   line-height: 21px;
   font-weight: 500;
@@ -353,7 +392,7 @@ input.form-control {
     line-height: 22px;
   }
 
-  .text-body {
+  .text--body {
     font-size: 14px;
     line-height: 19px;
   }

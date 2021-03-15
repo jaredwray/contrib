@@ -3,7 +3,7 @@ import React from 'react';
 import { AppState, Auth0Provider } from '@auth0/auth0-react';
 import { createBrowserHistory } from 'history';
 import ReactDOM from 'react-dom';
-import { Route, Router } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
@@ -45,22 +45,24 @@ ReactDOM.render(
     <Router history={history}>
       <ContribApolloProvider>
         <UserAccountProvider>
-          <Route exact component={HomePage} path="/" />
-          <Route exact component={AfterLogin} path="/after-login" />
-          <Route exact component={Charities} path="/charities" />
-          <Route exact component={Auctions} path="/auctions" />
-          <Route exact component={PhoneNumberVerification} path="/phone-verification" />
-          <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
-          <Route exact component={Profile} path="/profile" />
-          <Route exact component={WelcomePage} path="/welcome" />
-          <Route exact component={Influencers} path="/admin/influencers" />
-          <Route exact component={InvitationPage} path="/invitation/:slug" />
-          <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
-          <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
-          <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />
-          <Route exact component={EditAuctionMediaPage} path="/auctions/:auctionId/media" />
-          <Route exact component={EditAuctionDetailsPage} path="/auctions/:auctionId/details" />
-          <Route exact component={AuctionDonePage} path="/auctions/:auctionId/done" />
+          <Switch>
+            <Route exact component={HomePage} path="/" />
+            <Route exact component={AfterLogin} path="/after-login" />
+            <Route exact component={Charities} path="/charities" />
+            <Route exact component={Auctions} path="/auctions" />
+            <Route exact component={PhoneNumberVerification} path="/phone-verification" />
+            <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
+            <Route exact component={Profile} path="/profile" />
+            <Route exact component={WelcomePage} path="/welcome" />
+            <Route exact component={Influencers} path="/admin/influencers" />
+            <Route exact component={InvitationPage} path="/invitation/:slug" />
+            <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
+            <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
+            <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />
+            <Route exact component={EditAuctionMediaPage} path="/auctions/:auctionId/media" />
+            <Route exact component={EditAuctionDetailsPage} path="/auctions/:auctionId/details" />
+            <Route exact component={AuctionDonePage} path="/auctions/:auctionId/done" />
+          </Switch>
         </UserAccountProvider>
       </ContribApolloProvider>
     </Router>

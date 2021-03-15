@@ -16,7 +16,7 @@ const Row: FC<Props> = ({ title, description, children, childrenWrapperCLassName
     <RbRow className={clsx('flex-column flex-md-row', styles.divider)}>
       <Col className="pr-md-5">
         <p className="text-subhead">{title}</p>
-        <p className="text-body">{description}</p>
+        <p className="text--body">{description}</p>
       </Col>
 
       <Col className={clsx('pl-md-5', childrenWrapperCLassName)}>{children}</Col>

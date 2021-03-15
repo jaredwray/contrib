@@ -94,7 +94,7 @@ export default function EndingSoon() {
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">De’aaron Fox</div>
               </div>
               <div className="auction-title text-subhead pt-2">De'Aaron Fox Autographed Game Worn Jersey</div>
-              <div className="price text-body-super">$260.00</div>
+              <div className="price text--body-super">$260.00</div>
               <div className="text-label text-all-cups pt-2">1 bid • 7d 21h</div>
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function EndingSoon() {
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">Diego Rossi</div>
               </div>
               <div className="auction-title text-subhead pt-2">Diego Rossi Fox Signed Game Worn Jersey</div>
-              <div className="price text-body-super">$11 000.00</div>
+              <div className="price text--body-super">$11 000.00</div>
               <div className="text-label text-all-cups pt-2">10 bids • 3d 1h</div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function EndingSoon() {
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">De’aaron Fox</div>
               </div>
               <div className="auction-title text-subhead pt-2">De'Aaron Fox Autographed Game Worn Jersey</div>
-              <div className="price text-body-super">$260.00</div>
+              <div className="price text--body-super">$260.00</div>
               <div className="text-label text-all-cups pt-2">1 bid • 7d 21h</div>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function EndingSoon() {
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">Diego Rossi</div>
               </div>
               <div className="auction-title text-subhead pt-2">Diego Rossi Fox Signed Game Worn Jersey</div>
-              <div className="price text-body-super">$11 000.00</div>
+              <div className="price text--body-super">$11 000.00</div>
               <div className="text-label text-all-cups pt-2">10 bids • 3d 1h</div>
             </div>
           </div>

@@ -13,7 +13,7 @@ const NewAuctionPage = () => {
         <Container className={styles.root}>
           <p className="text-label label-with-separator">Auction an item</p>
           <p className="text-super mb-2">Get started</p>
-          <p className="text-headline mb-5">Create your charity auction now. It’s just four easy steps:</p>
+          <p className="text-headline mb-4 mb-sm-5">Create your charity auction now. It’s just four easy steps:</p>
           <Row>
             <Col>
               <ol className={cn('mb-0 pl-3 text-subhead', styles.list)}>

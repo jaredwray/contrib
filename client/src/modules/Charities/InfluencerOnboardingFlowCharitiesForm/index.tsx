@@ -79,7 +79,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
           <Row className="pt-3 pt-md-0">
             <Col md="6">
               <div className="text-subhead">Choose your charities</div>
-              <div className="text-body pt-0 pt-md-2">
+              <div className="text--body pt-0 pt-md-2">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consectetur quis eu amet vitae sitsed facilisi
                 suscipit volutpat.
               </div>
@@ -93,7 +93,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
           <Row className="pt-3 pt-md-0">
             <Col md="6">
               <div className="text-subhead">Don’t see your charity?</div>
-              <div className="text-body pt-0 pt-md-2">
+              <div className="text--body pt-0 pt-md-2">
                 If your charity isn’t listed send us their info and we will add them to Contrib.
               </div>
             </Col>

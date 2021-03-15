@@ -20,6 +20,22 @@
   }
 }
 
+.button {
+  &::after {
+    right: 110px !important;
+
+    @include media-breakpoint-down(lg) {
+      right: 80px !important;
+    }
+    @include media-breakpoint-down(md) {
+      right: 50px !important;
+    }
+    @include media-breakpoint-down(md) {
+      right: 25px !important;
+    }
+  }
+}
+
 .mobileButton {
   display: block;
   height: 120px !important;

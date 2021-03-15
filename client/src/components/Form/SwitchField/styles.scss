@@ -9,6 +9,7 @@ $custom-control-indicator-border-width: 3px;
 $custom-control-indicator-border-color: $white-color;
 
 .custom-switch2.custom-switch {
+  cursor: pointer;
   height: $custom-switch-width / 2;
 
   .custom-control-label {

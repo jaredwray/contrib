@@ -1,53 +1,45 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 
 import clsx from 'clsx';
-import { addDays, differenceInCalendarDays, parseISO, toDate } from 'date-fns';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-import { useFormState } from 'react-final-form';
 
 import useField from 'src/components/Form/hooks/useField';
-import { serializeStartDate } from 'src/modules/auctions/DetailsPage/utils';
 
 import './styles.scss';
 
 interface Props {
   name: string;
-  options: { eventKey: string; label: string }[];
+  options: { value: string; label: string }[];
   placeholder?: string;
   small?: boolean;
+  selected?: any;
 }
 
-const SelectField: FC<Props> = ({ name, children, options, placeholder, small }) => {
-  const { values } = useFormState();
+const SelectField: FC<Props> = ({ name, children, options, placeholder, small, selected }) => {
+  const [selectedOption, setSelectedOption] = useState(selected);
   const { hasError, errorMessage, onChange, value, ...inputProps } = useField(name, {});
-
-  const startDate = serializeStartDate(values.startDate);
-  const duration = differenceInCalendarDays(toDate(parseISO(value)), toDate(parseISO(startDate)));
 
   const handleSelect = useCallback(
     (key) => {
-      const count = parseInt(key, 10);
-      const newDate = addDays(toDate(parseISO(startDate)), count);
-      onChange(newDate.toISOString());
+      setSelectedOption(options.find((option) => option.value === key));
+      onChange(key);
     },
-    [onChange, startDate],
+    [onChange, options],
   );
-
-  const activeOption = options.find(({ eventKey }) => parseInt(eventKey, 10) === duration);
 
   return (
     <DropdownButton
-      className={clsx('text-subhead w-100 justify-content-start', !activeOption && 'emptyState')}
+      className={clsx('text-subhead w-100 justify-content-start select-field', !selectedOption && 'emptyState')}
       size={small ? 'sm' : undefined}
       {...inputProps}
       as={ButtonGroup}
       id={`dropdown-variants-${value}`}
-      title={activeOption?.label || placeholder}
+      title={selectedOption?.label || placeholder}
       variant="outline-primary"
       onSelect={handleSelect}
     >
-      {options.map(({ eventKey, label }: { eventKey: string; label: string }) => (
-        <Dropdown.Item key={eventKey} active={duration === parseInt(eventKey, 10)} eventKey={eventKey}>
+      {options.map(({ value, label }: { value: string; label: string }) => (
+        <Dropdown.Item key={value + label} active={selectedOption?.value === value} eventKey={value}>
           {label}
         </Dropdown.Item>
       ))}
