@@ -13,7 +13,7 @@ interface Props {
   closeModal: () => void;
 }
 
-const ModalWindow: FC<Props> = ({ selectedAttachment, closeModal }) => {
+const Dialog: FC<Props> = ({ selectedAttachment, closeModal }) => {
   if (!selectedAttachment) {
     return null;
   }
@@ -34,4 +34,4 @@ const ModalWindow: FC<Props> = ({ selectedAttachment, closeModal }) => {
   );
 };
 
-export default ModalWindow;
+export default Dialog;

@@ -16,7 +16,7 @@ import Row from '../common/Row';
 import StepByStepRow from '../common/StepByStepRow';
 import StepHeader from '../common/StepHeader';
 import AttachmentsStateInterface from './common/AttachmentsStateInterface';
-import ModalWindow from './ModalWindow';
+import Dialog from './Dialog';
 import styles from './styles.module.scss';
 import UploadingDropzone from './UploadingDropzone';
 
@@ -90,7 +90,7 @@ const EditAuctionMediaPage = () => {
           <FormUpdateMessages errorMessage={errorMessage} />
           <Container>
             <StepHeader step="2" title="Photos & video" />
-            <ModalWindow closeModal={closeModal} selectedAttachment={selectedAttachment} />
+            <Dialog closeModal={closeModal} selectedAttachment={selectedAttachment} />
             <Row
               childrenWrapperCLassName={styles.dropzoneWrapper}
               description="Provide a number of photos that show the item off from a couple of angles as well as any standout markings, signatures, etc."
