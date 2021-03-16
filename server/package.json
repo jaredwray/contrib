@@ -9,7 +9,7 @@
     "build": "tsc --build tsconfig.build.json",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
-    "test": "NODE_ENV=local jest --passWithNoTests",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch --passWithNoTests",
     "test:cov": "jest --coverage --passWithNoTests"
   },
