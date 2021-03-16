@@ -27,7 +27,6 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
   submitErrorMessage,
 }) => {
   const history = useHistory();
-  console.log('🚀 ~ file: index.tsx ~ line 30 ~ history', history);
   const [isSubmitting, setSubmitting] = useState(false);
   const [favoriteCharities, setFavoriteCharities] = useState(initialFavoriteCharities);
 
