@@ -19,11 +19,12 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
   const { data: myAccountsData } = useQuery(MyFavoriteCharitiesQuery);
   const [executeSearch] = useLazyQuery(CharitiesSearch, {
     onCompleted({ charitiesSearch }) {
+      console.log('🚀 ~ file: index.tsx ~ line 22 ~ onCompleted ~ charitiesSearch', charitiesSearch);
       setCharitiesSearch(charitiesSearch);
     },
   });
   const searchContainer = useRef(null);
-  const favoriteCharities = myAccountsData?.myAccount?.influencerProfile?.favoriteCharities;
+  // const favoriteCharities = myAccountsData?.myAccount?.influencerProfile?.favoriteCharities;
   const [searchQuery, setSearchQuery] = useState('');
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
@@ -34,11 +35,12 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
 
   const onClickSearch = useCallback(
     (e: any) => {
-      if (!e.target.value) {
-        setCharitiesSearch(favoriteCharities);
+      if (!e.target.value.length) {
+        console.log(myAccountsData);
+        setCharitiesSearch(myAccountsData?.myAccount?.influencerProfile?.favoriteCharities);
       }
     },
-    [favoriteCharities],
+    [myAccountsData?.myAccount?.influencerProfile?.favoriteCharities],
   );
 
   const onInputSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
