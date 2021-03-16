@@ -64,6 +64,7 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+
 .btn-group.btn-group-toggle {
   height: 50px;
   & > .btn.btn-outline-primary {
@@ -109,17 +110,6 @@ body {
   &.btn-ochre {
     background: $ochre-color;
     color: $sage-color;
-
-    &:hover,
-    &:active {
-      background: $sage-color !important;
-      color: $white-color !important;
-    }
-  }
-
-  &.btn-dark-gray {
-    background: $dark-gray-color;
-    color: $white-color;
 
     &:hover,
     &:active {
