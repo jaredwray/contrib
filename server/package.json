@@ -60,6 +60,11 @@
       "json",
       "ts"
     ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/__mocks__/dayjs.js",
+      "<rootDir>/__mocks__/dayjs.ts",
+      "<rootDir>/app/Auction/repository/AuctionRepository.spec.ts"
+    ],
     "rootDir": "./",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
