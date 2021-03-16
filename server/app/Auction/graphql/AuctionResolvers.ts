@@ -42,10 +42,11 @@ export const AuctionResolvers = {
       async (
         _: unknown,
         input: { input: AuctionInput },
-        { auction, user, userAccount }: GraphqlContext,
+        { auction, user, userAccount, influencer }: GraphqlContext,
       ): Promise<any> => {
         const account = await userAccount.getAccountByAuthzId(user.id);
-        return auction.createAuctionDraft(account.mongodbId, input.input);
+        const currentInfluencer = await influencer.findInfluencerByUserAccount(account.mongodbId);
+        return auction.createAuctionDraft(currentInfluencer?.id, input.input);
       },
     ),
     updateAuction: requirePermission(
@@ -53,10 +54,11 @@ export const AuctionResolvers = {
       async (
         _: unknown,
         { id, input }: { id: string; input: AuctionInput },
-        { auction, user, userAccount }: GraphqlContext,
+        { auction, user, userAccount, influencer }: GraphqlContext,
       ): Promise<any> => {
         const account = await userAccount.getAccountByAuthzId(user.id);
-        return auction.updateAuction(id, account.mongodbId, input);
+        const currentInfluencer = await influencer.findInfluencerByUserAccount(account.mongodbId);
+        return auction.updateAuction(id, currentInfluencer?.id, input);
       },
     ),
     deleteAuction: async (_: unknown, input: { id: string }): Promise<any> => {
@@ -67,10 +69,11 @@ export const AuctionResolvers = {
       async (
         _: unknown,
         { id, attachment }: { id: string; attachment: any },
-        { user, userAccount, auction },
+        { user, userAccount, auction, influencer },
       ): Promise<any> => {
         const account = await userAccount.getAccountByAuthzId(user.id);
-        return auction.addAuctionAttachment(id, account.mongodbId, attachment);
+        const currentInfluencer = await influencer.findInfluencerByUserAccount(account.mongodbId);
+        return auction.addAuctionAttachment(id, currentInfluencer?.id, attachment);
       },
     ),
     removeAuctionAttachment: requirePermission(
@@ -78,10 +81,11 @@ export const AuctionResolvers = {
       async (
         _: unknown,
         { id, attachmentUrl }: { id: string; attachmentUrl: string },
-        { user, userAccount, auction },
+        { user, userAccount, auction, influencer },
       ) => {
         const account = await userAccount.getAccountByAuthzId(user.id);
-        return auction.removeAuctionAttachment(id, account.mongodbId, attachmentUrl);
+        const currentInfluencer = await influencer.findInfluencerByUserAccount(account.mongodbId);
+        return auction.removeAuctionAttachment(id, currentInfluencer?.id, attachmentUrl);
       },
     ),
     createAuctionBid: requireAuthenticated(
@@ -95,10 +99,11 @@ export const AuctionResolvers = {
       async (
         _: unknown,
         { id, status }: { id: string; status: AuctionStatus },
-        { auction, user, userAccount }: GraphqlContext,
+        { auction, user, userAccount, influencer }: GraphqlContext,
       ): Promise<Auction> => {
         const account = await userAccount.getAccountByAuthzId(user.id);
-        return auction.updateAuctionStatus(id, account.mongodbId, status);
+        const currentInfluencer = await influencer.findInfluencerByUserAccount(account.mongodbId);
+        return auction.updateAuctionStatus(id, currentInfluencer?.id, status);
       },
     ),
   },

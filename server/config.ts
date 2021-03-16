@@ -1,3 +1,11 @@
+export const requireEnvVar = (name: string) => {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`missing required env variable: ${name}`);
+  }
+  return value;
+};
+
 export const AppConfig = {
   app: {
     port: Number(process.env.PORT ?? 3000),
@@ -44,11 +52,3 @@ export const AppConfig = {
     user: requireEnvVar('CLOUDFLARE_USER_ID'),
   },
 };
-
-function requireEnvVar(name) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`missing required env variable: ${name}`);
-  }
-  return value;
-}

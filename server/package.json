@@ -9,7 +9,7 @@
     "build": "tsc --build tsconfig.build.json",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
-    "test": "jest --passWithNoTests",
+    "test": "NODE_ENV=local jest --passWithNoTests",
     "test:watch": "jest --watch --passWithNoTests",
     "test:cov": "jest --coverage --passWithNoTests"
   },
@@ -38,6 +38,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.3",
     "@types/auth0": "^2.33.0",
     "@types/bcrypt": "^3.0.0",
     "@types/jest": "^26.0.20",
