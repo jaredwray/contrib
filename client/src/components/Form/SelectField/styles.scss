@@ -22,7 +22,8 @@
     }
 
     &::before {
-      background-image: url(/assets/images/arrowUp.svg);
+      transform: rotate(225deg);
+      border-color: $white-color;
     }
   }
 
@@ -70,13 +71,15 @@
     &::before {
       content: '';
       position: absolute;
-      right: 0;
+      right: 18px;
       margin: 0;
-      background-image: url(/assets/images/arrowDown.svg);
-      background-position: center;
-      background-repeat: no-repeat;
-      width: 50px;
-      height: 50px;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      transform: rotate(45deg);
+      border: 2px solid #5a7864;
+      border-left: none;
+      border-top: none;
       z-index: 1;
     }
 

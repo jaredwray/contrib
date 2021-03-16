@@ -2,9 +2,11 @@ import { FC, useCallback, useState } from 'react';
 
 import clsx from 'clsx';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { useHistory } from 'react-router';
 
 import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import FormUpdateMessages from 'src/components/FormUpdateMessages';
+import StepByStepRow from 'src/components/StepByStepRow';
 import { Charity } from 'src/types/Charity';
 
 import styles from './styles.module.scss';
@@ -24,6 +26,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
   submitSuccessMessage,
   submitErrorMessage,
 }) => {
+  const history = useHistory();
   const [isSubmitting, setSubmitting] = useState(false);
   const [favoriteCharities, setFavoriteCharities] = useState(initialFavoriteCharities);
 
@@ -57,7 +60,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
   );
 
   return (
-    <section className="charities-page">
+    <section className="pb-0">
       <Form onSubmit={handleSubmit}>
         <FormUpdateMessages errorMessage={submitErrorMessage} successMessage={submitSuccessMessage} />
 
@@ -124,23 +127,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
             </Row>
           )}
         </Container>
-
-        {isStepByStep && (
-          <Container fluid className="steps-navigation-container">
-            <Row className="pl-4 pr-4">
-              <Col className="steps-navigation-items" xs="6">
-                <a className="steps-prev-btn text-subhead" href="/profile?sbs=true">
-                  Prev
-                </a>
-              </Col>
-              <Col className="steps-navigation-items" xs="6">
-                <Button className="btn-with-arrows steps-next-btn float-right" type="submit">
-                  Finish
-                </Button>
-              </Col>
-            </Row>
-          </Container>
-        )}
+        {isStepByStep && <StepByStepRow last loading={false} prevAction={() => history.push('/profile?sbs=true')} />}
       </Form>
     </section>
   );

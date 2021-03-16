@@ -1,0 +1,42 @@
+@import 'src/variables.scss';
+
+.pagination-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  background-color: $sage-color !important;
+  transition: transform 0s;
+  cursor: pointer;
+  margin: auto;
+  border-radius: 50% !important;
+
+  &::before {
+    content: '';
+    position: absolute;
+    right: 12px;
+    margin: 0;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    transform: rotate(-45deg);
+    border: 2px solid $white-color;
+    border-right: none;
+    border-bottom: none;
+    z-index: 1;
+  }
+  &:disabled,
+  &:not([disabled]):hover {
+    &::before {
+      border-color: $light-sage-color;
+    }
+  }
+}
+.pagination-btn-next {
+  transform: rotate(-180deg);
+}
+.pagination-status {
+  margin: auto 0;
+}
+.pagination-status-info {
+  color: $light-gray-color;
+}

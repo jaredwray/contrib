@@ -1,0 +1,50 @@
+@import 'src/variables.scss';
+
+.root {
+  padding-bottom: 0;
+}
+
+.alert {
+  position: absolute !important;
+  width: 100%;
+  z-index: 100;
+}
+
+.avatar {
+  height: 100px;
+  display: inline-block;
+  background-color: $sage-color;
+  text-align: center;
+  margin-bottom: 60px;
+  user-select: none;
+
+  img {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    cursor: pointer;
+    pointer-events: auto;
+    top: 40px;
+    object-fit: cover;
+    background-color: $gray-color;
+  }
+}
+
+.textarea {
+  min-height: 200px;
+}
+
+.upload {
+  &,
+  &:active,
+  &:focus {
+    opacity: 0.5;
+    height: 25px;
+    background: url('/assets/images/picture-sign.webp') no-repeat;
+    background-position: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 16px 0 40px !important;
+    margin-top: 30px;
+  }
+}

@@ -64,6 +64,7 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+
 .btn-group.btn-group-toggle {
   height: 50px;
   & > .btn.btn-outline-primary {
@@ -109,17 +110,6 @@ body {
   &.btn-ochre {
     background: $ochre-color;
     color: $sage-color;
-
-    &:hover,
-    &:active {
-      background: $sage-color !important;
-      color: $white-color !important;
-    }
-  }
-
-  &.btn-dark-gray {
-    background: $dark-gray-color;
-    color: $white-color;
 
     &:hover,
     &:active {
@@ -265,28 +255,26 @@ input[type='time']::-webkit-calendar-picker-indicator {
   }
 
   &__navigation {
-    background: url(/assets/images/arrowRight.svg) no-repeat center;
     line-height: 22px;
     top: 20px;
-    border: none;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    border: 2px solid $sage-color;
+    border-left: none;
+    border-bottom: none;
     z-index: 1;
-    height: 12px;
-    width: 12px;
     text-indent: -999em;
     overflow: hidden;
 
     &--previous {
-      transform: rotate(180deg);
+      transform: rotate(225deg);
+      &:hover {
+        border-color: $sage-color;
+      }
     }
   }
-}
-
-select.form-control {
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-  background: url(/assets/images/arrowDown.svg) no-repeat;
-  background-position: bottom 20px right 20px;
 }
 
 .form-control {

@@ -1,18 +1,18 @@
 import { useState, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
-import { ErrorMessage } from '@hookform/error-message';
-import { Alert, Button, Form, Spinner, Modal } from 'react-bootstrap';
-import { Controller, useForm } from 'react-hook-form';
+import { Alert, Button, Spinner, Modal, Form as RbForm } from 'react-bootstrap';
+import { Field } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
 
 import { InviteInfluencerMutation } from 'src/apollo/queries/influencers';
+import Form from 'src/components/Form/Form';
+import InputField from 'src/components/Form/InputField';
 
 export default function InvitationModal(props: any) {
   const [inviteInfluencer] = useMutation(InviteInfluencerMutation);
   const [creating, setCreating] = useState(false);
   const [invitationError, setInvitationError] = useState();
-  const { register, errors, handleSubmit, control } = useForm();
 
   const onSubmit = useCallback(
     ({
@@ -45,65 +45,34 @@ export default function InvitationModal(props: any) {
       </Modal.Header>
 
       <Modal.Body>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <Form
+          initialValues={{ firstName: null, lastName: null, phoneNumber: null, welcomeMessage: null }}
+          onSubmit={onSubmit}
+        >
           {invitationError && <Alert variant="danger">{invitationError}</Alert>}
 
-          <Form.Group>
-            <Form.Label>First Name</Form.Label>
-            <Form.Control
-              ref={register({ required: 'required' })}
-              className={errors.firstName && 'is-invalid'}
-              name="firstName"
-              placeholder="Enter First Name"
-            />
-            <ErrorMessage as="div" className="invalid-feedback" errors={errors} name="firstName" />
-          </Form.Group>
+          <InputField required name="firstName" title="Enter First Name" />
 
-          <Form.Group>
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control
-              ref={register({ required: 'required' })}
-              className={errors.lastName && 'is-invalid'}
-              name="lastName"
-              placeholder="Enter Last Name"
-            />
-            <ErrorMessage as="div" className="invalid-feedback" errors={errors} name="lastName" />
-          </Form.Group>
+          <InputField required name="lastName" title="Enter Last Name" />
 
-          <Form.Group>
-            <Form.Label>Phone Number</Form.Label>
-            <Controller
-              control={control}
-              defaultValue={''}
-              name="phoneNumber"
-              render={({ onChange }) => {
-                return (
-                  <PhoneInput
-                    copyNumbersOnly={false}
-                    country={'us'}
-                    inputClass={errors.phoneNumber && 'is-invalid'}
-                    inputProps={{ required: true, name: 'phoneNumber' }}
-                    placeholder=""
-                    specialLabel=""
-                    onChange={(v) => onChange(v)}
-                  />
-                );
-              }}
-            />
-          </Form.Group>
+          <RbForm.Group>
+            <RbForm.Label>Phone Number</RbForm.Label>
+            <Field name="phoneNumber">
+              {({ input }) => (
+                <PhoneInput
+                  copyNumbersOnly={false}
+                  country={'us'}
+                  inputClass={'is-invalid'}
+                  inputProps={{ required: true, name: 'phoneNumber' }}
+                  placeholder=""
+                  specialLabel=""
+                  {...input}
+                />
+              )}
+            </Field>
+          </RbForm.Group>
 
-          <Form.Group>
-            <Form.Label>Message on the Welcome page</Form.Label>
-            <Form.Control
-              ref={register({ required: 'required' })}
-              as="textarea"
-              className={errors.welcomeMessage && 'is-invalid'}
-              name="welcomeMessage"
-              placeholder="Enter Message on the Welcome page"
-              rows={5}
-            />
-            <ErrorMessage as="div" className="invalid-feedback" errors={errors} name="welcomeMessage" />
-          </Form.Group>
+          <InputField required textarea name="welcomeMessage" title="Enter Message on the Welcome page" />
 
           <hr />
           <div className="text-right">
@@ -115,7 +84,7 @@ export default function InvitationModal(props: any) {
               </Button>
             )}
           </div>
-        </form>
+        </Form>
       </Modal.Body>
     </Modal>
   );

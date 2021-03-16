@@ -49,13 +49,13 @@ ReactDOM.render(
             <Route exact component={HomePage} path="/" />
             <Route exact component={AfterLogin} path="/after-login" />
             <Route exact component={Charities} path="/charities" />
-            <Route exact component={Auctions} path="/auctions" />
             <Route exact component={PhoneNumberVerification} path="/phone-verification" />
             <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
             <Route exact component={Profile} path="/profile" />
             <Route exact component={WelcomePage} path="/welcome" />
             <Route exact component={Influencers} path="/admin/influencers" />
             <Route exact component={InvitationPage} path="/invitation/:slug" />
+            <Route exact component={Auctions} path="/auctions" />
             <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
             <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
             <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />
