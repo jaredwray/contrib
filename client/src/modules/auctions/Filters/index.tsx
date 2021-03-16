@@ -22,10 +22,14 @@ const Filters: FC<Props> = ({ initialBids, filters, changeFilters }) => {
     [changeFilters],
   );
 
+  const handleQueryCancel = useCallback(() => {
+    changeFilters('query', '');
+  }, [changeFilters]);
+
   return (
     <>
       <div className={clsx('float-left pt-4 pb-4', styles.title)}>Auctions</div>
-      <SearchInput placeholder="Search" onChange={handleQueryChange} />
+      <SearchInput placeholder="Search" onCancel={handleQueryCancel} onChange={handleQueryChange} />
       <SportsDropdown changeFilters={changeFilters} selectedSports={filters.sports} />
       <PriceRange bids={filters.bids} changeFilters={changeFilters} initialBids={initialBids} />
     </>

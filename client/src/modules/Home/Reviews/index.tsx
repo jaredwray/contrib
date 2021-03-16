@@ -1,9 +1,10 @@
 import React from 'react';
 
+import clsx from 'clsx';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import Carousel from 'react-multi-carousel';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 const responsive = {
   size_1261_6000: {
@@ -60,8 +61,8 @@ const responsive = {
 
 export default function Reviews() {
   return (
-    <section className="reviews">
-      <Container className="homepage-container">
+    <section className={styles.reviews}>
+      <Container className={styles.homepageContainer}>
         <Row>
           <Col className="text-label label-with-separator">Testimonials</Col>
         </Row>
@@ -73,68 +74,68 @@ export default function Reviews() {
           infinite
           partialVisible
           swipeable
-          className="quotes"
+          className={styles.quotes}
           containerClass="carousel-container-with-scrollbar"
           responsive={responsive}
         >
-          <div className="review">
-            <div className="avatar">
-              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-1.webp" />
+          <div className={styles.review}>
+            <div className={styles.avatar}>
+              <Image roundedCircle className={styles.reviewer} src="/content/img/users/reviewer-1.webp" />
             </div>
-            <div className="quotes-sign" />
-            <div className="text-subhead reviews-quote pt-2">
+            <div className={styles.quotesSign} />
+            <div className={clsx(styles.reviewsQuote, 'text-subhead pt-2')}>
               With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman,
               all for charity.
             </div>
-            <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">De’aaron Fox</div>
+            <div className="text-subhead text-all-cups text-sm mb-md-0">De’aaron Fox</div>
             <div className="users-badge text-label pt-2">
-              <span className="users-badge-verified" />
+              <span className={styles.usersBadgeVerified} />
               Verified Athlete
             </div>
           </div>
 
-          <div className="review">
-            <div className="avatar">
-              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-2.webp" />
+          <div className={styles.review}>
+            <div className={styles.avatar}>
+              <Image roundedCircle className={styles.reviewer} src="/content/img/users/reviewer-2.webp" />
             </div>
-            <div className="quotes-sign" />
-            <div className="text-subhead reviews-quote pt-2">
+            <div className={styles.quotesSign} />
+            <div className={clsx(styles.reviewsQuote, 'text-subhead pt-2')}>
               With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman,
               all for charity.
             </div>
-            <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">Diego Rossi</div>
+            <div className="text-subhead text-all-cups text-sm mb-md-0">Diego Rossi</div>
             <div className="users-badge text-label pt-2">
-              <span className="users-badge-verified" />
+              <span className={styles.usersBadgeVerified} />
               Verified Athlete
             </div>
           </div>
 
-          <div className="review">
-            <div className="avatar">
-              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-1.webp" />
+          <div className={styles.review}>
+            <div className={styles.avatar}>
+              <Image roundedCircle className={styles.reviewer} src="/content/img/users/reviewer-1.webp" />
             </div>
-            <div className="quotes-sign" />
-            <div className="text-subhead reviews-quote pt-2">
+            <div className={styles.quotesSign} />
+            <div className={clsx(styles.reviewsQuote, 'text-subhead pt-2')}>
               With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman,
               all for charity.
             </div>
-            <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">De’aaron Fox</div>
+            <div className="text-subhead text-all-cups text-sm mb-md-0">De’aaron Fox</div>
             <div className="users-badge text-label pt-2">
-              <span className="users-badge-verified" />
+              <span className={styles.usersBadgeVerified} />
               Verified Athlete
             </div>
           </div>
 
-          <div className="review">
-            <div className="avatar">
-              <Image roundedCircle className="reviewer" src="/content/img/users/reviewer-2.webp" />
+          <div className={styles.review}>
+            <div className={styles.avatar}>
+              <Image roundedCircle className={styles.reviewer} src="/content/img/users/reviewer-2.webp" />
             </div>
-            <div className="quotes-sign" />
-            <div className="text-subhead reviews-quote pt-2">
+            <div className={styles.quotesSign} />
+            <div className={clsx(styles.reviewsQuote, 'text-subhead pt-2')}>
               With Contrib’s direct approach I can get game-worn memorabelia into hands fans. No delay, no middleman,
               all for charity.
             </div>
-            <div className="text-subhead text-all-cups reviewers-name text-sm mb-md-0">Diego Rossi</div>
+            <div className="text-subhead text-all-cups text-sm mb-md-0">Diego Rossi</div>
             <div className="users-badge text-label pt-2">Verified Athlete</div>
           </div>
         </Carousel>

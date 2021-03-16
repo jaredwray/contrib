@@ -1,10 +1,11 @@
 import React from 'react';
 
+import clsx from 'clsx';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import Carousel from 'react-multi-carousel';
 import { Link } from 'react-router-dom';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 const responsive = {
   size_1261_6000: {
@@ -66,14 +67,14 @@ const responsive = {
 
 export default function EndingSoon() {
   return (
-    <section className="ending-soon">
-      <Container className="header pb-4 homepage-container">
+    <section className={styles.endingSoon}>
+      <Container className={clsx(styles.homepageContainer, 'header pb-4')}>
         <Row className="pb-5">
           <Col className="text-super" lg="9" xs="12">
             Ending soon
           </Col>
           <Col className="align-self-end pr-lg-0 ml-1 ml-lg-0" lg="3" xs="12">
-            <Link className="see-all-link float-lg-right text-label text-all-cups" to="/auctions">
+            <Link className={clsx('float-lg-right text-label text-all-cups', styles.seeAllLink)} to="/auctions">
               See all auctions &gt;&gt;
             </Link>
           </Col>
@@ -85,57 +86,57 @@ export default function EndingSoon() {
           containerClass="carousel-container-with-scrollbar"
           responsive={responsive}
         >
-          <div className="auction">
-            <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-1.webp" />
+          <div className={styles.auction}>
+            <div className={styles.like} />
+            <Image className={styles.picture} src="/content/img/auctions/auction-item-1.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image roundedCircle className="auction-owner-picture" src="/content/img/users/auction-owner-1.webp" />
+                <Image roundedCircle className={styles.ownerPicture} src="/content/img/users/auction-owner-1.webp" />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">De’aaron Fox</div>
               </div>
-              <div className="auction-title text-subhead pt-2">De'Aaron Fox Autographed Game Worn Jersey</div>
+              <div className={clsx(styles.title, 'text-subhead pt-2')}>De'Aaron Fox Autographed Game Worn Jersey</div>
               <div className="price text--body-super">$260.00</div>
               <div className="text-label text-all-cups pt-2">1 bid • 7d 21h</div>
             </div>
           </div>
 
-          <div className="auction">
-            <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-2.webp" />
+          <div className={styles.auction}>
+            <div className={styles.like} />
+            <Image className={styles.picture} src="/content/img/auctions/auction-item-2.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image roundedCircle className="auction-owner-picture" src="/content/img/users/auction-owner-2.webp" />
+                <Image roundedCircle className={styles.ownerPicture} src="/content/img/users/auction-owner-2.webp" />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">Diego Rossi</div>
               </div>
-              <div className="auction-title text-subhead pt-2">Diego Rossi Fox Signed Game Worn Jersey</div>
+              <div className={clsx(styles.title, 'text-subhead pt-2')}>Diego Rossi Fox Signed Game Worn Jersey</div>
               <div className="price text--body-super">$11 000.00</div>
               <div className="text-label text-all-cups pt-2">10 bids • 3d 1h</div>
             </div>
           </div>
 
-          <div className="auction">
-            <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-1.webp" />
+          <div className={styles.auction}>
+            <div className={styles.like} />
+            <Image className={styles.picture} src="/content/img/auctions/auction-item-1.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image roundedCircle className="auction-owner-picture" src="/content/img/users/auction-owner-1.webp" />
+                <Image roundedCircle className={styles.ownerPicture} src="/content/img/users/auction-owner-1.webp" />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">De’aaron Fox</div>
               </div>
-              <div className="auction-title text-subhead pt-2">De'Aaron Fox Autographed Game Worn Jersey</div>
+              <div className={clsx(styles.title, 'text-subhead pt-2')}>De'Aaron Fox Autographed Game Worn Jersey</div>
               <div className="price text--body-super">$260.00</div>
               <div className="text-label text-all-cups pt-2">1 bid • 7d 21h</div>
             </div>
           </div>
 
-          <div className="auction">
-            <div className="like" />
-            <Image className="auction-picture" src="/content/img/auctions/auction-item-2.webp" />
+          <div className={styles.auction}>
+            <div className={styles.like} />
+            <Image className={styles.picture} src="/content/img/auctions/auction-item-2.webp" />
             <div className="p-3">
               <div className="owner">
-                <Image roundedCircle className="auction-owner-picture" src="/content/img/users/auction-owner-2.webp" />
+                <Image roundedCircle className={styles.ownerPicture} src="/content/img/users/auction-owner-2.webp" />
                 <div className="text-sm mb-md-0 text-label text-all-cups pl-2 d-inline-block">Diego Rossi</div>
               </div>
-              <div className="auction-title text-subhead pt-2">Diego Rossi Fox Signed Game Worn Jersey</div>
+              <div className={clsx(styles.title, 'text-subhead pt-2')}>Diego Rossi Fox Signed Game Worn Jersey</div>
               <div className="price text--body-super">$11 000.00</div>
               <div className="text-label text-all-cups pt-2">10 bids • 3d 1h</div>
             </div>

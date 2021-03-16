@@ -7,9 +7,11 @@
 
 .suggestButton {
   font-size: 14px !important;
+  margin-bottom: 58px;
 
   @include media-breakpoint-only(sm) {
     font-style: 11px !important;
+    margin-bottom: 30px;
   }
 }
 
