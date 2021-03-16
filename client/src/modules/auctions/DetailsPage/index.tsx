@@ -13,10 +13,10 @@ import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
 import SelectField from 'src/components/Form/SelectField';
 import Layout from 'src/components/Layout';
+import StepByStepRow from 'src/components/StepByStepRow';
 import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
-import StepByStepRow from '../common/StepByStepRow';
 import StepHeader from '../common/StepHeader';
 import { durationOptions } from './consts';
 import StartDateField from './StartDateField';
@@ -147,12 +147,7 @@ const EditAuctionDetailsPage = () => {
             </Row>
           </Container>
           <Field name="charity">{({ input }) => <input type="hidden" {...input} />}</Field>
-          <StepByStepRow
-            last
-            loading={updating || updatingStatus}
-            nextAction={handleSubmit}
-            prevAction={handlePrevAction}
-          />
+          <StepByStepRow last loading={updating || updatingStatus} prevAction={handlePrevAction} />
         </Form>
       </section>
     </Layout>

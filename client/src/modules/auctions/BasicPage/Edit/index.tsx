@@ -7,9 +7,9 @@ import { useHistory, useParams } from 'react-router-dom';
 import { updateAuctionBasics, getAuctionBasics } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
+import StepByStepRow from 'src/components/StepByStepRow';
 
 import Row from '../../common/Row';
-import StepByStepRow from '../../common/StepByStepRow';
 import StepHeader from '../../common/StepHeader';
 import BasicForm from '../PageForm';
 import styles from './styles.module.scss';
@@ -54,7 +54,7 @@ const EditAuctionBasicPage = () => {
             </Row>
           </Container>
 
-          <StepByStepRow loading={updating} nextAction={handleSubmit} />
+          <StepByStepRow loading={updating} />
         </Form>
       </section>
     </Layout>

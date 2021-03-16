@@ -8,7 +8,7 @@ import { createAuctionMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 
-import StepByStepRow from '../../common/StepByStepRow';
+import StepByStepRow from '../../../../components/StepByStepRow';
 import StepHeader from '../../common/StepHeader';
 import BasicForm from '../PageForm';
 import styles from './styles.module.scss';
@@ -72,7 +72,7 @@ const NewAuctionBasicPage = () => {
             </Row>
           </Container>
 
-          <StepByStepRow loading={loading} nextAction={handleSubmit} prevAction={handlePrevAction} />
+          <StepByStepRow loading={loading} prevAction={handlePrevAction} />
         </Form>
       </section>
     </Layout>

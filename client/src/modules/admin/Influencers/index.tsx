@@ -91,6 +91,7 @@ export default function InfluencersPage() {
                             id="influencerActions"
                             menuAlign="right"
                             title="..."
+                            variant="link"
                           ></DropdownButton>
                         </td>
                       </tr>

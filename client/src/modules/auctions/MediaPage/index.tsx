@@ -10,10 +10,10 @@ import AddVideoIcon from 'src/assets/images/VideoIcon';
 import Form from 'src/components/Form/Form';
 import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import Layout from 'src/components/Layout';
+import StepByStepRow from 'src/components/StepByStepRow';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import Row from '../common/Row';
-import StepByStepRow from '../common/StepByStepRow';
 import StepHeader from '../common/StepHeader';
 import AttachmentsStateInterface from './common/AttachmentsStateInterface';
 import Dialog from './Dialog';
@@ -130,7 +130,6 @@ const EditAuctionMediaPage = () => {
 
           <StepByStepRow
             loading={!!(attachments?.images.loading.length || attachments?.videos.loading.length)}
-            nextAction={handleSubmit}
             prevAction={handlePrevAction}
           />
         </Form>
