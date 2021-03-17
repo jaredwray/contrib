@@ -24,7 +24,7 @@ export default function Header() {
   const handleLogout = useCallback(() => logout(), [logout]);
 
   return (
-    <header className="pl-4 pr-4">
+    <header className="pl-4 pr-4 navigation-header">
       <Container fluid>
         <Row className="top">
           <Col md className="p-0">

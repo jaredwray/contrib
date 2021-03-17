@@ -38,9 +38,9 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
   }
 
   return (
-    <div className="pt-4 pb-4 text-center text-md-left">
+    <div className="pt-4 pb-4 text-center text-md-left d-flex mt-auto align-items-center">
       <Button
-        className={clsx(styles.navBtn, 'pl-0')}
+        className={clsx(styles.navBtn, 'pl-0 font-weight-bold')}
         disabled={!hasPev}
         variant="link"
         onClick={() => goToPage(currentPage - 1)}
@@ -51,7 +51,7 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
         {[...Array(totalPages)].map((e: number, i: number) => renderPageNumber(i + 1))}
       </div>
       <Button
-        className={clsx(styles.navBtn, 'pr-0')}
+        className={clsx(styles.navBtn, 'pr-0 font-weight-bold')}
         disabled={!hasNext}
         variant="link"
         onClick={() => goToPage(currentPage + 1)}

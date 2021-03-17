@@ -81,6 +81,7 @@
       border-left: none;
       border-top: none;
       z-index: 1;
+      bottom: 20px;
     }
 
     &.btn-sm {
@@ -95,6 +96,7 @@
   }
 
   .dropdown-item {
+    cursor: pointer;
     font-weight: 700;
     position: relative;
 

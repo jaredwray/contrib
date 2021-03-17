@@ -2,21 +2,22 @@ import { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
 import { useQuery, useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
+import Layout from 'src/components/Layout';
 import { Auction } from 'src/types/Auction';
 
-import AuctionPreview from '../AuctionPreview';
-import Filters from '../Filters';
-import Pagination from '../Pagination';
-import PaginationInfo from '../PaginationInfo';
-import SortByInput from '../SortByInput';
+import AuctionPreview from './AuctionPreview';
+import Filters from './Filters';
+import Pagination from './Pagination';
+import PaginationInfo from './PaginationInfo';
+import SortByInput from './SortByInput';
 import styles from './styles.module.scss';
 
 const PER_PAGE = 25;
 
-const AuctionsOnboardingFlowAuctionsList: FC = () => {
+const AuctionsPage: FC = () => {
   const { data: auctionPriceLimitsData } = useQuery(AuctionPriceLimitsQuery);
   const auctionPriceLimits = auctionPriceLimitsData?.auctionPriceLimits;
 
@@ -68,39 +69,42 @@ const AuctionsOnboardingFlowAuctionsList: FC = () => {
   }, [executeAuctionsSearch, filters]);
 
   return (
-    <Row className="h-100 flex-grow-1">
-      <Col className="d-none d-sm-block" lg="1"></Col>
-      <Col lg="3" md="4">
-        <Filters changeFilters={changeFilters} filters={filters} initialBids={initialBids} />
-      </Col>
-      <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5')} md="8">
-        <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
-          <SortByInput changeFilters={changeFilters} orderBy={filters.orderBy} />
+    <Layout>
+      <Container fluid className="d-flex flex-column flex-grow-1">
+        <Row className="h-100 flex-grow-1">
+          <Col className={styles.filtersWrapper} lg="3" md="4">
+            <Filters changeFilters={changeFilters} filters={filters} initialBids={initialBids} />
+          </Col>
+          <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5')} md="8">
+            <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
+              <SortByInput changeFilters={changeFilters} />
 
-          <PaginationInfo
-            pageSize={auctions?.size || 0}
-            pageSkip={auctions?.skip || 0}
-            perPage={PER_PAGE}
-            totalItems={auctions?.totalItems || 0}
-          />
-        </div>
+              <PaginationInfo
+                pageSize={auctions?.size || 0}
+                pageSkip={auctions?.skip || 0}
+                perPage={PER_PAGE}
+                totalItems={auctions?.totalItems || 0}
+              />
+            </div>
 
-        <div className={clsx(styles.auctions, 'd-grid text-center')}>
-          {(auctions?.items || []).map((auction: Auction) => (
-            <AuctionPreview key={auction.id} auction={auction} />
-          ))}
-        </div>
+            <div className={clsx(styles.auctions, 'd-grid text-center')}>
+              {(auctions?.items || []).map((auction: Auction) => (
+                <AuctionPreview key={auction.id} auction={auction} />
+              ))}
+            </div>
 
-        <Pagination
-          changeFilters={changeFilters}
-          pageSize={auctions?.size || 0}
-          pageSkip={auctions?.skip || 0}
-          perPage={PER_PAGE}
-          totalItems={auctions?.totalItems || 0}
-        />
-      </Col>
-    </Row>
+            <Pagination
+              changeFilters={changeFilters}
+              pageSize={auctions?.size || 0}
+              pageSkip={auctions?.skip || 0}
+              perPage={PER_PAGE}
+              totalItems={auctions?.totalItems || 0}
+            />
+          </Col>
+        </Row>
+      </Container>
+    </Layout>
   );
 };
 
-export default AuctionsOnboardingFlowAuctionsList;
+export default AuctionsPage;

@@ -21,7 +21,7 @@
 .activePageBnt:hover {
   background-color: $sage-color;
   border-radius: 30px;
-  color: $white-color;
+  color: $white-color !important;
   border: none;
   height: 30px;
   width: 30px;

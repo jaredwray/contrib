@@ -95,7 +95,6 @@ body {
   align-items: center;
   justify-content: center;
   letter-spacing: 0.1em;
-  height: 50px;
 
   &.btn-secondary {
     color: $sage-color;
@@ -133,6 +132,10 @@ body {
       margin-top: -3px;
     }
   }
+}
+
+section {
+  padding: 30px 0;
 }
 
 input[type='time']::-webkit-calendar-picker-indicator {
@@ -361,6 +364,10 @@ input.form-control {
 }
 
 @media (max-width: $medium-weight) {
+  .btn:not(.btn-with-input) {
+    height: 40px;
+  }
+
   .text-super {
     font-size: 50px;
     line-height: 50px;

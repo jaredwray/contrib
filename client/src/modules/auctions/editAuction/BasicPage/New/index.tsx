@@ -7,8 +7,8 @@ import { useHistory } from 'react-router-dom';
 import { createAuctionMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
+import StepByStepRow from 'src/components/StepByStepRow';
 
-import StepByStepRow from '../../../../components/StepByStepRow';
 import StepHeader from '../../common/StepHeader';
 import BasicForm from '../PageForm';
 import styles from './styles.module.scss';
