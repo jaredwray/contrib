@@ -118,7 +118,7 @@ const EditAuctionDetailsPage = () => {
 
       <section className={styles.section}>
         <Form initialValues={initialValues} onSubmit={handleSubmit}>
-          <Container className={styles.root}>
+          <Container>
             <StepHeader step="3" title="Details" />
 
             <Row

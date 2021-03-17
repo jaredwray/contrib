@@ -54,7 +54,7 @@ const NewAuctionBasicPage = () => {
 
       <section className={styles.section}>
         <Form initialValues={initialValues} onSubmit={handleSubmit}>
-          <Container className={styles.root}>
+          <Container>
             <StepHeader step="1" title="Basic info" />
 
             <Row className="flex-column flex-md-row">

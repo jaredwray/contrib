@@ -10,7 +10,7 @@ const NewAuctionPage = () => {
   return (
     <Layout>
       <section className={styles.section}>
-        <Container className={styles.root}>
+        <Container>
           <p className="text-label label-with-separator">Auction an item</p>
           <p className="text-super mb-2">Get started</p>
           <p className="text-headline mb-4 mb-sm-5">Create your charity auction now. It’s just four easy steps:</p>

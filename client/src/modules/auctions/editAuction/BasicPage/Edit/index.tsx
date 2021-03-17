@@ -43,7 +43,7 @@ const EditAuctionBasicPage = () => {
 
       <section className={styles.section}>
         <Form initialValues={auctionData?.auction} onSubmit={handleSubmit}>
-          <Container className={styles.root}>
+          <Container>
             <StepHeader step="1" title="Basic info" />
 
             <Row
