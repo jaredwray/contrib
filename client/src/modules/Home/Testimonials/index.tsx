@@ -2,13 +2,13 @@ import React from 'react';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-import MultiCarousel from 'src/components/MultiCarousel';
+import Slider from 'src/components/Slider';
 
-import ReviewPreview from './ReviewPreview';
 import styles from './styles.module.scss';
+import Testimonial from './Testimonial';
 
-export default function Reviews() {
-  const items = [...Array(5)].map((e: number, i: number) => <ReviewPreview key={i} review={null} />);
+export default function Testimonials() {
+  const items = [...Array(5)].map((e: number, i: number) => <Testimonial key={i} data={null} />);
   return (
     <section className={styles.reviews}>
       <Container className={styles.homepageContainer}>
@@ -18,7 +18,7 @@ export default function Reviews() {
         <Row>
           <Col className="text-headline">What’s being said about Contrib.</Col>
         </Row>
-        <MultiCarousel items={items} />
+        <Slider items={items} />
       </Container>
     </section>
   );

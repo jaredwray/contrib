@@ -6,10 +6,10 @@ import { Image } from 'react-bootstrap';
 import styles from './styles.module.scss';
 
 interface Props {
-  review: null;
+  data: null;
 }
 
-const ReviewPreview: FC<Props> = ({ review }) => {
+const Testimonial: FC<Props> = ({ data }) => {
   return (
     <div className={styles.review}>
       <div className={styles.avatarWrapper}>
@@ -31,4 +31,4 @@ const ReviewPreview: FC<Props> = ({ review }) => {
   );
 };
 
-export default ReviewPreview;
+export default Testimonial;

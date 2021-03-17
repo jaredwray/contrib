@@ -30,7 +30,7 @@
       height: 20px;
       content: '';
       transform: rotate(-45deg);
-      border: 6px solid $white-color;
+      border: 6px solid $light-gray-color;
       border-right: none;
       border-bottom: none;
       margin-left: 3px;
@@ -38,7 +38,7 @@
 
     &:hover {
       &:after {
-        border-color: $light-gray-color;
+        border-color: $white-color;
       }
     }
 

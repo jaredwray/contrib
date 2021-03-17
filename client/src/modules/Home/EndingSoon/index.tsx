@@ -4,14 +4,17 @@ import clsx from 'clsx';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import AuctionsCarousel from 'src/components/AuctionsCarousel';
+import Slider from 'src/components/Slider';
 
+import AuctionPreview from './AuctionPreview';
 import styles from './styles.module.scss';
 
 export default function EndingSoon() {
+  const items = [...Array(10)].map((e: number, i: number) => <AuctionPreview key={i} auction={null} />);
+
   return (
     <section className={styles.endingSoon}>
-      <Container className={clsx(styles.homepageContainer, 'header pb-4')}>
+      <Container className={clsx(styles.homepageContainer, 'header')}>
         <Row className="pb-5">
           <Col className="text-super" lg="9" xs="12">
             Ending soon
@@ -22,7 +25,7 @@ export default function EndingSoon() {
             </Link>
           </Col>
         </Row>
-        <AuctionsCarousel auctions={[]} />
+        <Slider items={items} />
       </Container>
     </section>
   );
