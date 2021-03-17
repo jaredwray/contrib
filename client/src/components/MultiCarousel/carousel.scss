@@ -1,0 +1,64 @@
+@import 'src/variables.scss';
+
+.multi-carousel {
+  .slick-list {
+    width: calc((100vw + 100%) / 2 - 6px);
+  }
+
+  .slick-slide {
+    z-index: 10;
+  }
+
+  .slick-arrow {
+    position: absolute;
+    display: block;
+    height: 60px;
+    width: 60px;
+    top: calc(50% - 60px);
+    cursor: pointer;
+    border-radius: 60px;
+    font-size: 0;
+    line-height: 0;
+    z-index: 100;
+    background-color: $sage-color;
+    border: none;
+    user-select: none;
+
+    &:after {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      content: '';
+      transform: rotate(-45deg);
+      border: 6px solid $white-color;
+      border-right: none;
+      border-bottom: none;
+      margin-left: 3px;
+    }
+
+    &:hover {
+      &:after {
+        border-color: $light-gray-color;
+      }
+    }
+
+    &:before {
+      content: '';
+    }
+  }
+
+  .slick-prev {
+    left: calc((100% - 100vw) / 2 + 45px);
+  }
+
+  .slick-next {
+    transform: rotate(-180deg);
+    right: calc((100% - 100vw) / 2 + 45px);
+  }
+
+  @media (max-width: $medium-weight) {
+    .slick-arrow {
+      display: none !important;
+    }
+  }
+}
