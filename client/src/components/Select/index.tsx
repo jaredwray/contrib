@@ -11,9 +11,10 @@ interface Props {
   selected?: any;
   onChange(value: string): void;
   small?: boolean;
+  className?: string;
 }
 
-const Select: FC<Props> = ({ options, placeholder, selected, onChange, small }) => {
+const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, className }) => {
   const [selectedOption, setSelectedOption] = useState(selected);
 
   const isArrayOfObjects = options?.length ? typeof options[0] === 'object' : null;
@@ -35,7 +36,11 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small }) 
   return (
     <DropdownButton
       as={ButtonGroup}
-      className={clsx('text-subhead w-100 justify-content-start select-field', !selectedOption && 'emptyState')}
+      className={clsx(
+        'text-subhead w-100 justify-content-start select-field',
+        !selectedOption && 'emptyState',
+        className,
+      )}
       id={`dropdown-select`}
       size={small ? 'sm' : undefined}
       title={title || placeholder}

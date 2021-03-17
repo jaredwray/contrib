@@ -1,7 +1,8 @@
-.dropdownWrapper {
+.select {
   min-width: 306px;
 }
 
 .dropdownFormGroup {
+  flex-wrap: nowrap !important;
   width: 100%;
 }

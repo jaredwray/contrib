@@ -10,9 +10,10 @@ interface Props {
   onChange(value: string): void;
   onCancel?(): void;
   onClick?(event: BaseSyntheticEvent): void;
+  className?: string;
 }
 
-const SearchInput: FC<Props> = ({ placeholder, onChange, onCancel, onClick }) => {
+const SearchInput: FC<Props> = ({ placeholder, onChange, onCancel, onClick, className }) => {
   const [query, setQuery] = useState<string>('');
 
   const handleChange = useCallback(
@@ -31,7 +32,7 @@ const SearchInput: FC<Props> = ({ placeholder, onChange, onCancel, onClick }) =>
   }, [onCancel]);
 
   return (
-    <InputGroup>
+    <InputGroup className={className}>
       <Form.Control placeholder={placeholder} value={query} onChange={handleChange} onClick={onClick} />
       {query && (
         <InputGroup.Append>

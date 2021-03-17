@@ -12,7 +12,7 @@ import AuctionPreview from './AuctionPreview';
 import Filters from './Filters';
 import Pagination from './Pagination';
 import PaginationInfo from './PaginationInfo';
-import SortByInput from './SortByInput';
+import SortBy from './SortBy';
 import styles from './styles.module.scss';
 
 const PER_PAGE = 25;
@@ -77,7 +77,7 @@ const AuctionsPage: FC = () => {
           </Col>
           <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5')} md="8">
             <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
-              <SortByInput changeFilters={changeFilters} />
+              <SortBy changeFilters={changeFilters} />
 
               <PaginationInfo
                 pageSize={auctions?.size || 0}

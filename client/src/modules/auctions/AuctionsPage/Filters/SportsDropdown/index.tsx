@@ -6,8 +6,6 @@ import { Form } from 'react-bootstrap';
 import { SportsQuery } from 'src/apollo/queries/auctions';
 import Select from 'src/components/Select';
 
-import styles from './styles.module.scss';
-
 interface Props {
   selectedSports: string[];
   changeFilters: (key: string, value: any) => void;
@@ -24,7 +22,7 @@ const SportsDropdown: FC<Props> = ({ selectedSports, changeFilters }) => {
   );
 
   return (
-    <Form.Group className={styles.dropdownFormGroup}>
+    <Form.Group className="mb-1">
       <Form.Label>Sport</Form.Label>
       <Select
         options={sportsListData?.sports}
