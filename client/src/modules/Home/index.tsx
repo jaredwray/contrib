@@ -3,10 +3,7 @@ import Layout from 'src/components/Layout';
 import AboutUs from './AboutUs';
 import Banner from './Banner';
 import EndingSoon from './EndingSoon';
-import Reviews from './Reviews';
-
-import 'react-multi-carousel/lib/styles.css';
-import './MultiCarousel.scss';
+import Testimonials from './Testimonials';
 
 export default function HomePage() {
   return (
@@ -14,7 +11,7 @@ export default function HomePage() {
       <Banner />
       <AboutUs />
       <EndingSoon />
-      <Reviews />
+      <Testimonials />
     </Layout>
   );
 }

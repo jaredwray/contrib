@@ -17,8 +17,6 @@ import { UserAccount } from 'src/types/UserAccount';
 
 import styles from './styles.module.scss';
 
-import 'src/components/Layout/Steps.scss';
-
 const MAX_AVATAR_SIZE_MB = 2;
 const HIDE_ALERT_TIMEOUT_MS = 3500;
 

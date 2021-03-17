@@ -1,14 +1,7 @@
 @import 'src/variables.scss';
 
-.reviews {
-  padding: 30px 0;
-}
-
-.quotes {
-  padding: 90px 0 20px 0;
-}
-
 .review {
+  margin-top: 100px;
   width: 522px;
   min-height: 347px;
   display: inline-block;
@@ -27,17 +20,30 @@
   .review {
     width: 278px;
   }
+
+  .avatar {
+    height: 120px;
+    width: 120px;
+  }
+
+  .avatarWrapper {
+    top: -120px;
+    left: 20%;
+  }
+}
+
+.avatarWrapper {
+  position: relative;
+  text-align: center;
+  top: -120px;
+  left: 30%;
 }
 
 .avatar {
-  position: relative;
-  top: -100px;
-  text-align: center;
-  height: 20px;
-}
-
-.reviewer {
+  position: absolute;
+  z-index: 100;
   height: 150px;
+  width: 150px;
 }
 
 .quotesSign {
@@ -51,26 +57,28 @@
   min-height: 180px;
 }
 
-.usersBadge {
+.badge {
   height: 22px;
-  color: $sage-color;
 }
 
-.usersBadgeVerified {
-  border-radius: 100%;
-  display: inline-block;
+.badgeVerified {
   height: 22px;
   width: 22px;
+  border-radius: 22px;
+  display: inline-block;
   line-height: 22px;
-  vertical-align: bottom;
-  background-image: url('/assets/images/badge-verified.webp');
-  background-repeat: no-repeat;
-  margin-right: 10px;
-}
+  background-color: $sage-color;
+  border: none;
+  margin-top: 0;
 
-@media (min-width: $extra-large-weight) {
-  .homepageContainer {
-    max-width: 100%;
-    padding: 0 150px;
+  &:after {
+    content: 'L';
+    color: $white-color;
+    display: inline-block;
+    transform: scaleX(-1) rotate(325deg);
+    line-height: 0;
+    font-weight: bold;
+    padding: 0 0 19px 9px;
   }
+  margin-right: 10px;
 }

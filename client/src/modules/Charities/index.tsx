@@ -11,8 +11,6 @@ import { Charity } from 'src/types/Charity';
 
 import { InfluencerOnboardingFlowCharitiesForm } from './InfluencerOnboardingFlowCharitiesForm';
 
-import 'src/components/Layout/Steps.scss';
-
 export default function CharitiesPage() {
   const stepByStep = Boolean(useUrlQueryParam('sbs'));
   const history = useHistory();
