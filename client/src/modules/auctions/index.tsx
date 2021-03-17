@@ -2,7 +2,7 @@ import { Container } from 'react-bootstrap';
 
 import Layout from 'src/components/Layout';
 
-import AuctionsOnboardingFlowAuctionsList from './AuctionsOnboardingFlowAuctionsList';
+import AuctionsOnboardingFlowAuctionsList from './AuctionsPage';
 
 export default function Auctions() {
   return (

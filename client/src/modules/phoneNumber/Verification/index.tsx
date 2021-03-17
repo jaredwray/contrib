@@ -90,7 +90,7 @@ export default function PhoneNumberVerification() {
                 )}
               </Field>
               <Button
-                className="submit-btn mb-2 btn-with-input text-label"
+                className="submit-btn mb-2 text-label"
                 disabled={formSubmitting}
                 type="submit"
                 variant="secondary"

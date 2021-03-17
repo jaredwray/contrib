@@ -4,10 +4,10 @@ import { mount, ReactWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
+import { GetInvitation } from 'src/apollo/queries/getInvitation';
 import { mockedUseAuth0, withNotAuthenticatedUser } from 'src/helpers/testHelpers/auth0';
 
 import InvitationPage from '..';
-import { GetInvitation } from '../../../apollo/queries/getInvitation';
 
 const cache = new InMemoryCache();
 cache.writeQuery({

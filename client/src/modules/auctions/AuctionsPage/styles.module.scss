@@ -1,0 +1,31 @@
+@import 'src/variables.scss';
+
+.filtersWrapper {
+  max-width: 306px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (max-width: $small-weight) {
+    margin-bottom: 27px;
+    max-width: unset;
+  }
+}
+
+.rightBlock {
+  background-color: $barely-gray-color;
+}
+
+.auctions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(428px, 1fr));
+  grid-gap: 0.5rem;
+  align-items: start;
+
+  @media (max-width: $small-weight) {
+    display: block;
+  }
+}
+
+.topPanel {
+  height: 100px;
+}

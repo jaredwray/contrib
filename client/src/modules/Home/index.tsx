@@ -6,7 +6,6 @@ import EndingSoon from './EndingSoon';
 import Reviews from './Reviews';
 
 import 'react-multi-carousel/lib/styles.css';
-import './styles.scss';
 import './MultiCarousel.scss';
 
 export default function HomePage() {

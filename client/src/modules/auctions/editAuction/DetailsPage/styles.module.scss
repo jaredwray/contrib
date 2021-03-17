@@ -1,0 +1,32 @@
+@import '~bootstrap/scss/bootstrap.scss';
+@import 'src/variables.scss';
+
+.suggestButton {
+  font-size: 14px !important;
+  margin-bottom: 58px;
+
+  @include media-breakpoint-only(sm) {
+    font-style: 11px !important;
+    margin-bottom: 30px;
+  }
+}
+
+.divider {
+  border-bottom: 1px solid $barely-gray-color;
+  padding-bottom: 60px;
+  margin-bottom: 27px;
+
+  @include media-breakpoint-down(sm) {
+    padding-bottom: 30px;
+    margin-bottom: 27px;
+  }
+}
+
+.section {
+  padding-bottom: 0;
+
+  @include media-breakpoint-only(xs) {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}

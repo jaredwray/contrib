@@ -1,13 +1,14 @@
 import React from 'react';
 
+import clsx from 'clsx';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 export default function AboutUs() {
   return (
-    <section className="about-us">
-      <Container className="homepage-container">
+    <section className={styles.aboutUs}>
+      <Container className={styles.homepageContainer}>
         <Row>
           <Col className="text-label label-with-separator">Who we are</Col>
         </Row>
@@ -19,7 +20,7 @@ export default function AboutUs() {
         </Row>
         <Row>
           <Col className="pt-3">
-            <Button className="btn-with-arrows text-label" variant="secondary">
+            <Button className={clsx('btn-with-arrows text-label', styles.button)} variant="secondary">
               How does it work?
             </Button>
           </Col>
