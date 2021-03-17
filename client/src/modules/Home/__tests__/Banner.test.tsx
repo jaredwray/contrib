@@ -10,7 +10,7 @@ describe('Banner', () => {
       withAuthenticatedUser();
 
       const wrapper = shallow(<Banner />);
-      expect(wrapper.find('.banner-sign-up-button')).toHaveLength(0);
+      expect(wrapper.find('.btn-with-arrows')).toHaveLength(0);
     });
   });
 
@@ -19,7 +19,8 @@ describe('Banner', () => {
       withNotAuthenticatedUser();
 
       const wrapper = shallow(<Banner />);
-      const signUpButton = wrapper.find('.banner-sign-up-button');
+      const signUpButton = wrapper.find('.btn-with-arrows');
+      console.log('🚀 ~ file: Banner.test.tsx ~ line 23 ~ it ~ signUpButton', signUpButton);
       expect(signUpButton).toHaveLength(1);
 
       signUpButton.simulate('click');
