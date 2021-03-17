@@ -1,0 +1,45 @@
+.btn,
+.btn:focus {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.1em;
+
+  &.btn-secondary {
+    color: $sage-color;
+
+    &:hover,
+    &:active {
+      background: $sage-color;
+      color: $white-color;
+      border-color: $sage-color;
+    }
+  }
+
+  &.btn-ochre {
+    background: $ochre-color;
+    color: $sage-color;
+
+    &:hover,
+    &:active {
+      background: $sage-color !important;
+      color: $white-color !important;
+    }
+  }
+
+  &.btn-with-arrows {
+    padding-right: 40px;
+
+    &:after {
+      content: '»';
+      position: absolute;
+      right: 15px;
+      font-size: 25px;
+      line-height: 13px;
+      font-weight: normal;
+      margin-left: 10px;
+      margin-top: -3px;
+    }
+  }
+}

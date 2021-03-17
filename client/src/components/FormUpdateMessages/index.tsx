@@ -33,7 +33,7 @@ const FormUpdateMessages: FC<PropTypes> = ({ successMessage, errorMessage }) => 
   return (
     <>
       {errorMessage && (
-        <Alert className={styles.alert} variant="danger">
+        <Alert className={styles.alert} variant="warning">
           {errorMessage}
         </Alert>
       )}

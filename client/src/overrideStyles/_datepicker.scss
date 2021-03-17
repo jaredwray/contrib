@@ -1,0 +1,140 @@
+@import 'src/variables.scss';
+
+input[type='time']::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.react-datepicker-popper {
+  z-index: 2;
+}
+
+.react-datepicker {
+  border: 2px solid $sage-color;
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  background-color: $white-color;
+  color: $sage-color;
+
+  &__input-container {
+    background-color: transparent;
+
+    & > .form-control {
+      z-index: 10;
+    }
+
+    &::after {
+      content: '';
+      cursor: pointer;
+      top: 0;
+      position: absolute;
+      color: $sage-color;
+      right: 0;
+      margin: 0;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-left: 1px solid $light-sage-color;
+    }
+
+    &::before {
+      z-index: -1;
+      content: '';
+      position: absolute;
+      color: $sage-color;
+      right: 0;
+      margin: 0;
+      background-image: url(/assets/images/Calendar.svg);
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 50px;
+      height: 50px;
+      z-index: 0;
+    }
+  }
+
+  &__header {
+    background-color: $white-color;
+    border-bottom: none;
+    padding-top: 14px;
+  }
+
+  &__month {
+    margin-bottom: 30px !important;
+  }
+
+  &__current-month,
+  &-time__header,
+  &-year-header {
+    margin-top: 0;
+    color: $sage-color;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  &__triangle {
+    display: none;
+  }
+
+  &__day-name,
+  &__day,
+  &__time-name {
+    color: $sage-color;
+    display: inline-block;
+    width: 44px;
+    line-height: 22px;
+    padding: 11px 12px;
+  }
+
+  &__day--outside-month {
+    color: $light-gray-color;
+  }
+
+  &__day-name {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  &__day--selected,
+  &__day--selected:hover {
+    border-radius: 10px;
+    background-color: $barely-gray-color;
+  }
+
+  &__day--keyboard-selected {
+    background-color: $white-color;
+
+    &:hover {
+      background-color: $barely-gray-color;
+    }
+  }
+
+  &__navigation {
+    line-height: 22px;
+    top: 20px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    border: 2px solid $sage-color;
+    border-left: none;
+    border-bottom: none;
+    z-index: 1;
+    text-indent: -999em;
+    overflow: hidden;
+
+    &--previous {
+      transform: rotate(225deg);
+      &:hover {
+        border-color: $sage-color;
+      }
+    }
+  }
+}
