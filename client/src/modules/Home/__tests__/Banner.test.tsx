@@ -20,7 +20,6 @@ describe('Banner', () => {
 
       const wrapper = shallow(<Banner />);
       const signUpButton = wrapper.find('.btn-with-arrows');
-      console.log('🚀 ~ file: Banner.test.tsx ~ line 23 ~ it ~ signUpButton', signUpButton);
       expect(signUpButton).toHaveLength(1);
 
       signUpButton.simulate('click');

@@ -1,0 +1,22 @@
+.btn-group.btn-group-toggle {
+  height: 50px;
+  & > .btn.btn-outline-primary {
+    box-sizing: border-box;
+    border: 1px solid $light-sage-color;
+    color: $light-gray-color;
+
+    &:hover {
+      background-color: $barely-gray-color;
+    }
+  }
+
+  & > .btn.btn-outline-primary.active {
+    color: $white-color;
+    border: none;
+    z-index: 0;
+
+    &:hover {
+      background-color: $sage-color;
+    }
+  }
+}

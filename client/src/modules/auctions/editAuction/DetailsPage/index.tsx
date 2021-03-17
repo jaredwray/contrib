@@ -12,6 +12,7 @@ import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
 import SelectField from 'src/components/Form/SelectField';
+import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
 import { Charity } from 'src/types/Charity';
@@ -37,12 +38,9 @@ const EditAuctionDetailsPage = () => {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
-    onError(error) {
-      console.log(error);
-    },
   });
 
-  const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
+  const [updateAuction, { loading: updating, error: updateError }] = useMutation(updateAuctionDetails, {
     onCompleted() {
       updateAuctionStatus({ variables: { id: auctionId, status: 'ACTIVE' } });
     },
@@ -118,6 +116,8 @@ const EditAuctionDetailsPage = () => {
 
       <section className={styles.section}>
         <Form initialValues={initialValues} onSubmit={handleSubmit}>
+          <FormUpdateMessages errorMessage={updateError?.message} />
+
           <Container>
             <StepHeader step="3" title="Details" />
 

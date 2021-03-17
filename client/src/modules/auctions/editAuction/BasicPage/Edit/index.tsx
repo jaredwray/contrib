@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { updateAuctionBasics, getAuctionBasics } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
+import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
 
@@ -18,15 +19,12 @@ const EditAuctionBasicPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
-  const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionBasics, {
+  const { loading: loadingQuery, data: auctionData, error: updateError } = useQuery(getAuctionBasics, {
     variables: { id: auctionId },
   });
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionBasics, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/media`);
-    },
-    onError(error) {
-      console.log(error);
     },
   });
 
@@ -40,6 +38,7 @@ const EditAuctionBasicPage = () => {
   return (
     <Layout>
       <ProgressBar now={25} />
+      <FormUpdateMessages errorMessage={updateError?.message} />
 
       <section className={styles.section}>
         <Form initialValues={auctionData?.auction} onSubmit={handleSubmit}>

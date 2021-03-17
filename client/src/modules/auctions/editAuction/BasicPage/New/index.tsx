@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import { createAuctionMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
+import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
 
@@ -26,14 +27,11 @@ const initialValues = {
 const NewAuctionBasicPage = () => {
   const history = useHistory();
 
-  const [createAuction, { loading }] = useMutation(createAuctionMutation, {
+  const [createAuction, { loading, error: updateError }] = useMutation(createAuctionMutation, {
     onCompleted({ createAuction }) {
       if (createAuction.id) {
         history.push(`/auctions/${createAuction.id}/media`);
       }
-    },
-    onError(error) {
-      console.log(error);
     },
   });
 
@@ -51,6 +49,7 @@ const NewAuctionBasicPage = () => {
   return (
     <Layout>
       <ProgressBar now={25} />
+      <FormUpdateMessages errorMessage={updateError?.message} />
 
       <section className={styles.section}>
         <Form initialValues={initialValues} onSubmit={handleSubmit}>
