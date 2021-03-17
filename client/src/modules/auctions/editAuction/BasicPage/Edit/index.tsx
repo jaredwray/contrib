@@ -26,9 +26,6 @@ const EditAuctionBasicPage = () => {
     onCompleted() {
       history.push(`/auctions/${auctionId}/media`);
     },
-    onError(error) {
-      console.log(error);
-    },
   });
 
   const handleSubmit = useCallback(

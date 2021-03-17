@@ -33,9 +33,6 @@ const NewAuctionBasicPage = () => {
         history.push(`/auctions/${createAuction.id}/media`);
       }
     },
-    onError(error) {
-      console.log(error);
-    },
   });
 
   const handlePrevAction = useCallback(() => {
