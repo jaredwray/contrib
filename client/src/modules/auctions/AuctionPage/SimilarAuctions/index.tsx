@@ -6,7 +6,9 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
-import AuctionsSlider from 'src/components/AuctionsSlider';
+import AuctionPreview from 'src/components/AuctionSliderPreview';
+import Slider from 'src/components/Slider';
+import { Auction } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
 
@@ -22,6 +24,8 @@ export default function SimilarAuctions() {
     return null;
   }
 
+  const items = data.auctions.items.map((auction: Auction, i: number) => <AuctionPreview key={i} auction={auction} />);
+
   return (
     <section className={styles.endingSoon}>
       <Container className={clsx(styles.homepageContainer, 'header')}>
@@ -35,7 +39,7 @@ export default function SimilarAuctions() {
             </Link>
           </Col>
         </Row>
-        <AuctionsSlider auctions={data.auctions.items} />
+        <Slider items={items} />
       </Container>
     </section>
   );
