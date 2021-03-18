@@ -3,6 +3,11 @@
 .select-field {
   min-width: 105px;
 
+  .dropdown-menu {
+    overflow: hidden;
+    max-height: 350px;
+  }
+
   &.dropdown.show > .dropdown-toggle {
     box-shadow: inset 0 0 0 1px $sage-color !important;
     background-color: $white-color;
