@@ -5,7 +5,6 @@ import { InvitationService } from './Influencer/service/InvitationService';
 import { CharityService } from './Charity/service/CharityService';
 import { AuctionService } from './Auction/service/AuctionService';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
-import { UserAccountRolesManagementService } from './UserAccount/service/UserAccountRolesManagementService';
 
 export interface IAppServices {
   auth0: Auth0Service;
@@ -16,5 +15,4 @@ export interface IAppServices {
   auction: AuctionService;
   twilioVerification: TwilioVerificationService;
   twilioNotification: TwilioNotificationService;
-  userAccountRolesManagement: UserAccountRolesManagementService;
 }

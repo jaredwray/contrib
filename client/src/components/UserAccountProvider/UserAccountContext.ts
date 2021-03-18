@@ -1,11 +1,11 @@
 import { createContext } from 'react';
 
+import { UserProfile } from './UserProfile';
+
 type UserContext = {
-  account: any;
-  permissions: string[];
+  account: UserProfile | null;
 };
 
 export const UserAccountContext = createContext<UserContext>({
   account: null,
-  permissions: [],
 });

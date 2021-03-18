@@ -4,8 +4,7 @@ import { UserAccount } from '../dto/UserAccount';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
 import { UserAccountStatus } from '../dto/UserAccountStatus';
 import { TwilioVerificationService } from '../../../twilio-client';
-import { AppError } from '../../../errors/AppError';
-import { ErrorCode } from '../../../errors/ErrorCode';
+import { AppError, ErrorCode } from '../../../errors';
 import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
 
@@ -21,12 +20,7 @@ export class UserAccountService {
   async getAccountByAuthzId(authzId: string): Promise<UserAccount> {
     const account = await this.accountModel.findOne({ authzId }).exec();
     if (account != null) {
-      return {
-        id: account.authzId,
-        phoneNumber: account.phoneNumber,
-        status: UserAccountStatus.COMPLETED,
-        mongodbId: account._id.toString(),
-      };
+      return UserAccountService.makeUserAccount(account);
     }
 
     return {
@@ -39,12 +33,7 @@ export class UserAccountService {
   async getAccountByPhoneNumber(phoneNumber: string): Promise<UserAccount> {
     const account = await this.accountModel.findOne({ phoneNumber }).exec();
     if (account != null) {
-      return {
-        id: account.authzId,
-        phoneNumber: account.phoneNumber,
-        status: UserAccountStatus.COMPLETED,
-        mongodbId: account._id.toString(),
-      };
+      return UserAccountService.makeUserAccount(account);
     }
     return null;
   }
@@ -83,14 +72,24 @@ export class UserAccountService {
     }
 
     const accountModel = await this.accountModel.create({ authzId, phoneNumber });
-    const account = {
+    const account = UserAccountService.makeUserAccount(accountModel);
+
+    await this.eventHub.broadcast(Events.USER_ACCOUNT_CREATED, account);
+
+    return account;
+  }
+
+  private static makeUserAccount(accountModel: IUserAccount): UserAccount {
+    const account: UserAccount = {
       id: accountModel.authzId,
       phoneNumber: accountModel.phoneNumber,
       status: UserAccountStatus.COMPLETED,
       mongodbId: accountModel._id.toString(),
     };
 
-    await this.eventHub.broadcast(Events.USER_ACCOUNT_CREATED, account);
+    if (accountModel.isAdmin) {
+      account.isAdmin = true;
+    }
 
     return account;
   }
