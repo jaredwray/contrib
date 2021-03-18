@@ -21,7 +21,7 @@ export default function Footer() {
             Direct athlete-to-fan charity auctions.
           </Col>
           <Col className="p-0 pt-4 pt-lg-0 pl-md-4 pr-md-4 " lg="4" xs="12">
-            <a className={clsx('float-lg-right text-headline', styles.link)} href="/">
+            <a className="float-lg-right text-headline" href="/">
               About Contrib
             </a>
           </Col>
