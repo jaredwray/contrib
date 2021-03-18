@@ -8,7 +8,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
 import Influencers from 'src/modules/admin/Influencers';
-import AuctionPage from 'src/modules/auctionPage';
+import AuctionPage from 'src/modules/auctions/AuctionPage';
 import Auctions from 'src/modules/auctions/AuctionsPage';
 import EditAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/Edit';
 import NewAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/New';

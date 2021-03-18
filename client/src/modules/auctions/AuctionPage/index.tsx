@@ -6,7 +6,7 @@ import { getAuction } from 'src/apollo/queries/auctions';
 import Layout from 'src/components/Layout';
 import { AuctionStatus } from 'src/types/Auction';
 
-import AboutAuction from './AboutAuction';
+import About from './About';
 import AttachmentsSlider from './AttachmentsSlider';
 import AuctionDetails from './AuctionDetails';
 import Benefits from './Benefits';
@@ -48,7 +48,7 @@ const AuctionPage = () => {
           <Col md="1" />
           <Col md="6" xs="12">
             <Profile profile={auction.auctionOrganizer} />
-            <AboutAuction auction={auction} />
+            <About auction={auction} />
             <Benefits charity={auction.charity} />
           </Col>
           <Col md="7" />

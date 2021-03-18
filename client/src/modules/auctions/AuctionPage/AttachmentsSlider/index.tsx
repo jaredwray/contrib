@@ -15,7 +15,7 @@ interface Props {
   attachments: AuctionAttachment[];
 }
 
-const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement => {
+const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   const [currentSlide, setCurrentSlide] = useState(1);
   const [activeStream, setActiveStream] = useState<HTMLStreamElement>();
 
@@ -58,6 +58,10 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement => {
     },
     [setActiveStream],
   );
+
+  if (attachments.length === 0) {
+    return null;
+  }
 
   return (
     <>

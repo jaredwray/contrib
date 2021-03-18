@@ -14,8 +14,8 @@ interface Props {
 const WatchBtn: FC<Props> = ({ auction }): ReactElement => {
   return (
     <div className={clsx(styles.container, 'pt-3 pb-3 d-table  align-middle')}>
-      <Button className={clsx(styles.watchBtn, 'd-table-cell align-sub')} variant="link" />
-      <div className="d-table-cell pl-4 align-text-bottom align-middle">
+      <Button className={clsx(styles.watchBtn, 'd-table-cell align-text-top')} variant="link" />
+      <div className="d-table-cell pl-4 align-middle">
         <div className={clsx(styles.subhead, 'text-subhead')}>Watch this auction</div>
         <div className="text-label text-all-cups">3 watchers</div>
       </div>

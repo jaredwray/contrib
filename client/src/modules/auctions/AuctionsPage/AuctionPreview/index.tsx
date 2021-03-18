@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import clsx from 'clsx';
 import { Image } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import { auctionTimeLeft } from 'src/helpers/auctionTimeLeft';
 import { Auction } from 'src/types/Auction';
@@ -31,9 +32,13 @@ const AuctionPreview: FC<Props> = ({ auction }) => {
             De’aaron Fox
           </div>
         </div>
-        <div className={clsx('text--body pt-2', styles.auctionTitle)} title={auction.title}>
+        <Link
+          className={clsx('text--body pt-2', styles.auctionTitle)}
+          title={auction.title}
+          to={`/auction/${auction.id}`}
+        >
           {auction.title}
-        </div>
+        </Link>
         <div className="text--body-super">$400</div>
         <div className="text-label text-all-cups pt-2">1 bid • {auctionTimeLeft(auction.endDate)}</div>
       </div>

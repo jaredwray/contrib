@@ -12,13 +12,10 @@ interface Props {
   auction: Auction;
 }
 
-const AboutAuction: FC<Props> = ({ auction }): ReactElement => {
+const About: FC<Props> = ({ auction }): ReactElement => {
   return (
     <Row title="About this item">
-      <div className="text--body">
-        I wore this jersey during the season final against Los Angeles FC lasy year where I managed to score 3 goals in
-        the first half.
-      </div>
+      <div className="text--body">{auction.fullPageDescription}</div>
       <div className={clsx(styles.details, 'pt-4 text-label')}>
         <Status text="Signed" value={auction.autographed} />
         <Status text="Certificate included" value={auction.authenticityCertificate} />
@@ -28,4 +25,4 @@ const AboutAuction: FC<Props> = ({ auction }): ReactElement => {
   );
 };
 
-export default AboutAuction;
+export default About;
