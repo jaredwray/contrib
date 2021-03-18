@@ -1,5 +1,5 @@
 export interface AuctionSearchFilters {
-  sports: [String];
+  sports: string[];
   minPrice: number;
   maxPrice: number;
 }

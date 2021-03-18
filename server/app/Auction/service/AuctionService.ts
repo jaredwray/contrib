@@ -3,36 +3,38 @@ import * as dayjs from 'dayjs';
 import * as Dinero from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
-import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
+import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
-import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionBidModel, IAuctionBidModel } from '../mongodb/AuctionBidModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
-import { AuctionOrderBy } from '../dto/AuctionOrderBy';
-import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionBid } from '../dto/AuctionBid';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
 import { StripeService } from '../../../payment/StripeService';
-import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { AuctionInput } from '../graphql/model/AuctionInput';
+import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
+
+import { CloudflareStreaming } from '../../CloudflareStreaming';
+import { InfluencerService } from '../../Influencer/service/InfluencerService';
 
 import { AppError } from '../../../errors/AppError';
 import { ErrorCode } from '../../../errors/ErrorCode';
 import { AppLogger } from '../../../logger';
-import { CloudflareStreaming } from '../../CloudflareStreaming';
+
+import { AuctionRepository } from '../repository/AuctionRepository';
+import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
-  private readonly CharityModel = CharityModel(this.connection);
   private readonly AuctionBidModel = AuctionBidModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
+  private readonly auctionRepository: IAuctionRepository = new AuctionRepository(this.connection);
 
   constructor(
     private readonly connection: Connection,
@@ -44,166 +46,48 @@ export class AuctionService {
     auctionOrganizerId: string,
     { charity: _, ...input }: AuctionInput,
   ): Promise<Auction> {
-    if (!input.title) {
-      throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
-    }
-    const [auction] = await this.AuctionModel.create([
-      {
-        ...input,
-        auctionOrganizer: Types.ObjectId(auctionOrganizerId),
-      },
-    ]);
+    const auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
     return AuctionService.makeAuction(auction);
   }
 
-  public async listAuctions({
-    size,
-    skip,
-    query,
-    filters,
-    orderBy,
-  }: {
-    size: number;
-    skip: number;
-    query?: string;
-    filters?: AuctionSearchFilters;
-    orderBy?: AuctionOrderBy;
-  }): Promise<{ items: Auction[]; totalItems: number; size: number; skip: number }> {
-    const items = await this.findAuctions({ size, skip, query, filters, orderBy });
-    const totalItems = await this.AuctionModel.find(this.searchFindOptions(query, filters)).countDocuments().exec();
+  public async listAuctions(
+    params: IAuctionFilters,
+  ): Promise<{ items: Auction[]; totalItems: number; size: number; skip: number }> {
+    const items = await this.auctionRepository.getAuctions(params);
+    const totalItems = await this.auctionRepository.getAuctionsCount(params);
 
     return {
-      items,
       totalItems,
-      size,
-      skip,
+      items: items.map(AuctionService.makeAuction),
+      size: params.size,
+      skip: params.skip,
     };
   }
 
   public async listSports(): Promise<string[]> {
-    return await this.AuctionModel.distinct('sport', { status: AuctionStatus.ACTIVE });
+    return this.auctionRepository.getAuctionSports();
   }
 
   public async getAuctionPriceLimits(): Promise<{ min: Dinero.Dinero; max: Dinero.Dinero }> {
-    const result = await this.AuctionModel.aggregate([
-      {
-        $match: {
-          status: { $eq: AuctionStatus.ACTIVE },
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          min: { $min: '$startPrice' },
-          max: { $max: '$startPrice' },
-        },
-      },
-    ]);
-
+    const { min, max } = await this.auctionRepository.getAuctionPriceLimits();
     return {
-      min: Dinero({ amount: result[0]?.min || 0, currency: 'USD' }),
-      max: Dinero({ amount: result[0]?.max || 0, currency: 'USD' }),
+      min: Dinero({ amount: min, currency: 'USD' }),
+      max: Dinero({ amount: max, currency: 'USD' }),
     };
   }
 
-  private async findAuctions({
-    size,
-    skip,
-    query,
-    filters,
-    orderBy,
-  }: {
-    size: number;
-    skip: number;
-    query?: string;
-    filters?: AuctionSearchFilters;
-    orderBy?: AuctionOrderBy;
-  }): Promise<Auction[]> {
-    const auctions = await this.AuctionModel.find(this.searchFindOptions(query, filters))
-      .populate({ path: 'charity', model: this.CharityModel })
-      .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
-      .populate({ path: 'auctionOrganizer', mode: this.UserAccountModel, select: ['_id'] })
-      .populate({
-        path: 'bids',
-        model: this.AuctionBidModel,
-        populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
-      })
-      .populate({ path: 'maxBid', model: this.AuctionBidModel })
-      .skip(skip)
-      .limit(size)
-      .sort(this.searchSortOptionsByName(orderBy))
-      .exec();
-
-    return auctions.map(AuctionService.makeAuction);
-  }
-
-  private searchSortOptionsByName(name: string): object {
-    return (
-      {
-        [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'desc' },
-        [AuctionOrderBy.TIME_ASC]: { endsAt: 'asc' },
-        [AuctionOrderBy.TIME_DESC]: { endsAt: 'desc' },
-        [AuctionOrderBy.SPORT]: { sport: 'asc' },
-        [AuctionOrderBy.PRICE_ASC]: { startPrice: 'asc' },
-        [AuctionOrderBy.PRICE_DESC]: { startPrice: 'desc' },
-      }[name] || { startsAt: 'desc' }
-    );
-  }
-
-  private searchFindOptions(query: string | null, filters: AuctionSearchFilters | null): object {
-    let options = { status: { $eq: AuctionStatus.ACTIVE } };
-
-    if (query) {
-      options['title'] = { $regex: query.trim(), $options: 'i' };
-    }
-
-    if (filters?.sports?.length) {
-      options['sport'] = { $in: filters.sports };
-    }
-
-    if (filters?.minPrice || filters?.maxPrice) {
-      options['startPrice'] = {};
-      // TODO: use maxBid.bid or use startPrice when the auction does not have bids
-    }
-
-    if (filters?.minPrice) {
-      options['startPrice'].$gte = filters.minPrice;
-    }
-
-    if (filters?.maxPrice) {
-      options['startPrice'].$lte = filters.maxPrice;
-    }
-
-    return options;
-  }
-
   public async getAuction(id: string): Promise<Auction> {
-    const auction = await this.handleGetAuction(id);
+    const auction = await this.auctionRepository.getAuction(id);
     return AuctionService.makeAuction(auction);
   }
 
   public async updateAuctionStatus(id: string, userId: string, status: AuctionStatus): Promise<Auction> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: Types.ObjectId(userId) }).exec();
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
-    if (auction.status === AuctionStatus.ACTIVE && status === AuctionStatus.DRAFT) {
-      throw new AppError('Cannot set active auction to DRAFT status', ErrorCode.BAD_REQUEST);
-    }
-    auction.status = status;
-    const updatedAuction = await auction.save();
-    await this.populateAuction(updatedAuction).execPopulate();
-    return AuctionService.makeAuction(updatedAuction);
+    const auction = await this.auctionRepository.changeAuctionStatus(id, userId, status);
+    return AuctionService.makeAuction(auction);
   }
 
   public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
-    const auction = await this.AuctionModel.findOne({
-      _id: id,
-      auctionOrganizer: Types.ObjectId(userId),
-    }).exec();
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
+    const auction = await this.auctionRepository.getAuction(id, userId);
     try {
       const asset = await this.attachmentsService.uploadFileAttachment(id, userId, attachment);
       const { filename } = await attachment;
@@ -234,28 +118,16 @@ export class AuctionService {
   }
 
   public async updateAuction(id: string, userId: string, input: AuctionInput): Promise<Auction> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
-    if (auction.status !== AuctionStatus.DRAFT) {
-      throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
-    }
-
     const { startDate, endDate, charity, initialPrice, ...rest } = input;
-    const charityObject = charity ? { charity: Types.ObjectId(charity) } : {};
-
-    Object.assign(auction, {
-      startsAt: startDate ? startDate : auction.startsAt.toISOString(),
-      endsAt: endDate ? endDate : auction.endsAt.toISOString(),
-      startPrice: initialPrice ? initialPrice.getAmount() : auction.startPrice,
-      startPriceCurrency: initialPrice ? initialPrice.getCurrency() : auction.startPriceCurrency,
-      ...charityObject,
+    const auction = await this.auctionRepository.updateAuction(id, userId, {
+      ...(startDate ? { startsAt: startDate } : {}),
+      ...(endDate ? { endsAt: endDate } : {}),
+      ...(initialPrice ? { startPrice: initialPrice.getAmount(), startPriceCurrency: initialPrice.getCurrency() } : {}),
+      ...(charity ? { charity: Types.ObjectId(charity) } : {}),
       ...rest,
     });
-    const updatedAuction = await auction.save();
-    await this.populateAuction(updatedAuction).execPopulate();
-    return AuctionService.makeAuction(updatedAuction);
+
+    return AuctionService.makeAuction(auction);
   }
 
   public async addAuctionBid(
@@ -354,29 +226,6 @@ export class AuctionService {
     await auction.save();
   }
 
-  private populateAuction(model: IAuctionModel): IAuctionModel {
-    return model
-      .populate({ path: 'charity', model: this.CharityModel })
-      .populate({ path: 'assets', model: this.attachmentsService.AuctionAsset })
-      .populate({ path: 'maxBid', model: this.AuctionBidModel })
-      .populate({ path: 'auctionOrganizer', model: this.UserAccountModel })
-      .populate({
-        path: 'bids',
-        model: this.AuctionBidModel,
-        populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
-      });
-  }
-
-  private async handleGetAuction(id: string): Promise<IAuctionModel> {
-    try {
-      const res = await this.AuctionModel.findById(id).exec();
-      await this.populateAuction(res).execPopulate();
-      return res;
-    } catch (e) {
-      throw new AppError('Auction was not found', ErrorCode.NOT_FOUND);
-    }
-  }
-
   private static makeAuctionBid(model: IAuctionBidModel): AuctionBid | null {
     if (!model) {
       return null;
@@ -419,6 +268,7 @@ export class AuctionService {
       bids,
       maxBid,
       startPrice,
+      auctionOrganizer,
       startPriceCurrency,
       ...rest
     } = model.toObject();
@@ -432,6 +282,7 @@ export class AuctionService {
       charity: charity ? { id: charity?._id, name: charity.name } : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
       initialPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
+      auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       ...rest,
     };
   }

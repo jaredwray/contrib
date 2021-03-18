@@ -3,6 +3,7 @@ import { Dayjs } from 'dayjs';
 import { AuctionAssets } from './AuctionAssets';
 import { Charity } from '../../Charity/dto/Charity';
 import { AuctionStatus } from './AuctionStatus';
+import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 
 export interface Auction {
   id: string;
@@ -11,6 +12,7 @@ export interface Auction {
   gameWorn: boolean;
   autographed: boolean;
   attachments: AuctionAssets[];
+  auctionOrganizer: InfluencerProfile;
   charity: Charity;
   startDate: Dayjs;
   endDate: Dayjs;

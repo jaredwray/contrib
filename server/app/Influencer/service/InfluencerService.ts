@@ -162,7 +162,7 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
-  private static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
+  public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
     return {
       id: model._id.toString(),
       name: model.name,

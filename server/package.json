@@ -38,6 +38,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.3",
     "@types/auth0": "^2.33.0",
     "@types/bcrypt": "^3.0.0",
     "@types/jest": "^26.0.20",
@@ -58,6 +59,11 @@
       "js",
       "json",
       "ts"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/__mocks__/dayjs.js",
+      "<rootDir>/__mocks__/dayjs.ts",
+      "<rootDir>/app/Auction/repository/AuctionRepository.spec.ts"
     ],
     "rootDir": "./",
     "testRegex": ".*\\.spec\\.ts$",

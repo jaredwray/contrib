@@ -7,6 +7,7 @@ import { AuctionBidCollectionName, IAuctionBidModel } from './AuctionBidModel';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
 import arrayMax from '../../../helpers/arrayMax';
+import { InfluencerCollectionName } from '../../Influencer/mongodb/InfluencerModel';
 
 export interface IAuctionModel extends Document {
   title: string;
@@ -46,7 +47,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     startPrice: { type: SchemaTypes.Number, default: 0 },
     playedIn: { type: SchemaTypes.String },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
-    auctionOrganizer: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+    auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
     startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
     endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
   },
