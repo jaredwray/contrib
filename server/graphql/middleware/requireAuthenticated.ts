@@ -1,14 +1,14 @@
 import { GraphqlContext } from '../GraphqlContext';
-import { AppError } from '../../errors/AppError';
-import { ErrorCode } from '../../errors/ErrorCode';
+import { AppError, ErrorCode } from '../../errors';
+import { GraphqlHandler } from '../types';
 
 export function requireAuthenticated<Result, Args>(
-  handler: (parent: unknown, args: Args, context: GraphqlContext, info: unknown) => Promise<Result>,
-) {
-  return async (parent: unknown, args: Args, context: GraphqlContext, info: unknown): Promise<Result> => {
+  handler: GraphqlHandler<Result, Args>,
+): GraphqlHandler<Result, Args> {
+  return (parent: unknown, args: Args, context: GraphqlContext, info: unknown): Promise<Result> => {
     if (!context.user) {
       throw new AppError('Unauthorized', ErrorCode.UNAUTHORIZED);
     }
-    return await handler(parent, args, context, info);
+    return handler(parent, args, context, info);
   };
 }
