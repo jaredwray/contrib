@@ -6,11 +6,11 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 
 import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
+import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
 import Slider from 'src/components/Slider';
 import TruncateText from 'src/components/TruncateText';
 import VerifiedStatus from 'src/components/VerifiedStatus';
-import AuctionPreview from 'src/modules/Home/EndingSoon/AuctionPreview';
 
 import styles from './styles.module.scss';
 
@@ -19,7 +19,7 @@ interface Props {}
 const AthleteProfilePage: FC<Props> = () => {
   // const { influencerId } = useParams<{ influencerId: string }>();
 
-  const items = [...Array(10)].map((e: number, i: number) => <AuctionPreview key={i} auction={null} />);
+  // const items = [...Array(10)].map((e: number, i: number) => <AuctionCard key={i} auction={null} />);
 
   return (
     <Layout>
@@ -71,11 +71,11 @@ const AthleteProfilePage: FC<Props> = () => {
         <Container>
           <div className="mb-5">
             <span className="label-with-separator text-label mb-4 d-block">Diego’s live auctions</span>
-            <Slider items={items} />
+            {/* <Slider items={items} /> */}
           </div>
           <div>
             <span className="label-with-separator text-label mb-4 d-block">Diego’s past auctions</span>
-            <Slider items={items} />
+            {/* <Slider items={items} /> */}
           </div>
         </Container>
       </section>

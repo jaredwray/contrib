@@ -14,6 +14,11 @@ const Slider: FC<Props> = ({ items }) => {
     swipeToSlide: true,
     variableWidth: true,
   };
+
+  if (!items.length) {
+    return null;
+  }
+
   return (
     <div className="multi-carousel">
       <RSlider {...settings}>{items}</RSlider>

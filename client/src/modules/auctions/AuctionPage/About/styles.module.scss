@@ -1,0 +1,33 @@
+@import 'src/variables.scss';
+
+.avatar {
+  height: 50px;
+  width: 50px;
+}
+
+.badge {
+  color: $sage-color;
+  font-weight: bold;
+}
+
+.badgeVerified {
+  height: 22px;
+  width: 22px;
+  border-radius: 22px;
+  display: inline-block;
+  line-height: 22px;
+  background-color: $sage-color;
+  border: none;
+  margin-top: 0;
+
+  &:after {
+    content: 'L';
+    color: $white-color;
+    display: inline-block;
+    transform: scaleX(-1) rotate(325deg);
+    line-height: 0;
+    font-weight: bold;
+    padding: 0 0 19px 9px;
+  }
+  margin-right: 10px;
+}

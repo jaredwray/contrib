@@ -1,3 +1,5 @@
+import { DineroObject } from 'dinero.js';
+
 import { InfluencerProfile } from './InfluencerProfile';
 
 export enum AuctionStatus {
@@ -18,7 +20,7 @@ export interface AuctionAttachment {
 
 export interface AuctionBid {
   id: string;
-  bid: number;
+  bid: Dinero.Dinero;
   createdAt: Date;
 }
 
@@ -37,7 +39,7 @@ export interface Auction {
   sport: string;
   maxBid: AuctionBid;
   startDate: string;
-  initialPrice: { amount: number; currency: string; precision: number };
   endDate: string;
+  initialPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
 }
