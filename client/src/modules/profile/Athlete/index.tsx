@@ -6,9 +6,9 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 
 import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
-import AuctionCard from 'src/components/AuctionCard';
+// import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
-import Slider from 'src/components/Slider';
+// import Slider from 'src/components/Slider';
 import TruncateText from 'src/components/TruncateText';
 import VerifiedStatus from 'src/components/VerifiedStatus';
 
