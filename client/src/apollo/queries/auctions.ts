@@ -9,6 +9,41 @@ export const AuctionPriceLimitsQuery = gql`
   }
 `;
 
+export const getAuction = gql`
+  query getAuction($id: String!) {
+    auction(id: $id) {
+      id
+      startDate
+      endDate
+      initialPrice
+      title
+      gameWorn
+      autographed
+      authenticityCertificate
+      playedIn
+      description
+      fullPageDescription
+      status
+      auctionOrganizer {
+        id
+        name
+        avatarUrl
+      }
+      attachments {
+        uid
+        url
+        type
+        cloudflareUrl
+        thumbnail
+      }
+      charity {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const getAuctionBasics = gql`
   query getAuction($id: String!) {
     auction(id: $id) {

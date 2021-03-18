@@ -8,6 +8,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
 import Influencers from 'src/modules/admin/Influencers';
+import AuctionPage from 'src/modules/auctionPage';
 import Auctions from 'src/modules/auctions/AuctionsPage';
 import EditAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/Edit';
 import NewAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/New';
@@ -56,6 +57,7 @@ ReactDOM.render(
             <Route exact component={Influencers} path="/admin/influencers" />
             <Route exact component={InvitationPage} path="/invitation/:slug" />
             <Route exact component={Auctions} path="/auctions" />
+            <Route exact component={AuctionPage} path="/auction/:auctionId" />
             <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
             <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
             <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />

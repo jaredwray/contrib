@@ -1,0 +1,25 @@
+@import 'src/variables.scss';
+
+.container {
+  border: 1px solid $barely-gray-color;
+  border-left: none;
+  border-right: none;
+}
+
+.watchBtn {
+  height: 36px;
+  width: 36px;
+  border: 1px solid $barely-gray-color !important;
+  border-radius: 36px !important;
+  background-image: url('/assets/images/like.webp');
+  background-repeat: no-repeat;
+  background-position: center;
+
+  &:hover {
+    border-width: 2px !important;
+  }
+}
+
+.subhead {
+  color: $sage-color;
+}

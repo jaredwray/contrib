@@ -1,0 +1,70 @@
+@import 'src/variables.scss';
+
+.auction-attachments-slider {
+  margin-bottom: 60px;
+
+  /* Arrows */
+  .slick-arrow {
+    position: absolute;
+    display: block;
+    height: 60px;
+    width: 60px;
+    top: calc(50% - 60px);
+    cursor: pointer;
+    font-size: 0;
+    line-height: 0;
+    z-index: 100;
+    border: none;
+    user-select: none;
+    background: none;
+
+    &:after {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      content: '';
+      transform: rotate(-45deg);
+      border: 4px solid $sage-color;
+      border-right: none;
+      border-bottom: none;
+      margin-left: 3px;
+    }
+  }
+  .slick-prev {
+    left: -100px;
+  }
+
+  .slick-next {
+    transform: rotate(-180deg);
+    right: -100px;
+  }
+
+  /* Dots */
+  .slick-dotted.slick-slider {
+    margin-bottom: 30px;
+  }
+
+  .slick-dots {
+    position: absolute;
+    bottom: -60px;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+  }
+  .slick-dots li {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    margin-right: 5px;
+    padding: 5px;
+    cursor: pointer;
+
+    &.slick-active {
+      border: 1px solid $sage-color;
+    }
+  }
+}

@@ -1,3 +1,7 @@
+import * as Dinero from 'dinero.js';
+
+import { InfluencerProfile } from './InfluencerProfile';
+
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
   ACTIVE = 'ACTIVE',
@@ -16,7 +20,7 @@ export interface AuctionAttachment {
 
 export interface AuctionBid {
   id: string;
-  bid: number;
+  bid: Dinero.Dinero;
   createdAt: Date;
 }
 
@@ -29,14 +33,13 @@ export interface Auction {
   status: AuctionStatus;
   attachments: [AuctionAttachment];
   bids: [AuctionBid];
-  startPrice: number;
   gameWorn: boolean;
   autographed: boolean;
   authenticityCertificate: boolean;
   sport: string;
   maxBid: AuctionBid;
   startDate: Date;
-  initialPrice: number;
+  initialPrice: Dinero.Dinero;
   endDate: Date;
-  auctionOrganizer: string;
+  auctionOrganizer: InfluencerProfile;
 }

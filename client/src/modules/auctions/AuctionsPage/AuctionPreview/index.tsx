@@ -1,10 +1,9 @@
 import { FC } from 'react';
 
 import clsx from 'clsx';
-import { differenceInHours } from 'date-fns';
-import { toDate } from 'date-fns-tz';
 import { Image } from 'react-bootstrap';
 
+import { auctionTimeLeft } from 'src/helpers/auctionTimeLeft';
 import { Auction } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
@@ -14,10 +13,6 @@ interface Props {
 }
 
 const AuctionPreview: FC<Props> = ({ auction }) => {
-  const hours = differenceInHours(toDate(auction.endDate), new Date());
-  const hoursLeft = hours % 24;
-  const daysLeft = Math.floor(hours / 24);
-
   return (
     <div className={clsx('d-inline-block m-auto', styles.auction)}>
       <div className={clsx('d-inline-block', styles.picture)}>
@@ -40,9 +35,7 @@ const AuctionPreview: FC<Props> = ({ auction }) => {
           {auction.title}
         </div>
         <div className="text--body-super">$400</div>
-        <div className="text-label text-all-cups pt-2">
-          1 bid • {daysLeft && `${daysLeft}d`} {hoursLeft && `${hoursLeft}h`}
-        </div>
+        <div className="text-label text-all-cups pt-2">1 bid • {auctionTimeLeft(auction.endDate)}</div>
       </div>
     </div>
   );

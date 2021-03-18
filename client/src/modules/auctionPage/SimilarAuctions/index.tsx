@@ -10,7 +10,7 @@ import AuctionsSlider from 'src/components/AuctionsSlider';
 
 import styles from './styles.module.scss';
 
-export default function EndingSoon() {
+export default function SimilarAuctions() {
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: {
       size: 10,
@@ -25,9 +25,9 @@ export default function EndingSoon() {
   return (
     <section className={styles.endingSoon}>
       <Container className={clsx(styles.homepageContainer, 'header')}>
-        <Row className="pb-5">
+        <Row className="pb-1 pb-md-5">
           <Col className="text-super" lg="9" xs="12">
-            Ending soon
+            Similar auctions
           </Col>
           <Col className="align-self-end pr-lg-0 ml-1 ml-lg-0" lg="3" xs="12">
             <Link className={clsx('float-lg-right text-label text-all-cups', styles.seeAllLink)} to="/auctions">
