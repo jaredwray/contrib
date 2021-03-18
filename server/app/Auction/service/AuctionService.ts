@@ -22,8 +22,7 @@ import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 import { CloudflareStreaming } from '../../CloudflareStreaming';
 import { InfluencerService } from '../../Influencer/service/InfluencerService';
 
-import { AppError } from '../../../errors/AppError';
-import { ErrorCode } from '../../../errors/ErrorCode';
+import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
 
 import { AuctionRepository } from '../repository/AuctionRepository';
@@ -42,10 +41,7 @@ export class AuctionService {
     private readonly cloudStorage: GCloudStorage,
   ) {}
 
-  public async createAuctionDraft(
-    auctionOrganizerId: string,
-    { charity: _, ...input }: AuctionInput,
-  ): Promise<Auction> {
+  public async createAuctionDraft(auctionOrganizerId: string, { ...input }: AuctionInput): Promise<Auction> {
     const auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
     return AuctionService.makeAuction(auction);
   }
@@ -87,7 +83,7 @@ export class AuctionService {
   }
 
   public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
-    const auction = await this.auctionRepository.getAuction(id, userId);
+    await this.auctionRepository.getAuction(id, userId);
     try {
       const asset = await this.attachmentsService.uploadFileAttachment(id, userId, attachment);
       const { filename } = await attachment;

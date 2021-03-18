@@ -5,4 +5,5 @@ export interface UserAccount {
   phoneNumber?: string;
   status: UserAccountStatus;
   mongodbId?: string;
+  isAdmin?: boolean;
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -18,24 +18,14 @@ interface PropTypes {
 export function UserAccountProvider({ children }: PropTypes) {
   const history = useHistory();
   const location = useLocation();
-  const { user, isLoading: userIsLoading, getAccessTokenSilently } = useAuth0();
+  const { user, isLoading: userIsLoading } = useAuth0();
   const userId = user?.sub;
 
   const [getMyAccount, { data: myAccountData, error: myAccountError }] = useLazyQuery(MyAccountQuery);
-  const [{ userPermissions, userPermissionsError }, setUserPermissions] = useState<{
-    userPermissions: undefined | string[];
-    userPermissionsError: Error | null;
-  }>({
-    userPermissions: userId ? undefined : [],
-    userPermissionsError: null,
-  });
 
   const queryParams = useUrlQueryParams();
 
-  const userContextValue = useMemo(() => ({ permissions: userPermissions as string[], account: myAccountData }), [
-    userPermissions,
-    myAccountData,
-  ]);
+  const userContextValue = useMemo(() => ({ account: myAccountData?.myAccount }), [myAccountData]);
 
   // load profile when user is logged in
   useEffect(() => {
@@ -44,58 +34,15 @@ export function UserAccountProvider({ children }: PropTypes) {
     }
   }, [userId, getMyAccount]);
 
-  const refreshUserPermissions = useCallback(
-    (forceRefreshSession = false) => {
-      if (!userId) {
-        setUserPermissions({ userPermissions: [], userPermissionsError: null });
-        return;
-      }
-
-      let active = true;
-      getAccessTokenSilently({ ignoreCache: forceRefreshSession }).then(
-        (token) => {
-          if (active) {
-            const { permissions } = JSON.parse(atob(token.split('.')[1]));
-            setUserPermissions({ userPermissions: permissions, userPermissionsError: null });
-          }
-        },
-        (error) => {
-          if (active) {
-            setUserPermissions({ userPermissions: undefined, userPermissionsError: error });
-          }
-        },
-      );
-      return () => {
-        active = false;
-      };
-    },
-    [getAccessTokenSilently, userId],
-  );
-
-  // if account data is showing user has an influencer profile, but token does not feature an "influencer" permission,
-  // this means the token is outdated, and session must be refreshed (this happens when influencer has just signed up)
-  const influencerRoleOutdated = Boolean(myAccountData?.influencerProfile && !userPermissions?.includes('influencer'));
-  useEffect(() => {
-    if (influencerRoleOutdated) {
-      return refreshUserPermissions(true);
-    }
-  }, [influencerRoleOutdated, refreshUserPermissions]);
-
-  // parses user token for permissions - we use these to understand what he has access for
-  useEffect(() => refreshUserPermissions(), [refreshUserPermissions]);
-
   // write error to console if something went wrong
   useEffect(() => {
-    if (userPermissionsError) {
-      console.error('error fetching permissions', userPermissionsError);
-    }
     if (myAccountError) {
       console.error('error fetching account data', myAccountError);
     }
-  }, [userPermissionsError, myAccountError]);
+  }, [myAccountError]);
 
   // redirect to onboarding if needed
-  const targetPathname = getOnboardingPath(myAccountData?.myAccount, userPermissions ?? []);
+  const targetPathname = getOnboardingPath(myAccountData?.myAccount);
   const currentPathname = location.pathname;
   useEffect(() => {
     if (targetPathname !== null && targetPathname !== currentPathname) {
@@ -114,29 +61,19 @@ export function UserAccountProvider({ children }: PropTypes) {
     }
   }, [invitationToken]);
 
-  if (
-    userIsLoading ||
-    influencerRoleOutdated ||
-    (userId && !myAccountData) ||
-    (userId && !userPermissions) ||
-    (targetPathname && targetPathname !== currentPathname)
-  ) {
+  if (userIsLoading || (userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) {
     return null;
   }
 
   return <UserAccountContext.Provider value={userContextValue}>{children}</UserAccountContext.Provider>;
 }
 
-function getOnboardingPath(userAccount: UserAccount, permissions: string[]) {
+function getOnboardingPath(userAccount: UserAccount) {
   if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_REQUIRED) {
     return '/phone-verification';
   }
 
-  if (
-    userAccount?.influencerProfile &&
-    !userAccount.influencerProfile.profileDescription &&
-    permissions?.includes('influencer')
-  ) {
+  if (userAccount?.influencerProfile && !userAccount.influencerProfile.profileDescription) {
     return '/profile';
   }
 

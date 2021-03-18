@@ -40,6 +40,11 @@ export const UserAccountSchema = gql`
     Account onboarding status.
     """
     status: UserAccountStatus!
+
+    """
+    Admin users will have True here, others will have null.
+    """
+    isAdmin: Boolean
   }
 
   extend type Query {

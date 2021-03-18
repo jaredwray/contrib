@@ -12,7 +12,7 @@ import './styles.scss';
 
 export default function Header() {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
-  const { permissions } = useContext(UserAccountContext);
+  const { account } = useContext(UserAccountContext);
 
   const afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
 
@@ -46,14 +46,15 @@ export default function Header() {
                     </>
                   )}
 
-                  {permissions.includes('influencers:manage') && (
+                  {account?.isAdmin && (
                     <NavLink to="/admin/influencers">
                       <NavDropdown.Item href="/admin/influencers">
                         <span>Manage Influencers</span>
                       </NavDropdown.Item>
                     </NavLink>
                   )}
-                  {permissions.includes('influencer') && (
+
+                  {account?.influencerProfile && (
                     <NavLink to="/profile">
                       <NavDropdown.Item href="/profile">
                         <span>Account</span>

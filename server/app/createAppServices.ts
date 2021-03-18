@@ -10,7 +10,6 @@ import { InfluencerService } from './Influencer/service/InfluencerService';
 import { InvitationService } from './Influencer/service/InvitationService';
 import { CharityService } from './Charity/service/CharityService';
 import { AuctionService } from './Auction/service/AuctionService';
-import { UserAccountRolesManagementService } from './UserAccount/service/UserAccountRolesManagementService';
 import { GCloudStorage } from './GCloudStorage';
 import { CloudflareStreaming } from './CloudflareStreaming';
 
@@ -31,8 +30,6 @@ export default function createAppServices(connection: Connection): IAppServices 
 
   const auction = new AuctionService(connection, stripeService, cloudStorage);
 
-  const userAccountRolesManagement = new UserAccountRolesManagementService(auth0, eventHub);
-
   return {
     auth0,
     userAccount,
@@ -42,6 +39,5 @@ export default function createAppServices(connection: Connection): IAppServices 
     invitation,
     charity,
     auction,
-    userAccountRolesManagement,
   };
 }
