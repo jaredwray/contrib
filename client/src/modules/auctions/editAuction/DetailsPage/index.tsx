@@ -31,7 +31,9 @@ const EditAuctionDetailsPage = () => {
   const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionDetails, {
     variables: { id: auctionId },
     onCompleted({ auction }) {
-      setCharities([auction.charity]);
+      if (auction.charity) {
+        setCharities([auction.charity]);
+      }
     },
   });
   const [updateAuctionStatus, { loading: updatingStatus }] = useMutation(updateAuctionStatusMutation, {

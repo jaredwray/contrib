@@ -71,12 +71,9 @@ const EditAuctionMediaPage = () => {
     history.push(`/auctions/${auctionId}/basic`);
   }, [auctionId, history]);
 
-  const handleSubmit = useCallback(
-    (values) => {
-      history.push(`/auctions/${auctionId}/details`);
-    },
-    [auctionId, history],
-  );
+  const handleSubmit = useCallback(() => {
+    history.push(`/auctions/${auctionId}/details`);
+  }, [auctionId, history]);
 
   const closeModal = useCallback(() => {
     setSelectedAttachment(null);
