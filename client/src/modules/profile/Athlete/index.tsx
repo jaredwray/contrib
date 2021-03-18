@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 // import { useParams } from 'react-router-dom';
 
-import instagramIcon from 'src/assets/images/instagram.webp';
-import twitterIcon from 'src/assets/images/twitter.webp';
+import InstagramIcon from 'src/assets/images/Instagram';
+import TwitterIcon from 'src/assets/images/Twitter';
 import Layout from 'src/components/Layout';
 import Slider from 'src/components/Slider';
 import TruncateText from 'src/components/TruncateText';
@@ -33,12 +33,18 @@ const AthleteProfilePage: FC<Props> = () => {
               <VerifiedStatus />
               <p className="text-headline">Diego Rossi</p>
               <p className="text-label text-all-cups">Total charity amount raised: --------</p>
-              <div>
-                <a className={clsx('d-inline-block', styles.socialIcon)} href="/" rel="external" title="twitter">
-                  <img alt="twitter" className="" src={twitterIcon} />
+              <div className="d-flex">
+                <a
+                  className={clsx(styles.socialIcon, 'mr-3')}
+                  href="/"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  title="twitter"
+                >
+                  <TwitterIcon />
                 </a>
-                <a className="d-inline-block" href="/" rel="external" title="instagram">
-                  <img alt="instagram" className="" src={instagramIcon} />
+                <a className={styles.socialIcon} href="/" rel="noreferrer noopener" target="_blank" title="instagram">
+                  <InstagramIcon />
                 </a>
               </div>
             </Col>

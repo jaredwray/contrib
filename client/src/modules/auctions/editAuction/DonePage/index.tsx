@@ -14,7 +14,7 @@ import styles from './styles.module.scss';
 const AuctionDonePage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
 
-  const { data } = useQuery(getAuction, {
+  const { data, error } = useQuery(getAuction, {
     variables: { id: auctionId },
   });
   const auction = data?.auction;
@@ -60,7 +60,7 @@ const AuctionDonePage = () => {
               </div>
             </div>
           </Col>
-          <Col className={styles.rightCol}>{auction && <AuctionCard justCreated auction={auction} />}</Col>
+          <Col className={styles.rightCol}>{auction && !error && <AuctionCard justCreated auction={auction} />}</Col>
         </Row>
       </Container>
     </Layout>
