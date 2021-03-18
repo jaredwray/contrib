@@ -25,7 +25,7 @@ export function UserAccountProvider({ children }: PropTypes) {
 
   const queryParams = useUrlQueryParams();
 
-  const userContextValue = useMemo(() => ({ account: myAccountData }), [myAccountData]);
+  const userContextValue = useMemo(() => ({ account: myAccountData?.myAccount }), [myAccountData]);
 
   // load profile when user is logged in
   useEffect(() => {
