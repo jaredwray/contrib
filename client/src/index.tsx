@@ -20,7 +20,8 @@ import HomePage from 'src/modules/Home';
 import InvitationPage from 'src/modules/Invitation';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
-import Profile from 'src/modules/Profile';
+import AthleteProfile from 'src/modules/profile/Athlete';
+import MyProfile from 'src/modules/profile/My';
 import WelcomePage from 'src/modules/Welcome';
 
 import 'src/index.scss';
@@ -51,11 +52,12 @@ ReactDOM.render(
             <Route exact component={Charities} path="/charities" />
             <Route exact component={PhoneNumberVerification} path="/phone-verification" />
             <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
-            <Route exact component={Profile} path="/profile" />
+            <Route exact component={MyProfile} path="/profile" />
             <Route exact component={WelcomePage} path="/welcome" />
             <Route exact component={Influencers} path="/admin/influencers" />
             <Route exact component={InvitationPage} path="/invitation/:slug" />
             <Route exact component={Auctions} path="/auctions" />
+            <Route exact component={AthleteProfile} path="/profiles/:influencerId" />
             <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
             <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
             <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />

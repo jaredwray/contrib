@@ -1,3 +1,5 @@
+import { InfluencerProfile } from './InfluencerProfile';
+
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
   ACTIVE = 'ACTIVE',
@@ -29,14 +31,13 @@ export interface Auction {
   status: AuctionStatus;
   attachments: [AuctionAttachment];
   bids: [AuctionBid];
-  startPrice: number;
   gameWorn: boolean;
   autographed: boolean;
   authenticityCertificate: boolean;
   sport: string;
   maxBid: AuctionBid;
-  startDate: Date;
-  initialPrice: number;
-  endDate: Date;
-  auctionOrganizer: string;
+  startDate: string;
+  initialPrice: { amount: number; currency: string; precision: number };
+  endDate: string;
+  auctionOrganizer: InfluencerProfile;
 }
