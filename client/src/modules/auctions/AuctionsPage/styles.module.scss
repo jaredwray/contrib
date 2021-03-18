@@ -13,6 +13,8 @@
 
 .rightBlock {
   background-color: $barely-gray-color;
+  display: flex;
+  flex-direction: column;
 }
 
 .auctions {

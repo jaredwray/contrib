@@ -6,7 +6,7 @@
 
 .wrapper {
   margin: 191px auto;
-  padding: 0 80px;
+  max-width: 413px;
 }
 
 .buttonIcon {
@@ -22,6 +22,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 48px 0;
 }
 
 .auction {

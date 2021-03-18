@@ -20,7 +20,7 @@ import styles from './styles.module.scss';
 const MAX_AVATAR_SIZE_MB = 2;
 const HIDE_ALERT_TIMEOUT_MS = 3500;
 
-export default function ProfilePage() {
+export default function MyProfilePage() {
   const [updateInfluencerProfile, { loading: updatingProfile }] = useMutation(UpdateInfluencerProfileMutation);
   const [updateInfluencerProfileAvatar] = useMutation(UpdateInfluencerProfileAvatarMutation);
 

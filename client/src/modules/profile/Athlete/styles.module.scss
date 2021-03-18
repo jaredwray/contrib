@@ -1,0 +1,55 @@
+@import 'src/variables.scss';
+
+.root {
+  padding-bottom: 0;
+}
+
+.header {
+  background-color: $sage-color;
+  height: 130px;
+  text-align: center;
+}
+
+.content {
+  margin-top: 135px;
+  margin-bottom: 56px;
+}
+
+.avatar {
+  width: 194px;
+  height: 194px;
+  transform: translateY(33px);
+}
+
+.socialIcon {
+  margin-right: 20px;
+  width: 36px;
+  height: 36px;
+  background-color: $sage-color;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sliders {
+  background-color: $barely-gray-color;
+  padding-top: 57px;
+  padding-bottom: 60px;
+}
+
+@media (max-width: $small-weight) {
+  .header {
+    height: 85px;
+  }
+
+  .content {
+    margin-top: 65px;
+  }
+
+  .avatar {
+    width: 120px;
+    height: 120px;
+    transform: translateY(20px);
+  }
+}

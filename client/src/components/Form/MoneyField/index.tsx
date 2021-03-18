@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, ReactElement } from 'react';
 
 import Dinero from 'dinero.js';
 import { Form as BsForm } from 'react-bootstrap';
@@ -16,7 +16,7 @@ interface Props {
   disabled?: boolean;
   className?: string;
   constraints?: { [key: string]: any };
-  externalText?: string;
+  externalText?: string | ReactElement;
 }
 
 const MoneyField: FC<Props> = ({

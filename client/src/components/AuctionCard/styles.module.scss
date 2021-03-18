@@ -1,0 +1,64 @@
+@import 'src/variables.scss';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 0;
+  height: 481px;
+  width: 305px;
+}
+
+.link {
+  color: $dark-gray-color;
+  white-space: nowrap;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  background-color: $white-color;
+  padding: 20px;
+}
+
+.image {
+  background-color: #f8f8f8;
+}
+
+.title {
+  color: $sage-color;
+}
+
+.horizontalRoot {
+  max-width: 428px;
+  flex-direction: row;
+}
+
+.horizontalImage {
+  height: 214px;
+  width: 214px;
+  flex-shrink: 0;
+}
+
+.horizontalDescription {
+  flex-grow: 1;
+  flex-basis: 50%;
+}
+
+@media (max-width: $medium-weight) {
+  .root {
+    width: 278px;
+    height: 462px;
+  }
+
+  .horizontalRoot {
+    max-width: 335px;
+  }
+
+  .horizontalImage {
+    flex-shrink: 0;
+    height: 163px;
+    width: 163px;
+  }
+}

@@ -5,10 +5,10 @@ import clsx from 'clsx';
 import { Row, Col, Container } from 'react-bootstrap';
 
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
+import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
 import { Auction } from 'src/types/Auction';
 
-import AuctionPreview from './AuctionPreview';
 import Filters from './Filters';
 import Pagination from './Pagination';
 import PaginationInfo from './PaginationInfo';
@@ -87,9 +87,9 @@ const AuctionsPage: FC = () => {
               />
             </div>
 
-            <div className={clsx(styles.auctions, 'd-grid text-center')}>
+            <div className={clsx(styles.auctions, 'd-grid align-items-center')}>
               {(auctions?.items || []).map((auction: Auction) => (
-                <AuctionPreview key={auction.id} auction={auction} />
+                <AuctionCard key={auction.id} horizontal auction={auction} />
               ))}
             </div>
 

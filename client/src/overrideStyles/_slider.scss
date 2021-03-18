@@ -7,6 +7,9 @@
 
   .slick-slide {
     z-index: 10;
+    &:not(:last-child) {
+      margin-right: 74px;
+    }
   }
 
   .slick-arrow {
@@ -41,10 +44,6 @@
         border-color: $white-color;
       }
     }
-
-    &:before {
-      content: '';
-    }
   }
 
   .slick-prev {
@@ -59,6 +58,13 @@
   @media (max-width: $medium-weight) {
     .slick-arrow {
       display: none !important;
+    }
+
+    .slick-slide {
+      z-index: 10;
+      &:not(:last-child) {
+        margin-right: 20px;
+      }
     }
   }
 }
