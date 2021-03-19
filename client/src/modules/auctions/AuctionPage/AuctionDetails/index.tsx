@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useState } from 'react';
 
 import clsx from 'clsx';
 import { format as dateFormat } from 'date-fns';
@@ -14,15 +14,15 @@ import styles from './styles.module.scss';
 import WatchBtn from './WatchBtn';
 
 const AuctionDetails: FC<Auction> = (auction): ReactElement => {
-  const { maxBid, initialPrice, endDate, bids, title, status } = auction;
-  const parserMaxBid = Dinero(Object(maxBid?.bid || initialPrice));
+  const { initialPrice, endDate, bids, title, status } = auction;
+  const [maxBid, setMaxBid] = useState(Dinero(Object(auction.maxBid?.bid || initialPrice)));
   const timeLeft = toHumanReadableDatetime(endDate);
   const endDateFormatted = dateFormat(toDate(endDate), 'MMM dd yyyy');
 
   return (
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2')}>{title}</div>
-      <div className="text-headline">{parserMaxBid.toFormat('$0.00')}</div>
+      <div className="text-headline">{maxBid.toFormat('$0.00')}</div>
       <div className="text-label text-all-cups pt-3 pb-3">
         {pluralize(bids?.length, 'bid')}{' '}
         <span className="float-right">
@@ -36,7 +36,7 @@ const AuctionDetails: FC<Auction> = (auction): ReactElement => {
       </div>
       {status === AuctionStatus.ACTIVE && (
         <>
-          <BidInput maxBid={parserMaxBid} />
+          <BidInput auctionId={auction.id} maxBid={maxBid} setMaxBid={setMaxBid} />
           <WatchBtn auction={auction} />
         </>
       )}
