@@ -1,13 +1,13 @@
 @import 'src/variables.scss';
 
-.title {
-  color: $sage-color;
-}
-
 .notBold {
   color: $light-gray-color;
 }
 
 .bold {
   color: $dark-gray-color;
+}
+
+.error {
+  color: $salmon-color;
 }

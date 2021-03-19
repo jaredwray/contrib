@@ -144,15 +144,11 @@ export class AuctionService {
     if (dayjs().utc().isAfter(auction.endsAt)) {
       throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
     }
-    const initialPrice = Dinero({
-      amount: auction.startPrice,
-      currency: auction.startPriceCurrency as Dinero.Currency,
-    });
-    if (initialPrice.greaterThan(bid)) {
-      throw new AppError('Provided bid is lower than initial price', ErrorCode.BAD_REQUEST);
-    }
 
-    const maxBid = Dinero({ currency: auction.maxBid.bidCurrency as Dinero.Currency, amount: auction.maxBid.bid });
+    const maxBid = Dinero({
+      amount: auction.maxBid?.bid || auction.startPrice,
+      currency: auction.maxBid?.bidCurrency || auction.startPriceCurrency,
+    });
 
     if (maxBid.greaterThan(bid)) {
       throw new AppError(
@@ -161,6 +157,7 @@ export class AuctionService {
       );
     }
 
+    // TODO: error if bids collection is missing
     const [createdBid] = await this.AuctionBidModel.create(
       [
         {

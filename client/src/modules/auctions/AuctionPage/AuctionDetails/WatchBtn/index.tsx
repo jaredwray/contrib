@@ -14,7 +14,7 @@ interface Props {
 
 const WatchBtn: FC<Props> = ({ auction }): ReactElement => {
   return (
-    <div className={clsx(styles.container, 'pt-3 pb-3 d-table  align-middle')}>
+    <div className={clsx(styles.container, 'mt-3 pt-3 pb-3 d-table  align-middle')}>
       <Button className={styles.watchBtn} variant="link">
         <HeartIcon />
       </Button>

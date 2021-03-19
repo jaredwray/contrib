@@ -24,6 +24,9 @@ export const getAuction = gql`
       description
       fullPageDescription
       status
+      maxBid {
+        bid
+      }
       bids {
         bid
         createdAt

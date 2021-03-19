@@ -16,6 +16,7 @@ cache.writeQuery({
       phoneNumber: '123',
       status: UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED,
       influencerProfile: null,
+      isAdmin: false,
     },
   },
 });
