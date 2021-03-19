@@ -7,6 +7,7 @@ import { AuctionInput } from './model/AuctionInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer';
+import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 
 export const AuctionResolvers = {
   Query: {
@@ -79,5 +80,9 @@ export const AuctionResolvers = {
         { auction, currentInfluencer }: GraphqlContext,
       ): Promise<Auction> => auction.updateAuctionStatus(id, currentInfluencer.id, status),
     ),
+  },
+  InfluencerProfile: {
+    auctions: async (parent: InfluencerProfile, _, { auction }: GraphqlContext): Promise<Auction[]> =>
+      await auction.getInfluencersAuctions(parent.id),
   },
 };

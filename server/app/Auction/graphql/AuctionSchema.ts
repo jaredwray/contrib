@@ -107,4 +107,8 @@ export const AuctionSchema = gql`
     removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
     deleteAuction(id: String!): AuctionStatusResponse!
   }
+
+  extend type InfluencerProfile {
+    auctions: [Auction!]
+  }
 `;

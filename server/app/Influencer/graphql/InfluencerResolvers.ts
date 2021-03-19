@@ -1,6 +1,7 @@
 import { InviteInfluencerInput } from './model/InviteInfluencerInput';
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
+import { Auction } from '../../Auction/dto/Auction';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateInfluencerProfileInput } from './model/UpdateInfluencerProfileInput';
 import { Invitation } from '../dto/Invitation';
@@ -35,6 +36,9 @@ export const InfluencerResolvers = {
         skip,
       }),
     ),
+    influencer: (_, { id }: { id: string }, { influencer }: GraphqlContext) => {
+      return influencer.findInfluencer(id);
+    },
   },
   Mutation: {
     inviteInfluencer: requireAdmin(async (parent, { input }: { input: InviteInfluencerInput }, { invitation }) =>

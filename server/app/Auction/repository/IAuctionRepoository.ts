@@ -9,7 +9,7 @@ import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 
 export type IAuctionFilters = {
-  size: number;
+  size?: number;
   skip: number;
   query?: string;
   filters?: AuctionSearchFilters;
@@ -41,4 +41,5 @@ export interface IAuctionRepository {
   getAuction(id: string, organizerId?: string): Promise<IAuctionModel>;
   getAuctionSports(): Promise<string[]>;
   addAuctionAttachment(id: string, organizerId: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel>;
+  getInfluencersAuctions(id: string): Promise<IAuctionModel[]>;
 }

@@ -8,8 +8,7 @@ import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 
 import { AuctionInput } from '../graphql/model/AuctionInput';
-import { AppError } from '../../../errors/AppError';
-import { ErrorCode } from '../../../errors/ErrorCode';
+import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionStatus } from '../dto/AuctionStatus';
@@ -77,6 +76,7 @@ export class AuctionRepository implements IAuctionRepository {
       [filters?.sports?.length, { sport: { $in: filters?.sports } }],
       [filters?.maxPrice, { startPrice: { $lte: filters?.maxPrice } }],
       [filters?.minPrice, { startPrice: { $gte: filters?.minPrice } }],
+      [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {
@@ -129,13 +129,15 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   async getAuctions({ query, size, skip = 0, orderBy, filters }: IAuctionFilters): Promise<IAuctionModel[]> {
-    return this.populateAuctionQuery<IAuctionModel[]>(
+    const auctions = this.populateAuctionQuery<IAuctionModel[]>(
       this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
     )
       .skip(skip)
-      .limit(size)
-      .sort(AuctionRepository.searchSortOptionsByName(orderBy))
-      .exec();
+      .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+    if (size) {
+      auctions.limit(size);
+    }
+    return auctions.exec();
   }
 
   async getAuctionsCount({ query, size, skip = 0, orderBy, filters }: IAuctionFilters): Promise<number> {
@@ -168,6 +170,10 @@ export class AuctionRepository implements IAuctionRepository {
       throw new AppError('Cannot get min/max price limits', ErrorCode.NOT_FOUND);
     }
     return { min: result[0]?.min || 0, max: result[0]?.max || 0 };
+  }
+
+  public getInfluencersAuctions(id: string): Promise<IAuctionModel[]> {
+    return this.AuctionModel.find({ auctionOrganizer: Types.ObjectId(id) }).exec();
   }
 
   public getAuctionSports(): Promise<string[]> {
