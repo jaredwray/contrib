@@ -21,7 +21,6 @@ const AuctionPage = () => {
     variables: { id: auctionId },
   });
   const auction = auctionData?.auction;
-  console.log('🚀 ~ file: index.tsx ~ line 24 ~ AuctionPage ~ auction', auction?.attachment);
 
   if (error?.message === 'Auction was not found' || auction?.status === AuctionStatus.DRAFT) {
     history.push(`/`);

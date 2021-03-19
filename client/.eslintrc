@@ -31,6 +31,7 @@
   ],
 
   "rules": {
+    "no-console": "warn",
     "react/prop-types": "off",
     "react/no-unknown-property": "error",
     "react/jsx-sort-props": [
