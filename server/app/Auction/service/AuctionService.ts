@@ -204,6 +204,11 @@ export class AuctionService {
     return { message: 'Scheduled' };
   }
 
+  public async getInfluencersAuctions(id: string): Promise<Auction[]> {
+    const auctions = await this.auctionRepository.getInfluencersAuctions(id);
+    return auctions.map(AuctionService.makeAuction);
+  }
+
   public async settleAuctionAndCharge(auction: IAuctionModel): Promise<void> {
     if (!auction) {
       throw new AppError('Auction not found');
@@ -251,7 +256,7 @@ export class AuctionService {
     };
   }
 
-  private static makeAuction(model: IAuctionModel): Auction | null {
+  public static makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
       return null;
     }

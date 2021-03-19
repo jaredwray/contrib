@@ -39,6 +39,7 @@ export const InfluencerSchema = gql`
   extend type Query {
     invitation(slug: String!): Invitation
     influencers(size: Int!, skip: Int!): InfluencersPage!
+    influencer(id: String!): InfluencerProfile!
   }
 
   input InviteInfluencerInput {

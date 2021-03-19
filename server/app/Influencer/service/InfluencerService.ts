@@ -17,10 +17,7 @@ interface InfluencerInput {
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
 
-  constructor(
-    private readonly connection: Connection,
-    private readonly charityService: CharityService,
-  ) { }
+  constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
   async createInfluencer(
     { name, avatarUrl, userAccount }: InfluencerInput,
@@ -39,6 +36,11 @@ export class InfluencerService {
       { session },
     );
     return InfluencerService.makeInfluencerProfile(influencer[0]);
+  }
+
+  async findInfluencer(id: string): Promise<InfluencerProfile | null> {
+    const influencer = await this.InfluencerModel.findById(id).exec();
+    return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
   }
 
   async findInfluencerByUserAccount(userAccount: string): Promise<InfluencerProfile | null> {
