@@ -12,7 +12,6 @@ import { CharityService } from './Charity/service/CharityService';
 import { AuctionService } from './Auction/service/AuctionService';
 import { GCloudStorage } from './GCloudStorage';
 import { CloudflareStreaming } from './CloudflareStreaming';
-import { createAppRepositories } from './createAppRepositories';
 
 export default function createAppServices(connection: Connection): IAppServices {
   const eventHub = new EventHub();
