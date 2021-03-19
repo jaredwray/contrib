@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useCallback, useEffect } from 'react';
 
 import { useQuery } from '@apollo/client';
@@ -33,7 +34,6 @@ export default function InvitationPage() {
 
   useEffect(() => {
     if (!loading && !invitation) {
-      console.error('Invitation loading error: ', error);
       history.push('/');
     }
   }, [invitation, loading, error, history]);

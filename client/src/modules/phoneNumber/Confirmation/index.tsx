@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useCallback, useEffect, useState } from 'react';
 
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';

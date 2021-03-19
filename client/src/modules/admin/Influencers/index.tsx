@@ -28,7 +28,6 @@ export default function InfluencersPage() {
   });
 
   if (error) {
-    console.error('Influencers loading error: ', error);
     return null;
   }
 

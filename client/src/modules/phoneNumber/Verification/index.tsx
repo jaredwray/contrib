@@ -52,7 +52,6 @@ export default function PhoneNumberVerification() {
   useEffect(() => {
     if (invitationToken) {
       enterInvitationCode({ variables: { code: invitationToken } }).catch((error) => {
-        console.error('error submitting invitation token', error);
         invitationTokenVar(null);
       });
     }

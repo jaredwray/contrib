@@ -37,6 +37,7 @@ export function UserAccountProvider({ children }: PropTypes) {
   // write error to console if something went wrong
   useEffect(() => {
     if (myAccountError) {
+      // eslint-disable-next-line no-console
       console.error('error fetching account data', myAccountError);
     }
   }, [myAccountError]);

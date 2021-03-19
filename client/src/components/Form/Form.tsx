@@ -38,8 +38,6 @@ const Form: FC<Props> = ({ constraints, children, initialValues = {}, onSubmit, 
           };
         }
 
-        console.error('failed submitting form with unknown type of error: ', error);
-
         return {
           [FORM_ERROR]: 'Something went wrong, please try again later',
         };

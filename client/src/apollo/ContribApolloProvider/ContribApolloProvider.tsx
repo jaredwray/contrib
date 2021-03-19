@@ -30,7 +30,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
           },
         };
       } catch (error) {
-        console.error('error getting access token', error);
+        // eslint-disable-next-line no-console
         return headers;
       }
     });

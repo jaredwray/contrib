@@ -37,6 +37,7 @@ export const InfluencerOnboardingFlowCharitiesForm: FC<Props> = ({
       try {
         await onSubmit(favoriteCharities);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('error submitting favorite charities: ', error);
       } finally {
         setSubmitting(false);

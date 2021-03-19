@@ -119,7 +119,6 @@ export default function MyProfilePage() {
     return <>Loading...</>;
   }
   if (accountDataLoadingError) {
-    console.error("Account's data loading error: ", accountDataLoadingError);
     return null;
   }
   if (!influencerProfile) {
