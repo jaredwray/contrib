@@ -34,10 +34,6 @@ const BidInput: FC<Props> = ({ auctionId, maxBid, setMaxBid }) => {
 
   const handleSubmit = useCallback(
     (values) => {
-      if (!isAuthenticated) {
-        window.alert('You need to log in to make a bid!');
-        return;
-      }
       const newBid = Dinero(values.maxBid);
       const confirmation = window.confirm(`Your max bid is ${newBid.toFormat('$0.00')}. Are you sure?`);
 
@@ -45,7 +41,7 @@ const BidInput: FC<Props> = ({ auctionId, maxBid, setMaxBid }) => {
         makeBid({ variables: { id: auctionId, bid: newBid.toObject() } });
       }
     },
-    [auctionId, isAuthenticated, makeBid],
+    [auctionId, makeBid],
   );
 
   return (
