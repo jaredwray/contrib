@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, SyntheticEvent } from 'react';
 
 import { Modal } from 'react-bootstrap';
 
@@ -6,7 +6,7 @@ const { Header, Title } = Modal;
 
 interface Props {
   open: boolean;
-  onClose(): void;
+  onClose(event: SyntheticEvent): void;
   title?: string;
   size?: 'sm' | 'lg' | 'xl';
 }

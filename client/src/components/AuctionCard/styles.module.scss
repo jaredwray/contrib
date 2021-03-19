@@ -7,6 +7,11 @@
   margin: 0;
   height: 481px;
   width: 305px;
+  max-width: 305px;
+}
+
+.name {
+  font-size: 11px !important;
 }
 
 .link {
@@ -32,6 +37,8 @@
 
 .horizontalRoot {
   max-width: 428px;
+  height: 214px;
+  width: 428px;
   flex-direction: row;
 }
 
@@ -49,11 +56,13 @@
 @media (max-width: $medium-weight) {
   .root {
     width: 278px;
+    max-width: 278px;
     height: 462px;
   }
 
   .horizontalRoot {
     max-width: 335px;
+    width: 335px;
   }
 
   .horizontalImage {

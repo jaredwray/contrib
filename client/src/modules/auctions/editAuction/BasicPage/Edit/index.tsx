@@ -19,7 +19,7 @@ const EditAuctionBasicPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
-  const { loading: loadingQuery, data: auctionData, error: updateError } = useQuery(getAuctionBasics, {
+  const { loading: loadingQuery, data: auctionData, error } = useQuery(getAuctionBasics, {
     variables: { id: auctionId },
   });
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionBasics, {
@@ -38,7 +38,7 @@ const EditAuctionBasicPage = () => {
   return (
     <Layout>
       <ProgressBar now={25} />
-      <FormUpdateMessages errorMessage={updateError?.message} />
+      <FormUpdateMessages errorMessage={error?.message} />
 
       <section className={styles.section}>
         <Form initialValues={auctionData?.auction} onSubmit={handleSubmit}>
