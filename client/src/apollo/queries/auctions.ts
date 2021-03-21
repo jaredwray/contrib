@@ -192,7 +192,10 @@ export const updateAuctionDetails = gql`
       startDate
       endDate
       startPrice
-      charity
+      charity {
+        id
+        name
+      }
     }
   }
 `;

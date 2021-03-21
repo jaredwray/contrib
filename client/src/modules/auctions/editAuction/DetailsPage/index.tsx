@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { addDays, differenceInCalendarDays, parseISO } from 'date-fns';
@@ -95,28 +95,35 @@ const EditAuctionDetailsPage = () => {
     return durationOptions.find(({ value }) => parseInt(value, 10) === duration);
   }, [auctionData?.auction]);
 
+  const { startDate, endDate, startPrice, charity } = auctionData?.auction ?? {};
+
+  const initialValues = useMemo(() => {
+    if (!startDate) {
+      return undefined;
+    }
+
+    const currentDate = toDate(startDate);
+    const time = format(currentDate, 'hh:mm');
+    const dayPeriod = format(currentDate, 'aaa');
+    const currentTimeZone = format(currentDate, 'x');
+    const duration = differenceInCalendarDays(toDate(parseISO(endDate)), toDate(parseISO(startDate)));
+
+    return {
+      startPrice,
+      charity,
+      startDate: {
+        date: currentDate,
+        time: time,
+        dayPeriod: dayPeriod,
+        timeZone: currentTimeZone,
+      },
+      duration: duration,
+    };
+  }, [startDate, endDate, startPrice, charity]);
+
   if (loadingQuery) {
     return null;
   }
-
-  const { startDate, endDate, ...rest } = auctionData?.auction;
-
-  const currentDate = toDate(startDate);
-  const time = format(currentDate, 'hh:mm');
-  const dayPeriod = format(currentDate, 'aaa');
-  const currentTimeZone = format(currentDate, 'x');
-  const duration = differenceInCalendarDays(toDate(parseISO(endDate)), toDate(parseISO(startDate)));
-
-  const initialValues = {
-    ...rest,
-    startDate: {
-      date: currentDate,
-      time: time,
-      dayPeriod: dayPeriod,
-      timeZone: currentTimeZone,
-    },
-    duration: duration,
-  };
 
   return (
     <Layout>

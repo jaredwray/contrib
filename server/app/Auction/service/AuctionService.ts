@@ -235,7 +235,7 @@ export class AuctionService {
     }
     return {
       id: model._id.toString(),
-      user: model.user._id.toString(),
+      user: model.user?._id?.toString(),
       bid: model.bidMoney || Dinero({ amount: model.bid, currency: model.bidCurrency }),
       createdAt: model.createdAt,
     };
