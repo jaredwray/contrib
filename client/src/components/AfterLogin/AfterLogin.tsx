@@ -1,4 +1,7 @@
+import { useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router-dom';
+
+import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
 
 /**
  * A separate page where Auth0 callback leads to.
@@ -12,5 +15,8 @@ import { Redirect } from 'react-router-dom';
  */
 
 export function AfterLogin() {
-  return <Redirect to="/" />;
+  const returnUrl = useReactiveVar(returnUrlVar);
+  const redirectUrl = (returnUrl && returnUrl.startsWith('/') && returnUrl) || '/';
+
+  return <Redirect to={redirectUrl} />;
 }

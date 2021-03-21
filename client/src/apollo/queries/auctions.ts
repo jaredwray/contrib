@@ -26,6 +26,7 @@ export const AuctionQuery = gql`
       status
       startPrice
       maxBid {
+        id
         bid
       }
       bids {
@@ -122,6 +123,18 @@ export const createAuctionMutation = gql`
       }
     ) {
       id
+    }
+  }
+`;
+
+export const MakeAuctionBidMutation = gql`
+  mutation createAuctionBid($id: String!, $bid: Money!) {
+    createAuctionBid(id: $id, bid: $bid) {
+      id
+      maxBid {
+        id
+        bid
+      }
     }
   }
 `;

@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
+import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
@@ -52,11 +53,15 @@ export function UserAccountProvider({ children }: PropTypes) {
   }, [targetPathname, currentPathname, history]);
 
   const invitationToken = queryParams.get('invite');
+  const returnUrl = queryParams.get('returnUrl');
   useEffect(() => {
     if (invitationToken) {
       invitationTokenVar(invitationToken);
     }
-  }, [invitationToken]);
+    if (returnUrl) {
+      returnUrlVar(returnUrl);
+    }
+  }, [invitationToken, returnUrl]);
 
   if (userIsLoading || (userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) {
     return null;

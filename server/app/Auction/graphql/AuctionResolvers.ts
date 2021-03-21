@@ -11,7 +11,6 @@ import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { GraphqlResolver } from '../../../graphql/types';
 import { AuctionAssets } from '../dto/AuctionAssets';
-import { AuctionBid } from '../dto/AuctionBid';
 import { loadInfluencer } from '../../../graphql/middleware/loadInfluencer';
 
 interface AuctionResolversType {
@@ -30,7 +29,7 @@ interface AuctionResolversType {
     deleteAuction: GraphqlResolver<Auction, { id: string }>;
     addAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachment: any }>;
     removeAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
-    createAuctionBid: GraphqlResolver<AuctionBid, { id: string } & ICreateAuctionBidInput>;
+    createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     updateAuctionStatus: GraphqlResolver<Auction, { id: string; status: AuctionStatus }>;
   };
   InfluencerProfile: {
@@ -67,9 +66,10 @@ export const AuctionResolvers: AuctionResolversType = {
     removeAuctionAttachment: requireInfluencer(async (_, { id, attachmentUrl }, { currentInfluencer, auction }) =>
       auction.removeAuctionAttachment(id, currentInfluencer.id, attachmentUrl),
     ),
-    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { currentAccount, auction }) =>
-      auction.addAuctionBid(id, { bid, user: currentAccount }),
-    ),
+    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { currentAccount, auction }) => {
+      await auction.addAuctionBid(id, { bid, user: currentAccount });
+      return auction.getAuction(id);
+    }),
     updateAuctionStatus: requireInfluencer(async (_, { id, status }, { auction, currentInfluencer }) =>
       auction.updateAuctionStatus(id, currentInfluencer.id, status),
     ),
