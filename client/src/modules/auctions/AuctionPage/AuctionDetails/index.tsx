@@ -29,7 +29,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const history = useHistory();
   const [makeBid] = useMutation(MakeAuctionBidMutation);
 
-  const { startPrice, maxBid, endDate, bids, title, status } = auction;
+  const { startPrice, maxBid, endDate, totalBids, title, status } = auction;
   const ended = toDate(endDate) <= new Date();
   const durationTillEnd = toHumanReadableDuration(endDate);
   const endDateFormatted = dateFormat(toDate(endDate), 'MMM dd yyyy');
@@ -84,7 +84,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       <div className={clsx(styles.title, 'text-subhead pt-2')}>{title}</div>
       <div className="text-headline">{price.toFormat('$0,0.00')}</div>
       <div className="text-label text-all-cups pt-3 pb-3">
-        {pluralize(bids?.length, 'bid')}{' '}
+        {pluralize(totalBids, 'bid')}{' '}
         <span className="float-right">
           {!ended && (
             <>

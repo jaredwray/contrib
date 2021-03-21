@@ -25,14 +25,10 @@ export const AuctionQuery = gql`
       fullPageDescription
       status
       startPrice
+      totalBids
       maxBid {
         id
         bid
-      }
-      bids {
-        bid
-        createdAt
-        id
       }
       auctionOrganizer {
         id
@@ -123,6 +119,14 @@ export const createAuctionMutation = gql`
       }
     ) {
       id
+      description
+      fullPageDescription
+      gameWorn
+      autographed
+      playedIn
+      title
+      sport
+      authenticityCertificate
     }
   }
 `;
@@ -135,6 +139,7 @@ export const MakeAuctionBidMutation = gql`
         id
         bid
       }
+      totalBids
     }
   }
 `;
@@ -165,6 +170,14 @@ export const updateAuctionBasics = gql`
       }
     ) {
       id
+      description
+      sport
+      fullPageDescription
+      gameWorn
+      autographed
+      playedIn
+      title
+      authenticityCertificate
     }
   }
 `;
@@ -176,6 +189,10 @@ export const updateAuctionDetails = gql`
       input: { startDate: $startDate, endDate: $endDate, startPrice: $startPrice, charity: $charity }
     ) {
       id
+      startDate
+      endDate
+      startPrice
+      charity
     }
   }
 `;
@@ -213,11 +230,11 @@ export const AuctionsListQuery = gql`
       skip
       items {
         id
-        bids {
-          bid
-          createdAt
+        maxBid {
           id
+          bid
         }
+        totalBids
         title
         description
         startPrice
