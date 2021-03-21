@@ -42,7 +42,8 @@
   flex-direction: row;
 }
 
-.horizontalImage {
+.horizontalImage,
+.horizontalDescription {
   height: 214px;
   width: 214px;
   flex-shrink: 0;
@@ -65,7 +66,9 @@
     width: 335px;
   }
 
-  .horizontalImage {
+  .horizontalImage,
+  .horizontalDescription {
+    font-size: 14px;
     flex-shrink: 0;
     height: 163px;
     width: 163px;
