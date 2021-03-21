@@ -25,3 +25,37 @@ export const InviteInfluencerMutation = gql`
     }
   }
 `;
+
+export const getInfluencersById = gql`
+  query GetInfluencersById($id: String!) {
+    influencer(id: $id) {
+      avatarUrl
+      id
+      name
+      profileDescription
+      sport
+      status
+      team
+
+      auctions {
+        attachments {
+          url
+          id
+        }
+        auctionOrganizer {
+          name
+          avatarUrl
+          id
+        }
+        endDate
+        initialPrice
+        startDate
+
+        title
+        bids {
+          id
+        }
+      }
+    }
+  }
+`;
