@@ -9,7 +9,7 @@ export const requireEnvVar = (name: string) => {
 export const AppConfig = {
   app: {
     port: Number(process.env.PORT ?? 3000),
-    url: requireEnvVar('APP_URL'),
+    url: requireEnvVar('APP_URL').replace(/\/$/, ''),
   },
   environment: {
     isProduction: process.env.NODE_ENV === 'live',

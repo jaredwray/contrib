@@ -104,9 +104,7 @@ export class InvitationService {
   }
 
   private async makeInvitationLink(slug: string): Promise<string> {
-    const baseUrl = AppConfig.app.url.replace(/\/$/, '');
-    const invitationLink = `${baseUrl}/invitation/${slug}`;
-    return this.urlShortenerService.shortenUrl(invitationLink);
+    return this.urlShortenerService.shortenUrl(`${AppConfig.app.url}/invitation/${slug}`);
   }
 
   private async creatInfluencerProfileForExistingUser(
@@ -143,7 +141,7 @@ export class InvitationService {
     const influencerProfile = await this.influencerService.createInfluencer(
       {
         name: `${firstName} ${lastName}`,
-        avatarUrl: 'https://picsum.photos/200',
+        avatarUrl: `${AppConfig.app.url}/content/img/users/person.png`,
         userAccount: null,
       },
       session,

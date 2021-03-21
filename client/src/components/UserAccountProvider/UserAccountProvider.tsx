@@ -47,11 +47,7 @@ export function UserAccountProvider({ children }: PropTypes) {
   const currentPathname = location.pathname;
   useEffect(() => {
     if (targetPathname !== null && targetPathname !== currentPathname) {
-      if (targetPathname === '/profile') {
-        history.replace(`${targetPathname}?sbs=true`);
-      } else {
-        history.replace(targetPathname);
-      }
+      history.replace(targetPathname);
     }
   }, [targetPathname, currentPathname, history]);
 
@@ -75,7 +71,7 @@ function getOnboardingPath(userAccount: UserAccount) {
   }
 
   if (userAccount?.influencerProfile && !userAccount.influencerProfile.profileDescription) {
-    return '/profile';
+    return '/onboarding/basic';
   }
 
   if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {

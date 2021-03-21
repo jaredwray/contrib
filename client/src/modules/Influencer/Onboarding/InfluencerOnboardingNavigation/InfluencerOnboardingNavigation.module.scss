@@ -1,0 +1,29 @@
+@import 'src/variables.scss';
+@import '~bootstrap/scss/bootstrap.scss';
+
+.root {
+  height: 100px;
+  background-color: $barely-gray-color;
+  margin-top: 56px;
+  padding: 24px;
+}
+
+.button {
+  min-width: 197px;
+  height: 50px !important;
+
+  transition: opacity ease-in-out 0.25s;
+  &:disabled {
+    opacity: 0.2;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .root {
+    margin-top: 26px;
+  }
+
+  .button {
+    min-width: 162px;
+  }
+}

@@ -2,13 +2,11 @@
 @import '~react-datepicker/src/stylesheets/datepicker.scss';
 
 @import 'src/overrideStyles/variables';
-
 @import '~bootstrap/scss/bootstrap';
 @import 'src/overrideStyles';
 
 body {
   color: $dark-gray-color;
-  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   height: 100%;
 }

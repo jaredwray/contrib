@@ -37,7 +37,7 @@ const InputField: FC<Props> = ({
 
   return (
     <Group>
-      {title && <Label>{title}</Label>}
+      {title && <Label className="d-block">{title}</Label>}
       <Control
         {...inputProps}
         as={textarea ? 'textarea' : 'input'}

@@ -47,6 +47,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "react-slick": "^0.28.1",
+    "react-toast-notifications": "^2.4.3",
     "redux-bundler": "^28.0.0",
     "sass": "^1.32.5",
     "sass-loader": "^10.1.1",

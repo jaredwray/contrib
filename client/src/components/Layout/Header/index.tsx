@@ -62,6 +62,14 @@ export default function Header() {
                     </NavLink>
                   )}
 
+                  {account?.influencerProfile && (
+                    <NavLink to="/auctions/new">
+                      <NavDropdown.Item href="/auctions/new">
+                        <span>Create new Auction</span>
+                      </NavDropdown.Item>
+                    </NavLink>
+                  )}
+
                   <NavLink to="/">
                     <NavDropdown.Item href="/">
                       <span>Bids</span>
@@ -75,11 +83,6 @@ export default function Header() {
                   <NavLink to="/">
                     <NavDropdown.Item href="/">
                       <span>Purchase history</span>
-                    </NavDropdown.Item>
-                  </NavLink>
-                  <NavLink to="/">
-                    <NavDropdown.Item href="/">
-                      <span>Manage auctions</span>
                     </NavDropdown.Item>
                   </NavLink>
 

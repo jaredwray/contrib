@@ -1,0 +1,55 @@
+@import 'src/variables.scss';
+
+.wrapper {
+  background: no-repeat center url('/assets/images/logo.svg') $sage-color;
+  background-size: auto 120%;
+}
+
+.heroImage {
+  width: 108px;
+  height: 108px;
+  background: no-repeat center url('/assets/images/done.webp');
+  background-size: cover;
+
+  @media (max-width: $medium-weight) {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+.title {
+  margin: auto 0 auto 20px;
+}
+
+.separator {
+  width: 102px;
+  height: 12px;
+  background-color: $ochre-color;
+
+  @media (max-width: $medium-weight) {
+    width: 68px;
+    height: 8px;
+  }
+}
+
+.leftBlock {
+  color: $white-color;
+}
+
+.rightBlock {
+  background-color: $barely-gray-color;
+  border-radius: 10px;
+
+  &,
+  a {
+    color: $dark-gray-color;
+  }
+}
+
+.auctionButton {
+  &:after {
+    line-height: 20px !important;
+    margin: 0;
+  }
+}
+

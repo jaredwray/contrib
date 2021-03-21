@@ -14,8 +14,10 @@ import styles from './styles.module.scss';
 interface Props {
   charities: Charity[];
   onChange: (charity: Charity, isFavorite: boolean) => void;
+  disabled?: boolean;
 }
-const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
+
+const CharitiesSearchInput: FC<Props> = ({ charities, onChange, disabled }) => {
   const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -68,6 +70,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange }) => {
       <Form.Label>Search</Form.Label>
       <div ref={searchContainer} className={styles.wrapper}>
         <SearchInput
+          disabled={disabled}
           placeholder="Search charities by name"
           onCancel={clearAndCloseSearch}
           onChange={onInputSearchChange}
