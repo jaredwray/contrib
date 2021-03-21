@@ -77,7 +77,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       }
       history.replace(`/auction/${auction.id}`);
     }
-  }, [placeBidQueryParam, minBid, handleBid, history]);
+  }, [placeBidQueryParam, auction.id, minBid, handleBid, history]);
 
   return (
     <>

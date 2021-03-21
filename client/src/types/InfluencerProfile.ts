@@ -1,5 +1,5 @@
-import { Charity } from './Charity';
 import { Auction } from './Auction';
+import { Charity } from './Charity';
 
 export interface InfluencerProfile {
   id: string;

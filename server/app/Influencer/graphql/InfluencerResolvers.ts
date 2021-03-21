@@ -10,6 +10,7 @@ import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer
 import { loadAccount } from '../../../graphql/middleware/loadAccount';
 import { GraphqlResolver } from '../../../graphql/types';
 import { Charity } from '../../Charity/dto/Charity';
+import { GraphqlContext } from '../../../graphql/GraphqlContext';
 
 interface InfluencerResolversType {
   Query: {
@@ -40,7 +41,11 @@ interface InfluencerResolversType {
 
 export const InfluencerResolvers: InfluencerResolversType = {
   Query: {
-    invitation: async (_: unknown, { slug }, { invitation }): Promise<Invitation | null> => {
+    invitation: async (
+      _: unknown,
+      { slug }: { slug: string },
+      { invitation }: GraphqlContext,
+    ): Promise<Invitation | null> => {
       const foundInvitation = await invitation.findInvitationBySlug(slug);
       if (foundInvitation?.accepted) {
         return null;

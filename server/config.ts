@@ -1,4 +1,4 @@
-export const requireEnvVar = (name: string) => {
+export const requireEnvVar = (name: string): string => {
   const value = process.env[name];
   if (!value) {
     throw new Error(`missing required env variable: ${name}`);
