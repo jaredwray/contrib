@@ -18,8 +18,9 @@ export interface Auction {
   endDate: Dayjs;
   status: AuctionStatus;
   bids: any[];
+  totalBids: number;
   maxBid: any;
   description: string;
   fullPageDescription: string;
-  initialPrice: Dinero.Dinero;
+  startPrice: Dinero.Dinero;
 }

@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { getAuction } from 'src/apollo/queries/auctions';
+import { AuctionQuery } from 'src/apollo/queries/auctions';
 import Layout from 'src/components/Layout';
 import { AuctionStatus } from 'src/types/Auction';
 
@@ -17,7 +17,7 @@ const AuctionPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
-  const { loading: auctionLoading, data: auctionData, error } = useQuery(getAuction, {
+  const { loading: auctionLoading, data: auctionData, error } = useQuery(AuctionQuery, {
     variables: { id: auctionId },
   });
   const auction = auctionData?.auction;
@@ -39,7 +39,7 @@ const AuctionPage = () => {
           </Col>
           <Col md="1" />
           <Col md="4" xs="12">
-            <AuctionDetails {...auction} />
+            <AuctionDetails auction={auction} />
           </Col>
           <Col md="1" />
         </Row>

@@ -6,15 +6,16 @@ import { Auth0Service } from '../authz';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
 import { StripeService } from '../payment/StripeService';
 import { UserAccountService } from './UserAccount';
-import { InfluencerService } from './Influencer/service/InfluencerService';
-import { InvitationService } from './Influencer/service/InvitationService';
-import { CharityService } from './Charity/service/CharityService';
-import { AuctionService } from './Auction/service/AuctionService';
+import { InfluencerService, InvitationService } from './Influencer';
+import { CharityService } from './Charity';
+import { AuctionService } from './Auction';
 import { GCloudStorage } from './GCloudStorage';
 import { CloudflareStreaming } from './CloudflareStreaming';
+import { UrlShortenerService } from './Core';
 
 export default function createAppServices(connection: Connection): IAppServices {
   const eventHub = new EventHub();
+  const urlShortener = new UrlShortenerService();
   const auth0 = new Auth0Service();
   const twilioVerification = new TwilioVerificationService();
   const twilioNotification = new TwilioNotificationService();
@@ -23,7 +24,14 @@ export default function createAppServices(connection: Connection): IAppServices 
   const charity = new CharityService(connection);
   const userAccount = new UserAccountService(connection, twilioVerification, eventHub);
   const influencer = new InfluencerService(connection, charity);
-  const invitation = new InvitationService(connection, userAccount, influencer, twilioNotification, eventHub);
+  const invitation = new InvitationService(
+    connection,
+    userAccount,
+    influencer,
+    twilioNotification,
+    eventHub,
+    urlShortener,
+  );
 
   const cloudflareStreaming = new CloudflareStreaming();
   const cloudStorage = new GCloudStorage(cloudflareStreaming);
@@ -32,6 +40,7 @@ export default function createAppServices(connection: Connection): IAppServices 
 
   return {
     auth0,
+    urlShortener,
     userAccount,
     twilioVerification,
     twilioNotification,

@@ -3,12 +3,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Container, ProgressBar } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import { GetAuctionMedia } from 'src/apollo/queries/auctions';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
 import AddVideoIcon from 'src/assets/images/VideoIcon';
 import Form from 'src/components/Form/Form';
-import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
 import { AuctionAttachment } from 'src/types/Auction';
@@ -21,8 +21,8 @@ import styles from './styles.module.scss';
 import UploadingDropzone from './UploadingDropzone';
 
 const EditAuctionMediaPage = () => {
+  const { addToast } = useToasts();
   const [selectedAttachment, setSelectedAttachment] = useState<AuctionAttachment | null>(null);
-  const [errorMessage, setErrorMessage] = useState('');
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
   const [attachments, setAttachments] = useState<AttachmentsStateInterface>({
@@ -84,7 +84,6 @@ const EditAuctionMediaPage = () => {
       <ProgressBar now={50} />
       <section className={styles.section}>
         <Form initialValues={{ photos: [], videos: [] }} onSubmit={handleSubmit}>
-          <FormUpdateMessages errorMessage={errorMessage} />
           <Container>
             <StepHeader step="2" title="Photos & video" />
             <Dialog closeModal={closeModal} selectedAttachment={selectedAttachment} />
@@ -101,7 +100,7 @@ const EditAuctionMediaPage = () => {
                 icon={<AddPhotoIcon />}
                 name={'photos'}
                 setAttachments={setAttachments}
-                setErrorMessage={setErrorMessage}
+                setErrorMessage={(message) => addToast(message, { autoDismiss: true, appearance: 'warning' })}
                 setSelectedAttachment={setSelectedAttachment}
               />
             </Row>
@@ -119,7 +118,7 @@ const EditAuctionMediaPage = () => {
                 icon={<AddVideoIcon />}
                 name={'video'}
                 setAttachments={setAttachments}
-                setErrorMessage={setErrorMessage}
+                setErrorMessage={(message) => addToast(message, { autoDismiss: true, appearance: 'warning' })}
                 setSelectedAttachment={setSelectedAttachment}
               />
             </Row>

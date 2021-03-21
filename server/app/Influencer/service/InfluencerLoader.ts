@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 
 import { InfluencerService } from './InfluencerService';
 import { InfluencerProfile } from '../dto/InfluencerProfile';

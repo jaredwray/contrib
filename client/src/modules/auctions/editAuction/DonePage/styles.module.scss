@@ -1,12 +1,48 @@
+@import '~bootstrap/scss/bootstrap.scss';
 @import 'src/variables.scss';
+
+.contentWrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.contentLeft {
+  flex-grow: 0;
+
+  @include media-breakpoint-up(md) {
+    min-width: 350px;
+    width: 573px;
+  }
+}
+
+.contentRight {
+  flex-grow: 1;
+  background-color: $barely-gray-color;
+}
+
+.contentRightWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 400px;
+}
 
 .left {
   max-width: 573px !important;
-}
-
-.wrapper {
-  margin: 191px auto;
-  max-width: 413px;
 }
 
 .buttonIcon {
@@ -17,21 +53,6 @@
   margin-top: 56px;
 }
 
-.rightCol {
-  background-color: $barely-gray-color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 48px 0;
-}
-
-.auction {
-  width: 280px;
-  display: inline-block;
-  margin-right: 40px;
-  color: $dark-gray-color;
-  background-color: $white-color;
-}
 .like {
   position: absolute;
   width: 36px;

@@ -26,8 +26,8 @@ export const InviteInfluencerMutation = gql`
   }
 `;
 
-export const getInfluencersById = gql`
-  query GetInfluencersById($id: String!) {
+export const GetInfluencerQuery = gql`
+  query GetInfluencerById($id: String!) {
     influencer(id: $id) {
       avatarUrl
       id
@@ -38,22 +38,19 @@ export const getInfluencersById = gql`
       team
 
       auctions {
+        id
         attachments {
           url
           id
         }
-        auctionOrganizer {
-          name
-          avatarUrl
-          id
-        }
+        status
         endDate
-        initialPrice
+        startPrice
         startDate
-
         title
-        bids {
-          id
+        totalBids
+        maxBid {
+          bid
         }
       }
     }

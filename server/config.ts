@@ -1,4 +1,4 @@
-export const requireEnvVar = (name: string) => {
+export const requireEnvVar = (name: string): string => {
   const value = process.env[name];
   if (!value) {
     throw new Error(`missing required env variable: ${name}`);
@@ -9,7 +9,7 @@ export const requireEnvVar = (name: string) => {
 export const AppConfig = {
   app: {
     port: Number(process.env.PORT ?? 3000),
-    url: requireEnvVar('APP_URL'),
+    url: requireEnvVar('APP_URL').replace(/\/$/, ''),
   },
   environment: {
     isProduction: process.env.NODE_ENV === 'live',
@@ -50,5 +50,9 @@ export const AppConfig = {
   cloudflare: {
     token: requireEnvVar('CLOUDFLARE_STREAMING_KEY'),
     user: requireEnvVar('CLOUDFLARE_USER_ID'),
+  },
+  bitly: {
+    accessToken: requireEnvVar('BITLY_ACCESS_TOKEN'),
+    domain: requireEnvVar('BITLY_DOMAIN'),
   },
 };

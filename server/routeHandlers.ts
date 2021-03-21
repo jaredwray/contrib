@@ -1,5 +1,5 @@
-import * as express from 'express';
-import * as bcrypt from 'bcrypt';
+import express from 'express';
+import bcrypt from 'bcrypt';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 

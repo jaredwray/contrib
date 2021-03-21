@@ -21,7 +21,7 @@ export default function Header() {
     afterLoginUri,
   ]);
 
-  const handleLogout = useCallback(() => logout(), [logout]);
+  const handleLogout = useCallback(() => logout({ federated: true }), [logout]);
 
   return (
     <header className="pl-4 pr-4 navigation-header">
@@ -55,9 +55,17 @@ export default function Header() {
                   )}
 
                   {account?.influencerProfile && (
-                    <NavLink to="/profile">
-                      <NavDropdown.Item href="/profile">
+                    <NavLink to="/profiles/me">
+                      <NavDropdown.Item href="/profiles/me">
                         <span>Account</span>
+                      </NavDropdown.Item>
+                    </NavLink>
+                  )}
+
+                  {account?.influencerProfile && (
+                    <NavLink to="/auctions/new">
+                      <NavDropdown.Item href="/auctions/new">
+                        <span>Create new Auction</span>
                       </NavDropdown.Item>
                     </NavLink>
                   )}
@@ -75,11 +83,6 @@ export default function Header() {
                   <NavLink to="/">
                     <NavDropdown.Item href="/">
                       <span>Purchase history</span>
-                    </NavDropdown.Item>
-                  </NavLink>
-                  <NavLink to="/">
-                    <NavDropdown.Item href="/">
-                      <span>Manage auctions</span>
                     </NavDropdown.Item>
                   </NavLink>
 

@@ -1,10 +1,10 @@
 import { Auth0Service } from '../authz';
 import { UserAccountService } from './UserAccount';
-import { InfluencerService } from './Influencer/service/InfluencerService';
-import { InvitationService } from './Influencer/service/InvitationService';
-import { CharityService } from './Charity/service/CharityService';
-import { AuctionService } from './Auction/service/AuctionService';
+import { InfluencerService, InvitationService } from './Influencer';
+import { CharityService } from './Charity';
+import { AuctionService } from './Auction';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
+import { UrlShortenerService } from './Core';
 
 export interface IAppServices {
   auth0: Auth0Service;
@@ -15,4 +15,5 @@ export interface IAppServices {
   auction: AuctionService;
   twilioVerification: TwilioVerificationService;
   twilioNotification: TwilioNotificationService;
+  urlShortener: UrlShortenerService;
 }

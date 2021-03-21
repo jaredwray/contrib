@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 
 import { InvitationService } from './InvitationService';
 import { Invitation } from '../dto/Invitation';

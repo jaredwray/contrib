@@ -3,21 +3,27 @@ import { toDate } from 'date-fns-tz';
 
 import { timeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 
-export function toHumanReadableDatetime(date: string): string | null {
-  const hours = differenceInHours(toDate(date), new Date());
+export function toHumanReadableDuration(date: string): string | null {
+  let hours = differenceInHours(toDate(date), new Date());
+  let inPast = false;
 
   if (hours < 0) {
-    return null;
+    hours = Math.abs(hours);
+    inPast = true;
   }
 
   if (hours === 0) {
-    const minutes = differenceInMinutes(toDate(date), new Date());
+    const minutes = Math.abs(differenceInMinutes(toDate(date), new Date()));
     return minutes ? `${minutes}m` : null;
   }
 
   const hoursLeft = hours % 24;
   const daysLeft = Math.floor(hours / 24);
   const left = [daysLeft ? `${daysLeft}d` : '', hoursLeft ? `${hoursLeft}h` : ''];
+
+  if (inPast) {
+    left.push('ago');
+  }
 
   return left.join(' ');
 }

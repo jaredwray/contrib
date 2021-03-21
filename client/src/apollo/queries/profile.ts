@@ -20,10 +20,10 @@ export const UpdateInfluencerProfileAvatarMutation = gql`
   mutation UpdateInfluencerProfileAvatar($image: Upload!) {
     updateMyInfluencerProfileAvatar(image: $image) {
       id
+      profileDescription
       name
       sport
       team
-      profileDescription
       avatarUrl
       status
     }

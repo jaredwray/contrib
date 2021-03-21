@@ -44,9 +44,9 @@ export const AuctionSchema = gql`
     sport: String!
     maxBid: AuctionBid
     startDate: DateTime!
-    initialPrice: Money!
     endDate: DateTime!
     auctionOrganizer: InfluencerProfile!
+    totalBids: Int!
   }
 
   input AuctionSearchFilters {
@@ -89,7 +89,7 @@ export const AuctionSchema = gql`
     fullPageDescription: String
     startDate: DateTime
     endDate: DateTime
-    initialPrice: Money
+    startPrice: Money
     charity: String
     authenticityCertificate: Boolean
     gameWorn: Boolean
@@ -102,7 +102,7 @@ export const AuctionSchema = gql`
     createAuction(input: AuctionInput!): Auction!
     updateAuction(id: String, input: AuctionInput): Auction!
     updateAuctionStatus(id: String!, status: AuctionStatus!): Auction!
-    createAuctionBid(id: String!, bid: Money!): AuctionBid!
+    createAuctionBid(id: String!, bid: Money!): Auction!
     addAuctionAttachment(id: String!, attachment: Upload!): AuctionAttachment!
     removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
     deleteAuction(id: String!): AuctionStatusResponse!

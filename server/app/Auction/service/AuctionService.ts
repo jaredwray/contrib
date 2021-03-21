@@ -1,6 +1,6 @@
 import { Connection, Types } from 'mongoose';
-import * as dayjs from 'dayjs';
-import * as Dinero from 'dinero.js';
+import dayjs from 'dayjs';
+import Dinero from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -20,7 +20,7 @@ import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 
 import { CloudflareStreaming } from '../../CloudflareStreaming';
-import { InfluencerService } from '../../Influencer/service/InfluencerService';
+import { InfluencerService } from '../../Influencer';
 
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
@@ -114,11 +114,16 @@ export class AuctionService {
   }
 
   public async updateAuction(id: string, userId: string, input: AuctionInput): Promise<Auction> {
-    const { startDate, endDate, charity, initialPrice, ...rest } = input;
+    const { startDate, endDate, charity, startPrice, ...rest } = input;
     const auction = await this.auctionRepository.updateAuction(id, userId, {
       ...(startDate ? { startsAt: startDate } : {}),
       ...(endDate ? { endsAt: endDate } : {}),
-      ...(initialPrice ? { startPrice: initialPrice.getAmount(), startPriceCurrency: initialPrice.getCurrency() } : {}),
+      ...(startPrice
+        ? {
+            startPrice: startPrice.getAmount(),
+            startPriceCurrency: startPrice.getCurrency(),
+          }
+        : {}),
       ...(charity ? { charity: Types.ObjectId(charity) } : {}),
       ...rest,
     });
@@ -230,7 +235,7 @@ export class AuctionService {
     }
     return {
       id: model._id.toString(),
-      user: model.user._id.toString(),
+      user: model.user?._id?.toString(),
       bid: model.bidMoney || Dinero({ amount: model.bid, currency: model.bidCurrency }),
       createdAt: model.createdAt,
     };
@@ -279,7 +284,8 @@ export class AuctionService {
       startDate: startsAt,
       charity: charity ? { id: charity?._id, name: charity.name } : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
-      initialPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
+      totalBids: bids?.length ?? 0,
+      startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       ...rest,
     };

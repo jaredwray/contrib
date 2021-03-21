@@ -20,7 +20,7 @@ export interface AuctionAttachment {
 
 export interface AuctionBid {
   id: string;
-  bid: Dinero.Dinero;
+  bid: DineroObject;
   createdAt: Date;
 }
 
@@ -37,9 +37,10 @@ export interface Auction {
   autographed: boolean;
   authenticityCertificate: boolean;
   sport: string;
+  totalBids: number;
   maxBid: AuctionBid;
   startDate: string;
   endDate: string;
-  initialPrice: DineroObject;
+  startPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
 }

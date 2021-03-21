@@ -3,7 +3,9 @@ import { gql } from '@apollo/client';
 export const MyFavoriteCharitiesQuery = gql`
   query GetMyFavoriteCharitiesQuery {
     myAccount {
+      id
       influencerProfile {
+        id
         favoriteCharities {
           id
           name

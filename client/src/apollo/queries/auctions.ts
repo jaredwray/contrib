@@ -9,13 +9,13 @@ export const AuctionPriceLimitsQuery = gql`
   }
 `;
 
-export const getAuction = gql`
-  query getAuction($id: String!) {
+export const AuctionQuery = gql`
+  query AuctionQuery($id: String!) {
     auction(id: $id) {
       id
       startDate
       endDate
-      initialPrice
+      startPrice
       title
       gameWorn
       autographed
@@ -24,13 +24,11 @@ export const getAuction = gql`
       description
       fullPageDescription
       status
+      startPrice
+      totalBids
       maxBid {
-        bid
-      }
-      bids {
-        bid
-        createdAt
         id
+        bid
       }
       auctionOrganizer {
         id
@@ -88,7 +86,7 @@ export const getAuctionDetails = gql`
       id
       startDate
       endDate
-      initialPrice
+      startPrice
       charity {
         id
         name
@@ -121,6 +119,27 @@ export const createAuctionMutation = gql`
       }
     ) {
       id
+      description
+      fullPageDescription
+      gameWorn
+      autographed
+      playedIn
+      title
+      sport
+      authenticityCertificate
+    }
+  }
+`;
+
+export const MakeAuctionBidMutation = gql`
+  mutation createAuctionBid($id: String!, $bid: Money!) {
+    createAuctionBid(id: $id, bid: $bid) {
+      id
+      maxBid {
+        id
+        bid
+      }
+      totalBids
     }
   }
 `;
@@ -151,23 +170,32 @@ export const updateAuctionBasics = gql`
       }
     ) {
       id
+      description
+      sport
+      fullPageDescription
+      gameWorn
+      autographed
+      playedIn
+      title
+      authenticityCertificate
     }
   }
 `;
 
 export const updateAuctionDetails = gql`
-  mutation updateAuction(
-    $id: String!
-    $startDate: DateTime
-    $endDate: DateTime
-    $initialPrice: Money
-    $charity: String
-  ) {
+  mutation updateAuction($id: String!, $startDate: DateTime, $endDate: DateTime, $startPrice: Money, $charity: String) {
     updateAuction(
       id: $id
-      input: { startDate: $startDate, endDate: $endDate, initialPrice: $initialPrice, charity: $charity }
+      input: { startDate: $startDate, endDate: $endDate, startPrice: $startPrice, charity: $charity }
     ) {
       id
+      startDate
+      endDate
+      startPrice
+      charity {
+        id
+        name
+      }
     }
   }
 `;
@@ -205,14 +233,14 @@ export const AuctionsListQuery = gql`
       skip
       items {
         id
-        bids {
-          bid
-          createdAt
+        maxBid {
           id
+          bid
         }
+        totalBids
         title
         description
-        initialPrice
+        startPrice
         endDate
         auctionOrganizer {
           id

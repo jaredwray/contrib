@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
+import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
@@ -47,20 +48,20 @@ export function UserAccountProvider({ children }: PropTypes) {
   const currentPathname = location.pathname;
   useEffect(() => {
     if (targetPathname !== null && targetPathname !== currentPathname) {
-      if (targetPathname === '/profile') {
-        history.replace(`${targetPathname}?sbs=true`);
-      } else {
-        history.replace(targetPathname);
-      }
+      history.replace(targetPathname);
     }
   }, [targetPathname, currentPathname, history]);
 
   const invitationToken = queryParams.get('invite');
+  const returnUrl = queryParams.get('returnUrl');
   useEffect(() => {
     if (invitationToken) {
       invitationTokenVar(invitationToken);
     }
-  }, [invitationToken]);
+    if (returnUrl) {
+      returnUrlVar(returnUrl);
+    }
+  }, [invitationToken, returnUrl]);
 
   if (userIsLoading || (userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) {
     return null;
@@ -75,7 +76,7 @@ function getOnboardingPath(userAccount: UserAccount) {
   }
 
   if (userAccount?.influencerProfile && !userAccount.influencerProfile.profileDescription) {
-    return '/profile';
+    return '/onboarding/basic';
   }
 
   if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {

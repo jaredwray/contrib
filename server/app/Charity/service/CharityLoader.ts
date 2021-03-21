@@ -1,12 +1,16 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 
 import { CharityService } from './CharityService';
 import { Charity } from '../dto/Charity';
 
 export class CharityLoader {
+  private readonly loaderByCharityId = new DataLoader<string, Charity>(async (charityIds) =>
+    this.charityService.listCharitiesByIds(charityIds),
+  );
+
   constructor(private readonly charityService: CharityService) {}
 
-  getByIds(charityIds: string[]): Promise<Charity[]> {
-    return this.charityService.listCharitiesByIds(charityIds);
+  getById(charityId: string): Promise<Charity> {
+    return this.loaderByCharityId.load(charityId);
   }
 }

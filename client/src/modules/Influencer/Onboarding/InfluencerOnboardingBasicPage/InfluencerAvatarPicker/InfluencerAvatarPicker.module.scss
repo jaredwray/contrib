@@ -1,0 +1,20 @@
+@import "src/variables";
+
+.uploadButton {
+  &,
+  &:active,
+  &:focus {
+    height: 25px;
+    background: rgba(50, 52, 50, 0.5) url('/assets/images/picture-sign.webp') no-repeat 15px !important;
+    border: 0 !important;
+    padding: 0 16px 0 40px !important;
+    margin-top: -12px;
+  }
+}
+
+.image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  background: $light-gray-color;
+}

@@ -11,6 +11,6 @@ export type AuctionInput = {
   charity?: string;
   startDate?: Dayjs;
   endDate?: Dayjs;
-  initialPrice?: Dinero.Dinero;
+  startPrice?: Dinero.Dinero;
   playedIn?: string;
 };

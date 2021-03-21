@@ -1,5 +1,5 @@
 import '../../../__mocks__/dayjs';
-import * as path from 'path';
+import path from 'path';
 import { config as loadDotEnvFile } from 'dotenv';
 loadDotEnvFile({ path: path.resolve(__dirname, '../../../.env') });
 

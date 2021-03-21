@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 import { useMutation } from '@apollo/client';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import { createAuctionMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
-import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
 
@@ -26,8 +26,9 @@ const initialValues = {
 
 const NewAuctionBasicPage = () => {
   const history = useHistory();
+  const { addToast } = useToasts();
 
-  const [createAuction, { loading, error: updateError }] = useMutation(createAuctionMutation, {
+  const [createAuction, { loading }] = useMutation(createAuctionMutation, {
     onCompleted({ createAuction }) {
       if (createAuction.id) {
         history.push(`/auctions/${createAuction.id}/media`);
@@ -40,16 +41,19 @@ const NewAuctionBasicPage = () => {
   }, [history]);
 
   const handleSubmit = useCallback(
-    (values) => {
-      createAuction({ variables: values });
+    async (values) => {
+      try {
+        await createAuction({ variables: values });
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'error' });
+      }
     },
-    [createAuction],
+    [createAuction, addToast],
   );
 
   return (
     <Layout>
       <ProgressBar now={25} />
-      <FormUpdateMessages errorMessage={updateError?.message} />
 
       <section className={styles.section}>
         <Form initialValues={initialValues} onSubmit={handleSubmit}>

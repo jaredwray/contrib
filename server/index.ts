@@ -1,5 +1,5 @@
 import { config as loadDotEnvFile } from 'dotenv';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 
 if (fs.pathExistsSync(`./.env`)) {
   loadDotEnvFile();
@@ -11,8 +11,8 @@ if (AppConfig.newRelic.enabled) {
   require('newrelic');
 }
 
-import * as express from 'express';
-import * as path from 'path';
+import express from 'express';
+import path from 'path';
 import { createGraphqlServer } from './graphql';
 import { AppLogger } from './logger';
 import { initMongodbConnection } from './mongodb';

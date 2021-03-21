@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { Container, ProgressBar } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import { updateAuctionBasics, getAuctionBasics } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
-import FormUpdateMessages from 'src/components/FormUpdateMessages';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
 
@@ -16,10 +16,11 @@ import BasicForm from '../PageForm';
 import styles from './styles.module.scss';
 
 const EditAuctionBasicPage = () => {
+  const { addToast } = useToasts();
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
-  const { loading: loadingQuery, data: auctionData, error } = useQuery(getAuctionBasics, {
+  const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionBasics, {
     variables: { id: auctionId },
   });
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionBasics, {
@@ -29,16 +30,19 @@ const EditAuctionBasicPage = () => {
   });
 
   const handleSubmit = useCallback(
-    (values) => {
-      updateAuction({ variables: { id: auctionId, ...values } });
+    async (values) => {
+      try {
+        await updateAuction({ variables: { id: auctionId, ...values } });
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'error' });
+      }
     },
-    [auctionId, updateAuction],
+    [auctionId, updateAuction, addToast],
   );
 
   return (
     <Layout>
       <ProgressBar now={25} />
-      <FormUpdateMessages errorMessage={error?.message} />
 
       <section className={styles.section}>
         <Form initialValues={auctionData?.auction} onSubmit={handleSubmit}>
