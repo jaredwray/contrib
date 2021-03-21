@@ -1,4 +1,5 @@
 import { Charity } from './Charity';
+import { Auction } from './Auction';
 
 export interface InfluencerProfile {
   id: string;
@@ -8,4 +9,5 @@ export interface InfluencerProfile {
   team: string | null;
   profileDescription: string | null;
   favoriteCharities: Charity[];
+  auctions?: Auction[];
 }

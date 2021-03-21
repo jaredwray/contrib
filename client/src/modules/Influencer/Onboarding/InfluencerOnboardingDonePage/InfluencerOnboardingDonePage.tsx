@@ -38,7 +38,7 @@ export const InfluencerOnboardingDonePage: FC = () => {
                     </Link>
                   </div>
                   <div className="text-label label-with-separator pt-4">Explore Contrib</div>
-                  <Link className="text-label text-all-cups d-block" to="/profile/my">
+                  <Link className="text-label text-all-cups d-block" to="/profiles/me">
                     View your account &gt;&gt;
                   </Link>
                   <Link className="text-label text-all-cups d-block pt-4" to="/auctions">

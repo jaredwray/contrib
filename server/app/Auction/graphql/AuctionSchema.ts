@@ -47,6 +47,7 @@ export const AuctionSchema = gql`
     initialPrice: Money!
     endDate: DateTime!
     auctionOrganizer: InfluencerProfile!
+    totalBids: Int!
   }
 
   input AuctionSearchFilters {

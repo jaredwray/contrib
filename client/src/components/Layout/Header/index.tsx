@@ -55,8 +55,8 @@ export default function Header() {
                   )}
 
                   {account?.influencerProfile && (
-                    <NavLink to="/profile">
-                      <NavDropdown.Item href="/profile">
+                    <NavLink to="/profiles/me">
+                      <NavDropdown.Item href="/profiles/me">
                         <span>Account</span>
                       </NavDropdown.Item>
                     </NavLink>

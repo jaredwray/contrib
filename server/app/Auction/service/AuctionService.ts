@@ -118,7 +118,12 @@ export class AuctionService {
     const auction = await this.auctionRepository.updateAuction(id, userId, {
       ...(startDate ? { startsAt: startDate } : {}),
       ...(endDate ? { endsAt: endDate } : {}),
-      ...(initialPrice ? { startPrice: initialPrice.getAmount(), startPriceCurrency: initialPrice.getCurrency() } : {}),
+      ...(initialPrice
+        ? {
+            startPrice: initialPrice.getAmount(),
+            startPriceCurrency: initialPrice.getCurrency(),
+          }
+        : {}),
       ...(charity ? { charity: Types.ObjectId(charity) } : {}),
       ...rest,
     });
@@ -279,6 +284,7 @@ export class AuctionService {
       startDate: startsAt,
       charity: charity ? { id: charity?._id, name: charity.name } : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
+      totalBids: bids?.length ?? 0,
       initialPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       ...rest,

@@ -37,6 +37,7 @@ export interface Auction {
   autographed: boolean;
   authenticityCertificate: boolean;
   sport: string;
+  totalBids: number;
   maxBid: AuctionBid;
   startDate: string;
   endDate: string;
