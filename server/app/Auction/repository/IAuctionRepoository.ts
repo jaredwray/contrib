@@ -1,4 +1,4 @@
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { Types } from 'mongoose';
 
 import { AuctionInput } from '../graphql/model/AuctionInput';

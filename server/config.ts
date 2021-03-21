@@ -51,4 +51,8 @@ export const AppConfig = {
     token: requireEnvVar('CLOUDFLARE_STREAMING_KEY'),
     user: requireEnvVar('CLOUDFLARE_USER_ID'),
   },
+  bitly: {
+    accessToken: requireEnvVar('BITLY_ACCESS_TOKEN'),
+    domain: requireEnvVar('BITLY_DOMAIN'),
+  },
 };

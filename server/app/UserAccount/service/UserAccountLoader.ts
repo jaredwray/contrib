@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 
 import { UserAccountService } from './UserAccountService';
 import { UserAccount } from '../dto/UserAccount';

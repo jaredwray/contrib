@@ -3,7 +3,7 @@ import Maybe from 'graphql/tsutils/Maybe';
 import { Kind } from 'graphql/language/kinds';
 
 import { gql } from 'apollo-server-express';
-import * as Dinero from 'dinero.js';
+import Dinero from 'dinero.js';
 
 export const MoneyTypeDefs = gql`
   scalar Money

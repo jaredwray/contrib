@@ -1,5 +1,5 @@
-import * as Dinero from 'dinero.js';
-import * as dayjs from 'dayjs';
+import Dinero from 'dinero.js';
+import dayjs from 'dayjs';
 
 export interface IAuctionBid {
   id: string;

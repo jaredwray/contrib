@@ -1,11 +1,11 @@
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes, Types } from 'mongoose';
 
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionBidCollectionName, IAuctionBidModel } from './AuctionBidModel';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
-import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
+import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import arrayMax from '../../../helpers/arrayMax';
 import { InfluencerCollectionName } from '../../Influencer/mongodb/InfluencerModel';
 

@@ -9,13 +9,13 @@ import { TwilioNotificationService } from '../../../twilio-client';
 import { AppConfig } from '../../../config';
 import { Invitation } from '../dto/Invitation';
 import { InvitationParentEntityType } from '../mongodb/InvitationParentEntityType';
-import { AppError } from '../../../errors/AppError';
-import { ErrorCode } from '../../../errors/ErrorCode';
+import { AppError, ErrorCode } from '../../../errors';
 import { UserAccountService } from '../../UserAccount';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { Events } from '../../Events';
 import { AppLogger } from '../../../logger';
 import { EventHub } from '../../EventHub';
+import { UrlShortenerService } from '../../Core';
 
 export class InvitationService {
   private readonly InvitationModel = InvitationModel(this.connection);
@@ -26,6 +26,7 @@ export class InvitationService {
     private readonly influencerService: InfluencerService,
     private readonly twilioNotificationService: TwilioNotificationService,
     private readonly eventHub: EventHub,
+    private readonly urlShortenerService: UrlShortenerService,
   ) {
     eventHub.subscribe(Events.USER_ACCOUNT_CREATED, async (userAccount) => {
       await this.maybeFinalizeInvitation(userAccount);
@@ -102,9 +103,10 @@ export class InvitationService {
     }
   }
 
-  private static makeInvitationLink(slug: string): string {
+  private async makeInvitationLink(slug: string): Promise<string> {
     const baseUrl = AppConfig.app.url.replace(/\/$/, '');
-    return `${baseUrl}/invitation/${slug}`;
+    const invitationLink = `${baseUrl}/invitation/${slug}`;
+    return this.urlShortenerService.shortenUrl(invitationLink);
   }
 
   private async creatInfluencerProfileForExistingUser(
@@ -125,7 +127,8 @@ export class InvitationService {
       session,
     );
 
-    const message = `Hello, ${firstName}. You have been invited to Contrib at ${AppConfig.app.url}. Sign in with your phone number to begin.`;
+    const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
+    const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
     await this.twilioNotificationService.sendMessage(userAccount.phoneNumber, message);
 
     await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
@@ -161,7 +164,7 @@ export class InvitationService {
       session,
     );
 
-    const link = InvitationService.makeInvitationLink(invitation.slug);
+    const link = await this.makeInvitationLink(invitation.slug);
     const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
     await this.twilioNotificationService.sendMessage(phoneNumber, message);
     return influencerProfile;

@@ -1,7 +1,6 @@
 import { InviteInfluencerInput } from './model/InviteInfluencerInput';
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
-import { Auction } from '../../Auction/dto/Auction';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateInfluencerProfileInput } from './model/UpdateInfluencerProfileInput';
 import { Invitation } from '../dto/Invitation';
@@ -83,8 +82,8 @@ export const InfluencerResolvers = {
     invitation: requireAdmin(async (parent: InfluencerProfile, _, { loaders }) =>
       loaders.invitation.getByInfluencerId(parent.id),
     ),
-    favoriteCharities: requireInfluencer(
-      async (parent: InfluencerProfile, _, { loaders }) => await loaders.charity.getByIds(parent.favoriteCharities),
+    favoriteCharities: requireInfluencer(async (parent: InfluencerProfile, _, { loaders }) =>
+      Promise.all(parent.favoriteCharities.map((c) => loaders.charity.getById(c))),
     ),
   },
   UserAccount: {

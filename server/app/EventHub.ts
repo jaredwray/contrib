@@ -11,8 +11,10 @@ export class EventHub {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public async broadcast(event: Events, payload: any): Promise<void> {
-    for await (const handler of this.observers[event]) {
-      await handler(payload);
+    if (this.observers[event]) {
+      for await (const handler of this.observers[event]) {
+        await handler(payload);
+      }
     }
   }
 }

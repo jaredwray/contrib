@@ -1,6 +1,6 @@
 import { Connection, Types } from 'mongoose';
-import * as dayjs from 'dayjs';
-import * as Dinero from 'dinero.js';
+import dayjs from 'dayjs';
+import Dinero from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -20,7 +20,7 @@ import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 
 import { CloudflareStreaming } from '../../CloudflareStreaming';
-import { InfluencerService } from '../../Influencer/service/InfluencerService';
+import { InfluencerService } from '../../Influencer';
 
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';

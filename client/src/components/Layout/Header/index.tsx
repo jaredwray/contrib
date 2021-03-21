@@ -21,7 +21,7 @@ export default function Header() {
     afterLoginUri,
   ]);
 
-  const handleLogout = useCallback(() => logout(), [logout]);
+  const handleLogout = useCallback(() => logout({ federated: true }), [logout]);
 
   return (
     <header className="pl-4 pr-4 navigation-header">

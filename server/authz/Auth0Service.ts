@@ -1,6 +1,5 @@
-import { ManagementClient } from 'auth0';
 import { GetPublicKeyOrSecret, JwtHeader, SigningKeyCallback, verify as verifyJwt, VerifyErrors } from 'jsonwebtoken';
-import * as JwksClient from 'jwks-rsa';
+import JwksClient from 'jwks-rsa';
 
 import { Auth0User } from './Auth0User';
 import { Auth0TokenPayload } from './Auth0TokenPayload';

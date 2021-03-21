@@ -1,8 +1,7 @@
-import * as Stream from 'stream';
+import Stream from 'stream';
 import { Storage } from '@google-cloud/storage';
 import { AppConfig } from '../config';
-import { AppError } from '../errors/AppError';
-import { ErrorCode } from '../errors/ErrorCode';
+import { AppError, ErrorCode } from '../errors';
 import { CloudflareStreaming } from './CloudflareStreaming';
 
 export type IFile = {
