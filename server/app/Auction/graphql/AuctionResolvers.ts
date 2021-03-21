@@ -12,6 +12,7 @@ import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { GraphqlResolver } from '../../../graphql/types';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionBid } from '../dto/AuctionBid';
+import { loadInfluencer } from '../../../graphql/middleware/loadInfluencer';
 
 interface AuctionResolversType {
   Query: {
@@ -43,7 +44,14 @@ export const AuctionResolvers: AuctionResolversType = {
       auction.listAuctions({ query, filters, orderBy, size, skip }),
     auctionPriceLimits: (_, __, { auction }) => auction.getAuctionPriceLimits(),
     sports: (_, __, { auction }) => auction.listSports(),
-    auction: (_, { id }, { auction }) => auction.getAuction(id),
+    auction: loadInfluencer(async (_, { id }, { currentInfluencer, auction }) => {
+      const foundAuction = await auction.getAuction(id);
+      const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencer?.id;
+      if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner) {
+        return null;
+      }
+      return foundAuction;
+    }),
   },
   Mutation: {
     createAuction: requireInfluencer(async (_, input, { auction, currentInfluencer }) =>
@@ -67,6 +75,10 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
   },
   InfluencerProfile: {
-    auctions: async (influencerProfile, _, { auction }) => auction.getInfluencersAuctions(influencerProfile.id),
+    auctions: loadInfluencer(async (influencerProfile, _, { currentInfluencer, auction }) => {
+      const auctions = await auction.getInfluencersAuctions(influencerProfile.id);
+      const isOwner = influencerProfile.id === currentInfluencer?.id;
+      return auctions.filter((foundAuction) => foundAuction.status !== AuctionStatus.DRAFT || isOwner);
+    }),
   },
 };

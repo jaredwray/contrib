@@ -44,7 +44,6 @@ export const AuctionSchema = gql`
     sport: String!
     maxBid: AuctionBid
     startDate: DateTime!
-    initialPrice: Money!
     endDate: DateTime!
     auctionOrganizer: InfluencerProfile!
     totalBids: Int!
@@ -90,7 +89,7 @@ export const AuctionSchema = gql`
     fullPageDescription: String
     startDate: DateTime
     endDate: DateTime
-    initialPrice: Money
+    startPrice: Money
     charity: String
     authenticityCertificate: Boolean
     gameWorn: Boolean

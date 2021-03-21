@@ -1,10 +1,11 @@
-import { FC, SetStateAction, useState, useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
+import { useToasts } from 'react-toast-notifications';
 
 import { MakeBid } from 'src/apollo/queries/bids';
 import Form from 'src/components/Form/Form';
@@ -15,33 +16,28 @@ import styles from './styles.module.scss';
 interface Props {
   auctionId: string;
   maxBid: Dinero.Dinero;
-  setMaxBid: (_: SetStateAction<Dinero.Dinero>) => void;
 }
 
-const BidInput: FC<Props> = ({ auctionId, maxBid, setMaxBid }) => {
-  const [updateError, setUpdateError] = useState('');
+const BidInput: FC<Props> = ({ auctionId, maxBid }) => {
+  const { addToast } = useToasts();
   const { isAuthenticated } = useAuth0();
   const nextMinBid = maxBid.add(Dinero({ amount: 50 }));
-  const [makeBid] = useMutation(MakeBid, {
-    onCompleted(newBid) {
-      setUpdateError('');
-      setMaxBid(Dinero(newBid.createAuctionBid.bid));
-    },
-    onError(error) {
-      setUpdateError(error.message);
-    },
-  });
+  const [makeBid] = useMutation(MakeBid);
 
   const handleSubmit = useCallback(
-    (values) => {
+    async (values) => {
       const newBid = Dinero(values.maxBid);
-      const confirmation = window.confirm(`Your max bid is ${newBid.toFormat('$0.00')}. Are you sure?`);
+      const confirmation = window.confirm(`Your max bid is ${newBid.toFormat('$0,0.00')}. Are you sure?`);
 
       if (confirmation) {
-        makeBid({ variables: { id: auctionId, bid: newBid.toObject() } });
+        try {
+          await makeBid({ variables: { id: auctionId, bid: newBid.toObject() } });
+        } catch (error) {
+          addToast(error.message, { appearance: 'error', autoDismiss: true });
+        }
       }
     },
-    [auctionId, makeBid],
+    [auctionId, makeBid, addToast],
   );
 
   return (
@@ -50,7 +46,7 @@ const BidInput: FC<Props> = ({ auctionId, maxBid, setMaxBid }) => {
         required
         externalText={
           <span className={clsx(styles.notBold, 'text-label text-all-cups')}>
-            enter <span className={styles.bold}>{nextMinBid.toFormat('$0.00')}</span> or more
+            enter <span className={styles.bold}>{nextMinBid.toFormat('$0,0.00')}</span> or more
           </span>
         }
         name="maxBid"
@@ -66,7 +62,6 @@ const BidInput: FC<Props> = ({ auctionId, maxBid, setMaxBid }) => {
         Place your bid
       </Button>
       <p className="text-label pt-2 mb-2">Bidding is a commitment to buy this item if you win the auction.</p>
-      {updateError && <p className={clsx(styles.error, 'text-label mt-0 mb-2')}>{updateError}</p>}
     </Form>
   );
 };

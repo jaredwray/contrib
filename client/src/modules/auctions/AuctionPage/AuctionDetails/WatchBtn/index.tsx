@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC } from 'react';
 
 import clsx from 'clsx';
 import { Button } from 'react-bootstrap';
@@ -12,7 +12,7 @@ interface Props {
   auction: Auction;
 }
 
-const WatchBtn: FC<Props> = ({ auction }): ReactElement => {
+const WatchBtn: FC<Props> = ({ auction }) => {
   return (
     <div className={clsx(styles.container, 'mt-3 pt-3 pb-3 d-table  align-middle')}>
       <Button className={styles.watchBtn} variant="link">

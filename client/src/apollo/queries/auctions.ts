@@ -9,13 +9,13 @@ export const AuctionPriceLimitsQuery = gql`
   }
 `;
 
-export const getAuction = gql`
-  query getAuction($id: String!) {
+export const AuctionQuery = gql`
+  query AuctionQuery($id: String!) {
     auction(id: $id) {
       id
       startDate
       endDate
-      initialPrice
+      startPrice
       title
       gameWorn
       autographed
@@ -24,6 +24,7 @@ export const getAuction = gql`
       description
       fullPageDescription
       status
+      startPrice
       maxBid {
         bid
       }
@@ -88,7 +89,7 @@ export const getAuctionDetails = gql`
       id
       startDate
       endDate
-      initialPrice
+      startPrice
       charity {
         id
         name
@@ -156,16 +157,10 @@ export const updateAuctionBasics = gql`
 `;
 
 export const updateAuctionDetails = gql`
-  mutation updateAuction(
-    $id: String!
-    $startDate: DateTime
-    $endDate: DateTime
-    $initialPrice: Money
-    $charity: String
-  ) {
+  mutation updateAuction($id: String!, $startDate: DateTime, $endDate: DateTime, $startPrice: Money, $charity: String) {
     updateAuction(
       id: $id
-      input: { startDate: $startDate, endDate: $endDate, initialPrice: $initialPrice, charity: $charity }
+      input: { startDate: $startDate, endDate: $endDate, startPrice: $startPrice, charity: $charity }
     ) {
       id
     }
@@ -212,7 +207,7 @@ export const AuctionsListQuery = gql`
         }
         title
         description
-        initialPrice
+        startPrice
         endDate
         auctionOrganizer {
           id

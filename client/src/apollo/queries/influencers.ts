@@ -38,12 +38,14 @@ export const GetInfluencerQuery = gql`
       team
 
       auctions {
+        id
         attachments {
           url
           id
         }
+        status
         endDate
-        initialPrice
+        startPrice
         startDate
         title
         totalBids

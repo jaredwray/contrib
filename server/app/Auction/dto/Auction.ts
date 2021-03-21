@@ -22,5 +22,5 @@ export interface Auction {
   maxBid: any;
   description: string;
   fullPageDescription: string;
-  initialPrice: Dinero.Dinero;
+  startPrice: Dinero.Dinero;
 }

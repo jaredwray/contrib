@@ -3,6 +3,7 @@ import React, { FC, useMemo } from 'react';
 import Dinero from 'dinero.js';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 
+import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
 import Slider from 'src/components/Slider';
 import VerifiedStatus from 'src/components/VerifiedStatus';
@@ -22,14 +23,18 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
     () =>
       (influencer.auctions ?? [])
         .filter((a) => a.status === AuctionStatus.SETTLED)
-        .map((a) => a.maxBid.bid)
+        .map((a) => Dinero(a.maxBid.bid))
         .reduce((total, next) => total.add(next), Dinero({ amount: 0, currency: 'USD' })),
     [influencer],
   );
 
-  const liveAuctions = useMemo(() => (influencer.auctions ?? []).filter((a) => a.status === AuctionStatus.ACTIVE), [
-    influencer,
-  ]);
+  const liveAuctions = useMemo(
+    () =>
+      (influencer.auctions ?? []).filter(
+        (a) => a.status === AuctionStatus.ACTIVE || (a.status === AuctionStatus.DRAFT && isOwnProfile),
+      ),
+    [influencer, isOwnProfile],
+  );
 
   const pastAuctions = useMemo(() => (influencer.auctions ?? []).filter((a) => a.status === AuctionStatus.SETTLED), [
     influencer,
@@ -40,6 +45,13 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
   const hasLiveAuctions = Boolean(liveAuctions.length);
   const hasPastAuctions = Boolean(pastAuctions.length);
   const hasAuctions = hasLiveAuctions || hasPastAuctions;
+
+  const liveAuctionsLayout = liveAuctions.map((auction) => (
+    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
+  ));
+  const pastAuctionsLayout = pastAuctions.map((auction) => (
+    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
+  ));
 
   return (
     <Layout>
@@ -52,7 +64,9 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
             <Col>
               <VerifiedStatus />
               <p className="text-headline">{influencer.name}</p>
-              <p className="text-label text-all-cups">Total charity amount raised: ${totalRaised.toFormat('0,0$')}</p>
+              <p className="text-label text-all-cups">
+                Total charity amount raised: ${totalRaised.toFormat('$0,0.00')}
+              </p>
               {/*<div className="d-flex">
                 <a
                   className={clsx(styles.socialIcon, 'mr-3')}
@@ -86,13 +100,13 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
             {hasLiveAuctions && (
               <div className="mb-5">
                 <span className="label-with-separator text-label mb-4 d-block">{influencer.name} live auctions</span>
-                <Slider items={liveAuctions} />
+                <Slider items={liveAuctionsLayout} />
               </div>
             )}
             {hasPastAuctions && (
               <div>
                 <span className="label-with-separator text-label mb-4 d-block">{influencer.name} past auctions</span>
-                <Slider items={pastAuctions} />
+                <Slider items={pastAuctionsLayout} />
               </div>
             )}
           </Container>

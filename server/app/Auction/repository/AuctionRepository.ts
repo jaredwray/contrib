@@ -173,7 +173,7 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   public getInfluencersAuctions(id: string): Promise<IAuctionModel[]> {
-    return this.AuctionModel.find({ auctionOrganizer: Types.ObjectId(id) }).exec();
+    return this.populateAuctionQuery(this.AuctionModel.find({ auctionOrganizer: Types.ObjectId(id) })).exec();
   }
 
   public getAuctionSports(): Promise<string[]> {

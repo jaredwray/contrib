@@ -114,14 +114,14 @@ export class AuctionService {
   }
 
   public async updateAuction(id: string, userId: string, input: AuctionInput): Promise<Auction> {
-    const { startDate, endDate, charity, initialPrice, ...rest } = input;
+    const { startDate, endDate, charity, startPrice, ...rest } = input;
     const auction = await this.auctionRepository.updateAuction(id, userId, {
       ...(startDate ? { startsAt: startDate } : {}),
       ...(endDate ? { endsAt: endDate } : {}),
-      ...(initialPrice
+      ...(startPrice
         ? {
-            startPrice: initialPrice.getAmount(),
-            startPriceCurrency: initialPrice.getCurrency(),
+            startPrice: startPrice.getAmount(),
+            startPriceCurrency: startPrice.getCurrency(),
           }
         : {}),
       ...(charity ? { charity: Types.ObjectId(charity) } : {}),
@@ -285,7 +285,7 @@ export class AuctionService {
       charity: charity ? { id: charity?._id, name: charity.name } : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
       totalBids: bids?.length ?? 0,
-      initialPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
+      startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       ...rest,
     };
