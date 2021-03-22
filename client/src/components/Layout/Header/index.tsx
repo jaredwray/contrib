@@ -37,7 +37,7 @@ export default function Header() {
                 <section className="nav-dropdown-menu text-subhead">
                   {isAuthenticated && (
                     <>
-                      <div className="dropdown-menu-user-name d-inline-block">{user.name}</div>
+                      <div className="dropdown-menu-user-name d-inline-block break-word">{user.name}</div>
                       <Image
                         roundedCircle
                         className="dropdown-menu-user-picture float-right d-inline-block"
