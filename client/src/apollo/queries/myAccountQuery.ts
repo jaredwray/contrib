@@ -16,6 +16,13 @@ export const MyAccountQuery = gql`
         avatarUrl
         status
       }
+      paymentInformation {
+        id
+        cardNumberLast4
+        cardBrand
+        cardExpirationMonth
+        cardExpirationYear
+      }
     }
   }
 `;

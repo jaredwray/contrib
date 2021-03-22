@@ -6,4 +6,5 @@ export interface UserAccount {
   status: UserAccountStatus;
   mongodbId?: string;
   isAdmin?: boolean;
+  stripeCustomerId?: string;
 }

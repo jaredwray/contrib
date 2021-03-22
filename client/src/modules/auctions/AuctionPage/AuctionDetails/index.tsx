@@ -1,7 +1,8 @@
-import { FC, ReactElement, useCallback, useEffect, useMemo } from 'react';
+import { FC, ReactElement, useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import clsx from 'clsx';
 import { format as dateFormat } from 'date-fns';
 import { toDate } from 'date-fns-tz';
@@ -9,13 +10,13 @@ import Dinero from 'dinero.js';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { MakeAuctionBidMutation } from 'src/apollo/queries/auctions';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 
+import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal';
 import { BidInput } from './BidInput';
 import styles from './styles.module.scss';
 
@@ -23,11 +24,12 @@ interface Props {
   auction: Auction;
 }
 
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
+
 const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const { addToast } = useToasts();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const history = useHistory();
-  const [makeBid] = useMutation(MakeAuctionBidMutation);
 
   const { startPrice, maxBid, endDate, totalBids, title, status } = auction;
   const ended = toDate(endDate) <= new Date();
@@ -41,6 +43,8 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   ]);
   const canBid = status === AuctionStatus.ACTIVE && !ended;
   const queryParams = useUrlQueryParams();
+
+  const confirmationRef = useRef<BidConfirmationRef>(null);
 
   const handleBid = useCallback(
     async (amount: Dinero.Dinero) => {
@@ -56,14 +60,9 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         return;
       }
 
-      try {
-        await makeBid({ variables: { id: auction.id, bid: amount.toObject() } });
-        addToast(`Your bid of ${amount.toFormat('$0,0.00')} has been accepted.`, { appearance: 'success' });
-      } catch (error) {
-        addToast(error.message, { appearance: 'error', autoDismiss: true });
-      }
+      confirmationRef.current?.placeBid(amount);
     },
-    [loginWithRedirect, isAuthenticated, makeBid, addToast, auction],
+    [loginWithRedirect, isAuthenticated, addToast, auction],
   );
 
   const placeBidQueryParam = queryParams.get('placeBid');
@@ -94,6 +93,9 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           <span className={styles.notBold}>{ended && 'ended'} on</span> {endDateFormatted}
         </span>
       </div>
+      <Elements stripe={stripePromise}>
+        <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} />
+      </Elements>
       {canBid && (
         <>
           <BidInput minBid={minBid} onSubmit={handleBid} />

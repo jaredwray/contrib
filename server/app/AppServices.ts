@@ -5,6 +5,7 @@ import { CharityService } from './Charity';
 import { AuctionService } from './Auction';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
 import { UrlShortenerService } from './Core';
+import { PaymentService } from './Payment/service/PaymentService';
 
 export interface IAppServices {
   auth0: Auth0Service;
@@ -16,4 +17,5 @@ export interface IAppServices {
   twilioVerification: TwilioVerificationService;
   twilioNotification: TwilioNotificationService;
   urlShortener: UrlShortenerService;
+  payment: PaymentService;
 }
