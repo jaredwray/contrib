@@ -14,7 +14,7 @@ interface Props {
 const SelectField: FC<Props> = ({ name, options, placeholder, small, selected }) => {
   const { hasError, errorMessage, value, ...inputProps } = useField(name, {});
 
-  return <Select options={options} selected={selected} small={small} {...inputProps} />;
+  return <Select options={options} selected={selected} small={small} {...inputProps} placeholder={placeholder} />;
 };
 
 export default SelectField;
