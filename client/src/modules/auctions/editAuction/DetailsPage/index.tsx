@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { addDays, differenceInCalendarDays, parseISO } from 'date-fns';
-import { format, toDate } from 'date-fns-tz';
+import { format, toDate, utcToZonedTime } from 'date-fns-tz';
 import { Button, Container, ProgressBar } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
@@ -19,7 +19,7 @@ import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
 import StepHeader from '../common/StepHeader';
-import { durationOptions } from './consts';
+import { durationOptions, timeZones } from './consts';
 import StartDateField from './StartDateField';
 import styles from './styles.module.scss';
 import { serializeStartDate } from './utils';
@@ -102,20 +102,25 @@ const EditAuctionDetailsPage = () => {
       return undefined;
     }
 
-    const currentDate = toDate(startDate);
-    const time = format(currentDate, 'hh:mm');
-    const dayPeriod = format(currentDate, 'aaa');
-    const currentTimeZone = format(currentDate, 'x');
+    const defaultTimezone = timeZones[0].value;
+
+    const currentTimeZone = format(new Date(), 'x');
+    const knownTimezone = timeZones.find(({ value }) => currentTimeZone === value);
+
+    const date = knownTimezone ? toDate(startDate) : utcToZonedTime(startDate, defaultTimezone);
+
+    const time = format(date, 'hh:mm');
+    const dayPeriod = format(date, 'aaa');
     const duration = differenceInCalendarDays(toDate(parseISO(endDate)), toDate(parseISO(startDate)));
 
     return {
       startPrice,
       charity,
       startDate: {
-        date: currentDate,
+        date: date,
         time: time,
         dayPeriod: dayPeriod,
-        timeZone: currentTimeZone,
+        timeZone: knownTimezone?.value || defaultTimezone,
       },
       duration: duration,
     };
@@ -124,7 +129,6 @@ const EditAuctionDetailsPage = () => {
   if (loadingQuery) {
     return null;
   }
-
   return (
     <Layout>
       <ProgressBar now={75} />

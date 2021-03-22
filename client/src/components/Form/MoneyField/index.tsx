@@ -32,14 +32,18 @@ const MoneyField: FC<Props> = ({
   const constraints = useFieldConstraints(inputConstraints, required);
   const { hasError, errorMessage, value, onChange, ...inputProps } = useField(name, { constraints, disabled });
 
+  const dollars = value.amount;
+
   const handleChange = useCallback(
     (event) => {
       const targetValue = event.target.value;
       const number = targetValue.replace(/\$|,|\./g, '');
-      onChange({ ...value, amount: parseInt(number, 10) });
+      onChange({ ...value, amount: number ? parseInt(number, 10) * 100 : 0 });
     },
     [onChange, value],
   );
+
+  const handleFocus = useCallback((event) => event.target.select(), []);
 
   return (
     <Group>
@@ -49,8 +53,9 @@ const MoneyField: FC<Props> = ({
         className={className}
         isInvalid={hasError}
         placeholder={placeholder}
-        value={Dinero(value).toFormat('$0,0.00')}
+        value={dollars ? Dinero(value).toFormat('$0,0') : '$'}
         onChange={handleChange}
+        onFocus={handleFocus}
       />
       <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
       {externalText && <p className="text--body mt-2">{externalText}</p>}

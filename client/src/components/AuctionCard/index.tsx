@@ -69,7 +69,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
         <Link className={clsx(styles.auctionTitle, 'text-subhead mb-0 text-left')} to={`/auction/${auction.id}`}>
           <p className="mb-0 text-truncate">{auction.title}</p>
         </Link>
-        <p className="text-subhead text-left text-truncate">{currentPrice.toFormat('$0,0.00')}</p>
+        <p className="text-subhead text-left text-truncate font-weight-bold">{currentPrice.toFormat('$0,0.00')}</p>
 
         {auction.status === AuctionStatus.DRAFT && (
           <p className="text-label text-all-cups mb-0 mt-auto text-left">DRAFT</p>
