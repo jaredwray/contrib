@@ -12,11 +12,9 @@ import styles from './styles.module.scss';
 const Benefits: FC<Charity> = ({ name }) => {
   return (
     <Row title="This auction benefits">
-      <div className="d-table">
-        <Image roundedCircle className={clsx(styles.image, 'd-table-cell')} src="https://picsum.photos/200" />
-        <div className={'text-subhead text-all-cups d-table-cell align-middle pl-4 text-nowrap'}>
-          {name || 'seattle children’s hospital'}
-        </div>
+      <div className="d-flex align-items-center">
+        <Image roundedCircle className={clsx(styles.image)} src="https://picsum.photos/200" />
+        <div className={'text-subhead text-all-cups align-middle pl-4 break-word'}>{name}</div>
       </div>
       <br />
       <Link className={clsx(styles.link, 'text-label text-all-cups text-nowrap')} to="/auctions">

@@ -35,6 +35,15 @@ img {
   }
 }
 
+.text-truncate {
+  max-width: 100%;
+}
+
+.break-word {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
 .error-message {
   color: $salmon-color;
 }

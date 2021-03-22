@@ -80,7 +80,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   return (
     <>
-      <div className={clsx(styles.title, 'text-subhead pt-2')}>{title}</div>
+      <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
       <div className="text-headline">{price.toFormat('$0,0.00')}</div>
       <div className="text-label text-all-cups pt-3 pb-3">
         {pluralize(totalBids, 'bid')}{' '}

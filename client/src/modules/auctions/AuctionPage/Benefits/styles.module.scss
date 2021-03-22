@@ -6,5 +6,10 @@
 }
 
 .link {
-  color: $dark-gray-color;
+  &,
+  &:focus,
+  &:hover {
+    color: $dark-gray-color;
+    outline: none;
+  }
 }

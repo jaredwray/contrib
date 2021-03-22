@@ -11,7 +11,7 @@ import styles from './styles.module.scss';
 const About: FC<Auction> = ({ fullPageDescription, autographed, authenticityCertificate, gameWorn }): ReactElement => {
   return (
     <Row title="About this item">
-      <div className="text--body">{fullPageDescription}</div>
+      <div className="text--body break-word">{fullPageDescription}</div>
       <div className={clsx(styles.details, 'pt-4 text-label')}>
         <Status text="Signed" value={autographed} />
         <Status text="Certificate included" value={authenticityCertificate} />
