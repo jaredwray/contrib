@@ -26,7 +26,7 @@ export const InfluencerOnboardingNavigation: FC<Props> = ({ step }) => {
     <div className={styles.root}>
       <Container fluid className="d-flex flex-row h-100 align-items-center">
         {handlePrev && (
-          <Button className="text-subhead font-weight-bold" disabled={submitting} variant="link" onClick={handlePrev}>
+          <Button className="text-subhead" disabled={submitting} variant="link" onClick={handlePrev}>
             Prev
           </Button>
         )}

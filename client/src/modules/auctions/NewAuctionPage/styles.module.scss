@@ -3,7 +3,7 @@
 .section {
   margin-bottom: 120px;
 
-  @media (min-width: 0px) and (max-width: $medium-weight) {
+  @media (max-width: $medium-weight) {
     padding-bottom: 0;
     margin-bottom: 0;
   }
