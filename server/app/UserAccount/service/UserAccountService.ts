@@ -79,12 +79,28 @@ export class UserAccountService {
     return account;
   }
 
+  async updateAccountStripeCustomerId(account: UserAccount, stripeCustomerId: string): Promise<UserAccount> {
+    if (!account.mongodbId) {
+      throw new Error('cannot update non-persisted UserAccount');
+    }
+
+    await this.accountModel.updateOne(
+      { _id: account.mongodbId },
+      {
+        $set: { stripeCustomerId },
+      },
+    );
+
+    return this.getAccountByAuthzId(account.id);
+  }
+
   private static makeUserAccount(accountModel: IUserAccount): UserAccount {
     const account: UserAccount = {
       id: accountModel.authzId,
       phoneNumber: accountModel.phoneNumber,
       status: UserAccountStatus.COMPLETED,
       mongodbId: accountModel._id.toString(),
+      stripeCustomerId: accountModel.stripeCustomerId,
     };
 
     if (accountModel.isAdmin) {

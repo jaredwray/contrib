@@ -55,4 +55,7 @@ export const AppConfig = {
     accessToken: requireEnvVar('BITLY_ACCESS_TOKEN'),
     domain: requireEnvVar('BITLY_DOMAIN'),
   },
+  stripe: {
+    secretKey: requireEnvVar('STRIPE_SECRET_KEY'),
+  },
 };

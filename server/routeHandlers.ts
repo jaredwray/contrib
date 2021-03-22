@@ -1,5 +1,4 @@
 import express from 'express';
-import bcrypt from 'bcrypt';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 
@@ -10,8 +9,7 @@ export default function appRouteHandlers(app: express.Express, { auction }: IApp
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    const isValidKey = await bcrypt.compare(AppConfig.googleCloud.schedulerSecretKey, req.body.key);
-    if (!isValidKey) {
+    if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }

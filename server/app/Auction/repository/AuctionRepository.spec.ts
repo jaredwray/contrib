@@ -1,6 +1,9 @@
 import '../../../__mocks__/dayjs';
+
 import path from 'path';
 import { config as loadDotEnvFile } from 'dotenv';
+import Dinero from 'dinero.js';
+
 loadDotEnvFile({ path: path.resolve(__dirname, '../../../.env') });
 
 import { Connection } from 'mongoose';
@@ -8,13 +11,13 @@ import { AuctionRepository } from './AuctionRepository';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { IAuctionRepository } from './IAuctionRepoository';
 import { IAuctionModel } from '../mongodb/AuctionModel';
-import { AppError } from '../../../errors/AppError';
+import { AppError } from '../../../errors';
 import { initMongodbConnection } from '../../../mongodb';
 import { requireEnvVar } from '../../../config';
 
 const auctionRepoInput = {
   title: 'test-auction',
-  startPrice: 150,
+  startPrice: Dinero({ amount: 150, currency: 'USD', precision: 2 }),
   startPriceCurrency: 'USD',
   sport: 'hockey',
   fullPageDescription: 'Hockey stick',
@@ -54,6 +57,7 @@ describe('AuctionRepository', () => {
     const title = 'Update test action';
     const updated = await auctionRepo.updateAuction(createdAuction.id.toString(), testInfluencerId, {
       ...auctionRepoInput,
+      startPrice: auctionRepoInput.startPrice.getAmount(),
       title,
     });
     expect(updated.title).toEqual(title);
