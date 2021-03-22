@@ -14,7 +14,6 @@ import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionBid } from '../dto/AuctionBid';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
-import { StripeService } from '../../../payment/StripeService';
 import { AuctionInput } from '../graphql/model/AuctionInput';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
@@ -27,6 +26,7 @@ import { AppLogger } from '../../../logger';
 
 import { AuctionRepository } from '../repository/AuctionRepository';
 import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
+import { PaymentService } from '../../Payment';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -37,7 +37,7 @@ export class AuctionService {
 
   constructor(
     private readonly connection: Connection,
-    private readonly stripeService: StripeService,
+    private readonly paymentService: PaymentService,
     private readonly cloudStorage: GCloudStorage,
   ) {}
 
@@ -138,6 +138,11 @@ export class AuctionService {
     const session = await this.connection.startSession();
     session.startTransaction();
 
+    const card = await this.paymentService.getAccountPaymentInformation(user);
+    if (!card) {
+      throw new AppError('Payment method is not provided');
+    }
+
     const auction = await this.AuctionModel.findById(id)
       .populate({ path: 'maxBid', model: this.AuctionBidModel })
       .session(session)
@@ -146,6 +151,7 @@ export class AuctionService {
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
     }
+
     if (dayjs().utc().isAfter(auction.endsAt)) {
       throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
     }
@@ -169,6 +175,7 @@ export class AuctionService {
           user: user.mongodbId,
           bid: bid.getAmount(),
           bidCurrency: bid.getCurrency(),
+          paymentSource: card.id,
           createdAt: dayjs().toISOString(),
         },
       ],
@@ -194,12 +201,22 @@ export class AuctionService {
           if (dayjs().utc().isAfter(auction.endsAt)) {
             const currentAuction = await auction
               .populate({
+                path: 'bids',
+                model: this.AuctionBidModel,
+                populate: { path: 'user', model: this.UserAccountModel },
+              })
+              .populate({
                 path: 'maxBid',
                 model: this.AuctionBidModel,
                 populate: { path: 'user', model: this.UserAccountModel },
               })
               .execPopulate();
-            await this.settleAuctionAndCharge(currentAuction);
+
+            try {
+              await this.settleAuctionAndCharge(currentAuction);
+            } catch (error) {
+              AppLogger.error(`failed settling auction ${currentAuction.id}: ${error.message}`, error);
+            }
           }
         }
       });
@@ -218,12 +235,18 @@ export class AuctionService {
     auction.status = AuctionStatus.SETTLED;
 
     if (auction.maxBid) {
-      try {
-        const result = await this.stripeService.chargePayment(auction.maxBid.user);
-        AppLogger.info(`Payment charged for user ${auction.maxBid.user._id.toString()} with result ${result}`);
-      } catch (e) {
-        throw new AppError('Cannot charge user', ErrorCode.INTERNAL_ERROR);
-      }
+      const amount = Dinero({
+        amount: auction.maxBid.bid,
+        currency: auction.maxBid.bidCurrency,
+        precision: 2,
+      });
+      auction.maxBid.chargeId = await this.paymentService.chargeUser(
+        auction.maxBid.user,
+        auction.maxBid.paymentSource,
+        amount,
+        `Contrib auction: ${auction.title}`,
+      );
+      await auction.maxBid.save();
     }
     AppLogger.info(`Auction with id ${auction.id} has been settled`);
     await auction.save();

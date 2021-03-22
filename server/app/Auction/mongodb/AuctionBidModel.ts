@@ -7,8 +7,10 @@ export interface IAuctionBidModel extends Document {
   user: IUserAccount['_id'];
   bidMoney?: Dinero.Dinero;
   createdAt: dayjs.Dayjs;
+  paymentSource: string;
   bid: number;
   bidCurrency: Dinero.Currency;
+  chargeId: string;
 }
 
 export const AuctionBidCollectionName = 'bids';
@@ -17,7 +19,9 @@ const AuctionBidSchema: Schema<IAuctionBidModel> = new Schema<IAuctionBidModel>(
   user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   bid: { type: SchemaTypes.Number, required: true },
   bidCurrency: { type: SchemaTypes.String, default: 'USD' },
+  paymentSource: { type: SchemaTypes.String, required: true },
   createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+  chargeId: { type: SchemaTypes.String },
 });
 
 AuctionBidSchema.virtual('bidMoney').get(function () {

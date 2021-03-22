@@ -1,8 +1,7 @@
 import { ApolloError, ApolloServer, gql } from 'apollo-server-express';
-import { Connection } from 'mongoose';
 
 import { createGraphqlContext } from './createGraphqlContext';
-import { UserAccountSchema, UserAccountResolvers } from '../app/UserAccount';
+import { UserAccountResolvers, UserAccountSchema } from '../app/UserAccount';
 import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
 import { CharityResolvers, CharitySchema } from '../app/Charity';
 import { AuctionResolvers, AuctionSchema } from '../app/Auction';
@@ -10,9 +9,9 @@ import { DateTimeResolver, DateTimeTypeDefs } from './scalars/dateTime';
 import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
 
 import { AppLogger } from '../logger';
-import { ErrorCode } from '../errors/ErrorCode';
-import { AppError } from '../errors/AppError';
+import { AppError, ErrorCode } from '../errors';
 import { IAppServices } from '../app/AppServices';
+import { PaymentResolvers, PaymentSchema } from '../app/Payment';
 
 export const DefaultSchema = gql`
   type Query {
@@ -34,6 +33,7 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
       InfluencerSchema,
       CharitySchema,
       AuctionSchema,
+      PaymentSchema,
     ],
     resolvers: [
       DateTimeResolver,
@@ -42,6 +42,7 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
       InfluencerResolvers,
       CharityResolvers,
       AuctionResolvers,
+      PaymentResolvers,
     ],
     context: (ctx) => createGraphqlContext(ctx, appServices),
     playground: {

@@ -63,10 +63,8 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
           <Row>
             <Col>
               <VerifiedStatus />
-              <p className="text-headline font-weight-bold">{influencer.name}</p>
-              <p className="text-label text-all-cups">
-                Total charity amount raised: ${totalRaised.toFormat('$0,0.00')}
-              </p>
+              <p className="text-headline font-weight-bold break-word">{influencer.name}</p>
+              <p className="text-label text-all-cups">Total charity amount raised: {totalRaised.toFormat('$0,0.00')}</p>
               {/*<div className="d-flex">
                 <a
                   className={clsx(styles.socialIcon, 'mr-3')}
@@ -85,7 +83,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
             <Col>
               <span className="label-with-separator text-label font-weight-bold">Player profile</span>
               {profileDescriptionParagraphs.map((paragraph, paragraphIndex) => (
-                <p key={paragraphIndex} className="text--body mb-4 mt-4">
+                <p key={paragraphIndex} className="text--body mb-4 mt-4 break-word">
                   {paragraph}
                 </p>
               ))}
@@ -99,7 +97,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
           <Container>
             {hasLiveAuctions && (
               <div className="mb-5">
-                <span className="label-with-separator text-label mb-4 d-block font-weight-bold">
+                <span className="label-with-separator text-label mb-4 d-block font-weight-bold break-word">
                   {influencer.name} live auctions
                 </span>
                 <Slider items={liveAuctionsLayout} />

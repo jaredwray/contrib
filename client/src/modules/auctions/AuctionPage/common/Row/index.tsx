@@ -7,9 +7,10 @@ import styles from './styles.module.scss';
 
 interface Props {
   title: string;
+  childrenClassName?: string;
 }
 
-const Row: FC<Props> = ({ title, children }) => {
+const Row: FC<Props> = ({ title, children, childrenClassName }) => {
   return (
     <>
       <br />
@@ -17,7 +18,7 @@ const Row: FC<Props> = ({ title, children }) => {
         <Col className="text-label label-with-separator">{title}</Col>
       </RbRow>
       <RbRow>
-        <Col>{children}</Col>
+        <Col className={childrenClassName}>{children}</Col>
       </RbRow>
     </>
   );

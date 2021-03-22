@@ -4,3 +4,12 @@
   height: 60px;
   width: 60px;
 }
+
+.name {
+  &,
+  &:focus,
+  &:hover {
+    color: $sage-color;
+    outline: none;
+  }
+}
