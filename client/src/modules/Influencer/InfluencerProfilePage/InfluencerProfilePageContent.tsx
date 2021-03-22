@@ -23,7 +23,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
     () =>
       (influencer.auctions ?? [])
         .filter((a) => a.status === AuctionStatus.SETTLED)
-        .map((a) => Dinero(a.maxBid.bid))
+        .map((a) => Dinero(a.maxBid?.bid))
         .reduce((total, next) => total.add(next), Dinero({ amount: 0, currency: 'USD' })),
     [influencer],
   );

@@ -49,12 +49,24 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
     >
       {options && options.length && isArrayOfObjects
         ? options.map(({ value, label }: { value: string; label: string }) => (
-            <Dropdown.Item key={value + label} active={selectedOption?.value === value} as="div" eventKey={value}>
+            <Dropdown.Item
+              key={value + label}
+              active={selectedOption?.value === value}
+              as="div"
+              className="text-truncate"
+              eventKey={value}
+            >
               {label}
             </Dropdown.Item>
           ))
         : options.map((option: string) => (
-            <Dropdown.Item key={option} active={selectedOption === option} as="div" eventKey={option}>
+            <Dropdown.Item
+              key={option}
+              active={selectedOption === option}
+              as="div"
+              className="text-truncate"
+              eventKey={option}
+            >
               {option}
             </Dropdown.Item>
           ))}

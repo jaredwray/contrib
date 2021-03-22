@@ -1,17 +1,16 @@
-@import '~bootstrap/scss/bootstrap.scss';
 @import 'src/variables.scss';
 
 .section {
   margin-bottom: 120px;
 
-  @include media-breakpoint-down(sm) {
+  @media (min-width: 0px) and (max-width: $medium-weight) {
     padding-bottom: 0;
     margin-bottom: 0;
   }
 }
 
 .buttonWrapper {
-  @include media-breakpoint-down(sm) {
+  @media (max-width: $medium-weight) {
     display: none;
   }
 }
@@ -20,13 +19,13 @@
   &::after {
     right: 110px !important;
 
-    @include media-breakpoint-down(lg) {
+    @media (max-width: $extra-large-weight) {
       right: 80px !important;
     }
-    @include media-breakpoint-down(md) {
-      right: 50px !important;
+    @media (max-width: $large-weight) {
+      right: 25px !important;
     }
-    @include media-breakpoint-down(md) {
+    @media (max-width: $medium-weight) {
       right: 25px !important;
     }
   }
@@ -37,7 +36,7 @@
   height: 120px !important;
   margin-top: 40px;
 
-  @include media-breakpoint-up(md) {
+  @media (min-width: $medium-weight) {
     display: none !important;
   }
 }
@@ -75,7 +74,7 @@
   &:not(:last-child) {
     margin-bottom: 20px;
 
-    @include media-breakpoint-down(sm) {
+    @media (max-width: $small-weight) {
       margin-bottom: 10px;
     }
   }

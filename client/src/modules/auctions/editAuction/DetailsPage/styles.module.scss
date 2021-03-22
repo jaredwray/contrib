@@ -1,11 +1,10 @@
-@import '~bootstrap/scss/bootstrap.scss';
 @import 'src/variables.scss';
 
 .suggestButton {
   font-size: 14px !important;
   margin-bottom: 58px;
 
-  @include media-breakpoint-only(sm) {
+  @media (min-width: $small-weight) and (max-width: $medium-weight) {
     font-style: 11px !important;
     margin-bottom: 30px;
   }
@@ -16,7 +15,7 @@
   padding-bottom: 60px;
   margin-bottom: 27px;
 
-  @include media-breakpoint-down(sm) {
+  @media (max-width: $small-weight) {
     padding-bottom: 30px;
     margin-bottom: 27px;
   }
@@ -25,7 +24,7 @@
 .section {
   padding-bottom: 0;
 
-  @include media-breakpoint-only(xs) {
+  @media (max-width: $small-weight) {
     padding-bottom: 0;
     margin-bottom: 0;
   }

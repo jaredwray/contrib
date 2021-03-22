@@ -21,13 +21,16 @@ const SportsDropdown: FC<Props> = ({ selectedSports, changeFilters }) => {
     [changeFilters],
   );
 
+  const hasSelection = selectedSports.length;
+
+  const options = sportsListData && ['ALL', ...sportsListData?.sports];
   return (
     <Form.Group className="mb-1">
       <Form.Label>Sport</Form.Label>
       <Select
-        options={sportsListData?.sports}
+        options={options}
         placeholder="Select sport"
-        selected={selectedSports || 'all'}
+        selected={hasSelection ? selectedSports : 'ALL'}
         onChange={selectSport}
       />
     </Form.Group>

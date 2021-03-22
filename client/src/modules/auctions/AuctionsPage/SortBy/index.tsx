@@ -30,7 +30,7 @@ const SortBy: FC<Props> = ({ changeFilters }) => {
     <div className="float-left float-sm-right pt-4 pt-sm-0 form-inline h-100">
       <Form.Group className={styles.dropdownFormGroup}>
         <Form.Label className="pr-3 text-nowrap">Sort by</Form.Label>
-        <Select className={styles.select} options={sortByEnum} onChange={selectSortBy} />
+        <Select className={styles.select} options={sortByEnum} selected={sortByEnum[0]} onChange={selectSortBy} />
       </Form.Group>
     </div>
   );
