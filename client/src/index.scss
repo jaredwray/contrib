@@ -7,7 +7,7 @@
 
 body {
   color: $dark-gray-color;
-  font-weight: 700;
+  font-weight: 700 !important;
   height: 100%;
 }
 
@@ -33,6 +33,15 @@ img {
       height: 4px;
     }
   }
+}
+
+.text-truncate {
+  max-width: 100%;
+}
+
+.break-word {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .error-message {

@@ -14,7 +14,7 @@
 }
 
 .link {
-  color: $dark-gray-color;
+  color: $dark-gray-color !important;
   white-space: nowrap;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .auctionTitle {
-  color: $sage-color;
+  color: $sage-color !important;
   font-weight: 700;
 }
 
