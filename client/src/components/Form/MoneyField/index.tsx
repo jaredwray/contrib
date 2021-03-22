@@ -34,6 +34,8 @@ const MoneyField: FC<Props> = ({
 
   const dollars = value.amount;
 
+  const filteredValue = dollars > 999999999 * 100 ? Dinero({ amount: 999999999 * 100 }) : Dinero(value);
+
   const handleChange = useCallback(
     (event) => {
       const targetValue = event.target.value;
@@ -53,7 +55,7 @@ const MoneyField: FC<Props> = ({
         className={className}
         isInvalid={hasError}
         placeholder={placeholder}
-        value={dollars ? Dinero(value).toFormat('$0,0') : '$'}
+        value={dollars ? filteredValue.toFormat('$0,0') : '$'}
         onChange={handleChange}
         onFocus={handleFocus}
       />
