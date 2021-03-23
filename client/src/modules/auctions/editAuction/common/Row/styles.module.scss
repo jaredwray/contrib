@@ -1,4 +1,3 @@
-@import '~bootstrap/scss/bootstrap.scss';
 @import 'src/variables.scss';
 
 .divider:not(:last-child) {
@@ -6,7 +5,7 @@
   padding-bottom: 60px;
   margin-bottom: 25px;
 
-  @include media-breakpoint-down(sm) {
+  @media (max-width: $small-weight) {
     padding-bottom: 30px;
   }
 }

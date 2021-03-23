@@ -1,5 +1,4 @@
 @import 'src/variables.scss';
-@import '~bootstrap/scss/bootstrap.scss';
 
 .root {
   height: 100px;
@@ -18,7 +17,7 @@
   }
 }
 
-@include media-breakpoint-down(sm) {
+@media (max-width: $small-weight) {
   .root {
     margin-top: 26px;
   }

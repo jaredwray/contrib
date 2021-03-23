@@ -6,6 +6,7 @@
   .dropdown-menu {
     overflow: hidden;
     max-height: 350px;
+    max-width: 350px;
   }
 
   &.dropdown.show > .dropdown-toggle {

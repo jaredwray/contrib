@@ -1,10 +1,9 @@
 @import 'src/variables.scss';
-@import '~bootstrap/scss/bootstrap.scss';
 
 .root {
   margin-top: 54px;
 
-  @include media-breakpoint-down(sm) {
+  @media (max-width: $small-weight) {
     margin-top: 34px;
   }
 }
