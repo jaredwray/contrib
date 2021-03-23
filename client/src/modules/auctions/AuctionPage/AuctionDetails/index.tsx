@@ -37,7 +37,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const endDateFormatted = dateFormat(toDate(endDate), 'MMM dd yyyy');
 
   const price = useMemo(() => (maxBid && Dinero(maxBid.bid)) || Dinero(startPrice), [maxBid, startPrice]);
-  const minBid = useMemo(() => (maxBid && Dinero(maxBid.bid).add(Dinero({ amount: 50 }))) || Dinero(startPrice), [
+  const minBid = useMemo(() => (maxBid && Dinero(maxBid.bid).add(Dinero({ amount: 100 }))) || Dinero(startPrice), [
     maxBid,
     startPrice,
   ]);

@@ -19,6 +19,8 @@ interface Props {
   externalText?: string | ReactElement;
 }
 
+const MaxLength = 11;
+
 const MoneyField: FC<Props> = ({
   name,
   title,
@@ -32,9 +34,10 @@ const MoneyField: FC<Props> = ({
   const constraints = useFieldConstraints(inputConstraints, required);
   const { hasError, errorMessage, value, onChange, ...inputProps } = useField(name, { constraints, disabled });
 
-  const dollars = value.amount;
-
-  const filteredValue = dollars > 999999999 * 100 ? Dinero({ amount: 999999999 * 100 }) : Dinero(value);
+  const filteredValue = Dinero({
+    amount: parseInt(value.amount.toString().slice(-1 * MaxLength)),
+    currency: value.currency,
+  });
 
   const handleChange = useCallback(
     (event) => {
@@ -54,8 +57,9 @@ const MoneyField: FC<Props> = ({
         {...inputProps}
         className={className}
         isInvalid={hasError}
+        maxLength={MaxLength}
         placeholder={placeholder}
-        value={dollars ? filteredValue.toFormat('$0,0') : '$'}
+        value={filteredValue.toFormat('$0,0')}
         onChange={handleChange}
         onFocus={handleFocus}
       />

@@ -34,7 +34,10 @@ export default function SimilarAuctions() {
             Similar auctions
           </Col>
           <Col className="align-self-end pr-lg-0" lg="3" xs="12">
-            <Link className={clsx('float-lg-right text-label text-all-cups', styles.seeAllLink)} to="/auctions">
+            <Link
+              className={clsx('float-lg-right text-label text-all-cups ml-1 ml-md-0', styles.seeAllLink)}
+              to="/auctions"
+            >
               See all auctions &gt;&gt;
             </Link>
           </Col>

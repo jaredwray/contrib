@@ -34,7 +34,7 @@ const AuctionsPage: FC = () => {
     query: '',
     bids: initialBids,
     sports: [],
-    orderBy: 'createdAtDesc',
+    orderBy: 'CREATED_AT_DESC',
     pageSkip: 0,
   });
   const [executeAuctionsSearch, { data: auctionsData }] = useLazyQuery(AuctionsListQuery);
