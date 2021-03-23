@@ -1,6 +1,7 @@
 import { Connection, Types } from 'mongoose';
 import dayjs from 'dayjs';
 import Dinero from 'dinero.js';
+import arrayMax from '../../../helpers/arrayMax';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -240,16 +241,38 @@ export class AuctionService {
         currency: auction.maxBid.bidCurrency,
         precision: 2,
       });
-      auction.maxBid.chargeId = await this.paymentService.chargeUser(
-        auction.maxBid.user,
-        auction.maxBid.paymentSource,
-        amount,
-        `Contrib auction: ${auction.title}`,
-      );
-      await auction.maxBid.save();
+      try {
+        auction.maxBid.chargeId = await this.paymentService.chargeUser(
+          auction.maxBid.user,
+          auction.maxBid.paymentSource,
+          amount,
+          `Contrib auction: ${auction.title}`,
+        );
+        AppLogger.info(`Auction with id ${auction.id} has been settled`);
+        await auction.save();
+      } catch (error) {
+        if (error?.type === 'StripeCardError') {
+          AppLogger.info(
+            `Caught StripeCardError for the auction: ${auction.id.toString()}, of maxBid: ${auction.maxBid.id.toString()}. Changing maxBid to `,
+          );
+          if (auction.bids.length > 1) {
+            auction.maxBid = arrayMax<IAuctionBidModel>(
+              auction.bids.filter((bid) => bid.id !== auction.maxBid.id),
+              (currentBid, prevBid) => currentBid.bidMoney.greaterThan(prevBid.bidMoney),
+            );
+            await auction.maxBid.save();
+            await this.settleAuctionAndCharge(auction);
+          } else {
+            // TODO: handle auction with single bid, where placedBid payment fails:
+            // 1. Extend auction for additional time, and try to charge user who posted bid later
+            // 2. If there is no success, put auction to the FAILED STATUS
+          }
+        } else {
+          AppLogger.error(error.message);
+          throw new AppError(error.message, ErrorCode.INTERNAL_ERROR);
+        }
+      }
     }
-    AppLogger.info(`Auction with id ${auction.id} has been settled`);
-    await auction.save();
   }
 
   private static makeAuctionBid(model: IAuctionBidModel): AuctionBid | null {
