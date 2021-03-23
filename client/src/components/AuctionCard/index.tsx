@@ -42,6 +42,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
   }
 
   const ended = toDate(auction.endDate) <= new Date();
+  const isDraft = auction.status === AuctionStatus.DRAFT;
+  const linkToAuction = `/auctions/${auction.id}${isDraft ? '/basic' : ''}`;
 
   return (
     <figure className={clsx(styles.root, horizontal ? styles.horizontalRoot : styles.verticalRoot)}>
@@ -69,7 +71,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
         <Link
           className={clsx(styles.auctionTitle, 'text-subhead mb-0 text-left break-word')}
           title={auction.title}
-          to={`/auction/${auction.id}`}
+          to={linkToAuction}
         >
           {auction.title}
         </Link>
@@ -77,11 +79,9 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
           {currentPrice.toFormat('$0,0.00')}
         </p>
 
-        {auction.status === AuctionStatus.DRAFT && (
-          <p className="text-label text-all-cups mb-0 mt-auto text-left">DRAFT</p>
-        )}
+        {isDraft && <p className="text-label text-all-cups mb-0 mt-auto text-left">DRAFT</p>}
 
-        {auction.status !== AuctionStatus.DRAFT && (
+        {!isDraft && (
           <p className="text-label text-all-cups mb-0 mt-auto text-left">
             {pluralize(auction.totalBids ?? 0, 'bid')} •{ended && ' ended'} {toHumanReadableDuration(auction.endDate)}
           </p>
