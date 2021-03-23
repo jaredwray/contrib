@@ -61,7 +61,7 @@ ReactDOM.render(
               <Route exact component={InvitationPage} path="/invitation/:slug" />
               <Route exact component={Auctions} path="/auctions" />
               <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
-              <Route exact component={AuctionPage} path="/auction/:auctionId" />
+              <Route exact component={AuctionPage} path="/auctions/:auctionId" />
               <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
               <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
               <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />

@@ -238,6 +238,7 @@ export const AuctionsListQuery = gql`
           bid
         }
         totalBids
+        status
         title
         description
         startPrice
