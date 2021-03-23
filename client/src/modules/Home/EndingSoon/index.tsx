@@ -29,12 +29,15 @@ export default function EndingSoon() {
   return (
     <section className={styles.root}>
       <Container className={clsx(styles.homepageContainer, 'header')}>
-        <Row className="pb-5">
+        <Row className="pb-2 pb-sm-3 pb-lg-5">
           <Col className={clsx(styles.title, 'text-super')} lg="9" xs="12">
             Ending soon
           </Col>
           <Col className="align-self-end pr-lg-0" lg="3" xs="12">
-            <Link className={clsx('float-lg-right text-label text-all-cups', styles.seeAllLink)} to="/auctions">
+            <Link
+              className={clsx('float-lg-right text-label text-all-cups ml-1 ml-md-0', styles.seeAllLink)}
+              to="/auctions"
+            >
               See all auctions &gt;&gt;
             </Link>
           </Col>

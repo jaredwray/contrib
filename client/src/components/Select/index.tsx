@@ -55,6 +55,7 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
               as="div"
               className="text-truncate"
               eventKey={value}
+              title={label}
             >
               {label}
             </Dropdown.Item>
@@ -66,6 +67,7 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
               as="div"
               className="text-truncate"
               eventKey={option}
+              title={option}
             >
               {option}
             </Dropdown.Item>

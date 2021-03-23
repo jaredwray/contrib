@@ -11,26 +11,28 @@ interface Props {
   changeFilters: (key: string, value: any) => void;
 }
 
+const OptionAll = 'All';
+
 const SportsDropdown: FC<Props> = ({ selectedSports, changeFilters }) => {
   const { data: sportsListData } = useQuery(SportsQuery);
 
   const selectSport = useCallback(
     (sport: string) => {
-      changeFilters('sports', [sport]);
+      sport === OptionAll ? changeFilters('sports', []) : changeFilters('sports', [sport]);
     },
     [changeFilters],
   );
 
   const hasSelection = selectedSports.length;
 
-  const options = sportsListData && ['ALL', ...sportsListData?.sports];
+  const options = sportsListData && [OptionAll, ...sportsListData?.sports];
   return (
     <Form.Group className="mb-1">
       <Form.Label>Sport</Form.Label>
       <Select
         options={options}
         placeholder="Select sport"
-        selected={hasSelection ? selectedSports : 'ALL'}
+        selected={hasSelection ? selectedSports : OptionAll}
         onChange={selectSport}
       />
     </Form.Group>

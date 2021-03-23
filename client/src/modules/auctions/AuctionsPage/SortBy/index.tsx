@@ -11,11 +11,11 @@ interface Props {
 }
 
 const sortByEnum = [
-  { value: 'createdAtDesc', label: 'New first' },
-  { value: 'timeAsc', label: 'Ending soon first' },
-  { value: 'sport', label: 'Sport' },
-  { value: 'priceAsc', label: 'Price: lowest first' },
-  { value: 'priceDesc', label: 'Price: highest first' },
+  { value: 'CREATED_AT_DESC', label: 'New first' },
+  { value: 'TIME_ASC', label: 'Ending soon first' },
+  { value: 'SPORT', label: 'Sport' },
+  { value: 'PRICE_ASC', label: 'Price: lowest first' },
+  { value: 'PRICE_DESC', label: 'Price: highest first' },
 ];
 
 const SortBy: FC<Props> = ({ changeFilters }) => {
