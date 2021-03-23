@@ -212,12 +212,7 @@ export class AuctionService {
                 populate: { path: 'user', model: this.UserAccountModel },
               })
               .execPopulate();
-
-            try {
-              await this.settleAuctionAndCharge(currentAuction);
-            } catch (error) {
-              AppLogger.error(`failed settling auction ${currentAuction.id}: ${error.message}`, error);
-            }
+            await this.settleAuctionAndCharge(currentAuction);
           }
         }
       });
@@ -234,42 +229,27 @@ export class AuctionService {
       throw new AppError('Auction not found');
     }
     auction.status = AuctionStatus.SETTLED;
-
-    if (auction.maxBid) {
-      const amount = Dinero({
-        amount: auction.maxBid.bid,
-        currency: auction.maxBid.bidCurrency,
-        precision: 2,
-      });
+    const maxBids: IAuctionBidModel[] = auction.bids.sort((curr, next) => curr.bidMoney.lessThan(next.bidMoney));
+    for await (const [i, bid] of maxBids.entries()) {
       try {
-        auction.maxBid.chargeId = await this.paymentService.chargeUser(
-          auction.maxBid.user,
-          auction.maxBid.paymentSource,
-          amount,
+        bid.chargeId = await this.paymentService.chargeUser(
+          bid.user,
+          bid.paymentSource,
+          bid.bidMoney,
           `Contrib auction: ${auction.title}`,
         );
         AppLogger.info(`Auction with id ${auction.id} has been settled`);
         await auction.save();
+        return;
       } catch (error) {
-        if (error?.type === 'StripeCardError') {
-          AppLogger.info(
-            `Caught StripeCardError for the auction: ${auction.id.toString()}, of maxBid: ${auction.maxBid.id.toString()}. Changing maxBid to `,
+        AppLogger.error(`Unable to charge user ${bid.user.id.toString()}, with error: ${error.message}`);
+        if (i === maxBids.length - 1) {
+          AppLogger.error(
+            `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
           );
-          if (auction.bids.length > 1) {
-            auction.maxBid = arrayMax<IAuctionBidModel>(
-              auction.bids.filter((bid) => bid.id !== auction.maxBid.id),
-              (currentBid, prevBid) => currentBid.bidMoney.greaterThan(prevBid.bidMoney),
-            );
-            await auction.maxBid.save();
-            await this.settleAuctionAndCharge(auction);
-          } else {
-            // TODO: handle auction with single bid, where placedBid payment fails:
-            // 1. Extend auction for additional time, and try to charge user who posted bid later
-            // 2. If there is no success, put auction to the FAILED STATUS
-          }
-        } else {
-          AppLogger.error(error.message);
-          throw new AppError(error.message, ErrorCode.INTERNAL_ERROR);
+          auction.status = AuctionStatus.FAILED;
+          await auction.save();
+          return;
         }
       }
     }
