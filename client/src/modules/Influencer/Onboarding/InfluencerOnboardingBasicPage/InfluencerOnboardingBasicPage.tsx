@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
-import clsx from 'clsx';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
@@ -9,12 +8,11 @@ import { useToasts } from 'react-toast-notifications';
 import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
-import InputField from 'src/components/Form/InputField';
 import Layout from 'src/components/Layout';
 import { UserAccount } from 'src/types/UserAccount';
 
+import { BasicFormFields } from '../../common/BasicFormFields';
 import { InfluencerOnboardingNavigation } from '../InfluencerOnboardingNavigation';
-import { InfluencerAvatarPicker } from './InfluencerAvatarPicker';
 import styles from './InfluencerOnboardingBasicPage.module.scss';
 
 interface FormValues {
@@ -66,25 +64,7 @@ export const InfluencerOnboardingBasicPage: FC = () => {
             <span className={styles.stepIndicator}>Step 1</span>
           </h2>
           <hr className="d-none d-md-block" />
-          <Row className="pt-3 pt-md-0">
-            <Col md="6">
-              <div className={clsx(styles.avatarBlock, 'd-flex flex-column align-items-center')}>
-                <InfluencerAvatarPicker />
-              </div>
-            </Col>
-            <Col className="pt-4 pt-md-0" md="6">
-              <InputField required name="name" title="Enter your name" />
-              <InputField required name="sport" title="Enter your sport" />
-              <InputField required name="team" title="Enter your team name" />
-              <InputField
-                required
-                textarea
-                className={styles.textarea}
-                name="profileDescription"
-                title="Enter description"
-              />
-            </Col>
-          </Row>
+          <BasicFormFields />
         </Container>
 
         <InfluencerOnboardingNavigation step="basic" />

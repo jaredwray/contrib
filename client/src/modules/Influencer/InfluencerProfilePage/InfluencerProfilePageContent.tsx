@@ -1,7 +1,9 @@
 import React, { FC, useMemo } from 'react';
 
+import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
@@ -59,6 +61,9 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
         <div className={styles.header}>
           <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
+        <Link className={clsx(styles.editLink, 'text-label')} to="/profiles/me/edit">
+          Edit
+        </Link>
         <Container className={styles.content}>
           <Row>
             <Col>

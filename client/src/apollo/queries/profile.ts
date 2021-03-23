@@ -29,3 +29,23 @@ export const UpdateInfluencerProfileAvatarMutation = gql`
     }
   }
 `;
+
+export const MyProfileQuery = gql`
+  query GetMyAccount {
+    myAccount {
+      influencerProfile {
+        id
+        profileDescription
+        name
+        sport
+        team
+        avatarUrl
+        status
+        favoriteCharities {
+          id
+          name
+        }
+      }
+    }
+  }
+`;

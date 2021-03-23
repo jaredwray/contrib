@@ -60,7 +60,7 @@ export default function InfluencersPage() {
         </Container>
         <Container fluid>
           <Row>
-            <Col md="10">
+            <Col className="w-100">
               {loading ? (
                 <Spinner animation="border" />
               ) : (
@@ -80,8 +80,8 @@ export default function InfluencersPage() {
                         <td className="admin-influencers-id" title={influencer.id}>
                           {influencer.id}
                         </td>
-                        <td>{influencer.name}</td>
-                        <td>{influencer.sport}</td>
+                        <td className="break-word">{influencer.name}</td>
+                        <td className="break-word">{influencer.sport}</td>
                         <td>{influencer.status}</td>
                         <td>
                           <DropdownButton

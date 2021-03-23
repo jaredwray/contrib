@@ -1,0 +1,17 @@
+@import 'src/variables.scss';
+
+.button {
+  min-width: 197px;
+  height: 50px !important;
+
+  transition: opacity ease-in-out 0.25s;
+  &:disabled {
+    opacity: 0.2;
+  }
+}
+
+@media (max-width: $small-weight) {
+  .button {
+    min-width: 162px;
+  }
+}
