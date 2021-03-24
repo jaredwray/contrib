@@ -15,8 +15,6 @@ const StripeInput: FC<Props> = ({ disabled, onChange }) => {
   const [node, setNode] = useState<StripeCardElement | null>(null);
   const [focused, setFocused] = useState(false);
 
-  console.log('🚀 ~ file: index.tsx ~ line 15 ~ node', node);
-
   const options = useMemo(
     () => ({
       disabled: disabled,
