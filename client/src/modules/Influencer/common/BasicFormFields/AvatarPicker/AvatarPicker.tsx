@@ -10,14 +10,14 @@ import { UpdateInfluencerProfileAvatarMutation } from 'src/apollo/queries/profil
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { UserAccount } from 'src/types/UserAccount';
 
-import styles from './InfluencerAvatarPicker.module.scss';
+import styles from './AvatarPicker.module.scss';
 
 const MAX_AVATAR_SIZE_MB = 2;
 
 const ACCEPTED_FILE_TYPES = ['png', 'jpeg', 'jpg', 'webp'];
 const ACCEPTED_FILE_TYPES_STRING = ACCEPTED_FILE_TYPES.map((t) => `.${t}`).join(',');
 
-export const InfluencerAvatarPicker: FC = () => {
+export const AvatarPicker: FC = () => {
   const { addToast } = useToasts();
   const [uploadPreviewUrl, setUploadPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

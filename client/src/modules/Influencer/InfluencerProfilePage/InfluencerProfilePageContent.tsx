@@ -1,11 +1,13 @@
-import React, { FC, useMemo } from 'react';
+import { FC, useMemo, useContext } from 'react';
 
 import Dinero from 'dinero.js';
 import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
 import Slider from 'src/components/Slider';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import VerifiedStatus from 'src/components/VerifiedStatus';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionStatus } from 'src/types/Auction';
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfile }) => {
+  const { account } = useContext(UserAccountContext);
   const totalRaised = useMemo(
     () =>
       (influencer.auctions ?? [])
@@ -59,6 +62,17 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
         <div className={styles.header}>
           <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
+        {influencer.id === account?.influencerProfile?.id && (
+          <Container>
+            <Row>
+              <Col>
+                <Link className="text-label float-right" to="/profiles/me/edit">
+                  Edit
+                </Link>
+              </Col>
+            </Row>
+          </Container>
+        )}
         <Container className={styles.content}>
           <Row>
             <Col>

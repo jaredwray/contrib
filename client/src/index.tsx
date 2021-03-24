@@ -25,6 +25,7 @@ import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
 import 'src/index.scss';
 import { AfterLogin } from './components/AfterLogin';
 import { mergeUrlPath } from './helpers/mergeUrlPath';
+import { InfluencerProfileEditPage } from './modules/Influencer/InfluencerProfileEditPage';
 import { InfluencerProfilePage } from './modules/Influencer/InfluencerProfilePage';
 import { InfluencerOnboardingBasicPage } from './modules/Influencer/Onboarding/InfluencerOnboardingBasicPage';
 import { InfluencerOnboardingCharitiesPage } from './modules/Influencer/Onboarding/InfluencerOnboardingCharitiesPage';
@@ -61,12 +62,13 @@ ReactDOM.render(
               <Route exact component={InvitationPage} path="/invitation/:slug" />
               <Route exact component={Auctions} path="/auctions" />
               <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
-              <Route exact component={AuctionPage} path="/auctions/:auctionId" />
+              <Route exact component={InfluencerProfileEditPage} path="/profiles/me/edit" />
               <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
               <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />
               <Route exact component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" />
               <Route exact component={EditAuctionMediaPage} path="/auctions/:auctionId/media" />
               <Route exact component={EditAuctionDetailsPage} path="/auctions/:auctionId/details" />
+              <Route exact component={AuctionPage} path="/auctions/:auctionId" />
               <Route exact component={AuctionDonePage} path="/auctions/:auctionId/done" />
             </Switch>
           </UserAccountProvider>
