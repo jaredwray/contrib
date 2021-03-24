@@ -5,7 +5,8 @@ import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { MyFavoriteCharitiesQuery, UpdateMyFavoriteCharities } from 'src/apollo/queries/charities';
+import { UpdateMyFavoriteCharities } from 'src/apollo/queries/charities';
+import { MyProfileQuery } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import { Charity } from 'src/types/Charity';
@@ -22,7 +23,7 @@ interface FormValues {
 export const InfluencerOnboardingCharitiesPage: FC = () => {
   const { addToast } = useToasts();
   const history = useHistory();
-  const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyFavoriteCharitiesQuery);
+  const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyProfileQuery);
   const [updateMyFavoriteCharities] = useMutation(UpdateMyFavoriteCharities);
 
   const handleSubmit = useCallback(

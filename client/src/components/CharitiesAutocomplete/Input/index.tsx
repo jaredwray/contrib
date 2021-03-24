@@ -4,7 +4,8 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Button, Form } from 'react-bootstrap';
 
-import { CharitiesSearch, MyFavoriteCharitiesQuery } from 'src/apollo/queries/charities';
+import { CharitiesSearch } from 'src/apollo/queries/charities';
+import { MyProfileQuery } from 'src/apollo/queries/profile';
 import SearchInput from 'src/components/SearchInput';
 import useOutsideClick from 'src/helpers/useOutsideClick';
 import { Charity } from 'src/types/Charity';
@@ -21,7 +22,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, onChange, disabled }) => {
   const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const { data: myAccountsData } = useQuery(MyFavoriteCharitiesQuery);
+  const { data: myAccountsData } = useQuery(MyProfileQuery);
   const [executeSearch] = useLazyQuery(CharitiesSearch, {
     onCompleted({ charitiesSearch }) {
       setCharitiesSearch(charitiesSearch);
