@@ -230,7 +230,7 @@ export class AuctionService {
     }
     auction.status = AuctionStatus.SETTLED;
     const maxBids: IAuctionBidModel[] = auction.bids.sort((curr, next) => curr.bidMoney.lessThan(next.bidMoney));
-    for await (const [i, bid] of maxBids.entries()) {
+    for await (const bid of maxBids) {
       try {
         bid.chargeId = await this.paymentService.chargeUser(
           bid.user,
@@ -243,16 +243,14 @@ export class AuctionService {
         return;
       } catch (error) {
         AppLogger.error(`Unable to charge user ${bid.user.id.toString()}, with error: ${error.message}`);
-        if (i === maxBids.length - 1) {
-          AppLogger.error(
-            `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
-          );
-          auction.status = AuctionStatus.FAILED;
-          await auction.save();
-          return;
-        }
       }
     }
+    AppLogger.error(
+      `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
+    );
+    auction.status = AuctionStatus.FAILED;
+    await auction.save();
+    return;
   }
 
   private static makeAuctionBid(model: IAuctionBidModel): AuctionBid | null {
