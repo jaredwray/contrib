@@ -49,7 +49,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const handleBid = useCallback(
     async (amount: Dinero.Dinero) => {
       if (!isAuthenticated) {
-        const bidPath = `/auctions/${auction.id}?placeBid=${JSON.stringify(amount.toJSON())}`;
+        const bidPath = `/auction/${auction.id}?placeBid=${JSON.stringify(amount.toJSON())}`;
         const redirectUri = mergeUrlPath(
           process.env.REACT_APP_PLATFORM_URL,
           `/after-login?returnUrl=${encodeURIComponent(bidPath)}`,
@@ -74,7 +74,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           // any error should be handled by handleBid
         });
       }
-      history.replace(`/auctions/${auction.id}`);
+      history.replace(`/auction/${auction.id}`);
     }
   }, [placeBidQueryParam, auction.id, minBid, handleBid, history]);
 
