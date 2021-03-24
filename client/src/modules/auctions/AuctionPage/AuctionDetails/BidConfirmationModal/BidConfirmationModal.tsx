@@ -6,11 +6,14 @@ import type { StripeCardElement, StripeCardElementChangeEvent } from '@stripe/st
 import clsx from 'clsx';
 import { isPast } from 'date-fns';
 import Dinero from 'dinero.js';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
 
 import { MakeAuctionBidMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
+import Dialog from 'src/components/Dialog';
+import DialogActions from 'src/components/DialogActions';
+import DialogContent from 'src/components/DialogContent';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import styles from './BidConfirmationModal.module.scss';
@@ -119,11 +122,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
   };
 
   return (
-    <Modal backdrop="static" keyboard={false} show={Boolean(activeBid)} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>{title}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+    <Dialog backdrop="static" keyboard={false} open={Boolean(activeBid)} title={title} onClose={handleClose}>
+      <DialogContent>
         <div className={styles.cardInputWrapper}>
           <p>
             We need your card number in order to place your bid. Card will be charged only after auction end, in case
@@ -136,15 +136,13 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
             <CardElement options={cardOptions} onChange={handleCardInputChange} />
           )}
         </div>
-      </Modal.Body>
-      {showSubmitButton && (
-        <Modal.Footer>
-          <Button block disabled={!cardComplete || isSubmitting} variant="primary" onClick={handleSubmit}>
-            Confirm bidding {activeBid?.toFormat('$0,0.00')}
-          </Button>
-        </Modal.Footer>
-      )}
-    </Modal>
+      </DialogContent>
+      <DialogActions>
+        <Button block disabled={!cardComplete || isSubmitting} variant="primary" onClick={handleSubmit}>
+          Confirm bidding {activeBid?.toFormat('$0,0.00')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 });
 
