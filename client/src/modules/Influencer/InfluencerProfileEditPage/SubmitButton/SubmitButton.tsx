@@ -10,7 +10,7 @@ export const SubmitButton: FC = () => {
   const { submitting } = useFormState({ subscription: { submitting: true } });
 
   return (
-    <div className="pt-3 pb-5 float-right">
+    <div className="pt-3 pb-3 pb-sm-5 float-right">
       <Button className={clsx('text-subhead', styles.button)} disabled={submitting} type="submit">
         Save
       </Button>
