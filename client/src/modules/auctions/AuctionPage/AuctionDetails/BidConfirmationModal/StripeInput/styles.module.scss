@@ -1,0 +1,15 @@
+@import 'src/variables.scss';
+
+.root {
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid $light-sage-color;
+  will-change: opacity, transform;
+  border-radius: 8px;
+  cursor: text;
+}
+
+.focused {
+  border-width: 2px;
+  border-color: $sage-color;
+}

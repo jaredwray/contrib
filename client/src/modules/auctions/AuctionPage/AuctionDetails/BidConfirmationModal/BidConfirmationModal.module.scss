@@ -1,4 +1,14 @@
+@import 'src/variables.scss';
+
 .cardInputWrapper {
-  max-width: 320px;
+  max-width: 350px;
   margin: 0 auto;
+}
+
+.expiredBlock {
+  color: $salmon-color;
+}
+
+.addCardBtn {
+  letter-spacing: 0 !important;
 }
