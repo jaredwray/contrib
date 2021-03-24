@@ -23,6 +23,7 @@ const StripeInput: FC<Props> = ({ disabled, onChange }) => {
           color: '#5a7864',
           fontSize: '16px',
           fontWeight: 500,
+          fontFamily: 'Montserrat, sans-serif',
 
           '::placeholder': {
             color: '#caccc6',
