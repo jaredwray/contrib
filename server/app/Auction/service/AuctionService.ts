@@ -1,6 +1,7 @@
 import { Connection, Types } from 'mongoose';
 import dayjs from 'dayjs';
 import Dinero from 'dinero.js';
+import arrayMax from '../../../helpers/arrayMax';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -211,12 +212,7 @@ export class AuctionService {
                 populate: { path: 'user', model: this.UserAccountModel },
               })
               .execPopulate();
-
-            try {
-              await this.settleAuctionAndCharge(currentAuction);
-            } catch (error) {
-              AppLogger.error(`failed settling auction ${currentAuction.id}: ${error.message}`, error);
-            }
+            await this.settleAuctionAndCharge(currentAuction);
           }
         }
       });
@@ -233,23 +229,28 @@ export class AuctionService {
       throw new AppError('Auction not found');
     }
     auction.status = AuctionStatus.SETTLED;
-
-    if (auction.maxBid) {
-      const amount = Dinero({
-        amount: auction.maxBid.bid,
-        currency: auction.maxBid.bidCurrency,
-        precision: 2,
-      });
-      auction.maxBid.chargeId = await this.paymentService.chargeUser(
-        auction.maxBid.user,
-        auction.maxBid.paymentSource,
-        amount,
-        `Contrib auction: ${auction.title}`,
-      );
-      await auction.maxBid.save();
+    const maxBids: IAuctionBidModel[] = auction.bids.sort((curr, next) => curr.bidMoney.lessThan(next.bidMoney));
+    for await (const bid of maxBids) {
+      try {
+        bid.chargeId = await this.paymentService.chargeUser(
+          bid.user,
+          bid.paymentSource,
+          bid.bidMoney,
+          `Contrib auction: ${auction.title}`,
+        );
+        AppLogger.info(`Auction with id ${auction.id} has been settled`);
+        await auction.save();
+        return;
+      } catch (error) {
+        AppLogger.error(`Unable to charge user ${bid.user.id.toString()}, with error: ${error.message}`);
+      }
     }
-    AppLogger.info(`Auction with id ${auction.id} has been settled`);
+    AppLogger.error(
+      `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
+    );
+    auction.status = AuctionStatus.FAILED;
     await auction.save();
+    return;
   }
 
   private static makeAuctionBid(model: IAuctionBidModel): AuctionBid | null {
