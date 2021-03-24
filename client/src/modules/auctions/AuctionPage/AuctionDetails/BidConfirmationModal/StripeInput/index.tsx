@@ -1,7 +1,8 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 
 import { CardElement } from '@stripe/react-stripe-js';
-import type { StripeCardElementChangeEvent } from '@stripe/stripe-js';
+import type { StripeCardElementChangeEvent, StripeCardElement } from '@stripe/stripe-js';
+import clsx from 'clsx';
 
 import styles from './styles.module.scss';
 
@@ -11,6 +12,11 @@ interface Props {
 }
 
 const StripeInput: FC<Props> = ({ disabled, onChange }) => {
+  const [node, setNode] = useState<StripeCardElement | null>(null);
+  const [focused, setFocused] = useState(false);
+
+  console.log('🚀 ~ file: index.tsx ~ line 15 ~ node', node);
+
   const options = useMemo(
     () => ({
       disabled: disabled,
@@ -38,8 +44,14 @@ const StripeInput: FC<Props> = ({ disabled, onChange }) => {
   );
 
   return (
-    <div className={styles.root}>
-      <CardElement options={options} onChange={onChange} />{' '}
+    <div onClick={() => node?.focus()} className={clsx(styles.root, focused && styles.focused)}>
+      <CardElement
+        options={options}
+        onChange={onChange}
+        onReady={setNode}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+      />
     </div>
   );
 };

@@ -3,8 +3,6 @@ import { FC } from 'react';
 import Footer from './Footer';
 import Header from './Header';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 const Layout: FC = ({ children }) => (
   <div className="d-flex flex-column min-vh-100">
     <Header />
