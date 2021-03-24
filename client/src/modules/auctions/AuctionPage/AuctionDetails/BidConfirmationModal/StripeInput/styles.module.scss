@@ -1,0 +1,9 @@
+@import 'src/variables.scss';
+
+.root {
+  padding: 8px;
+
+  border: 1px solid $light-sage-color;
+  will-change: opacity, transform;
+  border-radius: 8px;
+}

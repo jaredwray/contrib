@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import { forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useState } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -17,6 +17,7 @@ import DialogContent from 'src/components/DialogContent';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import styles from './BidConfirmationModal.module.scss';
+import StripeInput from './StripeInput';
 
 export interface BidConfirmationRef {
   placeBid: (amount: Dinero.Dinero) => void;
@@ -81,13 +82,6 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
     }
   }, [stripe, elements, activeBid, auctionId, addToast, makeBid, registerPaymentMethod]);
 
-  const cardOptions = useMemo(
-    () => ({
-      disabled: isSubmitting,
-    }),
-    [isSubmitting],
-  );
-
   const handleCardInputChange = useCallback((event: StripeCardElementChangeEvent) => {
     setCardComplete(event.complete);
   }, []);
@@ -130,10 +124,10 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
             your bid is winning.
           </p>
           <p>Please make sure this card has enough available funds at time of auction finalization.</p>
-          {!showSubmitButton ? (
-            renderExpiredBlock()
+          {showSubmitButton ? (
+            <StripeInput disabled={isSubmitting} onChange={handleCardInputChange} />
           ) : (
-            <CardElement options={cardOptions} onChange={handleCardInputChange} />
+            renderExpiredBlock()
           )}
         </div>
       </DialogContent>

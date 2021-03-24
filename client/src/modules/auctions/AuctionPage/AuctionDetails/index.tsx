@@ -46,6 +46,14 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   const confirmationRef = useRef<BidConfirmationRef>(null);
 
+  const stripeOptions = {
+    fonts: [
+      {
+        cssSrc: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap',
+      },
+    ],
+  };
+
   const handleBid = useCallback(
     async (amount: Dinero.Dinero) => {
       if (!isAuthenticated) {
@@ -66,6 +74,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   );
 
   const placeBidQueryParam = queryParams.get('placeBid');
+
   useEffect(() => {
     if (placeBidQueryParam) {
       const amount = Dinero(JSON.parse(placeBidQueryParam));
@@ -93,7 +102,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           <span className={styles.notBold}>{ended && 'ended'} on</span> {endDateFormatted}
         </span>
       </div>
-      <Elements stripe={stripePromise}>
+      <Elements options={stripeOptions} stripe={stripePromise}>
         <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} />
       </Elements>
       {canBid && (
