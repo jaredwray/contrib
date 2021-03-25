@@ -1588,11 +1588,13 @@
     </script>
     <!-- NewRelic end -->
     <% } %>
+    <% if (process.env.REACT_APP_FULLSTORY_ORG_ID) { %>
+    <!-- FullStory start -->
     <script>
       window['_fs_debug'] = false;
       window['_fs_host'] = 'fullstory.com';
       window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
-      window['_fs_org'] = '11QDZ0';
+      window['_fs_org'] = '%REACT_APP_FULLSTORY_ORG_ID%';
       window['_fs_namespace'] = 'FS';
       (function (m, n, e, t, l, o, g, y) {
         if (e in m) {
@@ -1658,18 +1660,21 @@
         g._v = '1.3.0';
       })(window, document, window['_fs_namespace'], 'script', 'user');
     </script>
+    <!-- FullStory end -->
+    <% } %>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet" />
     <title>Contrib</title>
   </head>
+  <% if (process.env.REACT_APP_INTERCOM_APP_ID) { %>
+  <!-- Intercom start -->
   <script>
     window.intercomSettings = {
-      app_id: 'mw8y2bsb',
+      app_id: '%REACT_APP_INTERCOM_APP_ID%',
     };
   </script>
 
   <script>
-    // We pre-filled your app ID in the widget URL: 'https://widget.intercom.io/widget/mw8y2bsb'
     (function () {
       var w = window;
       var ic = w.Intercom;
@@ -1690,7 +1695,7 @@
           var s = d.createElement('script');
           s.type = 'text/javascript';
           s.async = true;
-          s.src = 'https://widget.intercom.io/widget/mw8y2bsb';
+          s.src = 'https://widget.intercom.io/widget/%REACT_APP_INTERCOM_APP_ID%';
           var x = d.getElementsByTagName('script')[0];
           x.parentNode.insertBefore(s, x);
         };
@@ -1702,6 +1707,8 @@
       }
     })();
   </script>
+  <!-- Intercom end -->
+  <% } %>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
