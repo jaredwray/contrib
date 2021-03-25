@@ -1,5 +1,6 @@
 import { config as loadDotEnvFile } from 'dotenv';
 import fs from 'fs-extra';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 if (fs.pathExistsSync(`./.env`)) {
   loadDotEnvFile();
@@ -38,6 +39,7 @@ if (AppConfig.environment.serveClient) {
   const appServices: IAppServices = createAppServices(connection);
 
   appRouteHandlers(app, appServices);
+  app.use('/graphql', graphqlUploadExpress({ maxFiles: 1, maxFileSize: 100000000 }));
   createGraphqlServer(appServices).applyMiddleware({ app });
 
   app.listen(AppConfig.app.port, () => {

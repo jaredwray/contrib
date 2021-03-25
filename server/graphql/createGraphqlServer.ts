@@ -7,6 +7,7 @@ import { CharityResolvers, CharitySchema } from '../app/Charity';
 import { AuctionResolvers, AuctionSchema } from '../app/Auction';
 import { DateTimeResolver, DateTimeTypeDefs } from './scalars/dateTime';
 import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
+import { GraphQLUpload } from 'graphql-upload';
 
 import { AppLogger } from '../logger';
 import { AppError, ErrorCode } from '../errors';
@@ -21,10 +22,14 @@ export const DefaultSchema = gql`
   type Mutation {
     _empty: String
   }
+  
+  scalar Upload
 `;
 
 export function createGraphqlServer(appServices: IAppServices): ApolloServer {
   return new ApolloServer({
+    // don't use bundled file uploading capabilities, use graphql-upload package instead
+    uploads: false,
     typeDefs: [
       DefaultSchema,
       DateTimeTypeDefs,
@@ -43,6 +48,9 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
       CharityResolvers,
       AuctionResolvers,
       PaymentResolvers,
+      {
+        Upload: GraphQLUpload,
+      },
     ],
     context: (ctx) => createGraphqlContext(ctx, appServices),
     playground: {

@@ -75,23 +75,23 @@ export class GCloudStorage {
   }
 
   async uploadFile(
-    file: Promise<IFile>,
+    filePromise: Promise<IFile>,
     {
       bucketName = AppConfig.googleCloud.bucketName,
       fileName,
       shouldResizeImage = false,
     }: { bucketName?: string; fileName: string; shouldResizeImage?: boolean },
   ): Promise<{ fileType: FileType; url: string; uid: string | undefined }> {
-    const { createReadStream, filename } = await file;
+    const file = await filePromise;
 
-    const extension = filename.split('.').pop();
+    const extension = file.filename.split('.').pop();
     const fileType = GCloudStorage.getFileType(extension);
 
     if (fileType === FileType.UNKNOWN) {
       throw new AppError('Unsupported file format', ErrorCode.BAD_REQUEST);
     }
     const formattedFileName = `${fileName}.${extension}`;
-    const buffer = await this.streamToBuffer(createReadStream());
+    const buffer = await this.streamToBuffer(file.createReadStream());
     let assetUrl = formattedFileName;
 
     if (fileType === FileType.IMAGE && shouldResizeImage) {

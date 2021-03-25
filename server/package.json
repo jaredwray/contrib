@@ -31,6 +31,7 @@
     "dotenv": "^8.2.0",
     "fs-extra": "^9.1.0",
     "graphql": "^15.5.0",
+    "graphql-upload": "^11.0.0",
     "mongoose": "^5.12.2",
     "newrelic": "^7.2.0",
     "stripe": "^8.139.0",

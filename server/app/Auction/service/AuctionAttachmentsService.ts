@@ -15,22 +15,15 @@ export class AuctionAttachmentsService {
     attachment: Promise<IFile>,
   ): Promise<IAuctionAssetModel> {
     const attachmentUrl = `${userId}/auctions/${id}/${uuid()}`;
-    try {
-      const { fileType, url, uid } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentUrl });
-      const assetUid = Boolean(uid) ? { uid } : {};
-      const asset = new this.AuctionAsset({ url, type: fileType, ...assetUid });
-      await asset.save();
-      return asset;
-    } catch (error) {
-      throw error;
-    }
+
+    const { fileType, url, uid } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentUrl });
+    const assetUid = Boolean(uid) ? { uid } : {};
+    const asset = new this.AuctionAsset({ url, type: fileType, ...assetUid });
+    await asset.save();
+    return asset;
   }
 
   public async removeFileAttachment(attachmentUrl: string): Promise<void> {
-    try {
-      await this.cloudStorage.removeFile(attachmentUrl);
-    } catch (error) {
-      throw error;
-    }
+    await this.cloudStorage.removeFile(attachmentUrl);
   }
 }

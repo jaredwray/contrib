@@ -1,7 +1,6 @@
 import { Connection, Types } from 'mongoose';
 import dayjs from 'dayjs';
 import Dinero from 'dinero.js';
-import arrayMax from '../../../helpers/arrayMax';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -84,7 +83,11 @@ export class AuctionService {
   }
 
   public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
-    await this.auctionRepository.getAuction(id, userId);
+    const auction = await this.auctionRepository.getAuction(id, userId);
+    if (auction?.status !== AuctionStatus.DRAFT) {
+      throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
+    }
+
     try {
       const asset = await this.attachmentsService.uploadFileAttachment(id, userId, attachment);
       const { filename } = await attachment;
