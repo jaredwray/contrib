@@ -133,7 +133,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
       </DialogContent>
       <DialogActions>
         <Button block disabled={!cardComplete || isSubmitting} variant="primary" onClick={handleSubmit}>
-          Confirm bidding {activeBid?.toFormat('$0,0.00')}
+          Confirm bidding {activeBid?.toFormat('$0,0')}
         </Button>
       </DialogActions>
     </Dialog>

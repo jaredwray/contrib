@@ -78,7 +78,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
             <Col>
               <VerifiedStatus />
               <p className="text-headline break-word">{influencer.name}</p>
-              <p className="text-label text-all-cups">Total charity amount raised: {totalRaised.toFormat('$0,0.00')}</p>
+              <p className="text-label text-all-cups">Total charity amount raised: {totalRaised.toFormat('$0,0')}</p>
               {/*<div className="d-flex">
                 <a
                   className={clsx(styles.socialIcon, 'mr-3')}

@@ -75,8 +75,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
         >
           {auction.title}
         </Link>
-        <p className="text-subhead text-left text-truncate" title={currentPrice.toFormat('$0,0.00')}>
-          {currentPrice.toFormat('$0,0.00')}
+        <p className="text-subhead text-left text-truncate" title={currentPrice.toFormat('$0,0')}>
+          {currentPrice.toFormat('$0,0')}
         </p>
 
         {isDraft && <p className="text-label text-all-cups mb-0 mt-auto text-left">DRAFT</p>}

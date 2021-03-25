@@ -31,7 +31,7 @@ export const BidInput: FC<Props> = ({ minBid, onSubmit }) => {
         required
         externalText={
           <span className={clsx(styles.notBold, 'text-label text-all-cups')}>
-            enter <span className={styles.bold}>{minBid.toFormat('$0,0.00')}</span> or more
+            enter <span className={styles.bold}>{minBid.toFormat('$0,0')}</span> or more
           </span>
         }
         name="bid"
