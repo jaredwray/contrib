@@ -1,18 +1,16 @@
 import { FC, useMemo } from 'react';
 
 import clsx from 'clsx';
-import { toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import CoverImage from 'src/components/CoverImage';
-import { pluralize } from 'src/helpers/pluralize';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import Footer from './Footer';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -43,7 +41,6 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizon
     return null;
   }
 
-  const ended = toDate(auction.endDate) <= new Date();
   const isDraft = auction.status === AuctionStatus.DRAFT;
   const linkToAuction = `/auctions/${auction.id}${isDraft ? '/basic' : ''}`;
   const priceFormatted = currentPrice.toFormat('$0,0');
@@ -74,7 +71,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizon
         )}
       >
         <Link className={styles.link} to={`/profiles/${influencer?.id}`}>
-          <div className="d-flex align-items-center mb-2">
+          <div className="d-flex align-items-center mb-1">
             <Image
               roundedCircle
               className="mr-2"
@@ -88,27 +85,20 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizon
           </div>
         </Link>
         <Link
-          className={clsx(styles.auctionTitle, 'text--body mb-0 text-left break-word')}
+          className={clsx(styles.auctionTitle, 'text-subhead mb-0 text-left break-word')}
           title={auction.title}
           to={linkToAuction}
         >
           {auction.title}
         </Link>
-        <p className="text--body text-left text-truncate m-0 pb-3" title={priceFormatted}>
+        <p className="text-subhead text-left text-truncate m-0 pb-2 pb-md-3" title={priceFormatted}>
           {priceFormatted}
         </p>
 
         {isDraft && <p className="text-label text-all-cups mb-0 mt-auto text-left">DRAFT</p>}
 
         {!isDraft && (
-          <p className="text-label text-all-cups mb-0 mt-auto text-left">
-            {footer ?? (
-              <>
-                {pluralize(auction.totalBids ?? 0, 'bid')} • {ended && 'ended on '}
-                {toHumanReadableDuration(auction.endDate)}
-              </>
-            )}
-          </p>
+          <p className="text-label text-all-cups mb-0 mt-auto text-left">{footer ?? <Footer auction={auction} />}</p>
         )}
       </figcaption>
     </figure>

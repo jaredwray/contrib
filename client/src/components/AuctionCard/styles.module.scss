@@ -34,6 +34,7 @@
   height: 80px;
   overflow: hidden;
   -webkit-line-clamp: 3;
+  font-weight: 700 !important;
 }
 
 .horizontalRoot {
@@ -81,6 +82,6 @@
   }
 
   .horizontalOnMobileDescription {
-    padding: 10px;
+    padding: 5px 10px;
   }
 }
