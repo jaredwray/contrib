@@ -39,7 +39,9 @@ const StartDateField: FC<Props> = ({ name }) => {
 
       <div className="d-flex mt-4">
         <Field name={`${name}.time`}>
-          {({ input }) => <Form.Control className="text-headline text-center mr-2 mr-sm-3" type="time" {...input} />}
+          {({ input }) => (
+            <Form.Control className="text-headline text-center mr-2 mr-sm-3 p-1 p-sm-2" type="time" {...input} />
+          )}
         </Field>
 
         <Field name={`${name}.dayPeriod`}>

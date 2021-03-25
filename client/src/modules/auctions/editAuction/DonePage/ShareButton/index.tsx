@@ -16,7 +16,7 @@ const ShareButton: FC<Props> = ({ service, icon }): ReactElement => {
       <Button className={clsx(styles.buttonIcon)} size="lg">
         {icon}
       </Button>
-      <Button className={clsx(styles.button, 'text-label align-left')} size="lg" variant="secondary">
+      <Button className={clsx(styles.button, 'text-label pl-4 pl-md-5')} size="lg" variant="secondary">
         Share on {service}
       </Button>
     </ButtonGroup>

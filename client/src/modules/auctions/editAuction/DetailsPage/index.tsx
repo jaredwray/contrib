@@ -119,6 +119,7 @@ const EditAuctionDetailsPage = () => {
     return {
       startPrice: Dinero.maximum([Dinero(startPrice), Dinero({ amount: 100 })]).toObject(),
       charity,
+      duration: selectedOption()?.value,
       startDate: {
         date,
         time,
@@ -126,7 +127,7 @@ const EditAuctionDetailsPage = () => {
         timeZone: knownTimezone?.value || defaultTimezone,
       },
     };
-  }, [auctionData, startPrice, charity]);
+  }, [auctionData, selectedOption, startPrice, charity]);
 
   if (loadingQuery) {
     return null;

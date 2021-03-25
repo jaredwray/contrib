@@ -58,15 +58,18 @@
 
 @media (max-width: $medium-weight) {
   .root {
-    width: 278px;
     max-width: 278px;
     height: 462px;
   }
 
+  .description {
+    padding: 10px;
+  }
+
   .horizontalRoot,
   .horizontalOnMobileRoot {
+    width: 100%;
     max-width: 335px;
-    width: 335px;
     flex-direction: row;
     align-items: center;
   }
@@ -78,7 +81,7 @@
     font-size: 14px;
     flex-shrink: 0;
     height: 163px;
-    width: 163px;
+    width: 50%;
   }
 
   .horizontalOnMobileDescription {
