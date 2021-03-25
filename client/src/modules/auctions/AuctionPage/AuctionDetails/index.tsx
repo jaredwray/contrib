@@ -83,7 +83,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           // any error should be handled by handleBid
         });
       }
-      history.replace(`/auction/${auction.id}`);
+      history.replace(`/auctions/${auction.id}`);
     }
   }, [placeBidQueryParam, auction.id, minBid, handleBid, history]);
 

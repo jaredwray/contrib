@@ -32,10 +32,10 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
   const elements = useElements();
   const { addToast } = useToasts();
 
-  const [showSubmitButton, setShowSubmitButton] = useState(true);
+  const [cardComplete, setCardComplete] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
   const [activeBid, setActiveBid] = useState<Dinero.Dinero | null>(null);
-  const [cardComplete, setCardComplete] = useState(false);
+  const [newCard, setNewCard] = useState(false);
   const { account } = useContext(UserAccountContext);
 
   const [makeBid] = useMutation(MakeAuctionBidMutation);
@@ -44,15 +44,21 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
   const paymentInformation = account?.paymentInformation;
 
   const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
+
   const hasPaymentMethod = Boolean(paymentInformation);
   const title = hasPaymentMethod ? 'Confirm bid' : 'Payment information';
 
   const handleClose = useCallback(() => {
     setActiveBid(null);
+    setNewCard(false);
   }, []);
 
   const handleAddCard = useCallback(() => {
-    setShowSubmitButton(true);
+    setNewCard(true);
+  }, []);
+
+  const handleCardInputChange = useCallback((event: StripeCardElementChangeEvent) => {
+    setCardComplete(event.complete);
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -63,28 +69,29 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
     setSubmitting(true);
 
     try {
-      const tokenResult = await stripe?.createToken(elements.getElement(CardElement) as StripeCardElement);
-      if (tokenResult?.error) {
-        setSubmitting(false);
-        addToast(tokenResult.error.message, { autoDismiss: true, appearance: 'error' });
-        return;
-      }
-      const token = tokenResult?.token ?? { id: '' };
+      if (!paymentInformation || newCard) {
+        const tokenResult = await stripe?.createToken(elements.getElement(CardElement) as StripeCardElement);
+        if (tokenResult?.error) {
+          setSubmitting(false);
+          addToast(tokenResult.error.message, { autoDismiss: true, appearance: 'error' });
+          return;
+        }
+        const token = tokenResult?.token ?? { id: '' };
 
-      await registerPaymentMethod({ variables: { token: token.id } });
+        await registerPaymentMethod({ variables: { token: token.id } });
+      }
+
       await makeBid({ variables: { id: auctionId, bid: activeBid?.toObject() } });
       setSubmitting(false);
       setActiveBid(null);
-      addToast(`Your bid of ${activeBid.toFormat('$0,0.00')} has been accepted.`, { appearance: 'success' });
+      setNewCard(false);
+      addToast(`Your bid of ${activeBid.toFormat('$0,0')} has been accepted.`, { appearance: 'success' });
     } catch (error) {
       setSubmitting(false);
+      setNewCard(false);
       addToast(error.message, { autoDismiss: true, appearance: 'error' });
     }
-  }, [stripe, elements, activeBid, auctionId, addToast, makeBid, registerPaymentMethod]);
-
-  const handleCardInputChange = useCallback((event: StripeCardElementChangeEvent) => {
-    setCardComplete(event.complete);
-  }, []);
+  }, [elements, activeBid, paymentInformation, newCard, makeBid, auctionId, addToast, stripe, registerPaymentMethod]);
 
   useImperativeHandle(ref, () => ({
     placeBid: (amount: Dinero.Dinero) => {
@@ -92,25 +99,16 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
     },
   }));
 
-  useEffect(() => {
-    setShowSubmitButton(!expired);
-  }, [expired]);
+  useEffect(() => setNewCard(false), []);
 
-  const renderExpiredBlock = () => {
+  const renderCardInfo = () => {
     return (
-      <div className={styles.expiredBlock}>
+      <div className={clsx(styles.cardInfo, expired && styles.expired)}>
         <p className="text-center mb-1">
-          {paymentInformation?.cardBrand} ending *{paymentInformation?.cardNumberLast4}, exp.{' '}
-          {paymentInformation?.cardExpirationMonth}/{paymentInformation?.cardExpirationYear}
+          {paymentInformation?.cardBrand} **** **** **** {paymentInformation?.cardNumberLast4},{' '}
+          {paymentInformation?.cardExpirationMonth}/{`${paymentInformation?.cardExpirationYear}`.slice(-2)}{' '}
+          {expired && <span className="text-all-cups font-weight-bold">expired</span>}
         </p>
-        <Button
-          className={clsx(styles.addCardBtn, 'mx-auto text--body')}
-          size="sm"
-          variant="link"
-          onClick={handleAddCard}
-        >
-          Use another card
-        </Button>
       </div>
     );
   };
@@ -119,22 +117,39 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
     <Dialog backdrop="static" keyboard={false} open={Boolean(activeBid)} title={title} onClose={handleClose}>
       <DialogContent>
         <div className={styles.cardInputWrapper}>
-          <p>
+          <p className="text--body">
             We need your card number in order to place your bid. Card will be charged only after auction end, in case
             your bid is winning.
           </p>
-          <p>Please make sure this card has enough available funds at time of auction finalization.</p>
-          {showSubmitButton ? (
-            <StripeInput disabled={isSubmitting} onChange={handleCardInputChange} />
-          ) : (
-            renderExpiredBlock()
-          )}
+          <p className="text--body">
+            Please make sure this card has enough available funds at time of auction finalization.
+          </p>
+
+          {(expired || paymentInformation) && !newCard && renderCardInfo()}
+          {(!paymentInformation || newCard) && <StripeInput disabled={isSubmitting} onChange={handleCardInputChange} />}
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button block disabled={!cardComplete || isSubmitting} variant="primary" onClick={handleSubmit}>
-          Confirm bidding {activeBid?.toFormat('$0,0')}
-        </Button>
+
+      <DialogActions className="justify-content-center">
+        {(paymentInformation || expired) && !newCard && (
+          <Button
+            className={clsx(styles.addCardBtn, 'mx-auto text--body')}
+            size="sm"
+            variant="link"
+            onClick={handleAddCard}
+          >
+            Use another card
+          </Button>
+        )}
+        {(!expired || newCard) && (
+          <Button
+            disabled={isSubmitting || (!paymentInformation && expired) || (newCard && !cardComplete)}
+            variant="secondary"
+            onClick={handleSubmit}
+          >
+            Confirm bidding {activeBid?.toFormat('$0,0')}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 
 interface Props {
   disabled: boolean;
-  onChange(event: StripeCardElementChangeEvent): void;
+  onChange?(event: StripeCardElementChangeEvent): void;
 }
 
 const StripeInput: FC<Props> = ({ disabled, onChange }) => {
