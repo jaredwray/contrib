@@ -1,3 +1,5 @@
+@import 'src/variables.scss';
+
 .text-super {
   font-size: 72px;
   line-height: 76px;
@@ -34,6 +36,16 @@ label {
 
 input.form-control {
   height: 50px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: $input-color;
+  -webkit-box-shadow: inset 0 0 0 1px $input-focus-border-color;
 }
 
 .form-control::placeholder {

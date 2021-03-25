@@ -33,6 +33,7 @@
 .auctionTitle {
   height: 80px;
   overflow: hidden;
+  -webkit-line-clamp: 3;
 }
 
 .horizontalRoot {
@@ -61,16 +62,25 @@
     height: 462px;
   }
 
-  .horizontalRoot {
+  .horizontalRoot,
+  .horizontalOnMobileRoot {
     max-width: 335px;
     width: 335px;
+    flex-direction: row;
+    align-items: center;
   }
 
   .horizontalImage,
-  .horizontalDescription {
+  .horizontalDescription,
+  .horizontalOnMobileImage,
+  .horizontalOnMobileDescription {
     font-size: 14px;
     flex-shrink: 0;
     height: 163px;
     width: 163px;
+  }
+
+  .horizontalOnMobileDescription {
+    padding: 10px;
   }
 }

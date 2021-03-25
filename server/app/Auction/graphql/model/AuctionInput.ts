@@ -7,6 +7,7 @@ export type AuctionInput = {
   sport?: string;
   gameWorn?: boolean;
   autographed?: boolean;
+  description?: string;
   fullPageDescription?: string;
   charity?: string;
   startDate?: Dayjs;

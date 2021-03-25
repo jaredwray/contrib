@@ -9,7 +9,7 @@ import styles from './styles.module.scss';
 const NewAuctionPage = () => {
   return (
     <Layout>
-      <section className={styles.section}>
+      <section className={'pt-5 pb-0 pb-md-5'}>
         <Container>
           <p className="text-label label-with-separator">Auction an item</p>
           <p className="text-super mb-2">Get started</p>

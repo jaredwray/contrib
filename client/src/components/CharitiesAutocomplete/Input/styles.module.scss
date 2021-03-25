@@ -63,6 +63,7 @@
     float: right;
 
     &:after {
+      padding-left: 3px;
       padding-top: 3px;
       content: '+';
       color: $white-color;

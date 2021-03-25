@@ -1,11 +1,15 @@
 @import 'src/variables.scss';
 
-.divider:not(:last-child) {
+.divider:not(:last-of-type) {
   border-bottom: 1px solid $barely-gray-color;
   padding-bottom: 60px;
   margin-bottom: 25px;
 
-  @media (max-width: $small-weight) {
-    padding-bottom: 30px;
+  @media (max-width: $medium-weight) {
+    padding-bottom: 25px;
   }
+}
+
+.divider:last-of-type {
+  margin-bottom: 25px;
 }

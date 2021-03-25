@@ -18,10 +18,12 @@ import styles from './styles.module.scss';
 type Props = {
   auction: Auction;
   horizontal?: boolean;
+  horizontalOnMobile?: boolean;
   auctionOrganizer?: InfluencerProfile;
+  footer?: string;
 };
 
-const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
+const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizontalOnMobile, footer }) => {
   const imageSrc = auction.attachments[0]?.url;
 
   const influencer = auctionOrganizer || auction.auctionOrganizer;
@@ -44,16 +46,33 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
   const ended = toDate(auction.endDate) <= new Date();
   const isDraft = auction.status === AuctionStatus.DRAFT;
   const linkToAuction = `/auctions/${auction.id}${isDraft ? '/basic' : ''}`;
+  const priceFormatted = currentPrice.toFormat('$0,0');
 
   return (
-    <figure className={clsx(styles.root, horizontal ? styles.horizontalRoot : styles.verticalRoot)}>
+    <figure
+      className={clsx(
+        styles.root,
+        horizontal && styles.horizontalRoot,
+        horizontalOnMobile && styles.horizontalOnMobileRoot,
+      )}
+    >
       <CoverImage
         alt="Auction image"
-        className={clsx(styles.image, horizontal && styles.horizontalImage)}
+        className={clsx(
+          styles.image,
+          horizontal && styles.horizontalImage,
+          horizontalOnMobile && styles.horizontalOnMobileImage,
+        )}
         src={imageSrc}
       />
 
-      <figcaption className={clsx(styles.description, horizontal && styles.horizontalDescription)}>
+      <figcaption
+        className={clsx(
+          styles.description,
+          horizontal && styles.horizontalDescription,
+          horizontalOnMobile && styles.horizontalOnMobileDescription,
+        )}
+      >
         <Link className={styles.link} to={`/profiles/${influencer?.id}`}>
           <div className="d-flex align-items-center mb-2">
             <Image
@@ -69,21 +88,26 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal }) => {
           </div>
         </Link>
         <Link
-          className={clsx(styles.auctionTitle, 'text-subhead mb-0 text-left break-word')}
+          className={clsx(styles.auctionTitle, 'text--body mb-0 text-left break-word')}
           title={auction.title}
           to={linkToAuction}
         >
           {auction.title}
         </Link>
-        <p className="text-subhead text-left text-truncate" title={currentPrice.toFormat('$0,0')}>
-          {currentPrice.toFormat('$0,0')}
+        <p className="text--body text-left text-truncate m-0 pb-3" title={priceFormatted}>
+          {priceFormatted}
         </p>
 
         {isDraft && <p className="text-label text-all-cups mb-0 mt-auto text-left">DRAFT</p>}
 
         {!isDraft && (
           <p className="text-label text-all-cups mb-0 mt-auto text-left">
-            {pluralize(auction.totalBids ?? 0, 'bid')} •{ended && ' ended'} {toHumanReadableDuration(auction.endDate)}
+            {footer ?? (
+              <>
+                {pluralize(auction.totalBids ?? 0, 'bid')} • {ended && 'ended on '}
+                {toHumanReadableDuration(auction.endDate)}
+              </>
+            )}
           </p>
         )}
       </figcaption>

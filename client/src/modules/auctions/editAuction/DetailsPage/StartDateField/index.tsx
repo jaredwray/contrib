@@ -7,6 +7,7 @@ import { Field, useFormState } from 'react-final-form';
 import SelectField from 'src/components/Form/SelectField';
 
 import { timeZones } from '../consts';
+import styles from './styles.module.scss';
 
 interface Props {
   name: string;
@@ -62,7 +63,13 @@ const StartDateField: FC<Props> = ({ name }) => {
           )}
         </Field>
 
-        <SelectField small name={`${name}.timeZone`} options={timeZones} selected={selectedOption()} />
+        <SelectField
+          small
+          className={styles.timeZone}
+          name={`${name}.timeZone`}
+          options={timeZones}
+          selected={selectedOption()}
+        />
       </div>
     </>
   );

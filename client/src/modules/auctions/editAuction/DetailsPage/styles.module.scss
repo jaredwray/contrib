@@ -2,12 +2,6 @@
 
 .suggestButton {
   font-size: 14px !important;
-  margin-bottom: 58px;
-
-  @media (min-width: $small-weight) and (max-width: $medium-weight) {
-    font-style: 11px !important;
-    margin-bottom: 30px;
-  }
 }
 
 .divider {

@@ -1,14 +1,5 @@
 @import 'src/variables.scss';
 
-.section {
-  margin-bottom: 120px;
-
-  @media (max-width: $medium-weight) {
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
-}
-
 .buttonWrapper {
   @media (max-width: $medium-weight) {
     display: none;
