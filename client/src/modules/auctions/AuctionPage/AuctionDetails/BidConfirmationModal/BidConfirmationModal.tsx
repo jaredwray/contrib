@@ -11,6 +11,7 @@ import { useToasts } from 'react-toast-notifications';
 
 import { MakeAuctionBidMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
+import AsyncButton from 'src/components/AsyncButton';
 import Dialog from 'src/components/Dialog';
 import DialogActions from 'src/components/DialogActions';
 import DialogContent from 'src/components/DialogContent';
@@ -33,7 +34,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
   const { addToast } = useToasts();
 
   const [cardComplete, setCardComplete] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(true);
   const [activeBid, setActiveBid] = useState<Dinero.Dinero | null>(null);
   const [newCard, setNewCard] = useState(false);
   const { account } = useContext(UserAccountContext);
@@ -134,6 +135,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
         {(paymentInformation || expired) && !newCard && (
           <Button
             className={clsx(styles.addCardBtn, 'mx-auto text--body')}
+            disabled={isSubmitting}
             size="sm"
             variant="link"
             onClick={handleAddCard}
@@ -142,13 +144,14 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
           </Button>
         )}
         {(!expired || newCard) && (
-          <Button
+          <AsyncButton
             disabled={isSubmitting || (!paymentInformation && expired) || (newCard && !cardComplete)}
+            loading={isSubmitting}
             variant="secondary"
             onClick={handleSubmit}
           >
             Confirm bidding {activeBid?.toFormat('$0,0')}
-          </Button>
+          </AsyncButton>
         )}
       </DialogActions>
     </Dialog>
