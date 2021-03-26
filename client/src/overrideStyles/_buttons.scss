@@ -9,7 +9,7 @@
   &.btn-secondary {
     color: $sage-color;
 
-    &:hover,
+    &:hover:not(:disabled),
     &:active {
       background: $sage-color;
       color: $white-color;
@@ -21,7 +21,7 @@
     background: $ochre-color;
     color: $sage-color;
 
-    &:hover,
+    &:hover:not(:disabled),
     &:active {
       background: $sage-color !important;
       color: $white-color !important;
