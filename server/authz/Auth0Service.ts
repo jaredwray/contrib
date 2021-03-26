@@ -1,3 +1,4 @@
+import { ManagementClient } from 'auth0';
 import { GetPublicKeyOrSecret, JwtHeader, SigningKeyCallback, verify as verifyJwt, VerifyErrors } from 'jsonwebtoken';
 import JwksClient from 'jwks-rsa';
 
@@ -8,6 +9,11 @@ import { AppLogger } from '../logger';
 
 export class Auth0Service {
   private readonly jwksClient: JwksClient.JwksClient;
+  private readonly managementClient = new ManagementClient({
+    domain: AppConfig.auth0.management.domain,
+    clientId: AppConfig.auth0.management.clientId,
+    clientSecret: AppConfig.auth0.management.clientSecret,
+  });
 
   constructor() {
     this.jwksClient = JwksClient({
@@ -39,6 +45,10 @@ export class Auth0Service {
         }
       });
     });
+  }
+
+  async getUser(id: string): Promise<any> {
+    return id ? this.managementClient.getUser({ id }) : {};
   }
 
   private getKey = (header: JwtHeader, cb: SigningKeyCallback): GetPublicKeyOrSecret => {

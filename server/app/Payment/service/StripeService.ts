@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 
+import { Auth0Service } from '../../../authz';
 import { AppConfig } from '../../../config';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { AppLogger } from '../../../logger';
@@ -8,11 +9,15 @@ export class StripeService {
   private readonly stripe = new Stripe(AppConfig.stripe.secretKey, { apiVersion: '2020-08-27' });
 
   public async createCustomerForAccount(account: UserAccount): Promise<Stripe.Customer> {
+    const { name, email } = await new Auth0Service().getUser(account.id);
+
     return this.stripe.customers.create({
       phone: account.phoneNumber,
       metadata: {
         auth0: account.id,
         contrib: account.mongodbId,
+        name,
+        email,
       },
     });
   }
