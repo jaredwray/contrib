@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Col, Form as BsForm, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import { FavoriteCharitiesField } from './FavoriteCharitiesField';
 
@@ -19,6 +19,7 @@ export const CharitiesFormFields: FC = () => {
         </Col>
       </Row>
       <Row className="buffer d-none d-md-block" />
+      {/*
       <hr className="mt-0" />
       <Row className="pt-3 pt-md-0">
         <Col md="6">
@@ -38,6 +39,7 @@ export const CharitiesFormFields: FC = () => {
           </BsForm.Group>
         </Col>
       </Row>
+      */}
     </>
   );
 };

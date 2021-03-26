@@ -70,22 +70,6 @@ export default function Header() {
                     </NavLink>
                   )}
 
-                  <NavLink to="/">
-                    <NavDropdown.Item href="/">
-                      <span>Bids</span>
-                    </NavDropdown.Item>
-                  </NavLink>
-                  <NavLink to="/">
-                    <NavDropdown.Item href="/">
-                      <span>Watch list</span>
-                    </NavDropdown.Item>
-                  </NavLink>
-                  <NavLink to="/">
-                    <NavDropdown.Item href="/">
-                      <span>Purchase history</span>
-                    </NavDropdown.Item>
-                  </NavLink>
-
                   <NavDropdown.Divider />
 
                   {isAuthenticated ? (
