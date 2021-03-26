@@ -28,12 +28,12 @@ export function toHumanReadableDuration(date: string): string | null {
   return left.join(' ');
 }
 
-export function toFullHumanReadableDatetime(date: string): string | null {
-  const currentDate = toDate(parseISO(date));
-  const day = format(currentDate, 'd.mm.yy');
-  const time = format(currentDate, 'hh:mm');
-  const dayPeriod = format(currentDate, 'a');
-  const timeZone = format(currentDate, 'x');
+export function toFullHumanReadableDatetime(dateISO: string): string | null {
+  const date = toDate(parseISO(dateISO));
+  const day = format(date, 'd.mm.yy');
+  const time = format(date, 'hh:mm');
+  const dayPeriod = format(date, 'a');
+  const timeZone = format(date, 'x');
   const currentTimeZone = timeZones.find((x) => x.value === timeZone);
 
   return `${day} @ ${time} ${dayPeriod} ${currentTimeZone || timeZone}`;

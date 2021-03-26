@@ -10,18 +10,17 @@ import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import Footer from './Footer';
+import DateDetails from './DateDetails';
 import styles from './styles.module.scss';
 
 type Props = {
   auction: Auction;
+  isDonePage?: boolean;
   horizontal?: boolean;
-  horizontalOnMobile?: boolean;
   auctionOrganizer?: InfluencerProfile;
-  footer?: string;
 };
 
-const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizontalOnMobile, footer }) => {
+const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage }) => {
   const imageSrc = auction.attachments[0]?.url;
 
   const influencer = auctionOrganizer || auction.auctionOrganizer;
@@ -47,18 +46,14 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizon
 
   return (
     <figure
-      className={clsx(
-        styles.root,
-        horizontal && styles.horizontalRoot,
-        horizontalOnMobile && styles.horizontalOnMobileRoot,
-      )}
+      className={clsx(styles.root, horizontal && styles.horizontalRoot, isDonePage && styles.horizontalOnMobileRoot)}
     >
       <CoverImage
         alt="Auction image"
         className={clsx(
           styles.image,
           horizontal && styles.horizontalImage,
-          horizontalOnMobile && styles.horizontalOnMobileImage,
+          isDonePage && styles.horizontalOnMobileImage,
         )}
         src={imageSrc}
       />
@@ -67,7 +62,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizon
         className={clsx(
           styles.description,
           horizontal && styles.horizontalDescription,
-          horizontalOnMobile && styles.horizontalOnMobileDescription,
+          isDonePage && styles.horizontalOnMobileDescription,
         )}
       >
         <Link className={styles.link} title={influencer.name} to={`/profiles/${influencer?.id}`}>
@@ -98,7 +93,9 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, horizon
         {isDraft && <p className="text-label text-all-cups mb-0 mt-1 text-left">DRAFT</p>}
 
         {!isDraft && (
-          <p className="text-label text-all-cups mb-0 mt-auto text-left">{footer ?? <Footer auction={auction} />}</p>
+          <p className="text-label text-all-cups mb-0 mt-auto text-left">
+            <DateDetails auction={auction} isDonePage={isDonePage} />
+          </p>
         )}
       </figcaption>
     </figure>

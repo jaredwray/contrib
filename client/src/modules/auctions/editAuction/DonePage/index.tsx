@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { format, toDate } from 'date-fns-tz';
 import { ProgressBar } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
@@ -37,22 +36,14 @@ const AuctionDonePage = () => {
               Thank you! Your listing is now viewable and will start at the specified time. Now, let everyone know about
               the auction.
             </p>
-            <div className="pt-2 pt-sm-5">
+            <div className="pt-3 pt-md-5">
               <ShareButton icon={<TwitterIcon />} service="Twitter" />
               <ShareButton icon={<FacebookIcon />} service="Facebook" />
               <ShareButton icon={<InstagramIcon />} service="Instagram" />
             </div>
           </div>
         </div>
-        <div className={clsx(styles.content, styles.contentRight)}>
-          {
-            <AuctionCard
-              horizontalOnMobile
-              auction={auction}
-              footer={`starts on ${format(toDate(auction.startDate), 'M.d.yy @ hh:mm aa x')}`}
-            />
-          }
-        </div>
+        <div className={clsx(styles.content, styles.contentRight)}>{<AuctionCard isDonePage auction={auction} />}</div>
       </div>
     </Layout>
   );
