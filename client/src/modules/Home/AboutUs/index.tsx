@@ -1,7 +1,6 @@
 import React from 'react';
 
-import clsx from 'clsx';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 
 import styles from './styles.module.scss';
 
@@ -18,6 +17,7 @@ export default function AboutUs() {
             important charities, and make direct and meaningful impact in their communities.
           </Col>
         </Row>
+        {/*
         <Row>
           <Col className="pt-3">
             <Button className={clsx('btn-with-arrows text-label', styles.button)} variant="secondary">
@@ -25,6 +25,7 @@ export default function AboutUs() {
             </Button>
           </Col>
         </Row>
+        */}
       </Container>
     </section>
   );
