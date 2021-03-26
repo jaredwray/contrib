@@ -3,7 +3,6 @@
 .root {
   height: 100px;
   background-color: $barely-gray-color;
-  margin-top: 56px;
   padding: 24px;
 }
 
@@ -13,10 +12,6 @@
 }
 
 @media (max-width: $small-weight) {
-  .root {
-    margin-top: 26px;
-  }
-
   .button {
     min-width: 162px;
   }

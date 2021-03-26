@@ -118,8 +118,20 @@ export class AuctionService {
   }
 
   public async updateAuction(id: string, userId: string, input: AuctionInput): Promise<Auction> {
-    const { startDate, endDate, charity, startPrice, ...rest } = input;
+    const {
+      title,
+      startDate,
+      endDate,
+      charity,
+      startPrice,
+      description,
+      fullPageDescription,
+      playedIn,
+      sport,
+      ...rest
+    } = input;
     const auction = await this.auctionRepository.updateAuction(id, userId, {
+      ...(title ? { title: title.trim() } : {}),
       ...(startDate ? { startsAt: startDate } : {}),
       ...(endDate ? { endsAt: endDate } : {}),
       ...(startPrice
@@ -129,6 +141,10 @@ export class AuctionService {
           }
         : {}),
       ...(charity ? { charity: Types.ObjectId(charity) } : {}),
+      ...(description ? { description: description.trim() } : {}),
+      ...(fullPageDescription ? { fullPageDescription: fullPageDescription.trim() } : {}),
+      ...(sport ? { sport: sport.trim() } : {}),
+      ...(playedIn ? { playedIn: playedIn.trim() } : {}),
       ...rest,
     });
 

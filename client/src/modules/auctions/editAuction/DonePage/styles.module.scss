@@ -23,14 +23,24 @@
   flex-grow: 0;
 
   @media (min-width: $medium-weight) {
-    min-width: 350px;
-    width: 573px;
+    max-width: 50%;
+    padding: 0 50px;
   }
 }
 
 .contentRight {
   flex-grow: 1;
   background-color: $barely-gray-color;
+
+  @media (max-width: $medium-weight) {
+    height: 246px;
+    order: -1;
+  }
+
+  @media (width: $medium-weight) {
+    height: auto;
+    order: 0;
+  }
 }
 
 .contentRightWrapper {
@@ -38,46 +48,4 @@
   flex-direction: column;
   align-items: flex-start;
   max-width: 400px;
-}
-
-.left {
-  max-width: 573px !important;
-}
-
-.buttonIcon {
-  max-width: 50px;
-}
-
-.buttonsGroup {
-  margin-top: 56px;
-}
-
-.like {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  left: 235px;
-  top: 5px;
-  border-radius: 36px;
-  background-color: $white-color;
-  cursor: pointer;
-  background-image: url('/assets/images/like.webp');
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.auctionPicture {
-  width: 280px;
-  height: 280px;
-  background-color: $barely-gray-color;
-}
-
-.auctionTitle {
-  color: $sage-color;
-  height: 85px;
-}
-
-.auctionOwnerPicture {
-  width: 32px;
-  height: 32px;
 }

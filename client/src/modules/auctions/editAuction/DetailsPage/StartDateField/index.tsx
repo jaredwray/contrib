@@ -7,6 +7,7 @@ import { Field, useFormState } from 'react-final-form';
 import SelectField from 'src/components/Form/SelectField';
 
 import { timeZones } from '../consts';
+import styles from './styles.module.scss';
 
 interface Props {
   name: string;
@@ -38,7 +39,9 @@ const StartDateField: FC<Props> = ({ name }) => {
 
       <div className="d-flex mt-4">
         <Field name={`${name}.time`}>
-          {({ input }) => <Form.Control className="text-headline text-center mr-2 mr-sm-3" type="time" {...input} />}
+          {({ input }) => (
+            <Form.Control className="text-headline text-center mr-2 mr-sm-3 p-1 p-sm-2" type="time" {...input} />
+          )}
         </Field>
 
         <Field name={`${name}.dayPeriod`}>
@@ -62,7 +65,13 @@ const StartDateField: FC<Props> = ({ name }) => {
           )}
         </Field>
 
-        <SelectField small name={`${name}.timeZone`} options={timeZones} selected={selectedOption()} />
+        <SelectField
+          small
+          className={styles.timeZone}
+          name={`${name}.timeZone`}
+          options={timeZones}
+          selected={selectedOption()}
+        />
       </div>
     </>
   );

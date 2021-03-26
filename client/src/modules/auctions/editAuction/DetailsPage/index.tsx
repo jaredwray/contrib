@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
-import { addDays, differenceInCalendarDays, parseISO } from 'date-fns';
+import { addDays, differenceInCalendarDays, max, parseISO } from 'date-fns';
 import { format, toDate, utcToZonedTime } from 'date-fns-tz';
-import { Button, Container, ProgressBar } from 'react-bootstrap';
+import Dinero from 'dinero.js';
+import { Container, ProgressBar } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
@@ -90,15 +91,17 @@ const EditAuctionDetailsPage = () => {
   );
 
   const selectedOption = useCallback(() => {
-    const { startDate, endDate } = auctionData?.auction;
-    const duration = differenceInCalendarDays(toDate(parseISO(endDate)), toDate(parseISO(startDate)));
+    const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
+    const endDate = max([toDate(auctionData.auction.endDate), addDays(startDate, 1)]);
+    const duration = differenceInCalendarDays(endDate, startDate);
+
     return durationOptions.find(({ value }) => parseInt(value, 10) === duration);
   }, [auctionData?.auction]);
 
-  const { startDate, endDate, startPrice, charity } = auctionData?.auction ?? {};
+  const { startPrice, charity } = auctionData?.auction ?? {};
 
   const initialValues = useMemo(() => {
-    if (!startDate) {
+    if (!auctionData) {
       return undefined;
     }
 
@@ -107,28 +110,29 @@ const EditAuctionDetailsPage = () => {
     const currentTimeZone = format(new Date(), 'x');
     const knownTimezone = timeZones.find(({ value }) => currentTimeZone === value);
 
-    const date = knownTimezone ? toDate(startDate) : utcToZonedTime(startDate, defaultTimezone);
+    const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
+    const date = knownTimezone ? startDate : utcToZonedTime(startDate, defaultTimezone);
 
     const time = format(date, 'hh:mm');
     const dayPeriod = format(date, 'aaa');
-    const duration = differenceInCalendarDays(toDate(parseISO(endDate)), toDate(parseISO(startDate)));
 
     return {
-      startPrice,
+      startPrice: Dinero.maximum([Dinero(startPrice), Dinero({ amount: 100 })]).toObject(),
       charity,
+      duration: selectedOption()?.value,
       startDate: {
-        date: date,
-        time: time,
-        dayPeriod: dayPeriod,
+        date,
+        time,
+        dayPeriod,
         timeZone: knownTimezone?.value || defaultTimezone,
       },
-      duration: duration,
     };
-  }, [startDate, endDate, startPrice, charity]);
+  }, [auctionData, selectedOption, startPrice, charity]);
 
   if (loadingQuery) {
     return null;
   }
+
   return (
     <Layout>
       <ProgressBar now={75} />
@@ -158,10 +162,12 @@ const EditAuctionDetailsPage = () => {
             </Row>
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
               <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
+              {/*
               <p className="text--body mb-sm-4">Don’t see a charity you’re looking for?</p>
-              <Button className={styles.suggestButton} variant="secondary">
+              <Button className={clsx(styles.suggestButton, 'text-label')} variant="secondary">
                 Suggest a charity
               </Button>
+              */}
             </Row>
           </Container>
           <Field name="charity">{({ input }) => <input type="hidden" {...input} />}</Field>

@@ -9,12 +9,22 @@ interface Props {
   placeholder?: string;
   small?: boolean;
   selected?: any;
+  className?: string;
 }
 
-const SelectField: FC<Props> = ({ name, options, placeholder, small, selected }) => {
+const SelectField: FC<Props> = ({ name, options, placeholder, small, selected, className }) => {
   const { hasError, errorMessage, value, ...inputProps } = useField(name, {});
 
-  return <Select options={options} selected={selected} small={small} {...inputProps} placeholder={placeholder} />;
+  return (
+    <Select
+      className={className}
+      options={options}
+      selected={selected}
+      small={small}
+      {...inputProps}
+      placeholder={placeholder}
+    />
+  );
 };
 
 export default SelectField;

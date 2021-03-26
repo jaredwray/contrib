@@ -9,12 +9,13 @@ const BasicForm: FC<{}> = () => {
   return (
     <div>
       <InputField required name="title" placeholder="Enter auction title" title="Auction title" />
-      <InputField name="sport" placeholder="Select a sport" title="Sport" />
+      <InputField required name="sport" placeholder="Select a sport" title="Sport" />
       <SwitchField className="mb-2" name="gameWorn" title="Game worn" />
       <SwitchField className="mb-2" name="autographed" title="Autographed" />
       <SwitchField className="mb-4" name="authenticityCertificate" title="Certificate of authenticity" />
       <InputField name="playedIn" placeholder="Enter teams and date" title="Game played in" />
       <InputField
+        required
         textarea
         className={styles.description}
         externalText="This is the short one or two sentence description that will be used to describe the item when shared on social networks like Twitter and Facebook."
@@ -23,6 +24,7 @@ const BasicForm: FC<{}> = () => {
         title="Short description"
       />
       <InputField
+        required
         textarea
         className={styles.fullPageDescription}
         externalText="This is the full description that will appear on the Contrib auction page along side the bidding box etc."

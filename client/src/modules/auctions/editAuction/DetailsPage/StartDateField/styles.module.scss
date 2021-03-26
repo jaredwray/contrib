@@ -1,0 +1,18 @@
+@import 'src/variables.scss';
+
+.timeZone {
+  min-width: 115px;
+
+  @media (max-width: $small-weight) {
+    min-width: 75px;
+
+    button {
+      padding-left: 10px;
+      padding-right: 10px !important;
+
+      &::after {
+        width: 25px;
+      }
+    }
+  }
+}

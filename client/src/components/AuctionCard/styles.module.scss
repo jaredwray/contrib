@@ -33,6 +33,8 @@
 .auctionTitle {
   height: 80px;
   overflow: hidden;
+  -webkit-line-clamp: 3;
+  font-weight: 700 !important;
 }
 
 .horizontalRoot {
@@ -56,21 +58,33 @@
 
 @media (max-width: $medium-weight) {
   .root {
-    width: 278px;
     max-width: 278px;
     height: 462px;
   }
 
-  .horizontalRoot {
+  .description {
+    padding: 10px;
+  }
+
+  .horizontalRoot,
+  .horizontalOnMobileRoot {
+    width: 100%;
     max-width: 335px;
-    width: 335px;
+    flex-direction: row;
+    align-items: center;
   }
 
   .horizontalImage,
-  .horizontalDescription {
+  .horizontalDescription,
+  .horizontalOnMobileImage,
+  .horizontalOnMobileDescription {
     font-size: 14px;
     flex-shrink: 0;
     height: 163px;
-    width: 163px;
+    width: 50%;
+  }
+
+  .horizontalOnMobileDescription {
+    padding: 5px 10px;
   }
 }

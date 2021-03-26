@@ -93,7 +93,9 @@ input[type='time']::-webkit-calendar-picker-indicator {
     padding: 11px 12px;
   }
 
-  &__day--outside-month {
+  &__day--outside-month,
+  &__day--disabled {
+    cursor: not-allowed;
     color: $light-gray-color;
   }
 
