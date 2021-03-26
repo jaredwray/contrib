@@ -34,7 +34,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
   const { addToast } = useToasts();
 
   const [cardComplete, setCardComplete] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(true);
+  const [isSubmitting, setSubmitting] = useState(false);
   const [activeBid, setActiveBid] = useState<Dinero.Dinero | null>(null);
   const [newCard, setNewCard] = useState(false);
   const { account } = useContext(UserAccountContext);

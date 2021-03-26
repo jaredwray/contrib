@@ -1,8 +1,9 @@
 import { FC } from 'react';
 
 import clsx from 'clsx';
-import { Button } from 'react-bootstrap';
 import { useFormState } from 'react-final-form';
+
+import AsyncButton from 'src/components/AsyncButton';
 
 import styles from './SubmitButton.module.scss';
 
@@ -11,9 +12,9 @@ export const SubmitButton: FC = () => {
 
   return (
     <div className="pt-3 pb-3 pb-sm-5 float-right">
-      <Button className={clsx('text-subhead', styles.button)} disabled={submitting} type="submit">
+      <AsyncButton className={clsx('text-subhead', styles.button)} loading={submitting} type="submit">
         Save
-      </Button>
+      </AsyncButton>
     </div>
   );
 };

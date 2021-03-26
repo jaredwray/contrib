@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import clsx from 'clsx';
 import { Button, Container } from 'react-bootstrap';
 
+import AsyncButton from '../AsyncButton';
 import styles from './styles.module.scss';
 
 interface Props {
@@ -23,9 +24,9 @@ const StepByStepRow: FC<Props> = ({ prevAction, loading, last }) => {
         >
           Prev
         </Button>
-        <Button className={clsx('btn-with-arrows text-subhead', styles.button)} disabled={loading} type="submit">
+        <AsyncButton className={clsx('btn-with-arrows text-subhead', styles.button)} loading={loading} type="submit">
           {last ? 'Finish' : 'Next'}
-        </Button>
+        </AsyncButton>
       </Container>
     </div>
   );
