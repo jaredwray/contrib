@@ -12,7 +12,9 @@ $custom-control-indicator-border-color: $white-color;
 
   .custom-control-label {
     cursor: pointer;
-    line-height: $custom-switch-width / 2;
+    display: flex;
+    align-items: center;
+    height: 100%;
 
     &::before {
       cursor: pointer;
@@ -25,16 +27,23 @@ $custom-control-indicator-border-color: $white-color;
 
     &::after {
       top: $custom-control-indicator-border-width;
-      left: add(-($custom-switch-width + $custom-control-gutter), $custom-control-indicator-border-width);
+      left: calc(
+        #{$custom-control-indicator-border-width} - (#{$custom-switch-width} + #{$custom-control-gutter})
+      ) !important;
       background-color: $custom-control-indicator-border-color;
       border-radius: $custom-switch-indicator-border-radius;
+      transform: translateX($custom-switch-width / 2);
     }
   }
 
   .custom-control-input {
+    &:not(:checked) ~ .custom-control-label {
+      color: $light-gray-color;
+    }
+
     &:checked ~ .custom-control-label {
       &::after {
-        transform: translateX($custom-switch-width / 2);
+        transform: none;
       }
     }
 
