@@ -4,6 +4,7 @@ import { StripeService } from './StripeService';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { PaymentInformation } from '../dto/PaymentInformation';
 import { UserAccountService } from '../../UserAccount';
+import { Auth0Service } from '../../../authz';
 
 export class PaymentService {
   constructor(private readonly userAccountService: UserAccountService, private readonly stripeService: StripeService) {}
@@ -25,7 +26,8 @@ export class PaymentService {
     let account = sourceAccount;
 
     if (!account.stripeCustomerId) {
-      const customer = await this.stripeService.createCustomerForAccount(account);
+      const { name, email } = await new Auth0Service().getUser(account.id);
+      const customer = await this.stripeService.createCustomerForAccount(account, name, email);
       account = await this.userAccountService.updateAccountStripeCustomerId(account, customer.id);
     }
 
