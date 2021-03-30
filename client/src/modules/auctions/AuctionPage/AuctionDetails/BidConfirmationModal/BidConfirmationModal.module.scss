@@ -3,6 +3,10 @@
 .cardInputWrapper {
   max-width: 350px;
   margin: 0 auto;
+
+  @media (max-width: $small-weight) {
+    max-width: 100%;
+  }
 }
 
 .cardInfo {
@@ -15,4 +19,9 @@
 
 .addCardBtn {
   letter-spacing: 0 !important;
+}
+
+.confirmBtn {
+  white-space: break-spaces !important;
+  height: auto;
 }

@@ -134,7 +134,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
       <DialogActions className="justify-content-center">
         {(paymentInformation || expired) && !newCard && (
           <Button
-            className={clsx(styles.addCardBtn, 'mx-auto text--body')}
+            className={clsx(styles.addCardBtn, 'mx-auto text--body mt-0 pt-0 m-sm-auto p-sm-auto')}
             disabled={isSubmitting}
             size="sm"
             variant="link"
@@ -145,6 +145,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
         )}
         {(!expired || newCard) && (
           <AsyncButton
+            className={styles.confirmBtn}
             disabled={isSubmitting || (!paymentInformation && expired) || (newCard && !cardComplete)}
             loading={isSubmitting}
             variant="secondary"
