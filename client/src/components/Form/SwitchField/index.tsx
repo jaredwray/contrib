@@ -20,18 +20,10 @@ interface Props {
 
 const SwitchField: FC<Props> = ({ name, title, required, disabled, className, constraints: inputConstraints }) => {
   const constraints = useFieldConstraints(inputConstraints, required);
-  const { hasError, errorMessage, value, ...inputProps } = useField(name, { constraints, disabled, type: 'checkbox' });
+  const { hasError, errorMessage, ...inputProps } = useField(name, { constraints, disabled, type: 'checkbox' });
 
   return (
-    <Switch
-      custom
-      checked={value}
-      id={name}
-      label={title}
-      {...inputProps}
-      bsCustomPrefix="custom-switch2"
-      className={className}
-    />
+    <Switch custom id={name} label={title} {...inputProps} bsCustomPrefix="custom-switch2" className={className} />
   );
 };
 
