@@ -5,6 +5,11 @@
   align-items: center;
   justify-content: center;
   letter-spacing: 0.1em;
+  border-radius: 10px;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 
   &.btn-secondary {
     color: $sage-color;

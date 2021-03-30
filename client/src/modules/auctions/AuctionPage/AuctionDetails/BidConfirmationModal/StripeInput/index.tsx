@@ -3,15 +3,18 @@ import React, { FC, useMemo, useState } from 'react';
 import { CardElement } from '@stripe/react-stripe-js';
 import type { StripeCardElementChangeEvent, StripeCardElement } from '@stripe/stripe-js';
 import clsx from 'clsx';
+import { Button } from 'react-bootstrap';
 
 import styles from './styles.module.scss';
 
 interface Props {
   disabled: boolean;
+  showCancelBtn: boolean;
   onChange?(event: StripeCardElementChangeEvent): void;
+  onCancel: () => void;
 }
 
-const StripeInput: FC<Props> = ({ disabled, onChange }) => {
+const StripeInput: FC<Props> = ({ disabled, onChange, onCancel, showCancelBtn }) => {
   const [node, setNode] = useState<StripeCardElement | null>(null);
   const [focused, setFocused] = useState(false);
 
@@ -32,7 +35,6 @@ const StripeInput: FC<Props> = ({ disabled, onChange }) => {
 
         invalid: {
           color: '#e1825f',
-
           '::placeholder': {
             color: '#caccc6',
           },
@@ -43,7 +45,7 @@ const StripeInput: FC<Props> = ({ disabled, onChange }) => {
   );
 
   return (
-    <div className={clsx(styles.root, focused && styles.focused)} onClick={() => node?.focus()}>
+    <div className={clsx(styles.root, 'mb-4 mb-sm-0', focused && styles.focused)} onClick={() => node?.focus()}>
       <CardElement
         options={options}
         onBlur={() => setFocused(false)}
@@ -51,6 +53,11 @@ const StripeInput: FC<Props> = ({ disabled, onChange }) => {
         onFocus={() => setFocused(true)}
         onReady={setNode}
       />
+      {showCancelBtn && (
+        <Button className={clsx(styles.newCardCancelBtn, 'pr-0')} size="sm" variant="link" onClick={onCancel}>
+          Cancel
+        </Button>
+      )}
     </div>
   );
 };

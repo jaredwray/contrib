@@ -1,7 +1,6 @@
 @import 'src/variables.scss';
 
 .cardInputWrapper {
-  max-width: 350px;
   margin: 0 auto;
 
   @media (max-width: $small-weight) {
@@ -9,19 +8,18 @@
   }
 }
 
-.cardInfo {
-  color: $sage-color;
+.actionBtn {
+  height: 50px !important;
+
+  @media (max-width: $small-weight) {
+    width: 100%;
+  }
+  @media (min-width: $small-weight) {
+    width: 200px;
+  }
 }
 
-.expired {
-  color: $salmon-color;
-}
-
-.addCardBtn {
-  letter-spacing: 0 !important;
-}
-
-.confirmBtn {
-  white-space: break-spaces !important;
-  height: auto;
+.newCardCancelBtn {
+  position: absolute !important;
+  right: 0;
 }

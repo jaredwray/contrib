@@ -1,0 +1,21 @@
+@import 'src/variables.scss';
+
+.cardInfo {
+  color: $sage-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 61px;
+
+  @media (min-width: $small-weight) {
+    height: 38px;
+  }
+}
+
+.expired {
+  color: $salmon-color;
+}
+
+.addCardBtn {
+  letter-spacing: 0 !important;
+}

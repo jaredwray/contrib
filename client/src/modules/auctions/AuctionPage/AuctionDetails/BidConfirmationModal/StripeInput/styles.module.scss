@@ -13,3 +13,13 @@
   box-shadow: inset 0 0 0 1px $sage-color;
   border-color: $sage-color;
 }
+
+.newCardCancelBtn {
+  position: absolute !important;
+  right: 0;
+  top: 35px;
+
+  @media (max-width: $small-weight) {
+    top: 30px;
+  }
+}

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const DialogActions: FC<Props> = ({ children, className }) => (
-  <ModalFooter className={clsx('flex-row flex-wrap flex-sm-nowrap', className)}>{children}</ModalFooter>
+  <ModalFooter className={clsx('flex-row flex-nowrap', className)}>{children}</ModalFooter>
 );
 
 export default DialogActions;
