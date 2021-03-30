@@ -7,9 +7,11 @@ import { AppLogger } from '../../../logger';
 export class StripeService {
   private readonly stripe = new Stripe(AppConfig.stripe.secretKey, { apiVersion: '2020-08-27' });
 
-  public async createCustomerForAccount(account: UserAccount): Promise<Stripe.Customer> {
+  public async createCustomerForAccount(account: UserAccount, name: string, email: string): Promise<Stripe.Customer> {
     return this.stripe.customers.create({
       phone: account.phoneNumber,
+      name,
+      email,
       metadata: {
         auth0: account.id,
         contrib: account.mongodbId,
