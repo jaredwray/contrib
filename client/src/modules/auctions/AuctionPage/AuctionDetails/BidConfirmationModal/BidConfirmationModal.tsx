@@ -18,6 +18,7 @@ import DialogContent from 'src/components/DialogContent';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import styles from './BidConfirmationModal.module.scss';
+import CardInfo from './CardInfo';
 import StripeInput from './StripeInput';
 
 export interface BidConfirmationRef {
@@ -62,6 +63,10 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
     setCardComplete(event.complete);
   }, []);
 
+  const handleNewCardCancelBtnClick = useCallback(() => {
+    setNewCard(false);
+  }, [setNewCard]);
+
   const handleSubmit = useCallback(async () => {
     if (!elements || !activeBid) {
       return;
@@ -102,57 +107,58 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(({ auc
 
   useEffect(() => setNewCard(false), []);
 
-  const renderCardInfo = () => {
-    return (
-      <div className={clsx(styles.cardInfo, expired && styles.expired)}>
-        <p className="text-center mb-1">
-          {paymentInformation?.cardBrand} **** **** **** {paymentInformation?.cardNumberLast4},{' '}
-          {paymentInformation?.cardExpirationMonth}/{`${paymentInformation?.cardExpirationYear}`.slice(-2)}{' '}
-          {expired && <span className="text-all-cups font-weight-bold">expired</span>}
-        </p>
-      </div>
-    );
-  };
-
   return (
     <Dialog backdrop="static" keyboard={false} open={Boolean(activeBid)} title={title} onClose={handleClose}>
       <DialogContent>
-        <div className={styles.cardInputWrapper}>
-          <p className="text--body">
+        <div className={clsx(styles.cardInputWrapper, 'text--body')}>
+          <p>
             We need your card number in order to place your bid. Card will be charged only after auction end, in case
             your bid is winning.
           </p>
-          <p className="text--body">
-            Please make sure this card has enough available funds at time of auction finalization.
-          </p>
+          <p>Please make sure this card has enough available funds at time of auction finalization.</p>
 
-          {(expired || paymentInformation) && !newCard && renderCardInfo()}
-          {(!paymentInformation || newCard) && <StripeInput disabled={isSubmitting} onChange={handleCardInputChange} />}
+          {(expired || paymentInformation) && !newCard && (
+            <CardInfo
+              expired={expired}
+              isSubmitting={isSubmitting}
+              paymentInfo={paymentInformation}
+              onNewCardAdd={handleAddCard}
+            />
+          )}
+          {(!paymentInformation || newCard) && (
+            <StripeInput
+              disabled={isSubmitting}
+              showCancelBtn={Boolean(paymentInformation)}
+              onCancel={handleNewCardCancelBtnClick}
+              onChange={handleCardInputChange}
+            />
+          )}
+
+          <p className="text-center pt-0 pt-sm-3 mb-0">
+            Your bid is <span className="font-weight-bold">{activeBid?.toFormat('$0,0')}</span>
+          </p>
         </div>
       </DialogContent>
 
-      <DialogActions className="justify-content-center">
-        {(paymentInformation || expired) && !newCard && (
-          <Button
-            className={clsx(styles.addCardBtn, 'mx-auto text--body')}
-            disabled={isSubmitting}
-            size="sm"
-            variant="link"
-            onClick={handleAddCard}
-          >
-            Use another card
-          </Button>
-        )}
-        {(!expired || newCard) && (
-          <AsyncButton
-            disabled={isSubmitting || (!paymentInformation && expired) || (newCard && !cardComplete)}
-            loading={isSubmitting}
-            variant="secondary"
-            onClick={handleSubmit}
-          >
-            Confirm bidding {activeBid?.toFormat('$0,0')}
-          </AsyncButton>
-        )}
+      <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
+        <Button
+          className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+          size="sm"
+          variant="light"
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+
+        <AsyncButton
+          className={styles.actionBtn}
+          disabled={isSubmitting || expired || ((newCard || !paymentInformation) && !cardComplete)}
+          loading={isSubmitting}
+          variant="secondary"
+          onClick={handleSubmit}
+        >
+          Confirm bidding
+        </AsyncButton>
       </DialogActions>
     </Dialog>
   );
