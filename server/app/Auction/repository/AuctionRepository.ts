@@ -94,10 +94,8 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   async changeAuctionStatus(id: string, organizerId: string, status: AuctionStatus): Promise<IAuctionModel> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: organizerId }).exec();
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
+    const auction = await this.findAuction(id, organizerId);
+
     if (auction.status === AuctionStatus.ACTIVE && status === AuctionStatus.DRAFT) {
       throw new AppError('Cannot set active auction to DRAFT status', ErrorCode.BAD_REQUEST);
     }
@@ -107,10 +105,8 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   async updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: organizerId }).exec();
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
+    const auction = await this.findAuction(id, input.organizerId || organizerId);
+
     if (auction.status !== AuctionStatus.DRAFT) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
@@ -185,5 +181,16 @@ export class AuctionRepository implements IAuctionRepository {
     auction.assets.push(asset);
     await auction.save();
     return asset;
+  }
+
+  private async findAuction(id: string, organizerId?: string): Promise<IAuctionModel> {
+    const organizerOpts = organizerId ? { auctionOrganizer: Types.ObjectId(organizerId) } : {};
+    const auction = await this.AuctionModel.findOne({ _id: id, ...organizerOpts }).exec();
+
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+    }
+
+    return auction;
   }
 }

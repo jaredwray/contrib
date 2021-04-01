@@ -28,6 +28,7 @@ export type IUpdateAuction = {
   startDate?: dayjs.Dayjs;
   endDate?: dayjs.Dayjs;
   playedIn?: string;
+  organizerId?: string;
 };
 
 export interface IAuctionRepository {
