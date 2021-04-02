@@ -62,6 +62,17 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
         <div className={styles.header}>
           <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
+        {account?.isAdmin && (
+          <Container>
+            <Row>
+              <Col>
+                <Link className="text-label float-right" to={`/auctions/${influencer.id}/new/basic`}>
+                  Create Auction
+                </Link>
+              </Col>
+            </Row>
+          </Container>
+        )}
         {influencer.id === account?.influencerProfile?.id && (
           <Container>
             <Row>

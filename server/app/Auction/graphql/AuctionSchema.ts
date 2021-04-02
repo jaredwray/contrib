@@ -84,6 +84,7 @@ export const AuctionSchema = gql`
   }
 
   input AuctionInput {
+    organizerId: String
     title: String
     description: String
     fullPageDescription: String

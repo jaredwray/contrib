@@ -14,4 +14,5 @@ export type AuctionInput = {
   endDate?: Dayjs;
   startPrice?: Dinero.Dinero;
   playedIn?: string;
+  organizerId?: string;
 };

@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { createAuctionMutation } from 'src/apollo/queries/auctions';
@@ -27,6 +27,7 @@ const initialValues = {
 const NewAuctionBasicPage = () => {
   const history = useHistory();
   const { addToast } = useToasts();
+  const { ownerId } = useParams<{ ownerId: string }>();
 
   const [createAuction, { loading }] = useMutation(createAuctionMutation, {
     onCompleted({ createAuction }) {
@@ -43,12 +44,13 @@ const NewAuctionBasicPage = () => {
   const handleSubmit = useCallback(
     async (values) => {
       try {
-        await createAuction({ variables: values });
+        const variables = ownerId ? { ...values, organizerId: ownerId } : values;
+        await createAuction({ variables });
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
     },
-    [createAuction, addToast],
+    [createAuction, ownerId, addToast],
   );
 
   return (

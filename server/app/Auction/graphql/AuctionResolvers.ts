@@ -7,7 +7,7 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionInput } from './model/AuctionInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
-import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer';
+import { requireRole } from '../../../graphql/middleware/requireRole';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { GraphqlResolver } from '../../../graphql/types';
 import { AuctionAssets } from '../dto/AuctionAssets';
@@ -43,35 +43,40 @@ export const AuctionResolvers: AuctionResolversType = {
       auction.listAuctions({ query, filters, orderBy, size, skip }),
     auctionPriceLimits: (_, __, { auction }) => auction.getAuctionPriceLimits(),
     sports: (_, __, { auction }) => auction.listSports(),
-    auction: loadInfluencer(async (_, { id }, { currentInfluencer, auction }) => {
+    auction: loadInfluencer(async (_, { id }, { auction, currentAccount, currentInfluencer }) => {
       const foundAuction = await auction.getAuction(id);
       const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencer?.id;
-      if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner) {
+      if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner && !currentAccount.isAdmin) {
         return null;
       }
       return foundAuction;
     }),
   },
   Mutation: {
-    createAuction: requireInfluencer(async (_, input, { auction, currentInfluencer }) =>
-      auction.createAuctionDraft(currentInfluencer?.id, input.input),
-    ),
-    updateAuction: requireInfluencer(async (_, { id, input }, { auction, currentInfluencer }) =>
-      auction.updateAuction(id, currentInfluencer.id, input),
+    createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencer }) => {
+      if (!input.organizerId || currentAccount.isAdmin || currentInfluencer?.id === input.organizerId) {
+        return auction.createAuctionDraft(input.organizerId || currentInfluencer?.id, input);
+      } else {
+        return null;
+      }
+    }),
+    updateAuction: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencer }) =>
+      auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencer.id, input),
     ),
     deleteAuction: async () => Promise.resolve(null),
-    addAuctionAttachment: requireInfluencer(async (_, { id, attachment }, { currentInfluencer, auction }) =>
-      auction.addAuctionAttachment(id, currentInfluencer.id, attachment),
+    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencer }) =>
+      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencer.id, attachment),
     ),
-    removeAuctionAttachment: requireInfluencer(async (_, { id, attachmentUrl }, { currentInfluencer, auction }) =>
-      auction.removeAuctionAttachment(id, currentInfluencer.id, attachmentUrl),
+    removeAuctionAttachment: requireRole(
+      async (_, { id, attachmentUrl }, { auction, currentAccount, currentInfluencer }) =>
+        auction.removeAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencer.id, attachmentUrl),
     ),
-    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { currentAccount, auction }) => {
+    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auction, currentAccount, currentInfluencer }) => {
       await auction.addAuctionBid(id, { bid, user: currentAccount });
       return auction.getAuction(id);
     }),
-    updateAuctionStatus: requireInfluencer(async (_, { id, status }, { auction, currentInfluencer }) =>
-      auction.updateAuctionStatus(id, currentInfluencer.id, status),
+    updateAuctionStatus: requireRole(async (_, { id, status }, { auction, currentAccount, currentInfluencer }) =>
+      auction.updateAuctionStatus(id, currentAccount?.isAdmin ? null : currentInfluencer?.id, status),
     ),
   },
   InfluencerProfile: {

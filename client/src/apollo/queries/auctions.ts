@@ -97,6 +97,7 @@ export const getAuctionDetails = gql`
 
 export const createAuctionMutation = gql`
   mutation createAuction(
+    $organizerId: String
     $title: String!
     $sport: String!
     $gameWorn: Boolean
@@ -108,6 +109,7 @@ export const createAuctionMutation = gql`
   ) {
     createAuction(
       input: {
+        organizerId: $organizerId
         description: $description
         fullPageDescription: $fullPageDescription
         gameWorn: $gameWorn
