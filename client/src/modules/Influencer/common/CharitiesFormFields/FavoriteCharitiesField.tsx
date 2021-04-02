@@ -28,5 +28,7 @@ export const FavoriteCharitiesField: FC<Props> = ({ name, disabled }) => {
     [field],
   );
 
-  return <CharitiesAutocomplete charities={field.value} onChange={handleFavoriteCharityChange} />;
+  return (
+    <CharitiesAutocomplete charities={field.value} favoriteCharities={[]} onChange={handleFavoriteCharityChange} />
+  );
 };

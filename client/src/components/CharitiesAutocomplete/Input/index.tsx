@@ -1,11 +1,10 @@
 import { BaseSyntheticEvent, FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Button, Form } from 'react-bootstrap';
 
 import { CharitiesSearch } from 'src/apollo/queries/charities';
-import { MyProfileQuery } from 'src/apollo/queries/profile';
 import SearchInput from 'src/components/SearchInput';
 import useOutsideClick from 'src/helpers/useOutsideClick';
 import { Charity } from 'src/types/Charity';
@@ -14,22 +13,21 @@ import styles from './styles.module.scss';
 
 interface Props {
   charities: Charity[];
+  favoriteCharities: Charity[];
   onChange: (charity: Charity, isFavorite: boolean) => void;
   disabled?: boolean;
 }
 
-const CharitiesSearchInput: FC<Props> = ({ charities, onChange, disabled }) => {
+const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChange, disabled }) => {
   const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const { data: myAccountsData } = useQuery(MyProfileQuery);
   const [executeSearch] = useLazyQuery(CharitiesSearch, {
     onCompleted({ charitiesSearch }) {
       setCharitiesSearch(charitiesSearch);
     },
   });
   const searchContainer = useRef(null);
-  const favoriteCharities = myAccountsData?.myAccount?.influencerProfile?.favoriteCharities;
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
     setCharitiesSearch([]);

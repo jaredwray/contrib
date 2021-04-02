@@ -17,3 +17,12 @@ export const UpdateMyFavoriteCharities = gql`
     }
   }
 `;
+
+export const UpdateFavoriteCharities = gql`
+  mutation updateFavoriteCarities($influencerId: String!, $charities: [String!]!) {
+    updateInfluencerProfileFavoriteCharities(influencerId: $influencerId, charities: $charities) {
+      id
+      name
+    }
+  }
+`;

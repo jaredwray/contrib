@@ -1,14 +1,13 @@
 import { ChangeEvent, FC, useCallback, useRef, useState } from 'react';
 
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { Button, Image } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
 
-import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { UpdateInfluencerProfileAvatarMutation } from 'src/apollo/queries/profile';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { UserAccount } from 'src/types/UserAccount';
+import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import styles from './AvatarPicker.module.scss';
 
@@ -17,15 +16,15 @@ const MAX_AVATAR_SIZE_MB = 2;
 const ACCEPTED_FILE_TYPES = ['png', 'jpeg', 'jpg', 'webp'];
 const ACCEPTED_FILE_TYPES_STRING = ACCEPTED_FILE_TYPES.map((t) => `.${t}`).join(',');
 
-export const AvatarPicker: FC = () => {
+interface Props {
+  influencer: InfluencerProfile;
+}
+
+export const AvatarPicker: FC<Props> = ({ influencer }) => {
   const { addToast } = useToasts();
   const [uploadPreviewUrl, setUploadPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const { data: myAccountsData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery);
   const [updateInfluencerProfileAvatar] = useMutation(UpdateInfluencerProfileAvatarMutation);
-
-  const influencerProfile = myAccountsData?.myAccount?.influencerProfile;
 
   const handleError = useCallback(
     (errorMessage: string) => {
@@ -44,12 +43,12 @@ export const AvatarPicker: FC = () => {
       setUploadPreviewUrl(URL.createObjectURL(image));
 
       updateInfluencerProfileAvatar({
-        variables: { image },
+        variables: { influencerId: influencer.id, image },
       }).catch((error) => {
         handleError(error.message);
       });
     },
-    [updateInfluencerProfileAvatar, handleError],
+    [updateInfluencerProfileAvatar, handleError, influencer.id],
   );
 
   const handleSelectFileToUpload = useCallback(() => {
@@ -58,7 +57,7 @@ export const AvatarPicker: FC = () => {
     }
   }, [fileInputRef]);
 
-  if (!influencerProfile) {
+  if (!influencer) {
     return null;
   }
 
@@ -76,7 +75,7 @@ export const AvatarPicker: FC = () => {
         roundedCircle
         className={styles.image}
         id="profileAvatar"
-        src={uploadPreviewUrl || ResizedImageUrl(influencerProfile.avatarUrl, 120)}
+        src={uploadPreviewUrl || ResizedImageUrl(influencer.avatarUrl, 120)}
         onClick={handleSelectFileToUpload}
       />
       <Button

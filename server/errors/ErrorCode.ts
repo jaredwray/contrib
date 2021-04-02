@@ -12,11 +12,15 @@ export enum ErrorCode {
    */
   PHONE_NUMBER_ALREADY_TAKEN = 'PHONE_NUMBER_ALREADY_TAKEN',
   /**
-   * User is either not signed in, or access token is invalid/expired, or he lacks permissions to perform given action.
+   * User is either not signed in, or access token is invalid/expired.
    */
   UNAUTHORIZED = 'UNAUTHORIZED',
   /**
    * Requested entity not found
    */
   NOT_FOUND = 'NOT_FOUND',
+  /**
+   * User lacks permissions to perform given action.
+   */
+  FORBIDDEN = 'FORBIDDEN',
 }

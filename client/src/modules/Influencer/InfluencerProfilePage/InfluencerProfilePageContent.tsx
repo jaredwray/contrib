@@ -48,6 +48,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
   const hasLiveAuctions = Boolean(liveAuctions.length);
   const hasPastAuctions = Boolean(pastAuctions.length);
   const hasAuctions = hasLiveAuctions || hasPastAuctions;
+  const isMyProfile = influencer.id === account?.influencerProfile?.id;
 
   const liveAuctionsLayout = liveAuctions.map((auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
@@ -73,11 +74,11 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
             </Row>
           </Container>
         )}
-        {influencer.id === account?.influencerProfile?.id && (
+        {(isMyProfile || account?.isAdmin) && (
           <Container>
             <Row>
               <Col>
-                <Link className="text-label float-right" to="/profiles/me/edit">
+                <Link className="text-label float-right" to={`/profiles/${isMyProfile ? 'me' : influencer.id}/edit`}>
                   Edit
                 </Link>
               </Col>
@@ -86,7 +87,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
         )}
         <Container className={styles.content}>
           <Row>
-            <Col>
+            <Col md="6">
               <VerifiedStatus />
               <p className="text-headline break-word">{influencer.name}</p>
               <p className="text-label text-all-cups">Total charity amount raised: {totalRaised.toFormat('$0,0')}</p>
@@ -105,7 +106,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
                 </a>
               </div>*/}
             </Col>
-            <Col>
+            <Col md="6">
               <span className="label-with-separator text-label">Player profile</span>
               {profileDescriptionParagraphs.map((paragraph, paragraphIndex) => (
                 <p key={paragraphIndex} className="text--body mb-4 mt-4 break-word">

@@ -88,6 +88,79 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
+  async updateInfluencerProfileById(id: string, input: UpdateInfluencerProfileInput): Promise<InfluencerProfile> {
+    const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
+    if (!influencer) {
+      throw new Error(`influencer record #${id} not found`);
+    }
+
+    Object.assign(influencer, input);
+
+    await influencer.save();
+
+    return InfluencerService.makeInfluencerProfile(influencer);
+  }
+
+  async updateInfluencerProfileAvatarById(id: string, image: any): Promise<InfluencerProfile> {
+    const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
+    if (!influencer) {
+      throw new Error(`influencer record #${id} not found`);
+    }
+
+    const { filename: originalFilename, createReadStream } = await image;
+    const ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg', 'webp'];
+    const extension = originalFilename.split('.').pop();
+
+    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+      AppLogger.error('File has unsupported extension: ', originalFilename);
+      return;
+    }
+
+    const filename = `${influencer._id}/avatar/avatar.webp`;
+    const filePath = `pending/${filename}`;
+    const bucketName = AppConfig.googleCloud.bucketName;
+    const storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
+
+    await createReadStream().pipe(
+      storage
+        .bucket(bucketName)
+        .file(filePath)
+        .createWriteStream({ metadata: { cacheControl: 'no-store' } })
+        .on('finish', () => {
+          const bucketFullPath = `https://storage.googleapis.com/${bucketName}`;
+
+          storage
+            .bucket(bucketName)
+            .file(filePath)
+            .makePublic()
+            .then(() => {
+              influencer.avatarUrl = `${bucketFullPath}/${filename}`;
+              influencer.save();
+            })
+            .catch((e: any) => AppLogger.error(`exec error : ${e}`));
+        }),
+    );
+
+    return InfluencerService.makeInfluencerProfile(influencer);
+  }
+
+  async updateInfluencerProfileFavoriteCharitiesById(id: string, charities: [string]): Promise<InfluencerProfile> {
+    const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
+    if (!influencer) {
+      throw new Error(`influencer record #${id} not found`);
+    }
+
+    const favoriteCharities = await this.charityService.listCharitiesByIds(charities);
+    influencer.favoriteCharities = favoriteCharities.map((m) => m.id);
+
+    await influencer.save();
+
+    return InfluencerService.makeInfluencerProfile(influencer);
+  }
+
+  /* TODO should be removed after new API integration */
+  /* TODO block start */
+
   async updateInfluencerProfileByUserId(
     userAccount: string,
     input: UpdateInfluencerProfileInput,
@@ -163,6 +236,7 @@ export class InfluencerService {
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }
+  /* TODO block end */
 
   public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
     return {

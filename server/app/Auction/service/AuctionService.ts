@@ -101,7 +101,7 @@ export class AuctionService {
   }
 
   public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<AuctionAssets> {
-    const auction = await this.AuctionModel.findOne({ _id: id, auctionOrganizer: userId }).exec();
+    const auction = await this.auctionRepository.getAuction(id, userId);
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }

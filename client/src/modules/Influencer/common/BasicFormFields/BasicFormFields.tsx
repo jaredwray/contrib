@@ -4,16 +4,21 @@ import clsx from 'clsx';
 import { Col, Row } from 'react-bootstrap';
 
 import InputField from 'src/components/Form/InputField';
+import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { AvatarPicker } from './AvatarPicker';
 import styles from './BasicFormFields.module.scss';
 
-export const BasicFormFields: FC = () => {
+interface Props {
+  influencer: InfluencerProfile;
+}
+
+export const BasicFormFields: FC<Props> = ({ influencer }) => {
   return (
     <Row className="pt-3 pt-md-0">
       <Col md="6">
         <div className={clsx(styles.avatarBlock, 'd-flex flex-column align-items-center')}>
-          <AvatarPicker />
+          <AvatarPicker influencer={influencer} />
         </div>
       </Col>
       <Col className="pt-4 pt-md-0" md="6">

@@ -8,6 +8,7 @@ import { AppError, ErrorCode } from '../../../errors';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer';
 import { loadAccount } from '../../../graphql/middleware/loadAccount';
+import { requireRole } from '../../../graphql/middleware/requireRole';
 import { GraphqlResolver } from '../../../graphql/types';
 import { Charity } from '../../Charity/dto/Charity';
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
@@ -23,8 +24,17 @@ interface InfluencerResolversType {
   };
   Mutation: {
     inviteInfluencer: GraphqlResolver<InfluencerProfile, { input: InviteInfluencerInput }>;
+    updateInfluencerProfile: GraphqlResolver<
+      InfluencerProfile,
+      { influencerId: string; input: UpdateInfluencerProfileInput }
+    >;
+    updateInfluencerProfileAvatar: GraphqlResolver<InfluencerProfile, { influencerId: string; image: File }>;
+    updateInfluencerProfileFavoriteCharities: GraphqlResolver<
+      InfluencerProfile,
+      { influencerId: string; charities: [string] }
+    >;
     updateMyInfluencerProfile: GraphqlResolver<InfluencerProfile, { input: UpdateInfluencerProfileInput }>;
-    updateMyInfluencerProfileAvatar: GraphqlResolver<InfluencerProfile, { image: any }>;
+    updateMyInfluencerProfileAvatar: GraphqlResolver<InfluencerProfile, { image: File }>;
     updateMyInfluencerProfileFavoriteCharities: GraphqlResolver<InfluencerProfile, { charities: [string] }>;
     confirmAccountWithInvitation: GraphqlResolver<UserAccount, { otp: string; code: string }>;
     createAccountWithInvitation: GraphqlResolver<UserAccount, { code: string }>;
@@ -66,6 +76,35 @@ export const InfluencerResolvers: InfluencerResolversType = {
   },
   Mutation: {
     inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
+    updateInfluencerProfile: requireRole(
+      async (_, { influencerId, input }, { influencer, currentAccount, currentInfluencer }) => {
+        const profileId = influencerId === 'me' ? currentInfluencer.id : influencerId;
+        if (!currentAccount.isAdmin && currentInfluencer.id != profileId) {
+          throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+        }
+        return influencer.updateInfluencerProfileById(profileId, input);
+      },
+    ),
+    updateInfluencerProfileAvatar: requireRole(
+      async (_, { influencerId, image }, { influencer, currentAccount, currentInfluencer }) => {
+        const profileId = influencerId === 'me' ? currentInfluencer.id : influencerId;
+        if (!currentAccount.isAdmin && currentInfluencer.id != profileId) {
+          throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+        }
+        return influencer.updateInfluencerProfileAvatarById(profileId, image);
+      },
+    ),
+    updateInfluencerProfileFavoriteCharities: requireRole(
+      async (_, { influencerId, charities }, { influencer, currentAccount, currentInfluencer }) => {
+        const profileId = influencerId === 'me' ? currentInfluencer.id : influencerId;
+        if (!currentAccount.isAdmin && currentInfluencer.id != profileId) {
+          throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+        }
+        return influencer.updateInfluencerProfileFavoriteCharitiesById(profileId, charities);
+      },
+    ),
+    /* TODO it should be removed after new API integration */
+    /* TODO block start */
     updateMyInfluencerProfile: requireInfluencer(async (_, { input }, { influencer, currentAccount }) =>
       influencer.updateInfluencerProfileByUserId(currentAccount.mongodbId, input),
     ),
@@ -76,6 +115,7 @@ export const InfluencerResolvers: InfluencerResolversType = {
       async (_, { charities }, { influencer, currentAccount }) =>
         influencer.updateInfluencerProfileFavoriteCharitiesByUserId(currentAccount.mongodbId, charities),
     ),
+    /* TODO block end */
     confirmAccountWithInvitation: requireAuthenticated(async (_, { code, otp }, { user, userAccount, invitation }) => {
       const invitationModel = await invitation.findInvitationBySlug(code);
       if (!invitationModel || invitationModel.accepted) {
@@ -99,7 +139,7 @@ export const InfluencerResolvers: InfluencerResolversType = {
     invitation: requireAdmin(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
       loaders.invitation.getByInfluencerId(influencerProfile.id),
     ),
-    favoriteCharities: requireInfluencer(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
+    favoriteCharities: requireRole(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
       Promise.all(influencerProfile.favoriteCharities.map((c) => loaders.charity.getById(c))),
     ),
   },

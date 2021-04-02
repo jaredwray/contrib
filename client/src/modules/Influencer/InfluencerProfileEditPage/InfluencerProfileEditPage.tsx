@@ -1,15 +1,17 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { UpdateMyFavoriteCharities } from 'src/apollo/queries/charities';
-import { MyProfileQuery, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
+import { UpdateFavoriteCharities } from 'src/apollo/queries/charities';
+import { InfluencerProfileQuery, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { Charity } from 'src/types/Charity';
-import { UserAccount } from 'src/types/UserAccount';
+import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { BasicFormFields } from '../common/BasicFormFields';
 import { CharitiesFormFields } from '../common/CharitiesFormFields';
@@ -25,20 +27,22 @@ interface FormValues {
 
 export const InfluencerProfileEditPage: FC = () => {
   const { addToast } = useToasts();
-  const { data: myAccountData } = useQuery<{
-    myAccount: UserAccount;
-  }>(MyProfileQuery);
+  const { influencerId } = useParams<{ influencerId: string }>();
+  const { account } = useContext(UserAccountContext);
+  const { data: influencerProfileData } = useQuery<{
+    influencer: InfluencerProfile;
+  }>(InfluencerProfileQuery, { variables: { id: influencerId } });
   const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
-  const [updateMyFavoriteCharities] = useMutation(UpdateMyFavoriteCharities);
+  const [updateFavoriteCharities] = useMutation(UpdateFavoriteCharities);
 
   const handleSubmit = async ({ name, sport, team, profileDescription, favoriteCharities }: FormValues) => {
     try {
       await updateInfluencerProfile({
-        variables: { name, sport, team, profileDescription },
+        variables: { name, sport, team, profileDescription, influencerId },
       });
 
       if (influencerProfile?.favoriteCharities?.join() !== favoriteCharities.join()) {
-        await updateMyFavoriteCharities({ variables: { charities: favoriteCharities.map((c) => c.id) } });
+        await updateFavoriteCharities({ variables: { influencerId, charities: favoriteCharities.map((c) => c.id) } });
       }
       addToast(`Your profile has been successfully updated.`, { appearance: 'success' });
     } catch (error) {
@@ -46,7 +50,7 @@ export const InfluencerProfileEditPage: FC = () => {
     }
   };
 
-  const influencerProfile = myAccountData?.myAccount?.influencerProfile;
+  const influencerProfile = influencerProfileData?.influencer;
   if (!influencerProfile) {
     return null;
   }
@@ -60,15 +64,15 @@ export const InfluencerProfileEditPage: FC = () => {
       >
         <Container>
           <Row>
-            <Col className="text-label label-with-separator">My account</Col>
+            <Col className="text-label label-with-separator">{account?.isAdmin ? 'Account' : 'My account'}</Col>
           </Row>
           <h2 className="text-headline d-flex flex-row justify-content-between">
-            <span className="mr-1">My Profile</span>
+            <span className="mr-1">{account?.isAdmin ? 'Profile' : 'My Profile'}</span>
           </h2>
           <hr className="d-none d-md-block" />
-          <BasicFormFields />
+          <BasicFormFields influencer={influencerProfile} />
           <h2 className="text-headline d-flex flex-row justify-content-between">
-            <span className="mr-1">My Charities</span>
+            <span className="mr-1">{account?.isAdmin ? 'Charities' : 'My Charities'}</span>
           </h2>
           <hr className="d-none d-md-block" />
           <CharitiesFormFields />
