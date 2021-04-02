@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
-import { UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
+import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import { UserAccount } from 'src/types/UserAccount';
@@ -28,7 +28,7 @@ export const InfluencerOnboardingBasicPage: FC = () => {
   const { data: myAccountData } = useQuery<{
     myAccount: UserAccount;
   }>(MyAccountQuery);
-  const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
+  const [updateInfluencerProfile] = useMutation(UpdateMyInfluencerProfileMutation);
 
   const handleSubmit = async ({ name, sport, team, profileDescription }: FormValues) => {
     try {
@@ -64,7 +64,7 @@ export const InfluencerOnboardingBasicPage: FC = () => {
             <span className={styles.stepIndicator}>Step 1</span>
           </h2>
           <hr className="d-none d-md-block" />
-          <BasicFormFields />
+          <BasicFormFields influencer={influencerProfile} />
         </Container>
 
         <InfluencerOnboardingNavigation step="basic" />

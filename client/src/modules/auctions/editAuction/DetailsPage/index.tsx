@@ -161,7 +161,11 @@ const EditAuctionDetailsPage = () => {
               />
             </Row>
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
-              <CharitiesAutocomplete charities={charities} onChange={handleCharityChange} />
+              <CharitiesAutocomplete
+                charities={charities}
+                favoriteCharities={auctionData?.auction?.auctionOrganizer?.favoriteCharities}
+                onChange={handleCharityChange}
+              />
               {/*
               <p className="text--body mb-sm-4">Don’t see a charity you’re looking for?</p>
               <Button className={clsx(styles.suggestButton, 'text-label')} variant="secondary">

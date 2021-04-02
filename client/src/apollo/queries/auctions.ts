@@ -91,6 +91,12 @@ export const getAuctionDetails = gql`
         id
         name
       }
+      auctionOrganizer {
+        favoriteCharities {
+          id
+          name
+        }
+      }
     }
   }
 `;
