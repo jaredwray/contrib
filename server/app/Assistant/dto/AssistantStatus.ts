@@ -1,0 +1,4 @@
+export enum AssistantStatus {
+  INVITATION_PENDING = 'INVITATION_PENDING',
+  ONBOARDED = 'ONBOARDED',
+}

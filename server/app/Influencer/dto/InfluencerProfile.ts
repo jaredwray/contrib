@@ -10,4 +10,5 @@ export interface InfluencerProfile {
   status: InfluencerStatus;
   userAccount: string;
   favoriteCharities: string[];
+  assistants: string[];
 }

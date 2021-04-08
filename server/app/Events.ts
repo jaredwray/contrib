@@ -1,4 +1,5 @@
 export enum Events {
-  USER_ACCOUNT_CREATED = 'user.created',
+  ASSISTANT_ONBOARDED = 'assistant.onboarded',
   INFLUENCER_ONBOARDED = 'influencer.onboarded',
+  USER_ACCOUNT_CREATED = 'user.created',
 }

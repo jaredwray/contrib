@@ -1,8 +1,8 @@
-import { InviteInfluencerInput } from './model/InviteInfluencerInput';
+import { Invitation } from '../../Invitation/dto/Invitation';
+import { InviteInput } from '../../Invitation/graphql/model/InviteInput';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateInfluencerProfileInput } from './model/UpdateInfluencerProfileInput';
-import { Invitation } from '../dto/Invitation';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 import { AppError, ErrorCode } from '../../../errors';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
@@ -11,11 +11,11 @@ import { loadAccount } from '../../../graphql/middleware/loadAccount';
 import { requireRole } from '../../../graphql/middleware/requireRole';
 import { GraphqlResolver } from '../../../graphql/types';
 import { Charity } from '../../Charity/dto/Charity';
+import { Assistant } from '../../Assistant/dto/Assistant';
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
 
 interface InfluencerResolversType {
   Query: {
-    invitation: GraphqlResolver<Invitation | null, { slug: string }>;
     influencers: GraphqlResolver<
       { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
       { size: number; skip: number }
@@ -23,7 +23,7 @@ interface InfluencerResolversType {
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
   };
   Mutation: {
-    inviteInfluencer: GraphqlResolver<InfluencerProfile, { input: InviteInfluencerInput }>;
+    inviteInfluencer: GraphqlResolver<InfluencerProfile, { input: InviteInput }>;
     updateInfluencerProfile: GraphqlResolver<
       InfluencerProfile,
       { influencerId: string; input: UpdateInfluencerProfileInput }
@@ -36,13 +36,12 @@ interface InfluencerResolversType {
     updateMyInfluencerProfile: GraphqlResolver<InfluencerProfile, { input: UpdateInfluencerProfileInput }>;
     updateMyInfluencerProfileAvatar: GraphqlResolver<InfluencerProfile, { image: File }>;
     updateMyInfluencerProfileFavoriteCharities: GraphqlResolver<InfluencerProfile, { charities: [string] }>;
-    confirmAccountWithInvitation: GraphqlResolver<UserAccount, { otp: string; code: string }>;
-    createAccountWithInvitation: GraphqlResolver<UserAccount, { code: string }>;
   };
   InfluencerProfile: {
     userAccount: GraphqlResolver<UserAccount, Record<string, never>, InfluencerProfile>;
     invitation: GraphqlResolver<Invitation, Record<string, never>, InfluencerProfile>;
     favoriteCharities: GraphqlResolver<Charity[], Record<string, never>, InfluencerProfile>;
+    assistants: GraphqlResolver<Assistant[], Record<string, never>, InfluencerProfile>;
   };
   UserAccount: {
     influencerProfile: GraphqlResolver<InfluencerProfile, Record<string, never>, UserAccount>;
@@ -51,17 +50,6 @@ interface InfluencerResolversType {
 
 export const InfluencerResolvers: InfluencerResolversType = {
   Query: {
-    invitation: async (
-      _: unknown,
-      { slug }: { slug: string },
-      { invitation }: GraphqlContext,
-    ): Promise<Invitation | null> => {
-      const foundInvitation = await invitation.findInvitationBySlug(slug);
-      if (foundInvitation?.accepted) {
-        return null;
-      }
-      return foundInvitation;
-    },
     influencers: requireAdmin(async (_, { size, skip }, { influencer }) => ({
       items: await influencer.listInfluencers(skip, size),
       totalItems: await influencer.countInfluencers(),
@@ -116,20 +104,6 @@ export const InfluencerResolvers: InfluencerResolversType = {
         influencer.updateInfluencerProfileFavoriteCharitiesByUserId(currentAccount.mongodbId, charities),
     ),
     /* TODO block end */
-    confirmAccountWithInvitation: requireAuthenticated(async (_, { code, otp }, { user, userAccount, invitation }) => {
-      const invitationModel = await invitation.findInvitationBySlug(code);
-      if (!invitationModel || invitationModel.accepted) {
-        throw new AppError('Invitation code is outdated', ErrorCode.BAD_REQUEST);
-      }
-      return userAccount.confirmAccountWithPhoneNumber(user.id, invitationModel.phoneNumber, otp);
-    }),
-    createAccountWithInvitation: requireAuthenticated(async (_, { code }, { user, userAccount, invitation }) => {
-      const invitationModel = await invitation.findInvitationBySlug(code);
-      if (!invitationModel || invitationModel.accepted) {
-        throw new AppError('Invitation code is outdated', ErrorCode.BAD_REQUEST);
-      }
-      return userAccount.createAccountWithPhoneNumber(user.id, invitationModel.phoneNumber);
-    }),
   },
   InfluencerProfile: {
     userAccount: requireAdmin(
@@ -137,10 +111,13 @@ export const InfluencerResolvers: InfluencerResolversType = {
         (influencerProfile.userAccount && (await loaders.userAccount.getById(influencerProfile.userAccount))) ?? null,
     ),
     invitation: requireAdmin(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
-      loaders.invitation.getByInfluencerId(influencerProfile.id),
+      loaders.invitation.getByParentEntityId(influencerProfile.id),
     ),
     favoriteCharities: requireRole(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
       Promise.all(influencerProfile.favoriteCharities.map((c) => loaders.charity.getById(c))),
+    ),
+    assistants: requireRole(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
+      Promise.all(influencerProfile.assistants.map((a) => loaders.assistant.getById(a))),
     ),
   },
   UserAccount: {

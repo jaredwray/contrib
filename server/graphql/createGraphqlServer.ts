@@ -2,6 +2,8 @@ import { ApolloError, ApolloServer, gql } from 'apollo-server-express';
 
 import { createGraphqlContext } from './createGraphqlContext';
 import { UserAccountResolvers, UserAccountSchema } from '../app/UserAccount';
+import { AssistantResolvers, AssistantSchema } from '../app/Assistant';
+import { InvitationResolvers, InvitationSchema } from '../app/Invitation';
 import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
 import { CharityResolvers, CharitySchema } from '../app/Charity';
 import { AuctionResolvers, AuctionSchema } from '../app/Auction';
@@ -22,7 +24,7 @@ export const DefaultSchema = gql`
   type Mutation {
     _empty: String
   }
-  
+
   scalar Upload
 `;
 
@@ -36,6 +38,8 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
       MoneyTypeDefs,
       UserAccountSchema,
       InfluencerSchema,
+      InvitationSchema,
+      AssistantSchema,
       CharitySchema,
       AuctionSchema,
       PaymentSchema,
@@ -45,6 +49,8 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
       MoneyResolver,
       UserAccountResolvers,
       InfluencerResolvers,
+      InvitationResolvers,
+      AssistantResolvers,
       CharityResolvers,
       AuctionResolvers,
       PaymentResolvers,

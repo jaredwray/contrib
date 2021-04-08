@@ -17,16 +17,7 @@ export const InfluencerSchema = gql`
     userAccount: UserAccount
     invitation: Invitation!
     favoriteCharities: [Charity!]!
-  }
-
-  type Invitation {
-    id: String!
-    firstName: String!
-    lastName: String!
-    welcomeMessage: String!
-    accepted: Boolean!
-    createdAt: String!
-    updatedAt: String!
+    assistants: [Assistant!]!
   }
 
   type InfluencersPage {
@@ -37,16 +28,8 @@ export const InfluencerSchema = gql`
   }
 
   extend type Query {
-    invitation(slug: String!): Invitation
     influencers(size: Int!, skip: Int!): InfluencersPage!
     influencer(id: String!): InfluencerProfile!
-  }
-
-  input InviteInfluencerInput {
-    phoneNumber: String!
-    firstName: String!
-    lastName: String!
-    welcomeMessage: String!
   }
 
   input UpdateInfluencerProfileInput {
@@ -58,15 +41,13 @@ export const InfluencerSchema = gql`
   }
 
   extend type Mutation {
-    inviteInfluencer(input: InviteInfluencerInput!): InfluencerProfile!
+    inviteInfluencer(input: InviteInput!): InfluencerProfile!
     updateInfluencerProfile(influencerId: String!, input: UpdateInfluencerProfileInput!): InfluencerProfile!
     updateInfluencerProfileAvatar(influencerId: String!, image: Upload!): InfluencerProfile!
     updateInfluencerProfileFavoriteCharities(influencerId: String!, charities: [String!]!): InfluencerProfile!
     updateMyInfluencerProfile(input: UpdateInfluencerProfileInput!): InfluencerProfile!
     updateMyInfluencerProfileAvatar(image: Upload!): InfluencerProfile!
     updateMyInfluencerProfileFavoriteCharities(charities: [String!]!): InfluencerProfile!
-    createAccountWithInvitation(code: String!): UserAccount!
-    confirmAccountWithInvitation(code: String!, otp: String!): UserAccount!
   }
 
   extend type UserAccount {
