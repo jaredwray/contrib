@@ -1,0 +1,13 @@
+@import 'src/variables.scss';
+
+.page {
+  background-color: $barely-gray-color;
+  flex: 1;
+}
+
+.influencerId {
+  max-width: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

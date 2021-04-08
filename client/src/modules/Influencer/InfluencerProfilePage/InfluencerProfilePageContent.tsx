@@ -72,6 +72,13 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
                 </Link>
               </Col>
             </Row>
+            <Row>
+              <Col>
+                <Link className="text-label float-right" to={`/assistants/${influencer.id}`}>
+                  Assistants
+                </Link>
+              </Col>
+            </Row>
           </Container>
         )}
         {(isMyProfile || account?.isAdmin) && (

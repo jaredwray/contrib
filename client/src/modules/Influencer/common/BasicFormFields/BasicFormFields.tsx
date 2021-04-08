@@ -24,7 +24,7 @@ export const BasicFormFields: FC<Props> = ({ influencer }) => {
       <Col className="pt-4 pt-md-0" md="6">
         <InputField required name="name" title="Enter your name" />
         <InputField required name="sport" title="Enter your sport" />
-        <InputField required name="team" title="Enter your team name" />
+        <InputField name="team" title="Enter your team name" />
         <InputField required textarea className={styles.textarea} name="profileDescription" title="Enter description" />
       </Col>
     </Row>

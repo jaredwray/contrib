@@ -1,0 +1,49 @@
+@import 'src/variables.scss';
+
+table {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  th {
+    height: 49px;
+    padding: 7px;
+    border: none;
+  }
+
+  tbody {
+    tr {
+      cursor: pointer;
+      background-color: $white-color;
+
+      &:hover,
+      &.tr-selected {
+        background: $sage-color;
+        color: $white-color;
+
+        .dropdown-toggle {
+          &[aria-expanded='true'] {
+            color: $light-sage-color;
+          }
+        }
+      }
+    }
+
+    td {
+      vertical-align: middle;
+      padding: 7px;
+      white-space: normal;
+
+      &:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+      &:last-child {
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+    }
+  }
+}
