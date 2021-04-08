@@ -18,6 +18,7 @@ import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
 import EditAuctionMediaPage from 'src/modules/auctions/editAuction/MediaPage';
 import NewAuctionWizardPage from 'src/modules/auctions/NewAuctionPage';
 import HomePage from 'src/modules/Home';
+import Assistants from 'src/modules/Influencer/Assistants';
 import InvitationPage from 'src/modules/Invitation';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
@@ -63,6 +64,7 @@ ReactDOM.render(
               <Route exact component={Auctions} path="/auctions" />
               <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
               <Route exact component={InfluencerProfileEditPage} path="/profiles/:influencerId/edit" />
+              <Route exact component={Assistants} path="/assistants/:influencerId" />
               <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
               <Route exact component={NewAuctionBasicPage} path="/auctions/:ownerId/new/basic" />
               <Route exact component={NewAuctionBasicPage} path="/auctions/new/basic" />

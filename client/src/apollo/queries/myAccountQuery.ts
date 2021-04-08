@@ -16,6 +16,11 @@ export const MyAccountQuery = gql`
         avatarUrl
         status
       }
+      assistant {
+        name
+        status
+        influencer
+      }
       paymentInformation {
         id
         cardNumberLast4

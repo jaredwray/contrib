@@ -63,14 +63,29 @@ export default function Header() {
                   )}
 
                   {account?.influencerProfile && (
+                    <NavLink to="/assistants/me">
+                      <NavDropdown.Item href="/assistants/me">
+                        <span>My assistants</span>
+                      </NavDropdown.Item>
+                    </NavLink>
+                  )}
+
+                  {account?.assistant && (
+                    <NavLink to={`/profiles/${account.assistant.influencer}`}>
+                      <NavDropdown.Item href={`/profiles/${account.assistant.influencer}`}>
+                        <span>Account</span>
+                      </NavDropdown.Item>
+                    </NavLink>
+                  )}
+
+                  {(account?.influencerProfile || account?.assistant) && (
                     <NavLink to="/auctions/new">
                       <NavDropdown.Item href="/auctions/new">
                         <span>Create new Auction</span>
                       </NavDropdown.Item>
                     </NavLink>
                   )}
-
-                  <NavDropdown.Divider />
+                  {account && <NavDropdown.Divider />}
 
                   {isAuthenticated ? (
                     <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={handleLogout}>

@@ -1,16 +1,25 @@
-import { useState, useCallback } from 'react';
+import { FC, useState, useCallback } from 'react';
 
-import { useMutation } from '@apollo/client';
-import { Alert, Button, Spinner, Modal, Form as RbForm } from 'react-bootstrap';
+import { useMutation, DocumentNode } from '@apollo/client';
+import { Alert, Spinner, Button, Form as RbForm } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
+import { useParams } from 'react-router-dom';
 
-import { InviteInfluencerMutation } from 'src/apollo/queries/influencers';
+import Dialog from 'src/components/Dialog';
+import DialogContent from 'src/components/DialogContent';
 import Form from 'src/components/Form/Form';
 import InputField from 'src/components/Form/InputField';
 
-export default function InvitationModal(props: any) {
-  const [inviteInfluencer] = useMutation(InviteInfluencerMutation);
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  mutation: DocumentNode;
+}
+
+export const Modal: FC<Props> = ({ open, onClose, mutation }) => {
+  const { influencerId } = useParams<{ influencerId: string }>();
+  const [inviteMutation] = useMutation(mutation);
   const [creating, setCreating] = useState(false);
   const [invitationError, setInvitationError] = useState();
 
@@ -28,23 +37,20 @@ export default function InvitationModal(props: any) {
     }) => {
       if (firstName && lastName && phoneNumber && welcomeMessage) {
         setCreating(true);
-        inviteInfluencer({
-          variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage },
+        inviteMutation({
+          variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage, influencerId },
         })
           .then(() => window.location.reload(false))
-          .catch((error) => setInvitationError(error.message));
+          .catch((error) => setInvitationError(error.message))
+          .finally(() => setCreating(false));
       }
     },
-    [inviteInfluencer],
+    [inviteMutation, influencerId],
   );
 
   return (
-    <Modal {...props} centered aria-labelledby="contained-modal-title-vcenter" size="md">
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Create Invitation</Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
+    <Dialog open={open} title="Create Invitation" onClose={onClose}>
+      <DialogContent>
         <Form
           initialValues={{ firstName: null, lastName: null, phoneNumber: null, welcomeMessage: null }}
           onSubmit={onSubmit}
@@ -52,17 +58,15 @@ export default function InvitationModal(props: any) {
           {invitationError && <Alert variant="danger">{invitationError}</Alert>}
 
           <InputField required name="firstName" title="Enter First Name" />
-
           <InputField required name="lastName" title="Enter Last Name" />
-
           <RbForm.Group>
             <RbForm.Label>Phone Number</RbForm.Label>
             <Field name="phoneNumber">
               {({ input }) => (
                 <PhoneInput
                   copyNumbersOnly={false}
-                  country={'us'}
-                  inputClass={'is-invalid'}
+                  country="us"
+                  inputClass="is-invalid"
                   inputProps={{ required: true, name: 'phoneNumber' }}
                   placeholder=""
                   specialLabel=""
@@ -75,7 +79,7 @@ export default function InvitationModal(props: any) {
           <InputField required textarea name="welcomeMessage" title="Enter Message on the Welcome page" />
 
           <hr />
-          <div className="text-right">
+          <div className="float-right">
             {creating ? (
               <Spinner animation="border" />
             ) : (
@@ -85,7 +89,7 @@ export default function InvitationModal(props: any) {
             )}
           </div>
         </Form>
-      </Modal.Body>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
-}
+};

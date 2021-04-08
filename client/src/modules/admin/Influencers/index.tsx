@@ -1,18 +1,17 @@
 import { useState } from 'react';
 
 import { useQuery } from '@apollo/client';
-import { Button, Col, Container, DropdownButton, Form, Row, Spinner, Table } from 'react-bootstrap';
+import clsx from 'clsx';
+import { Col, Container, Form, Row, Spinner, Table } from 'react-bootstrap';
 
-import { AllInfluencersQuery } from 'src/apollo/queries/influencers';
+import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
+import { InviteButton } from 'src/components/InviteButton';
 import Layout from 'src/components/Layout';
 
-import InvitationModal from './InvitationModal';
 import Pagination, { PER_PAGE } from './Pagination';
-
-import './styles.scss';
+import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
-  const [modalShow, setModalShow] = useState(false);
   const [pageSkip, setPageSkip] = useState(0);
 
   const showPrevPage = () => {
@@ -35,7 +34,7 @@ export default function InfluencersPage() {
 
   return (
     <Layout>
-      <section className="admin-influencers-page text-label pl-4 pr-4">
+      <section className={clsx(styles.page, 'text-label p-4')}>
         <Container fluid>
           <Row>
             <Col md="6" xs="12">
@@ -51,10 +50,7 @@ export default function InfluencersPage() {
               />
             </Col>
             <Col className="pt-3 pt-md-0" md="2" xs="4">
-              <Button className="w-100 text-label" variant="dark" onClick={() => setModalShow(true)}>
-                Invite +
-              </Button>
-              <InvitationModal show={modalShow} onHide={() => setModalShow(false)} />
+              <InviteButton mutation={InviteInfluencerMutation} />
             </Col>
           </Row>
         </Container>
@@ -64,35 +60,24 @@ export default function InfluencersPage() {
               {loading ? (
                 <Spinner animation="border" />
               ) : (
-                <Table className="admin-influencers-table d-block d-sm-table">
+                <Table className="d-block d-sm-table">
                   <thead>
                     <tr>
                       <th>ID</th>
                       <th>Name</th>
                       <th>Sport</th>
                       <th>Status</th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tbody className="font-weight-normal">
                     {influencers.items.map((influencer: any) => (
                       <tr key={influencer.id}>
-                        <td className="admin-influencers-id" title={influencer.id}>
+                        <td className={styles.influencerId} title={influencer.id}>
                           {influencer.id}
                         </td>
                         <td className="break-word">{influencer.name}</td>
                         <td className="break-word">{influencer.sport}</td>
                         <td>{influencer.status}</td>
-                        <td>
-                          <DropdownButton
-                            className="influencer-actions-dropdown"
-                            disabled={true}
-                            id="influencerActions"
-                            menuAlign="right"
-                            title="..."
-                            variant="link"
-                          ></DropdownButton>
-                        </td>
                       </tr>
                     ))}
                   </tbody>
