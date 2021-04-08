@@ -31,6 +31,7 @@ export class InfluencerService {
           userAccount,
           status: userAccount ? InfluencerStatus.ONBOARDED : InfluencerStatus.INVITATION_PENDING,
           favoriteCharities: [],
+          assistants: [],
         },
       ],
       { session },
@@ -238,6 +239,10 @@ export class InfluencerService {
   }
   /* TODO block end */
 
+  async assignAssistantsToInfluencer(influencerId: string, assistantId: string): Promise<void> {
+    await this.InfluencerModel.updateOne({ _id: influencerId }, { $addToSet: { assistants: assistantId } });
+  }
+
   public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
     return {
       id: model._id.toString(),
@@ -249,6 +254,7 @@ export class InfluencerService {
       status: model.status,
       userAccount: model.userAccount?.toString() ?? null,
       favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
+      assistants: model.assistants?.map((m) => m.toString()) ?? [],
     };
   }
 }

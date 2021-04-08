@@ -2,14 +2,16 @@ import { ClientSession, Connection, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IInvitation, InvitationModel } from '../mongodb/InvitationModel';
-import { InfluencerService } from './InfluencerService';
-import { InfluencerProfile } from '../dto/InfluencerProfile';
-import { InviteInfluencerInput } from '../graphql/model/InviteInfluencerInput';
+import { InfluencerService } from '../../Influencer/service/InfluencerService';
+import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
+import { InviteInput } from '../graphql/model/InviteInput';
 import { TwilioNotificationService } from '../../../twilio-client';
 import { AppConfig } from '../../../config';
 import { Invitation } from '../dto/Invitation';
 import { InvitationParentEntityType } from '../mongodb/InvitationParentEntityType';
 import { AppError, ErrorCode } from '../../../errors';
+import { Assistant } from '../../Assistant/dto/Assistant';
+import { AssistantService } from '../../Assistant';
 import { UserAccountService } from '../../UserAccount';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { Events } from '../../Events';
@@ -22,6 +24,7 @@ export class InvitationService {
 
   constructor(
     private readonly connection: Connection,
+    private readonly assistantService: AssistantService,
     private readonly userAccountService: UserAccountService,
     private readonly influencerService: InfluencerService,
     private readonly twilioNotificationService: TwilioNotificationService,
@@ -38,15 +41,14 @@ export class InvitationService {
     return InvitationService.makeInvitation(model);
   }
 
-  async listInvitationsByInfluencerIds(influencerIds: readonly string[]): Promise<Invitation[]> {
+  async listInvitationsByParentEntityIds(parentEntityIds: readonly string[]): Promise<Invitation[]> {
     const models = await this.InvitationModel.find({
-      parentEntityType: InvitationParentEntityType.INFLUENCER,
-      parentEntityId: { $in: influencerIds },
+      parentEntityId: { $in: parentEntityIds },
     });
     return models.map((model) => InvitationService.makeInvitation(model));
   }
 
-  async inviteInfluencer(input: InviteInfluencerInput): Promise<InfluencerProfile> {
+  async inviteInfluencer(input: InviteInput): Promise<InfluencerProfile> {
     const session = await this.connection.startSession();
     let influencerProfile: InfluencerProfile = null;
 
@@ -61,6 +63,26 @@ export class InvitationService {
       });
 
       return influencerProfile;
+    } finally {
+      session.endSession();
+    }
+  }
+
+  async inviteAssistant(input: InviteInput): Promise<Assistant> {
+    const session = await this.connection.startSession();
+    let assistant: Assistant = null;
+
+    try {
+      await session.withTransaction(async () => {
+        const account = await this.userAccountService.getAccountByPhoneNumber(input.phoneNumber);
+        if (account) {
+          assistant = await this.creatAssistantForExistingUser(input, account, session);
+        } else {
+          assistant = await this.createNewAssistant(input, session);
+        }
+      });
+
+      return assistant;
     } finally {
       session.endSession();
     }
@@ -95,6 +117,18 @@ export class InvitationService {
           );
           await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
         });
+      } else if (invitation.parentEntityType === InvitationParentEntityType.ASSISTANT) {
+        await session.withTransaction(async () => {
+          invitation.accepted = true;
+          invitation.updatedAt = new Date();
+          await invitation.save();
+          const assistant = await this.assistantService.assignUserToAssistant(
+            invitation.parentEntityId,
+            userAccount.mongodbId,
+            session,
+          );
+          await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, assistant });
+        });
       } else {
         AppLogger.error(`unexpected parent entity type ${invitation.parentEntityType} for invitation ${invitation.id}`);
       }
@@ -108,7 +142,7 @@ export class InvitationService {
   }
 
   private async creatInfluencerProfileForExistingUser(
-    { firstName, lastName, phoneNumber }: InviteInfluencerInput,
+    { firstName, lastName, phoneNumber }: InviteInput,
     userAccount: UserAccount,
     session: ClientSession,
   ): Promise<InfluencerProfile> {
@@ -135,7 +169,7 @@ export class InvitationService {
   }
 
   private async createNewInfluencerProfile(
-    { firstName, lastName, phoneNumber, welcomeMessage }: InviteInfluencerInput,
+    { firstName, lastName, phoneNumber, welcomeMessage }: InviteInput,
     session: ClientSession,
   ): Promise<InfluencerProfile> {
     const influencerProfile = await this.influencerService.createInfluencer(
@@ -168,9 +202,81 @@ export class InvitationService {
     return influencerProfile;
   }
 
+  private async creatAssistantForExistingUser(
+    { firstName, lastName, phoneNumber, influencerId }: InviteInput,
+    userAccount: UserAccount,
+    session: ClientSession,
+  ): Promise<Assistant> {
+    if (await this.assistantService.findAssistantByUserAccount(userAccount.mongodbId)) {
+      throw new AppError(`${phoneNumber} is already using the system for the Assistant`, ErrorCode.BAD_REQUEST);
+    }
+
+    const influencer = await this.influencerService.findInfluencer(influencerId);
+    if (!influencer) {
+      throw new AppError(`Invalid influencerId #${influencerId}`, ErrorCode.BAD_REQUEST);
+    }
+
+    const assistant = await this.assistantService.createAssistant(
+      {
+        name: `${firstName} ${lastName}`,
+        userAccount: userAccount.mongodbId,
+        influencer: influencerId,
+      },
+      session,
+    );
+
+    await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
+
+    const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
+    // TODO add Influencer's name
+    const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
+    await this.twilioNotificationService.sendMessage(userAccount.phoneNumber, message);
+
+    await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, assistant });
+
+    return assistant;
+  }
+
+  private async createNewAssistant(
+    { firstName, lastName, phoneNumber, welcomeMessage, influencerId }: InviteInput,
+    session: ClientSession,
+  ): Promise<Assistant> {
+    if (await this.InvitationModel.exists({ phoneNumber })) {
+      throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+    }
+
+    const assistant = await this.assistantService.createAssistant(
+      {
+        name: `${firstName} ${lastName}`,
+        userAccount: null,
+        influencer: influencerId,
+      },
+      session,
+    );
+
+    await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
+
+    const invitation = await this.createInvitation(
+      assistant,
+      {
+        phoneNumber,
+        firstName,
+        lastName,
+        welcomeMessage,
+        influencerId,
+      },
+      session,
+    );
+
+    const link = await this.makeInvitationLink(invitation.slug);
+    const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
+    await this.twilioNotificationService.sendMessage(phoneNumber, message);
+    return assistant;
+  }
+
   private async createInvitation(
-    influencer: InfluencerProfile,
-    { phoneNumber, firstName, lastName, welcomeMessage }: InviteInfluencerInput,
+    parent: InfluencerProfile | Assistant,
+    { phoneNumber, firstName, lastName, welcomeMessage, influencerId }: InviteInput,
     session: ClientSession,
   ): Promise<Invitation> {
     const now = new Date();
@@ -184,8 +290,8 @@ export class InvitationService {
           phoneNumber,
           welcomeMessage,
           accepted: false,
-          parentEntityType: InvitationParentEntityType.INFLUENCER,
-          parentEntityId: Types.ObjectId(influencer.id),
+          parentEntityType: influencerId ? InvitationParentEntityType.ASSISTANT : InvitationParentEntityType.INFLUENCER,
+          parentEntityId: Types.ObjectId(parent.id),
           createdAt: now,
           updatedAt: now,
         },
