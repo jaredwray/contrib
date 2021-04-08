@@ -86,7 +86,7 @@ export class AssistantService {
       name: model.name,
       status: model.status,
       userAccount: model.userAccount?.toString() ?? null,
-      influencer: model.influencer?.toString() ?? null,
+      influencerId: model.influencer?.toString() ?? null,
     };
   }
 }

@@ -1,14 +1,14 @@
 import { GraphqlHandler } from '../types';
 import { AppError, ErrorCode } from '../../errors';
-import { loadInfluencer } from './loadInfluencer';
+import { loadRole } from './loadRole';
 
 export function requireRole<Result, Args, Parent>(
   handler: GraphqlHandler<Result, Args, Parent>,
 ): GraphqlHandler<Result, Args, Parent> {
-  return loadInfluencer(async (parent, args, context, info) => {
-    if (!context.currentAccount?.isAdmin && !context.currentInfluencer) {
-      throw new AppError('Unauthorized', ErrorCode.UNAUTHORIZED);
+  return loadRole(async (parent, args, context, info) => {
+    if (context.currentAccount?.isAdmin || context.currentInfluencer || context.currentAssistant) {
+      return handler(parent, args, context, info);
     }
-    return handler(parent, args, context, info);
+    throw new AppError('Unauthorized', ErrorCode.UNAUTHORIZED);
   });
 }

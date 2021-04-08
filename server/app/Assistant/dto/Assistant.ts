@@ -5,5 +5,5 @@ export interface Assistant {
   name: string;
   status: AssistantStatus;
   userAccount: string;
-  influencer: string;
+  influencerId: string;
 }

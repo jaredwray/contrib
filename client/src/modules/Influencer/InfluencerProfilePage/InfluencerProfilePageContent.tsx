@@ -48,7 +48,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
   const hasLiveAuctions = Boolean(liveAuctions.length);
   const hasPastAuctions = Boolean(pastAuctions.length);
   const hasAuctions = hasLiveAuctions || hasPastAuctions;
-  const isMyProfile = influencer.id === account?.influencerProfile?.id;
+  const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
 
   const liveAuctionsLayout = liveAuctions.map((auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
