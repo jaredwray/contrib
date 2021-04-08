@@ -8,6 +8,7 @@ import { AppError, ErrorCode } from '../../../errors';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer';
 import { loadAccount } from '../../../graphql/middleware/loadAccount';
+import { loadRole } from '../../../graphql/middleware/loadRole';
 import { requireRole } from '../../../graphql/middleware/requireRole';
 import { GraphqlResolver } from '../../../graphql/types';
 import { Charity } from '../../Charity/dto/Charity';
@@ -56,38 +57,48 @@ export const InfluencerResolvers: InfluencerResolversType = {
       size,
       skip,
     })),
-    influencer: loadAccount((_, { id }, { currentAccount, influencer }) =>
-      id === 'me' && currentAccount
-        ? influencer.findInfluencerByUserAccount(currentAccount.mongodbId)
-        : influencer.findInfluencer(id),
-    ),
+    influencer: loadRole(async (_, { id }, { currentAccount, influencer, currentAssistant }) => {
+      if (id === 'me' && currentAccount) {
+        if (currentAssistant) {
+          return influencer.findInfluencer(currentAssistant.influencerId);
+        } else {
+          return influencer.findInfluencerByUserAccount(currentAccount.mongodbId);
+        }
+      } else {
+        return influencer.findInfluencer(id);
+      }
+    }),
   },
   Mutation: {
     inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
     updateInfluencerProfile: requireRole(
-      async (_, { influencerId, input }, { influencer, currentAccount, currentInfluencer }) => {
-        const profileId = influencerId === 'me' ? currentInfluencer.id : influencerId;
-        if (!currentAccount.isAdmin && currentInfluencer.id != profileId) {
+      async (_, { influencerId, input }, { influencer, currentAccount, currentInfluencerId }) => {
+        const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;
+        if (!currentAccount.isAdmin && profileId !== currentInfluencerId) {
           throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
         }
+
         return influencer.updateInfluencerProfileById(profileId, input);
       },
     ),
     updateInfluencerProfileAvatar: requireRole(
-      async (_, { influencerId, image }, { influencer, currentAccount, currentInfluencer }) => {
-        const profileId = influencerId === 'me' ? currentInfluencer.id : influencerId;
-        if (!currentAccount.isAdmin && currentInfluencer.id != profileId) {
+      async (_, { influencerId, image }, { influencer, currentAccount, currentInfluencerId }) => {
+        const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;
+        if (!currentAccount.isAdmin && profileId !== currentInfluencerId) {
           throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
         }
+
         return influencer.updateInfluencerProfileAvatarById(profileId, image);
       },
     ),
+
     updateInfluencerProfileFavoriteCharities: requireRole(
-      async (_, { influencerId, charities }, { influencer, currentAccount, currentInfluencer }) => {
-        const profileId = influencerId === 'me' ? currentInfluencer.id : influencerId;
-        if (!currentAccount.isAdmin && currentInfluencer.id != profileId) {
+      async (_, { influencerId, charities }, { influencer, currentAccount, currentInfluencerId }) => {
+        const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;
+        if (!currentAccount.isAdmin && profileId !== currentInfluencerId) {
           throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
         }
+
         return influencer.updateInfluencerProfileFavoriteCharitiesById(profileId, charities);
       },
     ),

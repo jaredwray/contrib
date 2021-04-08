@@ -71,8 +71,8 @@ export default function Header() {
                   )}
 
                   {account?.assistant && (
-                    <NavLink to={`/profiles/${account.assistant.influencer}`}>
-                      <NavDropdown.Item href={`/profiles/${account.assistant.influencer}`}>
+                    <NavLink to={`/profiles/${account.assistant.influencerId}`}>
+                      <NavDropdown.Item href={`/profiles/${account.assistant.influencerId}`}>
                         <span>Account</span>
                       </NavDropdown.Item>
                     </NavLink>

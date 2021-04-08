@@ -11,7 +11,7 @@ import { requireRole } from '../../../graphql/middleware/requireRole';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { GraphqlResolver } from '../../../graphql/types';
 import { AuctionAssets } from '../dto/AuctionAssets';
-import { loadInfluencer } from '../../../graphql/middleware/loadInfluencer';
+import { loadRole } from '../../../graphql/middleware/loadRole';
 
 interface AuctionResolversType {
   Query: {
@@ -43,9 +43,9 @@ export const AuctionResolvers: AuctionResolversType = {
       auction.listAuctions({ query, filters, orderBy, size, skip }),
     auctionPriceLimits: (_, __, { auction }) => auction.getAuctionPriceLimits(),
     sports: (_, __, { auction }) => auction.listSports(),
-    auction: loadInfluencer(async (_, { id }, { auction, currentAccount, currentInfluencer }) => {
+    auction: loadRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) => {
       const foundAuction = await auction.getAuction(id);
-      const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencer?.id;
+      const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencerId;
       if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner && !currentAccount.isAdmin) {
         return null;
       }
@@ -53,36 +53,36 @@ export const AuctionResolvers: AuctionResolversType = {
     }),
   },
   Mutation: {
-    createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencer }) => {
-      if (!input.organizerId || currentAccount.isAdmin || currentInfluencer?.id === input.organizerId) {
-        return auction.createAuctionDraft(input.organizerId || currentInfluencer?.id, input);
+    createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencerId }) => {
+      if (!input.organizerId || currentAccount.isAdmin || currentInfluencerId === input.organizerId) {
+        return auction.createAuctionDraft(input.organizerId || currentInfluencerId, input);
       } else {
         return null;
       }
     }),
-    updateAuction: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencer }) =>
-      auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencer.id, input),
+    updateAuction: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencerId }) =>
+      auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input),
     ),
     deleteAuction: async () => Promise.resolve(null),
-    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencer }) =>
-      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencer.id, attachment),
+    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencerId }) =>
+      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachment),
     ),
     removeAuctionAttachment: requireRole(
-      async (_, { id, attachmentUrl }, { auction, currentAccount, currentInfluencer }) =>
-        auction.removeAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencer.id, attachmentUrl),
+      async (_, { id, attachmentUrl }, { auction, currentAccount, currentInfluencerId }) =>
+        auction.removeAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachmentUrl),
     ),
-    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auction, currentAccount, currentInfluencer }) => {
+    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auction, currentAccount }) => {
       await auction.addAuctionBid(id, { bid, user: currentAccount });
       return auction.getAuction(id);
     }),
-    updateAuctionStatus: requireRole(async (_, { id, status }, { auction, currentAccount, currentInfluencer }) =>
-      auction.updateAuctionStatus(id, currentAccount?.isAdmin ? null : currentInfluencer?.id, status),
+    updateAuctionStatus: requireRole(async (_, { id, status }, { auction, currentAccount, currentInfluencerId }) =>
+      auction.updateAuctionStatus(id, currentAccount?.isAdmin ? null : currentInfluencerId, status),
     ),
   },
   InfluencerProfile: {
-    auctions: loadInfluencer(async (influencerProfile, _, { currentInfluencer, auction }) => {
-      const auctions = await auction.getInfluencersAuctions(influencerProfile.id);
-      const isOwner = influencerProfile.id === currentInfluencer?.id;
+    auctions: loadRole(async (influencerProfile, _, { auction, currentAccount, currentInfluencerId }) => {
+      const auctions = await auction.getInfluencersAuctions(currentInfluencerId);
+      const isOwner = influencerProfile.id === currentInfluencerId;
       return auctions.filter((foundAuction) => foundAuction.status !== AuctionStatus.DRAFT || isOwner);
     }),
   },
