@@ -40,6 +40,10 @@ export const InfluencerSchema = gql`
     image: Upload
   }
 
+  input CreateInfluencerInput {
+    name: String!
+  }
+
   extend type Mutation {
     inviteInfluencer(input: InviteInput!): InfluencerProfile!
     updateInfluencerProfile(influencerId: String!, input: UpdateInfluencerProfileInput!): InfluencerProfile!

@@ -39,6 +39,19 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(influencer[0]);
   }
 
+  async createTransientInfluencer({ name }: TransientInfluencerInput): Promise<InfluencerProfile> {
+    const influencer = await this.InfluencerModel.create([
+      {
+        name,
+        avatarUrl: `${AppConfig.app.url}/content/img/users/person.png`,
+        status: InfluencerStatus.TRANSIENT,
+        favoriteCharities: [],
+        assistants: [],
+      },
+    ]);
+    return InfluencerService.makeInfluencerProfile(influencer[0]);
+  }
+
   async findInfluencer(id: string): Promise<InfluencerProfile | null> {
     const influencer = await this.InfluencerModel.findById(id).exec();
     return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;

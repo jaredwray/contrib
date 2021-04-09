@@ -3,7 +3,6 @@ import { InviteInput } from '../../Invitation/graphql/model/InviteInput';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateInfluencerProfileInput } from './model/UpdateInfluencerProfileInput';
-import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 import { AppError, ErrorCode } from '../../../errors';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer';
@@ -13,7 +12,7 @@ import { requireRole } from '../../../graphql/middleware/requireRole';
 import { GraphqlResolver } from '../../../graphql/types';
 import { Charity } from '../../Charity/dto/Charity';
 import { Assistant } from '../../Assistant/dto/Assistant';
-import { GraphqlContext } from '../../../graphql/GraphqlContext';
+import { CreateInfluencerInput } from '../../Invitation/graphql/model/CreateInfluencerInput';
 
 interface InfluencerResolversType {
   Query: {
@@ -24,6 +23,7 @@ interface InfluencerResolversType {
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
   };
   Mutation: {
+    createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
     inviteInfluencer: GraphqlResolver<InfluencerProfile, { input: InviteInput }>;
     updateInfluencerProfile: GraphqlResolver<
       InfluencerProfile,
@@ -70,6 +70,7 @@ export const InfluencerResolvers: InfluencerResolversType = {
     }),
   },
   Mutation: {
+    createInfluencer: requireAdmin(async (_, { input }, { influencer }) => influencer.createTransientInfluencer(input)),
     inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
     updateInfluencerProfile: requireRole(
       async (_, { influencerId, input }, { influencer, currentAccount, currentInfluencerId }) => {

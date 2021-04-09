@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Form, Row, Spinner, Table } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { InviteButton } from 'src/components/InviteButton';
@@ -49,7 +50,10 @@ export default function InfluencersPage() {
                 total={influencers.totalItems}
               />
             </Col>
-            <Col className="pt-3 pt-md-0" md="2" xs="4">
+            <Col className="pt-3 pt-md-0" md="1" xs="2">
+              <CreateInfluencer />
+            </Col>
+            <Col className="pt-3 pt-md-0" md="1" xs="2">
               <InviteButton mutation={InviteInfluencerMutation} />
             </Col>
           </Row>
@@ -71,7 +75,11 @@ export default function InfluencersPage() {
                   </thead>
                   <tbody className="font-weight-normal">
                     {influencers.items.map((influencer: any) => (
-                      <tr key={influencer.id}>
+                      <tr
+                        key={influencer.id}
+                        className={styles.clickable}
+                        onClick={() => handleSelectInfluencer(influencer)}
+                      >
                         <td className={styles.influencerId} title={influencer.id}>
                           {influencer.id}
                         </td>
@@ -84,7 +92,7 @@ export default function InfluencersPage() {
                 </Table>
               )}
             </Col>
-            <Col md="2"></Col>
+            <Col md="2" />
           </Row>
         </Container>
       </section>
