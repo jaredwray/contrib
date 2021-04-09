@@ -1587,8 +1587,7 @@
       };
     </script>
     <!-- NewRelic end -->
-    <% } %>
-    <% if (process.env.REACT_APP_FULLSTORY_ORG_ID) { %>
+    <% } %> <% if (process.env.REACT_APP_FULLSTORY_ORG_ID) { %>
     <!-- FullStory start -->
     <script>
       window['_fs_debug'] = false;
@@ -1668,12 +1667,6 @@
   </head>
   <% if (process.env.REACT_APP_INTERCOM_APP_ID) { %>
   <!-- Intercom start -->
-  <script>
-    window.intercomSettings = {
-      app_id: '%REACT_APP_INTERCOM_APP_ID%',
-    };
-  </script>
-
   <script>
     (function () {
       var w = window;
