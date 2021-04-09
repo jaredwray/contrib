@@ -45,10 +45,6 @@ export const InfluencerSchema = gql`
     name: String!
   }
 
-  input CreateInfluencerInput {
-    name: String!
-  }
-
   extend type Mutation {
     createInfluencer(input: CreateInfluencerInput!): InfluencerProfile!
     inviteInfluencer(input: InviteInput!): InfluencerProfile!
