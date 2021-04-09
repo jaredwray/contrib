@@ -26,6 +26,14 @@ export const InviteInfluencerMutation = gql`
   }
 `;
 
+export const CreateInfluencerMutation = gql`
+  mutation CreateInfluencer($name: String!) {
+    createInfluencer(input: { name: $name }) {
+      id
+    }
+  }
+`;
+
 export const GetInfluencerQuery = gql`
   query GetInfluencerById($id: String!) {
     influencer(id: $id) {

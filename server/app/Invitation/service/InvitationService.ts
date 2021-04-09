@@ -2,7 +2,7 @@ import { ClientSession, Connection, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IInvitation, InvitationModel } from '../mongodb/InvitationModel';
-import { InfluencerService } from '../../Influencer/service/InfluencerService';
+import { InfluencerService } from '../../Influencer';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { InviteInput } from '../graphql/model/InviteInput';
 import { TwilioNotificationService } from '../../../twilio-client';

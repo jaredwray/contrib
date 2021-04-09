@@ -14,5 +14,8 @@
     "run-docker": "docker run --rm -d -p 3000:3000/tcp --env-file ./server/.env contrib-app:latest",
     "build": "yarn build-client && yarn build-server && yarn build-docker",
     "start": "yarn --cwd server start"
+  },
+  "dependencies": {
+    "graphql-upload": "^11.0.0"
   }
 }

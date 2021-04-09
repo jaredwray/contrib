@@ -8,12 +8,15 @@ import { useHistory } from 'react-router-dom';
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { InviteButton } from 'src/components/InviteButton';
 import Layout from 'src/components/Layout';
+import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import { CreateInfluencer } from './CreateInfluencer';
 import Pagination, { PER_PAGE } from './Pagination';
 import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
+  const history = useHistory();
 
   const showPrevPage = () => {
     setPageSkip(pageSkip - PER_PAGE);
@@ -26,6 +29,10 @@ export default function InfluencersPage() {
   const { loading, data, error } = useQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
+
+  const handleSelectInfluencer = (influencer: InfluencerProfile) => {
+    history.push(`/profiles/${influencer.id}`);
+  };
 
   if (error) {
     return null;

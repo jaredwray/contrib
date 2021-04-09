@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 
 export const InfluencerSchema = gql`
   enum InfluencerStatus {
+    TRANSIENT
     INVITATION_PENDING
     ONBOARDED
   }
@@ -39,12 +40,17 @@ export const InfluencerSchema = gql`
     profileDescription: String!
     image: Upload
   }
+  
+  input CreateInfluencerInput {
+    name: String!
+  }
 
   input CreateInfluencerInput {
     name: String!
   }
 
   extend type Mutation {
+    createInfluencer(input: CreateInfluencerInput!): InfluencerProfile!
     inviteInfluencer(input: InviteInput!): InfluencerProfile!
     updateInfluencerProfile(influencerId: String!, input: UpdateInfluencerProfileInput!): InfluencerProfile!
     updateInfluencerProfileAvatar(influencerId: String!, image: Upload!): InfluencerProfile!
