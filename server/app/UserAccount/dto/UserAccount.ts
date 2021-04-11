@@ -7,4 +7,5 @@ export interface UserAccount {
   mongodbId?: string;
   isAdmin?: boolean;
   stripeCustomerId?: string;
+  createdAt: string;
 }

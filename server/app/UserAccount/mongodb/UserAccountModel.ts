@@ -5,6 +5,7 @@ export interface IUserAccount extends Document {
   phoneNumber: string;
   isAdmin: boolean;
   stripeCustomerId: string | null;
+  createdAt: Date;
 }
 
 export const UserAccountCollectionName = 'account';
@@ -14,6 +15,7 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   phoneNumber: { type: SchemaTypes.String, required: true, unique: true },
   isAdmin: { type: SchemaTypes.Boolean, required: false },
   stripeCustomerId: { type: SchemaTypes.String, required: false },
+  createdAt: { type: SchemaTypes.Date, required: true },
 });
 
 export const UserAccountModel = (connection: Connection): Model<IUserAccount> => {

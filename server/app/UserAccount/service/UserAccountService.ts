@@ -1,4 +1,5 @@
 import { Connection, Model } from 'mongoose';
+import dayjs from 'dayjs';
 
 import { UserAccount } from '../dto/UserAccount';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
@@ -27,6 +28,7 @@ export class UserAccountService {
       id: authzId,
       phoneNumber: null,
       status: UserAccountStatus.PHONE_NUMBER_REQUIRED,
+      createdAt: dayjs().toISOString(),
     };
   }
 
@@ -45,6 +47,7 @@ export class UserAccountService {
       phoneNumber: model.phoneNumber,
       status: UserAccountStatus.COMPLETED,
       mongodbId: model._id.toString(),
+      createdAt: model.createdAt.toISOString(),
     }));
   }
 
@@ -54,6 +57,7 @@ export class UserAccountService {
       id: authzId,
       phoneNumber,
       status: UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED,
+      createdAt: dayjs().toISOString(),
     };
   }
 
@@ -71,7 +75,7 @@ export class UserAccountService {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
 
-    const accountModel = await this.accountModel.create({ authzId, phoneNumber });
+    const accountModel = await this.accountModel.create({ authzId, phoneNumber, createdAt: dayjs().toISOString() });
     const account = UserAccountService.makeUserAccount(accountModel);
 
     await this.eventHub.broadcast(Events.USER_ACCOUNT_CREATED, account);
@@ -101,6 +105,7 @@ export class UserAccountService {
       status: UserAccountStatus.COMPLETED,
       mongodbId: accountModel._id.toString(),
       stripeCustomerId: accountModel.stripeCustomerId,
+      createdAt: accountModel.createdAt.toISOString(),
     };
 
     if (accountModel.isAdmin) {

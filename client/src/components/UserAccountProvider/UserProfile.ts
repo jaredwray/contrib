@@ -7,4 +7,5 @@ export interface UserProfile {
   influencerProfile: InfluencerProfile | null;
   assistant: Assistant | null;
   paymentInformation: PaymentInformation | null;
+  createdAt: Date;
 }

@@ -22,4 +22,5 @@ export interface UserAccount {
   influencerProfile?: InfluencerProfile;
   assistant?: Assistant;
   paymentInformation: PaymentCard | null;
+  createdAt: Date;
 }
