@@ -53,3 +53,26 @@
     transform: translateY(20px);
   }
 }
+
+.editBtn {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  height: 40px;
+
+  &:hover,
+  &:active,
+  &:focus,
+  &:hover:focus,
+  &:active:focus {
+    background: $ochre-color !important;
+    border: none;
+  }
+
+  @media (max-width: $small-weight) {
+    width: 100%;
+    position: initial !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+}

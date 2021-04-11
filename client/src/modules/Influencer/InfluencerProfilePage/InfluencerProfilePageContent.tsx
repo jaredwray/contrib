@@ -1,5 +1,6 @@
 import { FC, useMemo, useContext } from 'react';
 
+import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -60,6 +61,17 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
   return (
     <Layout>
       <section className={styles.root}>
+        {isMyProfile && (
+          <Container>
+            <Row>
+              <Col className="p-0">
+                <Link className={clsx(styles.editBtn, 'text-label btn btn-secondary')} to={'/profiles/me/edit'}>
+                  Edit
+                </Link>
+              </Col>
+            </Row>
+          </Container>
+        )}
         <div className={styles.header}>
           <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
@@ -79,13 +91,9 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
                 </Link>
               </Col>
             </Row>
-          </Container>
-        )}
-        {(isMyProfile || account?.isAdmin) && (
-          <Container>
             <Row>
               <Col>
-                <Link className="text-label float-right" to={`/profiles/${isMyProfile ? 'me' : influencer.id}/edit`}>
+                <Link className="text-label float-right" to={`/profiles/${influencer.id}/edit`}>
                   Edit
                 </Link>
               </Col>
