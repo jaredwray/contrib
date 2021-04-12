@@ -14,6 +14,10 @@ interface InfluencerInput {
   userAccount: string | null;
 }
 
+interface TransientInfluencerInput {
+  name: string;
+}
+
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
 
@@ -36,6 +40,20 @@ export class InfluencerService {
       ],
       { session },
     );
+    return InfluencerService.makeInfluencerProfile(influencer[0]);
+  }
+
+
+  async createTransientInfluencer({ name }: TransientInfluencerInput): Promise<InfluencerProfile> {
+    const influencer = await this.InfluencerModel.create([
+      {
+        name,
+        avatarUrl: `${AppConfig.app.url}/content/img/users/person.png`,
+        status: InfluencerStatus.TRANSIENT,
+        favoriteCharities: [],
+        assistants: [],
+      },
+    ]);
     return InfluencerService.makeInfluencerProfile(influencer[0]);
   }
 
@@ -160,6 +178,7 @@ export class InfluencerService {
   }
 
   /* TODO should be removed after new API integration */
+
   /* TODO block start */
 
   async updateInfluencerProfileByUserId(
@@ -237,6 +256,7 @@ export class InfluencerService {
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }
+
   /* TODO block end */
 
   async assignAssistantsToInfluencer(influencerId: string, assistantId: string): Promise<void> {

@@ -3,16 +3,20 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Form, Row, Spinner, Table } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { InviteButton } from 'src/components/InviteButton';
 import Layout from 'src/components/Layout';
+import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import { CreateInfluencer } from './CreateInfluencer';
 import Pagination, { PER_PAGE } from './Pagination';
 import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
+  const history = useHistory();
 
   const showPrevPage = () => {
     setPageSkip(pageSkip - PER_PAGE);
@@ -25,6 +29,10 @@ export default function InfluencersPage() {
   const { loading, data, error } = useQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
+
+  const handleSelectInfluencer = (influencer: InfluencerProfile) => {
+    history.push(`/profiles/${influencer.id}`);
+  };
 
   if (error) {
     return null;
@@ -49,7 +57,10 @@ export default function InfluencersPage() {
                 total={influencers.totalItems}
               />
             </Col>
-            <Col className="pt-3 pt-md-0" md="2" xs="4">
+            <Col className="pt-3 pt-md-0" md="1" xs="2">
+              <CreateInfluencer />
+            </Col>
+            <Col className="pt-3 pt-md-0" md="1" xs="2">
               <InviteButton mutation={InviteInfluencerMutation} />
             </Col>
           </Row>
@@ -71,7 +82,11 @@ export default function InfluencersPage() {
                   </thead>
                   <tbody className="font-weight-normal">
                     {influencers.items.map((influencer: any) => (
-                      <tr key={influencer.id}>
+                      <tr
+                        key={influencer.id}
+                        className={styles.clickable}
+                        onClick={() => handleSelectInfluencer(influencer)}
+                      >
                         <td className={styles.influencerId} title={influencer.id}>
                           {influencer.id}
                         </td>
@@ -84,7 +99,7 @@ export default function InfluencersPage() {
                 </Table>
               )}
             </Col>
-            <Col md="2"></Col>
+            <Col md="2" />
           </Row>
         </Container>
       </section>
