@@ -130,7 +130,7 @@ jobs:
         ___STRIPE_SECRET_KEY=$ENV_STRIPE_SECRET_KEY
         ___BITLY_DOMAIN=$ENV_BITLY_DOMAIN"
 
-        - name: Deploy to US-West1
+    - name: Deploy to US-West1
       run: >-
         gcloud run deploy $SERVICE_NAME
         --image=gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
