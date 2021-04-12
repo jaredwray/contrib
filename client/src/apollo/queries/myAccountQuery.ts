@@ -7,6 +7,7 @@ export const MyAccountQuery = gql`
       phoneNumber
       status
       isAdmin
+      createdAt
       influencerProfile {
         id
         profileDescription

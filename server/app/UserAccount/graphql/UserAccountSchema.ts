@@ -45,6 +45,11 @@ export const UserAccountSchema = gql`
     Admin users will have True here, others will have null.
     """
     isAdmin: Boolean
+
+    """
+    User creation datetime
+    """
+    createdAt: String!
   }
 
   extend type Query {
