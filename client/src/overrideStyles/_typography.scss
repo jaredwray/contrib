@@ -53,7 +53,7 @@ textarea:-webkit-autofill:focus {
 }
 
 @media (max-width: $medium-weight) {
-  .btn:not(.btn-with-input) {
+  .btn:not(.btn-with-input, .btn-link) {
     height: 40px;
   }
 

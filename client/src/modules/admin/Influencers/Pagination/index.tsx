@@ -17,15 +17,10 @@ export default function Pagination(props: {
   const itemsOnPage = hasNext ? PER_PAGE + props.skip : props.total;
 
   return (
-    <div className="float-left h-100 d-flex">
+    <div className={clsx(styles.container, 'float-left h-100 d-flex')}>
+      <Button className={clsx(styles.paginationBtn)} disabled={!hasPev} variant="" onClick={props.showPrevPage} />
       <Button
-        className={clsx(styles['pagination-btn'], 'text-label pagination-btn-prev')}
-        disabled={!hasPev}
-        variant=""
-        onClick={props.showPrevPage}
-      />
-      <Button
-        className={clsx(styles['pagination-btn'], styles['pagination-btn-next'], ' ml-3 mr-2')}
+        className={clsx(styles.paginationBtn, styles.nextBtn, 'ml-3 mr-2')}
         disabled={!hasNext}
         variant=""
         onClick={props.showNextPage}
@@ -34,11 +29,11 @@ export default function Pagination(props: {
       {props.loading ? (
         <Spinner animation="border" className="m-auto" />
       ) : (
-        <div className={clsx(styles['pagination-status'], 'ml-3')}>
+        <div className={clsx(styles.status, 'w-50 ml-3 ml-md-1')}>
           <span className="pagination-status-current">
             {props.skip + 1} - {itemsOnPage}
           </span>
-          <span className={clsx(styles['pagination-status-info'], 'ml-2 ')}>of {props.total}</span>
+          <span className={clsx(styles.statusInfo, 'ml-2 ')}>of {props.total}</span>
         </div>
       )}
     </div>

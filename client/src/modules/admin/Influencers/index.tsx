@@ -31,7 +31,7 @@ export default function InfluencersPage() {
   });
 
   const handleSelectInfluencer = (influencer: InfluencerProfile, event: MouseEvent) => {
-    if (!(event.target as Element).closest('.dropdown-actions, .modal')) {
+    if (!(event.target as Element).closest('button, .modal')) {
       history.push(`/profiles/${influencer.id}`);
     }
   };
@@ -44,13 +44,13 @@ export default function InfluencersPage() {
 
   return (
     <Layout>
-      <section className={clsx(styles.page, 'text-label p-4')}>
+      <section className={clsx(styles.page, 'text-label p-sm-4 p-1 pt-4 pb-2')}>
         <Container fluid>
           <Row>
-            <Col md="6" xs="12">
+            <Col className={styles.searchInput} md="4">
               <Form.Control placeholder="Search influencer" />
             </Col>
-            <Col className="pt-3 pt-md-0 pr-0" md="4" xs="8">
+            <Col className={clsx(styles.pagination, 'pt-3 pt-md-0 pr-0 pl-md-0 text-nowrap')} md="3" sm="5">
               <Pagination
                 loading={loading}
                 showNextPage={showNextPage}
@@ -59,11 +59,12 @@ export default function InfluencersPage() {
                 total={influencers.totalItems}
               />
             </Col>
-            <Col className="pt-3 pt-md-0" md="1" xs="2">
+            <Col className="pt-3 pt-md-0 text-sm-right text-center" md="5" sm="7">
               <CreateInfluencer />
-            </Col>
-            <Col className="pt-3 pt-md-0" md="1" xs="2">
-              <InviteButton mutation={InviteInfluencerMutation} />
+              <InviteButton
+                className={clsx(styles.inviteBtn, 'text--body d-inline-block ml-3')}
+                mutation={InviteInfluencerMutation}
+              />
             </Col>
           </Row>
         </Container>
@@ -95,7 +96,7 @@ export default function InfluencersPage() {
                         </td>
                         <td className="break-word">{influencer.name}</td>
                         <td className="break-word">{influencer.sport}</td>
-                        <td>{influencer.status}</td>
+                        <td className="break-word">{influencer.status}</td>
                         <td>
                           <DropdownButton
                             className="dropdown-actions"
@@ -121,7 +122,6 @@ export default function InfluencersPage() {
                 </Table>
               )}
             </Col>
-            <Col md="2" />
           </Row>
         </Container>
       </section>
