@@ -7,15 +7,22 @@ import { Modal } from './Modal';
 
 interface Props {
   mutation: DocumentNode;
+  text?: string;
+  variant?: string;
+  className?: string;
 }
 
-export const InviteButton: FC<Props> = ({ mutation }) => {
+export const InviteButton: FC<Props> = ({ className, mutation, text, variant }) => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
     <>
-      <Button className="w-100 text-label" variant="dark" onClick={() => setShowDialog(true)}>
-        Invite +
+      <Button
+        className={className ?? 'w-100 text-label'}
+        variant={variant ?? 'dark'}
+        onClick={() => setShowDialog(true)}
+      >
+        {text ?? 'Invite +'}
       </Button>
       <Modal mutation={mutation} open={showDialog} onClose={() => setShowDialog(false)} />
     </>
