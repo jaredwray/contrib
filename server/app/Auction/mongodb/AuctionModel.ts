@@ -26,6 +26,7 @@ export interface IAuctionModel extends Document {
   endsAt: dayjs.Dayjs;
   startPriceCurrency: string;
   startPrice: number;
+  link: string;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -50,6 +51,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
     startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
     endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
+    link: { type: SchemaTypes.String },
   },
   { optimisticConcurrency: true },
 );

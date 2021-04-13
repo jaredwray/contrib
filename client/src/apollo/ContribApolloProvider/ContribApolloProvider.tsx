@@ -14,7 +14,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const apolloClient = useMemo(() => {
-    const httpLink = createUploadLink({ uri: 'https://11cd1b6ff3b4.ngrok.io/graphql' });
+    const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_URL });
 
     const authLink = setContext(async (_, { headers }) => {
       if (!isAuthenticated) {

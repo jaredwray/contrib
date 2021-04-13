@@ -27,6 +27,8 @@ import { AppLogger } from '../../../logger';
 import { AuctionRepository } from '../repository/AuctionRepository';
 import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
 import { PaymentService } from '../../Payment';
+import { AppConfig } from '../../../config';
+import { UrlShortenerService } from '../../Core';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -39,11 +41,13 @@ export class AuctionService {
     private readonly connection: Connection,
     private readonly paymentService: PaymentService,
     private readonly cloudStorage: GCloudStorage,
+    private readonly urlShortenerService: UrlShortenerService,
   ) {}
 
-  public async createAuctionDraft(auctionOrganizerId: string, { ...input }: AuctionInput): Promise<Auction> {
-    const auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
-    return AuctionService.makeAuction(auction);
+  public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
+    let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
+    auction = await this.auctionRepository.updateAuctionLink(auction._id, await this.makeShortAuctionLink(auction._id));
+    return this.makeAuction(auction);
   }
 
   public async listAuctions(
@@ -54,7 +58,7 @@ export class AuctionService {
 
     return {
       totalItems,
-      items: items.map(AuctionService.makeAuction),
+      items: items.map((item) => this.makeAuction(item)),
       size: params.size,
       skip: params.skip,
     };
@@ -74,12 +78,12 @@ export class AuctionService {
 
   public async getAuction(id: string): Promise<Auction> {
     const auction = await this.auctionRepository.getAuction(id);
-    return AuctionService.makeAuction(auction);
+    return this.makeAuction(auction);
   }
 
   public async updateAuctionStatus(id: string, userId: string, status: AuctionStatus): Promise<Auction> {
     const auction = await this.auctionRepository.changeAuctionStatus(id, userId, status);
-    return AuctionService.makeAuction(auction);
+    return this.makeAuction(auction);
   }
 
   public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
@@ -148,7 +152,7 @@ export class AuctionService {
       ...rest,
     });
 
-    return AuctionService.makeAuction(auction);
+    return this.makeAuction(auction);
   }
 
   public async addAuctionBid(
@@ -240,7 +244,7 @@ export class AuctionService {
 
   public async getInfluencersAuctions(id: string): Promise<Auction[]> {
     const auctions = await this.auctionRepository.getInfluencersAuctions(id);
-    return auctions.map(AuctionService.makeAuction);
+    return auctions.map((auction) => this.makeAuction(auction));
   }
 
   public async settleAuctionAndCharge(auction: IAuctionModel): Promise<void> {
@@ -301,10 +305,11 @@ export class AuctionService {
     };
   }
 
-  public static makeAuction(model: IAuctionModel): Auction | null {
+  public makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
       return null;
     }
+
     const {
       _id,
       startsAt,
@@ -316,8 +321,13 @@ export class AuctionService {
       startPrice,
       auctionOrganizer,
       startPriceCurrency,
+      link: rawLink,
       ...rest
     } = model.toObject();
+
+    // temporal: some older auctions won't have a pre-populated link in dev environment
+    // one day we'll clear our dev database, and this line can removed then
+    const link = rawLink || this.makeLongAuctionLink(_id.toString());
 
     return {
       id: _id.toString(),
@@ -330,7 +340,18 @@ export class AuctionService {
       totalBids: bids?.length ?? 0,
       startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
+      link,
       ...rest,
     };
+  }
+
+  private makeLongAuctionLink(id: string) {
+    const url = new URL(AppConfig.app.url);
+    url.pathname = `/auctions/${id}`;
+    return url.toString();
+  }
+
+  private async makeShortAuctionLink(id: string) {
+    return this.urlShortenerService.shortenUrl(this.makeLongAuctionLink(id));
   }
 }

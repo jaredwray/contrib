@@ -13,7 +13,6 @@ if (AppConfig.newRelic.enabled) {
 }
 
 import express from 'express';
-import prerender from 'prerender-node';
 import path from 'path';
 import { createGraphqlServer } from './graphql';
 import { AppLogger } from './logger';
@@ -28,11 +27,6 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use(prerender
-  // .whitelisted('^/auctions/.*')
-  .set('prerenderServiceUrl', 'http://localhost:3000')
-  .set('prerenderToken', 'rXlesgnFdcYbI2HlT4fd')
-)
 if (AppConfig.environment.serveClient) {
   // Production uses a setup when both client and server are served from a single path.
   // note: it is assumed that server is run in prod mode, therefore we use two "..", assuming index.js is is dist folder
@@ -49,11 +43,6 @@ if (AppConfig.environment.serveClient) {
   const appServices: IAppServices = createAppServices(connection);
 
   appRouteHandlers(app, appServices);
-  app.use(prerender
-    // .whitelisted('^/auctions/.*')
-    .set('prerenderServiceUrl', 'http://localhost:3000')
-    .set('prerenderToken', 'rXlesgnFdcYbI2HlT4fd')
-  )
   app.use('/graphql', graphqlUploadExpress({ maxFiles: 1, maxFileSize: 100000000 }));
   createGraphqlServer(appServices).applyMiddleware({ app });
 
