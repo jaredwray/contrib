@@ -1,0 +1,38 @@
+@import 'src/variables.scss';
+
+.dropdown-actions {
+  cursor: pointer;
+  float: right;
+  display: inline-flex;
+  justify-content: center;
+  height: 10px;
+
+  .dropdown-toggle {
+    background: none;
+    color: $light-gray-color;
+    font-size: 20px;
+    height: 10px;
+    line-height: 10px !important;
+    padding: 0;
+    display: inline-flex;
+
+    &[aria-expanded='true'] {
+      color: $sage-color;
+    }
+
+    &:after {
+      display: none;
+    }
+  }
+  .dropdown-item {
+    border-radius: 0;
+    &:first-child:hover {
+      border-top-right-radius: 10px !important;
+      border-top-left-radius: 10px !important;
+    }
+    &:last-child:hover {
+      border-bottom-right-radius: 10px !important;
+      border-bottom-left-radius: 10px !important;
+    }
+  }
+}

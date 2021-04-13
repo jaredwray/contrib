@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { Col, Container, Form, Row, Spinner, Table } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { Col, Container, DropdownButton, Form, Row, Spinner, Table } from 'react-bootstrap';
+import { Link, useHistory } from 'react-router-dom';
 
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { InviteButton } from 'src/components/InviteButton';
@@ -30,8 +30,10 @@ export default function InfluencersPage() {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
 
-  const handleSelectInfluencer = (influencer: InfluencerProfile) => {
-    history.push(`/profiles/${influencer.id}`);
+  const handleSelectInfluencer = (influencer: InfluencerProfile, event: MouseEvent) => {
+    if (!(event.target as Element).closest('.dropdown-actions, .modal')) {
+      history.push(`/profiles/${influencer.id}`);
+    }
   };
 
   if (error) {
@@ -78,6 +80,7 @@ export default function InfluencersPage() {
                       <th>Name</th>
                       <th>Sport</th>
                       <th>Status</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody className="font-weight-normal">
@@ -85,7 +88,7 @@ export default function InfluencersPage() {
                       <tr
                         key={influencer.id}
                         className={styles.clickable}
-                        onClick={() => handleSelectInfluencer(influencer)}
+                        onClick={(e: MouseEvent) => handleSelectInfluencer(influencer, e)}
                       >
                         <td className={styles.influencerId} title={influencer.id}>
                           {influencer.id}
@@ -93,6 +96,25 @@ export default function InfluencersPage() {
                         <td className="break-word">{influencer.name}</td>
                         <td className="break-word">{influencer.sport}</td>
                         <td>{influencer.status}</td>
+                        <td>
+                          <DropdownButton
+                            className="dropdown-actions"
+                            id="influencerActions"
+                            menuAlign="right"
+                            title="..."
+                            variant="link"
+                          >
+                            <Link className="dropdown-item text--body" to={`/assistants/${influencer.id}`}>
+                              Assistants
+                            </Link>
+                            <InviteButton
+                              className={clsx(styles.inviteActionBtn, 'dropdown-item text--body')}
+                              mutation={InviteInfluencerMutation}
+                              text="Invite"
+                              variant="link"
+                            />
+                          </DropdownButton>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
