@@ -111,6 +111,7 @@ export default function InfluencersPage() {
                             <InviteButton
                               className={clsx(styles.inviteActionBtn, 'dropdown-item text--body')}
                               mutation={InviteInfluencerMutation}
+                              mutationVariables={{ influencerId: influencer.id }}
                               text="Invite"
                               variant="link"
                             />

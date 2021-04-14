@@ -18,6 +18,7 @@ import { Events } from '../../Events';
 import { AppLogger } from '../../../logger';
 import { EventHub } from '../../EventHub';
 import { UrlShortenerService } from '../../Core';
+import { InfluencerStatus } from '../../Influencer/dto/InfluencerStatus';
 
 export class InvitationService {
   private readonly InvitationModel = InvitationModel(this.connection);
@@ -53,12 +54,47 @@ export class InvitationService {
     let influencerProfile: InfluencerProfile = null;
 
     try {
+      const { firstName, lastName, phoneNumber, welcomeMessage } = input;
+
       await session.withTransaction(async () => {
-        const account = await this.userAccountService.getAccountByPhoneNumber(input.phoneNumber);
-        if (account) {
-          influencerProfile = await this.creatInfluencerProfileForExistingUser(input, account, session);
+        const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
+        influencerProfile = await this.getOrCreateTransientInfluencer(input, session);
+
+        if (userAccount) {
+          influencerProfile = await this.influencerService.updateInfluencerStatus(
+            influencerProfile,
+            InfluencerStatus.ONBOARDED,
+            userAccount,
+            session,
+          );
+
+          const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
+          const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
+          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
         } else {
-          influencerProfile = await this.createNewInfluencerProfile(input, session);
+          if (await this.InvitationModel.exists({ phoneNumber })) {
+            throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+          }
+          const invitation = await this.createInfluencerInvitation(
+            influencerProfile,
+            {
+              phoneNumber,
+              firstName,
+              lastName,
+              welcomeMessage,
+            },
+            session,
+          );
+          const link = await this.makeInvitationLink(invitation.slug);
+          influencerProfile = await this.influencerService.updateInfluencerStatus(
+            influencerProfile,
+            InfluencerStatus.INVITATION_PENDING,
+            null,
+            session,
+          );
+          const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
+          await this.twilioNotificationService.sendMessage(phoneNumber, message);
         }
       });
 
@@ -86,6 +122,27 @@ export class InvitationService {
     } finally {
       session.endSession();
     }
+  }
+
+  private async getOrCreateTransientInfluencer(
+    { influencerId, firstName, lastName }: InviteInput,
+    session: ClientSession,
+  ): Promise<InfluencerProfile | null> {
+    if (influencerId) {
+      const profile = await this.influencerService.findInfluencer(influencerId, session);
+
+      if (!profile) {
+        throw new AppError('requested influencer profile does not exist');
+      }
+
+      if (profile.status !== InfluencerStatus.TRANSIENT || profile.userAccount) {
+        throw new AppError('given influencer has already been invited');
+      }
+
+      return profile;
+    }
+
+    return await this.influencerService.createTransientInfluencer({ name: `${firstName} ${lastName}` });
   }
 
   private async maybeFinalizeInvitation(userAccount: UserAccount): Promise<void> {
@@ -141,67 +198,6 @@ export class InvitationService {
     return this.urlShortenerService.shortenUrl(`${AppConfig.app.url}/invitation/${slug}`);
   }
 
-  private async creatInfluencerProfileForExistingUser(
-    { firstName, lastName, phoneNumber }: InviteInput,
-    userAccount: UserAccount,
-    session: ClientSession,
-  ): Promise<InfluencerProfile> {
-    if (await this.influencerService.findInfluencerByUserAccount(userAccount.mongodbId)) {
-      throw new AppError(`${phoneNumber} is already using the system as an Influencer`, ErrorCode.BAD_REQUEST);
-    }
-
-    const influencerProfile = this.influencerService.createInfluencer(
-      {
-        name: `${firstName} ${lastName}`,
-        avatarUrl: 'https://picsum.photos/200',
-        userAccount: userAccount.mongodbId,
-      },
-      session,
-    );
-
-    const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
-    const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
-    await this.twilioNotificationService.sendMessage(userAccount.phoneNumber, message);
-
-    await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
-
-    return influencerProfile;
-  }
-
-  private async createNewInfluencerProfile(
-    { firstName, lastName, phoneNumber, welcomeMessage }: InviteInput,
-    session: ClientSession,
-  ): Promise<InfluencerProfile> {
-    const influencerProfile = await this.influencerService.createInfluencer(
-      {
-        name: `${firstName} ${lastName}`,
-        avatarUrl: `${AppConfig.app.url}/content/img/users/person.png`,
-        userAccount: null,
-      },
-      session,
-    );
-
-    if (await this.InvitationModel.exists({ phoneNumber })) {
-      throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
-    }
-
-    const invitation = await this.createInvitation(
-      influencerProfile,
-      {
-        phoneNumber,
-        firstName,
-        lastName,
-        welcomeMessage,
-      },
-      session,
-    );
-
-    const link = await this.makeInvitationLink(invitation.slug);
-    const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
-    await this.twilioNotificationService.sendMessage(phoneNumber, message);
-    return influencerProfile;
-  }
-
   private async creatAssistantForExistingUser(
     { firstName, lastName, phoneNumber, influencerId }: InviteInput,
     userAccount: UserAccount,
@@ -228,7 +224,6 @@ export class InvitationService {
     await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
 
     const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
-    // TODO add Influencer's name
     const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
     await this.twilioNotificationService.sendMessage(userAccount.phoneNumber, message);
 
@@ -256,7 +251,7 @@ export class InvitationService {
 
     await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
 
-    const invitation = await this.createInvitation(
+    const invitation = await this.createAssistantInvitation(
       assistant,
       {
         phoneNumber,
@@ -274,9 +269,9 @@ export class InvitationService {
     return assistant;
   }
 
-  private async createInvitation(
-    parent: InfluencerProfile | Assistant,
-    { phoneNumber, firstName, lastName, welcomeMessage, influencerId }: InviteInput,
+  private async createAssistantInvitation(
+    parent: Assistant,
+    { phoneNumber, firstName, lastName, welcomeMessage }: InviteInput,
     session: ClientSession,
   ): Promise<Invitation> {
     const now = new Date();
@@ -290,7 +285,34 @@ export class InvitationService {
           phoneNumber,
           welcomeMessage,
           accepted: false,
-          parentEntityType: influencerId ? InvitationParentEntityType.ASSISTANT : InvitationParentEntityType.INFLUENCER,
+          parentEntityType: InvitationParentEntityType.ASSISTANT,
+          parentEntityId: Types.ObjectId(parent.id),
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      { session },
+    );
+    return InvitationService.makeInvitation(invitation[0]);
+  }
+
+  private async createInfluencerInvitation(
+    parent: InfluencerProfile | Assistant,
+    { phoneNumber, firstName, lastName, welcomeMessage }: InviteInput,
+    session: ClientSession,
+  ): Promise<Invitation> {
+    const now = new Date();
+    const slug = uuidv4();
+    const invitation = await InvitationModel(this.connection).create(
+      [
+        {
+          slug,
+          firstName,
+          lastName,
+          phoneNumber,
+          welcomeMessage,
+          accepted: false,
+          parentEntityType: InvitationParentEntityType.INFLUENCER,
           parentEntityId: Types.ObjectId(parent.id),
           createdAt: now,
           updatedAt: now,

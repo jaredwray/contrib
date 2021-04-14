@@ -1,4 +1,4 @@
-import { Connection, Model } from 'mongoose';
+import { ClientSession, Connection, Model } from 'mongoose';
 import dayjs from 'dayjs';
 
 import { UserAccount } from '../dto/UserAccount';
@@ -32,8 +32,8 @@ export class UserAccountService {
     };
   }
 
-  async getAccountByPhoneNumber(phoneNumber: string): Promise<UserAccount> {
-    const account = await this.accountModel.findOne({ phoneNumber }).exec();
+  async getAccountByPhoneNumber(phoneNumber: string, session?: ClientSession): Promise<UserAccount> {
+    const account = await this.accountModel.findOne({ phoneNumber }, null, { session }).exec();
     if (account != null) {
       return UserAccountService.makeUserAccount(account);
     }
