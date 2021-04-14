@@ -25,3 +25,22 @@
   padding-left: 36px;
   justify-content: flex-start !important;
 }
+
+:global(.btn).inviteBtn {
+  @media (max-width: $medium-weight) {
+    line-height: 7px !important;
+  }
+
+  @media (max-width: $small-weight) {
+    width: 47%;
+  }
+}
+
+@media (max-width: $small-weight) {
+  .searchInput {
+    order: 0;
+  }
+  .pagination {
+    order: 1;
+  }
+}

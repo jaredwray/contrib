@@ -1,19 +1,20 @@
 @import 'src/variables.scss';
 
-.pagination-btn {
+.paginationBtn {
   width: 40px;
   height: 40px;
   display: inline-block;
   background-color: $sage-color !important;
   transition: transform 0s;
   cursor: pointer;
-  margin: auto;
   border-radius: 50% !important;
+  flex: none;
 
   &::before {
     content: '';
     position: absolute;
-    right: 12px;
+    right: 13px;
+    bottom: 14px;
     margin: 0;
     display: inline-block;
     width: 10px;
@@ -31,12 +32,16 @@
     }
   }
 }
-.pagination-btn-next {
+.nextBtn {
   transform: rotate(-180deg);
 }
-.pagination-status {
+.status {
   margin: auto 0;
 }
-.pagination-status-info {
+.statusInfo {
   color: $light-gray-color;
+}
+.container {
+  align-items: center;
+  justify-content: center;
 }
