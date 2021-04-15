@@ -17,9 +17,21 @@ export const AllInfluencersQuery = gql`
 `;
 
 export const InviteInfluencerMutation = gql`
-  mutation InviteInfluencer($firstName: String!, $lastName: String!, $phoneNumber: String!, $welcomeMessage: String!) {
+  mutation InviteInfluencer(
+    $firstName: String!
+    $lastName: String!
+    $phoneNumber: String!
+    $welcomeMessage: String!
+    $influencerId: String
+  ) {
     inviteInfluencer(
-      input: { firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, welcomeMessage: $welcomeMessage }
+      input: {
+        firstName: $firstName
+        lastName: $lastName
+        phoneNumber: $phoneNumber
+        welcomeMessage: $welcomeMessage
+        influencerId: $influencerId
+      }
     ) {
       id
     }
