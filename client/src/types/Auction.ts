@@ -33,6 +33,7 @@ export interface Auction {
   status: AuctionStatus;
   attachments: [AuctionAttachment];
   bids: [AuctionBid];
+  link: string;
   gameWorn: boolean;
   autographed: boolean;
   authenticityCertificate: boolean;

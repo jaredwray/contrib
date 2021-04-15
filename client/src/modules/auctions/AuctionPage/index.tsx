@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-sort-props */
 import { useQuery } from '@apollo/client';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
@@ -24,8 +23,6 @@ const AuctionPage = () => {
   });
   const auction = auctionData?.auction;
 
-  const link = encodeURIComponent(`https://16edae4dd724.ngrok.io/auctions/${auctionId}`);
-
   if (error?.message === 'Auction was not found' || auction?.status === AuctionStatus.DRAFT) {
     history.push(`/`);
   }
@@ -35,22 +32,6 @@ const AuctionPage = () => {
   }
   return (
     <Layout>
-      {auction && (
-        <Helmet>
-          <meta property="og:url" content={link} />
-          {<meta property="og:image:height" content="400" />}
-          {<meta property="og:image:width" content="400" />}
-          <meta property="og:type" content="article" />
-          {auction.title && <meta property="og:title" content={auction.title} />}
-          {auction.description && <meta property="og:description" content={auction.description} />}
-          {auction.attachments[0]?.url && <meta property="og:image:url" content={auction.attachments[0]?.url} />}
-          {auction.attachments[0]?.url && <meta property="og:image:secure_url" content={auction.attachments[0]?.url} />}
-          {/* <meta name="twitter:title" content={auction.title} />
-          <meta name="twitter:description" content={auction.description} />
-          <meta name="twitter:image" content={auction.attachments[0]?.url} />
-          <meta name="twitter:url" content={link} /> */}
-        </Helmet>
-      )}
       <Container className="pt-0 pt-md-5 pb-0 pb-md-5">
         <Row>
           <Col md="1" />

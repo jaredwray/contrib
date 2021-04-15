@@ -2,7 +2,6 @@
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { ProgressBar } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
@@ -23,30 +22,14 @@ const AuctionDonePage = () => {
   });
   const auction = auctionData?.auction;
 
-  const encodedLink = encodeURIComponent(`${window.location.origin}/auctions/${auctionId}`);
-
   if (!auction) {
     return null;
   }
 
+  const encodedAuctionLink = encodeURIComponent(auction.link);
+
   return (
     <Layout>
-      {auction && (
-        <Helmet defer={true}>
-          {<meta property="og:url" content={encodedLink} />}
-          {<meta property="og:type" content="article" />}
-          {<meta property="og:image:height" content="400" />}
-          {<meta property="og:image:width" content="400" />}
-          {auction.title && <meta property="og:title" content={auction.title} />}
-          {auction.description && <meta property="og:description" content={auction.description} />}
-          {auction.attachments[0]?.url && <meta property="og:image:url" content={auction.attachments[0]?.url} />}
-          {auction.attachments[0]?.url && <meta property="og:image:secure_url" content={auction.attachments[0]?.url} />}
-          {/* <meta name="twitter:title" content={auction.title} />
-          <meta name="twitter:description" content={auction.description} />
-          <meta name="twitter:image" content={auction.attachments[0]?.url} />
-          <meta name="twitter:url" content={encodedLink} /> */}
-        </Helmet>
-      )}
       <ProgressBar now={100} />
       <div className={styles.contentWrapper}>
         <div className={clsx(styles.content, styles.contentLeft)}>
@@ -59,12 +42,12 @@ const AuctionDonePage = () => {
             </p>
             <div className="pt-3 pt-md-5">
               <ShareButton
-                href={`https://www.facebook.com/sharer.php?s=100&p[url]=${encodedLink}`}
+                href={`https://www.facebook.com/sharer.php?s=100&p[url]=${encodedAuctionLink}`}
                 icon={<FacebookIcon />}
                 service="Facebook"
               />
               <ShareButton
-                href={`https://twitter.com/intent/tweet?url=${encodedLink}`}
+                href={`https://twitter.com/intent/tweet?url=${encodedAuctionLink}`}
                 icon={<TwitterIcon />}
                 service="Twitter"
               />
