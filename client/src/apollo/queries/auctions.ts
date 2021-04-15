@@ -26,6 +26,7 @@ export const AuctionQuery = gql`
       status
       startPrice
       totalBids
+      link
       maxBid {
         id
         bid
@@ -57,6 +58,7 @@ export const getAuctionBasics = gql`
       title
       sport
       gameWorn
+      link
       autographed
       authenticityCertificate
       playedIn
@@ -87,6 +89,7 @@ export const getAuctionDetails = gql`
       startDate
       endDate
       startPrice
+      link
       charity {
         id
         name
@@ -135,6 +138,7 @@ export const createAuctionMutation = gql`
       title
       sport
       authenticityCertificate
+      link
     }
   }
 `;
@@ -186,6 +190,7 @@ export const updateAuctionBasics = gql`
       playedIn
       title
       authenticityCertificate
+      link
     }
   }
 `;

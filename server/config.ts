@@ -1,3 +1,10 @@
+import { config as loadDotEnvFile } from 'dotenv';
+import fs from 'fs-extra';
+
+if (fs.pathExistsSync(`./.env`)) {
+  loadDotEnvFile();
+}
+
 export const requireEnvVar = (name: string): string => {
   const value = process.env[name];
   if (!value) {
@@ -57,5 +64,8 @@ export const AppConfig = {
   },
   stripe: {
     secretKey: requireEnvVar('STRIPE_SECRET_KEY'),
+  },
+  facebook: {
+    appId: requireEnvVar('FACEBOOK_APP_ID'),
   },
 };

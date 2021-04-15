@@ -2,7 +2,7 @@ import { FC, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { UpdateFavoriteCharities } from 'src/apollo/queries/charities';
@@ -34,6 +34,7 @@ export const InfluencerProfileEditPage: FC = () => {
   }>(InfluencerProfileQuery, { variables: { id: influencerId } });
   const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
   const [updateFavoriteCharities] = useMutation(UpdateFavoriteCharities);
+  const history = useHistory();
 
   const handleSubmit = async ({ name, sport, team, profileDescription, favoriteCharities }: FormValues) => {
     try {
@@ -45,6 +46,7 @@ export const InfluencerProfileEditPage: FC = () => {
         await updateFavoriteCharities({ variables: { influencerId, charities: favoriteCharities.map((c) => c.id) } });
       }
       addToast(`Your profile has been successfully updated.`, { appearance: 'success' });
+      history.push(`/profiles/${influencerId}`);
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'error' });
     }
