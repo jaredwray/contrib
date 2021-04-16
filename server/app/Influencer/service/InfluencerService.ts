@@ -7,12 +7,7 @@ import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
-
-interface InfluencerInput {
-  name: string;
-  avatarUrl: string;
-  userAccount: string | null;
-}
+import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
 interface TransientInfluencerInput {
   name: string;
@@ -23,17 +18,16 @@ export class InfluencerService {
 
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
-  async createInfluencer(
-    { name, avatarUrl, userAccount }: InfluencerInput,
-    session: ClientSession,
+  async createTransientInfluencer(
+    { name }: TransientInfluencerInput,
+    session?: ClientSession,
   ): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.create(
       [
         {
           name,
-          avatarUrl,
-          userAccount,
-          status: userAccount ? InfluencerStatus.ONBOARDED : InfluencerStatus.INVITATION_PENDING,
+          avatarUrl: `${AppConfig.app.url}/content/img/users/person.png`,
+          status: InfluencerStatus.TRANSIENT,
           favoriteCharities: [],
           assistants: [],
         },
@@ -43,28 +37,37 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(influencer[0]);
   }
 
-
-  async createTransientInfluencer({ name }: TransientInfluencerInput): Promise<InfluencerProfile> {
-    const influencer = await this.InfluencerModel.create([
-      {
-        name,
-        avatarUrl: `${AppConfig.app.url}/content/img/users/person.png`,
-        status: InfluencerStatus.TRANSIENT,
-        favoriteCharities: [],
-        assistants: [],
-      },
-    ]);
-    return InfluencerService.makeInfluencerProfile(influencer[0]);
-  }
-
-  async findInfluencer(id: string): Promise<InfluencerProfile | null> {
-    const influencer = await this.InfluencerModel.findById(id).exec();
+  async findInfluencer(id: string, session?: ClientSession): Promise<InfluencerProfile | null> {
+    const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
     return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
   }
 
   async findInfluencerByUserAccount(userAccount: string): Promise<InfluencerProfile | null> {
     const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
     return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+  }
+
+  async updateInfluencerStatus(
+    profile: InfluencerProfile,
+    status: InfluencerStatus,
+    userAccount: UserAccount | null,
+    session?: ClientSession,
+  ): Promise<InfluencerProfile> {
+    if (profile.status === status) {
+      return profile;
+    }
+    const model = await this.InfluencerModel.findById(profile.id, null, { session }).exec();
+    model.status = status;
+
+    if (userAccount) {
+      if (model.userAccount) {
+        throw new Error('attempting to override user account for an influencer');
+      }
+      model.userAccount = userAccount.mongodbId;
+    }
+
+    await model.save();
+    return InfluencerService.makeInfluencerProfile(model);
   }
 
   async listInfluencers(skip: number, size: number): Promise<InfluencerProfile[]> {

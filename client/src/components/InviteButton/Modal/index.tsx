@@ -1,10 +1,9 @@
-import { FC, useState, useCallback } from 'react';
+import { FC, useCallback, useState } from 'react';
 
-import { useMutation, DocumentNode } from '@apollo/client';
-import { Alert, Spinner, Button, Form as RbForm } from 'react-bootstrap';
+import { DocumentNode, useMutation } from '@apollo/client';
+import { Alert, Button, Form as RbForm, Spinner } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
-import { useParams } from 'react-router-dom';
 
 import Dialog from 'src/components/Dialog';
 import DialogContent from 'src/components/DialogContent';
@@ -15,10 +14,10 @@ interface Props {
   open: boolean;
   onClose: () => void;
   mutation: DocumentNode;
+  mutationVariables?: Record<string, string>;
 }
 
-export const Modal: FC<Props> = ({ open, onClose, mutation }) => {
-  const { influencerId } = useParams<{ influencerId: string }>();
+export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables }) => {
   const [inviteMutation] = useMutation(mutation);
   const [creating, setCreating] = useState(false);
   const [invitationError, setInvitationError] = useState();
@@ -38,14 +37,16 @@ export const Modal: FC<Props> = ({ open, onClose, mutation }) => {
       if (firstName && lastName && phoneNumber && welcomeMessage) {
         setCreating(true);
         inviteMutation({
-          variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage, influencerId },
+          variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage, ...mutationVariables },
         })
           .then(() => window.location.reload(false))
-          .catch((error) => setInvitationError(error.message))
+          .catch((error) => {
+            setInvitationError(error.message);
+          })
           .finally(() => setCreating(false));
       }
     },
-    [inviteMutation, influencerId],
+    [inviteMutation, mutationVariables],
   );
 
   return (

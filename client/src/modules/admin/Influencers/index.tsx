@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -8,7 +8,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { InviteButton } from 'src/components/InviteButton';
 import Layout from 'src/components/Layout';
-import { InfluencerProfile } from 'src/types/InfluencerProfile';
+import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
 
 import { CreateInfluencer } from './CreateInfluencer';
 import Pagination, { PER_PAGE } from './Pagination';
@@ -108,12 +108,15 @@ export default function InfluencersPage() {
                             <Link className="dropdown-item text--body" to={`/assistants/${influencer.id}`}>
                               Assistants
                             </Link>
-                            <InviteButton
-                              className={clsx(styles.inviteActionBtn, 'dropdown-item text--body')}
-                              mutation={InviteInfluencerMutation}
-                              text="Invite"
-                              variant="link"
-                            />
+                            {influencer.status === InfluencerStatus.TRANSIENT && (
+                              <InviteButton
+                                className={clsx(styles.inviteActionBtn, 'dropdown-item text--body')}
+                                mutation={InviteInfluencerMutation}
+                                mutationVariables={{ influencerId: influencer.id }}
+                                text="Invite"
+                                variant="link"
+                              />
+                            )}
                           </DropdownButton>
                         </td>
                       </tr>

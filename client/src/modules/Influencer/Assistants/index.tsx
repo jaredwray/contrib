@@ -36,7 +36,7 @@ export default function Assistants() {
               <span className="break-word">{isMyProfile ? 'My' : `${influencer.name}'s`}</span> assistants
             </Col>
             <Col className="pt-3 pt-md-0" md="2" xs="4">
-              <InviteButton mutation={InviteAssistantMutation} />
+              <InviteButton mutation={InviteAssistantMutation} mutationVariables={{ influencerId }} />
             </Col>
           </Row>
         </Container>
@@ -64,7 +64,7 @@ export default function Assistants() {
                 </Table>
               )}
             </Col>
-            <Col md="2"></Col>
+            <Col md="2" />
           </Row>
         </Container>
       </section>

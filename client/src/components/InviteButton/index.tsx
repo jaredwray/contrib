@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { DocumentNode } from '@apollo/client';
 import { Button } from 'react-bootstrap';
@@ -7,12 +7,13 @@ import { Modal } from './Modal';
 
 interface Props {
   mutation: DocumentNode;
+  mutationVariables?: Record<string, string>;
   text?: string;
   variant?: string;
   className?: string;
 }
 
-export const InviteButton: FC<Props> = ({ className, mutation, text, variant }) => {
+export const InviteButton: FC<Props> = ({ className, mutation, mutationVariables, text, variant }) => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
@@ -24,7 +25,12 @@ export const InviteButton: FC<Props> = ({ className, mutation, text, variant }) 
       >
         {text ?? 'Invite +'}
       </Button>
-      <Modal mutation={mutation} open={showDialog} onClose={() => setShowDialog(false)} />
+      <Modal
+        mutation={mutation}
+        mutationVariables={mutationVariables}
+        open={showDialog}
+        onClose={() => setShowDialog(false)}
+      />
     </>
   );
 };
