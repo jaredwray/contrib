@@ -6,13 +6,11 @@ import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionBidModel } from '../mongodb/AuctionBidModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
-
-import { AuctionInput } from '../graphql/model/AuctionInput';
 import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionStatus } from '../dto/AuctionStatus';
-import { IAuctionFilters, IAuctionRepository, IUpdateAuction } from './IAuctionRepoository';
+import { IAuctionFilters, IAuctionRepository, ICreateAuction, IUpdateAuction } from './IAuctionRepoository';
 
 type ISearchFilter = { [key in AuctionOrderBy]: { [key: string]: string } };
 type ISearchOptions = {
@@ -85,11 +83,18 @@ export class AuctionRepository implements IAuctionRepository {
     );
   }
 
-  async createAuction(organizerId: string, { charity: _, ...input }: AuctionInput): Promise<IAuctionModel> {
+  async createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel> {
     if (!input.title) {
       throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
     }
-    const [auction] = await this.AuctionModel.create([{ ...input, auctionOrganizer: Types.ObjectId(organizerId) }]);
+
+    const [auction] = await this.AuctionModel.create([
+      {
+        ...input,
+        auctionOrganizer: Types.ObjectId(organizerId),
+      },
+    ]);
+
     return this.populateAuctionModel(auction).execPopulate();
   }
 
@@ -113,6 +118,12 @@ export class AuctionRepository implements IAuctionRepository {
     Object.assign(auction, input);
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
+  }
+
+  async updateAuctionLink(id: string, link: string): Promise<IAuctionModel> {
+    const auction = await this.getAuction(id);
+    auction.link = link;
+    return auction.save();
   }
 
   async getAuction(id: string, organizerId?: string): Promise<IAuctionModel> {

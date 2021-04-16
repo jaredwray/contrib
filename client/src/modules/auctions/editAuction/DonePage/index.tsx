@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-sort-props */
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { ProgressBar } from 'react-bootstrap';
@@ -9,13 +10,14 @@ import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
+import { Auction } from 'src/types/Auction';
 
 import ShareButton from './ShareButton';
 import styles from './styles.module.scss';
 
 const AuctionDonePage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { data: auctionData } = useQuery(AuctionQuery, {
+  const { data: auctionData } = useQuery<{ auction: Auction }>(AuctionQuery, {
     variables: { id: auctionId },
   });
   const auction = auctionData?.auction;
@@ -23,6 +25,8 @@ const AuctionDonePage = () => {
   if (!auction) {
     return null;
   }
+
+  const encodedAuctionLink = encodeURIComponent(auction.link);
 
   return (
     <Layout>
@@ -37,9 +41,17 @@ const AuctionDonePage = () => {
               the auction.
             </p>
             <div className="pt-3 pt-md-5">
-              <ShareButton icon={<TwitterIcon />} service="Twitter" />
-              <ShareButton icon={<FacebookIcon />} service="Facebook" />
-              <ShareButton icon={<InstagramIcon />} service="Instagram" />
+              <ShareButton
+                href={`https://www.facebook.com/sharer.php?s=100&p[url]=${encodedAuctionLink}`}
+                icon={<FacebookIcon />}
+                service="Facebook"
+              />
+              <ShareButton
+                href={`https://twitter.com/intent/tweet?url=${encodedAuctionLink}`}
+                icon={<TwitterIcon />}
+                service="Twitter"
+              />
+              <ShareButton href="#" icon={<InstagramIcon />} service="Instagram" />
             </div>
           </div>
         </div>

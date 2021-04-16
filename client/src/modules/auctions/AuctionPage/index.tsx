@@ -1,5 +1,6 @@
+/* eslint-disable react/jsx-sort-props */
 import { useQuery } from '@apollo/client';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';

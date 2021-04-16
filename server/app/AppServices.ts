@@ -7,7 +7,7 @@ import { CharityService } from './Charity';
 import { AuctionService } from './Auction';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
 import { UrlShortenerService } from './Core';
-import { PaymentService } from './Payment/service/PaymentService';
+import { PaymentService } from './Payment';
 
 export interface IAppServices {
   assistant: AssistantService;

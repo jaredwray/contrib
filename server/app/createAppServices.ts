@@ -41,7 +41,7 @@ export default function createAppServices(connection: Connection): IAppServices 
   const cloudflareStreaming = new CloudflareStreaming();
   const cloudStorage = new GCloudStorage(cloudflareStreaming);
 
-  const auction = new AuctionService(connection, payment, cloudStorage);
+  const auction = new AuctionService(connection, payment, cloudStorage, urlShortener);
 
   return {
     assistant,
