@@ -142,48 +142,6 @@ export class InvitationService {
       return profile;
     }
 
-    return await this.influencerService.createTransientInfluencer({ name: `${firstName} ${lastName}` });
-  }
-
-  private async getOrCreateTransientInfluencer(
-    { influencerId, firstName, lastName }: InviteInput,
-    session: ClientSession,
-  ): Promise<InfluencerProfile | null> {
-    if (influencerId) {
-      const profile = await this.influencerService.findInfluencer(influencerId, session);
-
-      if (!profile) {
-        throw new AppError('requested influencer profile does not exist');
-      }
-
-      if (profile.status !== InfluencerStatus.TRANSIENT || profile.userAccount) {
-        throw new AppError('given influencer has already been invited');
-      }
-
-      return profile;
-    }
-
-    return await this.influencerService.createTransientInfluencer({ name: `${firstName} ${lastName}` }, session);
-  }
-
-  private async getOrCreateTransientInfluencer(
-    { influencerId, firstName, lastName }: InviteInput,
-    session: ClientSession,
-  ): Promise<InfluencerProfile | null> {
-    if (influencerId) {
-      const profile = await this.influencerService.findInfluencer(influencerId, session);
-
-      if (!profile) {
-        throw new AppError('requested influencer profile does not exist');
-      }
-
-      if (profile.status !== InfluencerStatus.TRANSIENT || profile.userAccount) {
-        throw new AppError('given influencer has already been invited');
-      }
-
-      return profile;
-    }
-
     return await this.influencerService.createTransientInfluencer({ name: `${firstName} ${lastName}` }, session);
   }
 

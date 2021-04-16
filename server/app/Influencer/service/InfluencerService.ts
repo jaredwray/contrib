@@ -53,30 +53,6 @@ export class InfluencerService {
     userAccount: UserAccount | null,
     session?: ClientSession,
   ): Promise<InfluencerProfile> {
-    console.log('PROFILE: ', JSON.stringify(profile, null, 2));
-    if (profile.status === status) {
-      return profile;
-    }
-    const model = await this.InfluencerModel.findById(profile.id, null, { session }).exec();
-    model.status = status;
-
-    if (userAccount) {
-      if (model.userAccount) {
-        throw new Error('attempting to override user account for an influencer');
-      }
-      model.userAccount = userAccount.mongodbId;
-    }
-
-    await model.save();
-    return InfluencerService.makeInfluencerProfile(model);
-  }
-
-  async updateInfluencerStatus(
-    profile: InfluencerProfile,
-    status: InfluencerStatus,
-    userAccount: UserAccount | null,
-    session?: ClientSession,
-  ): Promise<InfluencerProfile> {
     if (profile.status === status) {
       return profile;
     }
