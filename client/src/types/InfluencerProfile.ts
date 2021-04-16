@@ -19,9 +19,3 @@ export enum InfluencerStatus {
   INVITATION_PENDING = 'INVITATION_PENDING',
   ONBOARDED = 'ONBOARDED',
 }
-
-export enum InfluencerStatus {
-  TRANSIENT = 'TRANSIENT',
-  INVITATION_PENDING = 'INVITATION_PENDING',
-  ONBOARDED = 'ONBOARDED',
-}
