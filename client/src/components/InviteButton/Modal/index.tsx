@@ -35,23 +35,12 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables })
       welcomeMessage: string;
     }) => {
       if (firstName && lastName && phoneNumber && welcomeMessage) {
-        console.log(
-          'FIELDS',
-          firstName,
-          lastName,
-          phoneNumber,
-          welcomeMessage,
-          'MUTTATTION VARIABLES',
-          mutationVariables,
-        );
-
         setCreating(true);
         inviteMutation({
           variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage, ...mutationVariables },
         })
           .then(() => window.location.reload(false))
           .catch((error) => {
-            console.log('error', error);
             setInvitationError(error.message);
           })
           .finally(() => setCreating(false));

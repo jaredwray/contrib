@@ -71,6 +71,29 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(model);
   }
 
+  async updateInfluencerStatus(
+    profile: InfluencerProfile,
+    status: InfluencerStatus,
+    userAccount: UserAccount | null,
+    session?: ClientSession,
+  ): Promise<InfluencerProfile> {
+    if (profile.status === status) {
+      return profile;
+    }
+    const model = await this.InfluencerModel.findById(profile.id, null, { session }).exec();
+    model.status = status;
+
+    if (userAccount) {
+      if (model.userAccount) {
+        throw new Error('attempting to override user account for an influencer');
+      }
+      model.userAccount = userAccount.mongodbId;
+    }
+
+    await model.save();
+    return InfluencerService.makeInfluencerProfile(model);
+  }
+
   async listInfluencers(skip: number, size: number): Promise<InfluencerProfile[]> {
     const models = await this.InfluencerModel.find().skip(skip).limit(size).sort({ id: 'asc' }).exec();
 
