@@ -36,11 +36,11 @@ export const InfluencerSchema = gql`
   input UpdateInfluencerProfileInput {
     name: String!
     sport: String!
-    team: String!
+    team: String
     profileDescription: String!
     image: Upload
   }
-  
+
   input CreateInfluencerInput {
     name: String!
   }
