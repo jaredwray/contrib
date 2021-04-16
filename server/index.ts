@@ -19,11 +19,6 @@ const app = express();
 
 app.set('view engine', 'pug');
 
-app.use((req, res, next) => {
-  console.log(`REQUEST: ${req.url} ${JSON.stringify(req.headers)}`);
-  next();
-});
-
 (async function () {
   const connection = await initMongodbConnection();
   const appServices: IAppServices = createAppServices(connection);
