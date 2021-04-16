@@ -325,6 +325,13 @@ export class AuctionService {
       ...rest
     } = model.toObject();
 
+    if (!auctionOrganizer) {
+      AppLogger.error('auction is missing organizer', {
+        auctionData: JSON.stringify(model.toObject()),
+      });
+      return null;
+    }
+
     // temporal: some older auctions won't have a pre-populated link in dev environment
     // one day we'll clear our dev database, and this line can removed then
     const link = rawLink || this.makeLongAuctionLink(_id.toString());

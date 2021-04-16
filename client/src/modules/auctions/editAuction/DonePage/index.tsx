@@ -1,7 +1,9 @@
-/* eslint-disable react/jsx-sort-props */
+import React, { useCallback, useState } from 'react';
+
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { ProgressBar } from 'react-bootstrap';
+import { Button, InputGroup, Form, Modal, ProgressBar } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useParams } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
@@ -10,6 +12,7 @@ import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
+import { toFullHumanReadableDatetime } from 'src/helpers/timeFormatters';
 import { Auction } from 'src/types/Auction';
 
 import ShareButton from './ShareButton';
@@ -21,6 +24,15 @@ const AuctionDonePage = () => {
     variables: { id: auctionId },
   });
   const auction = auctionData?.auction;
+
+  const [showInstagramInstructions, setShowInstagramInstructions] = useState(false);
+  const toggleShowInstagramInstructions = useCallback(() => {
+    setShowInstagramInstructions((showing) => !showing);
+  }, [setShowInstagramInstructions]);
+
+  const [titleCopied, setTitleCopied] = useState(false);
+  const [descriptionCopied, setDescriptionCopied] = useState(false);
+  const [dateCopied, setDateCopied] = useState(false);
 
   if (!auction) {
     return null;
@@ -51,12 +63,72 @@ const AuctionDonePage = () => {
                 icon={<TwitterIcon />}
                 service="Twitter"
               />
-              <ShareButton href="#" icon={<InstagramIcon />} service="Instagram" />
+              <ShareButton icon={<InstagramIcon />} service="Instagram" onClick={toggleShowInstagramInstructions} />
             </div>
           </div>
         </div>
+
         <div className={clsx(styles.content, styles.contentRight)}>{<AuctionCard isDonePage auction={auction} />}</div>
       </div>
+
+      <Modal show={showInstagramInstructions} onHide={toggleShowInstagramInstructions}>
+        <Modal.Header>
+          <Modal.Title>Use following content to create an Instagram post</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label className="d-block">Auction Title</Form.Label>
+              <InputGroup>
+                <Form.Control disabled type="text" value={auction.title} />
+                <InputGroup.Append>
+                  <CopyToClipboard text={auction.title} onCopy={() => setTitleCopied(true)}>
+                    <Button type="button">{(titleCopied && 'Copied') || 'Copy'}</Button>
+                  </CopyToClipboard>
+                </InputGroup.Append>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className="d-block">Description</Form.Label>
+              <InputGroup>
+                <Form.Control disabled type="text" value={auction.description} />
+                <InputGroup.Append>
+                  <CopyToClipboard text={auction.description} onCopy={() => setDescriptionCopied(true)}>
+                    <Button type="button">{(descriptionCopied && 'Copied') || 'Copy'}</Button>
+                  </CopyToClipboard>
+                </InputGroup.Append>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className="d-block">Starts at</Form.Label>
+              <InputGroup>
+                <Form.Control disabled type="text" value={toFullHumanReadableDatetime(auction.startDate) || ''} />
+                <InputGroup.Append>
+                  <CopyToClipboard
+                    text={toFullHumanReadableDatetime(auction.startDate) || ''}
+                    onCopy={() => setDateCopied(true)}
+                  >
+                    <Button type="button">{(dateCopied && 'Copied') || 'Copy'}</Button>
+                  </CopyToClipboard>
+                </InputGroup.Append>
+              </InputGroup>
+            </Form.Group>
+
+            {Boolean(auction.attachments.length) && (
+              <Form.Group>
+                <Form.Label>Image</Form.Label>
+                <img alt={auction.title} src={auction.attachments[0].cloudflareUrl || auction.attachments[0].url} />
+              </Form.Group>
+            )}
+
+            <Button block type="button" variant="secondary" onClick={toggleShowInstagramInstructions}>
+              Close
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Layout>
   );
 };
