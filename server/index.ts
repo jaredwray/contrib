@@ -26,7 +26,7 @@ app.set('view engine', 'pug');
   if (AppConfig.environment.serveClient) {
     // Production uses a setup when both client and server are served from a single path.
     // note: it is assumed that server is run in prod mode, therefore we use two "..", assuming index.js is is dist folder
-    const clientBundlePath = path.join(__dirname, '../client/build');
+    const clientBundlePath = path.join(__dirname, '../../client/build');
     AppLogger.info(`serving client from: ${clientBundlePath}`);
     app.use(express.static(clientBundlePath));
     installPrerenderHandlers(app, connection);
