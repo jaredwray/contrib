@@ -15,6 +15,7 @@ import { GraphqlResolver } from '../../../graphql/types';
 interface AssistantResolversType {
   Mutation: {
     inviteAssistant: GraphqlResolver<Assistant, { input: InviteInput }>;
+    acceptAssistantTerms: GraphqlResolver<Assistant, { version: string }>;
   };
   Assistant: {
     userAccount: GraphqlResolver<UserAccount, Record<string, never>, Assistant>;
@@ -28,6 +29,9 @@ interface AssistantResolversType {
 export const AssistantResolvers: AssistantResolversType = {
   Mutation: {
     inviteAssistant: requireRole(async (_, { input }, { invitation }) => invitation.inviteAssistant(input)),
+    acceptAssistantTerms: requireRole(async (_, { version }, { assistant, currentAssistant }) =>
+      assistant.acceptTerms(currentAssistant.id, version),
+    ),
   },
   Assistant: {
     userAccount: requireAdmin(

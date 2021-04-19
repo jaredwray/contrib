@@ -23,6 +23,7 @@ interface InfluencerResolversType {
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
   };
   Mutation: {
+    acceptInfluencerTerms: GraphqlResolver<InfluencerProfile, { version: string }>;
     createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
     inviteInfluencer: GraphqlResolver<InfluencerProfile, { input: InviteInput }>;
     updateInfluencerProfile: GraphqlResolver<
@@ -70,6 +71,9 @@ export const InfluencerResolvers: InfluencerResolversType = {
     }),
   },
   Mutation: {
+    acceptInfluencerTerms: requireRole(async (_, { version }, { influencer, currentInfluencer }) =>
+      influencer.acceptTerms(currentInfluencer.id, version),
+    ),
     createInfluencer: requireAdmin(async (_, { input }, { influencer }) => influencer.createTransientInfluencer(input)),
     inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
     updateInfluencerProfile: requireRole(

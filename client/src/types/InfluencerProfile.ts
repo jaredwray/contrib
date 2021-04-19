@@ -1,6 +1,7 @@
 import { Assistant } from './Assistant';
 import { Auction } from './Auction';
 import { Charity } from './Charity';
+import { TermsInput } from './TermsInput';
 
 export interface InfluencerProfile {
   id: string;
@@ -12,6 +13,7 @@ export interface InfluencerProfile {
   favoriteCharities: Charity[];
   assistants: Assistant[];
   auctions?: Auction[];
+  notAcceptedTerms: TermsInput | null;
 }
 
 export enum InfluencerStatus {

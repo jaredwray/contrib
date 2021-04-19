@@ -17,6 +17,10 @@ cache.writeQuery({
       status: UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED,
       influencerProfile: null,
       isAdmin: false,
+      createdAt: '2021-02-18T14:36:35.208+00:00',
+      notAcceptedTerms: [],
+      assistant: null,
+      paymentInformation: null,
     },
   },
 });

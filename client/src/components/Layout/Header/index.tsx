@@ -47,42 +47,32 @@ export default function Header() {
                   )}
 
                   {account?.isAdmin && (
-                    <NavLink to="/admin/influencers">
-                      <NavDropdown.Item href="/admin/influencers">
-                        <span>Manage Influencers</span>
-                      </NavDropdown.Item>
+                    <NavLink className="dropdown-item" to="/admin/influencers">
+                      <span>Manage Influencers</span>
                     </NavLink>
                   )}
 
                   {account?.influencerProfile && (
-                    <NavLink to="/profiles/me">
-                      <NavDropdown.Item href="/profiles/me">
-                        <span>Account</span>
-                      </NavDropdown.Item>
+                    <NavLink className="dropdown-item" to="/profiles/me">
+                      <span>Account</span>
                     </NavLink>
                   )}
 
                   {account?.influencerProfile && (
-                    <NavLink to="/assistants/me">
-                      <NavDropdown.Item href="/assistants/me">
-                        <span>My assistants</span>
-                      </NavDropdown.Item>
+                    <NavLink className="dropdown-item" to="/assistants/me">
+                      <span>My assistants</span>
                     </NavLink>
                   )}
 
                   {account?.assistant && (
-                    <NavLink to={`/profiles/${account.assistant.influencerId}`}>
-                      <NavDropdown.Item href={`/profiles/${account.assistant.influencerId}`}>
-                        <span>Account</span>
-                      </NavDropdown.Item>
+                    <NavLink className="dropdown-item" to={`/profiles/${account.assistant.influencerId}`}>
+                      <span>Account</span>
                     </NavLink>
                   )}
 
                   {(account?.influencerProfile || account?.assistant) && (
-                    <NavLink to="/auctions/new">
-                      <NavDropdown.Item href="/auctions/new">
-                        <span>Create new Auction</span>
-                      </NavDropdown.Item>
+                    <NavLink className="dropdown-item" to="/auctions/new">
+                      <span>Create new Auction</span>
                     </NavLink>
                   )}
                   {account && <NavDropdown.Divider />}
@@ -112,9 +102,9 @@ export default function Header() {
                       <div className="text-label text-all-cups dropdown-menu-copyright">
                         Copyright {new Date().getFullYear()} Contrib Inc.
                       </div>
-                      <a className="dropdown-menu-privacy text-label text-all-cups" href="/">
+                      <Link className="dropdown-menu-privacy text-label text-all-cups" to="/privacy">
                         Privacy and Terms &gt;&gt;
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </section>

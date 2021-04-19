@@ -1,5 +1,6 @@
 import { Assistant } from './Assistant';
 import { InfluencerProfile } from './InfluencerProfile';
+import { TermsInput } from './TermsInput';
 
 export enum UserAccountStatus {
   PHONE_NUMBER_REQUIRED = 'PHONE_NUMBER_REQUIRED',
@@ -23,4 +24,5 @@ export interface UserAccount {
   assistant?: Assistant;
   paymentInformation: PaymentCard | null;
   createdAt: Date;
+  notAcceptedTerms: TermsInput | null;
 }

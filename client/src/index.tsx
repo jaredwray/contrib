@@ -23,6 +23,7 @@ import Assistants from 'src/modules/Influencer/Assistants';
 import InvitationPage from 'src/modules/Invitation';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
+import Privacy from 'src/modules/Privacy';
 
 import 'src/index.scss';
 import { AfterLogin } from './components/AfterLogin';
@@ -75,6 +76,7 @@ ReactDOM.render(
                 <Route exact component={EditAuctionDetailsPage} path="/auctions/:auctionId/details" />
                 <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                 <Route exact component={AuctionDonePage} path="/auctions/:auctionId/done" />
+                <Route exact component={Privacy} path="/privacy" />
               </Switch>
             </IntercomStateManager>
           </UserAccountProvider>

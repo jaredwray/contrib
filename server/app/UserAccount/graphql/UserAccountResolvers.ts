@@ -1,4 +1,5 @@
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
+import { requireRole } from '../../../graphql/middleware/requireRole';
 
 export const UserAccountResolvers = {
   Query: {
@@ -7,6 +8,9 @@ export const UserAccountResolvers = {
     ),
   },
   Mutation: {
+    acceptAccountTerms: requireRole(async (_, { version }, { userAccount, currentAccount }) =>
+      userAccount.acceptTerms(currentAccount.mongodbId, version),
+    ),
     confirmAccountWithPhoneNumber: requireAuthenticated(
       (parent, { phoneNumber, otp }: { otp: string; phoneNumber: string }, { user, userAccount }) =>
         userAccount.confirmAccountWithPhoneNumber(user.id, phoneNumber, otp),

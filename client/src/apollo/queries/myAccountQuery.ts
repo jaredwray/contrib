@@ -8,6 +8,10 @@ export const MyAccountQuery = gql`
       status
       isAdmin
       createdAt
+      notAcceptedTerms {
+        version
+        date
+      }
       influencerProfile {
         id
         profileDescription
@@ -16,11 +20,19 @@ export const MyAccountQuery = gql`
         team
         avatarUrl
         status
+        notAcceptedTerms {
+          version
+          date
+        }
       }
       assistant {
         name
         status
         influencerId
+        notAcceptedTerms {
+          version
+          date
+        }
       }
       paymentInformation {
         id

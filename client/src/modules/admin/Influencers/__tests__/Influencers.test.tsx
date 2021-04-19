@@ -7,6 +7,8 @@ import { AllInfluencersQuery } from 'src/apollo/queries/influencers';
 
 import Influencers from '..';
 
+jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+
 const cache = new InMemoryCache();
 cache.writeQuery({
   query: AllInfluencersQuery,

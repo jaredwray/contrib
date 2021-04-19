@@ -7,6 +7,7 @@ import { InvitationResolvers, InvitationSchema } from '../app/Invitation';
 import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
 import { CharityResolvers, CharitySchema } from '../app/Charity';
 import { AuctionResolvers, AuctionSchema } from '../app/Auction';
+import { TermsResolvers, TermsSchema } from '../app/Terms';
 import { DateTimeResolver, DateTimeTypeDefs } from './scalars/dateTime';
 import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
 import { GraphQLUpload } from 'graphql-upload';
@@ -43,6 +44,7 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
       CharitySchema,
       AuctionSchema,
       PaymentSchema,
+      TermsSchema,
     ],
     resolvers: [
       DateTimeResolver,
@@ -54,6 +56,7 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
       CharityResolvers,
       AuctionResolvers,
       PaymentResolvers,
+      TermsResolvers,
       {
         Upload: GraphQLUpload,
       },

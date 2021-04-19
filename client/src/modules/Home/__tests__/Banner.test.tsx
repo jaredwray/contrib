@@ -4,6 +4,8 @@ import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 
 
 import Banner from '../Banner';
 
+jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+
 describe('Banner', () => {
   describe('for logged in user', () => {
     it('does not render sign up button', () => {

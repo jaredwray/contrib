@@ -8,17 +8,19 @@ import { AuctionService } from './Auction';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
 import { UrlShortenerService } from './Core';
 import { PaymentService } from './Payment';
+import { TermsService } from './Terms';
 
 export interface IAppServices {
   assistant: AssistantService;
+  auction: AuctionService;
   auth0: Auth0Service;
-  userAccount: UserAccountService;
+  charity: CharityService;
   influencer: InfluencerService;
   invitation: InvitationService;
-  charity: CharityService;
-  auction: AuctionService;
-  twilioVerification: TwilioVerificationService;
-  twilioNotification: TwilioNotificationService;
-  urlShortener: UrlShortenerService;
   payment: PaymentService;
+  terms: TermsService;
+  twilioNotification: TwilioNotificationService;
+  twilioVerification: TwilioVerificationService;
+  urlShortener: UrlShortenerService;
+  userAccount: UserAccountService;
 }
