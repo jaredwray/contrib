@@ -45,7 +45,7 @@ export default function Footer() {
             Copyright {new Date().getFullYear()} Contrib Inc.
           </Col>
           <Col md className="pt-2 p-0 pt-md-0 pr-md-4">
-            <Link className={clsx('privacy float-md-right text-label text-all-cups', styles.link)} to="/privacy">
+            <Link className={clsx('privacy float-md-right text-label text-all-cups', styles.link)} to="/terms">
               Privacy and Terms &gt;&gt;
             </Link>
           </Col>

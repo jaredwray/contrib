@@ -3,12 +3,9 @@ import { TermsInput } from '../dto/TermsInput';
 import { TermsList } from '../dto/TermsList';
 
 const PRIVACY_AND_TERMS = {
-  userAccount: [{ version: '1.0', date: '2020-01-17' }],
-  influencer: [
-    { version: '1.0', date: '2020-01-17' },
-    { version: '1.1', date: '2020-03-11' },
-  ],
-  assistant: [{ version: '1.0', date: '2020-01-17' }],
+  userAccount: [{ version: '1.0', date: '2021-03-16' }],
+  influencer: [{ version: '1.0', date: '2021-03-16' }],
+  assistant: [{ version: '1.0', date: '2021-03-16' }],
 };
 
 export class TermsService {

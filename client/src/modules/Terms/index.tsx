@@ -5,7 +5,7 @@ import { TermsListQuery } from 'src/apollo/queries/terms';
 import Layout from 'src/components/Layout';
 import PrivacyCard from 'src/components/PrivacyCard';
 
-export default function Privacy() {
+export default function Terms() {
   const { loading, error, data } = useQuery(TermsListQuery);
 
   if (loading || error) {
