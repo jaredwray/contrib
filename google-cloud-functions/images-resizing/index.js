@@ -63,7 +63,6 @@ exports.resizeUploadedImage = async (file, context) => {
       });
 
     let content = await fs.readFile(tmpFilePath, { encoding: "base64" });
-    console.log("tmpFile content: ", content);
 
     // Create thumb image
     await sharp(tmpFilePath)
@@ -72,7 +71,6 @@ exports.resizeUploadedImage = async (file, context) => {
       .toFile(thumbPath);
 
     content = await fs.readFile(thumbPath, { encoding: "base64" });
-    console.log("processed file content: ", content);
 
     // Delete old file
     await bucket
