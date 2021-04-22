@@ -25,6 +25,7 @@
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "bitly": "^7.1.2",
+    "compare-versions": "^3.6.0",
     "dataloader": "^2.0.0",
     "dayjs": "^1.10.4",
     "dinero.js": "^1.8.1",

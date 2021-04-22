@@ -1,0 +1,27 @@
+@import 'src/variables.scss';
+
+.terms {
+  ol:not([type]) > li {
+    counter-increment: item;
+  }
+  ol:not([type]) > li:first-child {
+    counter-reset: item;
+  }
+  ol ol:not([type]) > li {
+    display: block;
+  }
+  ol ol:not([type]) > li:before {
+    content: counters(item, '.') '. ';
+    margin-left: -20px;
+  }
+
+  li {
+    padding: 5px;
+  }
+
+  @media (max-width: $small-weight) {
+    ol {
+      padding-left: 20px;
+    }
+  }
+}

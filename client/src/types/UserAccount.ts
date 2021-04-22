@@ -23,4 +23,5 @@ export interface UserAccount {
   assistant?: Assistant;
   paymentInformation: PaymentCard | null;
   createdAt: Date;
+  notAcceptedTerms: string | null;
 }

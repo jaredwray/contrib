@@ -1,0 +1,19 @@
+@import 'src/variables.scss';
+
+.logo {
+  display: block;
+  width: 150px;
+  height: 50px;
+}
+.rightBlock {
+  background: url('/assets/images/right-block-bg.webp');
+  background-color: $sage-color;
+  background-size: cover;
+  position: relative;
+  height: 50vw !important;
+}
+.signature {
+  color: $white-color;
+  left: 50px;
+  bottom: 20px;
+}

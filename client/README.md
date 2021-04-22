@@ -72,12 +72,36 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ## Auth0
 
 1. create `.env` file with follow variables:
+
 ```
 REACT_APP_AUTH0_DOMAIN=AUTH0_DOMAIN
 REACT_APP_AUTH0_CLIENT_ID=AUTH0_CLIENT_ID
 ```
+
 AUTH0_DOMAIN should not contain the protocol. An example: `contrib.us.auth0.com`
 
 2. change Universal Login page (https://manage.auth0.com/dashboard/us/contrib/login_page) using code from client/src/data/auth0/login.html file
 
 3. change Password Reset page (https://manage.auth0.com/dashboard/us/contrib/password_reset) using code from client/src/data/auth0/password_reset.html file
+
+## Privacy And Terms logic
+
+Account model has field with last accepted terms version (accpetedTers) and date when the user accepted it (acceptedTermsAt). The user will see terms confirmation dialog until he accepts last terms.
+
+### How add new terms
+
+1. Create new html file with terms in client/public/content/terms folder. File name template: `${version}.html`.
+
+Example: `1.1.html`
+
+2. Define new version.
+
+Add new version in TermsText component (client/src/components/TermsText/index.tsx) in VERSION const.
+
+Example: `const VERSION = '1.1';`
+
+3. Define new version on server-side.
+
+Add new version in TermsService (server/app/TermsService.ts) in VERSION const.
+
+Example: `const VERSION = '1.1';`

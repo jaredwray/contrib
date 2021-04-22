@@ -9,6 +9,8 @@ import { mockedUseAuth0, withNotAuthenticatedUser } from 'src/helpers/testHelper
 
 import InvitationPage from '..';
 
+jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+
 const cache = new InMemoryCache();
 cache.writeQuery({
   query: GetInvitation,

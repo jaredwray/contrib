@@ -4,6 +4,7 @@
   background: no-repeat center url('/assets/images/invitation-bg-lg.webp') $sage-color;
   background-size: cover;
   background-blend-mode: multiply;
+  flex-grow: 1;
 
   @media (max-width: $medium-weight) {
     background-image: url('/assets/images/invitation-bg-sm.webp');

@@ -7,6 +7,8 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 
 import EndingSoon from '../EndingSoon';
 
+jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+
 const cache = new InMemoryCache();
 cache.writeQuery({
   query: AuctionsListQuery,

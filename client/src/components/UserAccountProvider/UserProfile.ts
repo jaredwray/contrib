@@ -8,4 +8,5 @@ export interface UserProfile {
   assistant: Assistant | null;
   paymentInformation: PaymentInformation | null;
   createdAt: Date;
+  notAcceptedTerms: string | null;
 }

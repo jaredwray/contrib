@@ -8,6 +8,7 @@ import { TwilioVerificationService } from '../../../twilio-client';
 import { AppError, ErrorCode } from '../../../errors';
 import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
+import { TermsService } from '../../TermsService';
 
 export class UserAccountService {
   private readonly accountModel: Model<IUserAccount> = UserAccountModel(this.connection);
@@ -98,17 +99,32 @@ export class UserAccountService {
     return this.getAccountByAuthzId(account.id);
   }
 
-  private static makeUserAccount(accountModel: IUserAccount): UserAccount {
+  async acceptTerms(id: string, version: string): Promise<UserAccount> {
+    if (!TermsService.isValidVersion(version)) {
+      throw new Error(`Terms version ${version} is invalid!`);
+    }
+
+    const account = await this.accountModel.findById(id).exec();
+
+    account.acceptedTerms = version;
+    account.acceptedTermsAt = new Date();
+    await account.save();
+
+    return UserAccountService.makeUserAccount(account);
+  }
+
+  private static makeUserAccount(model: IUserAccount): UserAccount {
     const account: UserAccount = {
-      id: accountModel.authzId,
-      phoneNumber: accountModel.phoneNumber,
+      id: model.authzId,
+      phoneNumber: model.phoneNumber,
       status: UserAccountStatus.COMPLETED,
-      mongodbId: accountModel._id.toString(),
-      stripeCustomerId: accountModel.stripeCustomerId,
-      createdAt: accountModel.createdAt.toISOString(),
+      mongodbId: model._id.toString(),
+      stripeCustomerId: model.stripeCustomerId,
+      createdAt: model.createdAt.toISOString(),
+      notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms),
     };
 
-    if (accountModel.isAdmin) {
+    if (model.isAdmin) {
       account.isAdmin = true;
     }
 

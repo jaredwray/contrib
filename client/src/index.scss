@@ -12,7 +12,10 @@ body {
 }
 
 .cursor-pointer {
-  cursor: pointer;
+  &,
+  & * {
+    cursor: pointer;
+  }
 }
 
 img {
@@ -46,4 +49,8 @@ img {
 
 .error-message {
   color: $salmon-color;
+}
+
+.row {
+  margin: 0;
 }

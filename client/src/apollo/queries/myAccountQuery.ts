@@ -8,6 +8,7 @@ export const MyAccountQuery = gql`
       status
       isAdmin
       createdAt
+      notAcceptedTerms
       influencerProfile {
         id
         profileDescription

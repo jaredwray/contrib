@@ -50,6 +50,7 @@ export const UserAccountSchema = gql`
     User creation datetime
     """
     createdAt: String!
+    notAcceptedTerms: String
   }
 
   extend type Query {
@@ -57,6 +58,7 @@ export const UserAccountSchema = gql`
   }
 
   extend type Mutation {
+    acceptAccountTerms(version: String!): UserAccount!
     createAccountWithPhoneNumber(phoneNumber: String): UserAccount!
     confirmAccountWithPhoneNumber(phoneNumber: String!, otp: String!): UserAccount!
   }

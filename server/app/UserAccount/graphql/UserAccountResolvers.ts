@@ -7,6 +7,9 @@ export const UserAccountResolvers = {
     ),
   },
   Mutation: {
+    acceptAccountTerms: requireAuthenticated(async (_, { version }, { userAccount, currentAccount }) =>
+      userAccount.acceptTerms(currentAccount.mongodbId, version),
+    ),
     confirmAccountWithPhoneNumber: requireAuthenticated(
       (parent, { phoneNumber, otp }: { otp: string; phoneNumber: string }, { user, userAccount }) =>
         userAccount.confirmAccountWithPhoneNumber(user.id, phoneNumber, otp),

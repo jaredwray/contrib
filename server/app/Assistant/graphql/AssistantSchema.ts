@@ -12,6 +12,7 @@ export const AssistantSchema = gql`
     status: AssistantStatus!
     userAccount: UserAccount
     influencerId: String!
+    notAcceptedTerms: String
   }
 
   extend type Mutation {

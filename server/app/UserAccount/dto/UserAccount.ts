@@ -8,4 +8,5 @@ export interface UserAccount {
   isAdmin?: boolean;
   stripeCustomerId?: string;
   createdAt: string;
+  notAcceptedTerms?: string;
 }
