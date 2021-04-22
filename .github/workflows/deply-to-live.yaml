@@ -13,14 +13,14 @@ env:
   ENV_NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
   ENV_MONGODB_URI: ${{ secrets.LIVE_MONGODB_URI }}
   ENV_AUTH0_ISSUER_URL: https://contrib.us.auth0.com/
-  ENV_AUTH0_AUDIENCE: https://live.contrib.org
+  ENV_AUTH0_AUDIENCE: https://contrib.org
   ENV_AUTH0_MANAGEMENT_DOMAIN: contrib.us.auth0.com
   ENV_AUTH0_MANAGEMENT_CLIENT_ID: dj4DaWeggmOb7cbCOSxzSQAN5EYBwVqr
   ENV_AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.LIVE_AUTH0_MANAGEMENT_CLIENT_SECRET }}
   ENV_TWILIO_ACCOUNT_SID: ACd64357f20d26725ac0b45616048e8d84
   ENV_TWILIO_AUTH_TOKEN: ${{ secrets.LIVE_TWILIO_AUTH_TOKEN }}
   ENV_TWILIO_VERIFICATION_SERVICE_SID: ${{ secrets.LIVE_TWILIO_VERIFICATION_SERVICE_SID }}
-  ENV_APP_URL: "https://live.contrib.org/"
+  ENV_APP_URL: "https://contrib.org/"
   ENV_TWILIO_SENDER_NUMBER: +17726178791
   ENV_CONTENT_STORAGE_NAME: content-live.contrib.org
   ENV_CONTENT_STORAGE_KEY: ${{ secrets.LIVE_CONTENT_STORAGE_KEY }}
@@ -52,9 +52,9 @@ jobs:
       env:
         REACT_APP_AUTH0_DOMAIN: "contrib.us.auth0.com"
         REACT_APP_AUTH0_CLIENT_ID: JnjIWUhKdxPyceH48ZEZopVMKEPdT4E4
-        REACT_APP_PLATFORM_URL: "https://live.contrib.org/"
-        REACT_APP_API_URL: "https://live.contrib.org/graphql"
-        REACT_APP_API_AUDIENCE: "https://live.contrib.org"
+        REACT_APP_PLATFORM_URL: "https://contrib.org/"
+        REACT_APP_API_URL: "https://contrib.org/graphql"
+        REACT_APP_API_AUDIENCE: "https://contrib.org"
         REACT_APP_USE_NEWRELIC: true
         REACT_APP_NEWRELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
         REACT_APP_NEWRELIC_APPLICATION_ID: "916719636"
