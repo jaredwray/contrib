@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement, FC } from 'react';
 
 import { Form as BsForm } from 'react-bootstrap';
 
@@ -12,7 +12,7 @@ interface Props {
   checked?: boolean;
   required?: boolean;
   name: string;
-  label?: string;
+  label?: ReactElement | string;
   disabled?: boolean;
   wrapperClassName?: string;
 }
