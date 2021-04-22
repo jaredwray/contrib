@@ -41,7 +41,7 @@ export const UpdateInfluencerProfileMutation = gql`
     $influencerId: String!
     $name: String!
     $sport: String!
-    $team: String!
+    $team: String
     $profileDescription: String!
   ) {
     updateInfluencerProfile(

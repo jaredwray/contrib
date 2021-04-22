@@ -119,7 +119,11 @@ const AuctionDonePage = () => {
             {Boolean(auction.attachments.length) && (
               <Form.Group>
                 <Form.Label>Image</Form.Label>
-                <img alt={auction.title} src={auction.attachments[0].cloudflareUrl || auction.attachments[0].url} />
+                <img
+                  alt={auction.title}
+                  className="w-100"
+                  src={auction.attachments[0].cloudflareUrl || auction.attachments[0].url}
+                />
               </Form.Group>
             )}
 
