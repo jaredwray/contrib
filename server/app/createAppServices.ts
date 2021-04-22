@@ -10,7 +10,6 @@ import { InvitationService } from './Invitation';
 import { CharityService } from './Charity';
 import { AssistantService } from './Assistant';
 import { AuctionService } from './Auction';
-import { TermsService } from './Terms';
 import { GCloudStorage } from './GCloudStorage';
 import { CloudflareStreaming } from './CloudflareStreaming';
 import { UrlShortenerService } from './Core';
@@ -23,7 +22,6 @@ export default function createAppServices(connection: Connection): IAppServices 
   const twilioVerification = new TwilioVerificationService();
   const twilioNotification = new TwilioNotificationService();
   const stripe = new StripeService();
-  const terms = new TermsService();
 
   const assistant = new AssistantService(connection);
   const charity = new CharityService(connection);
@@ -47,16 +45,15 @@ export default function createAppServices(connection: Connection): IAppServices 
 
   return {
     assistant,
-    auction,
     auth0,
-    charity,
-    influencer,
-    invitation,
-    payment,
-    terms,
-    twilioNotification,
-    twilioVerification,
     urlShortener,
     userAccount,
+    twilioVerification,
+    twilioNotification,
+    influencer,
+    invitation,
+    charity,
+    auction,
+    payment,
   };
 }

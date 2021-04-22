@@ -86,22 +86,22 @@ AUTH0_DOMAIN should not contain the protocol. An example: `contrib.us.auth0.com`
 
 ## Privacy And Terms logic
 
-All models of roles (account, influencer, assistant) have fields with last accepted terms version (accpetedTers) and date when the user accepted it (acceptedTermsAt). The user will see terms confirmation dialog until he accepts last terms.
+Account model has field with last accepted terms version (accpetedTers) and date when the user accepted it (acceptedTermsAt). The user will see terms confirmation dialog until he accepts last terms.
 
 ### How add new terms
 
-1. Create new md file with terms in client/public/content/terms folder. File name template: `${role}_${version}.md`.
+1. Create new html file with terms in client/public/content/terms folder. File name template: `${version}.html`.
 
-Examples:
+Example: `1.1.html`
 
-- account_1.0.md
-- assistant_1.2.1.md
-- influencer_3.1.md
+2. Define new version.
 
-2. Define new version on server-side.
+Add new version in TermsText component (client/src/components/TermsText/index.tsx) in VERSION const.
 
-Add new version in TermsService (server/app/Terms/service/TermsService.ts) in PRIVACY_AND_TERMS const.
+Example: `const VERSION = '1.1';`
 
-Examples:
+3. Define new version on server-side.
 
-- userAccount: `[{ version: '1.0', date: '2020-04-20' }]`
+Add new version in TermsService (server/app/TermsService.ts) in VERSION const.
+
+Example: `const VERSION = '1.1';`

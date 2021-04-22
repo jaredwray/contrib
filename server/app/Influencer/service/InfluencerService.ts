@@ -8,7 +8,6 @@ import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerP
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
-import { TermsService } from '../../Terms';
 
 interface TransientInfluencerInput {
   name: string;
@@ -36,20 +35,6 @@ export class InfluencerService {
       { session },
     );
     return InfluencerService.makeInfluencerProfile(influencer[0]);
-  }
-
-  async acceptTerms(id: string, version: string): Promise<InfluencerProfile> {
-    if (!TermsService.hasVersion('influencer', version)) {
-      throw new Error(`Invalid terms version for influencers!`);
-    }
-
-    const influencer = await this.InfluencerModel.findById(id).exec();
-
-    influencer.acceptedTerms = version;
-    influencer.acceptedTermsAt = new Date();
-    await influencer.save();
-
-    return InfluencerService.makeInfluencerProfile(influencer);
   }
 
   async findInfluencer(id: string, session?: ClientSession): Promise<InfluencerProfile | null> {
@@ -293,7 +278,6 @@ export class InfluencerService {
       userAccount: model.userAccount?.toString() ?? null,
       favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
       assistants: model.assistants?.map((m) => m.toString()) ?? [],
-      notAcceptedTerms: TermsService.notAcceptedTerms('influencer', model.acceptedTerms),
     };
   }
 }

@@ -6,13 +6,7 @@ export function requireRole<Result, Args, Parent>(
   handler: GraphqlHandler<Result, Args, Parent>,
 ): GraphqlHandler<Result, Args, Parent> {
   return loadRole(async (parent, args, context, info) => {
-    if (
-      info.path.typename == 'Mutation' &&
-      !['acceptAccountTerms', 'acceptInfluencerTerms', 'acceptAssistantTerms'].includes(info.fieldName) &&
-      (context.currentAccount.notAcceptedTerms ||
-        context.currentInfluencer?.notAcceptedTerms ||
-        context.currentAssistant?.notAcceptedTerms)
-    ) {
+    if (info.path.typename === 'Mutation' && context.currentAccount.notAcceptedTerms) {
       throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
     }
 

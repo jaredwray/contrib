@@ -8,8 +8,6 @@ export interface IAssistant extends Document {
   status: AssistantStatus;
   userAccount: IUserAccount['_id'];
   influencer: IInfluencer['_id'];
-  acceptedTerms: string;
-  acceptedTermsAt: Date;
 }
 
 export const AssistantCollectionName = 'assistants';
@@ -19,8 +17,6 @@ const AssistantSchema: Schema<IAssistant> = new Schema<IAssistant>({
   status: { type: SchemaTypes.String, required: true },
   userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   influencer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName, required: true },
-  acceptedTerms: { type: SchemaTypes.String },
-  acceptedTermsAt: { type: SchemaTypes.Date },
 });
 
 export const AssistantModel = (connection: Connection): Model<IAssistant> => {

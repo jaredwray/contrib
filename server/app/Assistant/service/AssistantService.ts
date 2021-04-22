@@ -6,7 +6,6 @@ import { Assistant } from '../dto/Assistant';
 import { AssistantStatus } from '../dto/AssistantStatus';
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
-import { TermsService } from '../../Terms';
 
 interface AssistantInput {
   name: string;
@@ -32,20 +31,6 @@ export class AssistantService {
       { session },
     );
     return AssistantService.makeAssistant(assistant[0]);
-  }
-
-  async acceptTerms(id: string, version: string): Promise<Assistant> {
-    if (!TermsService.hasVersion('assistant', version)) {
-      throw new Error(`Invalid terms version for assistants!`);
-    }
-
-    const assistant = await this.assistantModel.findById(id).exec();
-
-    assistant.acceptedTerms = version;
-    assistant.acceptedTermsAt = new Date();
-    await assistant.save();
-
-    return AssistantService.makeAssistant(assistant);
   }
 
   async findAssistant(id: string): Promise<Assistant | null> {
@@ -102,7 +87,6 @@ export class AssistantService {
       status: model.status,
       userAccount: model.userAccount?.toString() ?? null,
       influencerId: model.influencer?.toString() ?? null,
-      notAcceptedTerms: TermsService.notAcceptedTerms('assistant', model.acceptedTerms),
     };
   }
 }

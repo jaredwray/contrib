@@ -19,7 +19,6 @@ export const InfluencerSchema = gql`
     invitation: Invitation!
     favoriteCharities: [Charity!]!
     assistants: [Assistant!]!
-    notAcceptedTerms: TermsInput
   }
 
   type InfluencersPage {
@@ -47,7 +46,6 @@ export const InfluencerSchema = gql`
   }
 
   extend type Mutation {
-    acceptInfluencerTerms(version: String!): InfluencerProfile!
     createInfluencer(input: CreateInfluencerInput!): InfluencerProfile!
     inviteInfluencer(input: InviteInput!): InfluencerProfile!
     updateInfluencerProfile(influencerId: String!, input: UpdateInfluencerProfileInput!): InfluencerProfile!

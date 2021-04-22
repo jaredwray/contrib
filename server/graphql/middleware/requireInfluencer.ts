@@ -6,11 +6,7 @@ export function requireInfluencer<Result, Args, Parent>(
   handler: GraphqlHandler<Result, Args, Parent>,
 ): GraphqlHandler<Result, Args, Parent> {
   return loadInfluencer(async (parent, args, context, info) => {
-    if (
-      info.path.typename == 'Mutation' &&
-      !['acceptAccountTerms', 'acceptInfluencerTerms'].includes(info.fieldName) &&
-      (context.currentAccount.notAcceptedTerms || context.currentInfluencer?.notAcceptedTerms)
-    ) {
+    if (info.path.typename === 'Mutation' && context.currentAccount.notAcceptedTerms) {
       throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
     }
 

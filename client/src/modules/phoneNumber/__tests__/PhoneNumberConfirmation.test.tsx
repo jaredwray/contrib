@@ -18,7 +18,7 @@ cache.writeQuery({
       influencerProfile: null,
       isAdmin: false,
       createdAt: '2021-02-18T14:36:35.208+00:00',
-      notAcceptedTerms: [],
+      notAcceptedTerms: null,
       assistant: null,
       paymentInformation: null,
     },

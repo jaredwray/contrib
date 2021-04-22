@@ -14,8 +14,6 @@ export interface IInfluencer extends Document {
   profileDescription: string | null;
   favoriteCharities: ICharityModel['_id'][];
   assistants: IAssistant['_id'][];
-  acceptedTerms: string;
-  acceptedTermsAt: Date;
 }
 
 export const InfluencerCollectionName = 'influencer';
@@ -30,8 +28,6 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   profileDescription: { type: SchemaTypes.String },
   favoriteCharities: [{ type: SchemaTypes.ObjectId, ref: CharityCollectionName }],
   assistants: [{ type: SchemaTypes.ObjectId, ref: AssistantCollectionName }],
-  acceptedTerms: { type: SchemaTypes.String },
-  acceptedTermsAt: { type: SchemaTypes.Date },
 });
 
 export const InfluencerModel = (connection: Connection): Model<IInfluencer> => {

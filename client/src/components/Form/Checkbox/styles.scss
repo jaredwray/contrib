@@ -1,0 +1,36 @@
+@import 'src/variables.scss';
+
+.custom-checkbox {
+  .custom-control-label::before {
+    top: 0;
+  }
+
+  .custom-control-input:not(:disabled):active ~ .custom-control-label::before {
+    border-color: $dark-gray-color;
+    background-color: $dark-gray-color;
+  }
+
+  .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: $dark-gray-color;
+    box-shadow: none;
+  }
+
+  .custom-control-input:checked ~ .custom-control-label {
+    &::before {
+      background-color: $dark-gray-color;
+      border-color: $dark-gray-color;
+      box-shadow: none;
+    }
+
+    &::after {
+      content: 'L';
+      color: $white-color;
+      display: inline-block;
+      transform: scaleX(-1) rotate(325deg);
+      line-height: 0;
+      font-weight: bold;
+      padding: 4px 9px 0 8px;
+      background-image: none !important;
+    }
+  }
+}

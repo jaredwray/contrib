@@ -5,6 +5,8 @@ import { Form as BsForm } from 'react-bootstrap';
 import useField from '../hooks/useField';
 import useFieldConstraints from '../hooks/useFieldConstraints';
 
+import './styles.scss';
+
 interface Props {
   constraints?: { [key: string]: any };
   checked?: boolean;
@@ -35,6 +37,7 @@ const Checkbox: FC<Props> = ({
     <BsForm.Group className={wrapperClassName}>
       <BsForm.Check
         {...checkboxProps}
+        custom
         className="cursor-pointer d-inline-block"
         id={name}
         label={label}

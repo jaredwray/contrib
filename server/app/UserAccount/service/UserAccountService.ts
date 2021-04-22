@@ -8,7 +8,7 @@ import { TwilioVerificationService } from '../../../twilio-client';
 import { AppError, ErrorCode } from '../../../errors';
 import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
-import { TermsService } from '../../Terms';
+import { TermsService } from '../../TermsService';
 
 export class UserAccountService {
   private readonly accountModel: Model<IUserAccount> = UserAccountModel(this.connection);
@@ -100,8 +100,8 @@ export class UserAccountService {
   }
 
   async acceptTerms(id: string, version: string): Promise<UserAccount> {
-    if (!TermsService.hasVersion('userAccount', version)) {
-      throw new Error(`Invalid terms version for accounts!`);
+    if (!TermsService.isValidVersion(version)) {
+      throw new Error(`Terms version ${version} is invalid!`);
     }
 
     const account = await this.accountModel.findById(id).exec();
@@ -121,7 +121,7 @@ export class UserAccountService {
       mongodbId: model._id.toString(),
       stripeCustomerId: model.stripeCustomerId,
       createdAt: model.createdAt.toISOString(),
-      notAcceptedTerms: TermsService.notAcceptedTerms('userAccount', model.acceptedTerms),
+      notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms),
     };
 
     if (model.isAdmin) {

@@ -50,7 +50,7 @@ export const UserAccountSchema = gql`
     User creation datetime
     """
     createdAt: String!
-    notAcceptedTerms: TermsInput
+    notAcceptedTerms: String
   }
 
   extend type Query {

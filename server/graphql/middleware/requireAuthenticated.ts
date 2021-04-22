@@ -9,7 +9,7 @@ export function requireAuthenticated<Result, Args, Parent>(
   return loadAccount(
     (parent: Parent, args: Args, context: GraphqlContext, info): Promise<Result> => {
       if (
-        info.path.typename == 'Mutation' &&
+        info.path.typename === 'Mutation' &&
         info.fieldName !== 'acceptAccountTerms' &&
         context.currentAccount.notAcceptedTerms
       ) {

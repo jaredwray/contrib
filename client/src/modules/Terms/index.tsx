@@ -1,19 +1,9 @@
-import { useQuery } from '@apollo/client';
-import { Accordion, Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 
-import { TermsListQuery } from 'src/apollo/queries/terms';
 import Layout from 'src/components/Layout';
-import PrivacyCard from 'src/components/PrivacyCard';
+import TermsText from 'src/components/TermsText';
 
 export default function Terms() {
-  const { loading, error, data } = useQuery(TermsListQuery);
-
-  if (loading || error) {
-    return null;
-  }
-
-  const terms = data.terms;
-
   return (
     <Layout>
       <Container className="p-sm-4 pt-3 pl-2 pr-2 pb-3">
@@ -22,11 +12,7 @@ export default function Terms() {
         </Row>
         <Row>
           <Col>
-            <Accordion>
-              <PrivacyCard eventKey="0" role="account" roleInTitle="Users" terms={terms.userAccount} />
-              <PrivacyCard eventKey="1" role="influencer" roleInTitle="Influencers" terms={terms.influencer} />
-              <PrivacyCard eventKey="2" role="assistant" roleInTitle="Assistants" terms={terms.assistant} />
-            </Accordion>
+            <TermsText />
           </Col>
         </Row>
       </Container>
