@@ -8,7 +8,7 @@ export default function Terms() {
     <Layout>
       <Container className="p-sm-4 pt-3 pl-2 pr-2 pb-3">
         <Row>
-          <Col className="text-label label-with-separator">Our Privacy and Terms</Col>
+          <Col className="text-label label-with-separator">Our Terms</Col>
         </Row>
         <Row>
           <Col>
