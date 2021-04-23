@@ -102,9 +102,13 @@ export default function Header() {
                       <div className="text-label text-all-cups dropdown-menu-copyright">
                         Copyright {new Date().getFullYear()} Contrib Inc.
                       </div>
-                      <Link className="dropdown-menu-privacy text-label text-all-cups" to="/terms">
-                        Privacy and Terms &gt;&gt;
-                      </Link>
+
+                      <div className="dropdown-menu-privacy text-label text-all-cups">
+                        <Link to="/privacy-policy">Privacy</Link>
+                        &#160;and&#160;
+                        <Link to="/terms">Terms</Link>
+                        &#160;&gt;&gt;
+                      </div>
                     </div>
                   </div>
                 </section>

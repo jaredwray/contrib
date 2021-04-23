@@ -2,6 +2,7 @@ import { FC, useContext, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { AcceptAccountTermsMutation } from 'src/apollo/queries/terms';
@@ -36,7 +37,16 @@ const TermsConfirmationDialog: FC = () => {
     [account, acceptAccountTerms, addToast],
   );
 
-  if (!account?.notAcceptedTerms) {
+  const checkboxLabel = (
+    <>
+      I accept terms and&#160;
+      <Link target="_blank" to="/privacy-policy">
+        privacy policy
+      </Link>
+    </>
+  );
+
+  if (!account?.notAcceptedTerms || window.location.pathname === '/privacy-policy') {
     return null;
   }
 
@@ -48,7 +58,7 @@ const TermsConfirmationDialog: FC = () => {
             <TermsText />
           </div>
 
-          <Checkbox label="I accept terms" name="terms" required={true} wrapperClassName="mb-0" />
+          <Checkbox label={checkboxLabel} name="terms" required={true} wrapperClassName="mb-0" />
 
           <div className="float-right">
             <Button className="text-label" type="submit" variant="secondary">
