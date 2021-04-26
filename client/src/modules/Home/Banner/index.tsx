@@ -24,7 +24,7 @@ export default function Banner() {
         </Row>
         <Row>
           <Col className="pt-3 pb-3 text-headline" lg="8" xs="12">
-            Auction your memorabelia quickly and hassle free
+            Auction your items quickly and hassle free
           </Col>
         </Row>
         {!isAuthenticated && (
