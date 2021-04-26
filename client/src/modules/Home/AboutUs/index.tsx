@@ -13,8 +13,8 @@ export default function AboutUs() {
         </Row>
         <Row>
           <Col className="text-headline">
-            Contrib is a digital fundraising platform that empowers athletes to engage with their fans, raise money for
-            important charities, and make direct and meaningful impact in their communities.
+            Contrib is a digital fundraising platform that empowers influencers to engage with their fans, raise money
+            for important charities, and make a direct and meaningful impact in their communities.
           </Col>
         </Row>
         {/*
