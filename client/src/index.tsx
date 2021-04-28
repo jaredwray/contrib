@@ -9,6 +9,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { IntercomStateManager } from 'src/components/IntercomStateManager';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
+import Charities from 'src/modules/admin/Charities';
 import Influencers from 'src/modules/admin/Influencers';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import Auctions from 'src/modules/auctions/AuctionsPage';
@@ -63,6 +64,7 @@ ReactDOM.render(
                 <Route exact component={InfluencerOnboardingBasicPage} path="/onboarding/basic" />
                 <Route exact component={InfluencerOnboardingCharitiesPage} path="/onboarding/charities" />
                 <Route exact component={InfluencerOnboardingDonePage} path="/onboarding/done" />
+                <Route exact component={Charities} path="/admin/charities" />
                 <Route exact component={Influencers} path="/admin/influencers" />
                 <Route exact component={InvitationPage} path="/invitation/:slug" />
                 <Route exact component={Auctions} path="/auctions" />

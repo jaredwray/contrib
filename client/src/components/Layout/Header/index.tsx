@@ -2,12 +2,13 @@ import React, { useCallback, useContext } from 'react';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Logo from 'src/assets/images/logo-with-text.svg';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 
+import MenuNavLink from './MenuNavLink';
 import './styles.scss';
 
 export default function Header() {
@@ -47,33 +48,22 @@ export default function Header() {
                   )}
 
                   {account?.isAdmin && (
-                    <NavLink className="dropdown-item" to="/admin/influencers">
-                      <span>Manage Influencers</span>
-                    </NavLink>
+                    <>
+                      <MenuNavLink link="/admin/influencers" title="Manage Influencers" />
+                      <MenuNavLink link="/admin/charities" title="Manage Charities" />
+                    </>
                   )}
 
-                  {account?.influencerProfile && (
-                    <NavLink className="dropdown-item" to="/profiles/me">
-                      <span>Account</span>
-                    </NavLink>
-                  )}
+                  {account?.influencerProfile && <MenuNavLink link="/profiles/me" title="Account" />}
 
-                  {account?.influencerProfile && (
-                    <NavLink className="dropdown-item" to="/assistants/me">
-                      <span>My assistants</span>
-                    </NavLink>
-                  )}
+                  {account?.influencerProfile && <MenuNavLink link="/assistants/me" title="My assistants" />}
 
                   {account?.assistant && (
-                    <NavLink className="dropdown-item" to={`/profiles/${account.assistant.influencerId}`}>
-                      <span>Account</span>
-                    </NavLink>
+                    <MenuNavLink link={`/profiles/${account.assistant.influencerId}`} title="Account" />
                   )}
 
                   {(account?.influencerProfile || account?.assistant) && (
-                    <NavLink className="dropdown-item" to="/auctions/new">
-                      <span>Create new Auction</span>
-                    </NavLink>
+                    <MenuNavLink link="/auctions/new" title="Create new Auction" />
                   )}
                   {account && <NavDropdown.Divider />}
 

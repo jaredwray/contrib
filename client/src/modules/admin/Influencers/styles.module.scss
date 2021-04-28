@@ -1,23 +1,10 @@
 @import 'src/variables.scss';
 
-.page {
-  background-color: $barely-gray-color;
-  flex: 1;
-}
-
 .influencerId {
   max-width: 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.clickable {
-  cursor: pointer;
-}
-
-.clickable {
-  cursor: pointer;
 }
 
 .inviteActionBtn {
@@ -33,14 +20,5 @@
 
   @media (max-width: $small-weight) {
     width: 47%;
-  }
-}
-
-@media (max-width: $small-weight) {
-  .searchInput {
-    order: 0;
-  }
-  .pagination {
-    order: 1;
   }
 }

@@ -38,7 +38,7 @@ const Checkbox: FC<Props> = ({
       <BsForm.Check
         {...checkboxProps}
         custom
-        className="cursor-pointer d-inline-block"
+        className="clickable d-inline-block"
         id={name}
         label={label}
         name={name}
