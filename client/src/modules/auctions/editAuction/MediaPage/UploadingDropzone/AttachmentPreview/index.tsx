@@ -66,7 +66,7 @@ const AttachementPreview: FC<Props> = ({
 
   return (
     <div className={previewStyles.previewWrapper}>
-      <div className="d-inline-block cursor-pointer" onClick={onClickPreview}>
+      <div className="d-inline-block clickable" onClick={onClickPreview}>
         {isInvalidPicture ? (
           defaultPicture()
         ) : (

@@ -1,0 +1,15 @@
+@import 'src/variables.scss';
+
+.page {
+  background-color: $barely-gray-color;
+  flex: 1;
+}
+
+@media (max-width: $small-weight) {
+  .searchInput {
+    order: 0;
+  }
+  .pagination {
+    order: 1;
+  }
+}

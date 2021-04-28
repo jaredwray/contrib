@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Button, Spinner } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import styles from './styles.module.scss';
 
@@ -26,9 +26,7 @@ export default function Pagination(props: {
         onClick={props.showNextPage}
       />
 
-      {props.loading ? (
-        <Spinner animation="border" className="m-auto" />
-      ) : (
+      {!props.loading && (
         <div className={clsx(styles.status, 'w-50 ml-3 ml-md-1')}>
           <span className="pagination-status-current">
             {props.skip + 1} - {itemsOnPage}
