@@ -25,7 +25,7 @@ export default function Header() {
   const handleLogout = useCallback(() => logout({ federated: true }), [logout]);
 
   return (
-    <header className="pl-4 pr-4 navigation-header">
+    <header className="p-0 pl-sm-4 pr-sm-4 navigation-header">
       <Container fluid>
         <Row className="top">
           <Col md className="p-0">

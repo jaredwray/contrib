@@ -1,6 +1,7 @@
 @import 'src/variables.scss';
 
 .auction-attachments-slider {
+  margin-top: 10px;
   margin-bottom: 60px;
 
   /* Arrows */
@@ -60,7 +61,6 @@
     width: 60px;
     height: 60px;
     margin-right: 5px;
-    padding: 5px;
     cursor: pointer;
 
     & > div {
@@ -70,5 +70,11 @@
     &.slick-active {
       border: 1px solid $sage-color;
     }
+  }
+}
+@media (max-width: $medium-weight) {
+  .auction-attachments-slider {
+    margin-top: 2px;
+    margin-bottom: 0;
   }
 }

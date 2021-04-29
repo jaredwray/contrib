@@ -41,14 +41,15 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
         !selectedOption && 'emptyState',
         className,
       )}
-      id={`dropdown-select`}
+      id="dropdown-select"
       size={small ? 'sm' : undefined}
       title={title || placeholder}
       variant="outline-primary"
       onSelect={handleSelect}
     >
-      {options && options.length && isArrayOfObjects
-        ? options.map(({ value, label }: { value: string; label: string }) => (
+      {options && options.length && isArrayOfObjects ? (
+        <div className="dropdown-items-wrapper">
+          {options.map(({ value, label }: { value: string; label: string }) => (
             <Dropdown.Item
               key={value + label}
               active={selectedOption?.value === value}
@@ -59,8 +60,11 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
             >
               {label}
             </Dropdown.Item>
-          ))
-        : options.map((option: string) => (
+          ))}
+        </div>
+      ) : (
+        <div className="dropdown-items-wrapper">
+          {options.map((option: string) => (
             <Dropdown.Item
               key={option}
               active={selectedOption === option}
@@ -72,6 +76,8 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
               {option}
             </Dropdown.Item>
           ))}
+        </div>
+      )}
     </DropdownButton>
   );
 };

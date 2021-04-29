@@ -39,6 +39,7 @@
   .wrapper {
     background-image: none;
   }
+
   .banner {
     background-image: url('/assets/images/player-sm.webp');
     background-repeat: no-repeat;
@@ -49,6 +50,19 @@
   .separator {
     height: 8px;
     width: 68px;
+  }
+}
+
+@media (max-width: 380px) {
+  .banner {
+    background-image: none;
+  }
+
+  .homepageContainer {
+    background-image: url('/assets/images/player-sm.webp');
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: cover;
   }
 }
 
