@@ -4,9 +4,13 @@
   min-width: 105px;
 
   .dropdown-menu {
+    width: 100%;
     overflow: hidden;
+  }
+
+  .dropdown-items-wrapper {
     max-height: 350px;
-    max-width: 350px;
+    overflow-y: auto;
   }
 
   &.dropdown.show > .dropdown-toggle {
@@ -112,6 +116,9 @@
     cursor: pointer;
     font-weight: 700;
     position: relative;
+    white-space: normal;
+    word-wrap: break-word;
+    // padding-right: 0px;
 
     &.active::before {
       content: '';
@@ -126,6 +133,11 @@
   @media (max-width: $medium-weight) {
     .dropdown-toggle {
       font-size: 18px !important;
+    }
+  }
+  @media (max-width: $small-weight) {
+    .dropdown-item {
+      padding-right: 25px;
     }
   }
 }

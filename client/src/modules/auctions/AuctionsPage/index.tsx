@@ -72,10 +72,10 @@ const AuctionsPage: FC = () => {
     <Layout>
       <Container fluid className="d-flex flex-column flex-grow-1">
         <Row className="h-100 flex-grow-1">
-          <Col className={styles.filtersWrapper} lg="3" md="4">
+          <Col className={clsx(styles.filtersWrapper, 'pb-0 pb-sm-4')} lg="3" md="4" sm="12">
             <Filters changeFilters={changeFilters} filters={filters} initialBids={initialBids} />
           </Col>
-          <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5')} md="8">
+          <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5 mt-1')} md="8">
             <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
               <SortBy changeFilters={changeFilters} />
 

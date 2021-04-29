@@ -12,13 +12,18 @@
 .attachment {
   max-width: 540px;
   max-height: 540px;
+  width: 100%;
+  height: min(100vw, 100vh);
   margin: 0 auto;
+  object-fit: contain;
 }
 .attachmentThumbnail {
   max-width: 50px;
   max-height: 50px;
 }
-
+.attachmentImageWrapper {
+  background-color: $barely-gray-color;
+}
 .attachmentStatus {
   height: 20px;
   line-height: 20px !important;
@@ -33,7 +38,8 @@
   .slider,
   .attachment {
     max-width: 100%;
-    max-height: 100vw;
-    margin: 0 !important;
+  }
+  .attachmentImageWrapper {
+    margin-bottom: 0;
   }
 }

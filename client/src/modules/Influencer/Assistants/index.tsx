@@ -32,10 +32,10 @@ export default function Assistants() {
       <section className={clsx(styles.page, 'text-label p-4')}>
         <Container fluid>
           <Row>
-            <Col className="text-headline" md="10" xs="12">
+            <Col className="text-headline" md="10">
               <span className="break-word">{isMyProfile ? 'My' : `${influencer.name}'s`}</span> assistants
             </Col>
-            <Col className="pt-3 pt-md-0" md="2" xs="4">
+            <Col className="pt-3 pt-md-0" md="2" sm="4">
               <InviteButton mutation={InviteAssistantMutation} mutationVariables={{ influencerId: influencer.id }} />
             </Col>
           </Row>

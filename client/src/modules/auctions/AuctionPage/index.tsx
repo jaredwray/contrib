@@ -35,11 +35,11 @@ const AuctionPage = () => {
       <Container className="pt-0 pt-md-5 pb-0 pb-md-5">
         <Row>
           <Col md="1" />
-          <Col md="6" xs="12">
+          <Col md="6">
             <AttachmentsSlider attachments={auction?.attachments} />
           </Col>
           <Col md="1" />
-          <Col md="4" xs="12">
+          <Col md="4">
             <AuctionDetails auction={auction} />
           </Col>
           <Col md="1" />
@@ -47,10 +47,10 @@ const AuctionPage = () => {
 
         <Row>
           <Col md="1" />
-          <Col md="6" xs="12">
+          <Col md="6">
             <Author {...auction.auctionOrganizer} />
             <About {...auction} />
-            <Benefits {...auction?.charity} />
+            {auction?.charity ? <Benefits {...auction?.charity} /> : <p className="pb-2 d-md-none" />}
           </Col>
           <Col md="7" />
         </Row>

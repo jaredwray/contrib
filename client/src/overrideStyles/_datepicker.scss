@@ -4,13 +4,16 @@ input[type='time']::-webkit-calendar-picker-indicator {
   display: none;
 }
 
+.DatePickerMainWrapper {
+  position: relative;
+}
 .react-datepicker-wrapper {
   width: 100%;
-  position: relative;
 }
 
 .react-datepicker-popper {
   z-index: 2;
+  width: 100% !important;
 }
 
 .react-datepicker {
@@ -22,10 +25,10 @@ input[type='time']::-webkit-calendar-picker-indicator {
   font-size: 18px;
   background-color: $white-color;
   color: $sage-color;
+  width: 100% !important;
 
   &__input-container {
     background-color: transparent;
-
     & > .form-control {
       z-index: 10;
     }
@@ -82,17 +85,21 @@ input[type='time']::-webkit-calendar-picker-indicator {
   &__triangle {
     display: none;
   }
-
+  &__month-container {
+    width: 100%;
+  }
   &__day-name,
   &__day,
   &__time-name {
     color: $sage-color;
     display: inline-block;
-    width: 44px;
     line-height: 22px;
     padding: 11px 12px;
   }
-
+  &__day,
+  &__day-name {
+    width: 3.6rem;
+  }
   &__day--outside-month,
   &__day--disabled {
     cursor: not-allowed;
@@ -136,6 +143,32 @@ input[type='time']::-webkit-calendar-picker-indicator {
       transform: rotate(225deg);
       &:hover {
         border-color: $sage-color;
+      }
+    }
+  }
+
+  @media (max-width: $extra-large-weight) {
+    .react-datepicker {
+      &__day,
+      &__day-name {
+        width: 3rem;
+      }
+    }
+  }
+  @media (max-width: $medium-weight) {
+    .react-datepicker {
+      &__day,
+      &__day-name {
+        width: 3.6rem;
+      }
+    }
+  }
+  @media (max-width: $small-weight) {
+    .react-datepicker {
+      &__day,
+      &__day-name {
+        width: 2rem;
+        padding: 11px 0;
       }
     }
   }
