@@ -338,7 +338,11 @@ export class AuctionService {
 
     return {
       id: _id.toString(),
-      attachments: assets.map((asset) => AuctionService.makeAuctionAttachment(asset)),
+      attachments: assets
+        .map((asset) => AuctionService.makeAuctionAttachment(asset))
+        .sort((a: any, b: any) => {
+          if (b.type > a.type) return -1;
+        }),
       maxBid: AuctionService.makeAuctionBid(maxBid),
       endDate: endsAt,
       startDate: startsAt,

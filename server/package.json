@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "license": "ISC",
   "scripts": {
-    "start": "NODE_ENV=local nodemon --exec ts-node ./index.ts",
+    "start": "cross-env NODE_ENV=local nodemon --exec ts-node ./index.ts",
     "build": "tsc --build tsconfig.build.json",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
@@ -26,6 +26,7 @@
     "bcrypt": "^5.0.1",
     "bitly": "^7.1.2",
     "compare-versions": "^3.6.0",
+    "cross-env": "^7.0.3",
     "dataloader": "^2.0.0",
     "dayjs": "^1.10.4",
     "dinero.js": "^1.8.1",

@@ -31,6 +31,12 @@
   ],
 
   "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "no-console": "warn",
     "react/prop-types": "off",
     "react/no-unknown-property": "error",
