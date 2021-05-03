@@ -40,7 +40,7 @@ export class AuctionRepository implements IAuctionRepository {
     return [
       { path: 'charity', model: this.CharityModel },
       { path: 'assets', model: this.AuctionAsset },
-      { path: 'auctionOrganizer', mode: this.InfluencerModel },
+      { path: 'auctionOrganizer', model: this.InfluencerModel },
       { path: 'maxBid', model: this.AuctionBidModel },
       {
         path: 'bids',
@@ -92,6 +92,8 @@ export class AuctionRepository implements IAuctionRepository {
       {
         ...input,
         auctionOrganizer: Types.ObjectId(organizerId),
+        startPrice: input.startPrice.getAmount(),
+        startPriceCurrency: input.startPrice.getCurrency(),
       },
     ]);
 

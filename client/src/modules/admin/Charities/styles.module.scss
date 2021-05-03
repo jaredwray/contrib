@@ -1,0 +1,11 @@
+@import 'src/variables.scss';
+
+:global(.btn).inviteBtn {
+  @media (max-width: $medium-weight) {
+    line-height: 7px !important;
+  }
+
+  @media (max-width: $small-weight) {
+    width: 47%;
+  }
+}

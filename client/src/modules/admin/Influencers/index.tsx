@@ -7,8 +7,8 @@ import { useHistory, Link } from 'react-router-dom';
 
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
+import { AdminPage } from 'src/components/AdminPage';
 import { InviteButton } from 'src/components/InviteButton';
-import { ManagePage } from 'src/components/ManagePage';
 import { PER_PAGE } from 'src/components/Pagination';
 import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
 
@@ -43,7 +43,7 @@ export default function InfluencersPage() {
     </>
   );
   return (
-    <ManagePage
+    <AdminPage
       controlBtns={controlBtns}
       items={influencers}
       loading={loading}
@@ -93,6 +93,6 @@ export default function InfluencersPage() {
           ))}
         </tbody>
       </Table>
-    </ManagePage>
+    </AdminPage>
   );
 }

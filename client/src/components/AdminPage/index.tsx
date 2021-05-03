@@ -23,7 +23,7 @@ interface Props {
   controlBtns?: React.ReactNode;
 }
 
-export const ManagePage: FC<Props> = ({ items, pageSkip, setPageSkip, loading, controlBtns, children }) => {
+export const AdminPage: FC<Props> = ({ items, pageSkip, setPageSkip, loading, controlBtns, children }) => {
   const showPrevPage = () => {
     setPageSkip(pageSkip - PER_PAGE);
   };

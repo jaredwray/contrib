@@ -56,6 +56,7 @@ export class InfluencerService {
     if (profile.status === status) {
       return profile;
     }
+
     const model = await this.InfluencerModel.findById(profile.id, null, { session }).exec();
     model.status = status;
 

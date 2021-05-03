@@ -9,7 +9,18 @@ export const AllCharitiesQuery = gql`
       items {
         id
         name
+        status
       }
+    }
+  }
+`;
+
+export const InviteCharityMutation = gql`
+  mutation InviteCharity($firstName: String!, $lastName: String!, $phoneNumber: String!, $welcomeMessage: String!) {
+    inviteCharity(
+      input: { firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, welcomeMessage: $welcomeMessage }
+    ) {
+      id
     }
   }
 `;

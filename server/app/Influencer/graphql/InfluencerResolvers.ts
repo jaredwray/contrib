@@ -125,8 +125,9 @@ export const InfluencerResolvers: InfluencerResolversType = {
     invitation: requireAdmin(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
       loaders.invitation.getByParentEntityId(influencerProfile.id),
     ),
-    favoriteCharities: requireRole(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
-      Promise.all(influencerProfile.favoriteCharities.map((c) => loaders.charity.getById(c))),
+    favoriteCharities: requireRole(
+      async (influencerProfile: InfluencerProfile, _, { loaders }) =>
+        await Promise.all(influencerProfile.favoriteCharities.map(async (c) => await loaders.charity.getById(c))),
     ),
     assistants: requireRole(async (influencerProfile: InfluencerProfile, _, { loaders }) =>
       Promise.all(influencerProfile.assistants.map((a) => loaders.assistant.getById(a))),

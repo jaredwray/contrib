@@ -9,6 +9,12 @@ export const MyAccountQuery = gql`
       isAdmin
       createdAt
       notAcceptedTerms
+      charity {
+        id
+        name
+        status
+        stripeAccountLink
+      }
       influencerProfile {
         id
         profileDescription

@@ -19,6 +19,9 @@ import { AppLogger } from '../../../logger';
 import { EventHub } from '../../EventHub';
 import { UrlShortenerService } from '../../Core';
 import { InfluencerStatus } from '../../Influencer/dto/InfluencerStatus';
+import { Charity } from '../../Charity/dto/Charity';
+import { CharityService } from '../../Charity';
+import { CharityStatus } from '../../Charity/dto/CharityStatus';
 
 export class InvitationService {
   private readonly InvitationModel = InvitationModel(this.connection);
@@ -27,6 +30,7 @@ export class InvitationService {
     private readonly connection: Connection,
     private readonly assistantService: AssistantService,
     private readonly userAccountService: UserAccountService,
+    private readonly charityService: CharityService,
     private readonly influencerService: InfluencerService,
     private readonly twilioNotificationService: TwilioNotificationService,
     private readonly eventHub: EventHub,
@@ -47,6 +51,57 @@ export class InvitationService {
       parentEntityId: { $in: parentEntityIds },
     });
     return models.map((model) => InvitationService.makeInvitation(model));
+  }
+
+  async inviteCharity(input: InviteInput): Promise<Charity> {
+    const session = await this.connection.startSession();
+    let charity: Charity = null;
+
+    try {
+      const { firstName, lastName, phoneNumber, welcomeMessage } = input;
+
+      // TODO findById method donesn't work in charityService
+      // await session.withTransaction(async () => {
+      const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
+      charity = await this.charityService.createCharity({ name: 'My Charity Name' }, session);
+
+      if (userAccount) {
+        charity = await this.charityService.updateCharityStatus(
+          charity,
+          CharityStatus.PENDING_INVITE,
+          userAccount,
+          session,
+        );
+
+        const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
+        const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
+        await this.twilioNotificationService.sendMessage(phoneNumber, message);
+        await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, charity);
+      } else {
+        if (await this.InvitationModel.exists({ phoneNumber })) {
+          throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+        }
+        const invitation = await this.createCharityInvitation(
+          charity,
+          {
+            phoneNumber,
+            firstName,
+            lastName,
+            welcomeMessage,
+          },
+          session,
+        );
+        const link = await this.makeInvitationLink(invitation.slug);
+        charity = await this.charityService.updateCharityStatus(charity, CharityStatus.PENDING_INVITE, null, session);
+        const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
+        await this.twilioNotificationService.sendMessage(phoneNumber, message);
+      }
+      // });
+
+      return charity;
+    } finally {
+      session.endSession();
+    }
   }
 
   async inviteInfluencer(input: InviteInput): Promise<InfluencerProfile> {
@@ -164,9 +219,7 @@ export class InvitationService {
 
       if (invitation.parentEntityType === InvitationParentEntityType.INFLUENCER) {
         await session.withTransaction(async () => {
-          invitation.accepted = true;
-          invitation.updatedAt = new Date();
-          await invitation.save();
+          await this.acceptInvitation(invitation);
           const influencerProfile = await this.influencerService.assignUserToInfluencer(
             invitation.parentEntityId,
             userAccount.mongodbId,
@@ -175,10 +228,8 @@ export class InvitationService {
           await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
         });
       } else if (invitation.parentEntityType === InvitationParentEntityType.ASSISTANT) {
+        await this.acceptInvitation(invitation);
         await session.withTransaction(async () => {
-          invitation.accepted = true;
-          invitation.updatedAt = new Date();
-          await invitation.save();
           const assistant = await this.assistantService.assignUserToAssistant(
             invitation.parentEntityId,
             userAccount.mongodbId,
@@ -186,12 +237,26 @@ export class InvitationService {
           );
           await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, assistant });
         });
+      } else if (invitation.parentEntityType === InvitationParentEntityType.CHARITY) {
+        await this.acceptInvitation(invitation);
+        const charity = await this.charityService.assignUserToCharity(
+          invitation.parentEntityId,
+          userAccount.mongodbId,
+          session,
+        );
+        await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, charity);
       } else {
         AppLogger.error(`unexpected parent entity type ${invitation.parentEntityType} for invitation ${invitation.id}`);
       }
     } finally {
       session.endSession();
     }
+  }
+
+  private async acceptInvitation(invitation: IInvitation): Promise<IInvitation> {
+    invitation.accepted = true;
+    invitation.updatedAt = new Date();
+    return await invitation.save();
   }
 
   private async makeInvitationLink(slug: string): Promise<string> {
@@ -286,6 +351,33 @@ export class InvitationService {
           welcomeMessage,
           accepted: false,
           parentEntityType: InvitationParentEntityType.ASSISTANT,
+          parentEntityId: Types.ObjectId(parent.id),
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      { session },
+    );
+    return InvitationService.makeInvitation(invitation[0]);
+  }
+
+  private async createCharityInvitation(
+    parent: Charity,
+    { phoneNumber, firstName, lastName, welcomeMessage }: InviteInput,
+    session: ClientSession,
+  ): Promise<Invitation> {
+    const now = new Date();
+    const slug = uuidv4();
+    const invitation = await InvitationModel(this.connection).create(
+      [
+        {
+          slug,
+          firstName,
+          lastName,
+          phoneNumber,
+          welcomeMessage,
+          accepted: false,
+          parentEntityType: InvitationParentEntityType.CHARITY,
           parentEntityId: Types.ObjectId(parent.id),
           createdAt: now,
           updatedAt: now,

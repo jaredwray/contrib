@@ -1,9 +1,21 @@
 import { gql } from 'apollo-server-express';
 
 export const CharitySchema = gql`
+  enum CharityStatus {
+    PENDING_INVITE
+    PENDING_ONBOARDING
+    PENDING_VERIFICATION
+    ACTIVE
+    INACTIVE
+  }
+
   type Charity {
     id: String!
     name: String!
+    status: String!
+    userAccount: UserAccount
+    stripeAccountId: String
+    stripeAccountLink: String
   }
 
   input CharityInputID {
@@ -27,7 +39,11 @@ export const CharitySchema = gql`
   }
 
   extend type Mutation {
-    createCharity(input: CharityInput!): Charity!
+    inviteCharity(input: InviteInput!): Charity!
     updateCharity(id: String!, input: CharityInput!): Charity!
+  }
+
+  extend type UserAccount {
+    charity: Charity
   }
 `;
