@@ -8,7 +8,6 @@ import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
-import { CharityStatus } from 'src/types/Charity';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import { UserAccountContext } from './UserAccountContext';
@@ -44,12 +43,6 @@ export function UserAccountProvider({ children }: PropTypes) {
       console.error('error fetching account data', myAccountError);
     }
   }, [myAccountError]);
-
-  useEffect(() => {
-    if (myAccount?.charity?.status === CharityStatus.PENDING_ONBOARDING) {
-      window.location.href = myAccount?.charity?.stripeAccountLink;
-    }
-  }, [myAccount]);
 
   // redirect to onboarding if needed
   const targetPathname = getOnboardingPath(myAccount);
