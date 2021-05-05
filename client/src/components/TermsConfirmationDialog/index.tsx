@@ -12,6 +12,7 @@ import Checkbox from 'src/components/Form/Checkbox';
 import Form from 'src/components/Form/Form';
 import TermsText from 'src/components/TermsText';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { CharityStatus } from 'src/types/Charity';
 
 import styles from './styles.module.scss';
 
@@ -19,6 +20,8 @@ const TermsConfirmationDialog: FC = () => {
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const [acceptAccountTerms] = useMutation(AcceptAccountTermsMutation);
+  const charity = account?.charity;
+  const pendingOnboardingChariry = charity?.status === CharityStatus.PENDING_ONBOARDING;
 
   const onSubmit = useCallback(
     async (values) => {
@@ -27,14 +30,20 @@ const TermsConfirmationDialog: FC = () => {
       }
 
       try {
-        await acceptAccountTerms({ variables: { version: account?.notAcceptedTerms } });
+        if (account?.notAcceptedTerms) {
+          await acceptAccountTerms({ variables: { version: account?.notAcceptedTerms } });
+        }
 
-        window.location.reload(false);
+        if (charity && pendingOnboardingChariry) {
+          window.location.replace(charity.stripeAccountLink);
+        } else {
+          window.location.reload(false);
+        }
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
     },
-    [account, acceptAccountTerms, addToast],
+    [account, acceptAccountTerms, addToast, charity, pendingOnboardingChariry],
   );
 
   const checkboxLabel = (
@@ -46,7 +55,10 @@ const TermsConfirmationDialog: FC = () => {
     </>
   );
 
-  if (!account?.notAcceptedTerms || window.location.pathname === '/privacy-policy') {
+  if (
+    (!account?.notAcceptedTerms && !pendingOnboardingChariry) ||
+    ['/privacy-policy', '/terms'].includes(window.location.pathname)
+  ) {
     return null;
   }
 
@@ -59,6 +71,19 @@ const TermsConfirmationDialog: FC = () => {
           </div>
 
           <Checkbox label={checkboxLabel} name="terms" required={true} wrapperClassName="mb-0" />
+
+          {pendingOnboardingChariry && (
+            <>
+              <div className="pt-2">You need to create a stripe account to continue work in our system.</div>
+              <div>
+                You will be redirected to the&nbsp;
+                <a href="https://stripe.com" rel="noreferrer" target="_blank">
+                  stripe.com
+                </a>
+                &nbsp;after our terms confirmation.
+              </div>
+            </>
+          )}
 
           <div className="float-right">
             <Button className="text-label" type="submit" variant="secondary">
