@@ -1,5 +1,8 @@
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
 import { Charity } from '../dto/Charity';
+import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
+import { loadAccount } from '../../../graphql/middleware/loadAccount';
+import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
 type CharityInput = {
   name: string;
@@ -28,13 +31,7 @@ export const CharityResolvers = {
     },
   },
   Mutation: {
-    createCharity: async (
-      _: unknown,
-      { input: { name } }: { input: CharityInput },
-      { charity }: GraphqlContext,
-    ): Promise<Charity> => {
-      return await charity.createCharity({ name });
-    },
+    inviteCharity: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteCharity(input)),
     updateCharity: async (
       _: unknown,
       currentInput: { input: CharityInput; id: string },
@@ -43,5 +40,16 @@ export const CharityResolvers = {
       const { id, input } = currentInput;
       return await charity.updateCharity(id, input);
     },
+  },
+  UserAccount: {
+    charity: loadAccount(
+      async (userAccount: UserAccount, _, { user, currentAccount, loaders }): Promise<Charity | null> => {
+        const hasAccess = currentAccount?.isAdmin || user?.id === userAccount.id;
+        if (!userAccount.mongodbId || !hasAccess) {
+          return null;
+        }
+        return await loaders.charity.getByUserAccountId(userAccount.mongodbId);
+      },
+    ),
   },
 };

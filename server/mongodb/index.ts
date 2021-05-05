@@ -1,1 +1,5 @@
-export { initMongodbConnection } from './initMongodbConnection';
+export {
+  initInMemoryMongodbConnection,
+  closeInMemoryMongodbConnection,
+  initMongodbConnection,
+} from './initMongodbConnection';

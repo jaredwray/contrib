@@ -1,11 +1,26 @@
 import Stripe from 'stripe';
-
+import { requireEnvVar } from '../../../config';
 import { AppConfig } from '../../../config';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { AppLogger } from '../../../logger';
 
 export class StripeService {
   private readonly stripe = new Stripe(AppConfig.stripe.secretKey, { apiVersion: '2020-08-27' });
+
+  public async createStripeAccount(): Promise<Stripe.Account> {
+    return await this.stripe.accounts.create({
+      type: 'express',
+    });
+  }
+
+  public async createStripeObjLink(stripeAccountId: string): Promise<Stripe.AccountLink> {
+    return this.stripe.accountLinks.create({
+      account: stripeAccountId,
+      refresh_url: requireEnvVar('APP_URL'),
+      return_url: requireEnvVar('APP_URL'),
+      type: 'account_onboarding',
+    });
+  }
 
   public async createCustomerForAccount(account: UserAccount, name: string, email: string): Promise<Stripe.Customer> {
     return this.stripe.customers.create({

@@ -346,7 +346,15 @@ export class AuctionService {
       maxBid: AuctionService.makeAuctionBid(maxBid),
       endDate: endsAt,
       startDate: startsAt,
-      charity: charity ? { id: charity?._id, name: charity.name } : null,
+      charity: charity
+        ? {
+            id: charity._id,
+            name: charity.name,
+            status: charity.status,
+            userAccount: charity.userAccount,
+            stripeAccountId: charity.stripeAccount,
+          }
+        : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
       totalBids: bids?.length ?? 0,
       startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),

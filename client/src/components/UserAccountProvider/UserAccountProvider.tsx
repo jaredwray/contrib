@@ -8,6 +8,7 @@ import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
+import { CharityStatus } from 'src/types/Charity';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import { UserAccountContext } from './UserAccountContext';
@@ -25,8 +26,9 @@ export function UserAccountProvider({ children }: PropTypes) {
   const [getMyAccount, { data: myAccountData, error: myAccountError }] = useLazyQuery(MyAccountQuery);
 
   const queryParams = useUrlQueryParams();
+  const myAccount = myAccountData?.myAccount;
 
-  const userContextValue = useMemo(() => ({ account: myAccountData?.myAccount }), [myAccountData]);
+  const userContextValue = useMemo(() => ({ account: myAccount }), [myAccount]);
 
   // load profile when user is logged in
   useEffect(() => {
@@ -43,8 +45,14 @@ export function UserAccountProvider({ children }: PropTypes) {
     }
   }, [myAccountError]);
 
+  useEffect(() => {
+    if (myAccount?.charity?.status === CharityStatus.PENDING_ONBOARDING) {
+      window.location.href = myAccount?.charity?.stripeAccountLink;
+    }
+  }, [myAccount]);
+
   // redirect to onboarding if needed
-  const targetPathname = getOnboardingPath(myAccountData?.myAccount);
+  const targetPathname = getOnboardingPath(myAccount);
   const currentPathname = location.pathname;
   useEffect(() => {
     if (targetPathname !== null && targetPathname !== currentPathname) {

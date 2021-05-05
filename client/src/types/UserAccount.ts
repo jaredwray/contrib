@@ -1,4 +1,5 @@
 import { Assistant } from './Assistant';
+import { Charity } from './Charity';
 import { InfluencerProfile } from './InfluencerProfile';
 
 export enum UserAccountStatus {
@@ -21,6 +22,7 @@ export interface UserAccount {
   status: UserAccountStatus;
   influencerProfile?: InfluencerProfile;
   assistant?: Assistant;
+  charity?: Charity;
   paymentInformation: PaymentCard | null;
   createdAt: Date;
   notAcceptedTerms: string | null;

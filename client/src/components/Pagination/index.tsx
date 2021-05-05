@@ -29,7 +29,7 @@ export default function Pagination(props: {
       {!props.loading && (
         <div className={clsx(styles.status, 'w-50 ml-3 ml-md-1')}>
           <span className="pagination-status-current">
-            {props.skip + 1} - {itemsOnPage}
+            {props.total > 0 ? props.skip + 1 : 0} - {itemsOnPage}
           </span>
           <span className={clsx(styles.statusInfo, 'ml-2 ')}>of {props.total}</span>
         </div>

@@ -89,7 +89,7 @@ export default function PhoneNumberVerification() {
                 )}
               </Field>
               <Button
-                className="submit-btn mb-2 text-label"
+                className="submit-btn mb-2 text-label d-inline-block"
                 disabled={formSubmitting}
                 type="submit"
                 variant="secondary"

@@ -5,7 +5,6 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
-import Dinero from 'dinero.js';
 
 export type IAuctionFilters = {
   size?: number;

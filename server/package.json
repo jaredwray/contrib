@@ -9,7 +9,7 @@
     "build": "tsc --build tsconfig.build.json",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
-    "test": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --detectOpenHandles",
     "test:watch": "jest --watch --passWithNoTests",
     "test:cov": "jest --coverage --passWithNoTests"
   },
@@ -34,6 +34,8 @@
     "fs-extra": "^9.1.0",
     "graphql": "^15.5.0",
     "graphql-upload": "^11.0.0",
+    "mongodb-memory-server": "^6.9.6",
+    "mongodb-memory-server-core": "^6.9.6",
     "mongoose": "^5.12.2",
     "newrelic": "^7.2.0",
     "pug": "^3.0.2",
