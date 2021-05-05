@@ -109,7 +109,7 @@ export class InvitationService {
     let influencerProfile: InfluencerProfile = null;
 
     try {
-      const { firstName, lastName, phoneNumber, welcomeMessage } = input;
+      const { firstName, lastName, phoneNumber, welcomeMessage, influencerId } = input;
 
       await session.withTransaction(async () => {
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
@@ -128,7 +128,7 @@ export class InvitationService {
           await this.twilioNotificationService.sendMessage(phoneNumber, message);
           await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
         } else {
-          if (await this.InvitationModel.exists({ phoneNumber })) {
+          if (await this.InvitationModel.exists({ parentEntityId: influencerId })) {
             throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
           }
           const invitation = await this.createInfluencerInvitation(

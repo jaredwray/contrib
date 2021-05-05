@@ -14,7 +14,7 @@ export const UserAccountCollectionName = 'account';
 
 const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   authzId: { type: SchemaTypes.String, required: true, index: true, unique: true },
-  phoneNumber: { type: SchemaTypes.String, required: true, unique: true },
+  phoneNumber: { type: SchemaTypes.String, required: true },
   isAdmin: { type: SchemaTypes.Boolean, required: false },
   stripeCustomerId: { type: SchemaTypes.String, required: false },
   createdAt: { type: SchemaTypes.Date, required: true },

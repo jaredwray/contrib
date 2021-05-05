@@ -72,10 +72,6 @@ export class UserAccountService {
       throw new AppError('Account already exists', ErrorCode.BAD_REQUEST);
     }
 
-    if (await this.accountModel.findOne({ phoneNumber }).exec()) {
-      throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
-    }
-
     const accountModel = await this.accountModel.create({ authzId, phoneNumber, createdAt: dayjs().toISOString() });
     const account = UserAccountService.makeUserAccount(accountModel);
 
