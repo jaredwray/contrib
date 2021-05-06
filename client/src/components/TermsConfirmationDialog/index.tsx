@@ -7,7 +7,7 @@ import { useToasts } from 'react-toast-notifications';
 
 import { AcceptAccountTermsMutation } from 'src/apollo/queries/terms';
 import Dialog from 'src/components/Dialog';
-import DialogContent from 'src/components/DialogContent';
+import DialogContent from 'src/components/Dialog/DialogContent';
 import Checkbox from 'src/components/Form/Checkbox';
 import Form from 'src/components/Form/Form';
 import TermsText from 'src/components/TermsText';

@@ -13,8 +13,8 @@ import { MakeAuctionBidMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import AsyncButton from 'src/components/AsyncButton';
 import Dialog from 'src/components/Dialog';
-import DialogActions from 'src/components/DialogActions';
-import DialogContent from 'src/components/DialogContent';
+import DialogActions from 'src/components/Dialog/DialogActions';
+import DialogContent from 'src/components/Dialog/DialogContent';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import styles from './BidConfirmationModal.module.scss';

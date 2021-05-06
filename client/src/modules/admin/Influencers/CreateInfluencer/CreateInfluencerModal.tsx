@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import { CreateInfluencerMutation } from 'src/apollo/queries/influencers';
 import Dialog from 'src/components/Dialog';
-import DialogContent from 'src/components/DialogContent';
+import DialogContent from 'src/components/Dialog/DialogContent';
 import Form from 'src/components/Form/Form';
 import InputField from 'src/components/Form/InputField';
 
