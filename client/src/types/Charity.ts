@@ -10,5 +10,8 @@ export interface Charity {
   id: string;
   name: string;
   status: CharityStatus;
+  avatarUrl?: string;
+  websiteUrl?: string;
+  profileDescription?: string;
   stripeAccountLink: string;
 }

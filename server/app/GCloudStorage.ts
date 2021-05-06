@@ -21,6 +21,7 @@ export class GCloudStorage {
   private static readonly cloudPath = 'https://storage.googleapis.com';
   private static readonly imageSupportedFormats = /png|jpeg|jpg|webp/;
   private static readonly videoSupportedFormats = /mp4|webm|opgg/;
+  static allowed_extensions = ['png', 'jpeg', 'jpg', 'webp'];
 
   constructor(private readonly cloudflareStreaming: CloudflareStreaming) {}
 

@@ -54,9 +54,13 @@ export default function Header() {
                     </>
                   )}
 
-                  {account?.influencerProfile && <MenuNavLink link="/profiles/me" title="Account" />}
-
-                  {account?.influencerProfile && <MenuNavLink link="/assistants/me" title="My assistants" />}
+                  {account?.influencerProfile && (
+                    <>
+                      <MenuNavLink link="/profiles/me" title="My Account" />
+                      <MenuNavLink link="/assistants/me" title="My Assistants" />
+                    </>
+                  )}
+                  {account?.charity && <MenuNavLink link="/charity/me" title="My Charity Profile" />}
 
                   {account?.assistant && (
                     <MenuNavLink link={`/profiles/${account.assistant.influencerId}`} title="Account" />
@@ -65,6 +69,7 @@ export default function Header() {
                   {(account?.influencerProfile || account?.assistant) && (
                     <MenuNavLink link="/auctions/new" title="Create new Auction" />
                   )}
+
                   {account && <NavDropdown.Divider />}
 
                   {isAuthenticated ? (

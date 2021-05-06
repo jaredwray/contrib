@@ -1,5 +1,11 @@
 @import 'src/variables.scss';
 
+.inviteActionBtn {
+  height: 49px;
+  padding-left: 36px;
+  justify-content: flex-start !important;
+}
+
 :global(.btn).inviteBtn {
   @media (max-width: $medium-weight) {
     line-height: 7px !important;

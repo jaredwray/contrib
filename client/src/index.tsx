@@ -19,6 +19,8 @@ import EditAuctionDetailsPage from 'src/modules/auctions/editAuction/DetailsPage
 import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
 import EditAuctionMediaPage from 'src/modules/auctions/editAuction/MediaPage';
 import NewAuctionWizardPage from 'src/modules/auctions/NewAuctionPage';
+import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPage';
+import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
 import HomePage from 'src/modules/Home';
 import Assistants from 'src/modules/Influencer/Assistants';
 import InvitationPage from 'src/modules/Invitation';
@@ -70,6 +72,8 @@ ReactDOM.render(
                 <Route exact component={Auctions} path="/auctions" />
                 <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
                 <Route exact component={InfluencerProfileEditPage} path="/profiles/:influencerId/edit" />
+                <Route exact component={CharityProfilePage} path="/charity/:charityId" />
+                <Route exact component={CharityProfileEditPage} path="/charity/:charityId/edit" />
                 <Route exact component={Assistants} path="/assistants/:influencerId" />
                 <Route exact component={NewAuctionWizardPage} path="/auctions/new" />
                 <Route exact component={NewAuctionBasicPage} path="/auctions/:ownerId/new/basic" />
