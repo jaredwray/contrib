@@ -5,11 +5,11 @@ import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import CoverImage from 'src/components/CoverImage';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import CoverImage from './CoverImage';
 import DateDetails from './DateDetails';
 import styles from './styles.module.scss';
 

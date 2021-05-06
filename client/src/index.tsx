@@ -30,8 +30,8 @@ import Privacy from 'src/modules/Privacy';
 import Terms from 'src/modules/Terms';
 
 import 'src/index.scss';
-import { AfterLogin } from './components/AfterLogin';
 import { mergeUrlPath } from './helpers/mergeUrlPath';
+import { AfterLogin } from './modules/AfterLogin';
 import { InfluencerProfileEditPage } from './modules/Influencer/InfluencerProfileEditPage';
 import { InfluencerProfilePage } from './modules/Influencer/InfluencerProfilePage';
 import { InfluencerOnboardingBasicPage } from './modules/Influencer/Onboarding/InfluencerOnboardingBasicPage';

@@ -6,7 +6,7 @@ import { Field } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
 
 import Dialog from 'src/components/Dialog';
-import DialogContent from 'src/components/DialogContent';
+import DialogContent from 'src/components/Dialog/DialogContent';
 import Form from 'src/components/Form/Form';
 import InputField from 'src/components/Form/InputField';
 
