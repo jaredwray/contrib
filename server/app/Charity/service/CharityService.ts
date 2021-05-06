@@ -18,11 +18,11 @@ export class CharityService {
 
   constructor(private readonly connection: Connection, private readonly eventHub: EventHub) {
     eventHub.subscribe(Events.CHARITY_ONBOARDED, async (charity) => {
-      await this.createStripeAccoutForCharity(charity);
+      await this.createStripeAccountForCharity(charity);
     });
   }
 
-  async createStripeAccoutForCharity(charity: Charity): Promise<Charity> {
+  async createStripeAccountForCharity(charity: Charity): Promise<Charity> {
     const session = await this.CharityModel.startSession();
 
     const model = await this.CharityModel.findById(charity.id, null, { session }).exec();
@@ -33,6 +33,19 @@ export class CharityService {
 
     await model.save();
     return CharityService.makeCharity(model);
+  }
+
+  async updateCharityByStripeAccount(account: any): Promise<void> {
+    const charityModel = await this.CharityModel.findOne({ stripeAccountId: account.id }).exec();
+    const session = await this.connection.startSession();
+    const charity = CharityService.makeCharity(charityModel);
+
+    await this.updateCharityStatus(
+      charity,
+      account.details_submitted ? CharityStatus.ACTIVE : CharityStatus.INACTIVE,
+      null,
+      session,
+    );
   }
 
   async maybeUpdateStripeLink(charity: Charity): Promise<Charity> {
@@ -48,14 +61,14 @@ export class CharityService {
 
     const charityUpd = {
       ...charity,
-      stripeAccountLink
-    }
+      stripeAccountLink,
+    };
 
     return charityUpd;
   }
 
   async getLinkForStripeAccount(charity: Charity): Promise<string> {
-    const objLink = await this.stripe.createStripeObjLink(charity.stripeAccountId);
+    const objLink = await this.stripe.createStripeObjLink(charity.stripeAccountId, charity.id);
     return objLink.url;
   }
 
