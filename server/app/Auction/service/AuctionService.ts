@@ -353,6 +353,9 @@ export class AuctionService {
             status: charity.status,
             userAccount: charity.userAccount,
             stripeAccountId: charity.stripeAccount,
+            avatarUrl: charity.avatarUrl,
+            profileDescription: charity.profileDescription,
+            websiteUrl: charity.websiteUrl,
           }
         : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],

@@ -1,0 +1,20 @@
+.socialMedia {
+  a {
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+  }
+  margin-bottom: 1rem;
+}
+.twitter {
+  background-image: url('/assets/images/twitter.webp');
+}
+
+.instagram {
+  background-image: url('/assets/images/instagram.webp');
+}
+
+.facebook {
+  background-image: url('/assets/images/facebook.webp');
+}

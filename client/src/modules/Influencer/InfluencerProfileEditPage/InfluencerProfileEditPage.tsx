@@ -9,13 +9,13 @@ import { UpdateFavoriteCharities } from 'src/apollo/queries/charities';
 import { InfluencerProfileQuery, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
+import { SubmitButton } from 'src/components/SubmitButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { BasicFormFields } from '../common/BasicFormFields';
 import { CharitiesFormFields } from '../common/CharitiesFormFields';
-import { SubmitButton } from './SubmitButton';
 
 interface FormValues {
   name: string;

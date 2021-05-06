@@ -1,0 +1,70 @@
+@import 'src/variables.scss';
+
+.root {
+  padding-bottom: 0;
+}
+
+.header {
+  background-color: $sage-color;
+  height: 130px;
+  text-align: center;
+}
+
+.content {
+  margin-top: 135px;
+  margin-bottom: 56px;
+}
+
+.avatar {
+  width: 194px;
+  height: 194px;
+  transform: translateY(33px);
+}
+
+.sliders {
+  background-color: $barely-gray-color;
+  padding-top: 57px;
+  padding-bottom: 60px;
+}
+
+.link {
+  color: $dark-gray-color;
+}
+
+@media (max-width: $small-weight) {
+  .header {
+    height: 85px;
+  }
+
+  .content {
+    margin-top: 65px;
+  }
+
+  .avatar {
+    width: 120px;
+    height: 120px;
+    transform: translateY(20px);
+  }
+}
+
+.editBtn {
+  position: absolute !important;
+  right: 0;
+  top: 10px;
+  height: 40px;
+
+  &:hover,
+  &:active,
+  &:focus,
+  &:hover:focus,
+  &:active:focus {
+    background: $ochre-color !important;
+  }
+
+  @media (max-width: $small-weight) {
+    width: 100%;
+    position: initial !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+}

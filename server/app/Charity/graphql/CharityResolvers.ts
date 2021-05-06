@@ -3,13 +3,20 @@ import { Charity } from '../dto/Charity';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { loadAccount } from '../../../graphql/middleware/loadAccount';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
-
+import { requireCharityOrAdmin } from '../../../graphql/middleware/requireCharityOrAdmin';
+import { AppError, ErrorCode } from '../../../errors';
 type CharityInput = {
   name: string;
 };
-
 export const CharityResolvers = {
   Query: {
+    charity: requireCharityOrAdmin(async (_, { id }, { charity, currentAccount, currentCharityId }) => {
+      const profileId = id === 'me' ? currentCharityId : id;
+      if (!currentAccount.isAdmin && profileId !== currentCharityId) {
+        throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+      }
+      return await charity.findCharity(profileId);
+    }),
     charitiesSearch: async (
       parent: unknown,
       { query }: { query: string },
@@ -40,6 +47,24 @@ export const CharityResolvers = {
       const { id, input } = currentInput;
       return await charity.updateCharity(id, input);
     },
+    updateCharityProfile: requireCharityOrAdmin(
+      async (_, { charityId, input }, { charity, currentAccount, currentCharityId }) => {
+        const profileId = charityId === 'me' ? currentCharityId : charityId;
+        if (!currentAccount.isAdmin && profileId !== currentCharityId) {
+          throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+        }
+        return charity.updateCharityProfileById(profileId, input);
+      },
+    ),
+    updateCharityProfileAvatar: requireCharityOrAdmin(
+      async (_, { charityId, image }, { charity, currentAccount, currentCharityId }) => {
+        const profileId = charityId === 'me' ? currentCharityId : charityId;
+        if (!currentAccount.isAdmin && profileId !== currentCharityId) {
+          throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+        }
+        return charity.updateCharityProfileAvatarById(profileId, image);
+      },
+    ),
   },
   UserAccount: {
     charity: loadAccount(
