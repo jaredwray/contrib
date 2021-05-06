@@ -7,10 +7,15 @@ export const CharitySchema = gql`
     ACTIVE
     INACTIVE
   }
+  enum CharityProfileStatus {
+    COMPLETED
+    CREATED
+  }
   type Charity {
     id: String!
     name: String!
-    status: String!
+    status: CharityStatus!
+    profileStatus: CharityProfileStatus
     userAccount: UserAccount
     stripeAccountId: String
     stripeAccountLink: String

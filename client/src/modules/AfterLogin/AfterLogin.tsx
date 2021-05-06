@@ -1,3 +1,5 @@
+import { FC } from 'react';
+
 import { useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router-dom';
 
@@ -14,9 +16,9 @@ import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
  * @see UserAccountProvider
  */
 
-export function AfterLogin() {
+export const AfterLogin: FC = () => {
   const returnUrl = useReactiveVar(returnUrlVar);
   const redirectUrl = (returnUrl && returnUrl.startsWith('/') && returnUrl) || '/';
 
   return <Redirect to={redirectUrl} />;
-}
+};
