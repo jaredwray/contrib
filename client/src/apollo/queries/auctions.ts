@@ -46,6 +46,9 @@ export const AuctionQuery = gql`
       charity {
         id
         name
+        avatarUrl
+        websiteUrl
+        status
       }
     }
   }
