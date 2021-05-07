@@ -1,13 +1,14 @@
-import { CharityStatus } from './CharityStatus';
+import { StripeCharityStatus } from './StripeCharityStatus';
 import { CharityProfileStatus } from './CharityProfileStatus';
-import { CharityStripeStatus } from './CharityStripeStatus';
+import { CharityStatus } from '../../../../client/src/types/Charity';
+
 export interface Charity {
   id: string;
   name: string;
+  stripeStatus: StripeCharityStatus;
+  userAccount: string;
   status: CharityStatus;
   profileStatus: CharityProfileStatus;
-  stripeStatus: CharityStripeStatus;
-  userAccount: string;
   stripeAccountId: string | null;
   avatarUrl: string | null;
   profileDescription: string | null;

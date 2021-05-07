@@ -56,5 +56,6 @@ export default function createAppServices(connection: Connection): IAppServices 
     charity,
     auction,
     payment,
+    stripe,
   };
 }
