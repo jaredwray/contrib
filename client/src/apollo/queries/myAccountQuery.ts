@@ -14,8 +14,6 @@ export const MyAccountQuery = gql`
         name
         status
         stripeAccountLink
-        profileStatus
-        stripeStatus
       }
       influencerProfile {
         id
