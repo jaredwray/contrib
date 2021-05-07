@@ -16,6 +16,7 @@
     "start": "yarn --cwd server start"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "graphql-upload": "^11.0.0"
   }
 }

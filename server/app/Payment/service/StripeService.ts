@@ -1,6 +1,5 @@
 import Stripe from 'stripe';
-import { requireEnvVar } from '../../../config';
-import { AppConfig } from '../../../config';
+import { AppConfig, requireEnvVar } from '../../../config';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { AppLogger } from '../../../logger';
 
@@ -13,13 +12,23 @@ export class StripeService {
     });
   }
 
-  public async createStripeObjLink(stripeAccountId: string): Promise<Stripe.AccountLink> {
+  public async createStripeObjLink(stripeAccountId: string, charityId: string): Promise<Stripe.AccountLink> {
     return this.stripe.accountLinks.create({
       account: stripeAccountId,
       refresh_url: requireEnvVar('APP_URL'),
-      return_url: requireEnvVar('APP_URL'),
+      return_url: this.stripeReturnURL(charityId),
       type: 'account_onboarding',
     });
+  }
+
+  private stripeReturnURL(charityId: string): string {
+    const appURL = new URL(AppConfig.app.url);
+    appURL.port = AppConfig.app.port.toString();
+    return `${appURL.toString()}api/v1/account_onboarding/?user_id=${charityId}`;
+  }
+
+  public constructEvent(body: string | Buffer, signature: string): any {
+    return this.stripe.webhooks.constructEvent(body, signature, AppConfig.stripe.secretKey);
   }
 
   public async createCustomerForAccount(account: UserAccount, name: string, email: string): Promise<Stripe.Customer> {
