@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
