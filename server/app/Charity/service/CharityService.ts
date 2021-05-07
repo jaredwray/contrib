@@ -210,6 +210,10 @@ export class CharityService {
       throw new Error('at least one status must be updated');
     }
 
+    if (status) {
+      model.status = status;
+    }
+
     if (stripeStatus) {
       model.stripeStatus = stripeStatus;
     }
@@ -224,7 +228,7 @@ export class CharityService {
       }
       model.userAccount = userAccount.mongodbId;
     }
-    model.status = status;
+
     this.maybeActivateCharity(model);
     await model.save();
     return CharityService.makeCharity(model);

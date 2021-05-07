@@ -29,8 +29,10 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     }
 
     const currentCharity = await charity.findCharity(userId);
+    const redirectToUrl = `${AppConfig.app.url}/charity/me/edit`;
+
     if (currentCharity?.status !== CharityStatus.PENDING_ONBOARDING) {
-      res.redirect(AppConfig.app.url);
+      res.redirect(redirectToUrl);
       return;
     }
 
@@ -39,7 +41,7 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
       stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
     });
 
-    res.redirect(AppConfig.app.url);
+    res.redirect(redirectToUrl);
   });
 
   app.post('/api/v1/stripe/', bodyParser.raw({ type: 'application/json' }), async (request, response) => {
