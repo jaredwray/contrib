@@ -45,7 +45,7 @@ export function UserAccountProvider({ children }: PropTypes) {
   }, [myAccountError]);
 
   useEffect(() => {
-    if (myAccount?.charity?.profileStatus === 'PENDING_ONBOARDING') {
+    if (myAccount?.charity?.status === 'PENDING_ONBOARDING') {
       window.location.href = myAccount?.charity?.stripeAccountLink;
     }
   }, [myAccount]);

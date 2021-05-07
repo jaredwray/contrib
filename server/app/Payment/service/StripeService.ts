@@ -24,7 +24,7 @@ export class StripeService {
   private generateStripeReturnURL(charityId: string): string {
     const appURL = new URL(AppConfig.app.url);
     appURL.port = AppConfig.app.port.toString();
-    return `${appURL.toString()}api/v1/account_onboarding/?user_id=${charityId}`;
+    return `${appURL.toString()}/api/v1/account_onboarding/?user_id=${charityId}`;
   }
 
   public constructEvent(body: string | Buffer, signature: string): any {
