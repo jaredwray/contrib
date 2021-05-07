@@ -15,10 +15,16 @@ export class CharityLoader {
 
     return userAccountIds.map((userAccountId) => charitiesByUserAccount[userAccountId] ?? null);
   });
-  private readonly loaderByCharityId = new DataLoader<string, Charity>(
-    async (userAccountIds) => await this.charityService.listCharitiesByUserAccountIds(userAccountIds),
-  );
-
+  private readonly loaderById = new DataLoader<string, Charity>(async (ids) => {
+    const charitiesById = (await this.charityService.listCharitiesByIds(ids)).reduce(
+      (byId, charity) => ({
+        ...byId,
+        [charity.id]: charity,
+      }),
+      {},
+    );
+    return ids.map((id) => charitiesById[id] ?? null);
+  });
   constructor(private readonly charityService: CharityService) {}
 
   async getByUserAccountId(userAccountId: string): Promise<Charity | null> {
@@ -31,9 +37,8 @@ export class CharityLoader {
     }
   }
 
-  async getById(charityId: string): Promise<Charity> {
-    const charity = await this.loaderByCharityId.load(charityId);
-
+  async getById(id: string): Promise<Charity> {
+    const charity = await this.loaderById.load(id);
     if (charity) {
       return await this.charityService.maybeUpdateStripeLink(charity);
     } else {
