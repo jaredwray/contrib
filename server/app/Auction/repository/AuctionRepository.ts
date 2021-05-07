@@ -92,8 +92,8 @@ export class AuctionRepository implements IAuctionRepository {
       {
         ...input,
         auctionOrganizer: Types.ObjectId(organizerId),
-        startPrice: input.startPrice.getAmount(),
-        startPriceCurrency: input.startPrice.getCurrency(),
+        startPrice: input.startPrice?.getAmount(),
+        startPriceCurrency: input.startPrice?.getCurrency(),
       },
     ]);
 

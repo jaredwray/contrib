@@ -10,6 +10,8 @@ export const AllCharitiesQuery = gql`
         id
         name
         status
+        profileStatus
+        stripeStatus
       }
     }
   }
