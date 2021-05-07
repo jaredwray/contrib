@@ -5,6 +5,7 @@ import { loadAccount } from '../../../graphql/middleware/loadAccount';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { requireCharityOrAdmin } from '../../../graphql/middleware/requireCharityOrAdmin';
 import { AppError, ErrorCode } from '../../../errors';
+import { CharityStatus } from '../dto/CharityStatus';
 type CharityInput = {
   name: string;
 };
@@ -22,7 +23,9 @@ export const CharityResolvers = {
       { query }: { query: string },
       { charity }: GraphqlContext,
     ): Promise<Charity[] | null> => {
-      return await charity.searchForCharity(query.trim());
+      return await (await charity.searchForCharity(query.trim())).filter(
+        (charity) => charity.status === CharityStatus.ACTIVE,
+      );
     },
     charities: async (
       parent: unknown,
