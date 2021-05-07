@@ -63,7 +63,7 @@ export default function InfluencersPage() {
         <tbody className="font-weight-normal">
           {influencers.items.map((item: any) => (
             <tr key={item.id} className="clickable" onClick={(e: MouseEvent) => handleSelectInfluencer(item, e)}>
-              <td className={styles.influencerId} title={item.id}>
+              <td className={styles.idColumn} title={item.id}>
                 {item.id}
               </td>
               <td className="break-word">{item.name}</td>

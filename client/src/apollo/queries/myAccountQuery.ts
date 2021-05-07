@@ -13,6 +13,8 @@ export const MyAccountQuery = gql`
         id
         name
         status
+        profileStatus
+        stripeStatus
         stripeAccountLink
       }
       influencerProfile {
