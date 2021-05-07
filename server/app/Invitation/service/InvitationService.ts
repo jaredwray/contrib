@@ -66,12 +66,12 @@ export class InvitationService {
       charity = await this.charityService.createCharity({ name: 'My Charity Name' }, session);
 
       if (userAccount) {
-        charity = await this.charityService.updateCharityStatus(
+        charity = await this.charityService.updateCharityStatus({
           charity,
-          CharityStatus.PENDING_INVITE,
           userAccount,
+          status: CharityStatus.PENDING_INVITE,
           session,
-        );
+        });
 
         const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
         const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
@@ -92,7 +92,11 @@ export class InvitationService {
           session,
         );
         const link = await this.makeInvitationLink(invitation.slug);
-        charity = await this.charityService.updateCharityStatus(charity, CharityStatus.PENDING_INVITE, null, session);
+        charity = await this.charityService.updateCharityStatus({
+          charity,
+          status: CharityStatus.PENDING_INVITE,
+          session,
+        });
         const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
         await this.twilioNotificationService.sendMessage(phoneNumber, message);
       }

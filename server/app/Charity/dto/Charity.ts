@@ -1,6 +1,7 @@
 import { CharityStatus } from './CharityStatus';
 import { CharityProfileStatus } from './CharityProfileStatus';
 import { CharityStripeStatus } from './CharityStripeStatus';
+
 export interface Charity {
   id: string;
   name: string;

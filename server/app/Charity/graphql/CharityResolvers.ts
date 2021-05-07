@@ -1,11 +1,12 @@
 import { GraphqlContext } from '../../../graphql/GraphqlContext';
 import { Charity } from '../dto/Charity';
+import { CharityStatus } from '../dto/CharityStatus';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { loadAccount } from '../../../graphql/middleware/loadAccount';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { requireCharityOrAdmin } from '../../../graphql/middleware/requireCharityOrAdmin';
 import { AppError, ErrorCode } from '../../../errors';
-import { CharityStatus } from '../dto/CharityStatus';
+
 type CharityInput = {
   name: string;
 };
