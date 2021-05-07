@@ -1,35 +1,29 @@
 import { gql } from 'apollo-server-express';
 export const CharitySchema = gql`
-  enum StripeCharityStatus {
-    PENDING_VERIFICATION
-    STRIPE_ACTIVE
-    STRIPE_INACTIVE
-  }
-
-  enum CharityProfileStatus {
+  enum CharityStatus {
     PENDING_INVITE
     PENDING_ONBOARDING
-    COMPLETED
-    CREATED
-  }
-
-  enum CharityStripeStatus {
     PENDING_VERIFICATION
-    STRIPE_ACTIVE
-    STRIPE_INACTIVE
-  }
-
-  enum CharityStatus {
     ACTIVE
     INACTIVE
   }
-
+  enum CharityProfileStatus {
+    COMPLETED
+    CREATED
+  }
+  enum CharityStripeStatus {
+    PENDING_INVITE
+    PENDING_ONBOARDING
+    PENDING_VERIFICATION
+    STRIPE_ACTIVE
+    STRIPE_INACTIVE
+  }
   type Charity {
     id: String!
     name: String!
     status: CharityStatus!
-    stripeStatus: StripeCharityStatus
-    profileStatus: CharityProfileStatus!
+    profileStatus: CharityProfileStatus
+    stripeStatus: CharityStripeStatus
     userAccount: UserAccount
     stripeAccountId: String
     stripeAccountLink: String

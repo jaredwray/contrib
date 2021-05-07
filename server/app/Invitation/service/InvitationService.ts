@@ -21,7 +21,7 @@ import { UrlShortenerService } from '../../Core';
 import { InfluencerStatus } from '../../Influencer/dto/InfluencerStatus';
 import { Charity } from '../../Charity/dto/Charity';
 import { CharityService } from '../../Charity';
-import { CharityProfileStatus } from '../../Charity/dto/CharityProfileStatus';
+import { CharityStatus } from '../../Charity/dto/CharityStatus';
 
 export class InvitationService {
   private readonly InvitationModel = InvitationModel(this.connection);
@@ -68,9 +68,8 @@ export class InvitationService {
       if (userAccount) {
         charity = await this.charityService.updateCharityStatus(
           charity,
+          CharityStatus.PENDING_INVITE,
           userAccount,
-          null,
-          CharityProfileStatus.PENDING_INVITE,
           session,
         );
 
@@ -93,13 +92,7 @@ export class InvitationService {
           session,
         );
         const link = await this.makeInvitationLink(invitation.slug);
-        charity = await this.charityService.updateCharityStatus(
-          charity,
-          null,
-          null,
-          CharityProfileStatus.PENDING_INVITE,
-          session,
-        );
+        charity = await this.charityService.updateCharityStatus(charity, CharityStatus.PENDING_INVITE, null, session);
         const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
         await this.twilioNotificationService.sendMessage(phoneNumber, message);
       }

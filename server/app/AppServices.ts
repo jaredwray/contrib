@@ -7,7 +7,7 @@ import { CharityService } from './Charity';
 import { AuctionService } from './Auction';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
 import { UrlShortenerService } from './Core';
-import { PaymentService, StripeService } from './Payment';
+import { PaymentService } from './Payment';
 
 export interface IAppServices {
   assistant: AssistantService;
@@ -21,5 +21,4 @@ export interface IAppServices {
   twilioNotification: TwilioNotificationService;
   urlShortener: UrlShortenerService;
   payment: PaymentService;
-  stripe: StripeService;
 }
