@@ -6,6 +6,7 @@ import { Charity } from '../dto/Charity';
 import { CharityInput } from '../graphql/model/CharityInput';
 import { CharityStatus } from '../dto/CharityStatus';
 import { CharityProfileStatus } from '../dto/CharityProfileStatus';
+import { CharityStripeStatus } from '../dto/CharityStripeStatus';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateCharityProfileInput } from '../graphql/model/UpdateCharityProfileInput';
 import { EventHub } from '../../EventHub';
@@ -65,6 +66,7 @@ export class CharityService {
           name,
           status: CharityStatus.PENDING_INVITE,
           profileStatus: CharityProfileStatus.CREATED,
+          stripeStatus: CharityStripeStatus.PENDING_INVITE,
         },
       ],
       { session },
@@ -84,8 +86,16 @@ export class CharityService {
     if (!charity) {
       throw new Error(`charity record #${id} not found`);
     }
+    if (charity.profileStatus === CharityProfileStatus.CREATED) {
+      charity.profileStatus = CharityProfileStatus.COMPLETED;
+    }
+    if (
+      charity.profileStatus === CharityProfileStatus.COMPLETED &&
+      charity.stripeStatus === CharityStripeStatus.STRIPE_ACTIVE
+    ) {
+      charity.status = CharityStatus.ACTIVE;
+    }
     Object.assign(charity, input);
-    charity.profileStatus = CharityProfileStatus.COMPLETED;
     await charity.save();
     return CharityService.makeCharity(charity);
   }
@@ -193,6 +203,7 @@ export class CharityService {
       name: model.name,
       status: model.status,
       profileStatus: model.profileStatus,
+      stripeStatus: model.stripeStatus,
       userAccount: model.userAccount?.toString() ?? null,
       stripeAccountId: model.stripeAccountId,
       avatarUrl: model.avatarUrl ?? `${AppConfig.app.url}/content/img/users/person.png`,

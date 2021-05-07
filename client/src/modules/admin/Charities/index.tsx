@@ -37,6 +37,7 @@ export default function CharitiesPage(): any {
       mutation={InviteCharityMutation}
     />
   );
+
   return (
     <AdminPage
       controlBtns={controlBtns}
@@ -51,6 +52,8 @@ export default function CharitiesPage(): any {
             <th>ID</th>
             <th>Name</th>
             <th>Status</th>
+            <th>Profile Status</th>
+            <th>Stripe Acccount Status</th>
           </tr>
         </thead>
         <tbody className="font-weight-normal">
@@ -59,6 +62,8 @@ export default function CharitiesPage(): any {
               <td>{item.id}</td>
               <td className="break-word">{item.name}</td>
               <td>{item.status}</td>
+              <td>{item.profileStatus}</td>
+              <td>{item.stripeStatus}</td>
             </tr>
           ))}
         </tbody>

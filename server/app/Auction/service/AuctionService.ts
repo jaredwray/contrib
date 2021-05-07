@@ -352,6 +352,7 @@ export class AuctionService {
             name: charity.name,
             status: charity.status,
             profileStatus: charity.profileStatus,
+            stripeStatus: charity.stripeStatus,
             userAccount: charity.userAccount,
             stripeAccountId: charity.stripeAccount,
             avatarUrl: charity.avatarUrl,
