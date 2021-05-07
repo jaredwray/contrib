@@ -3,7 +3,6 @@ export const CharitySchema = gql`
   enum CharityStatus {
     PENDING_INVITE
     PENDING_ONBOARDING
-    PENDING_VERIFICATION
     ACTIVE
     INACTIVE
   }
@@ -12,17 +11,15 @@ export const CharitySchema = gql`
     CREATED
   }
   enum CharityStripeStatus {
-    PENDING_INVITE
-    PENDING_ONBOARDING
     PENDING_VERIFICATION
-    STRIPE_ACTIVE
-    STRIPE_INACTIVE
+    ACTIVE
+    INACTIVE
   }
   type Charity {
     id: String!
     name: String!
     status: CharityStatus!
-    profileStatus: CharityProfileStatus
+    profileStatus: CharityProfileStatus!
     stripeStatus: CharityStripeStatus
     userAccount: UserAccount
     stripeAccountId: String

@@ -3,6 +3,7 @@ import { CharityStatus } from '../dto/CharityStatus';
 import { CharityProfileStatus } from '../dto/CharityProfileStatus';
 import { CharityStripeStatus } from '../dto/CharityStripeStatus';
 import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
+
 export interface ICharityModel extends Document {
   name: string;
   status: CharityStatus;
@@ -14,12 +15,14 @@ export interface ICharityModel extends Document {
   profileDescription: string | null;
   websiteUrl: string | null;
 }
+
 export const CharityCollectionName = 'charity';
+
 const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   name: { type: SchemaTypes.String, required: true },
   status: { type: SchemaTypes.String, required: true },
   profileStatus: { type: SchemaTypes.String, required: true },
-  stripeStatus: { type: SchemaTypes.String, required: true },
+  stripeStatus: { type: SchemaTypes.String },
   userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   stripeAccountId: { type: SchemaTypes.String },
   avatarUrl: { type: SchemaTypes.String },
