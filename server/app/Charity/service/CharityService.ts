@@ -71,7 +71,7 @@ export class CharityService {
   }
 
   async getLinkForStripeAccount(charity: Charity): Promise<string> {
-    const objLink = await this.stripe.createStripeObjLink(charity.stripeAccountId);
+    const objLink = await this.stripe.createStripeObjLink(charity.stripeAccountId, charity.id);
     return objLink.url;
   }
 
