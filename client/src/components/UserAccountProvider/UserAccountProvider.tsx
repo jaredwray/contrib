@@ -44,11 +44,9 @@ export function UserAccountProvider({ children }: PropTypes) {
     }
   }, [myAccountError]);
 
-  useEffect(() => {
-    if (myAccount?.charity && !myAccount.charity.stripeStatus) {
-      window.location.href = myAccount.charity.stripeAccountLink;
-    }
-  }, [myAccount]);
+  if (myAccount?.charity && !myAccount.charity.stripeStatus) {
+    window.location.href = myAccount.charity.stripeAccountLink;
+  }
 
   // redirect to onboarding if needed
   const targetPathname = getOnboardingPath(myAccount);
