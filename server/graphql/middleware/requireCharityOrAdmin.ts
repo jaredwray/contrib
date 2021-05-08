@@ -6,9 +6,6 @@ export function requireCharityOrAdmin<Result, Args, Parent>(
   handler: GraphqlHandler<Result, Args, Parent>,
 ): GraphqlHandler<Result, Args, Parent> {
   return loadCharity(async (parent, args, context, info) => {
-    if (info.path.typename === 'Mutation' && context.currentAccount.notAcceptedTerms) {
-      throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
-    }
     if (context.currentAccount?.isAdmin || context.currentCharity) {
       return handler(parent, args, context, info);
     }
