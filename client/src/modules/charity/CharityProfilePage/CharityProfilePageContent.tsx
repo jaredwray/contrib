@@ -23,7 +23,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const isMyProfile = account?.charity?.id === charity.id;
   const isActive = charity.status === CharityStatus.ACTIVE;
 
-  if (!isActive && (!isMyProfile || !account?.isAdmin)) {
+  if (!isActive && !isMyProfile && !account?.isAdmin) {
     return null;
   }
 
