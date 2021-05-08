@@ -27,17 +27,12 @@ const AuctionPage = () => {
   });
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
-  const isOwner = account?.influencerProfile?.id === auction?.auctionOrganizer?.id;
 
   if (error?.message === 'Auction was not found' || auction?.status === AuctionStatus.DRAFT) {
     history.push(`/`);
   }
 
   if (auctionLoading || error) {
-    return null;
-  }
-
-  if (!isActiveCharity && (!isOwner || !account?.isAdmin)) {
     return null;
   }
 
