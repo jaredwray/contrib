@@ -23,6 +23,8 @@ app.set('view engine', 'pug');
   const connection = await initMongodbConnection();
   const appServices: IAppServices = createAppServices(connection);
 
+  appRouteHandlers(app, appServices);
+
   if (AppConfig.environment.serveClient) {
     // Production uses a setup when both client and server are served from a single path.
     // note: it is assumed that server is run in prod mode, therefore we use two "..", assuming index.js is is dist folder
@@ -35,7 +37,6 @@ app.set('view engine', 'pug');
     });
   }
 
-  appRouteHandlers(app, appServices);
   app.use('/graphql', graphqlUploadExpress({ maxFiles: 1, maxFileSize: 100000000 }));
   createGraphqlServer(appServices).applyMiddleware({ app });
 
