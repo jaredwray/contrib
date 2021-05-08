@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { Charity } from 'src/types/Charity';
+import { Charity, CharityStatus } from 'src/types/Charity';
 
 import styles from './CharityProfilePageContent.module.scss';
 
@@ -21,6 +21,11 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const profileDescriptionParagraphs = (charity?.profileDescription ?? 'no description').split('\n');
 
   const isMyProfile = account?.charity?.id === charity.id;
+  const isActive = charity.status === CharityStatus.ACTIVE;
+
+  if (!isActive && (!isMyProfile || !account?.isAdmin)) {
+    return null;
+  }
 
   return (
     <Layout>
