@@ -22,6 +22,7 @@ export interface Charity {
   stripeStatus: CharityStripeStatus;
   avatarUrl?: string;
   websiteUrl?: string;
+  website?: string;
   profileDescription?: string;
   stripeAccountLink: string;
 }

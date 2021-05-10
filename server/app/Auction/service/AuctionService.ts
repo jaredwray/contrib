@@ -358,6 +358,7 @@ export class AuctionService {
             avatarUrl: charity.avatarUrl,
             profileDescription: charity.profileDescription,
             websiteUrl: charity.websiteUrl,
+            website: charity.website,
           }
         : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],

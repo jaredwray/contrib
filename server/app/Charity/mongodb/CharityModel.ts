@@ -13,6 +13,7 @@ export interface ICharityModel extends Document {
   stripeAccountId: string | null;
   avatarUrl: string | null;
   profileDescription: string | null;
+  website: string | null;
   websiteUrl: string | null;
 }
 
@@ -28,6 +29,7 @@ const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   avatarUrl: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
   websiteUrl: { type: SchemaTypes.String },
+  website: { type: SchemaTypes.String },
 });
 CharitySchema.index({ name: 'text' });
 export const CharityModel = (connection: Connection): Model<ICharityModel> =>

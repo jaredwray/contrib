@@ -62,7 +62,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
               {charity.websiteUrl && (
                 <p className="text-label text-all-cups">
                   <a className={styles.link} href={charity.websiteUrl}>
-                    {charity.websiteUrl}&#160;&gt;&gt;
+                    {charity.website}&#160;&gt;&gt;
                   </a>
                 </p>
               )}

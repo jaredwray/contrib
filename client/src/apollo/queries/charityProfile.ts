@@ -9,19 +9,20 @@ export const GetCharity = gql`
       avatarUrl
       profileDescription
       websiteUrl
+      website
     }
   }
 `;
 export const UpdateCharityProfileMutation = gql`
-  mutation UpdateCharityProfile($charityId: String!, $profileDescription: String, $websiteUrl: String, $name: String) {
+  mutation UpdateCharityProfile($charityId: String!, $profileDescription: String, $website: String, $name: String) {
     updateCharityProfile(
       charityId: $charityId
-      input: { profileDescription: $profileDescription, websiteUrl: $websiteUrl, name: $name }
+      input: { profileDescription: $profileDescription, website: $website, name: $name }
     ) {
       id
       name
       profileDescription
-      websiteUrl
+      website
     }
   }
 `;

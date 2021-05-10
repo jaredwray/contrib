@@ -12,5 +12,6 @@ export interface Charity {
   stripeAccountId: string | null;
   avatarUrl: string | null;
   profileDescription: string | null;
+  website: string | null;
   websiteUrl: string | null;
 }
