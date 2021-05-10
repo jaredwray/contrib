@@ -9,8 +9,7 @@ import { Charity } from 'src/types/Charity';
 import { CharityProfilePageContent } from './CharityProfilePageContent';
 
 export const CharityProfilePage: FC = () => {
-  const { charityId } = useParams<{ charityId: string }>();
-
+  const charityId = useParams<{ charityId: string }>().charityId ?? 'me';
   const { data } = useQuery<{ charity: Charity }>(GetCharity, {
     variables: { id: charityId },
   });

@@ -27,7 +27,7 @@ interface FormValues {
 
 export const InfluencerProfileEditPage: FC = () => {
   const { addToast } = useToasts();
-  const { influencerId } = useParams<{ influencerId: string }>();
+  const influencerId = useParams<{ influencerId: string }>().influencerId ?? 'me';
   const { account } = useContext(UserAccountContext);
   const { data: influencerProfileData } = useQuery<{
     influencer: InfluencerProfile;

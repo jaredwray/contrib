@@ -14,7 +14,7 @@ export default function WelcomePage() {
         <Container className="d-md-table">
           <Container className="h-100 d-md-table-cell align-middle">
             <Row className="pt-lg-3 pt-5 align-items-center">
-              <Col className="" lg="6">
+              <Col lg="6">
                 <div className="welcome-page-congratulations d-flex">
                   <div className="welcome-page-congratulation-img d-inline-block" />
                   <div className="welcome-page-congratulation-title text-label d-inline-block">Account created</div>

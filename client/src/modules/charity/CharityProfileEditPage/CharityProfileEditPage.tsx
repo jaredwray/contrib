@@ -22,7 +22,7 @@ interface FormValues {
 
 export const CharityProfileEditPage: FC = () => {
   const { addToast } = useToasts();
-  const { charityId } = useParams<{ charityId: string }>();
+  const charityId = useParams<{ charityId?: string }>().charityId ?? 'me';
   const { account } = useContext(UserAccountContext);
   const { data: charityProfileData } = useQuery<{
     charity: Charity;
