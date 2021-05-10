@@ -5,6 +5,7 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Layout from 'src/components/Layout';
+import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { Charity, CharityStatus } from 'src/types/Charity';
@@ -58,6 +59,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
         <Container className={styles.content}>
           <Row>
             <Col md="6">
+              {!isActive && <NotActiveStatus />}
               <p className="text-headline break-word">{charity.name}</p>
               {charity.websiteUrl && (
                 <p className="text-label text-all-cups">

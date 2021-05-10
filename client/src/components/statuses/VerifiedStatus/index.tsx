@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import VerifiedIcon from 'src/assets/images/VerifiedIcon';
+import VerifiedIcon from 'src/assets/icons/VerifiedIcon';
 
 import styles from './styles.module.scss';
 
