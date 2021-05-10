@@ -27,6 +27,7 @@ export const CharitySchema = gql`
     avatarUrl: String
     profileDescription: String
     websiteUrl: String
+    website: String
   }
   input CharityInputID {
     id: String!
@@ -37,7 +38,7 @@ export const CharitySchema = gql`
   input CharityProfileInput {
     name: String
     profileDescription: String
-    websiteUrl: String
+    website: String
   }
   type CharitiesPage {
     items: [Charity]!

@@ -16,7 +16,7 @@ import { FormFields } from './FormFields';
 
 interface FormValues {
   name: string;
-  websiteUrl: string;
+  website: string;
   profileDescription: string;
 }
 
@@ -30,10 +30,10 @@ export const CharityProfileEditPage: FC = () => {
   const [updateCharityProfile] = useMutation(UpdateCharityProfileMutation);
   const history = useHistory();
 
-  const handleSubmit = async ({ name, websiteUrl, profileDescription }: FormValues) => {
+  const handleSubmit = async ({ name, website, profileDescription }: FormValues) => {
     try {
       await updateCharityProfile({
-        variables: { name, websiteUrl, profileDescription, charityId },
+        variables: { name, website, profileDescription, charityId },
       });
 
       addToast(`Your profile has been successfully updated.`, { appearance: 'success' });

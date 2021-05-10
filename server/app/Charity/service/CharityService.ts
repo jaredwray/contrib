@@ -90,6 +90,7 @@ export class CharityService {
           name,
           status: CharityStatus.PENDING_INVITE,
           profileStatus: CharityProfileStatus.CREATED,
+          website: '',
         },
       ],
       { session },
@@ -266,6 +267,12 @@ export class CharityService {
     return this.CharityModel.countDocuments().exec();
   }
 
+  private static websiteUrl(website: string): string | null {
+    if (/https?:\/\//.test(website)) return website;
+
+    return `http://${website}`;
+  }
+
   private static makeCharity(model: ICharityModel): Charity | null {
     if (!model) {
       return null;
@@ -280,7 +287,8 @@ export class CharityService {
       stripeAccountId: model.stripeAccountId,
       avatarUrl: model.avatarUrl ?? `${AppConfig.app.url}/content/img/users/person.png`,
       profileDescription: model.profileDescription,
-      websiteUrl: model.websiteUrl,
+      website: model.website,
+      websiteUrl: CharityService.websiteUrl(model.website),
     };
   }
 }
