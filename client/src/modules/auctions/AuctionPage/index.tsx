@@ -19,7 +19,7 @@ import Benefits from './Benefits';
 import SimilarAuctions from './SimilarAuctions';
 
 const AuctionPage = () => {
-  const { auctionId } = useParams<{ auctionId: string }>();
+  const auctionId = useParams<{ auctionId: string }>().auctionId ?? 'me';
   const history = useHistory();
   const { account } = useContext(UserAccountContext);
   const { loading: auctionLoading, data: auctionData, error } = useQuery(AuctionQuery, {

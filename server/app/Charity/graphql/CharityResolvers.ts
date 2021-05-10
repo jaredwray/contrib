@@ -3,6 +3,7 @@ import { Charity } from '../dto/Charity';
 import { CharityStatus } from '../dto/CharityStatus';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { loadAccount } from '../../../graphql/middleware/loadAccount';
+import { loadCharity } from '../../../graphql/middleware/loadCharity';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { requireCharityOrAdmin } from '../../../graphql/middleware/requireCharityOrAdmin';
 import { AppError, ErrorCode } from '../../../errors';
@@ -12,11 +13,8 @@ type CharityInput = {
 };
 export const CharityResolvers = {
   Query: {
-    charity: requireCharityOrAdmin(async (_, { id }, { charity, currentAccount, currentCharityId }) => {
+    charity: loadCharity(async (_, { id }, { charity, currentCharityId }) => {
       const profileId = id === 'me' ? currentCharityId : id;
-      if (!currentAccount.isAdmin && profileId !== currentCharityId) {
-        throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
-      }
       return await charity.findCharity(profileId);
     }),
     charitiesSearch: async (
