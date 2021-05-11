@@ -1,27 +1,42 @@
 import { FC } from 'react';
 
 import clsx from 'clsx';
-import { Image } from 'react-bootstrap';
+import { Image, Col as BsCol, Row as BsRow } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { Charity } from 'src/types/Charity';
+import { Charity, CharityStatus } from 'src/types/Charity';
 
 import Row from '../common/Row';
 import styles from './styles.module.scss';
 
-const Benefits: FC<Charity> = ({ avatarUrl = '', name, id }) => {
+const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
+  const isNotActive = status !== CharityStatus.ACTIVE;
+
   return (
-    <Row childrenClassName="pb-4 pb-sm-0" title="This auction benefits">
-      <Link className="d-flex align-items-center" to={`/charity/${id}`}>
-        <Image roundedCircle className={clsx(styles.image)} src={ResizedImageUrl(avatarUrl, 120)} />
-        <div className={'text-subhead text-all-cups align-middle pl-4 break-word'}>{name}</div>
-      </Link>
-      <br />
-      <Link className={clsx(styles.link, 'text-label text-all-cups text-nowrap')} to={`/charity/${id}`}>
-        other auctions benefiting this charity &gt;&gt;
-      </Link>
-    </Row>
+    <>
+      <Row childrenClassName="d-flex align-items-center" title="This auction benefits">
+        <Image roundedCircle className={clsx(styles.avatar, 'd-inline-block')} src={ResizedImageUrl(avatarUrl, 120)} />
+        <div className={'pl-4 align-middle'}>
+          <Link
+            className={clsx(styles.name, 'text-subhead text-all-cups text-sm  break-word')}
+            title={name}
+            to={`/charity/${id}`}
+          >
+            {name}
+          </Link>
+          {isNotActive && <NotActiveStatus />}
+        </div>
+      </Row>
+      <BsRow className="pt-4">
+        <BsCol>
+          <Link className={clsx(styles.link, 'text-label text-all-cups text-nowrap')} to={`/charity/${id}`}>
+            other auctions benefiting this charity &gt;&gt;
+          </Link>
+        </BsCol>
+      </BsRow>
+    </>
   );
 };
 

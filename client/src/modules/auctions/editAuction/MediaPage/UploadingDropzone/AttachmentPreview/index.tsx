@@ -3,8 +3,8 @@ import { FC, useState, useCallback, ReactElement, SetStateAction } from 'react';
 import { useMutation } from '@apollo/client';
 
 import { RemoveAuctionMedia } from 'src/apollo/queries/auctions';
+import AddVideoIcon from 'src/assets/icons/VideoIcon';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
-import AddVideoIcon from 'src/assets/images/VideoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentsStateInterface from '../../common/AttachmentsStateInterface';

@@ -2,8 +2,8 @@ import { FC, ReactElement, useState, useCallback } from 'react';
 
 import { Image } from 'react-bootstrap';
 
+import AddVideoIcon from 'src/assets/icons/VideoIcon';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
-import AddVideoIcon from 'src/assets/images/VideoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
 interface Props {

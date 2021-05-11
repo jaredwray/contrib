@@ -6,8 +6,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { GetAuctionMedia } from 'src/apollo/queries/auctions';
+import AddVideoIcon from 'src/assets/icons/VideoIcon';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
-import AddVideoIcon from 'src/assets/images/VideoIcon';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
