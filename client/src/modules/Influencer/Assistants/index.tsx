@@ -14,7 +14,7 @@ import { InfluencerProfile } from 'src/types/InfluencerProfile';
 import styles from './styles.module.scss';
 
 export default function Assistants() {
-  const { influencerId } = useParams<{ influencerId: string }>();
+  const influencerId = useParams<{ influencerId?: string }>().influencerId ?? 'me';
   const { account } = useContext(UserAccountContext);
 
   const { loading, data, error } = useQuery<{ influencer: InfluencerProfile }>(AssistantsQuery, {

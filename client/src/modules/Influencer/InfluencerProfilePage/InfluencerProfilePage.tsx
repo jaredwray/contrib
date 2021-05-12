@@ -9,7 +9,7 @@ import { InfluencerProfile } from 'src/types/InfluencerProfile';
 import { InfluencerProfilePageContent } from './InfluencerProfilePageContent';
 
 export const InfluencerProfilePage: FC = () => {
-  const { influencerId } = useParams<{ influencerId: string }>();
+  const influencerId = useParams<{ influencerId?: string }>().influencerId ?? 'me';
 
   const { data } = useQuery<{ influencer: InfluencerProfile }>(GetInfluencerQuery, {
     variables: { id: influencerId },
