@@ -1,3 +1,4 @@
+import 'intersection-observer';
 import React from 'react';
 
 import { AppState, Auth0Provider } from '@auth0/auth0-react';

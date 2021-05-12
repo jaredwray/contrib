@@ -34,6 +34,7 @@
     "enzyme": "^3.11.0",
     "final-form": "^4.20.2",
     "graphql": "^15.5.0",
+    "intersection-observer": "^0.12.0",
     "jest-when": "^3.2.1",
     "luxon": "^1.26.0",
     "node-sass": "5.0.0",
