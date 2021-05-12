@@ -33,7 +33,7 @@ export const CharityProfileEditPage: FC = () => {
   const handleSubmit = async ({ name, website, profileDescription }: FormValues) => {
     try {
       await updateCharityProfile({
-        variables: { name, website, profileDescription, charityId },
+        variables: { name, website: website ?? '', profileDescription, charityId },
       });
 
       addToast(`Your profile has been successfully updated.`, { appearance: 'success' });
