@@ -37,7 +37,7 @@ app.set('view engine', 'pug');
     });
   }
 
-  app.use('/graphql', graphqlUploadExpress({ maxFiles: 1, maxFileSize: 100000000 }));
+  app.use('/graphql', graphqlUploadExpress({ maxFiles: 1 }));
   createGraphqlServer(appServices).applyMiddleware({ app });
 
   app.listen(AppConfig.app.port, () => {
