@@ -56,7 +56,11 @@ const AuctionPage = () => {
           <Col md="6">
             <Author {...auction.auctionOrganizer} />
             <About {...auction} />
-            {account?.isAdmin || isActiveCharity ? <Benefits {...auction.charity} /> : <p className="pb-2 d-md-none" />}
+            {(auction?.charity && account?.isAdmin) || isActiveCharity ? (
+              <Benefits {...auction.charity} />
+            ) : (
+              <p className="pb-2 d-md-none" />
+            )}
           </Col>
           <Col md="7" />
         </Row>
