@@ -39,7 +39,7 @@ export const InfluencerProfileEditPage: FC = () => {
   const handleSubmit = async ({ name, sport, team, profileDescription, favoriteCharities }: FormValues) => {
     try {
       await updateInfluencerProfile({
-        variables: { name, sport, team, profileDescription, influencerId },
+        variables: { name, sport, team: team ?? '', profileDescription, influencerId },
       });
 
       if (influencerProfile?.favoriteCharities?.join() !== favoriteCharities.join()) {

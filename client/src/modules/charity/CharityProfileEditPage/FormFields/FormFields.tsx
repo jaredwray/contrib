@@ -24,7 +24,7 @@ export const FormFields: FC<Props> = ({ charity }) => {
       </Col>
       <Col className="pt-4 pt-md-0" md="6">
         <InputField required name="name" title="Enter charity name" />
-        <InputField required name="website" title="Enter charity website" />
+        <InputField name="website" title="Enter charity website" />
         <InputField required textarea className={styles.textarea} name="profileDescription" title="Enter description" />
       </Col>
     </Row>
