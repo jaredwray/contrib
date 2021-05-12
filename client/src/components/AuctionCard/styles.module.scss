@@ -55,6 +55,9 @@
   flex-grow: 1;
   flex-basis: 50%;
 }
+.settled {
+  opacity: 0.3;
+}
 
 @media (max-width: $medium-weight) {
   .root {

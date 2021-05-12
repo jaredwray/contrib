@@ -78,7 +78,7 @@ export class AuctionRepository implements IAuctionRepository {
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {
-        status: { $eq: AuctionStatus.ACTIVE },
+        status: { $in: filters?.status || [AuctionStatus.ACTIVE] },
       },
     );
   }
@@ -143,6 +143,7 @@ export class AuctionRepository implements IAuctionRepository {
     )
       .skip(skip)
       .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+
     if (size) {
       auctions.limit(size);
     }
@@ -153,9 +154,6 @@ export class AuctionRepository implements IAuctionRepository {
     return this.populateAuctionQuery<IAuctionModel[]>(
       this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
     )
-      .skip(skip)
-      .limit(size)
-      .sort(AuctionRepository.searchSortOptionsByName(orderBy))
       .countDocuments()
       .exec();
   }

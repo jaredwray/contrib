@@ -23,7 +23,6 @@ export default function EndingSoon() {
   if (loading || error) {
     return null;
   }
-
   const items = data.auctions.items.map((auction: Auction, i: number) => <AuctionCard key={i} auction={auction} />);
 
   return (
@@ -42,7 +41,7 @@ export default function EndingSoon() {
             </Link>
           </Col>
         </Row>
-        <Slider items={items} />
+        {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
       </Container>
     </section>
   );

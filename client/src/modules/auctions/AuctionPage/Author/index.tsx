@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import VerifiedStatus from 'src/components/statuses/VerifiedStatus';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -23,7 +22,6 @@ const Author: FC<InfluencerProfile> = ({ id, name, avatarUrl }): ReactElement =>
         >
           {name}
         </Link>
-        <VerifiedStatus />
       </div>
     </Row>
   );

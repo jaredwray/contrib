@@ -1,60 +1,72 @@
 import { FC, useMemo, useContext } from 'react';
 
+import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
+import { InfluencerProfileSliderRow } from 'src/components/InfluencerProfileSliderRow';
 import Layout from 'src/components/Layout';
-import Slider from 'src/components/Slider';
-import VerifiedStatus from 'src/components/statuses/VerifiedStatus';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { AuctionStatus } from 'src/types/Auction';
+import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import styles from './InfluencerProfilePageContent.module.scss';
 
 interface Props {
   influencer: InfluencerProfile;
-  isOwnProfile: boolean;
 }
 
-export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfile }) => {
+export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const { account } = useContext(UserAccountContext);
+
+  const { data } = useQuery(AuctionsListQuery, {
+    variables: {
+      filters: {
+        auctionOrganizer: influencer.id,
+        status: [AuctionStatus.DRAFT, AuctionStatus.ACTIVE, AuctionStatus.SETTLED],
+      },
+    },
+  });
+  const auctions = data?.auctions?.items;
+
   const totalRaised = useMemo(
     () =>
-      (influencer.auctions ?? [])
-        .filter((a) => a.status === AuctionStatus.SETTLED)
-        .map((a) => Dinero(a.maxBid?.bid))
-        .reduce((total, next) => total.add(next), Dinero({ amount: 0, currency: 'USD' })),
-    [influencer],
+      (auctions ?? [])
+        .filter((a: Auction) => a.status === AuctionStatus.SETTLED)
+        .map((a: Auction) => Dinero(a.maxBid?.bid))
+        .reduce((total: any, next: any) => total.add(next), Dinero({ amount: 0, currency: 'USD' })),
+    [auctions],
   );
+  const profileAuctions = Object.keys(AuctionStatus).reduce((hash: any, elem: string) => {
+    hash[elem] = (auctions ?? []).filter((a: Auction) => a.status === elem);
+    return hash;
+  }, {});
 
-  const liveAuctions = useMemo(
-    () =>
-      (influencer.auctions ?? []).filter(
-        (a) => a.status === AuctionStatus.ACTIVE || (a.status === AuctionStatus.DRAFT && isOwnProfile),
-      ),
-    [influencer, isOwnProfile],
-  );
-
-  const pastAuctions = useMemo(() => (influencer.auctions ?? []).filter((a) => a.status === AuctionStatus.SETTLED), [
-    influencer,
-  ]);
+  const liveAuctions = profileAuctions.ACTIVE;
+  const pastAuctions = profileAuctions.SETTLED;
+  const draftAuctions = profileAuctions.DRAFT;
 
   const profileDescriptionParagraphs = (influencer.profileDescription ?? '').split('\n');
 
   const hasLiveAuctions = Boolean(liveAuctions.length);
   const hasPastAuctions = Boolean(pastAuctions.length);
-  const hasAuctions = hasLiveAuctions || hasPastAuctions;
+  const hasDraftAuctions = Boolean(draftAuctions.length);
+
+  const hasAuctions = hasLiveAuctions || hasPastAuctions || hasDraftAuctions;
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
 
-  const liveAuctionsLayout = liveAuctions.map((auction) => (
+  const liveAuctionsLayout = liveAuctions.map((auction: Auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
   ));
-  const pastAuctionsLayout = pastAuctions.map((auction) => (
+  const draftAuctionsLayout = draftAuctions.map((auction: Auction) => (
+    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
+  ));
+  const pastAuctionsLayout = pastAuctions.map((auction: Auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
   ));
 
@@ -103,7 +115,6 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
         <Container className={styles.content}>
           <Row>
             <Col md="6">
-              <VerifiedStatus />
               <p className="text-headline break-word">{influencer.name}</p>
               <p className="text-label text-all-cups">Total charity amount raised: {totalRaised.toFormat('$0,0')}</p>
               {/*<div className="d-flex">
@@ -137,18 +148,13 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, isOwnProfi
         <section className={styles.sliders}>
           <Container>
             {hasLiveAuctions && (
-              <div className="mb-5">
-                <span className="label-with-separator text-label mb-4 d-block break-word">
-                  {influencer.name} live auctions
-                </span>
-                <Slider items={liveAuctionsLayout} />
-              </div>
+              <InfluencerProfileSliderRow items={liveAuctionsLayout} name={influencer.name} status="live" />
+            )}
+            {hasDraftAuctions && (account?.isAdmin || isMyProfile) && (
+              <InfluencerProfileSliderRow items={draftAuctionsLayout} name={influencer.name} status="draft" />
             )}
             {hasPastAuctions && (
-              <div>
-                <span className="label-with-separator text-label mb-4 d-block ">{influencer.name} past auctions</span>
-                <Slider items={pastAuctionsLayout} />
-              </div>
+              <InfluencerProfileSliderRow items={pastAuctionsLayout} name={influencer.name} status="past" />
             )}
           </Container>
         </section>

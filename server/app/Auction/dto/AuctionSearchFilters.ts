@@ -5,4 +5,5 @@ export interface AuctionSearchFilters {
   minPrice?: number;
   maxPrice?: number;
   auctionOrganizer?: Types.ObjectId;
+  status?: string[];
 }

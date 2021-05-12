@@ -59,8 +59,8 @@ export class AuctionService {
     return {
       totalItems,
       items: items.map((item) => this.makeAuction(item)),
-      size: params.size,
-      skip: params.skip,
+      size: items.length,
+      skip: params.skip || 0,
     };
   }
 
