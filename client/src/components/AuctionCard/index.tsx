@@ -39,7 +39,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   if (!auction) {
     return null;
   }
-
+  const isSettled = auction.status === AuctionStatus.SETTLED;
   const isDraft = auction.status === AuctionStatus.DRAFT;
   const linkToAuction = `/auctions/${auction.id}${isDraft ? '/basic' : ''}`;
   const priceFormatted = currentPrice.toFormat('$0,0');
@@ -54,6 +54,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
           styles.image,
           horizontal && styles.horizontalImage,
           isDonePage && styles.horizontalOnMobileImage,
+          isSettled && styles.settled,
         )}
         src={imageSrc}
       />

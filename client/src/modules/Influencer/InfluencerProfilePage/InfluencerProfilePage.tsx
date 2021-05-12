@@ -20,5 +20,5 @@ export const InfluencerProfilePage: FC = () => {
     return null;
   }
 
-  return <InfluencerProfilePageContent influencer={influencer} isOwnProfile={influencerId === 'me'} />;
+  return <InfluencerProfilePageContent influencer={influencer} />;
 };

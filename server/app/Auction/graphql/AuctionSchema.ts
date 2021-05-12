@@ -54,6 +54,8 @@ export const AuctionSchema = gql`
     sports: [String]
     minPrice: Int
     maxPrice: Int
+    status: [String]
+    auctionOrganizer: String
   }
 
   enum AuctionOrderBy {
@@ -68,8 +70,8 @@ export const AuctionSchema = gql`
   type AuctionsPage {
     items: [Auction]!
     totalItems: Int!
-    size: Int!
-    skip: Int!
+    size: Int
+    skip: Int
   }
 
   type AuctionPriceLimits {
@@ -78,7 +80,7 @@ export const AuctionSchema = gql`
   }
 
   extend type Query {
-    auctions(size: Int!, skip: Int!, query: String, filters: AuctionSearchFilters, orderBy: String): AuctionsPage!
+    auctions(size: Int, skip: Int, query: String, filters: AuctionSearchFilters, orderBy: String): AuctionsPage!
     auctionPriceLimits: AuctionPriceLimits!
     auction(id: String!): Auction
     sports: [String]

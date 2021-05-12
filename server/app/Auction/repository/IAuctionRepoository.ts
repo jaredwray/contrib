@@ -12,6 +12,8 @@ export type IAuctionFilters = {
   query?: string;
   filters?: AuctionSearchFilters;
   orderBy?: AuctionOrderBy;
+  auctionOrganizer?: string;
+  status?: AuctionStatus;
 };
 
 export interface ICreateAuction {

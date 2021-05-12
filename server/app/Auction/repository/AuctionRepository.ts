@@ -72,13 +72,12 @@ export class AuctionRepository implements IAuctionRepository {
     return ([
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.sports?.length, { sport: { $in: filters?.sports } }],
-      [filters?.maxPrice, { startPrice: { $lte: filters?.maxPrice } }],
-      [filters?.minPrice, { startPrice: { $gte: filters?.minPrice } }],
+      [filters?.minPrice || filters?.maxPrice, { startPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
       [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {
-        status: { $eq: AuctionStatus.ACTIVE },
+        status: { $in: filters?.status || [AuctionStatus.ACTIVE] },
       },
     );
   }
@@ -143,6 +142,7 @@ export class AuctionRepository implements IAuctionRepository {
     )
       .skip(skip)
       .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+
     if (size) {
       auctions.limit(size);
     }
@@ -153,9 +153,6 @@ export class AuctionRepository implements IAuctionRepository {
     return this.populateAuctionQuery<IAuctionModel[]>(
       this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
     )
-      .skip(skip)
-      .limit(size)
-      .sort(AuctionRepository.searchSortOptionsByName(orderBy))
       .countDocuments()
       .exec();
   }
