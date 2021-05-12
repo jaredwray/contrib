@@ -72,8 +72,7 @@ export class AuctionRepository implements IAuctionRepository {
     return ([
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.sports?.length, { sport: { $in: filters?.sports } }],
-      [filters?.maxPrice, { startPrice: { $lte: filters?.maxPrice } }],
-      [filters?.minPrice, { startPrice: { $gte: filters?.minPrice } }],
+      [filters?.minPrice || filters?.maxPrice, { startPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
       [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
