@@ -20,7 +20,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
         <Image roundedCircle className={clsx(styles.avatar, 'd-inline-block')} src={ResizedImageUrl(avatarUrl, 120)} />
         <div className={'pl-4 align-middle'}>
           <Link
-            className={clsx(styles.name, 'text-subhead text-all-cups text-sm  break-word')}
+            className={clsx(styles.link, 'text-subhead text-all-cups text-sm  break-word')}
             title={name}
             to={`/charity/${id}`}
           >

@@ -1,13 +1,20 @@
 import { FC, useContext } from 'react';
 
+import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import { AuctionsListQuery } from 'src/apollo/queries/auctions';
+import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
+import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
 import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
+import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { AuctionStatus, Auction } from 'src/types/Auction';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
 import styles from './CharityProfilePageContent.module.scss';
@@ -19,6 +26,16 @@ interface Props {
 export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const { account } = useContext(UserAccountContext);
 
+  const { data } = useQuery(AuctionsListQuery, {
+    variables: {
+      filters: {
+        charity: charity.id,
+        status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED],
+      },
+    },
+  });
+  const auctions = data?.auctions?.items ?? [];
+
   const profileDescriptionParagraphs = (charity?.profileDescription ?? 'no description').split('\n');
 
   const isMyProfile = account?.charity?.id === charity.id;
@@ -27,6 +44,19 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   if (!isActive && !isMyProfile && !account?.isAdmin) {
     return null;
   }
+
+  const profileAuctions = profileAuctionsHash(auctions);
+
+  const liveAuctions = profileAuctions.ACTIVE;
+  const pastAuctions = profileAuctions.SETTLED;
+
+  const hasLiveAuctions = Boolean(liveAuctions.length);
+  const hasPastAuctions = Boolean(pastAuctions.length);
+
+  const hasAuctions = Boolean(auctions.length);
+
+  const liveAuctionCards = liveAuctions.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
+  const pastAuctionCards = pastAuctions.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
 
   return (
     <Layout>
@@ -61,6 +91,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
             <Col md="6">
               {!isActive && <NotActiveStatus />}
               <p className="text-headline break-word">{charity.name}</p>
+              <TotalRaisedAmount auctions={auctions} />
               {charity.website && (
                 <p className="text-label text-all-cups">
                   <a className={styles.link} href={charity.websiteUrl}>
@@ -80,6 +111,18 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
           </Row>
         </Container>
       </section>
+      {hasAuctions && (
+        <section className={styles.sliders}>
+          <Container>
+            {hasLiveAuctions && (
+              <ProfileSliderRow items={liveAuctionCards}>Live auctions benefiting {charity.name}</ProfileSliderRow>
+            )}
+            {hasPastAuctions && (
+              <ProfileSliderRow items={pastAuctionCards}>Past auctions benefiting {charity.name}</ProfileSliderRow>
+            )}
+          </Container>
+        </section>
+      )}
     </Layout>
   );
 };
