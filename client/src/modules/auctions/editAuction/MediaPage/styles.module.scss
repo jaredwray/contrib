@@ -12,6 +12,7 @@
 .dropzoneWrapper {
   min-height: 200px;
   display: table;
+  width: -webkit-fit-content !important;
 
   @media (max-width: $medium-weight) {
     & {
