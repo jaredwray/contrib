@@ -1,16 +1,17 @@
-import { FC, useMemo, useContext } from 'react';
+import { FC, useContext } from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import Dinero from 'dinero.js';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
-import { InfluencerProfileSliderRow } from 'src/components/InfluencerProfileSliderRow';
 import Layout from 'src/components/Layout';
+import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
+import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
@@ -34,18 +35,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   });
   const auctions = data?.auctions?.items;
 
-  const totalRaised = useMemo(
-    () =>
-      (auctions ?? [])
-        .filter((a: Auction) => a.status === AuctionStatus.SETTLED)
-        .map((a: Auction) => Dinero(a.maxBid?.bid))
-        .reduce((total: any, next: any) => total.add(next), Dinero({ amount: 0, currency: 'USD' })),
-    [auctions],
-  );
-  const profileAuctions = Object.keys(AuctionStatus).reduce((hash: any, elem: string) => {
-    hash[elem] = (auctions ?? []).filter((a: Auction) => a.status === elem);
-    return hash;
-  }, {});
+  const profileAuctions = profileAuctionsHash(auctions);
 
   const liveAuctions = profileAuctions.ACTIVE;
   const pastAuctions = profileAuctions.SETTLED;
@@ -116,7 +106,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           <Row>
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>
-              <p className="text-label text-all-cups">Total charity amount raised: {totalRaised.toFormat('$0,0')}</p>
+              <TotalRaisedAmount auctions={auctions} />
               {/*<div className="d-flex">
                 <a
                   className={clsx(styles.socialIcon, 'mr-3')}
@@ -148,13 +138,13 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
         <section className={styles.sliders}>
           <Container>
             {hasLiveAuctions && (
-              <InfluencerProfileSliderRow items={liveAuctionsLayout} name={influencer.name} status="live" />
+              <ProfileSliderRow items={liveAuctionsLayout}>{influencer.name}'s live auctions</ProfileSliderRow>
             )}
             {hasDraftAuctions && (account?.isAdmin || isMyProfile) && (
-              <InfluencerProfileSliderRow items={draftAuctionsLayout} name={influencer.name} status="draft" />
+              <ProfileSliderRow items={draftAuctionsLayout}>{influencer.name}'s draft auctions</ProfileSliderRow>
             )}
             {hasPastAuctions && (
-              <InfluencerProfileSliderRow items={pastAuctionsLayout} name={influencer.name} status="past" />
+              <ProfileSliderRow items={pastAuctionsLayout}>{influencer.name}'s past auctions</ProfileSliderRow>
             )}
           </Container>
         </section>
