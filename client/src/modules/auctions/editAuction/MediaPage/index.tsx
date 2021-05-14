@@ -115,7 +115,7 @@ const EditAuctionMediaPage = () => {
               title="Video"
             >
               <UploadingDropzone
-                accepted={'.mp4,.webm,.opgg'}
+                accepted={'.mp4,.webm,.opgg,.mov'}
                 attachments={attachments.videos}
                 attachmentsType={'videos'}
                 auctionId={auctionId}
