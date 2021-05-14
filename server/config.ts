@@ -57,6 +57,7 @@ export const AppConfig = {
   cloudflare: {
     token: requireEnvVar('CLOUDFLARE_STREAMING_KEY'),
     user: requireEnvVar('CLOUDFLARE_USER_ID'),
+    maxSizeGB: process.env['MAX_SIZE_VIDEO_GB'],
   },
   bitly: {
     accessToken: requireEnvVar('BITLY_ACCESS_TOKEN'),

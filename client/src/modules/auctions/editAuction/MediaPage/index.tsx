@@ -97,12 +97,12 @@ const EditAuctionMediaPage = () => {
               title="Photos"
             >
               <UploadingDropzone
-                accepted={'.png,.jpeg,.jpg,.webp'}
+                accepted=".png, .jpeg, .jpg, .webp"
                 attachments={attachments.images}
-                attachmentsType={'images'}
+                attachmentsType="images"
                 auctionId={auctionId}
                 icon={<AddPhotoIcon />}
-                name={'photos'}
+                name="photos"
                 setAttachments={setAttachments}
                 setErrorMessage={(message) => addToast(message, { autoDismiss: true, appearance: 'warning' })}
                 setSelectedAttachment={setSelectedAttachment}
@@ -115,12 +115,12 @@ const EditAuctionMediaPage = () => {
               title="Video"
             >
               <UploadingDropzone
-                accepted={'.mp4,.webm,.opgg,.mov'}
+                accepted=".mp4, .webm, .opgg, .mov"
                 attachments={attachments.videos}
-                attachmentsType={'videos'}
+                attachmentsType="videos"
                 auctionId={auctionId}
                 icon={<AddVideoIcon />}
-                name={'video'}
+                name="video"
                 setAttachments={setAttachments}
                 setErrorMessage={(message) => addToast(message, { autoDismiss: true, appearance: 'warning' })}
                 setSelectedAttachment={setSelectedAttachment}
