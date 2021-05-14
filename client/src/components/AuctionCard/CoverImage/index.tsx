@@ -54,7 +54,7 @@ const CoverImage: FC<Props> = ({ src, alt, className }) => {
         observer.unobserve(element);
       }
     };
-  }, [imageSrc, imageRef, loadedImageSrc]);
+  }, [src, imageSrc, imageRef, loadedImageSrc]);
 
   return (
     <div className={clsx(styles.root, className)}>

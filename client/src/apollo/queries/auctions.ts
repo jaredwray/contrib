@@ -267,6 +267,7 @@ export const AuctionsListQuery = gql`
         attachments {
           type
           url
+          thumbnail
         }
       }
     }
