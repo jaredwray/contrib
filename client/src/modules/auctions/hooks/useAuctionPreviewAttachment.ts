@@ -4,7 +4,6 @@ export default function useAuctionPreviewAttachment(attachments: AuctionAttachme
   if (attachments.length) {
     const [previewAttachment] = attachments;
     if (previewAttachment.type === 'VIDEO') {
-      console.log(previewAttachment);
       return `${previewAttachment.thumbnail}?width=800`;
     }
     return previewAttachment.url;
