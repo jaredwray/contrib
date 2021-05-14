@@ -211,7 +211,7 @@ export class InfluencerService {
     const ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg', 'webp'];
     const extension = originalFilename.split('.').pop();
 
-    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+    if (!ALLOWED_EXTENSIONS.includes(extension.toLowerCase())) {
       AppLogger.error('File has unsupported extension: ', originalFilename);
       return;
     }

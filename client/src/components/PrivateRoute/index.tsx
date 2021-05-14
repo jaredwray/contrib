@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC, ReactElement, useCallback, useContext } from 'react';
 
 import { Redirect, Route } from 'react-router-dom';
 
@@ -10,24 +10,19 @@ interface Props {
   role: string;
 }
 
-const PrivateRoute: FC<Props> = ({ component, path, role }) => {
+const PrivateRoute: FC<Props> = ({ component, path, role }): ReactElement => {
   const { account } = useContext(UserAccountContext);
 
-  const isAllowed = (role: string) => {
-    if (account?.isAdmin) {
-      return true;
-    }
-
-    if (role === 'influencer' && (account?.influencerProfile || account?.assistant)) {
-      return true;
-    }
-
-    if (role === 'charity' && account?.charity) {
-      return true;
-    }
-
-    return false;
-  };
+  const isAllowed = useCallback(
+    (role: string) => {
+      return (
+        account?.isAdmin ||
+        (role === 'influencer' && (account?.influencerProfile || account?.assistant)) ||
+        (role === 'charity' && account?.charity)
+      );
+    },
+    [account],
+  );
 
   if (!isAllowed(role)) {
     return <Redirect to="/" />;

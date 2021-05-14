@@ -142,9 +142,9 @@ export class CharityService {
       throw new Error(`charity record #${id} not found`);
     }
     const { filename: originalFilename, createReadStream } = await image;
-    const ALLOWED_EXTENSIONS = GCloudStorage.allowed_extensions;
+    const ALLOWED_EXTENSIONS = /png|jpeg|jpg|webp/i;
     const extension = originalFilename.split('.').pop();
-    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+    if (!ALLOWED_EXTENSIONS.test(extension)) {
       AppLogger.error('File has unsupported extension: ', originalFilename);
       return;
     }
