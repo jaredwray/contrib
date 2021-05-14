@@ -72,12 +72,12 @@ const EditAuctionMediaPage = () => {
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(() => {
-    if (auctionData?.auction?.attachments?.length === 0) {
+    if (attachments.images.uploaded.length + attachments.videos.uploaded.length === 0) {
       addToast('You need to upload at least one attachment', { autoDismiss: true, appearance: 'error' });
     } else {
       history.push(`/auctions/${auctionId}/details`);
     }
-  }, [addToast, auctionData?.auction?.attachments?.length, auctionId, history]);
+  }, [addToast, attachments.images.uploaded.length, attachments.videos.uploaded.length, auctionId, history]);
 
   const closeModal = useCallback(() => {
     setSelectedAttachment(null);
