@@ -21,7 +21,7 @@ type Props = {
 };
 
 const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage }) => {
-  const imageSrc = auction.attachments[0]?.url;
+  const imageSrc = auction.attachments[0]?.thumbnail || auction.attachments[0]?.url;
 
   const influencer = auctionOrganizer || auction.auctionOrganizer;
   const currentPrice = useMemo(() => {

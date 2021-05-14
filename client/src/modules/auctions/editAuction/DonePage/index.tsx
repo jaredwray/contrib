@@ -122,7 +122,7 @@ const AuctionDonePage = () => {
                 <img
                   alt={auction.title}
                   className="w-100"
-                  src={auction.attachments[0].cloudflareUrl || auction.attachments[0].url}
+                  src={auction.attachments[0].thumbnail || auction.attachments[0].url}
                 />
               </Form.Group>
             )}
