@@ -20,7 +20,7 @@ export class GCloudStorage {
   private readonly storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
   private static readonly cloudPath = 'https://storage.googleapis.com';
   private static readonly imageSupportedFormats = /png|jpeg|jpg|webp/i;
-  private static readonly videoSupportedFormats = /mp4|webm|opgg/i;
+  private static readonly videoSupportedFormats = /mp4|webm|opgg|mov/i;
 
   constructor(private readonly cloudflareStreaming: CloudflareStreaming) {}
 
