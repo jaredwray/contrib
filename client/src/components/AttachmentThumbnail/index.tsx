@@ -6,6 +6,8 @@ import AddVideoIcon from 'src/assets/icons/VideoIcon';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
+import useAuctionPreviewAttachment from '../../modules/auctions/hooks/useAuctionPreviewAttachment';
+
 interface Props {
   attachment: AuctionAttachment;
   className: string;
@@ -13,14 +15,11 @@ interface Props {
 
 const AttachmentThumbnail: FC<Props> = ({ attachment, className }): ReactElement => {
   const [isInvalidPicture, setIsInvalidPicture] = useState(false);
-
-  const srcUrl = attachment.thumbnail || attachment.url;
+  const srcUrl = useAuctionPreviewAttachment([attachment]);
   const onImagePreviewError = useCallback(() => setIsInvalidPicture(true), [setIsInvalidPicture]);
-  const defaultPicture =
-    attachment.type === 'VIDEO' ? <AddVideoIcon hideAddSign={true} /> : <AddPhotoIcon hideAddSign={true} />;
 
   if (isInvalidPicture) {
-    return defaultPicture;
+    return attachment.type === 'VIDEO' ? <AddVideoIcon hideAddSign={true} /> : <AddPhotoIcon hideAddSign={true} />;
   }
 
   return <Image className={className} src={srcUrl} onError={onImagePreviewError} />;

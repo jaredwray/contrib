@@ -72,12 +72,8 @@ const EditAuctionMediaPage = () => {
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(() => {
-    if (attachments.images.uploaded.length + attachments.videos.uploaded.length === 0) {
-      addToast('You need to upload at least one attachment', { autoDismiss: true, appearance: 'error' });
-    } else {
-      history.push(`/auctions/${auctionId}/details`);
-    }
-  }, [addToast, attachments.images.uploaded.length, attachments.videos.uploaded.length, auctionId, history]);
+    history.push(`/auctions/${auctionId}/details`);
+  }, [auctionId, history]);
 
   const closeModal = useCallback(() => {
     setSelectedAttachment(null);

@@ -6,6 +6,7 @@ import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -21,7 +22,7 @@ type Props = {
 };
 
 const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage }) => {
-  const imageSrc = auction.attachments[0]?.thumbnail || auction.attachments[0]?.url;
+  const imageSrc = useAuctionPreviewAttachment(auction.attachments);
 
   const influencer = auctionOrganizer || auction.auctionOrganizer;
   const currentPrice = useMemo(() => {
