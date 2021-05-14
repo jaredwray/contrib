@@ -36,8 +36,15 @@ app.set('view engine', 'pug');
       res.sendFile(clientBundlePath + '/index.html', { acceptRanges: false });
     });
   }
+  const bytes = Math.pow(1024, 3);
 
-  app.use('/graphql', graphqlUploadExpress({ maxFiles: 1 }));
+  app.use(
+    '/graphql',
+    graphqlUploadExpress({
+      maxFiles: 1,
+      maxFileSize: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytes ?? Infinity,
+    }),
+  );
   createGraphqlServer(appServices).applyMiddleware({ app });
 
   app.listen(AppConfig.app.port, () => {

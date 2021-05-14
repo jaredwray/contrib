@@ -36,7 +36,7 @@ const UploadingDropzone: FC<Props> = ({
 }): ReactElement => {
   const [addAuctionMedia] = useMutation(AddAuctionMedia, {
     onError(error) {
-      setErrorMessage('We cannot upload one of your selected file. Please, try later.');
+      setErrorMessage(`We cannot upload one of your selected file. Please, try later`);
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
@@ -62,29 +62,45 @@ const UploadingDropzone: FC<Props> = ({
     },
   });
 
+  const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
+  const bytes = Math.pow(1024, 3);
+
   const onDrop = useCallback(
-    (files: File[]) => {
+    (acceptedFiles: File[], fileRejections: any) => {
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
 
           [attachmentsType]: {
             uploaded: attachments.uploaded,
-            loading: attachments.loading.concat(files),
+            loading: attachments.loading.concat(acceptedFiles),
           },
         };
       });
 
-      files.forEach((file) => {
+      acceptedFiles.forEach((file) => {
         addAuctionMedia({
           variables: { id: auctionId, file },
         });
       });
+
+      fileRejections.forEach((file: any) => {
+        file.errors.forEach((err: any) => {
+          if (err.code === 'file-too-large') {
+            setErrorMessage(`File is too big, max size is ${maxSizeGB} GB`);
+          }
+
+          if (err.code === 'file-invalid-type') {
+            setErrorMessage(`Unsupported file format. ${err.message}`);
+          }
+        });
+      });
     },
-    [addAuctionMedia, setAttachments, auctionId, attachments, attachmentsType],
+    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, attachmentsType, maxSizeGB],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
+    maxSize: maxSizeGB ? parseFloat(maxSizeGB) * bytes : Infinity,
     accept: accepted,
     onDrop,
   });
