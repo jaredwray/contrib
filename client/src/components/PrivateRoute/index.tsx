@@ -1,11 +1,11 @@
-import { FC, ReactElement, useCallback, useContext } from 'react';
+import { ComponentType, FC, ReactElement, useCallback, useContext } from 'react';
 
 import { Redirect, Route } from 'react-router-dom';
 
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 interface Props {
-  component: any;
+  component: ComponentType;
   path: string;
   role: string;
 }
