@@ -72,7 +72,7 @@ export default function PhoneNumberVerification() {
         <Form onSubmit={handleSubmit}>
           {(formProps) => (
             <BsForm onSubmit={formProps.handleSubmit}>
-              <div className={clsx('pt-1 text-label', styles.errorMessage)}>{error}</div>
+              <div className={clsx('pt-1 mb-1 text-label error-message', styles.errorMessage)}>{error}</div>
 
               <Field name="phoneNumber">
                 {(props) => (

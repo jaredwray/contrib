@@ -53,6 +53,10 @@ export class UserAccountService {
   }
 
   async createAccountWithPhoneNumber(authzId: string, phoneNumber: string): Promise<UserAccount> {
+    if (await this.accountModel.findOne({ phoneNumber }).exec()) {
+      throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
+    }
+
     await this.twilioVerificationService.createVerification(phoneNumber);
     return {
       id: authzId,
