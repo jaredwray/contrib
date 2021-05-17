@@ -60,47 +60,46 @@ export class InvitationService {
     try {
       const { firstName, lastName, phoneNumber, welcomeMessage } = input;
 
-      // TODO findById method donesn't work in charityService
-      // await session.withTransaction(async () => {
-      const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
-      charity = await this.charityService.createCharity({ name: 'My Charity Name' }, session);
+      await session.withTransaction(async () => {
+        const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
+        charity = await this.charityService.createCharity({ name: 'My Charity Name' }, session);
 
-      if (userAccount) {
-        charity = await this.charityService.updateCharityStatus({
-          charity,
-          userAccount,
-          status: CharityStatus.PENDING_INVITE,
-          session,
-        });
+        if (userAccount) {
+          charity = await this.charityService.updateCharityStatus({
+            charity,
+            userAccount,
+            status: CharityStatus.PENDING_ONBOARDING,
+            session,
+          });
 
-        const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
-        const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
-        await this.twilioNotificationService.sendMessage(phoneNumber, message);
-        await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, charity);
-      } else {
-        if (await this.InvitationModel.exists({ phoneNumber })) {
-          throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+          const link = await this.urlShortenerService.shortenUrl(AppConfig.app.url);
+          const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
+          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, { charity, session });
+        } else {
+          if (await this.InvitationModel.exists({ phoneNumber })) {
+            throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+          }
+          const invitation = await this.createCharityInvitation(
+            charity,
+            {
+              phoneNumber,
+              firstName,
+              lastName,
+              welcomeMessage,
+            },
+            session,
+          );
+          const link = await this.makeInvitationLink(invitation.slug);
+          charity = await this.charityService.updateCharityStatus({
+            charity,
+            status: CharityStatus.PENDING_INVITE,
+            session,
+          });
+          const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
+          await this.twilioNotificationService.sendMessage(phoneNumber, message);
         }
-        const invitation = await this.createCharityInvitation(
-          charity,
-          {
-            phoneNumber,
-            firstName,
-            lastName,
-            welcomeMessage,
-          },
-          session,
-        );
-        const link = await this.makeInvitationLink(invitation.slug);
-        charity = await this.charityService.updateCharityStatus({
-          charity,
-          status: CharityStatus.PENDING_INVITE,
-          session,
-        });
-        const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
-        await this.twilioNotificationService.sendMessage(phoneNumber, message);
-      }
-      // });
+      });
 
       return charity;
     } finally {
@@ -243,12 +242,14 @@ export class InvitationService {
         });
       } else if (invitation.parentEntityType === InvitationParentEntityType.CHARITY) {
         await this.acceptInvitation(invitation);
-        const charity = await this.charityService.assignUserToCharity(
-          invitation.parentEntityId,
-          userAccount.mongodbId,
-          session,
-        );
-        await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, charity);
+        await session.withTransaction(async () => {
+          const charity = await this.charityService.assignUserToCharity(
+            invitation.parentEntityId,
+            userAccount.mongodbId,
+            session,
+          );
+          await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, { charity, session });
+        });
       } else {
         AppLogger.error(`unexpected parent entity type ${invitation.parentEntityType} for invitation ${invitation.id}`);
       }
