@@ -84,7 +84,7 @@ ReactDOM.render(
                 <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/me/edit" role="influencer" />
                 <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/:influencerId/edit" role="admin" />
                 <PrivateRoute component={InfluencerProfilePage} path="/profiles/me" role="influencer" />
-                <Route component={InfluencerProfilePage} path="/profiles/:influencerId" />
+                <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
 
                 <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
                 <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
@@ -95,9 +95,9 @@ ReactDOM.render(
                 <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
 
                 <Route exact component={Auctions} path="/auctions" />
-                <PrivateRoute component={NewAuctionWizardPage} path="/auctions/new" role="influencer" />
                 <PrivateRoute component={NewAuctionBasicPage} path="/auctions/:ownerId/new/basic" role="admin" />
                 <PrivateRoute component={NewAuctionBasicPage} path="/auctions/new/basic" role="influencer" />
+                <PrivateRoute component={NewAuctionWizardPage} path="/auctions/new" role="influencer" />
                 <PrivateRoute component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" role="influencer" />
                 <PrivateRoute component={EditAuctionMediaPage} path="/auctions/:auctionId/media" role="influencer" />
                 <PrivateRoute
