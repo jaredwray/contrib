@@ -16,6 +16,15 @@
   border: none;
 }
 
+.dots {
+  width: 10px;
+  height: 10px;
+}
+
+.dots + .activePageBnt {
+  margin-left: 10px;
+}
+
 .activePageBnt,
 .activePageBnt:focus,
 .activePageBnt:hover {
