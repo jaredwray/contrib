@@ -24,13 +24,12 @@ export class CharityService {
   private readonly stripe = new StripeService();
 
   constructor(private readonly connection: Connection, private readonly eventHub: EventHub) {
-    eventHub.subscribe(Events.CHARITY_ONBOARDED, async (charity) => {
-      await this.createStripeAccountForCharity(charity);
+    eventHub.subscribe(Events.CHARITY_ONBOARDED, async ({ charity, session }) => {
+      await this.createStripeAccountForCharity(charity, session);
     });
   }
 
-  async createStripeAccountForCharity(charity: Charity): Promise<Charity> {
-    const session = await this.CharityModel.startSession();
+  async createStripeAccountForCharity(charity: Charity, session): Promise<Charity> {
     const model = await this.CharityModel.findById(charity.id, null, { session }).exec();
 
     model.status = CharityStatus.PENDING_ONBOARDING;
@@ -90,7 +89,6 @@ export class CharityService {
           name,
           status: CharityStatus.PENDING_INVITE,
           profileStatus: CharityProfileStatus.CREATED,
-          website: '',
         },
       ],
       { session },
