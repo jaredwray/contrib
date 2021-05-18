@@ -4,7 +4,6 @@ import { useMutation } from '@apollo/client';
 
 import { RemoveAuctionMedia } from 'src/apollo/queries/auctions';
 import AddVideoIcon from 'src/assets/icons/VideoIcon';
-import AddPhotoIcon from 'src/assets/images/ProtoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentsStateInterface from '../../common/AttachmentsStateInterface';
@@ -14,7 +13,6 @@ import styles from './styles.module.scss';
 interface Props {
   auctionId: string;
   attachment: AuctionAttachment;
-  attachmentsType: 'videos' | 'images';
   setAttachments: (_: SetStateAction<AttachmentsStateInterface>) => void;
   setErrorMessage: (_: SetStateAction<string>) => void;
   setSelectedAttachment: (_: SetStateAction<AuctionAttachment | null>) => void;
@@ -23,7 +21,6 @@ interface Props {
 const AttachementPreview: FC<Props> = ({
   auctionId,
   attachment,
-  attachmentsType,
   setAttachments,
   setErrorMessage,
   setSelectedAttachment,
@@ -40,12 +37,8 @@ const AttachementPreview: FC<Props> = ({
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
-          [attachmentsType]: {
-            uploaded: prevState[attachmentsType].uploaded.filter(
-              (uploaded: AuctionAttachment) => uploaded.url !== attachment.url,
-            ),
-            loading: prevState[attachmentsType].loading,
-          },
+          uploaded: prevState.uploaded.filter((uploaded: AuctionAttachment) => uploaded.url !== attachment.url),
+          loading: prevState.loading,
         };
       });
 
@@ -53,7 +46,7 @@ const AttachementPreview: FC<Props> = ({
         variables: { id: auctionId, url: attachment.url },
       });
     },
-    [auctionId, removeAuctionMedia, setAttachments, attachmentsType],
+    [auctionId, removeAuctionMedia, setAttachments],
   );
 
   const handleMediaRemove = useCallback(() => removeMedia(attachment), [attachment, removeMedia]);
@@ -61,8 +54,7 @@ const AttachementPreview: FC<Props> = ({
   const onImagePreviewError = useCallback(() => setIsInvalidPicture(true), [setIsInvalidPicture]);
   const srcUrl = attachment.thumbnail || attachment.url;
 
-  const defaultPicture = () =>
-    attachmentsType === 'videos' ? <AddVideoIcon hideAddSign={true} /> : <AddPhotoIcon hideAddSign={true} />;
+  const defaultPicture = () => <AddVideoIcon hideAddSign={true} />;
 
   return (
     <div className={previewStyles.previewWrapper}>

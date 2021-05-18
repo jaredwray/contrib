@@ -7,19 +7,11 @@ import styles from './styles.module.scss';
 
 interface Props {
   file: File;
-  attachmentsType: string;
 }
 
-const FilePreview: FC<Props> = ({ file, attachmentsType }): ReactElement => {
-  const src = URL.createObjectURL(file);
-
+const FilePreview: FC<Props> = (): ReactElement => {
   return (
     <div className={previewStyles.previewWrapper}>
-      {attachmentsType === 'images' ? (
-        <img alt="" className={previewStyles.preview} src={src} />
-      ) : (
-        <video muted autoPlay={false} className={previewStyles.preview} src={src} onClick={(e) => e.preventDefault()} />
-      )}
       <Spinner animation="border" className={styles.spinner} title="loading" />
     </div>
   );
