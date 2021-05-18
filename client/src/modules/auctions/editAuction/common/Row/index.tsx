@@ -6,8 +6,8 @@ import { Col, Row as RbRow } from 'react-bootstrap';
 import styles from './styles.module.scss';
 
 interface Props {
-  title: string;
-  description: string;
+  title?: string;
+  description: React.ReactNode;
   childrenWrapperCLassName?: string;
 }
 
@@ -15,7 +15,7 @@ const Row: FC<Props> = ({ title, description, children, childrenWrapperCLassName
   return (
     <RbRow className={clsx('flex-column flex-md-row', styles.divider)}>
       <Col className="pr-md-5">
-        <p className="text-subhead">{title}</p>
+        {title && <p className="text-subhead">{title}</p>}
         <p className="text--body">{description}</p>
       </Col>
 

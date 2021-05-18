@@ -6,8 +6,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { GetAuctionMedia } from 'src/apollo/queries/auctions';
-import AddVideoIcon from 'src/assets/icons/VideoIcon';
-import AddPhotoIcon from 'src/assets/images/ProtoIcon';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
@@ -26,43 +24,19 @@ const EditAuctionMediaPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
   const [attachments, setAttachments] = useState<AttachmentsStateInterface>({
-    images: {
-      uploaded: [],
-      loading: [],
-    },
-    videos: {
-      uploaded: [],
-      loading: [],
-    },
+    uploaded: [],
+    loading: [],
   });
-  const { data: auctionData } = useQuery(GetAuctionMedia, {
-    variables: { id: auctionId },
-  });
+  const { data: auctionData } = useQuery(GetAuctionMedia, { variables: { id: auctionId } });
 
   useEffect(() => {
     if (!auctionData) return;
 
-    const hash = {
-      IMAGE: [] as AuctionAttachment[],
-      VIDEO: [] as AuctionAttachment[],
-    };
-
-    auctionData.auction.attachments.forEach((item: AuctionAttachment) => {
-      const type = item.type as 'IMAGE' | 'VIDEO';
-      hash[type] = hash[type].concat([item]);
-    });
-
     setAttachments((prevState: any) => {
       return {
         ...prevState,
-        images: {
-          uploaded: hash.IMAGE,
-          loading: [],
-        },
-        videos: {
-          uploaded: hash.VIDEO,
-          loading: [],
-        },
+        uploaded: auctionData.auction.attachments,
+        loading: [],
       };
     });
   }, [auctionData]);
@@ -79,6 +53,18 @@ const EditAuctionMediaPage = () => {
     setSelectedAttachment(null);
   }, [setSelectedAttachment]);
 
+  const description = (
+    <>
+      <p>
+        Provide a number of photos that show the item off from a couple of angles as well as any standout markings,
+        signatures, etc.
+      </p>
+      <p>
+        Provide a single video (preferably portrait mode) that shows the item off and talks to what makes it special.
+      </p>
+    </>
+  );
+
   return (
     <Layout>
       <ProgressBar now={50} />
@@ -87,36 +73,12 @@ const EditAuctionMediaPage = () => {
           <Container>
             <StepHeader step="2" title="Photos & video" />
             <Dialog closeModal={closeModal} selectedAttachment={selectedAttachment} />
-            <Row
-              childrenWrapperCLassName={styles.dropzoneWrapper}
-              description="Provide a number of photos that show the item off from a couple of angles as well as any standout markings, signatures, etc."
-              title="Photos"
-            >
+            <Row childrenWrapperCLassName={styles.dropzoneWrapper} description={description}>
               <UploadingDropzone
-                accepted=".png, .jpeg, .jpg, .webp"
-                attachments={attachments.images}
-                attachmentsType="images"
+                accepted=".png, .jpeg, .jpg, .webp, .mp4, .webm, .opgg, .mov"
+                attachments={attachments}
                 auctionId={auctionId}
-                icon={<AddPhotoIcon />}
-                name="photos"
-                setAttachments={setAttachments}
-                setErrorMessage={(message) => addToast(message, { autoDismiss: true, appearance: 'warning' })}
-                setSelectedAttachment={setSelectedAttachment}
-              />
-            </Row>
-
-            <Row
-              childrenWrapperCLassName={styles.dropzoneWrapper}
-              description="Provide a single video (preferably portrait mode) that shows the item off and talks to what makes it special."
-              title="Video"
-            >
-              <UploadingDropzone
-                accepted=".mp4, .webm, .opgg, .mov"
-                attachments={attachments.videos}
-                attachmentsType="videos"
-                auctionId={auctionId}
-                icon={<AddVideoIcon />}
-                name="video"
+                name="image and video"
                 setAttachments={setAttachments}
                 setErrorMessage={(message) => addToast(message, { autoDismiss: true, appearance: 'warning' })}
                 setSelectedAttachment={setSelectedAttachment}
@@ -124,10 +86,7 @@ const EditAuctionMediaPage = () => {
             </Row>
           </Container>
 
-          <StepByStepRow
-            loading={!!(attachments?.images.loading.length || attachments?.videos.loading.length)}
-            prevAction={handlePrevAction}
-          />
+          <StepByStepRow loading={!!attachments?.loading.length} prevAction={handlePrevAction} />
         </Form>
       </section>
     </Layout>

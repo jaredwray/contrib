@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
 
 import { AddAuctionMedia } from 'src/apollo/queries/auctions';
+import AddPhotoIcon from 'src/assets/images/ProtoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentsStateInterface from '../common/AttachmentsStateInterface';
@@ -13,10 +14,8 @@ import styles from './styles.module.scss';
 
 interface Props {
   accepted: string;
-  attachmentsType: 'videos' | 'images';
   name: string;
   auctionId: string;
-  icon: ReactElement;
   attachments: { uploaded: AuctionAttachment[]; loading: File[] };
   setAttachments: (_: SetStateAction<AttachmentsStateInterface>) => void;
   setErrorMessage: (_: SetStateAction<string>) => void;
@@ -26,8 +25,6 @@ interface Props {
 const UploadingDropzone: FC<Props> = ({
   accepted,
   name,
-  attachmentsType,
-  icon,
   auctionId,
   attachments,
   setAttachments,
@@ -40,10 +37,8 @@ const UploadingDropzone: FC<Props> = ({
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
-          [attachmentsType]: {
-            uploaded: attachments.uploaded,
-            loading: [],
-          },
+          uploaded: attachments.uploaded,
+          loading: [],
         };
       });
     },
@@ -53,10 +48,8 @@ const UploadingDropzone: FC<Props> = ({
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
-          [attachmentsType]: {
-            uploaded: attachments.uploaded.concat(attachment),
-            loading: attachments.loading.filter((file) => file.name !== attachment.originalFileName),
-          },
+          uploaded: attachments.uploaded.concat(attachment),
+          loading: attachments.loading.filter((file) => file.name !== attachment.originalFileName),
         };
       });
     },
@@ -70,11 +63,8 @@ const UploadingDropzone: FC<Props> = ({
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
-
-          [attachmentsType]: {
-            uploaded: attachments.uploaded,
-            loading: attachments.loading.concat(acceptedFiles),
-          },
+          uploaded: attachments.uploaded,
+          loading: attachments.loading.concat(acceptedFiles),
         };
       });
 
@@ -96,7 +86,7 @@ const UploadingDropzone: FC<Props> = ({
         });
       });
     },
-    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, attachmentsType, maxSizeGB],
+    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -112,7 +102,6 @@ const UploadingDropzone: FC<Props> = ({
           <AttachmentPreview
             key={index}
             attachment={attachment}
-            attachmentsType={attachmentsType}
             auctionId={auctionId}
             setAttachments={setAttachments}
             setErrorMessage={setErrorMessage}
@@ -120,12 +109,12 @@ const UploadingDropzone: FC<Props> = ({
           />
         ))}
         {attachments.loading.map((file: File, index: number) => (
-          <FilePreview key={index} attachmentsType={attachmentsType} file={file} />
+          <FilePreview key={index} file={file} />
         ))}
       </div>
       <div {...getRootProps({ className: styles.dropzone })}>
         <input {...getInputProps()} name={name} />
-        {icon}
+        <AddPhotoIcon />
         <p className="text-center mt-2 mb-0">
           Drag {name} here or
           <br />
