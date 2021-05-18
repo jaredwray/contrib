@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { ReactElement, useContext, useEffect } from 'react';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import { getUnixTime } from 'date-fns';
@@ -7,7 +7,7 @@ import { toDate } from 'date-fns-tz';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 interface PropTypes {
-  children: any;
+  children: ReactElement;
 }
 
 export function IntercomStateManager({ children }: PropTypes) {
@@ -38,3 +38,5 @@ export function IntercomStateManager({ children }: PropTypes) {
 
   return children;
 }
+
+export default IntercomStateManager;
