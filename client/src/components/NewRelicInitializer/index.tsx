@@ -3,15 +3,17 @@ import { ReactElement, useEffect } from 'react';
 interface PropTypes {
   children: ReactElement;
 }
+type AgentIdsType = {
+  [key: string]: string;
+};
 
 const LICENSE_KEY = 'NRJS-d190c88daa27d216f3e';
 const ACCOUNT_ID = '2921752';
-class AgentIds {
-  [key: string]: string;
-  'dev.contrib.org': '1108663362';
-  'live.contrib.org': '1108705300';
-  'contrib.org': '1108706736';
-}
+const AGENT_IDS: AgentIdsType = {
+  'dev.contrib.org': '1108663362',
+  'live.contrib.org': '1108705300',
+  'contrib.org': '1108706736',
+};
 
 export function NewRelicInitializer({ children }: PropTypes) {
   useEffect(() => {
@@ -20,7 +22,7 @@ export function NewRelicInitializer({ children }: PropTypes) {
     }
 
     const platformUrl = new URL(process.env.REACT_APP_PLATFORM_URL || '');
-    const agentId = new AgentIds()[platformUrl.hostname];
+    const agentId = AGENT_IDS[platformUrl.hostname];
 
     if (!agentId) {
       return;
