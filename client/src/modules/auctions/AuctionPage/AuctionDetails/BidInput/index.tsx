@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useMemo, useContext } from 'react';
 
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
@@ -6,17 +6,20 @@ import { Button } from 'react-bootstrap';
 
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import styles from './styles.module.scss';
 
 interface Props {
   minBid: Dinero.Dinero;
   onSubmit: (amount: Dinero.Dinero) => Promise<any>;
+  fairMarketValue: Dinero.Dinero;
 }
 
-export const BidInput: FC<Props> = ({ minBid, onSubmit }) => {
+export const BidInput: FC<Props> = ({ minBid, onSubmit, fairMarketValue }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialFormValues = useMemo(() => ({ bid: minBid.toObject() }), [minBid.getAmount()]);
+  const { account } = useContext(UserAccountContext);
 
   const handleSubmit = useCallback(
     ({ bid }) => {
@@ -37,6 +40,7 @@ export const BidInput: FC<Props> = ({ minBid, onSubmit }) => {
         name="bid"
         title="Enter your max bid amount"
       />
+      {account?.isAdmin && fairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
       <Button className="w-100" title="Place your bid" type="submit" variant="dark">
         Place your bid
       </Button>

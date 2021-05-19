@@ -48,6 +48,7 @@ export const AuctionSchema = gql`
     auctionOrganizer: InfluencerProfile!
     totalBids: Int!
     link: String!
+    fairMarketValue: Money
   }
 
   input AuctionSearchFilters {
@@ -100,6 +101,7 @@ export const AuctionSchema = gql`
     autographed: Boolean
     sport: String
     playedIn: String
+    fairMarketValue: Money
   }
 
   extend type Mutation {

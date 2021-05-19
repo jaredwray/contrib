@@ -15,9 +15,7 @@ import styles from './styles.module.scss';
 
 export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
-
   const history = useHistory();
-
   const { loading, data, error } = useQuery(AllCharitiesQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
@@ -57,7 +55,7 @@ export default function CharitiesPage(): any {
           </tr>
         </thead>
         <tbody className="font-weight-normal">
-          {charities.items.map((item: any) => (
+          {charities.items.map((item: Charity) => (
             <tr key={item.id} className="clickable" onClick={(e: MouseEvent) => handleSelectCharity(item, e)}>
               <td className={styles.idColumn}>{item.id}</td>
               <td className="break-word">{item.name}</td>

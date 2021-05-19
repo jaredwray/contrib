@@ -61,7 +61,7 @@ export default function InfluencersPage() {
           </tr>
         </thead>
         <tbody className="font-weight-normal">
-          {influencers.items.map((item: any) => (
+          {influencers.items.map((item: InfluencerProfile) => (
             <tr key={item.id} className="clickable" onClick={(e: MouseEvent) => handleSelectInfluencer(item, e)}>
               <td className={styles.idColumn} title={item.id}>
                 {item.id}

@@ -113,7 +113,7 @@ export class AuctionRepository implements IAuctionRepository {
   async updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, input.organizerId || organizerId);
 
-    if (auction.status !== AuctionStatus.DRAFT) {
+    if (auction.status !== AuctionStatus.DRAFT && !input.fairMarketValue) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
     Object.assign(auction, input);

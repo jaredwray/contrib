@@ -24,4 +24,5 @@ export interface Auction {
   fullPageDescription: string;
   startPrice: Dinero.Dinero;
   link: string;
+  fairMarketValue: Dinero.Dinero;
 }

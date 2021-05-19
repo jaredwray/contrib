@@ -43,6 +43,8 @@ export type IUpdateAuction = {
   endDate?: dayjs.Dayjs;
   playedIn?: string;
   organizerId?: string;
+  fairMarketValueCurrency?: string;
+  fairMarketValue?: number;
 };
 
 export interface IAuctionRepository {
