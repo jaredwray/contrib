@@ -27,6 +27,8 @@ export interface IAuctionModel extends Document {
   startPriceCurrency: string;
   startPrice: number;
   link: string;
+  fairMarketValue: number;
+  fairMarketValueCurrency: string;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -52,6 +54,8 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
     endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
     link: { type: SchemaTypes.String },
+    fairMarketValue: { type: SchemaTypes.Number, default: 0 },
+    fairMarketValueCurrency: { type: SchemaTypes.String, default: 'USD' },
   },
   { optimisticConcurrency: true },
 );

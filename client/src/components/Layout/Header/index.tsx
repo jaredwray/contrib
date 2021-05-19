@@ -51,6 +51,7 @@ export default function Header() {
                     <>
                       <MenuNavLink link="/admin/influencers" title="Manage Influencers" />
                       <MenuNavLink link="/admin/charities" title="Manage Charities" />
+                      <MenuNavLink link="/admin/auctions" title="Manage Auctions" />
                     </>
                   )}
 

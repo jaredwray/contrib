@@ -107,7 +107,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       </Elements>
       {canBid && (
         <>
-          <BidInput minBid={minBid} onSubmit={handleBid} />
+          <BidInput fairMarketValue={Dinero(auction.fairMarketValue)} minBid={minBid} onSubmit={handleBid} />
           {/*<WatchBtn auction={auction} />*/}
         </>
       )}

@@ -15,4 +15,5 @@ export type AuctionInput = {
   startPrice?: Dinero.Dinero;
   playedIn?: string;
   organizerId?: string;
+  fairMarketValue?: Dinero.Dinero;
 };

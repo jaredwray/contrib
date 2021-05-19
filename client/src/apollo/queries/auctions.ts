@@ -27,6 +27,7 @@ export const AuctionQuery = gql`
       startPrice
       totalBids
       link
+      fairMarketValue
       maxBid {
         id
         bid
@@ -199,10 +200,23 @@ export const updateAuctionBasics = gql`
 `;
 
 export const updateAuctionDetails = gql`
-  mutation updateAuction($id: String!, $startDate: DateTime, $endDate: DateTime, $startPrice: Money, $charity: String) {
+  mutation updateAuction(
+    $id: String!
+    $startDate: DateTime
+    $endDate: DateTime
+    $startPrice: Money
+    $charity: String
+    $fairMarketValue: Money
+  ) {
     updateAuction(
       id: $id
-      input: { startDate: $startDate, endDate: $endDate, startPrice: $startPrice, charity: $charity }
+      input: {
+        startDate: $startDate
+        endDate: $endDate
+        startPrice: $startPrice
+        charity: $charity
+        fairMarketValue: $fairMarketValue
+      }
     ) {
       id
       startDate
@@ -269,6 +283,7 @@ export const AuctionsListQuery = gql`
           url
           thumbnail
         }
+        fairMarketValue
       }
     }
   }

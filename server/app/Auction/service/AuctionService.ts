@@ -132,6 +132,7 @@ export class AuctionService {
       fullPageDescription,
       playedIn,
       sport,
+      fairMarketValue,
       ...rest
     } = input;
     const auction = await this.auctionRepository.updateAuction(id, userId, {
@@ -142,6 +143,12 @@ export class AuctionService {
         ? {
             startPrice: startPrice.getAmount(),
             startPriceCurrency: startPrice.getCurrency(),
+          }
+        : {}),
+      ...(fairMarketValue
+        ? {
+            fairMarketValue: fairMarketValue.getAmount(),
+            fairMarketValueCurrency: fairMarketValue.getCurrency(),
           }
         : {}),
       ...(charity ? { charity: Types.ObjectId(charity) } : {}),
@@ -321,6 +328,8 @@ export class AuctionService {
       startPrice,
       auctionOrganizer,
       startPriceCurrency,
+      fairMarketValue,
+      fairMarketValueCurrency,
       link: rawLink,
       ...rest
     } = model.toObject();
@@ -364,6 +373,9 @@ export class AuctionService {
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
       totalBids: bids?.length ?? 0,
       startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
+      fairMarketValue: fairMarketValue
+        ? Dinero({ currency: fairMarketValueCurrency as Dinero.Currency, amount: fairMarketValue })
+        : null,
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       link,
       ...rest,

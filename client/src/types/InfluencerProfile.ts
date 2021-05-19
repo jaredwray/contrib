@@ -12,6 +12,7 @@ export interface InfluencerProfile {
   favoriteCharities: Charity[];
   assistants: Assistant[];
   auctions?: Auction[];
+  status?: InfluencerStatus;
 }
 
 export enum InfluencerStatus {
