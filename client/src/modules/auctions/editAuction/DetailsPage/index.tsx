@@ -99,22 +99,17 @@ const EditAuctionDetailsPage = () => {
   }, [auctionData?.auction]);
 
   const { startPrice, charity } = auctionData?.auction ?? {};
-
   const initialValues = useMemo(() => {
     if (!auctionData) {
       return undefined;
     }
 
     const defaultTimezone = timeZones[0].value;
-
     const currentTimeZone = format(new Date(), 'x');
     const knownTimezone = timeZones.find(({ value }) => currentTimeZone === value);
-
     const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
     const date = knownTimezone ? startDate : utcToZonedTime(startDate, defaultTimezone);
-
-    const time = format(date, 'hh:mm');
-    const dayPeriod = format(date, 'aaa');
+    const time = format(date, 'H:mm');
 
     return {
       startPrice: Dinero.maximum([Dinero(startPrice), Dinero({ amount: 100 })]).toObject(),
@@ -123,7 +118,6 @@ const EditAuctionDetailsPage = () => {
       startDate: {
         date,
         time,
-        dayPeriod,
         timeZone: knownTimezone?.value || defaultTimezone,
       },
     };
