@@ -12,7 +12,6 @@ import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
-import { toFullHumanReadableDatetime } from 'src/helpers/timeFormatters';
 import { Auction } from 'src/types/Auction';
 
 import ShareButton from './ShareButton';
@@ -26,13 +25,12 @@ const AuctionDonePage = () => {
   const auction = auctionData?.auction;
 
   const [showInstagramInstructions, setShowInstagramInstructions] = useState(false);
+
   const toggleShowInstagramInstructions = useCallback(() => {
     setShowInstagramInstructions((showing) => !showing);
   }, [setShowInstagramInstructions]);
 
-  const [titleCopied, setTitleCopied] = useState(false);
-  const [descriptionCopied, setDescriptionCopied] = useState(false);
-  const [dateCopied, setDateCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   if (!auction) {
     return null;
@@ -70,69 +68,31 @@ const AuctionDonePage = () => {
 
         <div className={clsx(styles.content, styles.contentRight)}>{<AuctionCard isDonePage auction={auction} />}</div>
       </div>
-
-      <Modal show={showInstagramInstructions} onHide={toggleShowInstagramInstructions}>
-        <Modal.Header>
-          <Modal.Title>Use following content to create an Instagram post</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label className="d-block">Auction Title</Form.Label>
-              <InputGroup>
-                <Form.Control disabled type="text" value={auction.title} />
-                <InputGroup.Append>
-                  <CopyToClipboard text={auction.title} onCopy={() => setTitleCopied(true)}>
-                    <Button type="button">{(titleCopied && 'Copied') || 'Copy'}</Button>
-                  </CopyToClipboard>
-                </InputGroup.Append>
-              </InputGroup>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label className="d-block">Description</Form.Label>
-              <InputGroup>
-                <Form.Control disabled type="text" value={auction.description} />
-                <InputGroup.Append>
-                  <CopyToClipboard text={auction.description} onCopy={() => setDescriptionCopied(true)}>
-                    <Button type="button">{(descriptionCopied && 'Copied') || 'Copy'}</Button>
-                  </CopyToClipboard>
-                </InputGroup.Append>
-              </InputGroup>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label className="d-block">Starts at</Form.Label>
-              <InputGroup>
-                <Form.Control disabled type="text" value={toFullHumanReadableDatetime(auction.startDate) || ''} />
-                <InputGroup.Append>
-                  <CopyToClipboard
-                    text={toFullHumanReadableDatetime(auction.startDate) || ''}
-                    onCopy={() => setDateCopied(true)}
-                  >
-                    <Button type="button">{(dateCopied && 'Copied') || 'Copy'}</Button>
-                  </CopyToClipboard>
-                </InputGroup.Append>
-              </InputGroup>
-            </Form.Group>
-
-            {Boolean(auction.attachments.length) && (
+      <div className="modalWrapper">
+        <Modal centered show={showInstagramInstructions} onHide={toggleShowInstagramInstructions}>
+          <Modal.Header>
+            <Modal.Title>Use following content to create an Instagram post</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="modalWrapper">
+            <Form>
               <Form.Group>
-                <Form.Label>Image</Form.Label>
-                <img
-                  alt={auction.title}
-                  className="w-100"
-                  src={auction.attachments[0].thumbnail || auction.attachments[0].url}
-                />
+                <Form.Label className="d-block">Auction link</Form.Label>
+                <InputGroup>
+                  <Form.Control disabled type="text" value={auction.link} />
+                  <InputGroup.Append>
+                    <CopyToClipboard text={auction.link} onCopy={() => setLinkCopied(true)}>
+                      <Button type="button">{(linkCopied && 'Copied') || 'Copy'}</Button>
+                    </CopyToClipboard>
+                  </InputGroup.Append>
+                </InputGroup>
               </Form.Group>
-            )}
-
-            <Button block type="button" variant="secondary" onClick={toggleShowInstagramInstructions}>
-              Close
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+              <Button block type="button" variant="secondary" onClick={toggleShowInstagramInstructions}>
+                Close
+              </Button>
+            </Form>
+          </Modal.Body>
+        </Modal>
+      </div>
     </Layout>
   );
 };
