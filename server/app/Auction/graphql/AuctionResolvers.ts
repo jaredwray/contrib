@@ -60,9 +60,12 @@ export const AuctionResolvers: AuctionResolversType = {
         return null;
       }
     }),
-    updateAuction: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencerId }) =>
-      auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input),
-    ),
+    updateAuction: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencerId }) => {
+      if (!currentAccount.isAdmin) {
+        delete input.fairMarketValue;
+      }
+      return auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input);
+    }),
     deleteAuction: async () => Promise.resolve(null),
     addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencerId }) =>
       auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachment),

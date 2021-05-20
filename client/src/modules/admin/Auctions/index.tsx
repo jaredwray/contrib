@@ -1,10 +1,10 @@
-import { useState, MouseEvent } from 'react';
+import { useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Table } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { AuctionsListQuery, updateAuctionDetails } from 'src/apollo/queries/auctions';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
@@ -17,15 +17,9 @@ import styles from './styles.module.scss';
 
 export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
-  const history = useHistory();
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
-  const handleSelectAuction = (auction: Auction, event: MouseEvent) => {
-    if (!(event.target as Element).closest('button, .modal')) {
-      history.push(`/auctions/${auction.id}`);
-    }
-  };
 
   if (error) {
     return null;
@@ -41,12 +35,12 @@ export default function CharitiesPage(): any {
             <th>Name</th>
             <th>Status</th>
             <th>Price</th>
-            <th>fair Market Value</th>
+            <th>Fair Market Value</th>
           </tr>
         </thead>
         <tbody className="font-weight-normal">
           {auctions.items.map((item: Auction) => (
-            <tr key={item.id} className="clickable" onClick={(e: MouseEvent) => handleSelectAuction(item, e)}>
+            <tr key={item.id} className="clickable">
               <td className={styles.idColumn}>{item.id}</td>
               <td className="break-word">{item.title}</td>
               <td>{item.status}</td>
@@ -56,6 +50,9 @@ export default function CharitiesPage(): any {
               <td>{item.fairMarketValue && Dinero(item.fairMarketValue).toFormat('$0,0')}</td>
               <td>
                 <ActionsDropdown>
+                  <Link className="dropdown-item text--body" to={`/auctions/${item.id}`}>
+                    Go to
+                  </Link>
                   <FairMarketValueChangeButton
                     auction={item}
                     className={clsx(styles.actionBtn, 'dropdown-item text--body')}

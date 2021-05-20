@@ -1,9 +1,9 @@
-import { MouseEvent, useState, SyntheticEvent } from 'react';
+import { useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Table } from 'react-bootstrap';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
@@ -18,16 +18,10 @@ import styles from './styles.module.scss';
 export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
 
-  const history = useHistory();
-
   const { loading, data, error } = useQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
-  const handleSelectInfluencer = (influencer: InfluencerProfile, event: MouseEvent) => {
-    if (!(event.target as Element).closest('button, .modal')) {
-      history.push(`/profiles/${influencer.id}`);
-    }
-  };
+
   if (error) {
     return null;
   }
@@ -62,7 +56,7 @@ export default function InfluencersPage() {
         </thead>
         <tbody className="font-weight-normal">
           {influencers.items.map((item: InfluencerProfile) => (
-            <tr key={item.id} className="clickable" onClick={(e: MouseEvent) => handleSelectInfluencer(item, e)}>
+            <tr key={item.id} className="clickable">
               <td className={styles.idColumn} title={item.id}>
                 {item.id}
               </td>
@@ -71,11 +65,10 @@ export default function InfluencersPage() {
               <td className="break-word">{item.status}</td>
               <td>
                 <ActionsDropdown>
-                  <Link
-                    className="dropdown-item text--body"
-                    to={`/assistants/${item.id}`}
-                    onClick={(e: SyntheticEvent) => e.stopPropagation()}
-                  >
+                  <Link className="dropdown-item text--body" to={`/profiles/${item.id}`}>
+                    Go to
+                  </Link>
+                  <Link className="dropdown-item text--body" to={`/assistants/${item.id}`}>
                     Assistants
                   </Link>
                   {item.status === InfluencerStatus.TRANSIENT && (
