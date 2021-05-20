@@ -33,7 +33,7 @@ const UploadingDropzone: FC<Props> = ({
 }): ReactElement => {
   const [addAuctionMedia] = useMutation(AddAuctionMedia, {
     onError(error) {
-      setErrorMessage(`We cannot upload one of your selected file. Please, try later`);
+      setErrorMessage(error.message);
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
