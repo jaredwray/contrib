@@ -24,7 +24,6 @@ interface Props {
 
 export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const { account } = useContext(UserAccountContext);
-
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
       filters: {
@@ -106,7 +105,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           <Row>
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>
-              <TotalRaisedAmount auctions={auctions} />
+              <TotalRaisedAmount value={influencer.totalRaisedAmount} />
               {/*<div className="d-flex">
                 <a
                   className={clsx(styles.socialIcon, 'mr-3')}

@@ -368,6 +368,7 @@ export class AuctionService {
             profileDescription: charity.profileDescription,
             websiteUrl: charity.websiteUrl,
             website: charity.website,
+            totalRaisedAmount: charity.totalRaisedAmount,
           }
         : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
@@ -380,6 +381,14 @@ export class AuctionService {
       link,
       ...rest,
     };
+  }
+  public static totalRaisedAmount(auctions: IAuctionModel[]): Dinero.Dinero {
+    if (!auctions) {
+      return Dinero({ amount: 0, currency: 'USD' });
+    }
+    return auctions
+      .map((a) => Dinero({ amount: a.maxBid?.bid ?? 0, currency: a.maxBid?.bidCurrency ?? 'USD' }))
+      .reduce((total, next) => total.add(next), Dinero({ amount: 0, currency: 'USD' }));
   }
 
   private makeLongAuctionLink(id: string) {

@@ -1,21 +1,11 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 
 import Dinero from 'dinero.js';
 
-import { AuctionStatus, Auction } from 'src/types/Auction';
-
 interface Props {
-  auctions: Auction[];
+  value: Dinero.DineroObject;
 }
-export const TotalRaisedAmount: FC<Props> = ({ auctions }) => {
-  const totalRaised = useMemo(
-    () =>
-      (auctions ?? [])
-        .filter((a: Auction) => a.status === AuctionStatus.SETTLED)
-        .map((a: Auction) => Dinero(a.maxBid?.bid))
-        .reduce((total: any, next: any) => total.add(next), Dinero({ amount: 0, currency: 'USD' })),
-    [auctions],
-  );
 
-  return <p className="text-label text-all-cups">Total amount raised: {totalRaised.toFormat('$0,0')}</p>;
-};
+export const TotalRaisedAmount: FC<Props> = ({ value }) => (
+  <p className="text-label text-all-cups">Total amount raised: {Dinero(value).toFormat('$0,0')}</p>
+);

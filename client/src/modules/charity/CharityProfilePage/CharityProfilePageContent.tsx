@@ -91,7 +91,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
             <Col md="6">
               {!isActive && <NotActiveStatus />}
               <p className="text-headline break-word">{charity.name}</p>
-              <TotalRaisedAmount auctions={auctions} />
+              <TotalRaisedAmount value={charity.totalRaisedAmount} />
               {charity.website && (
                 <p className="text-label text-all-cups">
                   <a className={styles.link} href={charity.websiteUrl}>
