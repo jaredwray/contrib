@@ -15,7 +15,6 @@ interface Props {
 
 export const FairMarketValueChangeButton: FC<Props> = ({ auction, className, mutation }) => {
   const [showDialog, setShowDialog] = useState(false);
-
   return (
     <>
       <Button className={className} variant="link" onClick={() => setShowDialog(true)}>
