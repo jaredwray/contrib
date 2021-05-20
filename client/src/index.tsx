@@ -62,64 +62,60 @@ ReactDOM.render(
       <Router history={history}>
         <ContribApolloProvider>
           <UserAccountProvider>
-            <IntercomStateManager>
-              <NewRelicInitializer>
-                <Switch>
-                  <Route exact component={HomePage} path="/" />
-                  <Route exact component={AfterLogin} path="/after-login" />
-                  <Route exact component={Privacy} path="/privacy-policy" />
-                  <Route exact component={Terms} path="/terms" />
-                  <Route exact component={PhoneNumberVerification} path="/phone-verification" />
-                  <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
-                  <Route exact component={InvitationPage} path="/invitation/:slug" />
+            <>
+              <IntercomStateManager />
+              <NewRelicInitializer />
+              <Switch>
+                <Route exact component={HomePage} path="/" />
+                <Route exact component={AfterLogin} path="/after-login" />
+                <Route exact component={Privacy} path="/privacy-policy" />
+                <Route exact component={Terms} path="/terms" />
+                <Route exact component={PhoneNumberVerification} path="/phone-verification" />
+                <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
+                <Route exact component={InvitationPage} path="/invitation/:slug" />
 
-                  <PrivateRoute component={InfluencerOnboardingBasicPage} path="/onboarding/basic" role="influencer" />
-                  <PrivateRoute
-                    component={InfluencerOnboardingCharitiesPage}
-                    path="/onboarding/charities"
-                    role="influencer"
-                  />
-                  <PrivateRoute component={InfluencerOnboardingDonePage} path="/onboarding/done" role="influencer" />
+                <PrivateRoute component={InfluencerOnboardingBasicPage} path="/onboarding/basic" role="influencer" />
+                <PrivateRoute
+                  component={InfluencerOnboardingCharitiesPage}
+                  path="/onboarding/charities"
+                  role="influencer"
+                />
+                <PrivateRoute component={InfluencerOnboardingDonePage} path="/onboarding/done" role="influencer" />
 
-                  <PrivateRoute component={Charities} path="/admin/charities" role="admin" />
-                  <PrivateRoute component={Influencers} path="/admin/influencers" role="admin" />
-                  <PrivateRoute component={AdminAuctions} path="/admin/auctions" role="admin" />
+                <PrivateRoute component={Charities} path="/admin/charities" role="admin" />
+                <PrivateRoute component={Influencers} path="/admin/influencers" role="admin" />
+                <PrivateRoute component={AdminAuctions} path="/admin/auctions" role="admin" />
 
-                  <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/me/edit" role="influencer" />
-                  <PrivateRoute
-                    component={InfluencerProfileEditPage}
-                    path="/profiles/:influencerId/edit"
-                    role="admin"
-                  />
-                  <PrivateRoute component={InfluencerProfilePage} path="/profiles/me" role="influencer" />
-                  <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
+                <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/me/edit" role="influencer" />
+                <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/:influencerId/edit" role="admin" />
+                <PrivateRoute component={InfluencerProfilePage} path="/profiles/me" role="influencer" />
+                <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
 
-                  <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
-                  <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
-                  <PrivateRoute component={CharityProfilePage} path="/charity/me" role="charity" />
-                  <Route exact component={CharityProfilePage} path="/charity/:charityId" />
+                <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
+                <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
+                <PrivateRoute component={CharityProfilePage} path="/charity/me" role="charity" />
+                <Route exact component={CharityProfilePage} path="/charity/:charityId" />
 
-                  <PrivateRoute component={Assistants} path="/assistants/me" role="influencer" />
-                  <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
+                <PrivateRoute component={Assistants} path="/assistants/me" role="influencer" />
+                <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
 
-                  <Route exact component={Auctions} path="/auctions" />
-                  <PrivateRoute component={NewAuctionBasicPage} path="/auctions/:ownerId/new/basic" role="admin" />
-                  <PrivateRoute component={NewAuctionBasicPage} path="/auctions/new/basic" role="influencer" />
-                  <PrivateRoute component={NewAuctionWizardPage} path="/auctions/new" role="influencer" />
-                  <PrivateRoute component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" role="influencer" />
-                  <PrivateRoute component={EditAuctionMediaPage} path="/auctions/:auctionId/media" role="influencer" />
-                  <PrivateRoute
-                    component={EditAuctionDetailsPage}
-                    path="/auctions/:auctionId/details"
-                    role="influencer"
-                  />
-                  <Route exact component={AuctionPage} path="/auctions/:auctionId" />
-                  <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
+                <Route exact component={Auctions} path="/auctions" />
+                <PrivateRoute component={NewAuctionBasicPage} path="/auctions/:ownerId/new/basic" role="admin" />
+                <PrivateRoute component={NewAuctionBasicPage} path="/auctions/new/basic" role="influencer" />
+                <PrivateRoute component={NewAuctionWizardPage} path="/auctions/new" role="influencer" />
+                <PrivateRoute component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" role="influencer" />
+                <PrivateRoute component={EditAuctionMediaPage} path="/auctions/:auctionId/media" role="influencer" />
+                <PrivateRoute
+                  component={EditAuctionDetailsPage}
+                  path="/auctions/:auctionId/details"
+                  role="influencer"
+                />
+                <Route exact component={AuctionPage} path="/auctions/:auctionId" />
+                <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
 
-                  <Route component={Page404} path="*" />
-                </Switch>
-              </NewRelicInitializer>
-            </IntercomStateManager>
+                <Route component={Page404} path="*" />
+              </Switch>
+            </>
           </UserAccountProvider>
         </ContribApolloProvider>
       </Router>

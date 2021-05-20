@@ -1,8 +1,5 @@
-import { ReactElement, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
-interface PropTypes {
-  children: ReactElement;
-}
 type AgentIdsType = {
   [key: string]: string;
 };
@@ -11,11 +8,11 @@ const LICENSE_KEY = 'NRJS-d190c88daa27d216f3e';
 const ACCOUNT_ID = '2921752';
 const AGENT_IDS: AgentIdsType = {
   'dev.contrib.org': '1108663362',
-  'live.contrib.org': '1108705300',
+  'live.contrib.org': '1108706736',
   'contrib.org': '1108706736',
 };
 
-export function NewRelicInitializer({ children }: PropTypes) {
+const NewRelicInitializer: FC = () => {
   useEffect(() => {
     if (process.env.REACT_APP_USE_NEWRELIC !== 'true') {
       return;
@@ -46,7 +43,7 @@ export function NewRelicInitializer({ children }: PropTypes) {
     };
   }, []);
 
-  return children;
-}
+  return null;
+};
 
 export default NewRelicInitializer;
