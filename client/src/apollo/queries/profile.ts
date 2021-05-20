@@ -27,6 +27,7 @@ export const MyProfileQuery = gql`
         team
         avatarUrl
         status
+        totalRaisedAmount
         favoriteCharities {
           id
           name
@@ -83,6 +84,7 @@ export const InfluencerProfileQuery = gql`
       team
       avatarUrl
       status
+      totalRaisedAmount
       favoriteCharities {
         id
         name

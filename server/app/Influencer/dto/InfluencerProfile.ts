@@ -1,3 +1,5 @@
+import Dinero from 'dinero.js';
+
 import { InfluencerStatus } from './InfluencerStatus';
 
 export interface InfluencerProfile {
@@ -11,4 +13,5 @@ export interface InfluencerProfile {
   userAccount: string;
   favoriteCharities: string[];
   assistants: string[];
+  totalRaisedAmount: Dinero.Dinero | null;
 }

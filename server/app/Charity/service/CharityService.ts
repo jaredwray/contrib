@@ -1,6 +1,11 @@
+import Dinero from 'dinero.js';
+
 import { Storage } from '@google-cloud/storage';
 import { GCloudStorage } from '../../GCloudStorage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
+import { AuctionService } from '../../Auction/service/AuctionService';
+import { AuctionModel, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
+import { AuctionStatus } from '../../Auction/dto/AuctionStatus';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
 import { CharityInput } from '../graphql/model/CharityInput';
@@ -21,6 +26,7 @@ interface CharityCreationInput {
 
 export class CharityService {
   private readonly CharityModel = CharityModel(this.connection);
+  private readonly AuctionModel = AuctionModel(this.connection);
   private readonly stripe = new StripeService();
 
   constructor(private readonly connection: Connection, private readonly eventHub: EventHub) {
@@ -79,7 +85,7 @@ export class CharityService {
       return [];
     }
     const charities = await this.CharityModel.find({ name: { $regex: query, $options: 'i' } }).exec();
-    return charities.map(CharityService.makeCharity);
+    return charities.map((charity) => CharityService.makeCharity(charity));
   }
 
   async createCharity({ name }: CharityCreationInput, session?: ClientSession): Promise<Charity> {
@@ -103,7 +109,11 @@ export class CharityService {
 
   async findCharity(id: string, session?: ClientSession): Promise<Charity | null> {
     const charity = await this.CharityModel.findById(id, null, { session }).exec();
-    return (charity && CharityService.makeCharity(charity)) ?? null;
+    if (!charity) return null;
+    const auctions = await this.AuctionModel.find({ charity: id, status: AuctionStatus.SETTLED })
+      .populate('maxBid')
+      .exec();
+    return CharityService.makeCharity(charity, auctions);
   }
 
   async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity> {
@@ -245,7 +255,7 @@ export class CharityService {
 
   async listCharities(skip: number, size: number): Promise<Charity[]> {
     const charities = await this.CharityModel.find().skip(skip).limit(size).sort({ id: 'asc' }).exec();
-    return charities.map(CharityService.makeCharity);
+    return charities.map((charity) => CharityService.makeCharity(charity));
   }
 
   async listCharitiesByUserAccountIds(userAccountIds: readonly string[]): Promise<Charity[]> {
@@ -258,7 +268,7 @@ export class CharityService {
       return [];
     }
     const charities = await this.CharityModel.find({ _id: { $in: charityIds } }).exec();
-    return charities.map(CharityService.makeCharity);
+    return charities.map((charity) => CharityService.makeCharity(charity));
   }
 
   async countCharities(): Promise<number> {
@@ -271,7 +281,7 @@ export class CharityService {
     return `http://${website}`;
   }
 
-  private static makeCharity(model: ICharityModel): Charity | null {
+  private static makeCharity(model: ICharityModel, auctions?: IAuctionModel[]): Charity | null {
     if (!model) {
       return null;
     }
@@ -287,6 +297,7 @@ export class CharityService {
       profileDescription: model.profileDescription,
       website: model.website,
       websiteUrl: CharityService.websiteUrl(model.website),
+      totalRaisedAmount: AuctionService.totalRaisedAmount(auctions),
     };
   }
 }

@@ -14,7 +14,6 @@ export interface ICharityModel extends Document {
   avatarUrl: string | null;
   profileDescription: string | null;
   website: string | null;
-  websiteUrl: string | null;
 }
 
 export const CharityCollectionName = 'charity';
@@ -28,7 +27,6 @@ const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   stripeAccountId: { type: SchemaTypes.String },
   avatarUrl: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
-  websiteUrl: { type: SchemaTypes.String },
   website: { type: SchemaTypes.String },
 });
 CharitySchema.index({ name: 'text' });

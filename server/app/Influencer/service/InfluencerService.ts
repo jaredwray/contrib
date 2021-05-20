@@ -1,6 +1,9 @@
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
+import { AuctionModel, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
+import { AuctionService } from '../../Auction/service/AuctionService';
+import { AuctionStatus } from '../../Auction/dto/AuctionStatus';
 import { CharityService } from '../../Charity';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
@@ -15,6 +18,7 @@ interface TransientInfluencerInput {
 
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
+  private readonly AuctionModel = AuctionModel(this.connection);
 
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
@@ -39,12 +43,20 @@ export class InfluencerService {
 
   async findInfluencer(id: string, session?: ClientSession): Promise<InfluencerProfile | null> {
     const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
-    return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+    if (!influencer) return null;
+    const auctions = await this.AuctionModel.find({ auctionOrganizer: id, status: AuctionStatus.SETTLED })
+      .populate('maxBid')
+      .exec();
+    return InfluencerService.makeInfluencerProfile(influencer, auctions);
   }
 
   async findInfluencerByUserAccount(userAccount: string): Promise<InfluencerProfile | null> {
     const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
-    return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+    if (!influencer) return null;
+    const auctions = await this.AuctionModel.find({ auctionOrganizer: influencer.id, status: AuctionStatus.SETTLED })
+      .populate('maxBid')
+      .exec();
+    return InfluencerService.makeInfluencerProfile(influencer, auctions);
   }
 
   async updateInfluencerStatus(
@@ -267,7 +279,7 @@ export class InfluencerService {
     await this.InfluencerModel.updateOne({ _id: influencerId }, { $addToSet: { assistants: assistantId } });
   }
 
-  public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
+  public static makeInfluencerProfile(model: IInfluencer, auctions?: IAuctionModel[]): InfluencerProfile {
     return {
       id: model._id.toString(),
       name: model.name,
@@ -279,6 +291,7 @@ export class InfluencerService {
       userAccount: model.userAccount?.toString() ?? null,
       favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
       assistants: model.assistants?.map((m) => m.toString()) ?? [],
+      totalRaisedAmount: AuctionService.totalRaisedAmount(auctions),
     };
   }
 }

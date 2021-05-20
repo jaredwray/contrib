@@ -14,6 +14,7 @@ export type IAuctionFilters = {
   orderBy?: AuctionOrderBy;
   auctionOrganizer?: string;
   status?: AuctionStatus;
+  charity?: string;
 };
 
 export interface ICreateAuction {
