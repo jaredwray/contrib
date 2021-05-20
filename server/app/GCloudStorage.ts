@@ -9,7 +9,6 @@ export type IFile = {
   filename: string;
   mimetype: string;
 };
-
 enum FileType {
   VIDEO = 'VIDEO',
   IMAGE = 'IMAGE',
@@ -91,14 +90,14 @@ export class GCloudStorage {
       throw new AppError('Unsupported file format', ErrorCode.BAD_REQUEST);
     }
     const formattedFileName = `${fileName}.${extension}`;
-    const buffer = await this.streamToBuffer(file.createReadStream());
-    let assetUrl = formattedFileName;
-
-    if (fileType === FileType.IMAGE && shouldResizeImage) {
-      assetUrl = `pending/${formattedFileName}`;
-    }
-
     try {
+      const buffer = await this.streamToBuffer(file.createReadStream());
+      let assetUrl = formattedFileName;
+
+      if (fileType === FileType.IMAGE && shouldResizeImage) {
+        assetUrl = `pending/${formattedFileName}`;
+      }
+
       await this.storage.bucket(bucketName).file(assetUrl).save(buffer);
       let uid = undefined;
 
@@ -110,7 +109,13 @@ export class GCloudStorage {
       }
       return { fileType, url: `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`, uid: uid };
     } catch (error) {
-      throw new AppError(`Cannot process the file, threw error ${error.message}`, ErrorCode.INTERNAL_ERROR);
+      if (error.name === 'PayloadTooLargeError') {
+        throw new AppError(
+          `File is too big, max size is ${AppConfig.cloudflare.maxSizeGB} GB`,
+          ErrorCode.INTERNAL_ERROR,
+        );
+      }
+      throw new AppError(`We cannot upload one of your selected file. Please, try later`, ErrorCode.INTERNAL_ERROR);
     }
   }
 }
