@@ -16,6 +16,7 @@ import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import AdminDropdown from './AdminDropdown';
 import styles from './InfluencerProfilePageContent.module.scss';
 
 interface Props {
@@ -62,45 +63,43 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   return (
     <Layout>
       <section className={styles.root}>
-        {isMyProfile && (
-          <Container className="p-0">
-            <Row>
-              <Col className="p-0">
+        <Container className="p-0">
+          <Row>
+            <Col className="p-0">
+              {isMyProfile && (
                 <Link className={clsx(styles.editBtn, 'text-label btn btn-secondary')} to={'/profiles/me/edit'}>
                   Edit
                 </Link>
-              </Col>
-            </Row>
-          </Container>
-        )}
+              )}
+              {account?.isAdmin && (
+                <AdminDropdown>
+                  <Link
+                    className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
+                    to={`/assistants/${influencer.id}`}
+                  >
+                    Assistants
+                  </Link>
+                  <Link
+                    className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
+                    to={`/auctions/${influencer.id}/new/basic`}
+                  >
+                    Create Auction
+                  </Link>
+                  <Link
+                    className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
+                    to={`/profiles/${influencer.id}/edit`}
+                  >
+                    Edit
+                  </Link>
+                </AdminDropdown>
+              )}
+            </Col>
+          </Row>
+        </Container>
         <div className={styles.header}>
           <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
-        {account?.isAdmin && (
-          <Container>
-            <Row>
-              <Col>
-                <Link className="text-label float-right" to={`/auctions/${influencer.id}/new/basic`}>
-                  Create Auction
-                </Link>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Link className="text-label float-right" to={`/assistants/${influencer.id}`}>
-                  Assistants
-                </Link>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Link className="text-label float-right" to={`/profiles/${influencer.id}/edit`}>
-                  Edit
-                </Link>
-              </Col>
-            </Row>
-          </Container>
-        )}
+
         <Container className={styles.content}>
           <Row>
             <Col md="6">
