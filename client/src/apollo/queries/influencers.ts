@@ -69,9 +69,7 @@ export const GetInfluencerQuery = gql`
         startDate
         title
         totalBids
-        maxBid {
-          bid
-        }
+        currentPrice
       }
     }
   }

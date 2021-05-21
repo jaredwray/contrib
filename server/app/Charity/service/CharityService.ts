@@ -1,9 +1,6 @@
-import Dinero from 'dinero.js';
-
 import { Storage } from '@google-cloud/storage';
-import { GCloudStorage } from '../../GCloudStorage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
-import { AuctionService } from '../../Auction/service/AuctionService';
+import { AuctionService } from '../../Auction';
 import { AuctionModel, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { AuctionStatus } from '../../Auction/dto/AuctionStatus';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
@@ -110,9 +107,7 @@ export class CharityService {
   async findCharity(id: string, session?: ClientSession): Promise<Charity | null> {
     const charity = await this.CharityModel.findById(id, null, { session }).exec();
     if (!charity) return null;
-    const auctions = await this.AuctionModel.find({ charity: id, status: AuctionStatus.SETTLED })
-      .populate('maxBid')
-      .exec();
+    const auctions = await this.AuctionModel.find({ charity: id, status: AuctionStatus.SETTLED });
     return CharityService.makeCharity(charity, auctions);
   }
 
@@ -297,7 +292,7 @@ export class CharityService {
       profileDescription: model.profileDescription,
       website: model.website,
       websiteUrl: CharityService.websiteUrl(model.website),
-      totalRaisedAmount: AuctionService.totalRaisedAmount(auctions),
+      totalRaisedAmount: AuctionService.makeTotalRaisedAmount(auctions),
     };
   }
 }

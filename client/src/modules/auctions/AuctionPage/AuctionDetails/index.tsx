@@ -31,16 +31,16 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const history = useHistory();
 
-  const { startPrice, maxBid, endDate, totalBids, title, status } = auction;
+  const { startPrice, currentPrice, endDate, totalBids, title, status } = auction;
   const ended = toDate(endDate) <= new Date();
   const durationTillEnd = toHumanReadableDuration(endDate);
   const endDateFormatted = dateFormat(toDate(endDate), 'MMM dd yyyy');
 
-  const price = useMemo(() => (maxBid && Dinero(maxBid.bid)) || Dinero(startPrice), [maxBid, startPrice]);
-  const minBid = useMemo(() => (maxBid && Dinero(maxBid.bid).add(Dinero({ amount: 100 }))) || Dinero(startPrice), [
-    maxBid,
-    startPrice,
-  ]);
+  const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
+  const minBid = useMemo(
+    () => (currentPrice && Dinero(currentPrice).add(Dinero({ amount: 100 }))) || Dinero(startPrice),
+    [currentPrice, startPrice],
+  );
   const canBid = status === AuctionStatus.ACTIVE && !ended;
   const queryParams = useUrlQueryParams();
 

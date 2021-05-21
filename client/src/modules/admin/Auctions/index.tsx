@@ -45,7 +45,9 @@ export default function CharitiesPage(): any {
               <td className="break-word">{item.title}</td>
               <td>{item.status}</td>
               <td>
-                {item.maxBid ? Dinero(item.maxBid.bid).toFormat('$0,0') : Dinero(item.startPrice).toFormat('$0,0')}
+                {item.currentPrice
+                  ? Dinero(item.currentPrice).toFormat('$0,0')
+                  : Dinero(item.startPrice).toFormat('$0,0')}
               </td>
               <td>{item.fairMarketValue && Dinero(item.fairMarketValue).toFormat('$0,0')}</td>
               <td>
