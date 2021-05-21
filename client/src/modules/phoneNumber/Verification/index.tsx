@@ -6,7 +6,6 @@ import clsx from 'clsx';
 import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
-import { useHistory } from 'react-router-dom';
 
 import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
 import { EnterPhoneNumberMutation, EnterInvitationCodeMutation } from 'src/apollo/queries/phoneNumberVerification';
@@ -18,7 +17,6 @@ import styles from './styles.module.scss';
 
 export default function PhoneNumberVerification() {
   const { logout } = useAuth0();
-  const history = useHistory();
   const { data: myAccountsData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
     fetchPolicy: 'cache-only',
   });
@@ -45,9 +43,9 @@ export default function PhoneNumberVerification() {
 
   useEffect(() => {
     if (myAccountsData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_REQUIRED) {
-      history.replace('/');
+      window.location.href = '/';
     }
-  }, [myAccountsData, history]);
+  }, [myAccountsData]);
 
   useEffect(() => {
     if (invitationToken) {
