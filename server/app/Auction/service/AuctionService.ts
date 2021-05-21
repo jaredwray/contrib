@@ -189,7 +189,7 @@ export class AuctionService {
       currency: auction.currentPriceCurrency as Currency,
     });
 
-    if (currentPrice > bid) {
+    if (bid.lessThanOrEqual(currentPrice)) {
       throw new AppError(
         'Provided bid is lower, than maximum bid that was encountered on the auction',
         ErrorCode.BAD_REQUEST,
@@ -370,6 +370,7 @@ export class AuctionService {
       ...rest,
     };
   }
+
   public static makeTotalRaisedAmount(auctions: IAuctionModel[]): Dinero.Dinero {
     if (!auctions) {
       return Dinero({ amount: 0, currency: 'USD' });
