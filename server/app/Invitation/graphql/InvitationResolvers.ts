@@ -23,11 +23,7 @@ export const InvitationResolvers: InvitationResolversType = {
       { slug }: { slug: string },
       { invitation }: GraphqlContext,
     ): Promise<Invitation | null> => {
-      const foundInvitation = await invitation.findInvitationBySlug(slug);
-      if (foundInvitation?.accepted) {
-        return null;
-      }
-      return foundInvitation;
+      return await invitation.findInvitationBySlug(slug);
     },
   },
   Mutation: {

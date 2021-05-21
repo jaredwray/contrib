@@ -4,4 +4,6 @@ export interface InviteInput {
   lastName: string;
   welcomeMessage: string;
   influencerId?: string;
+  accepted?: boolean;
+  parentEntityType: string;
 }

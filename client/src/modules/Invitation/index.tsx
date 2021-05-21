@@ -64,7 +64,7 @@ export default function InvitationPage() {
                       href="/"
                       onClick={handleSignUp}
                     >
-                      Sign Up
+                      {invitation.accepted ? 'Log in' : 'Sign Up'}
                     </a>
                   </div>
                 </div>
