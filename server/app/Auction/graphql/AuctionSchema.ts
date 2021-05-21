@@ -22,7 +22,6 @@ export const AuctionSchema = gql`
   }
 
   type AuctionBid {
-    id: String!
     bid: Money!
     createdAt: DateTime!
   }
@@ -37,12 +36,12 @@ export const AuctionSchema = gql`
     attachments: [AuctionAttachment]
     bids: [AuctionBid]
     startPrice: Money!
+    currentPrice: Money!
     charity: Charity
     gameWorn: Boolean!
     autographed: Boolean!
     authenticityCertificate: Boolean!
     sport: String!
-    maxBid: AuctionBid
     startDate: DateTime!
     endDate: DateTime!
     auctionOrganizer: InfluencerProfile!

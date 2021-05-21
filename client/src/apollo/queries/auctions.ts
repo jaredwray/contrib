@@ -28,10 +28,7 @@ export const AuctionQuery = gql`
       totalBids
       link
       fairMarketValue
-      maxBid {
-        id
-        bid
-      }
+      currentPrice
       auctionOrganizer {
         id
         name
@@ -151,10 +148,7 @@ export const MakeAuctionBidMutation = gql`
   mutation createAuctionBid($id: String!, $bid: Money!) {
     createAuctionBid(id: $id, bid: $bid) {
       id
-      maxBid {
-        id
-        bid
-      }
+      currentPrice
       totalBids
     }
   }
@@ -263,10 +257,7 @@ export const AuctionsListQuery = gql`
       skip
       items {
         id
-        maxBid {
-          id
-          bid
-        }
+        currentPrice
         totalBids
         status
         title

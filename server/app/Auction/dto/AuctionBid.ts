@@ -3,7 +3,6 @@ import { Dinero } from 'dinero.js';
 import dayjs from 'dayjs';
 
 export interface AuctionBid {
-  id: string;
   user: {
     id: UserAccount['id'];
   };

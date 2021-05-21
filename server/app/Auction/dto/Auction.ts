@@ -19,9 +19,9 @@ export interface Auction {
   status: AuctionStatus;
   bids: any[];
   totalBids: number;
-  maxBid: any;
   description: string;
   fullPageDescription: string;
+  currentPrice: Dinero.Dinero;
   startPrice: Dinero.Dinero;
   link: string;
   fairMarketValue: Dinero.Dinero;

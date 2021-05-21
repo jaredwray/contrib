@@ -39,10 +39,10 @@ export interface Auction {
   authenticityCertificate: boolean;
   sport: string;
   totalBids: number;
-  maxBid: AuctionBid;
   startDate: string;
   endDate: string;
   startPrice: DineroObject;
+  currentPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
 }

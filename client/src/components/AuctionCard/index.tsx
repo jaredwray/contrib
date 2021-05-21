@@ -30,8 +30,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
       return Dinero();
     }
 
-    if (auction.maxBid) {
-      return Dinero(auction.maxBid.bid);
+    if (auction.currentPrice) {
+      return Dinero(auction.currentPrice);
     }
 
     return Dinero(auction.startPrice);
