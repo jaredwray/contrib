@@ -22,7 +22,7 @@ const InvitationSchema: Schema<IInvitation> = new Schema<IInvitation>({
   welcomeMessage: { type: SchemaTypes.String, required: true },
   slug: { type: SchemaTypes.String, required: true, unique: true },
   accepted: { type: SchemaTypes.Boolean, required: true },
-  phoneNumber: { type: SchemaTypes.String, required: true, unique: true },
+  phoneNumber: { type: SchemaTypes.String, required: true },
   parentEntityType: { type: SchemaTypes.String, required: true },
   parentEntityId: { type: SchemaTypes.ObjectId, required: true },
   createdAt: { type: SchemaTypes.Date, required: true },
