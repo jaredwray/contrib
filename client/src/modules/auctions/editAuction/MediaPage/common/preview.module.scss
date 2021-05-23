@@ -1,25 +1,28 @@
 @import 'src/variables.scss';
 
 .previewWrapper {
-  padding: 0 10px 10px 0;
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  min-height: 50px;
-  min-width: 50px;
-}
-
-.preview {
-  max-height: 80px;
-  max-width: 100px;
+  overflow: hidden;
+  width: 85px;
+  height: 85px;
+  background-color: $barely-gray-color;
+  margin: 5px;
   border-radius: 15px;
   border: 1px solid $sage-color;
+}
+.attachmentContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.preview {
+  max-height: 100%;
+  max-width: 100%;
   display: inline-block;
-
-  @media (max-width: $medium-weight) {
-    & {
-      max-height: 160px;
-      max-width: 200px;
-    }
-  }
+  text-align: center;
+  object-fit: contain;
+  margin: auto;
 }

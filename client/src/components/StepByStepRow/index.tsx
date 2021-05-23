@@ -24,7 +24,11 @@ const StepByStepRow: FC<Props> = ({ prevAction, loading, last }) => {
         >
           Prev
         </Button>
-        <AsyncButton className={clsx('btn-with-arrows text-subhead', styles.button)} loading={loading} type="submit">
+        <AsyncButton
+          className={clsx('text-subhead', styles.button, !loading && 'btn-with-arrows')}
+          loading={loading}
+          type="submit"
+        >
           {last ? 'Finish' : 'Next'}
         </AsyncButton>
       </Container>
