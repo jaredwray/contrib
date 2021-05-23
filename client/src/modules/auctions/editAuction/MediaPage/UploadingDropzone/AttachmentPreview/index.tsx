@@ -1,9 +1,10 @@
 import { FC, useState, useCallback, ReactElement, SetStateAction } from 'react';
 
 import { useMutation } from '@apollo/client';
+import clsx from 'clsx';
 
 import { RemoveAuctionMedia } from 'src/apollo/queries/auctions';
-import AddVideoIcon from 'src/assets/icons/VideoIcon';
+import VideoIcon from 'src/assets/icons/VideoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentsStateInterface from '../../common/AttachmentsStateInterface';
@@ -54,13 +55,11 @@ const AttachementPreview: FC<Props> = ({
   const onImagePreviewError = useCallback(() => setIsInvalidPicture(true), [setIsInvalidPicture]);
   const srcUrl = attachment.thumbnail || attachment.url;
 
-  const defaultPicture = () => <AddVideoIcon hideAddSign={true} />;
-
   return (
     <div className={previewStyles.previewWrapper}>
-      <div className="d-inline-block clickable" onClick={onClickPreview}>
+      <div className={(clsx(previewStyles.attachmentContent), 'd-flex clickable h-100 w-100')} onClick={onClickPreview}>
         {isInvalidPicture ? (
-          defaultPicture()
+          <VideoIcon className="w-100 h-100 pr-2" hideAddSign={true} />
         ) : (
           <img alt="" className={previewStyles.preview} src={srcUrl} onError={onImagePreviewError} />
         )}

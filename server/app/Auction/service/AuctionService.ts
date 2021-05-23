@@ -109,7 +109,7 @@ export class AuctionService {
     }
     try {
       const attachment = await this.attachmentsService.AuctionAsset.findOne({ url: attachmentUrl });
-      await auction.update({ $pull: { assets: attachment._id } });
+      await auction.updateOne({ $pull: { assets: attachment._id } });
       await attachment.remove();
       await this.attachmentsService.removeFileAttachment(attachmentUrl);
 

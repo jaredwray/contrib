@@ -19,7 +19,7 @@ const Dialog: FC<Props> = ({ selectedAttachment, closeModal }) => {
   }
 
   return (
-    <Modal contentClassName={'d-table'} dialogClassName={styles.modalDialog} show={true} onHide={closeModal}>
+    <Modal centered contentClassName="d-table" show={true} onHide={closeModal}>
       <Modal.Body className={clsx(styles.body, 'text-center')}>
         <button className={styles.closeBtn} title="close" onClick={closeModal}>
           X
