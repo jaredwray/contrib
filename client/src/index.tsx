@@ -69,6 +69,7 @@ ReactDOM.render(
                 <Route exact component={HomePage} path="/" />
                 <Route exact component={AfterLogin} path="/after-login" />
                 <Route exact component={Privacy} path="/privacy-policy" />
+                <Route exact component={Privacy} path="/privacy" />
                 <Route exact component={Terms} path="/terms" />
                 <Route exact component={PhoneNumberVerification} path="/phone-verification" />
                 <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
