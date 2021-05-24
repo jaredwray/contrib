@@ -71,11 +71,10 @@ export class AuctionRepository implements IAuctionRepository {
       [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
       [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
       [filters?.charity, { charity: filters?.charity }],
+      [filters?.status, { status: { $in: filters?.status } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
-      {
-        status: { $in: filters?.status || [AuctionStatus.ACTIVE] },
-      },
+      {},
     );
   }
 

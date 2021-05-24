@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
 import Slider from 'src/components/Slider';
-import { Auction } from 'src/types/Auction';
+import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
 
@@ -17,6 +17,9 @@ export default function SimilarAuctions() {
     variables: {
       size: 10,
       skip: 0,
+      filters: {
+        status: [AuctionStatus.ACTIVE],
+      },
     },
   });
 
