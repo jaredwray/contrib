@@ -35,14 +35,14 @@ const AuctionPage = () => {
   if (auctionLoading || error) {
     return null;
   }
-
+  const attachments = [...auction?.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
   return (
     <Layout>
       <Container className="pt-0 pt-md-5 pb-0 pb-md-5">
         <Row>
           <Col md="1" />
           <Col md="6">
-            <AttachmentsSlider attachments={auction?.attachments} />
+            <AttachmentsSlider attachments={attachments} />
           </Col>
           <Col md="1" />
           <Col md="4">
