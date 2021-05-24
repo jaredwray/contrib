@@ -78,7 +78,7 @@ export function createGraphqlServer(appServices: IAppServices): ApolloServer {
         AppLogger.error(`unhandled exception "${originalError.name}": ${originalError.message}`, {
           stack: originalError.stack,
         });
-        throw new ApolloError('Something went wrong. Please try again later.', ErrorCode.INTERNAL_ERROR);
+        throw new ApolloError(`${originalError.message}`, ErrorCode.INTERNAL_ERROR);
       }
 
       AppLogger.error(`unhandled graphql failure: ${JSON.stringify(error)}`);
