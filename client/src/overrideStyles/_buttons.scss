@@ -17,6 +17,7 @@
     &:hover:not(:disabled),
     &:active {
       background: $sage-color;
+      border-color: $sage-color;
       color: $white-color;
     }
   }
