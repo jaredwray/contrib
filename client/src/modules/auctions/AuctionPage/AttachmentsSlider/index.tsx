@@ -76,7 +76,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
           </div>
         ))}
       </Slider>
-      <div className={clsx(styles.attachmentStatus, 'd-block d-md-none text-center text-label text-all-cups')}>
+      <div className={clsx(styles.attachmentStatus, 'd-block d-md-none text-center text-body text-all-cups')}>
         {currentSlide} of {attachments.length}
       </div>
     </>

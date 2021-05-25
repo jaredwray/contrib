@@ -74,6 +74,15 @@
 }
 @media (max-width: $medium-weight) {
   .auction-attachments-slider {
+    .slick-arrow {
+      margin-top: 4px;
+      &:after {
+        border-left-width: 7px;
+        border-top-width: 7px;
+      }
+    }
+  }
+  .auction-attachments-slider {
     margin-top: 2px;
     margin-bottom: 0;
   }
