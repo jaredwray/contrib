@@ -11,10 +11,10 @@ export class AuctionAttachmentsService {
 
   public async uploadFileAttachment(
     id: string,
-    userId: string,
+    organizerId: string,
     attachment: Promise<IFile>,
   ): Promise<IAuctionAssetModel> {
-    const attachmentUrl = `${userId}/auctions/${id}/${uuid()}`;
+    const attachmentUrl = `${organizerId}/auctions/${id}/${uuid()}`;
 
     const { fileType, url, uid } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentUrl });
     const assetUid = Boolean(uid) ? { uid } : {};

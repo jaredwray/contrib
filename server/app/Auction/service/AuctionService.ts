@@ -74,24 +74,28 @@ export class AuctionService {
     };
   }
 
-  public async getAuction(id: string): Promise<Auction> {
-    const auction = await this.auctionRepository.getAuction(id);
+  public async getAuction(id: string, organizerId?: string): Promise<Auction> {
+    const auction = await this.auctionRepository.getAuction(id, organizerId);
     return this.makeAuction(auction);
   }
 
-  public async updateAuctionStatus(id: string, userId: string, status: AuctionStatus): Promise<Auction> {
-    const auction = await this.auctionRepository.changeAuctionStatus(id, userId, status);
+  public async updateAuctionStatus(id: string, organizerId: string, status: AuctionStatus): Promise<Auction> {
+    const auction = await this.auctionRepository.changeAuctionStatus(id, organizerId, status);
     return this.makeAuction(auction);
   }
 
-  public async addAuctionAttachment(id: string, userId: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
-    const auction = await this.auctionRepository.getAuction(id, userId);
+  public async addAuctionAttachment(
+    id: string,
+    organizerId: string,
+    attachment: Promise<IFile>,
+  ): Promise<AuctionAssets> {
+    const auction = await this.auctionRepository.getAuction(id, organizerId);
     if (auction?.status !== AuctionStatus.DRAFT) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
 
     try {
-      const asset = await this.attachmentsService.uploadFileAttachment(id, userId, attachment);
+      const asset = await this.attachmentsService.uploadFileAttachment(id, organizerId, attachment);
       const { filename } = await attachment;
 
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });
