@@ -48,19 +48,22 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
   app.post('/api/v1/stripe/', bodyParser.raw({ type: 'application/json' }), async (request, response) => {
     const sig = request.headers['stripe-signature'];
     AppLogger.info(`Stripe sign: ${sig}`);
+
     if (!sig) {
       response.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
     let event;
+
     try {
       event = stripe.constructEvent(request.body, sig as string);
     } catch (err) {
       AppLogger.error(`Error constructing event: ${err.message}`);
-      response.status(400).send(`Webhook Error: ${err.message}`);
+      response.sendStatus(400).json({ message: err.message });
+      return;
     }
-    AppLogger.info(`Stripe sign: ${event}`);
 
+    AppLogger.info(`Event: ${event}`);
     if (event.type === 'account.updated') {
       await charity.updateCharityByStripeAccount(event.data.object);
     }
