@@ -22,7 +22,7 @@ export default function Header() {
     afterLoginUri,
   ]);
 
-  const handleLogout = useCallback(() => logout({ federated: true }), [logout]);
+  const handleLogout = useCallback(() => logout({ returnTo: window.location.origin }), [logout]);
 
   return (
     <header className="p-0 pl-sm-4 pr-sm-4 navigation-header">
@@ -38,11 +38,11 @@ export default function Header() {
                 <section className="nav-dropdown-menu text-subhead">
                   {isAuthenticated && (
                     <>
-                      <div className="dropdown-menu-user-name d-inline-block break-word">{user.name}</div>
+                      <div className="dropdown-menu-user-name d-inline-block break-word">{user?.name}</div>
                       <Image
                         roundedCircle
                         className="dropdown-menu-user-picture float-right d-inline-block"
-                        src={user.picture}
+                        src={user?.picture}
                       />
                     </>
                   )}

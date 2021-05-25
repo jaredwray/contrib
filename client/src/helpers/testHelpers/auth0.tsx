@@ -25,6 +25,7 @@ export function withAuthenticatedUser() {
     isLoading: false,
     buildAuthorizeUrl: jest.fn(),
     buildLogoutUrl: jest.fn(),
+    handleRedirectCallback: jest.fn(),
   });
 }
 
@@ -41,6 +42,7 @@ export function withNotAuthenticatedUser() {
     isLoading: false,
     buildAuthorizeUrl: jest.fn(),
     buildLogoutUrl: jest.fn(),
+    handleRedirectCallback: jest.fn(),
   });
 }
 
