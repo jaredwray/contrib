@@ -45,7 +45,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
         breakpoint: 768,
         settings: {
           dots: false,
-          arrows: false,
+          arrows: true,
           afterChange,
         },
       },
