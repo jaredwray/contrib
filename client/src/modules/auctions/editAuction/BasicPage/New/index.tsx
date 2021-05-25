@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
@@ -9,6 +9,7 @@ import { createAuctionMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import StepHeader from '../../common/StepHeader';
 import BasicForm from '../PageForm';
@@ -25,6 +26,7 @@ const initialValues = {
 };
 
 const NewAuctionBasicPage = () => {
+  const { account } = useContext(UserAccountContext);
   const history = useHistory();
   const { addToast } = useToasts();
   const { ownerId } = useParams<{ ownerId: string }>();
@@ -32,7 +34,11 @@ const NewAuctionBasicPage = () => {
   const [createAuction, { loading }] = useMutation(createAuctionMutation, {
     onCompleted({ createAuction }) {
       if (createAuction.id) {
-        history.push(`/auctions/${createAuction.id}/media`);
+        let newUrl = `/auctions/${createAuction.id}/media`;
+        if (account?.isAdmin) {
+          newUrl += `?orginizerId=${ownerId || account?.influencerProfile?.id}`;
+        }
+        history.push(newUrl);
       }
     },
   });

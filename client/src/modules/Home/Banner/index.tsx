@@ -27,7 +27,7 @@ export default function Banner() {
           </Row>
           <Row>
             <Col className={clsx(styles.signature, 'text-label text-all-cups position-absolute')} sm="6" xs="9">
-              Stephan Frei
+              Stefan Frei
             </Col>
           </Row>
         </div>

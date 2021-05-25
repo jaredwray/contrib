@@ -21,13 +21,13 @@ interface AuctionResolversType {
     >;
     auctionPriceLimits: GraphqlResolver<{ min: Dinero.Dinero; max: Dinero.Dinero }>;
     sports: GraphqlResolver<string[]>;
-    auction: GraphqlResolver<Auction, { id: string }>;
+    auction: GraphqlResolver<Auction, { id: string; organizerId?: string }>;
   };
   Mutation: {
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
     updateAuction: GraphqlResolver<Auction, { id: string; input: AuctionInput }>;
     deleteAuction: GraphqlResolver<Auction, { id: string }>;
-    addAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachment: any }>;
+    addAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachment: any; organizerId: string }>;
     removeAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     updateAuctionStatus: GraphqlResolver<Auction, { id: string; status: AuctionStatus }>;
@@ -43,8 +43,8 @@ export const AuctionResolvers: AuctionResolversType = {
       auction.listAuctions({ query, filters, orderBy, size, skip }),
     auctionPriceLimits: (_, __, { auction }) => auction.getAuctionPriceLimits(),
     sports: (_, __, { auction }) => auction.listSports(),
-    auction: loadRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) => {
-      const foundAuction = await auction.getAuction(id);
+    auction: loadRole(async (_, { id, organizerId }, { auction, currentAccount, currentInfluencerId }) => {
+      const foundAuction = await auction.getAuction(id, organizerId);
       const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencerId;
       if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner && !currentAccount.isAdmin) {
         return null;
@@ -67,8 +67,9 @@ export const AuctionResolvers: AuctionResolversType = {
       return auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input);
     }),
     deleteAuction: async () => Promise.resolve(null),
-    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencerId }) =>
-      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachment),
+    addAuctionAttachment: requireRole(
+      async (_, { id, attachment, organizerId }, { auction, currentAccount, currentInfluencerId }) =>
+        auction.addAuctionAttachment(id, currentAccount.isAdmin ? organizerId : currentInfluencerId, attachment),
     ),
     removeAuctionAttachment: requireRole(
       async (_, { id, attachmentUrl }, { auction, currentAccount, currentInfluencerId }) =>
