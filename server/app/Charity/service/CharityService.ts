@@ -45,6 +45,7 @@ export class CharityService {
   }
 
   async updateCharityByStripeAccount(account: any): Promise<void> {
+    AppLogger.info(`Account id ${account.id}`);
     const charityModel = await this.CharityModel.findOne({ stripeAccountId: account.id }).exec();
     const session = await this.connection.startSession();
     const charity = CharityService.makeCharity(charityModel);

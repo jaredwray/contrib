@@ -4,6 +4,7 @@ import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
+import { AppLogger } from './logger';
 
 export default function appRouteHandlers(app: express.Express, { auction, charity, stripe }: IAppServices): void {
   app.use(express.json());
@@ -46,7 +47,19 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
 
   app.post('/api/v1/stripe/', bodyParser.raw({ type: 'application/json' }), async (request, response) => {
     const sig = request.headers['stripe-signature'];
-    const event = stripe.constructEvent(request.body, sig as string);
+    AppLogger.info(`Stripe sign: ${sig}`);
+    if (!sig) {
+      response.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      return;
+    }
+    let event;
+    try {
+      event = stripe.constructEvent(request.body, sig as string);
+    } catch (err) {
+      AppLogger.error(`Error constructing event: ${err.message}`);
+      response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+    AppLogger.info(`Stripe sign: ${event}`);
 
     if (event.type === 'account.updated') {
       await charity.updateCharityByStripeAccount(event.data.object);
