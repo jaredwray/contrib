@@ -46,6 +46,9 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
   });
 
   app.post('/api/v1/stripe/', bodyParser.raw({ type: 'application/json' }), async (request, response) => {
+    AppLogger.info(`----/api/v1/stripe/----start-`);
+    AppLogger.info(`Stripe request: ${request}`);
+
     const sig = request.headers['stripe-signature'];
     AppLogger.info(`Stripe sign: ${sig}`);
 
@@ -53,9 +56,10 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
       response.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    let event;
 
+    let event;
     try {
+      AppLogger.info(`Stripe request.body: ${request.body}`);
       event = stripe.constructEvent(request.body, sig as string);
     } catch (err) {
       AppLogger.error(`Error constructing event: ${err.message}`);
@@ -64,10 +68,19 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     }
 
     AppLogger.info(`Event: ${event}`);
+
     if (event.type === 'account.updated') {
-      await charity.updateCharityByStripeAccount(event.data.object);
+      AppLogger.info(`Account updating`);
+      try {
+        await charity.updateCharityByStripeAccount(event.data.object);
+      } catch (err) {
+        AppLogger.error(`Charity update error: ${err.message}`);
+        response.sendStatus(400).json({ message: err.message });
+        return;
+      }
     }
 
+    AppLogger.info(`----/api/v1/stripe/----end-`);
     response.sendStatus(200);
   });
 }
