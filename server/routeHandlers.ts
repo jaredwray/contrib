@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
@@ -7,11 +6,18 @@ import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
 import { AppLogger } from './logger';
 
 export default function appRouteHandlers(app: express.Express, { auction, charity, stripe }: IAppServices): void {
-  app.use(bodyParser.json());
+  app.use((req, res, next) => {
+    if (req.originalUrl === '/api/v1/stripe/') {
+      next();
+    } else {
+      express.json()(req, res, next);
+    }
+  });
 
   app.post('/api/auction-schedule', async (req, res) => {
     AppLogger.info(`----/api/auction-schedule/----start-`);
 
+    AppLogger.info(`req.body: ${req.body}`);
     AppLogger.info(`req.body.key: ${req.body.key}`);
     if (!req.body.key) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
@@ -50,21 +56,21 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     res.redirect(redirectToUrl);
   });
 
-  app.post('/api/v1/stripe/', bodyParser.raw({ type: 'application/*+json' }), async (request, response) => {
+  app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {
     AppLogger.info(`----/api/v1/stripe/----start-`);
-    AppLogger.info(`Stripe request: ${request}`);
+    AppLogger.info(`Stripe request body: ${request.body}`);
 
     const sig = request.headers['stripe-signature'];
     AppLogger.info(`Stripe sign: ${sig}`);
 
     if (!sig) {
+      AppLogger.error(`UNAUTHORIZED event`);
       response.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
 
     let event;
     try {
-      AppLogger.info(`Stripe request.body: ${request.body}`);
       event = stripe.constructEvent(request.body, sig as string);
     } catch (err) {
       AppLogger.error(`Error constructing event: ${err.message}`);
@@ -73,6 +79,8 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     }
 
     AppLogger.info(`Event: ${event}`);
+    AppLogger.info(`event.id: ${event.id}`);
+    AppLogger.info(`event.type: ${event.type}`);
 
     if (event.type === 'account.updated') {
       AppLogger.info(`Account updating`);
