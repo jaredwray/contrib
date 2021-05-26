@@ -1,10 +1,11 @@
 import { FC } from 'react';
 
 import { isPast } from 'date-fns';
-import { toDate } from 'date-fns-tz';
+import { toDate, utcToZonedTime } from 'date-fns-tz';
 
 import { pluralize } from 'src/helpers/pluralize';
 import { toFullHumanReadableDatetime, toHumanReadableDuration } from 'src/helpers/timeFormatters';
+import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { Auction } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
@@ -15,12 +16,18 @@ type Props = {
 };
 
 const DateDetails: FC<Props> = ({ auction, isDonePage }) => {
+  const timeZone = utcTimeZones.find((tz) => auction.timeZone === tz.label)?.value;
+  const auctionStartDate = utcToZonedTime(auction.startDate, timeZone || '');
   if (isPast(toDate(auction.endDate))) {
     return <span className={styles.ended}>ended</span>;
   }
 
   if (isDonePage) {
-    return <>starts on {toFullHumanReadableDatetime(auction.startDate)}</>;
+    return (
+      <>
+        starts on {toFullHumanReadableDatetime(auctionStartDate)} {auction.timeZone}
+      </>
+    );
   }
 
   return (

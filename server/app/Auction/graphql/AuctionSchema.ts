@@ -48,6 +48,7 @@ export const AuctionSchema = gql`
     totalBids: Int!
     link: String!
     fairMarketValue: Money
+    timeZone: String
   }
 
   input AuctionSearchFilters {
@@ -102,6 +103,7 @@ export const AuctionSchema = gql`
     sport: String
     playedIn: String
     fairMarketValue: Money
+    timeZone: String
   }
 
   extend type Mutation {

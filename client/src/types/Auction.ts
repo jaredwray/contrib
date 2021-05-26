@@ -45,4 +45,5 @@ export interface Auction {
   currentPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
+  timeZone: string;
 }

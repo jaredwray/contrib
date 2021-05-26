@@ -39,6 +39,7 @@ export interface IAuctionModel extends Document {
   link: string;
   fairMarketValue: number;
   fairMarketValueCurrency: string;
+  timeZone: string;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -76,6 +77,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     link: { type: SchemaTypes.String },
     fairMarketValue: { type: SchemaTypes.Number, default: 0 },
     fairMarketValueCurrency: { type: SchemaTypes.String, default: 'USD' },
+    timeZone: { type: SchemaTypes.String, default: 'EST' },
   },
   { optimisticConcurrency: true },
 );

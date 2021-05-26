@@ -6,9 +6,9 @@ export const durationOptions = [
   { value: '8', label: '8 Days' },
 ];
 
-export const timeZones = [
-  { value: '-08', label: 'PST' },
-  { value: '-07', label: 'MST' },
-  { value: '-06', label: 'CST' },
-  { value: '-05', label: 'EST' },
+export const utcTimeZones = [
+  { value: 'Eastern Standard Time', label: 'EST' },
+  { value: 'Pacific Standard Time', label: 'PST' },
+  { value: 'Central Standard Time', label: 'CST' },
+  { value: 'Mountain Standard Time', label: 'MST' },
 ];

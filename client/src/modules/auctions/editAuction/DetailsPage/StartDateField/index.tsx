@@ -6,7 +6,7 @@ import { Field, useFormState } from 'react-final-form';
 
 import SelectField from 'src/components/Form/SelectField';
 
-import { timeZones } from '../consts';
+import { utcTimeZones } from '../consts';
 import styles from './styles.module.scss';
 
 interface Props {
@@ -17,7 +17,7 @@ const StartDateField: FC<Props> = ({ name }) => {
   const { values } = useFormState();
   const selectedOption = () => {
     const { startDate } = values;
-    const selected = timeZones.find((option) => option.value === startDate.timeZone);
+    const selected = utcTimeZones.find((option) => option.value === startDate.timeZone);
     return selected || {};
   };
 
@@ -60,7 +60,7 @@ const StartDateField: FC<Props> = ({ name }) => {
           small
           className={styles.timeZone}
           name={`${name}.timeZone`}
-          options={timeZones}
+          options={utcTimeZones}
           selected={selectedOption()}
         />
       </div>
