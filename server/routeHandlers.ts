@@ -7,29 +7,23 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(app: express.Express, { auction, charity, stripe }: IAppServices): void {
   app.use((req, res, next) => {
-    if (['/api/v1/stripe/', '/api/auction-schedule'].includes(req.originalUrl)) {
+    if (req.originalUrl === '/api/v1/stripe/') {
       next();
     } else {
       express.json()(req, res, next);
     }
   });
 
-  app.post('/api/auction-schedule', express.raw({ type: 'application/json' }), async (req, res) => {
-    AppLogger.info(`----/api/auction-schedule/----start-`);
-
-    AppLogger.info(`req.body: ${req.body}`);
-    AppLogger.info(`req.body.key: ${req.body.key}`);
+  app.post('/api/auction-schedule', async (req, res) => {
     if (!req.body.key) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
 
-    AppLogger.info(`AppConfig.googleCloud.schedulerSecretKey: ${AppConfig.googleCloud.schedulerSecretKey}`);
     if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    AppLogger.info(`----/api/auction-schedule/----end-`);
     return res.json(auction.scheduleAuctionJob());
   });
 
@@ -57,14 +51,9 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
   });
 
   app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {
-    AppLogger.info(`----/api/v1/stripe/----start-`);
-    AppLogger.info(`Stripe request body: ${request.body}`);
-
     const sig = request.headers['stripe-signature'];
-    AppLogger.info(`Stripe sign: ${sig}`);
 
     if (!sig) {
-      AppLogger.error(`UNAUTHORIZED event`);
       response.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
@@ -73,26 +62,19 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     try {
       event = stripe.constructEvent(request.body, sig as string);
     } catch (err) {
-      AppLogger.error(`Error constructing event: ${err.message}`);
       response.sendStatus(400).json({ message: err.message });
       return;
     }
 
-    AppLogger.info(`event.id: ${event.id}`);
-    AppLogger.info(`event.type: ${event.type}`);
-
     if (event.type === 'account.updated') {
-      AppLogger.info(`Account updating`);
       try {
         await charity.updateCharityByStripeAccount(event.data.object);
       } catch (err) {
-        AppLogger.error(`Charity update error: ${err.message}`);
         response.sendStatus(400).json({ message: err.message });
         return;
       }
     }
 
-    AppLogger.info(`----/api/v1/stripe/----end-`);
     response.sendStatus(200);
   });
 }
