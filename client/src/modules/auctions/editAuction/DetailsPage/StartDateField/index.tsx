@@ -26,13 +26,7 @@ const StartDateField: FC<Props> = ({ name }) => {
       <Field name={`${name}.date`}>
         {({ input }) => (
           <div className="DatePickerMainWrapper">
-            <DatePicker
-              className="form-control"
-              dateFormat="MM/dd/yyyy"
-              selected={input.value}
-              {...input}
-              minDate={new Date()}
-            />
+            <DatePicker className="form-control" selected={input.value} {...input} minDate={new Date()} />
           </div>
         )}
       </Field>
