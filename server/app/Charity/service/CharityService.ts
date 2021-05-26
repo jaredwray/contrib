@@ -106,9 +106,7 @@ export class CharityService {
 
   async findCharity(id: string, session?: ClientSession): Promise<Charity | null> {
     const charity = await this.CharityModel.findById(id, null, { session }).exec();
-    if (!charity) return null;
-    const auctions = await this.AuctionModel.find({ charity: id, status: AuctionStatus.SETTLED });
-    return CharityService.makeCharity(charity, auctions);
+    return (charity && CharityService.makeCharity(charity)) ?? null;
   }
 
   async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity> {
@@ -276,7 +274,7 @@ export class CharityService {
     return `http://${website}`;
   }
 
-  private static makeCharity(model: ICharityModel, auctions?: IAuctionModel[]): Charity | null {
+  public static makeCharity(model: ICharityModel): Charity | null {
     if (!model) {
       return null;
     }
@@ -292,7 +290,6 @@ export class CharityService {
       profileDescription: model.profileDescription,
       website: model.website,
       websiteUrl: CharityService.websiteUrl(model.website),
-      totalRaisedAmount: AuctionService.makeTotalRaisedAmount(auctions),
     };
   }
 }

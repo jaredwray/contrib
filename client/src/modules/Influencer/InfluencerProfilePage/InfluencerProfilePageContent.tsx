@@ -21,9 +21,10 @@ import styles from './InfluencerProfilePageContent.module.scss';
 
 interface Props {
   influencer: InfluencerProfile;
+  totalRaisedAmount: Dinero.DineroObject;
 }
 
-export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
+export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaisedAmount }) => {
   const { account } = useContext(UserAccountContext);
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
@@ -104,7 +105,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           <Row>
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>
-              <TotalRaisedAmount value={influencer.totalRaisedAmount} />
+              <TotalRaisedAmount value={totalRaisedAmount} />
               {/*<div className="d-flex">
                 <a
                   className={clsx(styles.socialIcon, 'mr-3')}

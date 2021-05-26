@@ -8,7 +8,13 @@ export const AuctionPriceLimitsQuery = gql`
     }
   }
 `;
-
+export const GetTotalRaisedAmount = gql`
+  query GetTotalRaisedAmount($influencerId: String, $charityId: String) {
+    getTotalRaisedAmount(influencerId: $influencerId, charityId: $charityId) {
+      totalRaisedAmount
+    }
+  }
+`;
 export const AuctionQuery = gql`
   query AuctionQuery($id: String!) {
     auction(id: $id) {

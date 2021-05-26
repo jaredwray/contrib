@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
+import { GetTotalRaisedAmount } from 'src/apollo/queries/auctions';
 import { GetInfluencerQuery } from 'src/apollo/queries/influencers';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -15,10 +16,16 @@ export const InfluencerProfilePage: FC = () => {
     variables: { id: influencerId },
   });
 
+  const responce = useQuery(GetTotalRaisedAmount, {
+    variables: { influencerId },
+  });
+
   const influencer = data?.influencer;
   if (!influencer) {
     return null;
   }
 
-  return <InfluencerProfilePageContent influencer={influencer} />;
+  const totalRaisedAmount = responce.data?.getTotalRaisedAmount.totalRaisedAmount;
+
+  return <InfluencerProfilePageContent influencer={influencer} totalRaisedAmount={totalRaisedAmount} />;
 };
