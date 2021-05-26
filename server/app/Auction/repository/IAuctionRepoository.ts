@@ -25,6 +25,7 @@ export interface ICreateAuction {
   description?: string;
   fullPageDescription?: string;
   startDate?: Dayjs;
+  timeZone?: string;
   endDate?: Dayjs;
   startPrice?: Dinero.Dinero;
   playedIn?: string;
@@ -46,6 +47,7 @@ export type IUpdateAuction = {
   organizerId?: string;
   fairMarketValueCurrency?: string;
   fairMarketValue?: number;
+  timeZone?: string;
 };
 
 export interface IAuctionRepository {

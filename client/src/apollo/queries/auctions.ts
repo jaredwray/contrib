@@ -29,6 +29,7 @@ export const AuctionQuery = gql`
       link
       fairMarketValue
       currentPrice
+      timeZone
       auctionOrganizer {
         id
         name
@@ -201,6 +202,7 @@ export const updateAuctionDetails = gql`
     $startPrice: Money
     $charity: String
     $fairMarketValue: Money
+    $timeZone: String
   ) {
     updateAuction(
       id: $id
@@ -210,6 +212,7 @@ export const updateAuctionDetails = gql`
         startPrice: $startPrice
         charity: $charity
         fairMarketValue: $fairMarketValue
+        timeZone: $timeZone
       }
     ) {
       id

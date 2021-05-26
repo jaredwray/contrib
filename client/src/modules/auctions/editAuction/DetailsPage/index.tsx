@@ -20,7 +20,7 @@ import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
 import StepHeader from '../common/StepHeader';
-import { durationOptions, timeZones } from './consts';
+import { durationOptions, utcTimeZones } from './consts';
 import StartDateField from './StartDateField';
 import styles from './styles.module.scss';
 import { serializeStartDate } from './utils';
@@ -65,8 +65,13 @@ const EditAuctionDetailsPage = () => {
       const serializedStartDate = serializeStartDate(startDate);
       const endDate = addDays(toDate(parseISO(serializedStartDate)), duration).toISOString();
 
-      const clearValues = { ...rest, startDate: serializedStartDate, endDate: endDate, charity: charities[0]?.id };
-
+      const clearValues = {
+        ...rest,
+        startDate: serializedStartDate,
+        endDate: endDate,
+        charity: charities[0]?.id,
+        timeZone: utcTimeZones.find((timeZone) => timeZone.value === startDate.timeZone)?.label,
+      };
       try {
         await updateAuction({ variables: { id: auctionId, ...clearValues } });
       } catch (error) {
@@ -104,13 +109,11 @@ const EditAuctionDetailsPage = () => {
       return undefined;
     }
 
-    const defaultTimezone = timeZones[0].value;
+    const defaultTimezone = utcTimeZones[0].value;
     const currentTimeZone = format(new Date(), 'x');
-    const knownTimezone = timeZones.find(({ value }) => currentTimeZone === value);
     const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
-    const date = knownTimezone ? startDate : utcToZonedTime(startDate, defaultTimezone);
-    const time = format(date, 'H:mm');
-
+    const date = utcToZonedTime(startDate, currentTimeZone);
+    const time = format(startDate, 'H:mm');
     return {
       startPrice: Dinero.maximum([Dinero(startPrice), Dinero({ amount: 100 })]).toObject(),
       charity,
@@ -118,7 +121,7 @@ const EditAuctionDetailsPage = () => {
       startDate: {
         date,
         time,
-        timeZone: knownTimezone?.value || defaultTimezone,
+        timeZone: defaultTimezone,
       },
     };
   }, [auctionData, selectedOption, startPrice, charity]);

@@ -135,6 +135,7 @@ export class AuctionService {
       playedIn,
       sport,
       fairMarketValue,
+      timeZone,
       ...rest
     } = input;
     const auction = await this.auctionRepository.updateAuction(id, userId, {
@@ -160,6 +161,7 @@ export class AuctionService {
       ...(fullPageDescription ? { fullPageDescription: fullPageDescription.trim() } : {}),
       ...(sport ? { sport: sport.trim() } : {}),
       ...(playedIn ? { playedIn: playedIn.trim() } : {}),
+      ...(timeZone ? { timeZone: timeZone } : {}),
       ...rest,
     });
 
@@ -311,6 +313,7 @@ export class AuctionService {
     const {
       _id,
       startsAt,
+      timeZone,
       endsAt,
       charity,
       assets,
@@ -346,6 +349,7 @@ export class AuctionService {
         }),
       endDate: endsAt,
       startDate: startsAt,
+      timeZone: timeZone,
       charity: charity
         ? {
             id: charity._id,
