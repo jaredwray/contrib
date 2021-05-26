@@ -7,18 +7,23 @@ import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
 import { AppLogger } from './logger';
 
 export default function appRouteHandlers(app: express.Express, { auction, charity, stripe }: IAppServices): void {
-  app.use(express.json());
+  app.use(bodyParser.json());
+
   app.post('/api/auction-schedule', async (req, res) => {
+    AppLogger.info(`----/api/auction-schedule/----start-`);
+
+    AppLogger.info(`req.body.key: ${req.body.key}`);
     if (!req.body.key) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
 
+    AppLogger.info(`AppConfig.googleCloud.schedulerSecretKey: ${AppConfig.googleCloud.schedulerSecretKey}`);
     if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-
+    AppLogger.info(`----/api/auction-schedule/----end-`);
     return res.json(auction.scheduleAuctionJob());
   });
 
@@ -45,7 +50,7 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     res.redirect(redirectToUrl);
   });
 
-  app.post('/api/v1/stripe/', bodyParser.raw({ type: 'application/json' }), async (request, response) => {
+  app.post('/api/v1/stripe/', bodyParser.raw({ type: 'application/*+json' }), async (request, response) => {
     AppLogger.info(`----/api/v1/stripe/----start-`);
     AppLogger.info(`Stripe request: ${request}`);
 
