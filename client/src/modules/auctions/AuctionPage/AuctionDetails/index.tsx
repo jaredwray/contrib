@@ -91,15 +91,17 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
       <div className="text-headline">{price.toFormat('$0,0')}</div>
-      <div className="text-label text-all-cups pt-3 pb-3">
-        {pluralize(totalBids, 'bid')}{' '}
-        <span className="float-right">
+      <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
+        <span className="pr-4 pr-sm-0">{pluralize(totalBids, 'bid')}</span>
+        <span>
           {!ended && (
             <>
-              <span className={styles.notBold}>ends in</span> {durationTillEnd}{' '}
+              <span className={styles.notBold}>ends in </span>
+              {durationTillEnd}
             </>
           )}
-          <span className={styles.notBold}>{ended && 'ended'} on</span> {endDateFormatted}
+          <span className={styles.notBold}>{ended && 'ended'} on </span>
+          {endDateFormatted}
         </span>
       </div>
       <Elements options={stripeOptions} stripe={stripePromise}>

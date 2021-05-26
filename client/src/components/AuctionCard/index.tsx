@@ -49,16 +49,18 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     <figure
       className={clsx(styles.root, horizontal && styles.horizontalRoot, isDonePage && styles.horizontalOnMobileRoot)}
     >
-      <CoverImage
-        alt="Auction image"
-        className={clsx(
-          styles.image,
-          horizontal && styles.horizontalImage,
-          isDonePage && styles.horizontalOnMobileImage,
-          isSettled && styles.settled,
-        )}
-        src={imageSrc}
-      />
+      <Link to={linkToAuction}>
+        <CoverImage
+          alt="Auction image"
+          className={clsx(
+            styles.image,
+            horizontal && styles.horizontalImage,
+            isDonePage && styles.horizontalOnMobileImage,
+            isSettled && styles.settled,
+          )}
+          src={imageSrc}
+        />
+      </Link>
 
       <figcaption
         className={clsx(
