@@ -26,6 +26,10 @@ export const AuctionSchema = gql`
     createdAt: DateTime!
   }
 
+  type TotalRaisedAmount {
+    totalRaisedAmount: Money!
+  }
+
   type Auction {
     id: String!
     title: String!
@@ -86,6 +90,7 @@ export const AuctionSchema = gql`
     auctionPriceLimits: AuctionPriceLimits!
     auction(id: String!): Auction
     sports: [String]
+    getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
   }
 
   input AuctionInput {

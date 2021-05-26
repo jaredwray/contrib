@@ -43,16 +43,12 @@ export class InfluencerService {
 
   async findInfluencer(id: string, session?: ClientSession): Promise<InfluencerProfile | null> {
     const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
-    if (!influencer) return null;
-    const auctions = await this.AuctionModel.find({ auctionOrganizer: id, status: AuctionStatus.SETTLED });
-    return InfluencerService.makeInfluencerProfile(influencer, auctions);
+    return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
   }
 
   async findInfluencerByUserAccount(userAccount: string): Promise<InfluencerProfile | null> {
     const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
-    if (!influencer) return null;
-    const auctions = await this.AuctionModel.find({ auctionOrganizer: influencer.id, status: AuctionStatus.SETTLED });
-    return InfluencerService.makeInfluencerProfile(influencer, auctions);
+    return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
   }
 
   async updateInfluencerStatus(
@@ -287,7 +283,6 @@ export class InfluencerService {
       userAccount: model.userAccount?.toString() ?? null,
       favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
       assistants: model.assistants?.map((m) => m.toString()) ?? [],
-      totalRaisedAmount: AuctionService.makeTotalRaisedAmount(auctions),
     };
   }
 }

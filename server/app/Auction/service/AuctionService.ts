@@ -19,6 +19,7 @@ import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 
 import { CloudflareStreaming } from '../../CloudflareStreaming';
 import { InfluencerService } from '../../Influencer';
+import { CharityService } from './../../Charity';
 
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
@@ -105,7 +106,25 @@ export class AuctionService {
       throw error;
     }
   }
+  public async getTotalRaisedAmount(charityId?: String, influencerId?: String): Promise<Object> {
+    if (!charityId && !influencerId) {
+      throw new Error('Need to pass charityId or influencerId');
+    }
 
+    let filters = { status: AuctionStatus.SETTLED };
+    if (charityId) {
+      filters['charity'] = charityId;
+    }
+
+    if (influencerId) {
+      filters['influencerId'] = influencerId;
+    }
+
+    const auctions = await this.AuctionModel.find(filters);
+    return {
+      totalRaisedAmount: AuctionService.makeTotalRaisedAmount(auctions),
+    };
+  }
   public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, userId);
     if (!auction) {
@@ -350,22 +369,7 @@ export class AuctionService {
       endDate: endsAt,
       startDate: startsAt,
       timeZone: timeZone,
-      charity: charity
-        ? {
-            id: charity._id,
-            name: charity.name,
-            status: charity.status,
-            profileStatus: charity.profileStatus,
-            stripeStatus: charity.stripeStatus,
-            userAccount: charity.userAccount,
-            stripeAccountId: charity.stripeAccountId,
-            avatarUrl: charity.avatarUrl,
-            profileDescription: charity.profileDescription,
-            websiteUrl: charity.websiteUrl,
-            website: charity.website,
-            totalRaisedAmount: charity.totalRaisedAmount,
-          }
-        : null,
+      charity: charity ? CharityService.makeCharity(charity) : null,
       bids: bids?.map(AuctionService.makeAuctionBid) || [],
       totalBids: bids?.length ?? 0,
       currentPrice: Dinero({ currency: currentPriceCurrency as Dinero.Currency, amount: currentPrice }),

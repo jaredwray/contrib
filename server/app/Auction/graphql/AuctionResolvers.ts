@@ -22,6 +22,7 @@ interface AuctionResolversType {
     auctionPriceLimits: GraphqlResolver<{ min: Dinero.Dinero; max: Dinero.Dinero }>;
     sports: GraphqlResolver<string[]>;
     auction: GraphqlResolver<Auction, { id: string; organizerId?: string }>;
+    getTotalRaisedAmount: GraphqlResolver<any>;
   };
   Mutation: {
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
@@ -51,6 +52,8 @@ export const AuctionResolvers: AuctionResolversType = {
       }
       return foundAuction;
     }),
+    getTotalRaisedAmount: async (_, { charityId, influencerId }, { auction }) =>
+      await auction.getTotalRaisedAmount(charityId, influencerId),
   },
   Mutation: {
     createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencerId }) => {

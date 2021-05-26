@@ -56,7 +56,6 @@ export const GetInfluencerQuery = gql`
       sport
       status
       team
-      totalRaisedAmount
       auctions {
         id
         attachments {
