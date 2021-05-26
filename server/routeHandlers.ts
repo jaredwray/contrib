@@ -7,14 +7,14 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(app: express.Express, { auction, charity, stripe }: IAppServices): void {
   app.use((req, res, next) => {
-    if (req.originalUrl === '/api/v1/stripe/') {
+    if (['/api/v1/stripe/', '/api/auction-schedule'].includes(req.originalUrl)) {
       next();
     } else {
       express.json()(req, res, next);
     }
   });
 
-  app.post('/api/auction-schedule', async (req, res) => {
+  app.post('/api/auction-schedule', express.raw({ type: 'application/json' }), async (req, res) => {
     AppLogger.info(`----/api/auction-schedule/----start-`);
 
     AppLogger.info(`req.body: ${req.body}`);
@@ -78,7 +78,6 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
       return;
     }
 
-    AppLogger.info(`Event: ${event}`);
     AppLogger.info(`event.id: ${event.id}`);
     AppLogger.info(`event.type: ${event.type}`);
 

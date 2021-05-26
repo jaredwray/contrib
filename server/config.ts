@@ -65,6 +65,7 @@ export const AppConfig = {
   },
   stripe: {
     secretKey: requireEnvVar('STRIPE_SECRET_KEY'),
+    webhookSecretKey: requireEnvVar('STRIPE_WEBHOOK_SECRET_KEY'),
   },
   facebook: {
     appId: requireEnvVar('FACEBOOK_APP_ID'),
