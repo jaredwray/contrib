@@ -79,3 +79,20 @@ We use google cloud storage and there are two users for each environment (`dev` 
 -  storage owner: `content-owner@contrib-live.iam.gserviceaccount.com`
 -  content-writer `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gp42f74tfzg4vhsk5ifeamkd2i&h=contrib.1password.com
 -  content-owner `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=unlptfa6jbaixeodiwtk22vkay&h=contrib.1password.com
+
+## Setup webhook to notify application when an event happens in an account
+
+1. Sign in to Stripe `https://stripe.com/`
+2. Go to `Developers/Webhooks` section
+3. If needs to receive events from customer's accounts connected to the Contrib's account - press `Add endpoint` in `Endpoints receiving events from Connect applications` section
+4. If needs to receive event from personal account - press `Add endpoint` in `Endpoints receiving events from your account`
+5. In the appeared window enter the URL which will receive Stripe events on the server
+6. Enter description
+7. Select several events in `Events to send` section or press button `receive all events`
+8. Press `Add endpoint`
+9. Check the secret key in `Sign in secret` section
+
+Now webhook added and registered on Stripe side. On server side add new evn var with value from `Sign in secret` section.
+This value will be used to check webhook signature when event will be received.
+
+Every webhook will have personal sign in secret, so for every new webhook will require personal env var with defined secret value
