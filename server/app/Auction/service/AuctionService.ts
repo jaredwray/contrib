@@ -246,32 +246,28 @@ export class AuctionService {
     return AuctionService.makeAuctionBid(createdBid);
   }
 
-  public scheduleAuctionJobSettle(): { message: string } {
-    this.AuctionModel.find({ status: AuctionStatus.ACTIVE })
-      .exec()
-      .then(async (auctions) => {
-        for await (const auction of auctions) {
-          if (dayjs().utc().isAfter(auction.endsAt)) {
-            const currentAuction = await auction
-              .populate({ path: 'bids.user', model: this.UserAccountModel })
-              .execPopulate();
-            await this.settleAuctionAndCharge(currentAuction);
-          }
-        }
-      });
+  public async scheduleAuctionJobSettle(): Promise<{ message: string }> {
+    const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
+
+    for await (const auction of auctions) {
+      if (dayjs().utc().isAfter(auction.endsAt)) {
+        const currentAuction = await auction
+          .populate({ path: 'bids.user', model: this.UserAccountModel })
+          .execPopulate();
+        await this.settleAuctionAndCharge(currentAuction);
+      }
+    }
     return { message: 'Scheduled' };
   }
 
-  public scheduleAuctionJobStart(): { message: string } {
-    this.AuctionModel.find({ status: AuctionStatus.PENDING })
-      .exec()
-      .then(async (auctions) => {
-        for await (const auction of auctions) {
-          if (dayjs().utc().isAfter(auction.startsAt) || dayjs().utc().isSame(auction.startsAt)) {
-            await this.activateAuction(auction);
-          }
-        }
-      });
+  public async scheduleAuctionJobStart(): Promise<{ message: string }> {
+    const auctions = await this.AuctionModel.find({ status: AuctionStatus.PENDING });
+
+    for await (const auction of auctions) {
+      if (dayjs().utc().isAfter(auction.startsAt) || dayjs().utc().isSame(auction.startsAt)) {
+        await this.activateAuction(auction);
+      }
+    }
     return { message: 'Scheduled' };
   }
 
