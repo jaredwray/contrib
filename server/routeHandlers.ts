@@ -3,7 +3,6 @@ import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
-import { AppLogger } from './logger';
 
 export default function appRouteHandlers(app: express.Express, { auction, charity, stripe }: IAppServices): void {
   app.use((req, res, next) => {
@@ -14,7 +13,7 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     }
   });
 
-  app.post('/api/auction-schedule', async (req, res) => {
+  app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!req.body.key) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
@@ -24,7 +23,20 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    return res.json(auction.scheduleAuctionJob());
+    return res.json(auction.scheduleAuctionJobSettle());
+  });
+
+  app.post('/api/v1/auctions-start', async (req, res) => {
+    if (!req.body.key) {
+      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      return;
+    }
+
+    if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
+      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      return;
+    }
+    return res.json(auction.scheduleAuctionJobStart());
   });
 
   app.get('/api/v1/account_onboarding', async (req: express.Request, res: express.Response) => {

@@ -4,6 +4,7 @@ import { InfluencerProfile } from './InfluencerProfile';
 
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
+  PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   SETTLED = 'SETTLED',
 }

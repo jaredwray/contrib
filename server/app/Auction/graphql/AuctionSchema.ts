@@ -13,6 +13,7 @@ export const AuctionSchema = gql`
 
   enum AuctionStatus {
     DRAFT
+    PENDING
     ACTIVE
     SETTLED
   }
@@ -114,7 +115,7 @@ export const AuctionSchema = gql`
   extend type Mutation {
     createAuction(input: AuctionInput!): Auction!
     updateAuction(id: String, input: AuctionInput): Auction!
-    updateAuctionStatus(id: String!, status: AuctionStatus!): Auction!
+    finishAuctionCreation(id: String!): Auction!
     createAuctionBid(id: String!, bid: Money!): Auction!
     addAuctionAttachment(id: String!, attachment: Upload!, organizerId: String): AuctionAttachment!
     removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!

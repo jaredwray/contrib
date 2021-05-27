@@ -1,4 +1,5 @@
 import { Connection, FilterQuery, Query, Types } from 'mongoose';
+import dayjs from 'dayjs';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -97,13 +98,15 @@ export class AuctionRepository implements IAuctionRepository {
     return this.populateAuctionModel(auction).execPopulate();
   }
 
-  async changeAuctionStatus(id: string, organizerId: string, status: AuctionStatus): Promise<IAuctionModel> {
+  async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, organizerId);
 
-    if (auction.status === AuctionStatus.ACTIVE && status === AuctionStatus.DRAFT) {
-      throw new AppError('Cannot set active auction to DRAFT status', ErrorCode.BAD_REQUEST);
+    if (auction.status !== AuctionStatus.DRAFT) {
+      throw new AppError('Cannot activate not DRAFT auction', ErrorCode.BAD_REQUEST);
     }
-    auction.status = status;
+
+    auction.status = dayjs().utc().isAfter(auction.startsAt) ? AuctionStatus.ACTIVE : AuctionStatus.PENDING;
+
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
   }
