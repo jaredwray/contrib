@@ -289,9 +289,9 @@ export const AuctionsListQuery = gql`
   }
 `;
 
-export const updateAuctionStatusMutation = gql`
-  mutation updateAuctionStatus($id: String!, $status: AuctionStatus!) {
-    updateAuctionStatus(id: $id, status: $status) {
+export const finishAuctionCreationMutation = gql`
+  mutation finishAuctionCreation($id: String!) {
+    finishAuctionCreation(id: $id) {
       id
     }
   }

@@ -9,7 +9,7 @@ import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { getAuctionDetails, updateAuctionDetails, updateAuctionStatusMutation } from 'src/apollo/queries/auctions';
+import { getAuctionDetails, updateAuctionDetails, finishAuctionCreationMutation } from 'src/apollo/queries/auctions';
 import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
@@ -38,7 +38,7 @@ const EditAuctionDetailsPage = () => {
       }
     },
   });
-  const [updateAuctionStatus, { loading: updatingStatus }] = useMutation(updateAuctionStatusMutation, {
+  const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(finishAuctionCreationMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
@@ -47,7 +47,7 @@ const EditAuctionDetailsPage = () => {
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
     async onCompleted() {
       try {
-        await updateAuctionStatus({ variables: { id: auctionId, status: 'ACTIVE' } });
+        await finishAuctionCreation({ variables: { id: auctionId } });
       } catch (error) {
         addToast(error.message, { appearance: 'error', autoDismiss: true });
       }

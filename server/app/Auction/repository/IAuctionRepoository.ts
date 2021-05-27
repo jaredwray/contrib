@@ -52,7 +52,7 @@ export type IUpdateAuction = {
 
 export interface IAuctionRepository {
   createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel>;
-  changeAuctionStatus(id: string, organizerId: string, status: AuctionStatus): Promise<IAuctionModel>;
+  activateAuction(id: string, organizerId: string): Promise<IAuctionModel>;
   updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel>;
   updateAuctionLink(id: string, link: string): Promise<IAuctionModel>;
   getAuctionPriceLimits(): Promise<{ min: number; max: number }>;

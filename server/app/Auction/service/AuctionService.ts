@@ -80,8 +80,8 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  public async updateAuctionStatus(id: string, organizerId: string, status: AuctionStatus): Promise<Auction> {
-    const auction = await this.auctionRepository.changeAuctionStatus(id, organizerId, status);
+  public async maybeActivateAuction(id: string, organizerId: string): Promise<Auction> {
+    const auction = await this.auctionRepository.activateAuction(id, organizerId);
     return this.makeAuction(auction);
   }
 
@@ -106,12 +106,13 @@ export class AuctionService {
       throw error;
     }
   }
-  public async getTotalRaisedAmount(charityId?: String, influencerId?: String): Promise<Object> {
+
+  public async getTotalRaisedAmount(charityId?: string, influencerId?: string): Promise<Object> {
     if (!charityId && !influencerId) {
       throw new Error('Need to pass charityId or influencerId');
     }
 
-    let filters = { status: AuctionStatus.SETTLED };
+    const filters = { status: AuctionStatus.SETTLED };
     if (charityId) {
       filters['charity'] = charityId;
     }
@@ -125,6 +126,7 @@ export class AuctionService {
       totalRaisedAmount: AuctionService.makeTotalRaisedAmount(auctions),
     };
   }
+
   public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, userId);
     if (!auction) {
@@ -244,7 +246,7 @@ export class AuctionService {
     return AuctionService.makeAuctionBid(createdBid);
   }
 
-  public scheduleAuctionJob(): { message: string } {
+  public scheduleAuctionJobSettle(): { message: string } {
     this.AuctionModel.find({ status: AuctionStatus.ACTIVE })
       .exec()
       .then(async (auctions) => {
@@ -254,6 +256,19 @@ export class AuctionService {
               .populate({ path: 'bids.user', model: this.UserAccountModel })
               .execPopulate();
             await this.settleAuctionAndCharge(currentAuction);
+          }
+        }
+      });
+    return { message: 'Scheduled' };
+  }
+
+  public scheduleAuctionJobStart(): { message: string } {
+    this.AuctionModel.find({ status: AuctionStatus.PENDING })
+      .exec()
+      .then(async (auctions) => {
+        for await (const auction of auctions) {
+          if (dayjs().utc().isAfter(auction.startsAt) || dayjs().utc().isSame(auction.startsAt)) {
+            await this.activateAuction(auction);
           }
         }
       });
@@ -292,6 +307,15 @@ export class AuctionService {
       `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
     );
     auction.status = AuctionStatus.FAILED;
+    await auction.save();
+    return;
+  }
+
+  public async activateAuction(auction: IAuctionModel): Promise<void> {
+    if (!auction) {
+      throw new AppError('Auction not found');
+    }
+    auction.status = AuctionStatus.ACTIVE;
     await auction.save();
     return;
   }
