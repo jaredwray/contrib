@@ -19,7 +19,7 @@ import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 
 import { CloudflareStreaming } from '../../CloudflareStreaming';
 import { InfluencerService } from '../../Influencer';
-import { CharityService } from './../../Charity';
+import { CharityService } from '../../Charity';
 
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
@@ -246,32 +246,28 @@ export class AuctionService {
     return AuctionService.makeAuctionBid(createdBid);
   }
 
-  public scheduleAuctionJobSettle(): { message: string } {
-    this.AuctionModel.find({ status: AuctionStatus.ACTIVE })
-      .exec()
-      .then(async (auctions) => {
-        for await (const auction of auctions) {
-          if (dayjs().utc().isAfter(auction.endsAt)) {
-            const currentAuction = await auction
-              .populate({ path: 'bids.user', model: this.UserAccountModel })
-              .execPopulate();
-            await this.settleAuctionAndCharge(currentAuction);
-          }
-        }
-      });
+  public async scheduleAuctionJobSettle(): Promise<{ message: string }> {
+    const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
+
+    for await (const auction of auctions) {
+      if (dayjs().utc().isAfter(auction.endsAt)) {
+        const currentAuction = await auction
+          .populate({ path: 'bids.user', model: this.UserAccountModel })
+          .execPopulate();
+        await this.settleAuctionAndCharge(currentAuction);
+      }
+    }
     return { message: 'Scheduled' };
   }
 
-  public scheduleAuctionJobStart(): { message: string } {
-    this.AuctionModel.find({ status: AuctionStatus.PENDING })
-      .exec()
-      .then(async (auctions) => {
-        for await (const auction of auctions) {
-          if (dayjs().utc().isAfter(auction.startsAt) || dayjs().utc().isSame(auction.startsAt)) {
-            await this.activateAuction(auction);
-          }
-        }
-      });
+  public async scheduleAuctionJobStart(): Promise<{ message: string }> {
+    const auctions = await this.AuctionModel.find({ status: AuctionStatus.PENDING });
+
+    for await (const auction of auctions) {
+      if (dayjs().utc().isAfter(auction.startsAt) || dayjs().utc().isSame(auction.startsAt)) {
+        await this.activateAuction(auction);
+      }
+    }
     return { message: 'Scheduled' };
   }
 
@@ -286,14 +282,18 @@ export class AuctionService {
     }
     auction.status = AuctionStatus.SETTLED;
     const maxBids: IAuctionBid[] = auction.bids.sort((curr, next) => {
-      return Number(curr.bidMoney.lessThan(next.bidMoney));
+      return Number(
+        this.makeBidDineroValue(curr.bid, curr.bidCurrency).lessThan(
+          this.makeBidDineroValue(next.bid, next.bidCurrency),
+        ),
+      );
     });
     for await (const bid of maxBids) {
       try {
         bid.chargeId = await this.paymentService.chargeUser(
           bid.user,
           bid.paymentSource,
-          bid.bidMoney,
+          this.makeBidDineroValue(bid.bid, bid.bidCurrency),
           `Contrib auction: ${auction.title}`,
         );
         AppLogger.info(`Auction with id ${auction.id} has been settled`);
@@ -311,6 +311,10 @@ export class AuctionService {
     return;
   }
 
+  private makeBidDineroValue(amount: number, currency: Dinero.Currency) {
+    return Dinero({ amount: amount, currency: currency });
+  }
+
   public async activateAuction(auction: IAuctionModel): Promise<void> {
     if (!auction) {
       throw new AppError('Auction not found');
@@ -326,7 +330,7 @@ export class AuctionService {
     }
     return {
       user: model.user?._id?.toString(),
-      bid: model.bidMoney || Dinero({ amount: model.bid, currency: model.bidCurrency }),
+      bid: Dinero({ amount: model.bid, currency: model.bidCurrency }),
       createdAt: model.createdAt,
     };
   }

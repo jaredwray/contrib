@@ -7,6 +7,7 @@ export enum AuctionStatus {
   PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   SETTLED = 'SETTLED',
+  FAILED = 'FAILED',
 }
 
 export interface AuctionAttachment {
