@@ -146,7 +146,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
             )}
             {hasPendingAuctions && (
               <ProfileSliderRow items={pendingAuctionsLayout}>
-                {influencer.name}'s not started auctions
+                {influencer.name}'s outboarding auctions
               </ProfileSliderRow>
             )}
             {hasDraftAuctions && (account?.isAdmin || isMyProfile) && (
