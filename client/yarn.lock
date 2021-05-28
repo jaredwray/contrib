@@ -1321,7 +1321,12 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cloudflare/stream-react@^1.1.0", "@cnakazawa/watch@^1.0.3":
+"@cloudflare/stream-react@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/stream-react/-/stream-react-0.3.0.tgz#b231cfeeab56c74242e2e70be8831e4e2d11fb41"
+  integrity sha512-EraOdvalJMJmmyntAYl9aO77udXleXZintg1Gn8uvJGuYYCiUP6ELY0cMN2KUE+xqD3YeF+/MeHPOYM2z1sn8Q==
+
+"@cnakazawa/watch@^1.0.3":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/stream-react/-/stream-react-1.1.0.tgz#61c7afaf0ee2f8c0343e3d6fa611db8a487890f8"
   integrity sha512-WpWqDNAlutBJ04SsN+rmNnSR4uHEQM/+X6Bs3/nNCOa4R8Lde1Cp7h86HtEadl/y8RsuT6hIXEp6Yc90L5/6Nw==
