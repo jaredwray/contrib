@@ -106,7 +106,6 @@ export class AuctionRepository implements IAuctionRepository {
     }
 
     auction.status = dayjs().utc().isAfter(auction.startsAt) ? AuctionStatus.ACTIVE : AuctionStatus.PENDING;
-
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
   }

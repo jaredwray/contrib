@@ -23,7 +23,8 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    return res.json(auction.scheduleAuctionJobSettle());
+    const response = await auction.scheduleAuctionJobSettle();
+    return res.json(response);
   });
 
   app.post('/api/v1/auctions-start', async (req, res) => {
@@ -36,7 +37,8 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    return res.json(auction.scheduleAuctionJobStart());
+    const response = await auction.scheduleAuctionJobStart();
+    return res.json(response);
   });
 
   app.get('/api/v1/account_onboarding', async (req: express.Request, res: express.Response) => {

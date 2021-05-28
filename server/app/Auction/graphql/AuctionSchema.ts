@@ -16,6 +16,7 @@ export const AuctionSchema = gql`
     PENDING
     ACTIVE
     SETTLED
+    FAILED
   }
 
   type AuctionStatusResponse {

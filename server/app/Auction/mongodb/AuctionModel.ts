@@ -1,16 +1,15 @@
 import dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
+import Dinero from 'dinero.js';
 
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
 import { InfluencerCollectionName } from '../../Influencer/mongodb/InfluencerModel';
-import Dinero from 'dinero.js';
 
 export interface IAuctionBid {
   user: IUserAccount['_id'];
-  bidMoney?: Dinero.Dinero;
   createdAt: dayjs.Dayjs;
   paymentSource: string;
   bid: number;
