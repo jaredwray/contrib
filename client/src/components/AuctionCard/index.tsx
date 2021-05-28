@@ -3,13 +3,13 @@ import { FC, useMemo } from 'react';
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import SwipeableLink from '../SwipeableLink';
 import CoverImage from './CoverImage';
 import DateDetails from './DateDetails';
 import styles from './styles.module.scss';
@@ -49,7 +49,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     <figure
       className={clsx(styles.root, horizontal && styles.horizontalRoot, isDonePage && styles.horizontalOnMobileRoot)}
     >
-      <Link to={linkToAuction}>
+      <SwipeableLink to={linkToAuction}>
         <CoverImage
           alt="Auction image"
           className={clsx(
@@ -60,7 +60,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
           )}
           src={imageSrc}
         />
-      </Link>
+      </SwipeableLink>
 
       <figcaption
         className={clsx(
@@ -69,7 +69,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
           isDonePage && styles.horizontalOnMobileDescription,
         )}
       >
-        <Link className={styles.link} title={influencer.name} to={`/profiles/${influencer?.id}`}>
+        <SwipeableLink className={styles.link} title={influencer.name} to={`/profiles/${influencer?.id}`}>
           <div className="d-flex align-items-center mb-1">
             <Image
               roundedCircle
@@ -82,14 +82,14 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
               {influencer.name}
             </span>
           </div>
-        </Link>
-        <Link
+        </SwipeableLink>
+        <SwipeableLink
           className={clsx(styles.auctionTitle, 'text-subhead mb-0 mb-md-1 text-left break-word')}
           title={auction.title}
           to={linkToAuction}
         >
           {auction.title}
-        </Link>
+        </SwipeableLink>
         <p className="text-subhead text-left text-truncate m-0 pb-2 pb-md-3" title={priceFormatted}>
           {priceFormatted}
         </p>
