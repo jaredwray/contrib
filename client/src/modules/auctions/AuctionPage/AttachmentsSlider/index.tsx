@@ -1,6 +1,6 @@
 import { FC, ReactElement, useCallback, useState } from 'react';
 
-import { StreamPlayerApi, Stream } from '@cloudflare/stream-react';
+import { HTMLStreamElement, Stream } from '@cloudflare/stream-react';
 import clsx from 'clsx';
 import { Image } from 'react-bootstrap';
 import Slider from 'react-slick';
@@ -17,7 +17,7 @@ interface Props {
 
 const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   const [currentSlide, setCurrentSlide] = useState(1);
-  const [activeStream, setActiveStream] = useState<StreamPlayerApi>();
+  const [activeStream, setActiveStream] = useState<HTMLStreamElement>();
 
   const customPaging = (i: number) => (
     <div key={i}>
@@ -71,13 +71,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
             {attachment.type === 'IMAGE' ? (
               <Image className={styles.attachment} src={attachment.url} />
             ) : (
-              <Stream
-                controls
-                className={styles.attachment}
-                height="min(540px, 100vw)"
-                src={attachment.uid}
-                onPlay={onStreamPlay}
-              />
+              <Stream controls height="min(540px, 100vw)" src={attachment.uid} onPlay={onStreamPlay} />
             )}
           </div>
         ))}
