@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import clsx from 'clsx';
 import { format as dateFormat } from 'date-fns';
-import { toDate } from 'date-fns-tz';
+import { format, toDate, utcToZonedTime } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
@@ -30,11 +30,16 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const { addToast } = useToasts();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const history = useHistory();
-
-  const { startPrice, currentPrice, endDate, totalBids, title, status } = auction;
+  const { startPrice, currentPrice, endDate, startDate, totalBids, title, status, timeZone } = auction;
   const ended = toDate(endDate) <= new Date();
+  const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
+  const endTime = format(utcToZonedTime(startDate, timeZone), 'p');
+
+  const isPending = auction.status === AuctionStatus.PENDING;
+
   const durationTillEnd = toHumanReadableDuration(endDate);
-  const endDateFormatted = dateFormat(toDate(endDate), 'MMM dd yyyy');
+  const endDateFormatted = dateFormat(toDate(utcToZonedTime(endDate, timeZone)), 'MMM dd yyyy');
+  const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone)), 'MMM dd yyyy');
 
   const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
   const minBid = useMemo(
@@ -92,17 +97,41 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
       <div className="text-headline">{price.toFormat('$0,0')}</div>
       <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
-        <span className="pr-4 pr-sm-0">{pluralize(totalBids, 'bid')}</span>
-        <span>
-          {!ended && (
-            <>
+        {isPending || (
+          <>
+            <span className="pr-4 pr-sm-0">{pluralize(totalBids, 'bid')}</span>
+            <span>
+              {!ended && (
+                <>
+                  <span className={styles.notBold}>ends in </span>
+                  {durationTillEnd}
+                </>
+              )}
+              <span className={styles.notBold}>{ended && 'ended'} on </span>
+              {endDateFormatted}
+            </span>
+          </>
+        )}
+        {isPending && (
+          <>
+            <p>
+              <span className={styles.notBold}>starts in </span>
+              {startTime} {timeZone}
+              <p>
+                <span className={styles.notBold}> on </span>
+                {startFormatted}
+              </p>
+            </p>
+            <p>
               <span className={styles.notBold}>ends in </span>
-              {durationTillEnd}
-            </>
-          )}
-          <span className={styles.notBold}>{ended && 'ended'} on </span>
-          {endDateFormatted}
-        </span>
+              {endTime} {timeZone}
+              <p>
+                <span className={styles.notBold}> on </span>
+                {endDateFormatted}
+              </p>
+            </p>
+          </>
+        )}
       </div>
       <Elements options={stripeOptions} stripe={stripePromise}>
         <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} />

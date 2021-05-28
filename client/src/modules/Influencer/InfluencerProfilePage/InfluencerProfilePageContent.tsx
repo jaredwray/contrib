@@ -30,7 +30,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
     variables: {
       filters: {
         auctionOrganizer: influencer.id,
-        status: [AuctionStatus.DRAFT, AuctionStatus.ACTIVE, AuctionStatus.SETTLED],
+        status: [AuctionStatus.DRAFT, AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.PENDING],
       },
     },
   });
@@ -39,12 +39,14 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const profileAuctions = profileAuctionsHash(auctions);
 
   const liveAuctions = profileAuctions.ACTIVE;
+  const pendingAuctions = profileAuctions.PENDING;
   const pastAuctions = profileAuctions.SETTLED;
   const draftAuctions = profileAuctions.DRAFT;
 
   const profileDescriptionParagraphs = (influencer.profileDescription ?? '').split('\n');
 
   const hasLiveAuctions = Boolean(liveAuctions.length);
+  const hasPendingAuctions = Boolean(pendingAuctions.length);
   const hasPastAuctions = Boolean(pastAuctions.length);
   const hasDraftAuctions = Boolean(draftAuctions.length);
 
@@ -52,6 +54,9 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
 
   const liveAuctionsLayout = liveAuctions.map((auction: Auction) => (
+    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
+  ));
+  const pendingAuctionsLayout = pendingAuctions.map((auction: Auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
   ));
   const draftAuctionsLayout = draftAuctions.map((auction: Auction) => (
@@ -138,6 +143,11 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
           <Container>
             {hasLiveAuctions && (
               <ProfileSliderRow items={liveAuctionsLayout}>{influencer.name}'s live auctions</ProfileSliderRow>
+            )}
+            {hasPendingAuctions && (
+              <ProfileSliderRow items={pendingAuctionsLayout}>
+                {influencer.name}'s not started auctions
+              </ProfileSliderRow>
             )}
             {hasDraftAuctions && (account?.isAdmin || isMyProfile) && (
               <ProfileSliderRow items={draftAuctionsLayout}>{influencer.name}'s draft auctions</ProfileSliderRow>
