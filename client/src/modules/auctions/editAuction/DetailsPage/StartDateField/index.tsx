@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
-import { Form, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { Field, useFormState } from 'react-final-form';
 
 import SelectField from 'src/components/Form/SelectField';
 
-import { timeZones } from '../consts';
+import { utcTimeZones } from '../consts';
 import styles from './styles.module.scss';
 
 interface Props {
@@ -15,11 +15,9 @@ interface Props {
 
 const StartDateField: FC<Props> = ({ name }) => {
   const { values } = useFormState();
-
   const selectedOption = () => {
     const { startDate } = values;
-    const selected = timeZones.find((option) => option.value === startDate.timeZone);
-
+    const selected = utcTimeZones.find((option) => option.value === startDate.timeZone);
     return selected || {};
   };
 
@@ -28,50 +26,35 @@ const StartDateField: FC<Props> = ({ name }) => {
       <Field name={`${name}.date`}>
         {({ input }) => (
           <div className="DatePickerMainWrapper">
-            <DatePicker
-              className="form-control"
-              dateFormat="dd/MM/yyyy"
-              selected={input.value}
-              {...input}
-              minDate={new Date()}
-            />
+            <DatePicker className="form-control" selected={input.value} {...input} minDate={new Date()} />
           </div>
         )}
       </Field>
-
       <div className="d-flex mt-4">
         <Field name={`${name}.time`}>
-          {({ input }) => (
-            <Form.Control className="text-headline text-center mr-2 mr-sm-3 p-1 p-sm-2" type="time" {...input} />
-          )}
-        </Field>
+          {({ input }) => {
+            let selectedTime = input.value;
 
-        <Field name={`${name}.dayPeriod`}>
-          {({ input }) => (
-            <ToggleButtonGroup className="mr-2 mr-sm-3" {...input} type="radio">
-              <ToggleButton
-                className="h-100 text-subhead pr-sm-3 pr-2 pl-sm-3 pl-2"
-                value="am"
-                variant="outline-primary"
-              >
-                AM
-              </ToggleButton>
-              <ToggleButton
-                className="h-100 text-subhead pr-sm-3 pr-2 pl-sm-3 pl-2"
-                value="pm"
-                variant="outline-primary"
-              >
-                PM
-              </ToggleButton>
-            </ToggleButtonGroup>
-          )}
-        </Field>
+            if (selectedTime.split(':')[0].length === 1) {
+              selectedTime = `0${selectedTime}`;
+            }
 
+            delete input.value;
+            return (
+              <Form.Control
+                className="text-subhead font-weight-bold text-center mr-2 mr-sm-3 p-1 p-sm-2 font-weight-normal"
+                defaultValue={selectedTime}
+                type="time"
+                {...input}
+              />
+            );
+          }}
+        </Field>
         <SelectField
           small
           className={styles.timeZone}
           name={`${name}.timeZone`}
-          options={timeZones}
+          options={utcTimeZones}
           selected={selectedOption()}
         />
       </div>

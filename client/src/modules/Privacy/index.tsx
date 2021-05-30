@@ -27,11 +27,8 @@ export default function Privacy() {
 
             <p>
               This Policy is incorporated into and is subject to the Contrib.org Terms of Use (available at&nbsp;
-              <a href="https://contrib.org/privacy-policy" rel="noreferrer" target="_blank">
-                contrib.org/privacy-policy
-              </a>
-              ). Capitalized terms used but not defined in this Policy have the meaning given to them in the Contrib.org
-              Terms of Use.
+              <a href="https://contrib.org/privacy-policy">contrib.org/privacy-policy</a>). Capitalized terms used but
+              not defined in this Policy have the meaning given to them in the Contrib.org Terms of Use.
             </p>
 
             <p className="text-headline">The information we collect on the Service:</p>

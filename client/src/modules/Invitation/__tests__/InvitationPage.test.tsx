@@ -18,6 +18,7 @@ cache.writeQuery({
     invitation: {
       firstName: 'Bob',
       welcomeMessage: 'Welcome Bob!',
+      accepted: true,
     },
   },
 });

@@ -9,7 +9,7 @@ import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { getAuctionDetails, updateAuctionDetails, updateAuctionStatusMutation } from 'src/apollo/queries/auctions';
+import { getAuctionDetails, updateAuctionDetails, finishAuctionCreationMutation } from 'src/apollo/queries/auctions';
 import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
@@ -20,7 +20,7 @@ import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
 import StepHeader from '../common/StepHeader';
-import { durationOptions, timeZones } from './consts';
+import { durationOptions, utcTimeZones } from './consts';
 import StartDateField from './StartDateField';
 import styles from './styles.module.scss';
 import { serializeStartDate } from './utils';
@@ -38,7 +38,7 @@ const EditAuctionDetailsPage = () => {
       }
     },
   });
-  const [updateAuctionStatus, { loading: updatingStatus }] = useMutation(updateAuctionStatusMutation, {
+  const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(finishAuctionCreationMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
@@ -47,7 +47,7 @@ const EditAuctionDetailsPage = () => {
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
     async onCompleted() {
       try {
-        await updateAuctionStatus({ variables: { id: auctionId, status: 'ACTIVE' } });
+        await finishAuctionCreation({ variables: { id: auctionId } });
       } catch (error) {
         addToast(error.message, { appearance: 'error', autoDismiss: true });
       }
@@ -65,8 +65,13 @@ const EditAuctionDetailsPage = () => {
       const serializedStartDate = serializeStartDate(startDate);
       const endDate = addDays(toDate(parseISO(serializedStartDate)), duration).toISOString();
 
-      const clearValues = { ...rest, startDate: serializedStartDate, endDate: endDate, charity: charities[0]?.id };
-
+      const clearValues = {
+        ...rest,
+        startDate: serializedStartDate,
+        endDate: endDate,
+        charity: charities[0]?.id,
+        timeZone: utcTimeZones.find((timeZone) => timeZone.value === startDate.timeZone)?.label,
+      };
       try {
         await updateAuction({ variables: { id: auctionId, ...clearValues } });
       } catch (error) {
@@ -99,23 +104,16 @@ const EditAuctionDetailsPage = () => {
   }, [auctionData?.auction]);
 
   const { startPrice, charity } = auctionData?.auction ?? {};
-
   const initialValues = useMemo(() => {
     if (!auctionData) {
       return undefined;
     }
 
-    const defaultTimezone = timeZones[0].value;
-
+    const defaultTimezone = utcTimeZones[0].value;
     const currentTimeZone = format(new Date(), 'x');
-    const knownTimezone = timeZones.find(({ value }) => currentTimeZone === value);
-
     const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
-    const date = knownTimezone ? startDate : utcToZonedTime(startDate, defaultTimezone);
-
-    const time = format(date, 'hh:mm');
-    const dayPeriod = format(date, 'aaa');
-
+    const date = utcToZonedTime(startDate, currentTimeZone);
+    const time = format(startDate, 'H:mm');
     return {
       startPrice: Dinero.maximum([Dinero(startPrice), Dinero({ amount: 100 })]).toObject(),
       charity,
@@ -123,8 +121,7 @@ const EditAuctionDetailsPage = () => {
       startDate: {
         date,
         time,
-        dayPeriod,
-        timeZone: knownTimezone?.value || defaultTimezone,
+        timeZone: defaultTimezone,
       },
     };
   }, [auctionData, selectedOption, startPrice, charity]);

@@ -1,9 +1,9 @@
 import { Connection, FilterQuery, Query, Types } from 'mongoose';
+import dayjs from 'dayjs';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
-import { AuctionBidModel } from '../mongodb/AuctionBidModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppError, ErrorCode } from '../../../errors';
@@ -22,7 +22,6 @@ export class AuctionRepository implements IAuctionRepository {
 
   private readonly AuctionModel = AuctionModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
-  private readonly AuctionBidModel = AuctionBidModel(this.connection);
   private readonly InfluencerModel = InfluencerModel(this.connection);
   private readonly AuctionAsset = AuctionAssetModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
@@ -41,10 +40,8 @@ export class AuctionRepository implements IAuctionRepository {
       { path: 'charity', model: this.CharityModel },
       { path: 'assets', model: this.AuctionAsset },
       { path: 'auctionOrganizer', model: this.InfluencerModel },
-      { path: 'maxBid', model: this.AuctionBidModel },
       {
         path: 'bids',
-        model: this.AuctionBidModel,
         populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
       },
     ];
@@ -72,14 +69,13 @@ export class AuctionRepository implements IAuctionRepository {
     return ([
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.sports?.length, { sport: { $in: filters?.sports } }],
-      [filters?.minPrice || filters?.maxPrice, { startPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
+      [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
       [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
       [filters?.charity, { charity: filters?.charity }],
+      [filters?.status, { status: { $in: filters?.status } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
-      {
-        status: { $in: filters?.status || [AuctionStatus.ACTIVE] },
-      },
+      {},
     );
   }
 
@@ -93,20 +89,23 @@ export class AuctionRepository implements IAuctionRepository {
         ...input,
         auctionOrganizer: Types.ObjectId(organizerId),
         startPrice: input.startPrice?.getAmount(),
+        currentPrice: input.startPrice?.getAmount(),
         startPriceCurrency: input.startPrice?.getCurrency(),
+        currentPriceCurrency: input.startPrice?.getCurrency(),
       },
     ]);
 
     return this.populateAuctionModel(auction).execPopulate();
   }
 
-  async changeAuctionStatus(id: string, organizerId: string, status: AuctionStatus): Promise<IAuctionModel> {
+  async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, organizerId);
 
-    if (auction.status === AuctionStatus.ACTIVE && status === AuctionStatus.DRAFT) {
-      throw new AppError('Cannot set active auction to DRAFT status', ErrorCode.BAD_REQUEST);
+    if (auction.status !== AuctionStatus.DRAFT) {
+      throw new AppError('Cannot activate not DRAFT auction', ErrorCode.BAD_REQUEST);
     }
-    auction.status = status;
+
+    auction.status = dayjs().utc().isAfter(auction.startsAt) ? AuctionStatus.ACTIVE : AuctionStatus.PENDING;
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
   }
@@ -168,8 +167,8 @@ export class AuctionRepository implements IAuctionRepository {
       {
         $group: {
           _id: null,
-          min: { $min: '$startPrice' },
-          max: { $max: '$startPrice' },
+          min: { $min: '$currentPrice' },
+          max: { $max: '$currentPrice' },
         },
       },
     ]);

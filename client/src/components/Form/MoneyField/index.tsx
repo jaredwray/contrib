@@ -42,7 +42,7 @@ const MoneyField: FC<Props> = ({
   const handleChange = useCallback(
     (event) => {
       const targetValue = event.target.value;
-      const number = targetValue.replace(/\$|,|\./g, '');
+      const number = targetValue.replace(/[^0-9]/g, '');
       onChange({ ...value, amount: number ? parseInt(number, 10) * 100 : 0 });
     },
     [onChange, value],

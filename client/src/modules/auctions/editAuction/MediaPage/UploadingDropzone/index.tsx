@@ -2,6 +2,7 @@ import { FC, ReactElement, SetStateAction, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
+import { useLocation } from 'react-router';
 
 import { AddAuctionMedia } from 'src/apollo/queries/auctions';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
@@ -14,7 +15,6 @@ import styles from './styles.module.scss';
 
 interface Props {
   accepted: string;
-  name: string;
   auctionId: string;
   attachments: { uploaded: AuctionAttachment[]; loading: File[] };
   setAttachments: (_: SetStateAction<AttachmentsStateInterface>) => void;
@@ -24,7 +24,6 @@ interface Props {
 
 const UploadingDropzone: FC<Props> = ({
   accepted,
-  name,
   auctionId,
   attachments,
   setAttachments,
@@ -57,6 +56,7 @@ const UploadingDropzone: FC<Props> = ({
 
   const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
   const bytes = Math.pow(1024, 3);
+  const organizerId = useLocation().search.split('=')[1];
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: any) => {
@@ -70,7 +70,7 @@ const UploadingDropzone: FC<Props> = ({
 
       acceptedFiles.forEach((file) => {
         addAuctionMedia({
-          variables: { id: auctionId, file },
+          variables: { id: auctionId, file, organizerId },
         });
       });
 
@@ -86,7 +86,7 @@ const UploadingDropzone: FC<Props> = ({
         });
       });
     },
-    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
+    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB, organizerId],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -97,7 +97,7 @@ const UploadingDropzone: FC<Props> = ({
 
   return (
     <>
-      <div className="pl-3 pl-md-0 pr-3 pr-md-0 text-center text-sm-left d-table-row">
+      <div className="pl-md-0 pr-md-0 text-center text-sm-left d-table-row">
         {attachments.uploaded.map((attachment: AuctionAttachment, index: number) => (
           <AttachmentPreview
             key={index}
@@ -108,17 +108,19 @@ const UploadingDropzone: FC<Props> = ({
             setSelectedAttachment={setSelectedAttachment}
           />
         ))}
-        {attachments.loading.map((file: File, index: number) => (
-          <FilePreview key={index} file={file} />
-        ))}
+        <div className={styles.filePreviewWrapper}>
+          {attachments.loading.map((file: File, index: number) => (
+            <FilePreview key={index} file={file} />
+          ))}
+        </div>
       </div>
       <div {...getRootProps({ className: styles.dropzone })}>
-        <input {...getInputProps()} name={name} />
+        <input {...getInputProps()} name="attachment" />
         <AddPhotoIcon />
         <p className="text-center mt-2 mb-0">
-          Drag {name} here or
+          Drag images or video here
           <br />
-          click to upload
+          or click to upload
         </p>
       </div>
     </>

@@ -4,8 +4,10 @@ import { InfluencerProfile } from './InfluencerProfile';
 
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
+  PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   SETTLED = 'SETTLED',
+  FAILED = 'FAILED',
 }
 
 export interface AuctionAttachment {
@@ -39,10 +41,11 @@ export interface Auction {
   authenticityCertificate: boolean;
   sport: string;
   totalBids: number;
-  maxBid: AuctionBid;
   startDate: string;
   endDate: string;
   startPrice: DineroObject;
+  currentPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
+  timeZone: string;
 }

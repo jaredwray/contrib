@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
+import { GetTotalRaisedAmount } from 'src/apollo/queries/auctions';
 import { GetCharity } from 'src/apollo/queries/charityProfile';
 import { Charity } from 'src/types/Charity';
 
@@ -14,10 +15,16 @@ export const CharityProfilePage: FC = () => {
     variables: { id: charityId },
   });
 
+  const responce = useQuery(GetTotalRaisedAmount, {
+    variables: { charityId },
+  });
+
   const charity = data?.charity;
   if (!charity) {
     return null;
   }
 
-  return <CharityProfilePageContent charity={charity} />;
+  const totalRaisedAmount = responce.data?.getTotalRaisedAmount.totalRaisedAmount;
+
+  return <CharityProfilePageContent charity={charity} totalRaisedAmount={totalRaisedAmount} />;
 };

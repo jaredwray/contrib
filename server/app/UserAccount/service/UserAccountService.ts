@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 
 import { UserAccount } from '../dto/UserAccount';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
+import { IInvitation, InvitationModel } from '../../Invitation/mongodb/InvitationModel';
+import { InvitationParentEntityType } from '../../Invitation/mongodb/InvitationParentEntityType';
 import { UserAccountStatus } from '../dto/UserAccountStatus';
 import { TwilioVerificationService } from '../../../twilio-client';
 import { AppError, ErrorCode } from '../../../errors';
@@ -12,6 +14,7 @@ import { TermsService } from '../../TermsService';
 
 export class UserAccountService {
   private readonly accountModel: Model<IUserAccount> = UserAccountModel(this.connection);
+  private readonly invitationModel: Model<IInvitation> = InvitationModel(this.connection);
 
   constructor(
     private readonly connection: Connection,
@@ -57,6 +60,15 @@ export class UserAccountService {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
 
+    if (
+      await this.invitationModel.exists({
+        phoneNumber,
+        parentEntityType: InvitationParentEntityType.CHARITY,
+      })
+    ) {
+      return await this.confirmAccountWithPhoneNumber(authzId, phoneNumber);
+    }
+
     await this.twilioVerificationService.createVerification(phoneNumber);
     return {
       id: authzId,
@@ -66,10 +78,12 @@ export class UserAccountService {
     };
   }
 
-  async confirmAccountWithPhoneNumber(authzId: string, phoneNumber: string, otp: string): Promise<UserAccount> {
-    const result = await this.twilioVerificationService.confirmVerification(phoneNumber, otp);
-    if (!result) {
-      throw new AppError('Incorrect verification code', ErrorCode.BAD_REQUEST);
+  async confirmAccountWithPhoneNumber(authzId: string, phoneNumber: string, otp?: string): Promise<UserAccount> {
+    if (otp) {
+      const result = await this.twilioVerificationService.confirmVerification(phoneNumber, otp);
+      if (!result) {
+        throw new AppError('Incorrect verification code', ErrorCode.BAD_REQUEST);
+      }
     }
 
     if (await this.accountModel.findOne({ authzId }).exec()) {

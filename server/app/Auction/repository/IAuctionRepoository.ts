@@ -25,6 +25,7 @@ export interface ICreateAuction {
   description?: string;
   fullPageDescription?: string;
   startDate?: Dayjs;
+  timeZone?: string;
   endDate?: Dayjs;
   startPrice?: Dinero.Dinero;
   playedIn?: string;
@@ -46,11 +47,12 @@ export type IUpdateAuction = {
   organizerId?: string;
   fairMarketValueCurrency?: string;
   fairMarketValue?: number;
+  timeZone?: string;
 };
 
 export interface IAuctionRepository {
   createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel>;
-  changeAuctionStatus(id: string, organizerId: string, status: AuctionStatus): Promise<IAuctionModel>;
+  activateAuction(id: string, organizerId: string): Promise<IAuctionModel>;
   updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel>;
   updateAuctionLink(id: string, link: string): Promise<IAuctionModel>;
   getAuctionPriceLimits(): Promise<{ min: number; max: number }>;

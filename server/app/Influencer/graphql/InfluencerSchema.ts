@@ -19,7 +19,6 @@ export const InfluencerSchema = gql`
     invitation: Invitation!
     favoriteCharities: [Charity!]!
     assistants: [Assistant!]!
-    totalRaisedAmount: Money
   }
 
   type InfluencersPage {

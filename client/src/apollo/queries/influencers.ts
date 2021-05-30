@@ -56,7 +56,6 @@ export const GetInfluencerQuery = gql`
       sport
       status
       team
-      totalRaisedAmount
       auctions {
         id
         attachments {
@@ -69,9 +68,7 @@ export const GetInfluencerQuery = gql`
         startDate
         title
         totalBids
-        maxBid {
-          bid
-        }
+        currentPrice
       }
     }
   }

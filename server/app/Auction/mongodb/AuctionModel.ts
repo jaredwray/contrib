@@ -1,13 +1,21 @@
 import dayjs from 'dayjs';
-import { Connection, Document, Model, Schema, SchemaTypes, Types } from 'mongoose';
+import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
+import Dinero from 'dinero.js';
 
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
-import { AuctionBidCollectionName, IAuctionBidModel } from './AuctionBidModel';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
-import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
-import arrayMax from '../../../helpers/arrayMax';
+import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
 import { InfluencerCollectionName } from '../../Influencer/mongodb/InfluencerModel';
+
+export interface IAuctionBid {
+  user: IUserAccount['_id'];
+  createdAt: dayjs.Dayjs;
+  paymentSource: string;
+  bid: number;
+  bidCurrency: Dinero.Currency;
+  chargeId: string;
+}
 
 export interface IAuctionModel extends Document {
   title: string;
@@ -19,8 +27,9 @@ export interface IAuctionModel extends Document {
   fullPageDescription: string;
   auctionOrganizer: IUserAccount['_id'];
   assets: IAuctionAssetModel[];
-  bids: IAuctionBidModel['_id'][];
-  maxBid: IAuctionBidModel['_id'];
+  bids: IAuctionBid[];
+  currentPrice: number;
+  currentPriceCurrency: string;
   charity: ICharityModel['_id'];
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
@@ -29,6 +38,7 @@ export interface IAuctionModel extends Document {
   link: string;
   fairMarketValue: number;
   fairMarketValueCurrency: string;
+  timeZone: string;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -44,10 +54,20 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     autographed: { type: SchemaTypes.Boolean, default: false },
     authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
     gameWorn: { type: SchemaTypes.Boolean, default: false },
-    bids: [{ type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName }],
-    maxBid: { type: SchemaTypes.ObjectId, ref: AuctionBidCollectionName },
+    bids: [
+      {
+        user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+        bid: { type: SchemaTypes.Number, required: true },
+        bidCurrency: { type: SchemaTypes.String, default: 'USD' },
+        paymentSource: { type: SchemaTypes.String, required: true },
+        createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+        chargeId: { type: SchemaTypes.String },
+      },
+    ],
     startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
+    currentPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     startPrice: { type: SchemaTypes.Number, default: 0 },
+    currentPrice: { type: SchemaTypes.Number, default: 0 },
     playedIn: { type: SchemaTypes.String },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
@@ -56,22 +76,12 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     link: { type: SchemaTypes.String },
     fairMarketValue: { type: SchemaTypes.Number, default: 0 },
     fairMarketValueCurrency: { type: SchemaTypes.String, default: 'USD' },
+    timeZone: { type: SchemaTypes.String, default: 'EST' },
   },
   { optimisticConcurrency: true },
 );
 
-AuctionSchema.pre('save', async function (next) {
-  await this.populate({ path: 'bids' }).execPopulate();
-  if (this.bids.length) {
-    const maxBid = arrayMax<IAuctionBidModel>(this.bids, (currentBid, prevBid) =>
-      currentBid.bidMoney.greaterThan(prevBid.bidMoney),
-    );
-    this.maxBid = Types.ObjectId(maxBid._id);
-  }
-  next();
-});
-
-AuctionSchema.index({ startsAt: 1, endsAt: 1, maxBid: 1 });
+AuctionSchema.index({ startsAt: 1, endsAt: 1 });
 
 export const AuctionModel = (connection: Connection): Model<IAuctionModel> =>
   connection.model<IAuctionModel>(AuctionCollectionName, AuctionSchema);

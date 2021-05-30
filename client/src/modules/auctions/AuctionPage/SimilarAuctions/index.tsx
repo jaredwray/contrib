@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
 import Slider from 'src/components/Slider';
-import { Auction } from 'src/types/Auction';
+import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
 
@@ -17,6 +17,9 @@ export default function SimilarAuctions() {
     variables: {
       size: 10,
       skip: 0,
+      filters: {
+        status: [AuctionStatus.ACTIVE],
+      },
     },
   });
 
@@ -29,13 +32,13 @@ export default function SimilarAuctions() {
   return (
     <section className={styles.root}>
       <Container className={clsx(styles.homepageContainer, 'header')}>
-        <Row className="pb-1 pb-md-5">
-          <Col className={clsx(styles.title, 'text-super')} lg="9" xs="12">
+        <Row className="pb-3 pb-md-4">
+          <Col className={clsx(styles.title, 'text-super pb-3 pb-md-3 pb-lg-0')} lg="8" xs="12">
             Similar auctions
           </Col>
-          <Col className="align-self-end pr-lg-0" lg="3" xs="12">
+          <Col className="align-self-end pr-lg-0" lg="4" xs="12">
             <Link
-              className={clsx('float-lg-right text-label text-all-cups ml-1 ml-md-0', styles.seeAllLink)}
+              className={clsx('float-lg-right text-subhead text-all-cups ml-1 ml-md-0', styles.seeAllLink)}
               to="/auctions"
             >
               See all auctions &gt;&gt;

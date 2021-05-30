@@ -8,7 +8,10 @@
     margin-bottom: 0;
   }
 }
-
+.filePreviewWrapper {
+  position: relative;
+  display: inline-block;
+}
 .dropzone {
   cursor: pointer;
   color: $sage-color;
@@ -24,6 +27,7 @@
   display: table-cell;
   text-align: center;
   vertical-align: middle;
+  outline: none;
 
   &:focus {
     outline-color: $light-sage-color;

@@ -1,7 +1,5 @@
-import { differenceInHours, differenceInMinutes, format, parseISO } from 'date-fns';
+import { differenceInHours, differenceInMinutes, format } from 'date-fns';
 import { toDate } from 'date-fns-tz';
-
-import { timeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 
 export function toHumanReadableDuration(date: string): string | null {
   let hours = differenceInHours(toDate(date), new Date());
@@ -28,13 +26,9 @@ export function toHumanReadableDuration(date: string): string | null {
   return left.join(' ');
 }
 
-export function toFullHumanReadableDatetime(dateISO: string): string | null {
-  const date = toDate(parseISO(dateISO));
+export function toFullHumanReadableDatetime(prop: Date): string | null {
+  const date = toDate(prop);
   const day = format(date, 'd.MM.yy');
-  const time = format(date, 'hh:mm');
-  const dayPeriod = format(date, 'a');
-  const timeZone = format(date, 'x');
-  const currentTimeZone = timeZones.find((x) => x.value === timeZone);
-
-  return `${day} @ ${time} ${dayPeriod} ${currentTimeZone || timeZone}`;
+  const time = format(date, 'hh:mm a');
+  return `${day} @ ${time}`;
 }

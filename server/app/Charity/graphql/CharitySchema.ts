@@ -28,7 +28,6 @@ export const CharitySchema = gql`
     profileDescription: String
     websiteUrl: String
     website: String
-    totalRaisedAmount: Money
   }
   input CharityInputID {
     id: String!

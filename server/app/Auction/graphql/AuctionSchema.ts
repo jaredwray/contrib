@@ -13,8 +13,10 @@ export const AuctionSchema = gql`
 
   enum AuctionStatus {
     DRAFT
+    PENDING
     ACTIVE
     SETTLED
+    FAILED
   }
 
   type AuctionStatusResponse {
@@ -22,9 +24,12 @@ export const AuctionSchema = gql`
   }
 
   type AuctionBid {
-    id: String!
     bid: Money!
     createdAt: DateTime!
+  }
+
+  type TotalRaisedAmount {
+    totalRaisedAmount: Money!
   }
 
   type Auction {
@@ -37,18 +42,19 @@ export const AuctionSchema = gql`
     attachments: [AuctionAttachment]
     bids: [AuctionBid]
     startPrice: Money!
+    currentPrice: Money!
     charity: Charity
     gameWorn: Boolean!
     autographed: Boolean!
     authenticityCertificate: Boolean!
     sport: String!
-    maxBid: AuctionBid
     startDate: DateTime!
     endDate: DateTime!
     auctionOrganizer: InfluencerProfile!
     totalBids: Int!
     link: String!
     fairMarketValue: Money
+    timeZone: String
   }
 
   input AuctionSearchFilters {
@@ -86,6 +92,7 @@ export const AuctionSchema = gql`
     auctionPriceLimits: AuctionPriceLimits!
     auction(id: String!): Auction
     sports: [String]
+    getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
   }
 
   input AuctionInput {
@@ -103,14 +110,15 @@ export const AuctionSchema = gql`
     sport: String
     playedIn: String
     fairMarketValue: Money
+    timeZone: String
   }
 
   extend type Mutation {
     createAuction(input: AuctionInput!): Auction!
     updateAuction(id: String, input: AuctionInput): Auction!
-    updateAuctionStatus(id: String!, status: AuctionStatus!): Auction!
+    finishAuctionCreation(id: String!): Auction!
     createAuctionBid(id: String!, bid: Money!): Auction!
-    addAuctionAttachment(id: String!, attachment: Upload!): AuctionAttachment!
+    addAuctionAttachment(id: String!, attachment: Upload!, organizerId: String): AuctionAttachment!
     removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
     deleteAuction(id: String!): AuctionStatusResponse!
   }

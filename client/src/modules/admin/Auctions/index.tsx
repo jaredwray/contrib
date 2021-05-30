@@ -10,7 +10,7 @@ import { AuctionsListQuery, updateAuctionDetails } from 'src/apollo/queries/auct
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import { PER_PAGE } from 'src/components/Pagination';
-import { Auction } from 'src/types/Auction';
+import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import styles from './styles.module.scss';
@@ -45,14 +45,18 @@ export default function CharitiesPage(): any {
               <td className="break-word">{item.title}</td>
               <td>{item.status}</td>
               <td>
-                {item.maxBid ? Dinero(item.maxBid.bid).toFormat('$0,0') : Dinero(item.startPrice).toFormat('$0,0')}
+                {item.currentPrice
+                  ? Dinero(item.currentPrice).toFormat('$0,0')
+                  : Dinero(item.startPrice).toFormat('$0,0')}
               </td>
               <td>{item.fairMarketValue && Dinero(item.fairMarketValue).toFormat('$0,0')}</td>
               <td>
                 <ActionsDropdown>
-                  <Link className="dropdown-item text--body" to={`/auctions/${item.id}`}>
-                    Go to
-                  </Link>
+                  {item.status === AuctionStatus.ACTIVE && (
+                    <Link className="dropdown-item text--body" to={`/auctions/${item.id}`}>
+                      Go to
+                    </Link>
+                  )}
                   <FairMarketValueChangeButton
                     auction={item}
                     className={clsx(styles.actionBtn, 'dropdown-item text--body')}

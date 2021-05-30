@@ -8,7 +8,13 @@ export const AuctionPriceLimitsQuery = gql`
     }
   }
 `;
-
+export const GetTotalRaisedAmount = gql`
+  query GetTotalRaisedAmount($influencerId: String, $charityId: String) {
+    getTotalRaisedAmount(influencerId: $influencerId, charityId: $charityId) {
+      totalRaisedAmount
+    }
+  }
+`;
 export const AuctionQuery = gql`
   query AuctionQuery($id: String!) {
     auction(id: $id) {
@@ -28,10 +34,8 @@ export const AuctionQuery = gql`
       totalBids
       link
       fairMarketValue
-      maxBid {
-        id
-        bid
-      }
+      currentPrice
+      timeZone
       auctionOrganizer {
         id
         name
@@ -151,10 +155,7 @@ export const MakeAuctionBidMutation = gql`
   mutation createAuctionBid($id: String!, $bid: Money!) {
     createAuctionBid(id: $id, bid: $bid) {
       id
-      maxBid {
-        id
-        bid
-      }
+      currentPrice
       totalBids
     }
   }
@@ -207,6 +208,7 @@ export const updateAuctionDetails = gql`
     $startPrice: Money
     $charity: String
     $fairMarketValue: Money
+    $timeZone: String
   ) {
     updateAuction(
       id: $id
@@ -216,6 +218,7 @@ export const updateAuctionDetails = gql`
         startPrice: $startPrice
         charity: $charity
         fairMarketValue: $fairMarketValue
+        timeZone: $timeZone
       }
     ) {
       id
@@ -231,8 +234,8 @@ export const updateAuctionDetails = gql`
 `;
 
 export const AddAuctionMedia = gql`
-  mutation addAuctionAttachment($id: String!, $file: Upload!) {
-    addAuctionAttachment(id: $id, attachment: $file) {
+  mutation addAuctionAttachment($id: String!, $file: Upload!, $organizerId: String) {
+    addAuctionAttachment(id: $id, attachment: $file, organizerId: $organizerId) {
       url
       type
       cloudflareUrl
@@ -263,10 +266,7 @@ export const AuctionsListQuery = gql`
       skip
       items {
         id
-        maxBid {
-          id
-          bid
-        }
+        currentPrice
         totalBids
         status
         title
@@ -289,9 +289,9 @@ export const AuctionsListQuery = gql`
   }
 `;
 
-export const updateAuctionStatusMutation = gql`
-  mutation updateAuctionStatus($id: String!, $status: AuctionStatus!) {
-    updateAuctionStatus(id: $id, status: $status) {
+export const finishAuctionCreationMutation = gql`
+  mutation finishAuctionCreation($id: String!) {
+    finishAuctionCreation(id: $id) {
       id
     }
   }

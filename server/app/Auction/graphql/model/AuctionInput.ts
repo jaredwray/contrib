@@ -16,4 +16,5 @@ export type AuctionInput = {
   playedIn?: string;
   organizerId?: string;
   fairMarketValue?: Dinero.Dinero;
+  timeZone?: string;
 };

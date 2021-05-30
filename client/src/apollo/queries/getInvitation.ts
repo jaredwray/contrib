@@ -5,6 +5,7 @@ export const GetInvitation = gql`
     invitation(slug: $slug) {
       firstName
       welcomeMessage
+      accepted
     }
   }
 `;

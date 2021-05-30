@@ -10,7 +10,6 @@ export const GetCharity = gql`
       profileDescription
       websiteUrl
       website
-      totalRaisedAmount
     }
   }
 `;

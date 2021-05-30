@@ -18,7 +18,7 @@ export default function PhoneNumberLayout({ children }: { children: any }) {
           </Container>
         </Col>
         <Col className={clsx(styles.rightBlock, 'p-0 d-none d-md-block w-100')}>
-          <div className={clsx(styles.signature, 'text-label text-all-cups position-absolute')}>Stephan Frei</div>
+          <div className={clsx(styles.signature, 'text-label text-all-cups position-absolute')}>Stefan Frei</div>
         </Col>
       </Row>
     </Container>

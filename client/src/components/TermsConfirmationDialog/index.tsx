@@ -49,7 +49,7 @@ const TermsConfirmationDialog: FC = () => {
   if (
     (account?.charity && !account?.influencerProfile && !account?.assistant) ||
     !account?.notAcceptedTerms ||
-    ['/privacy-policy', '/terms'].includes(window.location.pathname)
+    ['/privacy-policy', '/terms', '/privacy'].includes(window.location.pathname)
   ) {
     return null;
   }

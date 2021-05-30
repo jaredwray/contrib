@@ -32,7 +32,7 @@ export class StripeService {
   }
 
   public constructEvent(body: string | Buffer, signature: string): any {
-    return this.stripe.webhooks.constructEvent(body, signature, AppConfig.stripe.secretKey);
+    return this.stripe.webhooks.constructEvent(body, signature, AppConfig.stripe.webhookSecretKey);
   }
 
   public async createCustomerForAccount(account: UserAccount, name: string, email: string): Promise<Stripe.Customer> {
