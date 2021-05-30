@@ -96,3 +96,40 @@ Now webhook added and registered on Stripe side. On server side add new evn var 
 This value will be used to check webhook signature when event will be received.
 
 Every webhook will have personal sign in secret, so for every new webhook will require personal env var with defined secret value
+
+
+## configuring scheduled jobs for the auctions:
+
+#### Configuring of the job:
+
+- First of all go to your GoogleCloud console and seek for service called [CloudScheduler](https://console.cloud.google.com/cloudscheduler)
+- Then you can add a cron job by clicking `CREATE JOB` button in the top navigation, after that you will be redirected over here:
+
+![Scheduler_1](./doc/scheduler_1.png)
+Right now frequency for all scheduled jobs equals - `EACH 5 MINUTE`
+
+
+1. First point responds to the name of the scheduled job, you can pick whatever name you prefer actually, same is for the description.
+2. Second point is the URL that will be invoked: <br/>
+NOTE: There are only 2 job options available for now.
+   ```  
+   1. Schedule job to seek the completed auctions and charge the user:
+   
+   DEV: https://dev.contrib.org/api/v1/auctions-settle
+   LIVE: https://contrib.org/api/v1/auctions-settle
+   
+   2. Schedule job to seek auctions that are upcoming and enable them in the future:
+   DEV: https://dev.contrib.org/api/v1/auctions-start
+   LIVE: https://contrib.org/api/v1/auctions-start 
+   ```
+
+![Scheduler_2](./doc/scheduler_2.png)
+
+3. Please setup header like it's provided in the screenshot, since our backend application can receive exact HTTP request
+4. Inside the body there should be one thing to be included:
+```json
+{ "key": "OUR_SECRET_KEY" }
+```
+NOTE: `OUR_SECRET_KEY` is located inside 1Password under `AUCTION_SCHEDULER_SECRET` variable
+
+After that we are good to go and test out our scheduled jobs 
