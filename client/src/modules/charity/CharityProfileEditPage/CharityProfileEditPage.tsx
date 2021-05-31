@@ -26,7 +26,7 @@ export const CharityProfileEditPage: FC = () => {
   const { account } = useContext(UserAccountContext);
   const { data: charityProfileData } = useQuery<{
     charity: Charity;
-  }>(GetCharity, { variables: { id: charityId } });
+  }>(GetCharity, { variables: { id: charityId }, fetchPolicy: 'network-only' });
   const [updateCharityProfile] = useMutation(UpdateCharityProfileMutation);
   const history = useHistory();
 

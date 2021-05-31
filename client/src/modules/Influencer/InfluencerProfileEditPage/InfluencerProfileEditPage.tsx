@@ -31,7 +31,7 @@ export const InfluencerProfileEditPage: FC = () => {
   const { account } = useContext(UserAccountContext);
   const { data: influencerProfileData } = useQuery<{
     influencer: InfluencerProfile;
-  }>(InfluencerProfileQuery, { variables: { id: influencerId } });
+  }>(InfluencerProfileQuery, { variables: { id: influencerId }, fetchPolicy: 'network-only' });
   const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
   const [updateFavoriteCharities] = useMutation(UpdateFavoriteCharities);
   const history = useHistory();
