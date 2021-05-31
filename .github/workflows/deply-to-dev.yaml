@@ -63,6 +63,7 @@ jobs:
           REACT_APP_INTERCOM_APP_ID: ${{ secrets.DEV_REACT_APP_INTERCOM_APP_ID }}
           REACT_APP_FULLSTORY_ORG_ID: ${{ secrets.DEV_REACT_APP_FULLSTORY_ORG_ID }}
           REACT_APP_MAX_SIZE_VIDEO_GB: "1"
+          REACT_APP_GOOGLE_ANALYTICS_APP_ID: ${{ secrets.DEV_REACT_APP_GOOGLE_ANALYTICS_APP_ID }}
 
       # Test Client
       - name: Test Client
