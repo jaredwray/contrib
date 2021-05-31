@@ -8,7 +8,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import { AuctionStatus } from 'src/types/Auction';
 import { CharityStatus } from 'src/types/Charity';
 
 import About from './About';
@@ -28,7 +27,7 @@ const AuctionPage = () => {
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
 
-  if (error?.message === 'Auction was not found' || auction?.status === AuctionStatus.DRAFT) {
+  if (error?.message === 'Auction was not found' || auction?.isDraft) {
     history.push(`/`);
   }
 

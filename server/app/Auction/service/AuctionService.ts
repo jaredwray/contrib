@@ -91,7 +91,7 @@ export class AuctionService {
     attachment: Promise<IFile>,
   ): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, organizerId);
-    if (auction?.status !== AuctionStatus.DRAFT) {
+    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
 
@@ -352,6 +352,35 @@ export class AuctionService {
     };
   }
 
+  public static makeTotalRaisedAmount(auctions: IAuctionModel[]): Dinero.Dinero {
+    if (!auctions) {
+      return Dinero({ amount: 0, currency: 'USD' });
+    }
+    return auctions
+      .map((a) =>
+        Dinero({ amount: a.currentPrice ?? 0, currency: (a.currentPriceCurrency as Dinero.Currency) ?? 'USD' }),
+      )
+      .reduce((total, next) => total.add(next), Dinero({ amount: 0, currency: 'USD' }));
+  }
+
+  private makeLongAuctionLink(id: string) {
+    const url = new URL(AppConfig.app.url);
+    url.pathname = `/auctions/${id}`;
+    return url.toString();
+  }
+
+  private async makeShortAuctionLink(id: string) {
+    return this.urlShortenerService.shortenUrl(this.makeLongAuctionLink(id));
+  }
+
+  private makeAssets(assets: IAuctionAssetModel[]): AuctionAssets[] {
+    return assets
+      .map((asset) => AuctionService.makeAuctionAttachment(asset))
+      .sort((a: any, b: any) => {
+        if (b.type > a.type) return -1;
+      });
+  }
+
   public makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
       return null;
@@ -364,6 +393,7 @@ export class AuctionService {
       endsAt,
       charity,
       assets,
+      status,
       bids,
       currentPrice,
       startPrice,
@@ -389,11 +419,7 @@ export class AuctionService {
 
     return {
       id: _id.toString(),
-      attachments: assets
-        .map((asset) => AuctionService.makeAuctionAttachment(asset))
-        .sort((a: any, b: any) => {
-          if (b.type > a.type) return -1;
-        }),
+      attachments: this.makeAssets(assets),
       endDate: endsAt,
       startDate: startsAt,
       timeZone: timeZone,
@@ -407,28 +433,13 @@ export class AuctionService {
         : null,
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       link,
+      status,
+      isActive: status === AuctionStatus.ACTIVE,
+      isDraft: status === AuctionStatus.DRAFT,
+      isPending: status === AuctionStatus.PENDING,
+      isSettled: status === AuctionStatus.SETTLED,
+      isFailed: status === AuctionStatus.FAILED,
       ...rest,
     };
-  }
-
-  public static makeTotalRaisedAmount(auctions: IAuctionModel[]): Dinero.Dinero {
-    if (!auctions) {
-      return Dinero({ amount: 0, currency: 'USD' });
-    }
-    return auctions
-      .map((a) =>
-        Dinero({ amount: a.currentPrice ?? 0, currency: (a.currentPriceCurrency as Dinero.Currency) ?? 'USD' }),
-      )
-      .reduce((total, next) => total.add(next), Dinero({ amount: 0, currency: 'USD' }));
-  }
-
-  private makeLongAuctionLink(id: string) {
-    const url = new URL(AppConfig.app.url);
-    url.pathname = `/auctions/${id}`;
-    return url.toString();
-  }
-
-  private async makeShortAuctionLink(id: string) {
-    return this.urlShortenerService.shortenUrl(this.makeLongAuctionLink(id));
   }
 }

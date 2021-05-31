@@ -17,7 +17,7 @@ export interface Auction {
   startDate: Dayjs;
   endDate: Dayjs;
   status: AuctionStatus;
-  bids: any[];
+  bids: object[];
   totalBids: number;
   description: string;
   fullPageDescription: string;
@@ -26,4 +26,9 @@ export interface Auction {
   link: string;
   fairMarketValue: Dinero.Dinero;
   timeZone: string;
+  isActive: boolean;
+  isDraft: boolean;
+  isPending: boolean;
+  isSettled: boolean;
+  isFailed: boolean;
 }

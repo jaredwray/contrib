@@ -48,4 +48,9 @@ export interface Auction {
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
   timeZone: string;
+  isActive: boolean;
+  isDraft: boolean;
+  isPending: boolean;
+  isSettled: boolean;
+  isFailed: boolean;
 }
