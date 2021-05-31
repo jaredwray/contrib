@@ -37,7 +37,7 @@ export const CharityProfileEditPage: FC = () => {
       });
 
       addToast(`Your profile has been successfully updated.`, { appearance: 'success' });
-      history.push(`/charity/${charityId}`);
+      history.goBack();
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'error' });
     }
