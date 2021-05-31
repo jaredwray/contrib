@@ -61,6 +61,9 @@ export default function CharitiesPage(): any {
                   <Link className="dropdown-item text--body" to={`/charity/${item.id}`}>
                     Go to
                   </Link>
+                  <Link className="dropdown-item text--body" to={`/charity/${item.id}/edit`}>
+                    Edit
+                  </Link>
                 </ActionsDropdown>
               </td>
             </tr>

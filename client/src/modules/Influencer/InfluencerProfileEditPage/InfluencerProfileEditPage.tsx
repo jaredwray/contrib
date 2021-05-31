@@ -46,7 +46,7 @@ export const InfluencerProfileEditPage: FC = () => {
         await updateFavoriteCharities({ variables: { influencerId, charities: favoriteCharities.map((c) => c.id) } });
       }
       addToast(`Your profile has been successfully updated.`, { appearance: 'success' });
-      history.push(`/profiles/${influencerId}`);
+      history.goBack();
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'error' });
     }

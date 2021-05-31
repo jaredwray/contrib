@@ -57,6 +57,11 @@ export default function CharitiesPage(): any {
                       Go to
                     </Link>
                   )}
+                  {(auction.isPending || auction.isDraft) && (
+                    <Link className={'dropdown-item text--body'} to={`/auctions/${auction.id}/basic`}>
+                      Edit
+                    </Link>
+                  )}
                   <FairMarketValueChangeButton
                     auction={auction}
                     className={clsx(styles.actionBtn, 'dropdown-item text--body')}
