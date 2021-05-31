@@ -17,6 +17,7 @@ import {
   ResendOtpWithInvitationMutation,
 } from 'src/apollo/queries/phoneNumberMutations';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
+import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
@@ -104,7 +105,8 @@ export default function PhoneNumberConfirmation() {
 
   useEffect(() => {
     if (myAccountData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
-      window.location.href = '/';
+      const auctionUrl = returnUrlVar();
+      window.location.href = auctionUrl || '/';
     }
   }, [myAccountData, history]);
 
