@@ -77,6 +77,8 @@ export function UserAccountProvider({ children }: PropTypes) {
 
 function getOnboardingPath(userAccount: UserAccount) {
   if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_REQUIRED) {
+    const returnUrl = returnUrlVar();
+    returnUrlVar(returnUrl?.split('?')[0]);
     return '/phone-verification';
   }
 
