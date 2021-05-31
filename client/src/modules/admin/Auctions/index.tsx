@@ -10,7 +10,7 @@ import { AuctionsListQuery, updateAuctionDetails } from 'src/apollo/queries/auct
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import { PER_PAGE } from 'src/components/Pagination';
-import { Auction, AuctionStatus } from 'src/types/Auction';
+import { Auction } from 'src/types/Auction';
 
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import styles from './styles.module.scss';
@@ -39,26 +39,26 @@ export default function CharitiesPage(): any {
           </tr>
         </thead>
         <tbody className="font-weight-normal">
-          {auctions.items.map((item: Auction) => (
-            <tr key={item.id} className="clickable">
-              <td className={styles.idColumn}>{item.id}</td>
-              <td className="break-word">{item.title}</td>
-              <td>{item.status}</td>
+          {auctions.items.map((auction: Auction) => (
+            <tr key={auction.id} className="clickable">
+              <td className={styles.idColumn}>{auction.id}</td>
+              <td className="break-word">{auction.title}</td>
+              <td>{auction.status}</td>
               <td>
-                {item.currentPrice
-                  ? Dinero(item.currentPrice).toFormat('$0,0')
-                  : Dinero(item.startPrice).toFormat('$0,0')}
+                {auction.currentPrice
+                  ? Dinero(auction.currentPrice).toFormat('$0,0')
+                  : Dinero(auction.startPrice).toFormat('$0,0')}
               </td>
-              <td>{item.fairMarketValue && Dinero(item.fairMarketValue).toFormat('$0,0')}</td>
+              <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
               <td>
                 <ActionsDropdown>
-                  {item.status === AuctionStatus.ACTIVE && (
-                    <Link className="dropdown-item text--body" to={`/auctions/${item.id}`}>
+                  {(auction.isActive || auction.isPending) && (
+                    <Link className="dropdown-item text--body" to={`/auctions/${auction.id}`}>
                       Go to
                     </Link>
                   )}
                   <FairMarketValueChangeButton
-                    auction={item}
+                    auction={auction}
                     className={clsx(styles.actionBtn, 'dropdown-item text--body')}
                     mutation={updateAuctionDetails}
                   />

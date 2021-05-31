@@ -101,8 +101,8 @@ export class AuctionRepository implements IAuctionRepository {
   async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, organizerId);
 
-    if (auction.status !== AuctionStatus.DRAFT) {
-      throw new AppError('Cannot activate not DRAFT auction', ErrorCode.BAD_REQUEST);
+    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
+      throw new AppError(`Cannot activate auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
 
     auction.status = dayjs().utc().isAfter(auction.startsAt) ? AuctionStatus.ACTIVE : AuctionStatus.PENDING;
@@ -113,7 +113,7 @@ export class AuctionRepository implements IAuctionRepository {
   async updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, input.organizerId || organizerId);
 
-    if (auction.status !== AuctionStatus.DRAFT && !input.fairMarketValue) {
+    if (auction.status !== AuctionStatus.DRAFT && auction.status !== AuctionStatus.PENDING && !input.fairMarketValue) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
     Object.assign(auction, input);

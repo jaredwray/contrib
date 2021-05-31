@@ -30,6 +30,11 @@ export const AuctionQuery = gql`
       description
       fullPageDescription
       status
+      isActive
+      isDraft
+      isPending
+      isSettled
+      isFailed
       startPrice
       totalBids
       link
@@ -269,9 +274,16 @@ export const AuctionsListQuery = gql`
         currentPrice
         totalBids
         status
+        isActive
+        isDraft
+        isPending
+        isSettled
+        isFailed
         title
         description
         startPrice
+        startDate
+        timeZone
         endDate
         auctionOrganizer {
           id

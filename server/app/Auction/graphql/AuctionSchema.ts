@@ -55,6 +55,11 @@ export const AuctionSchema = gql`
     link: String!
     fairMarketValue: Money
     timeZone: String
+    isActive: Boolean!
+    isDraft: Boolean!
+    isPending: Boolean!
+    isSettled: Boolean!
+    isFailed: Boolean!
   }
 
   input AuctionSearchFilters {
