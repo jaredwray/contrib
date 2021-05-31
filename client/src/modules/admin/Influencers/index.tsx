@@ -68,6 +68,9 @@ export default function InfluencersPage() {
                   <Link className="dropdown-item text--body" to={`/profiles/${item.id}`}>
                     Go to
                   </Link>
+                  <Link className="dropdown-item text--body" to={`/profiles/${item.id}/edit`}>
+                    Edit
+                  </Link>
                   <Link className="dropdown-item text--body" to={`/assistants/${item.id}`}>
                     Assistants
                   </Link>

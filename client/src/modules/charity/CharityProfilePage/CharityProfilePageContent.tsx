@@ -62,11 +62,14 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
   return (
     <Layout>
       <section className={styles.root}>
-        {isMyProfile && (
+        {(isMyProfile || account?.isAdmin) && (
           <Container className="p-0">
             <Row>
               <Col className="p-0">
-                <Link className={clsx(styles.editBtn, 'text-label btn btn-secondary')} to={'/charity/me/edit'}>
+                <Link
+                  className={clsx(styles.editBtn, 'text-label btn btn-secondary')}
+                  to={'/charity/' + (isMyProfile ? 'me' : charity.id) + '/edit'}
+                >
                   Edit
                 </Link>
               </Col>
@@ -76,17 +79,6 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
         <div className={styles.header}>
           <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
         </div>
-        {account?.isAdmin && (
-          <Container>
-            <Row>
-              <Col>
-                <Link className="text-label float-right" to={`/charity/${charity.id}/edit`}>
-                  Edit
-                </Link>
-              </Col>
-            </Row>
-          </Container>
-        )}
         <Container className={styles.content}>
           <Row>
             <Col md="6">
