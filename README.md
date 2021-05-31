@@ -102,34 +102,23 @@ Every webhook will have personal sign in secret, so for every new webhook will r
 
 #### Configuring of the job:
 
-- First of all go to your GoogleCloud console and seek for service called [CloudScheduler](https://console.cloud.google.com/cloudscheduler)
-- Then you can add a cron job by clicking `CREATE JOB` button in the top navigation, after that you will be redirected over here:
-
-![Scheduler_1](./doc/scheduler_1.png)
-Right now frequency for all scheduled jobs equals - `EACH 5 MINUTE`
-
-
-1. First point responds to the name of the scheduled job, you can pick whatever name you prefer actually, same is for the description.
-2. Second point is the URL that will be invoked: <br/>
-NOTE: There are only 2 job options available for now.
-   ```  
-   1. Schedule job to seek the completed auctions and charge the user:
-   
-   DEV: https://dev.contrib.org/api/v1/auctions-settle
-   LIVE: https://contrib.org/api/v1/auctions-settle
-   
-   2. Schedule job to seek auctions that are upcoming and enable them in the future:
-   DEV: https://dev.contrib.org/api/v1/auctions-start
-   LIVE: https://contrib.org/api/v1/auctions-start 
-   ```
-
-![Scheduler_2](./doc/scheduler_2.png)
-
-3. Please setup header like it's provided in the screenshot, since our backend application can receive exact HTTP request
-4. Inside the body there should be one thing to be included:
-```json
-{ "key": "OUR_SECRET_KEY" }
-```
 NOTE: `OUR_SECRET_KEY` is located inside 1Password under `AUCTION_SCHEDULER_SECRET` variable
 
-After that we are good to go and test out our scheduled jobs 
+Run this via terminal on the correct projects
+
+
+`contrib-live` GCloud Project
+```
+gcloud scheduler jobs create http contrib-auction-settle --schedule="*/5 * * * *" --uri="https://contrib.org/api/v1/auctions-settle" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"secret_key_for_auctions_scheduler\" }" --time-zone="America/Los_Angeles"
+
+
+gcloud scheduler jobs create http contrib-auction-start --schedule="* * * * *" --uri="https://contrib.org/api/v1/auctions-start" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"secret_key_for_auctions_scheduler\" }" --time-zone="America/Los_Angeles"
+```
+
+`contrib-dev` GCloud Project
+```
+gcloud scheduler jobs create http contrib-auction-settle --schedule="*/5 * * * *" --uri="https://dev.contrib.org/api/v1/auctions-settle" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"secret_key_for_auctions_scheduler\" }" --time-zone="America/Los_Angeles"
+
+
+gcloud scheduler jobs create http contrib-auction-start --schedule="* * * * *" --uri="https://dev.contrib.org/api/v1/auctions-start" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"secret_key_for_auctions_scheduler\" }" --time-zone="America/Los_Angeles"
+```
