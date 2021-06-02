@@ -6,13 +6,13 @@ import Select from '..';
 const props: any = {
   options: [],
   onchange: jest.fn(),
-  title: '...',
+  title: 'test',
 };
 
 test('renders without crashing', () => {
   render(
     <Select {...props}>
-      <DropdownButton title="..." />
+      <DropdownButton title={props.title} />
     </Select>,
   );
 });
