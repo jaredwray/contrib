@@ -40,7 +40,7 @@ export default function CharitiesPage(): any {
         </thead>
         <tbody className="font-weight-normal">
           {auctions.items.map((auction: Auction) => (
-            <ClickableTr key={auction.id} className="clickable" collection="auctions" item={auction}>
+            <ClickableTr key={auction.id} linkTo={`/auctions/${auction.id}${auction.isDraft ? '/basic' : ''}`}>
               <td className={styles.idColumn}>{auction.id}</td>
               <td className="break-word">{auction.title}</td>
               <td>{auction.status}</td>
