@@ -1,4 +1,4 @@
-import React, { FC, useCallback, ReactElement } from 'react';
+import React, { FC, useCallback, ReactElement, SetStateAction } from 'react';
 
 import Dinero from 'dinero.js';
 import { Form as BsForm } from 'react-bootstrap';
@@ -17,6 +17,8 @@ interface Props {
   className?: string;
   constraints?: { [key: string]: any };
   externalText?: string | ReactElement;
+  minValue?: number;
+  setDisabled?: (_: SetStateAction<boolean>) => void;
 }
 
 const MaxLength = 11;
@@ -30,6 +32,8 @@ const MoneyField: FC<Props> = ({
   className,
   constraints: inputConstraints,
   externalText,
+  minValue,
+  setDisabled,
 }) => {
   const constraints = useFieldConstraints(inputConstraints, required);
   const { hasError, errorMessage, value, onChange, ...inputProps } = useField(name, { constraints, disabled });
@@ -43,9 +47,12 @@ const MoneyField: FC<Props> = ({
     (event) => {
       const targetValue = event.target.value;
       const number = targetValue.replace(/[^0-9]/g, '');
+      if (setDisabled && minValue) {
+        setDisabled(minValue > number);
+      }
       onChange({ ...value, amount: number ? parseInt(number, 10) * 100 : 0 });
     },
-    [onChange, value],
+    [onChange, value, minValue, setDisabled],
   );
 
   const handleFocus = useCallback((event) => event.target.select(), []);

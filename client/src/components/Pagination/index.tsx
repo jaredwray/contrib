@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 
 import styles from './styles.module.scss';
 
-export const PER_PAGE = 25;
+export const PER_PAGE = 20;
 
 export default function Pagination(props: {
   loading: boolean;

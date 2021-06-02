@@ -15,7 +15,7 @@ import PaginationInfo from './PaginationInfo';
 import SortBy from './SortBy';
 import styles from './styles.module.scss';
 
-const PER_PAGE = 25;
+const PER_PAGE = 20;
 
 const AuctionsPage: FC = () => {
   const { data: auctionPriceLimitsData } = useQuery(AuctionPriceLimitsQuery);
