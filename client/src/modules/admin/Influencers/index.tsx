@@ -55,7 +55,7 @@ export default function InfluencersPage() {
         </thead>
         <tbody className="font-weight-normal">
           {influencers.items.map((item: InfluencerProfile) => (
-            <ClickableTr key={item.id} className="clickable" collection="profiles" item={item}>
+            <ClickableTr key={item.id} linkTo={`/profiles/${item.id}`}>
               <td className={styles.idColumn} title={item.id}>
                 {item.id}
               </td>
