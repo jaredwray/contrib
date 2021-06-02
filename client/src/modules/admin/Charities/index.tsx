@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { AllCharitiesQuery, InviteCharityMutation } from 'src/apollo/queries/charities';
+import { AllCharitiesQuery, InviteCharityMutation, CharitiesSearch } from 'src/apollo/queries/charities';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
@@ -20,11 +20,34 @@ export default function CharitiesPage(): any {
   const { loading, data, error } = useQuery(AllCharitiesQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
+
+  const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const [executeSearch] = useLazyQuery(CharitiesSearch, {
+    onCompleted({ charitiesSearch }) {
+      setCharitiesSearch(charitiesSearch);
+    },
+  });
+  const onInputSearchChange = useCallback((value) => {
+    setSearchQuery(value);
+  }, []);
+  const clearAndCloseSearch = useCallback(() => {
+    setSearchQuery('');
+    setCharitiesSearch([]);
+  }, []);
+
+  useEffect(() => {
+    executeSearch({ variables: { query: searchQuery } });
+  }, [executeSearch, searchQuery]);
+
   if (error) {
     return null;
   }
 
-  const charities = data?.charities || { skip: 0, totalItems: 0, items: [] };
+  const charities = searchQuery
+    ? { skip: 0, totalItems: charitiesSearch.length, items: charitiesSearch }
+    : data?.charities || { skip: 0, totalItems: 0, items: [] };
   const controlBtns = (
     <InviteButton className={clsx(styles.inviteBtn, 'text--body d-inline-block')} mutation={InviteCharityMutation} />
   );
@@ -36,6 +59,8 @@ export default function CharitiesPage(): any {
       loading={loading}
       pageSkip={pageSkip}
       setPageSkip={setPageSkip}
+      onCancel={clearAndCloseSearch}
+      onChange={onInputSearchChange}
     >
       <Table className="d-block d-sm-table">
         <thead>

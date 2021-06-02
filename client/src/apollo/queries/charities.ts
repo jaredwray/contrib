@@ -28,10 +28,13 @@ export const InviteCharityMutation = gql`
 `;
 
 export const CharitiesSearch = gql`
-  query charitiesSearch($query: String!) {
-    charitiesSearch(query: $query) {
+  query charitiesSearch($query: String!, $status: [String]) {
+    charitiesSearch(query: $query, status: $status) {
       id
       name
+      status
+      profileStatus
+      stripeStatus
     }
   }
 `;
