@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { AuctionsListQuery, updateAuctionDetails } from 'src/apollo/queries/auctions';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
+import ClickableTr from 'src/components/ClickableTr';
 import { PER_PAGE } from 'src/components/Pagination';
 import { Auction } from 'src/types/Auction';
 
@@ -20,7 +21,6 @@ export default function CharitiesPage(): any {
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
-
   if (error) {
     return null;
   }
@@ -40,7 +40,7 @@ export default function CharitiesPage(): any {
         </thead>
         <tbody className="font-weight-normal">
           {auctions.items.map((auction: Auction) => (
-            <tr key={auction.id} className="clickable">
+            <ClickableTr key={auction.id} className="clickable" collection="auctions" item={auction}>
               <td className={styles.idColumn}>{auction.id}</td>
               <td className="break-word">{auction.title}</td>
               <td>{auction.status}</td>
@@ -52,11 +52,6 @@ export default function CharitiesPage(): any {
               <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
               <td>
                 <ActionsDropdown>
-                  {(auction.isActive || auction.isPending) && (
-                    <Link className="dropdown-item text--body" to={`/auctions/${auction.id}`}>
-                      Go to
-                    </Link>
-                  )}
                   {(auction.isPending || auction.isDraft) && (
                     <Link className={'dropdown-item text--body'} to={`/auctions/${auction.id}/basic`}>
                       Edit
@@ -69,7 +64,7 @@ export default function CharitiesPage(): any {
                   />
                 </ActionsDropdown>
               </td>
-            </tr>
+            </ClickableTr>
           ))}
         </tbody>
       </Table>
