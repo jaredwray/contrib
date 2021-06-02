@@ -1,9 +1,10 @@
 import { FC } from 'react';
 
 import clsx from 'clsx';
-import { Col, Container, Row, Form } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 
 import Layout from 'src/components/Layout';
+import SearchInput from 'src/components/SearchInput';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -21,9 +22,20 @@ interface Props {
   setPageSkip: (x: number) => void;
   loading: boolean;
   controlBtns?: React.ReactNode;
+  onChange?: (value: string) => void;
+  onCancel?: () => void;
 }
 
-export const AdminPage: FC<Props> = ({ items, pageSkip, setPageSkip, loading, controlBtns, children }) => {
+export const AdminPage: FC<Props> = ({
+  items,
+  pageSkip,
+  setPageSkip,
+  loading,
+  controlBtns,
+  children,
+  onChange,
+  onCancel,
+}) => {
   const showPrevPage = () => {
     setPageSkip(pageSkip - PER_PAGE);
   };
@@ -37,7 +49,7 @@ export const AdminPage: FC<Props> = ({ items, pageSkip, setPageSkip, loading, co
         <Container fluid>
           <Row>
             <Col className={styles.searchInput} md="4">
-              <Form.Control placeholder="Search" />
+              <SearchInput placeholder="Search" onCancel={onCancel} onChange={onChange!} />
             </Col>
             <Col className={clsx(styles.pagination, 'pt-3 pt-md-0 pr-0 pl-md-0 text-nowrap')} md="3" sm="5">
               <Pagination

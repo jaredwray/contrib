@@ -19,12 +19,10 @@ export const CharityResolvers = {
     }),
     charitiesSearch: async (
       parent: unknown,
-      { query }: { query: string },
+      { query, status }: { query: string; status?: string[] },
       { charity }: GraphqlContext,
     ): Promise<Charity[] | null> => {
-      return await (await charity.searchForCharity(query.trim())).filter(
-        (charity) => charity.status === CharityStatus.ACTIVE,
-      );
+      return await charity.searchForCharity(query.trim(), status);
     },
     charities: async (
       parent: unknown,

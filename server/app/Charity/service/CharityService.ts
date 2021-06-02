@@ -1,5 +1,5 @@
 import { Storage } from '@google-cloud/storage';
-import { ClientSession, Connection, ObjectId } from 'mongoose';
+import { ClientSession, Connection, ObjectId, Query } from 'mongoose';
 import { AuctionService } from '../../Auction';
 import { AuctionModel, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { AuctionStatus } from '../../Auction/dto/AuctionStatus';
@@ -77,12 +77,28 @@ export class CharityService {
     return objLink.url;
   }
 
-  async searchForCharity(query: string): Promise<Charity[]> {
+  async searchForCharity(query: string, status?: string[]): Promise<Charity[]> {
     if (!query) {
       return [];
     }
-    const charities = await this.CharityModel.find({ name: { $regex: query, $options: 'i' } }).exec();
+    const charities = await this.CharityModel.find(CharityService.charitiesSearchSelector(query, status));
     return charities.map((charity) => CharityService.makeCharity(charity));
+  }
+
+  private static charitiesSearchSelector(query: string, status: string[]) {
+    const filter = {};
+
+    if (status) {
+      filter['status'] = { $in: status };
+    }
+
+    if (query.match(/^[0-9a-fA-F]{24}$/)) {
+      filter['_id'] = { $in: query };
+    } else {
+      filter['name'] = { $regex: query, $options: 'i' };
+    }
+
+    return filter;
   }
 
   async createCharity({ name }: CharityCreationInput, session?: ClientSession): Promise<Charity> {

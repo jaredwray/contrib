@@ -7,7 +7,7 @@ import { Button, Form } from 'react-bootstrap';
 import { CharitiesSearch } from 'src/apollo/queries/charities';
 import SearchInput from 'src/components/SearchInput';
 import useOutsideClick from 'src/helpers/useOutsideClick';
-import { Charity } from 'src/types/Charity';
+import { Charity, CharityStatus } from 'src/types/Charity';
 
 import styles from './styles.module.scss';
 
@@ -61,7 +61,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
   );
 
   useEffect(() => {
-    executeSearch({ variables: { query: searchQuery } });
+    executeSearch({ variables: { query: searchQuery, status: [CharityStatus.ACTIVE] } });
   }, [executeSearch, searchQuery]);
 
   return (
