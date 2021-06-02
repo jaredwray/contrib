@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
+import ClickableTr from 'src/components/ClickableTr';
 import { InviteButton } from 'src/components/InviteButton';
 import { PER_PAGE } from 'src/components/Pagination';
 import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
@@ -17,11 +18,9 @@ import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
-
   const { loading, data, error } = useQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
-
   if (error) {
     return null;
   }
@@ -56,7 +55,7 @@ export default function InfluencersPage() {
         </thead>
         <tbody className="font-weight-normal">
           {influencers.items.map((item: InfluencerProfile) => (
-            <tr key={item.id} className="clickable">
+            <ClickableTr key={item.id} className="clickable" collection="profiles" item={item}>
               <td className={styles.idColumn} title={item.id}>
                 {item.id}
               </td>
@@ -65,9 +64,6 @@ export default function InfluencersPage() {
               <td className="break-word">{item.status}</td>
               <td>
                 <ActionsDropdown>
-                  <Link className="dropdown-item text--body" to={`/profiles/${item.id}`}>
-                    Go to
-                  </Link>
                   <Link className="dropdown-item text--body" to={`/profiles/${item.id}/edit`}>
                     Edit
                   </Link>
@@ -85,7 +81,7 @@ export default function InfluencersPage() {
                   )}
                 </ActionsDropdown>
               </td>
-            </tr>
+            </ClickableTr>
           ))}
         </tbody>
       </Table>
