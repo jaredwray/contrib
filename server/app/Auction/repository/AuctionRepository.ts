@@ -27,12 +27,12 @@ export class AuctionRepository implements IAuctionRepository {
   private readonly UserAccountModel = UserAccountModel(this.connection);
 
   private static SEARCH_FILTERS: ISearchFilter = {
-    [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'desc' },
+    [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'asc' },
     [AuctionOrderBy.TIME_ASC]: { endsAt: 'asc' },
     [AuctionOrderBy.TIME_DESC]: { endsAt: 'desc' },
     [AuctionOrderBy.SPORT]: { sport: 'asc' },
-    [AuctionOrderBy.PRICE_ASC]: { startPrice: 'asc' },
-    [AuctionOrderBy.PRICE_DESC]: { startPrice: 'desc' },
+    [AuctionOrderBy.PRICE_ASC]: { currentPrice: 'asc' },
+    [AuctionOrderBy.PRICE_DESC]: { currentPrice: 'desc' },
   };
 
   private get auctionPopulateOpts() {
@@ -137,16 +137,49 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   async getAuctions({ query, size, skip = 0, orderBy, filters }: IAuctionFilters): Promise<IAuctionModel[]> {
+    if (orderBy === AuctionOrderBy.CREATED_AT_DESC) {
+      const activeAuctions = this.populateAuctionQuery<IAuctionModel[]>(
+        this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
+      )
+        .skip(skip)
+        .find({ status: AuctionStatus.ACTIVE })
+        .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+      const pendingAuctions = this.populateAuctionQuery<IAuctionModel[]>(
+        this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
+      )
+        .skip(skip)
+        .find({ status: AuctionStatus.PENDING })
+        .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+      const settledAuctions = this.populateAuctionQuery<IAuctionModel[]>(
+        this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
+      )
+        .skip(skip)
+        .find({ status: AuctionStatus.SETTLED })
+        .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+      return (await activeAuctions.exec()).concat(await pendingAuctions.exec()).concat(await settledAuctions.exec());
+    }
+    if (orderBy === AuctionOrderBy.TIME_ASC) {
+      const endedSoonAuctions = this.populateAuctionQuery<IAuctionModel[]>(
+        this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
+      )
+        .skip(skip)
+        .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+      const settledAuctions = this.populateAuctionQuery<IAuctionModel[]>(
+        this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
+      )
+        .skip(skip)
+        .find({ status: AuctionStatus.SETTLED })
+        .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+      return (await endedSoonAuctions.exec())
+        .filter((x) => x.status !== AuctionStatus.FAILED && x.status !== AuctionStatus.SETTLED)
+        .concat(await settledAuctions.exec());
+    }
     const auctions = this.populateAuctionQuery<IAuctionModel[]>(
       this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
     )
       .skip(skip)
       .sort(AuctionRepository.searchSortOptionsByName(orderBy));
-
-    if (size) {
-      auctions.limit(size);
-    }
-    return auctions.exec();
+    return (await auctions.exec()).filter((x) => x.status !== AuctionStatus.FAILED);
   }
 
   async getAuctionsCount({ query, size, skip = 0, orderBy, filters }: IAuctionFilters): Promise<number> {
