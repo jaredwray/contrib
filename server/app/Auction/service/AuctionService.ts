@@ -29,6 +29,8 @@ import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoo
 import { PaymentService } from '../../Payment';
 import { AppConfig } from '../../../config';
 import { UrlShortenerService } from '../../Core';
+import { CloudTaskService } from '../../CloudTaskService';
+import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -41,6 +43,8 @@ export class AuctionService {
     private readonly paymentService: PaymentService,
     private readonly cloudStorage: GCloudStorage,
     private readonly urlShortenerService: UrlShortenerService,
+    private readonly cloudTaskService: CloudTaskService,
+    private readonly handlebarsService: HandlebarsService,
   ) {}
 
   public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
@@ -230,6 +234,8 @@ export class AuctionService {
       );
     }
 
+    const lastUserId = auction.bids[auction.bids.length - 1]?.user;
+
     const createdBid = {
       user: user.mongodbId,
       createdAt: dayjs(),
@@ -250,6 +256,17 @@ export class AuctionService {
     await session.commitTransaction();
     session.endSession();
 
+    if (lastUserId) {
+      const userAccount = await this.UserAccountModel.findOne({ _id: lastUserId }).exec();
+      if (!userAccount) {
+        throw new Error(`Can not find account with id ${lastUserId}`);
+      }
+      const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_BID_OVERLAP);
+      await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
+        message: message,
+        phoneNumber: userAccount.phoneNumber,
+      });
+    }
     return AuctionService.makeAuctionBid(createdBid);
   }
 
@@ -309,6 +326,15 @@ export class AuctionService {
         );
         AppLogger.info(`Auction with id ${auction.id} has been settled`);
         await auction.save();
+        const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_WON_MESSAGE);
+        try {
+          await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
+            message: message,
+            phoneNumber: bid.user.phoneNumber,
+          });
+        } catch (error) {
+          AppLogger.warn(`Can not send the notification`, error.message);
+        }
         return;
       } catch (error) {
         AppLogger.error(`Unable to charge user ${bid.user.id.toString()}, with error: ${error.message}`);
@@ -333,6 +359,15 @@ export class AuctionService {
     auction.status = AuctionStatus.ACTIVE;
     await auction.save();
     return;
+  }
+
+  private generateGoogleTaskTarget(): string {
+    const appURL = new URL(AppConfig.app.url);
+
+    if (!AppConfig.environment.serveClient) {
+      appURL.port = AppConfig.app.port.toString();
+    }
+    return `${appURL.toString()}${AppConfig.googleCloud.task.notificationTaskTargetURL}`;
   }
 
   private static makeAuctionBid(model: IAuctionBid): AuctionBid | null {

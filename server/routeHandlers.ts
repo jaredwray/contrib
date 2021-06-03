@@ -3,8 +3,12 @@ import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
+import { AppLogger } from './logger';
 
-export default function appRouteHandlers(app: express.Express, { auction, charity, stripe }: IAppServices): void {
+export default function appRouteHandlers(
+  app: express.Express,
+  { auction, charity, stripe, twilioNotification }: IAppServices,
+): void {
   app.use((req, res, next) => {
     if (req.originalUrl === '/api/v1/stripe/') {
       next();
@@ -39,6 +43,19 @@ export default function appRouteHandlers(app: express.Express, { auction, charit
     }
     const response = await auction.scheduleAuctionJobStart();
     return res.json(response);
+  });
+
+  app.post('api/v1/notification', async (req, res) => {
+    if (!req.body) {
+      res.sendStatus(400).json({ message: 'BAD REQUEST' });
+    }
+
+    if (req.body.api_token !== AppConfig.googleCloud.task.googleTaskApiToken) {
+      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+    }
+    AppLogger.info(`Sending message ${req.body.phoneNumber} to user with phone number ${req.body.phoneNumber}`);
+    await twilioNotification.sendMessage(req.body.phoneNumber, req.body.message);
+    res.sendStatus(200);
   });
 
   app.get('/api/v1/account_onboarding', async (req: express.Request, res: express.Response) => {
