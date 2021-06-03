@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "cross-env NODE_ENV=local nodemon --exec ts-node ./index.ts",
-    "build": "tsc --build tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json && node copy-views.js",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
     "test": "jest --passWithNoTests --detectOpenHandles",
@@ -27,6 +27,7 @@
     "bcrypt": "^5.0.1",
     "bitly": "^7.1.2",
     "compare-versions": "^3.6.0",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "dataloader": "^2.0.0",
     "dayjs": "^1.10.4",
