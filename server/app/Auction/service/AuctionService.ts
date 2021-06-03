@@ -282,11 +282,9 @@ export class AuctionService {
     }
     auction.status = AuctionStatus.SETTLED;
     const maxBids: IAuctionBid[] = auction.bids.sort((curr, next) => {
-      return Number(
-        this.makeBidDineroValue(curr.bid, curr.bidCurrency).lessThan(
-          this.makeBidDineroValue(next.bid, next.bidCurrency),
-        ),
-      );
+      const nextBid = this.makeBidDineroValue(next.bid, next.bidCurrency);
+      const currBid = this.makeBidDineroValue(curr.bid, curr.bidCurrency);
+      return nextBid.lessThan(currBid) ? -1 : 1;
     });
     for await (const bid of maxBids) {
       try {
