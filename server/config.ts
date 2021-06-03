@@ -53,6 +53,13 @@ export const AppConfig = {
     bucketName: requireEnvVar('CONTENT_STORAGE_NAME'),
     keyDump: requireEnvVar('CONTENT_STORAGE_KEY'),
     schedulerSecretKey: requireEnvVar('AUCTION_SCHEDULER_SECRET'),
+    task: {
+      googleProjectId: requireEnvVar('GOOGLE_CLOUD_PROJECT'),
+      location: requireEnvVar('GOOGLE_CLOUD_LOCATION'),
+      queue: requireEnvVar('GOOGLE_CLOUD_TASK_QUEUE'),
+      googleTaskApiToken: requireEnvVar('GOOGLE_CLOUD_TASK_API_TOKEN'),
+      notificationTaskTargetURL: requireEnvVar('NOTIFICATION_TASK_TARGET_URL'),
+    },
   },
   cloudflare: {
     token: requireEnvVar('CLOUDFLARE_STREAMING_KEY'),

@@ -14,6 +14,8 @@ import { GCloudStorage } from './GCloudStorage';
 import { CloudflareStreaming } from './CloudflareStreaming';
 import { UrlShortenerService } from './Core';
 import { PaymentService, StripeService } from './Payment';
+import { CloudTaskService } from './CloudTaskService';
+import { HandlebarsService } from './Message/service/HandlebarsService';
 
 export default function createAppServices(connection: Connection): IAppServices {
   const eventHub = new EventHub();
@@ -21,13 +23,14 @@ export default function createAppServices(connection: Connection): IAppServices 
   const auth0 = new Auth0Service();
   const twilioVerification = new TwilioVerificationService();
   const twilioNotification = new TwilioNotificationService();
+  const cloudTaskService = new CloudTaskService();
   const stripe = new StripeService();
-
   const assistant = new AssistantService(connection);
   const charity = new CharityService(connection, eventHub);
   const userAccount = new UserAccountService(connection, twilioVerification, eventHub);
   const influencer = new InfluencerService(connection, charity);
   const payment = new PaymentService(userAccount, stripe, auth0);
+  const handlebarsService = new HandlebarsService();
   const invitation = new InvitationService(
     connection,
     assistant,
@@ -42,7 +45,14 @@ export default function createAppServices(connection: Connection): IAppServices 
   const cloudflareStreaming = new CloudflareStreaming();
   const cloudStorage = new GCloudStorage(cloudflareStreaming);
 
-  const auction = new AuctionService(connection, payment, cloudStorage, urlShortener);
+  const auction = new AuctionService(
+    connection,
+    payment,
+    cloudStorage,
+    urlShortener,
+    cloudTaskService,
+    handlebarsService,
+  );
 
   return {
     assistant,
@@ -57,5 +67,7 @@ export default function createAppServices(connection: Connection): IAppServices 
     auction,
     payment,
     stripe,
+    cloudTaskService,
+    handlebarsService,
   };
 }

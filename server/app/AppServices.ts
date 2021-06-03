@@ -8,6 +8,8 @@ import { AuctionService } from './Auction';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
 import { UrlShortenerService } from './Core';
 import { PaymentService, StripeService } from './Payment';
+import { CloudTaskService } from './CloudTaskService';
+import { IHandlebarsService } from './Message/service/HandlebarsService';
 
 export interface IAppServices {
   assistant: AssistantService;
@@ -22,4 +24,6 @@ export interface IAppServices {
   urlShortener: UrlShortenerService;
   payment: PaymentService;
   stripe: StripeService;
+  cloudTaskService: CloudTaskService;
+  handlebarsService: IHandlebarsService;
 }
