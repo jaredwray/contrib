@@ -54,6 +54,7 @@ export default function appRouteHandlers(
       AppLogger.info(
         `Wrong google task ApiToken. Expected: ${AppConfig.googleCloud.task.googleTaskApiToken}, but received: ${req.body.api_token}`,
       );
+      AppLogger.info(`Body keys: ${Object.keys(req.body)}`);
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
     }
     AppLogger.info(`Sending message ${req.body.phoneNumber} to user with phone number ${req.body.phoneNumber}`);
