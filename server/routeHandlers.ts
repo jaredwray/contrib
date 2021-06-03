@@ -45,7 +45,7 @@ export default function appRouteHandlers(
     return res.json(response);
   });
 
-  app.post('api/v1/notification', async (req, res) => {
+  app.post('/api/v1/notification', async (req, res) => {
     if (!req.body) {
       res.sendStatus(400).json({ message: 'BAD REQUEST' });
     }
