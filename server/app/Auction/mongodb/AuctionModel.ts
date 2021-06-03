@@ -30,6 +30,8 @@ export interface IAuctionModel extends Document {
   bids: IAuctionBid[];
   currentPrice: number;
   currentPriceCurrency: string;
+  itemPrice: number;
+  itemPriceCurrency: string;
   charity: ICharityModel['_id'];
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
@@ -39,11 +41,6 @@ export interface IAuctionModel extends Document {
   fairMarketValue: number;
   fairMarketValueCurrency: string;
   timeZone: string;
-  isActive: boolean;
-  isDraft: boolean;
-  isPending: boolean;
-  isSettled: boolean;
-  isFailed: boolean;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -69,10 +66,12 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
         chargeId: { type: SchemaTypes.String },
       },
     ],
-    startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
-    currentPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     startPrice: { type: SchemaTypes.Number, default: 0 },
+    startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
+    itemPrice: { type: SchemaTypes.Number, default: 0 },
+    itemtPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     currentPrice: { type: SchemaTypes.Number, default: 0 },
+    currentPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     playedIn: { type: SchemaTypes.String },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },

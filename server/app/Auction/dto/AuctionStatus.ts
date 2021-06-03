@@ -4,4 +4,5 @@ export enum AuctionStatus {
   ACTIVE = 'ACTIVE',
   SETTLED = 'SETTLED',
   FAILED = 'FAILED',
+  SOLD = 'SOLD',
 }

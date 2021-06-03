@@ -23,6 +23,7 @@ export interface Auction {
   fullPageDescription: string;
   currentPrice: Dinero.Dinero;
   startPrice: Dinero.Dinero;
+  itemPrice: Dinero.Dinero;
   link: string;
   fairMarketValue: Dinero.Dinero;
   timeZone: string;
@@ -31,4 +32,5 @@ export interface Auction {
   isPending: boolean;
   isSettled: boolean;
   isFailed: boolean;
+  isSold: boolean;
 }

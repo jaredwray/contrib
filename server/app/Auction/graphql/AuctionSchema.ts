@@ -17,6 +17,7 @@ export const AuctionSchema = gql`
     ACTIVE
     SETTLED
     FAILED
+    SOLD
   }
 
   type AuctionStatusResponse {
@@ -42,6 +43,7 @@ export const AuctionSchema = gql`
     attachments: [AuctionAttachment]
     bids: [AuctionBid]
     startPrice: Money!
+    itemPrice: Money
     currentPrice: Money!
     charity: Charity
     gameWorn: Boolean!
@@ -60,6 +62,7 @@ export const AuctionSchema = gql`
     isPending: Boolean!
     isSettled: Boolean!
     isFailed: Boolean!
+    isSold: Boolean!
   }
 
   input AuctionSearchFilters {
@@ -116,12 +119,14 @@ export const AuctionSchema = gql`
     playedIn: String
     fairMarketValue: Money
     timeZone: String
+    itemPrice: Money
   }
 
   extend type Mutation {
     createAuction(input: AuctionInput!): Auction!
     updateAuction(id: String, input: AuctionInput): Auction!
     finishAuctionCreation(id: String!): Auction!
+    buyAuction(id: String): AuctionStatusResponse!
     createAuctionBid(id: String!, bid: Money!): Auction!
     addAuctionAttachment(id: String!, attachment: Upload!, organizerId: String): AuctionAttachment!
     removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!

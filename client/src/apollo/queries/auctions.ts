@@ -30,11 +30,13 @@ export const AuctionQuery = gql`
       description
       fullPageDescription
       status
+      itemPrice
       isActive
       isDraft
       isPending
       isSettled
       isFailed
+      isSold
       startPrice
       totalBids
       link
@@ -101,6 +103,7 @@ export const getAuctionDetails = gql`
       id
       startDate
       endDate
+      itemPrice
       startPrice
       link
       charity {
@@ -211,6 +214,7 @@ export const updateAuctionDetails = gql`
     $startDate: DateTime
     $endDate: DateTime
     $startPrice: Money
+    $itemPrice: Money
     $charity: String
     $fairMarketValue: Money
     $timeZone: String
@@ -221,6 +225,7 @@ export const updateAuctionDetails = gql`
         startDate: $startDate
         endDate: $endDate
         startPrice: $startPrice
+        itemPrice: $itemPrice
         charity: $charity
         fairMarketValue: $fairMarketValue
         timeZone: $timeZone
@@ -230,6 +235,7 @@ export const updateAuctionDetails = gql`
       startDate
       endDate
       startPrice
+      itemPrice
       charity {
         id
         name
@@ -279,9 +285,11 @@ export const AuctionsListQuery = gql`
         isPending
         isSettled
         isFailed
+        isSold
         title
         description
         startPrice
+        itemPrice
         startDate
         timeZone
         endDate
@@ -300,7 +308,13 @@ export const AuctionsListQuery = gql`
     }
   }
 `;
-
+export const buyAuction = gql`
+  mutation buyAuction($id: String!) {
+    buyAuction(id: $id) {
+      status
+    }
+  }
+`;
 export const finishAuctionCreationMutation = gql`
   mutation finishAuctionCreation($id: String!) {
     finishAuctionCreation(id: $id) {

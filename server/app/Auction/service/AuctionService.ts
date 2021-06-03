@@ -151,6 +151,7 @@ export class AuctionService {
       endDate,
       charity,
       startPrice,
+      itemPrice,
       description,
       fullPageDescription,
       playedIn,
@@ -169,6 +170,12 @@ export class AuctionService {
             currentPrice: startPrice.getAmount(),
             startPriceCurrency: startPrice.getCurrency(),
             currentPriceCurrency: startPrice.getCurrency(),
+          }
+        : {}),
+      ...(itemPrice
+        ? {
+            itemPrice: itemPrice.getAmount(),
+            itemPriceCurrency: itemPrice.getCurrency(),
           }
         : {}),
       ...(fairMarketValue
@@ -280,6 +287,9 @@ export class AuctionService {
     if (!auction) {
       throw new AppError('Auction not found');
     }
+    if (auction.status !== AuctionStatus.ACTIVE) {
+      throw new AppError('Auction status is not ACTIVE');
+    }
     auction.status = AuctionStatus.SETTLED;
     const maxBids: IAuctionBid[] = auction.bids.sort((curr, next) => {
       return Number(
@@ -288,6 +298,7 @@ export class AuctionService {
         ),
       );
     });
+
     for await (const bid of maxBids) {
       try {
         bid.chargeId = await this.paymentService.chargeUser(
@@ -380,6 +391,25 @@ export class AuctionService {
         if (b.type > a.type) return -1;
       });
   }
+  public async buyAuction(id: string) {
+    const auction = await this.AuctionModel.findOne({ _id: id });
+
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
+    }
+    if (auction.status !== AuctionStatus.ACTIVE) {
+      throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
+    }
+    if (auction.currentPrice > auction.itemPrice) {
+      throw new AppError('Auction has larger current price', ErrorCode.BAD_REQUEST);
+    }
+    auction.status = AuctionStatus.SOLD;
+    auction.currentPrice = auction.itemPrice;
+    await auction.save();
+    return {
+      status: auction.status,
+    };
+  }
 
   public makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
@@ -395,11 +425,13 @@ export class AuctionService {
       assets,
       status,
       bids,
+      itemPrice,
       currentPrice,
       startPrice,
       auctionOrganizer,
       startPriceCurrency,
       currentPriceCurrency,
+      itemPriceCurrency,
       fairMarketValue,
       fairMarketValueCurrency,
       link: rawLink,
@@ -428,6 +460,7 @@ export class AuctionService {
       totalBids: bids?.length ?? 0,
       currentPrice: Dinero({ currency: currentPriceCurrency as Dinero.Currency, amount: currentPrice }),
       startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
+      itemPrice: Dinero({ currency: itemPriceCurrency as Dinero.Currency, amount: itemPrice }),
       fairMarketValue: fairMarketValue
         ? Dinero({ currency: fairMarketValueCurrency as Dinero.Currency, amount: fairMarketValue })
         : null,
@@ -439,6 +472,7 @@ export class AuctionService {
       isPending: status === AuctionStatus.PENDING,
       isSettled: status === AuctionStatus.SETTLED,
       isFailed: status === AuctionStatus.FAILED,
+      isSold: status === AuctionStatus.SOLD,
       ...rest,
     };
   }
