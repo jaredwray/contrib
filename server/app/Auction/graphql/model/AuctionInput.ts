@@ -13,6 +13,7 @@ export type AuctionInput = {
   startDate?: Dayjs;
   endDate?: Dayjs;
   startPrice?: Dinero.Dinero;
+  itemPrice?: Dinero.Dinero;
   playedIn?: string;
   organizerId?: string;
   fairMarketValue?: Dinero.Dinero;

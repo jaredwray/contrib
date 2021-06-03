@@ -8,6 +8,7 @@ export enum AuctionStatus {
   ACTIVE = 'ACTIVE',
   SETTLED = 'SETTLED',
   FAILED = 'FAILED',
+  SOLD = 'SOLD',
 }
 
 export interface AuctionAttachment {
@@ -44,6 +45,7 @@ export interface Auction {
   startDate: string;
   endDate: string;
   startPrice: DineroObject;
+  itemPrice: DineroObject;
   currentPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
@@ -53,4 +55,5 @@ export interface Auction {
   isPending: boolean;
   isSettled: boolean;
   isFailed: boolean;
+  isSold: boolean;
 }

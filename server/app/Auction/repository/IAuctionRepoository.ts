@@ -28,11 +28,14 @@ export interface ICreateAuction {
   timeZone?: string;
   endDate?: Dayjs;
   startPrice?: Dinero.Dinero;
+  itemPrice?: Dinero.Dinero;
   playedIn?: string;
   organizerId?: string;
 }
 
 export type IUpdateAuction = {
+  itemPrice?: number;
+  itemPriceCurrency?: string;
   startPriceCurrency?: string;
   startPrice?: number;
   title?: string;
