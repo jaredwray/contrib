@@ -11,6 +11,7 @@ import { requireRole } from '../../../graphql/middleware/requireRole';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { GraphqlResolver } from '../../../graphql/types';
 import { AuctionAssets } from '../dto/AuctionAssets';
+import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { loadRole } from '../../../graphql/middleware/loadRole';
 
 interface AuctionResolversType {
@@ -32,7 +33,7 @@ interface AuctionResolversType {
     removeAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
-    buyAuction: GraphqlResolver<AuctionStatus, { id: string }>;
+    buyAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
   };
   InfluencerProfile: {
     auctions: GraphqlResolver<Auction[], Record<string, never>, InfluencerProfile>;

@@ -8,6 +8,7 @@ import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
+import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionBid } from '../dto/AuctionBid';
@@ -428,7 +429,7 @@ export class AuctionService {
         if (b.type > a.type) return -1;
       });
   }
-  public async buyAuction(id: string, user: UserAccount): Promise<AuctionStatus> {
+  public async buyAuction(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
     const auction = await this.AuctionModel.findOne({ _id: id });
 
     if (!auction) {
@@ -466,19 +467,23 @@ export class AuctionService {
       Object.assign(auction, {
         bids: [...auction.bids, createdBid],
       });
-
-      AppLogger.info(`Auction with id ${auction.id} has been sold`);
-
-      auction.status = AuctionStatus.SOLD;
-      auction.currentPrice = auction.itemPrice;
-      auction.currentPriceCurrency = auction.itemPriceCurrency;
-      await auction.save();
     } catch (error) {
-      AppLogger.error(`Unable to charge user ${user.id.toString()}, with error: ${error.message}`);
       throw new AppError('Unable to charge');
     }
 
-    return auction.status;
+    AppLogger.info(`Auction with id ${auction.id} has been sold`);
+
+    auction.status = AuctionStatus.SOLD;
+    auction.currentPrice = auction.itemPrice;
+    auction.currentPriceCurrency = auction.itemPriceCurrency;
+
+    try {
+      await auction.save();
+    } catch (error) {
+      throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
+    }
+
+    return { status: auction.status };
   }
 
   public makeAuction(model: IAuctionModel): Auction | null {
