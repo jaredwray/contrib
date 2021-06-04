@@ -257,15 +257,19 @@ export class AuctionService {
     session.endSession();
 
     if (lastUserId) {
-      const userAccount = await this.UserAccountModel.findOne({ _id: lastUserId }).exec();
-      if (!userAccount) {
-        throw new Error(`Can not find account with id ${lastUserId}`);
+      try {
+        const userAccount = await this.UserAccountModel.findOne({ _id: lastUserId }).exec();
+        if (!userAccount) {
+          throw new Error(`Can not find account with id ${lastUserId}`);
+        }
+        const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_BID_OVERLAP);
+        await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
+          message: message,
+          phoneNumber: userAccount.phoneNumber,
+        });
+      } catch (error) {
+        AppLogger.warning(`Failed to send notification, error: ${error.message}`);
       }
-      const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_BID_OVERLAP);
-      await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
-        message: message,
-        phoneNumber: userAccount.phoneNumber,
-      });
     }
     return AuctionService.makeAuctionBid(createdBid);
   }
