@@ -74,7 +74,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       setNewCard(false);
     }, [setNewCard]);
 
-    const handleSubmit = useCallback(async () => {
+    const handleBiding = useCallback(async () => {
       if (!elements || !activeBid) {
         return;
       }
@@ -188,7 +188,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
             disabled={buttonsAreDisabled}
             loading={isSubmitting}
             variant="secondary"
-            onClick={isBuying ? handleBuying : handleSubmit}
+            onClick={isBuying ? handleBuying : handleBiding}
           >
             {isBuying ? 'Buy it now' : 'Confirm bidding'}
           </AsyncButton>
