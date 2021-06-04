@@ -328,8 +328,8 @@ export class AuctionService {
         );
         AppLogger.info(`Auction with id ${auction.id} has been settled`);
         await auction.save();
-        const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_WON_MESSAGE);
         try {
+          const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_WON_MESSAGE);
           await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
             message: message,
             phoneNumber: bid.user.phoneNumber,
@@ -428,7 +428,7 @@ export class AuctionService {
         if (b.type > a.type) return -1;
       });
   }
-  public async buyAuction(id: string) {
+  public async buyAuction(id: string, user: UserAccount): Promise<AuctionStatus> {
     const auction = await this.AuctionModel.findOne({ _id: id });
 
     if (!auction) {
@@ -440,12 +440,45 @@ export class AuctionService {
     if (auction.currentPrice > auction.itemPrice) {
       throw new AppError('Auction has larger current price', ErrorCode.BAD_REQUEST);
     }
-    auction.status = AuctionStatus.SOLD;
-    auction.currentPrice = auction.itemPrice;
-    await auction.save();
-    return {
-      status: auction.status,
-    };
+
+    const card = await this.paymentService.getAccountPaymentInformation(user);
+    if (!card) {
+      throw new AppError('Payment method is not provided');
+    }
+
+    try {
+      const chargeId = await this.paymentService.chargeUser(
+        user,
+        card.id,
+        this.makeBidDineroValue(auction.itemPrice, auction.itemPriceCurrency as Dinero.Currency),
+        `Contrib auction: ${auction.title}`,
+      );
+
+      const createdBid = {
+        user: user.mongodbId,
+        createdAt: dayjs(),
+        paymentSource: card.id,
+        bid: auction.itemPrice,
+        bidCurrency: auction.itemPriceCurrency as Dinero.Currency,
+        chargeId: chargeId,
+      };
+
+      Object.assign(auction, {
+        bids: [...auction.bids, createdBid],
+      });
+
+      AppLogger.info(`Auction with id ${auction.id} has been sold`);
+
+      auction.status = AuctionStatus.SOLD;
+      auction.currentPrice = auction.itemPrice;
+      auction.currentPriceCurrency = auction.itemPriceCurrency;
+      await auction.save();
+    } catch (error) {
+      AppLogger.error(`Unable to charge user ${user.id.toString()}, with error: ${error.message}`);
+      throw new AppError('Unable to charge');
+    }
+
+    return auction.status;
   }
 
   public makeAuction(model: IAuctionModel): Auction | null {
