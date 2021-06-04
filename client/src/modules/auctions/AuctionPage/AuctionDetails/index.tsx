@@ -71,7 +71,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   let isShowBuyButton;
 
   if (itemPrice) {
-    isShowBuyButton = itemPrice?.amount >= minBid.getAmount();
+    isShowBuyButton = false;
   }
 
   const stripeOptions = {
