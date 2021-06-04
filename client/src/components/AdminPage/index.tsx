@@ -49,7 +49,11 @@ export const AdminPage: FC<Props> = ({
         <Container fluid>
           <Row>
             <Col className={styles.searchInput} md="4">
-              <SearchInput placeholder="Search" onCancel={onCancel} onChange={onChange!} />
+              {onChange ? (
+                <SearchInput placeholder="Search" onCancel={onCancel} onChange={onChange!} />
+              ) : (
+                <input className="form-control" placeholder="Search"></input>
+              )}
             </Col>
             <Col className={clsx(styles.pagination, 'pt-3 pt-md-0 pr-0 pl-md-0 text-nowrap')} md="3" sm="5">
               <Pagination
