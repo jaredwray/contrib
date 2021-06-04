@@ -24,32 +24,22 @@ import styles from './styles.module.scss';
 
 interface Props {
   auction: Auction;
+  executeQuery: () => void;
 }
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
-const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
+const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const [isBying, setIsBying] = useState(false);
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const history = useHistory();
-  const {
-    startPrice,
-    itemPrice,
-    currentPrice,
-    endDate,
-    startDate,
-    totalBids,
-    title,
-    timeZone,
-    isActive,
-    isPending,
-  } = auction;
+  const { startPrice, itemPrice, currentPrice, endDate, startDate, title, timeZone, isPending, isSold } = auction;
   const ended = toDate(endDate) <= new Date();
   const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
   const endTime = format(utcToZonedTime(startDate, timeZone), 'p');
-  const canBid = isActive && !ended;
+  const canBid = auction.isActive && !ended;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
@@ -71,7 +61,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   let isShowBuyButton;
 
   if (itemPrice) {
-    isShowBuyButton = false;
+    isShowBuyButton = itemPrice?.amount >= minBid.getAmount();
   }
 
   const stripeOptions = {
@@ -146,9 +136,9 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           </div>
         </>
       )}
-      {!isPending && (
+      {!isPending && !isSold && (
         <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
-          <span className="pr-4 pr-sm-0">{pluralize(totalBids, 'bid')}</span>
+          <span className="pr-4 pr-sm-0">{pluralize(auction.totalBids, 'bid')}</span>
           <span>
             {!ended && (
               <>
@@ -161,8 +151,15 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           </span>
         </div>
       )}
+      {isSold && <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">sold</div>}
       <Elements options={stripeOptions} stripe={stripePromise}>
-        <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} isBuying={isBying} setIsBying={setIsBying} />
+        <BidConfirmationModal
+          ref={confirmationRef}
+          auctionId={auction.id}
+          executeQuery={executeQuery}
+          isBuying={isBying}
+          setIsBying={setIsBying}
+        />
       </Elements>
       {canBid && <BidInput fairMarketValue={Dinero(auction.fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
       {isPending && (account?.isAdmin || isMyAuction) && (

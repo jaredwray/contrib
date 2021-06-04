@@ -69,7 +69,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     startPrice: { type: SchemaTypes.Number, default: 0 },
     startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     itemPrice: { type: SchemaTypes.Number },
-    itemtPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
+    itemPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     currentPrice: { type: SchemaTypes.Number, default: 0 },
     currentPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     playedIn: { type: SchemaTypes.String },

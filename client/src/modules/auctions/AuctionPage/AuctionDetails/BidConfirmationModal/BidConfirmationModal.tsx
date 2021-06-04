@@ -29,10 +29,11 @@ interface Props {
   auctionId: string;
   isBuying: boolean;
   setIsBying: (value: boolean | ((prevVar: boolean) => boolean)) => void;
+  executeQuery: () => void;
 }
 
 export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
-  ({ auctionId, isBuying, setIsBying }, ref) => {
+  ({ auctionId, isBuying, setIsBying, executeQuery }, ref) => {
     const [updateAuction] = useMutation(buyAuction);
     const stripe = useStripe();
     const elements = useElements();
@@ -94,6 +95,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         }
 
         await makeBid({ variables: { id: auctionId, bid: activeBid?.toObject() } });
+
         setSubmitting(false);
         setActiveBid(null);
         setNewCard(false);
@@ -105,13 +107,19 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       }
     }, [elements, activeBid, paymentInformation, newCard, makeBid, auctionId, addToast, stripe, registerPaymentMethod]);
 
-    const handleBuying = () => {
-      addToast(`Your buying has been accepted.`, { autoDismiss: true, appearance: 'success' });
-      updateAuction({
-        variables: { id: auctionId },
-      });
-      window.location.reload();
-    };
+    const handleBuying = useCallback(async () => {
+      setSubmitting(true);
+
+      try {
+        await updateAuction({ variables: { id: auctionId } });
+        addToast(`Thank you for your purchase!`, { autoDismiss: true, appearance: 'success' });
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'error' });
+      }
+
+      executeQuery();
+      handleClose();
+    }, [auctionId, updateAuction, addToast, executeQuery, handleClose]);
 
     useImperativeHandle(ref, () => ({
       placeBid: (amount: Dinero.Dinero) => {
@@ -120,6 +128,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     }));
 
     useEffect(() => setNewCard(false), []);
+    const buttonsAreDisabled = isSubmitting || expired || ((newCard || !paymentInformation) && !cardComplete);
 
     return (
       <Dialog
@@ -157,7 +166,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
             )}
 
             <p className="text-center pt-0 pt-sm-3 mb-0">
-              Your bid is <span className="font-weight-bold">{activeBid?.toFormat('$0,0')}</span>
+              {isBuying ? 'Price is' : 'Your bid is'}
+              <span className="pl-1 font-weight-bold">{activeBid?.toFormat('$0,0')}</span>
             </p>
           </div>
         </DialogContent>
@@ -165,6 +175,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
           <Button
             className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+            disabled={buttonsAreDisabled}
             size="sm"
             variant="light"
             onClick={handleClose}
@@ -172,27 +183,15 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
             Cancel
           </Button>
 
-          {isBuying ? (
-            <AsyncButton
-              className={styles.actionBtn}
-              disabled={isSubmitting || expired || ((newCard || !paymentInformation) && !cardComplete)}
-              loading={isSubmitting}
-              variant="secondary"
-              onClick={handleBuying}
-            >
-              Buy it now
-            </AsyncButton>
-          ) : (
-            <AsyncButton
-              className={styles.actionBtn}
-              disabled={isSubmitting || expired || ((newCard || !paymentInformation) && !cardComplete)}
-              loading={isSubmitting}
-              variant="secondary"
-              onClick={handleSubmit}
-            >
-              Confirm bidding
-            </AsyncButton>
-          )}
+          <AsyncButton
+            className={styles.actionBtn}
+            disabled={buttonsAreDisabled}
+            loading={isSubmitting}
+            variant="secondary"
+            onClick={isBuying ? handleBuying : handleSubmit}
+          >
+            {isBuying ? 'Buy it now' : 'Confirm bidding'}
+          </AsyncButton>
         </DialogActions>
       </Dialog>
     );

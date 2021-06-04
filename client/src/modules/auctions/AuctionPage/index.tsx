@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-sort-props */
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -21,9 +21,14 @@ const AuctionPage = () => {
   const auctionId = useParams<{ auctionId: string }>().auctionId ?? 'me';
   const history = useHistory();
   const { account } = useContext(UserAccountContext);
-  const { loading: auctionLoading, data: auctionData, error } = useQuery(AuctionQuery, {
+  const [executeAuctionQuery, { data: auctionData, error }] = useLazyQuery(AuctionQuery, {
     variables: { id: auctionId },
   });
+
+  useEffect(() => {
+    executeAuctionQuery();
+  }, [executeAuctionQuery]);
+
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
 
@@ -31,10 +36,11 @@ const AuctionPage = () => {
     history.push(`/`);
   }
 
-  if (auctionLoading || error) {
+  if (error || !auction) {
     return null;
   }
   const attachments = [...auction?.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
+
   return (
     <Layout>
       <Container className="pt-0 pt-md-5 pb-0 pb-md-5">
@@ -45,7 +51,7 @@ const AuctionPage = () => {
           </Col>
           <Col md="1" />
           <Col md="4">
-            <AuctionDetails auction={auction} />
+            <AuctionDetails auction={auction} executeQuery={executeAuctionQuery} />
           </Col>
           <Col md="1" />
         </Row>
