@@ -32,7 +32,7 @@ interface AuctionResolversType {
     removeAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
-    buyAuction: GraphqlResolver<{ status: string }, { id: string }>;
+    buyAuction: GraphqlResolver<AuctionStatus, { id: string }>;
   };
   InfluencerProfile: {
     auctions: GraphqlResolver<Auction[], Record<string, never>, InfluencerProfile>;
@@ -71,7 +71,7 @@ export const AuctionResolvers: AuctionResolversType = {
       return auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input);
     }),
     deleteAuction: async () => Promise.resolve(null),
-    buyAuction: async (_, { id }, { auction }) => auction.buyAuction(id),
+    buyAuction: async (_, { id }, { auction, currentAccount }) => auction.buyAuction(id, currentAccount),
     addAuctionAttachment: requireRole(
       async (_, { id, attachment, organizerId }, { auction, currentAccount, currentInfluencerId }) =>
         auction.addAuctionAttachment(id, currentAccount.isAdmin ? organizerId : currentInfluencerId, attachment),
