@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
@@ -10,12 +11,18 @@ export default function appRouteHandlers(
   { auction, charity, stripe, twilioNotification }: IAppServices,
 ): void {
   app.use((req, res, next) => {
-    if (req.originalUrl === '/api/v1/stripe/') {
+    if (['/api/v1/stripe/', '/api/v1/notification'].includes(req.originalUrl)) {
       next();
     } else {
       express.json()(req, res, next);
     }
   });
+  app.use(
+    bodyParser.raw({
+      type: 'application/octet-stream',
+      limit: '10mb',
+    }),
+  );
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!req.body.key) {
@@ -46,6 +53,7 @@ export default function appRouteHandlers(
   });
 
   app.post('/api/v1/notification', async (req, res) => {
+    AppLogger.info(`Body: ${req.body}`);
     if (!req.body) {
       res.sendStatus(400).json({ message: 'BAD REQUEST' });
     }
@@ -54,7 +62,6 @@ export default function appRouteHandlers(
       AppLogger.info(
         `Wrong google task ApiToken. Expected: ${AppConfig.googleCloud.task.googleTaskApiToken}, but received: ${req.body.api_token}`,
       );
-      AppLogger.info(`Body keys: ${Object.keys(req.body)}`);
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
     }
     AppLogger.info(`Sending message ${req.body.phoneNumber} to user with phone number ${req.body.phoneNumber}`);
