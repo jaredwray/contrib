@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
@@ -17,12 +16,6 @@ export default function appRouteHandlers(
       express.json()(req, res, next);
     }
   });
-  app.use(
-    bodyParser.raw({
-      type: 'application/octet-stream',
-      limit: '10mb',
-    }),
-  );
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!req.body.key) {
