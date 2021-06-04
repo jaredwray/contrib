@@ -90,10 +90,10 @@ export class AuctionRepository implements IAuctionRepository {
         auctionOrganizer: Types.ObjectId(organizerId),
         startPrice: input.startPrice?.getAmount(),
         currentPrice: input.startPrice?.getAmount(),
-        itemPrice: input.startPrice?.getAmount(),
+        itemPrice: input.itemPrice?.getAmount(),
         startPriceCurrency: input.startPrice?.getCurrency(),
         currentPriceCurrency: input.startPrice?.getCurrency(),
-        itemPriceCurrency: input.startPrice?.getCurrency(),
+        itemPriceCurrency: input.itemPrice?.getCurrency(),
       },
     ]);
 
@@ -156,7 +156,7 @@ export class AuctionRepository implements IAuctionRepository {
         this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters)),
       )
         .skip(skip)
-        .find({ status: AuctionStatus.SETTLED })
+        .find({ status: { $in: [AuctionStatus.SETTLED, AuctionStatus.SOLD] } })
         .sort(AuctionRepository.searchSortOptionsByName(orderBy));
       return (await activeAuctions.exec()).concat(await pendingAuctions.exec()).concat(await settledAuctions.exec());
     }

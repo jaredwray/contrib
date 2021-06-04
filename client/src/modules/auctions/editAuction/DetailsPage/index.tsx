@@ -60,18 +60,23 @@ const EditAuctionDetailsPage = () => {
 
   const handleSubmit = useCallback(
     async (values) => {
-      const { startDate, duration, ...rest } = values;
-
+      const { startDate, duration, startPrice, itemPrice, ...rest } = values;
       const serializedStartDate = serializeStartDate(startDate);
       const endDate = addDays(toDate(parseISO(serializedStartDate)), duration).toISOString();
 
       const clearValues = {
         ...rest,
         startDate: serializedStartDate,
+        itemPrice: itemPrice.amount === 0 ? null : itemPrice,
         endDate: endDate,
         charity: charities[0]?.id,
         timeZone: utcTimeZones.find((timeZone) => timeZone.value === startDate.timeZone)?.label,
       };
+
+      if (itemPrice.amount > 0 && startPrice.amount > itemPrice.amount) {
+        addToast(`'Buy it now' price can't be smaller than Starting price`, { autoDismiss: true, appearance: 'error' });
+        return;
+      }
       try {
         await updateAuction({ variables: { id: auctionId, ...clearValues } });
       } catch (error) {
@@ -103,12 +108,11 @@ const EditAuctionDetailsPage = () => {
     return durationOptions.find(({ value }) => parseInt(value, 10) === duration);
   }, [auctionData?.auction]);
 
-  const { startPrice, charity } = auctionData?.auction ?? {};
+  const { startPrice, itemPrice, charity } = auctionData?.auction ?? {};
   const initialValues = useMemo(() => {
     if (!auctionData) {
       return undefined;
     }
-
     const defaultTimezone = utcTimeZones[0].value;
     const currentTimeZone = format(new Date(), 'x');
     const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
@@ -116,6 +120,7 @@ const EditAuctionDetailsPage = () => {
     const time = format(startDate, 'H:mm');
     return {
       startPrice: Dinero.maximum([Dinero(startPrice), Dinero({ amount: 100 })]).toObject(),
+      itemPrice: Dinero(itemPrice).toObject(),
       charity,
       duration: selectedOption()?.value,
       startDate: {
@@ -124,7 +129,7 @@ const EditAuctionDetailsPage = () => {
         timeZone: defaultTimezone,
       },
     };
-  }, [auctionData, selectedOption, startPrice, charity]);
+  }, [auctionData, selectedOption, startPrice, charity, itemPrice]);
 
   if (loadingQuery) {
     return null;
@@ -144,6 +149,12 @@ const EditAuctionDetailsPage = () => {
               title="Starting price"
             >
               <MoneyField name="startPrice" />
+            </Row>
+            <Row
+              description="The price for which user can buy the product without participating in the promotion. This field is optional"
+              title="Price to Buy it now"
+            >
+              <MoneyField name="itemPrice" />
             </Row>
 
             <Row description="The day and time your auction will start." title="Start date & time">

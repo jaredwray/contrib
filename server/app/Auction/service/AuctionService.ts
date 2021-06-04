@@ -530,7 +530,7 @@ export class AuctionService {
       totalBids: bids?.length ?? 0,
       currentPrice: Dinero({ currency: currentPriceCurrency as Dinero.Currency, amount: currentPrice }),
       startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
-      itemPrice: Dinero({ currency: itemPriceCurrency as Dinero.Currency, amount: itemPrice }),
+      itemPrice: itemPrice ? Dinero({ currency: itemPriceCurrency as Dinero.Currency, amount: itemPrice }) : null,
       fairMarketValue: fairMarketValue
         ? Dinero({ currency: fairMarketValueCurrency as Dinero.Currency, amount: fairMarketValue })
         : null,

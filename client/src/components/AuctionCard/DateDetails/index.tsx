@@ -13,13 +13,17 @@ import styles from './styles.module.scss';
 type Props = {
   auction: Auction;
   isDonePage?: boolean;
+  isSold?: boolean;
 };
 
-const DateDetails: FC<Props> = ({ auction, isDonePage }) => {
+const DateDetails: FC<Props> = ({ auction, isDonePage, isSold }) => {
   const timeZone = utcTimeZones.find((tz) => auction.timeZone === tz.label)?.value;
   const auctionStartDate = utcToZonedTime(auction.startDate, timeZone || '');
   if (isPast(toDate(auction.endDate))) {
     return <span className={styles.ended}>ended</span>;
+  }
+  if (isSold) {
+    return <span className={styles.ended}>sold</span>;
   }
 
   if (isDonePage) {

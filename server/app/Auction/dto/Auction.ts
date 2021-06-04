@@ -23,7 +23,7 @@ export interface Auction {
   fullPageDescription: string;
   currentPrice: Dinero.Dinero;
   startPrice: Dinero.Dinero;
-  itemPrice: Dinero.Dinero;
+  itemPrice?: Dinero.Dinero;
   link: string;
   fairMarketValue: Dinero.Dinero;
   timeZone: string;
