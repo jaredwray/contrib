@@ -71,7 +71,9 @@ export const AuctionResolvers: AuctionResolversType = {
       return auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input);
     }),
     deleteAuction: async () => Promise.resolve(null),
-    buyAuction: async (_, { id }, { auction, currentAccount }) => auction.buyAuction(id, currentAccount),
+    buyAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
+      auction.buyAuction(id, currentAccount),
+    ),
     addAuctionAttachment: requireRole(
       async (_, { id, attachment, organizerId }, { auction, currentAccount, currentInfluencerId }) =>
         auction.addAuctionAttachment(id, currentAccount.isAdmin ? organizerId : currentInfluencerId, attachment),

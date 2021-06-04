@@ -66,6 +66,7 @@ const EditAuctionDetailsPage = () => {
 
       const clearValues = {
         ...rest,
+        startPrice: startPrice,
         startDate: serializedStartDate,
         itemPrice: itemPrice.amount === 0 ? null : itemPrice,
         endDate: endDate,
