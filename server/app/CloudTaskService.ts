@@ -8,7 +8,7 @@ export class CloudTaskService {
     credentials: JSON.parse(AppConfig.googleCloud.keyDump),
   });
 
-  public async createTask(returnURL: string, payload: any): Promise<void> {
+  public async createTask(returnURL: string, payload: { [key: string]: any }): Promise<void> {
     const parent = this.cloudTaskClient.queuePath(
       AppConfig.googleCloud.task.googleProjectId,
       AppConfig.googleCloud.task.location,
@@ -20,6 +20,9 @@ export class CloudTaskService {
         httpMethod: 'POST',
         url: returnURL,
         body: null,
+        headers: {
+          'Content-Type': 'application/octet-stream',
+        },
       },
     };
 
