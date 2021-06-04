@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
@@ -10,7 +11,7 @@ export default function appRouteHandlers(
   { auction, charity, stripe, twilioNotification }: IAppServices,
 ): void {
   app.use((req, res, next) => {
-    if (['/api/v1/stripe/', '/api/v1/notification'].includes(req.originalUrl)) {
+    if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
     } else {
       express.json()(req, res, next);
@@ -45,7 +46,7 @@ export default function appRouteHandlers(
     return res.json(response);
   });
 
-  app.post('/api/v1/notification', async (req, res) => {
+  app.post('/api/v1/notification', bodyParser.raw({ type: 'application/octet-stream' }), async (req, res) => {
     AppLogger.info(`Body: ${req.body}`);
     if (!req.body) {
       res.sendStatus(400).json({ message: 'BAD REQUEST' });
