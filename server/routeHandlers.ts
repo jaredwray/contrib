@@ -48,6 +48,9 @@ export default function appRouteHandlers(
 
   app.post('/api/v1/notification', bodyParser.raw({ type: 'application/octet-stream' }), async (req, res) => {
     AppLogger.info(`Body: ${req.body}`);
+    AppLogger.info(`Body keys: ${Object.keys(req.body)}`);
+    AppLogger.info(`Message: ${req.body.message}`);
+    AppLogger.info(`phoneNumber: ${req.body.phoneNumber}`);
     if (!req.body) {
       res.sendStatus(400).json({ message: 'BAD REQUEST' });
     }
