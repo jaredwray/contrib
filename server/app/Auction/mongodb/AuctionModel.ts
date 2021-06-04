@@ -30,8 +30,8 @@ export interface IAuctionModel extends Document {
   bids: IAuctionBid[];
   currentPrice: number;
   currentPriceCurrency: string;
-  itemPrice: number;
-  itemPriceCurrency: string;
+  itemPrice?: number;
+  itemPriceCurrency?: string;
   charity: ICharityModel['_id'];
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
@@ -68,7 +68,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     ],
     startPrice: { type: SchemaTypes.Number, default: 0 },
     startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
-    itemPrice: { type: SchemaTypes.Number, default: 0 },
+    itemPrice: { type: SchemaTypes.Number },
     itemtPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     currentPrice: { type: SchemaTypes.Number, default: 0 },
     currentPriceCurrency: { type: SchemaTypes.String, default: 'USD' },

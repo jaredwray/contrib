@@ -42,7 +42,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     return null;
   }
   const priceFormatted = currentPrice.toFormat('$0,0');
-  const { startDate, timeZone, isSettled, isDraft, isPending } = auction;
+  const { startDate, timeZone, isSettled, isDraft, isPending, isSold } = auction;
   const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
   const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone)), 'MMM dd yyyy');
   const linkToAuction = `/auctions/${auction.id}${isDraft ? '/basic' : ''}`;
@@ -59,6 +59,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
             horizontal && styles.horizontalImage,
             isDonePage && styles.horizontalOnMobileImage,
             isSettled && styles.settled,
+            isSold && styles.settled,
           )}
           src={imageSrc}
         />
@@ -103,7 +104,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
 
         {!isDraft && !isPending && (
           <p className="text-label text-all-cups mb-0 mt-auto text-left">
-            <DateDetails auction={auction} isDonePage={isDonePage} />
+            <DateDetails auction={auction} isDonePage={isDonePage} isSold={isSold} />
           </p>
         )}
       </figcaption>

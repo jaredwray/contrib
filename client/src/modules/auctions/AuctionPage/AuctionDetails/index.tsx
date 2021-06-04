@@ -1,4 +1,4 @@
-import { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useContext } from 'react';
+import { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useContext, useState } from 'react';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import { Elements } from '@stripe/react-stripe-js';
@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { format as dateFormat } from 'date-fns';
 import { format, toDate, utcToZonedTime } from 'date-fns-tz';
 import Dinero from 'dinero.js';
+import { Button } from 'react-bootstrap';
 import { useHistory, Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
@@ -28,11 +29,23 @@ interface Props {
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
 const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
+  const [isBying, setIsBying] = useState(false);
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const history = useHistory();
-  const { startPrice, currentPrice, endDate, startDate, totalBids, title, timeZone, isActive, isPending } = auction;
+  const {
+    startPrice,
+    itemPrice,
+    currentPrice,
+    endDate,
+    startDate,
+    totalBids,
+    title,
+    timeZone,
+    isActive,
+    isPending,
+  } = auction;
   const ended = toDate(endDate) <= new Date();
   const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
   const endTime = format(utcToZonedTime(startDate, timeZone), 'p');
@@ -52,6 +65,14 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   );
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
   const confirmationRef = useRef<BidConfirmationRef>(null);
+
+  const buyingPrice = Dinero(itemPrice)?.toFormat('$0,0');
+
+  let isShowBuyButton;
+
+  if (itemPrice) {
+    isShowBuyButton = itemPrice?.amount >= minBid.getAmount();
+  }
 
   const stripeOptions = {
     fonts: [
@@ -79,6 +100,13 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     },
     [loginWithRedirect, isAuthenticated, addToast, auction],
   );
+  const handleBuy = useCallback(async () => {
+    if (isAuthenticated) {
+      setIsBying(true);
+      confirmationRef.current?.placeBid(Dinero(itemPrice));
+      return;
+    }
+  }, [isAuthenticated, itemPrice]);
 
   useEffect(() => {
     if (!placeBidQueryParam) {
@@ -134,13 +162,20 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         </div>
       )}
       <Elements options={stripeOptions} stripe={stripePromise}>
-        <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} />
+        <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} isBuying={isBying} setIsBying={setIsBying} />
       </Elements>
       {canBid && <BidInput fairMarketValue={Dinero(auction.fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
       {isPending && (account?.isAdmin || isMyAuction) && (
         <Link className="w-100 btn btn-primary" to={`/auctions/${auction.id}/basic`}>
           Edit
         </Link>
+      )}
+      {canBid && isShowBuyButton && (
+        <Button className="w-100 d-block" title="Buy it now" type="button" variant="primary" onClick={handleBuy}>
+          Buy it now for
+          <br />
+          {buyingPrice}
+        </Button>
       )}
     </>
   );
