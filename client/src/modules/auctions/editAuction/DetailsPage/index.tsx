@@ -74,10 +74,16 @@ const EditAuctionDetailsPage = () => {
         timeZone: utcTimeZones.find((timeZone) => timeZone.value === startDate.timeZone)?.label,
       };
 
-      if (itemPrice.amount > 0 && startPrice.amount > itemPrice.amount) {
+      if (itemPrice.amount > 0 && itemPrice.amount < startPrice.amount) {
         addToast(`'Buy it now' price can't be smaller than Starting price`, { autoDismiss: true, appearance: 'error' });
         return;
       }
+
+      if (!clearValues.charity) {
+        addToast('You should select charity', { autoDismiss: true, appearance: 'error' });
+        return;
+      }
+
       try {
         await updateAuction({ variables: { id: auctionId, ...clearValues } });
       } catch (error) {
