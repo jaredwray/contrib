@@ -1,4 +1,6 @@
+import { Dinero } from 'dinero.js';
 import Stripe from 'stripe';
+
 import { AppConfig, requireEnvVar } from '../../../config';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { AppLogger } from '../../../logger';
@@ -9,6 +11,9 @@ export class StripeService {
   public async createStripeAccount(): Promise<Stripe.Account> {
     return await this.stripe.accounts.create({
       type: 'express',
+      capabilities: {
+        transfers: { requested: true },
+      },
     });
   }
 
@@ -78,13 +83,27 @@ export class StripeService {
     paymentSource: string,
     amount: Dinero.Dinero,
     description: string,
+    charityStripeId: string,
+    charityId: string,
   ): Promise<string> {
+    const transferGroup = `CHARGE_FOR_CHARITY_${charityId}`;
+
     const charge = await this.stripe.charges.create({
       customer: customerId,
       amount: amount.getAmount(),
       currency: amount.getCurrency().toLowerCase(),
       source: paymentSource,
+      transfer_group: transferGroup,
       description,
+    });
+
+    const transferAmount = Math.round(amount.getAmount() * 0.85);
+
+    await this.stripe.transfers.create({
+      amount: transferAmount,
+      currency: amount.getCurrency().toLowerCase(),
+      destination: charityStripeId,
+      transfer_group: transferGroup,
     });
     return charge.id;
   }
