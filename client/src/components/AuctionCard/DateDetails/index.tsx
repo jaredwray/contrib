@@ -19,11 +19,12 @@ type Props = {
 const DateDetails: FC<Props> = ({ auction, isDonePage, isSold }) => {
   const timeZone = utcTimeZones.find((tz) => auction.timeZone === tz.label)?.value;
   const auctionStartDate = utcToZonedTime(auction.startDate, timeZone || '');
-  if (isPast(toDate(auction.endDate))) {
-    return <span className={styles.ended}>ended</span>;
-  }
   if (isSold) {
     return <span className={styles.ended}>sold</span>;
+  }
+
+  if (isPast(toDate(auction.endDate))) {
+    return <span className={styles.ended}>ended</span>;
   }
 
   if (isDonePage) {

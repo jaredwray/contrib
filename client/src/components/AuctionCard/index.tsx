@@ -41,6 +41,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   if (!auction) {
     return null;
   }
+
   const priceFormatted = currentPrice.toFormat('$0,0');
   const { startDate, timeZone, isSettled, isDraft, isPending, isSold } = auction;
   const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
