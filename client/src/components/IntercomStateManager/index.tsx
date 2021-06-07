@@ -15,14 +15,7 @@ const IntercomStateManager: FC = () => {
 
     if (appId) {
       const w = window as any;
-      w.Intercom('shutdown');
-      // 'shutdown' does not reset session after log out. maybe it's a bug
-      w.Intercom('boot', {
-        app_id: appId,
-        session_duration: 0,
-      });
 
-      w.Intercom('shutdown');
       w.Intercom('boot', {
         app_id: appId,
         name: user?.name,

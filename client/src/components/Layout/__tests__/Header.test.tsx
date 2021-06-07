@@ -13,6 +13,7 @@ describe('Header', () => {
   describe('menu', () => {
     let wrapper: ShallowWrapper;
     let menuButton;
+    global.Intercom = jest.fn();
 
     describe('for logged in user', () => {
       beforeEach(() => {
