@@ -18,7 +18,14 @@ interface AuctionResolversType {
   Query: {
     auctions: GraphqlResolver<
       { items: Auction[]; totalItems: number; size: number; skip: number },
-      { size: number; skip: number; query?: string; filters?: AuctionSearchFilters; orderBy?: AuctionOrderBy }
+      {
+        size: number;
+        skip: number;
+        query?: string;
+        filters?: AuctionSearchFilters;
+        orderBy?: AuctionOrderBy;
+        statusFilter: string[];
+      }
     >;
     auctionPriceLimits: GraphqlResolver<{ min: Dinero.Dinero; max: Dinero.Dinero }>;
     sports: GraphqlResolver<string[]>;
@@ -42,8 +49,8 @@ interface AuctionResolversType {
 
 export const AuctionResolvers: AuctionResolversType = {
   Query: {
-    auctions: async (_, { size, skip, query, filters, orderBy }, { auction }) =>
-      auction.listAuctions({ query, filters, orderBy, size, skip }),
+    auctions: async (_, { size, skip, query, filters, orderBy, statusFilter }, { auction }) =>
+      auction.listAuctions({ query, filters, orderBy, size, skip, statusFilter }),
     auctionPriceLimits: (_, __, { auction }) => auction.getAuctionPriceLimits(),
     sports: (_, __, { auction }) => auction.listSports(),
     auction: loadRole(async (_, { id, organizerId }, { auction, currentAccount, currentInfluencerId }) => {

@@ -7,7 +7,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
-import { Auction } from 'src/types/Auction';
+import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import Filters from './Filters';
 import Pagination from './Pagination';
@@ -64,6 +64,7 @@ const AuctionsPage: FC = () => {
         query: filters.query,
         orderBy: filters.orderBy,
         filters: queryFilters,
+        statusFilter: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD, AuctionStatus.PENDING],
       },
     });
   }, [executeAuctionsSearch, filters]);

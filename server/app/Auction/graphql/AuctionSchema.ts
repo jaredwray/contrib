@@ -96,7 +96,14 @@ export const AuctionSchema = gql`
   }
 
   extend type Query {
-    auctions(size: Int, skip: Int, query: String, filters: AuctionSearchFilters, orderBy: String): AuctionsPage!
+    auctions(
+      size: Int
+      skip: Int
+      query: String
+      filters: AuctionSearchFilters
+      orderBy: String
+      statusFilter: [String]
+    ): AuctionsPage!
     auctionPriceLimits: AuctionPriceLimits!
     auction(id: String!): Auction
     sports: [String]

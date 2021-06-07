@@ -270,8 +270,22 @@ export const RemoveAuctionMedia = gql`
 `;
 
 export const AuctionsListQuery = gql`
-  query auctions($size: Int, $skip: Int, $query: String, $orderBy: String, $filters: AuctionSearchFilters) {
-    auctions(size: $size, skip: $skip, query: $query, orderBy: $orderBy, filters: $filters) {
+  query auctions(
+    $size: Int
+    $skip: Int
+    $query: String
+    $orderBy: String
+    $filters: AuctionSearchFilters
+    $statusFilter: [String]
+  ) {
+    auctions(
+      size: $size
+      skip: $skip
+      query: $query
+      orderBy: $orderBy
+      filters: $filters
+      statusFilter: $statusFilter
+    ) {
       totalItems
       size
       skip
