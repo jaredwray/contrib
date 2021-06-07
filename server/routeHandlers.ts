@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
@@ -45,16 +46,21 @@ export default function appRouteHandlers(
     return res.json(response);
   });
 
-  app.post('/api/v1/notification', async (req, res) => {
-    if (!req.body) {
+  app.post('/api/v1/notification', bodyParser.raw({ type: 'application/octet-stream' }), async (req, res) => {
+    const parsedBody = JSON.parse(req.body);
+
+    if (!parsedBody) {
       res.sendStatus(400).json({ message: 'BAD REQUEST' });
     }
 
-    if (req.body.api_token !== AppConfig.googleCloud.task.googleTaskApiToken) {
+    if (parsedBody.api_token !== AppConfig.googleCloud.task.googleTaskApiToken) {
+      AppLogger.info(
+        `Wrong google task ApiToken. Expected: ${AppConfig.googleCloud.task.googleTaskApiToken}, but received: ${parsedBody.api_token}`,
+      );
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
     }
-
-    await twilioNotification.sendMessage(req.body.phoneNumber, req.body.message);
+    AppLogger.info(`Sending message ${parsedBody.phoneNumber} to user with phone number ${parsedBody.phoneNumber}`);
+    await twilioNotification.sendMessage(parsedBody.phoneNumber, parsedBody.message);
     res.sendStatus(200);
   });
 
