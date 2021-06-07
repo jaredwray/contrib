@@ -78,4 +78,7 @@ export const AppConfig = {
   facebook: {
     appId: requireEnvVar('FACEBOOK_APP_ID'),
   },
+  terms: {
+    version: '1.0',
+  }
 };
