@@ -97,7 +97,7 @@ export class StripeService {
       description,
     });
 
-    const transferAmount = Math.round(amount.getAmount() * 0.85);
+    const transferAmount = Math.round((amount.getAmount() * AppConfig.stripe.charitySharePercentage) / 100);
 
     await this.stripe.transfers.create({
       amount: transferAmount,
