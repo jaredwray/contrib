@@ -4,6 +4,9 @@ import dayjs from 'dayjs';
 import { UserAccount } from '../dto/UserAccount';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
 import { IInvitation, InvitationModel } from '../../Invitation/mongodb/InvitationModel';
+import { ICharityModel, CharityModel } from '../../Charity/mongodb/CharityModel';
+import { IAssistant, AssistantModel } from '../../Assistant/mongodb/AssistantModel';
+import { IInfluencer, InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { InvitationParentEntityType } from '../../Invitation/mongodb/InvitationParentEntityType';
 import { UserAccountStatus } from '../dto/UserAccountStatus';
 import { TwilioVerificationService } from '../../../twilio-client';
@@ -13,8 +16,11 @@ import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
 
 export class UserAccountService {
-  private readonly accountModel: Model<IUserAccount> = UserAccountModel(this.connection);
-  private readonly invitationModel: Model<IInvitation> = InvitationModel(this.connection);
+  private readonly AccountModel: Model<IUserAccount> = UserAccountModel(this.connection);
+  private readonly AssistantModel: Model<IAssistant> = AssistantModel(this.connection);
+  private readonly CharityModel: Model<ICharityModel> = CharityModel(this.connection);
+  private readonly InfluencerModel: Model<IInfluencer> = InfluencerModel(this.connection);
+  private readonly InvitationModel: Model<IInvitation> = InvitationModel(this.connection);
 
   constructor(
     private readonly connection: Connection,
@@ -23,9 +29,15 @@ export class UserAccountService {
   ) {}
 
   async getAccountByAuthzId(authzId: string): Promise<UserAccount> {
-    const account = await this.accountModel.findOne({ authzId }).exec();
+    const account = await this.AccountModel.findOne({ authzId }).exec();
     if (account != null) {
-      return UserAccountService.makeUserAccount(account);
+      const filter = { userAccount: account._id };
+      const accountEntityTypes = {
+        assistant: await this.AssistantModel.exists(filter),
+        charity: await this.CharityModel.exists(filter),
+        influencer: await this.InfluencerModel.exists(filter),
+      };
+      return UserAccountService.makeUserAccount(account, accountEntityTypes);
     }
 
     return {
@@ -37,7 +49,7 @@ export class UserAccountService {
   }
 
   async getAccountByPhoneNumber(phoneNumber: string, session?: ClientSession): Promise<UserAccount> {
-    const account = await this.accountModel.findOne({ phoneNumber }, null, { session }).exec();
+    const account = await this.AccountModel.findOne({ phoneNumber }, null, { session }).exec();
     if (account != null) {
       return UserAccountService.makeUserAccount(account);
     }
@@ -45,7 +57,7 @@ export class UserAccountService {
   }
 
   async listAccountsById(ids: readonly string[]): Promise<UserAccount[]> {
-    const models = await this.accountModel.find({ _id: { $in: ids } });
+    const models = await this.AccountModel.find({ _id: { $in: ids } });
     return models.map((model) => ({
       id: model.authzId,
       phoneNumber: model.phoneNumber,
@@ -56,12 +68,12 @@ export class UserAccountService {
   }
 
   async createAccountWithPhoneNumber(authzId: string, phoneNumber: string): Promise<UserAccount> {
-    if (await this.accountModel.findOne({ phoneNumber }).exec()) {
+    if (await this.AccountModel.findOne({ phoneNumber }).exec()) {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
 
     if (
-      await this.invitationModel.exists({
+      await this.InvitationModel.exists({
         phoneNumber,
         parentEntityType: InvitationParentEntityType.CHARITY,
       })
@@ -86,15 +98,15 @@ export class UserAccountService {
       }
     }
 
-    if (await this.accountModel.findOne({ authzId }).exec()) {
+    if (await this.AccountModel.findOne({ authzId }).exec()) {
       throw new AppError('Account already exists', ErrorCode.BAD_REQUEST);
     }
 
-    if (await this.accountModel.findOne({ phoneNumber }).exec()) {
+    if (await this.AccountModel.findOne({ phoneNumber }).exec()) {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
 
-    const accountModel = await this.accountModel.create({ authzId, phoneNumber, createdAt: dayjs().toISOString() });
+    const accountModel = await this.AccountModel.create({ authzId, phoneNumber, createdAt: dayjs().toISOString() });
     const account = UserAccountService.makeUserAccount(accountModel);
 
     await this.eventHub.broadcast(Events.USER_ACCOUNT_CREATED, account);
@@ -107,7 +119,7 @@ export class UserAccountService {
       throw new Error('cannot update non-persisted UserAccount');
     }
 
-    await this.accountModel.updateOne(
+    await this.AccountModel.updateOne(
       { _id: account.mongodbId },
       {
         $set: { stripeCustomerId },
@@ -122,7 +134,7 @@ export class UserAccountService {
       throw new Error(`Terms version ${version} is invalid!`);
     }
 
-    const account = await this.accountModel.findById(id).exec();
+    const account = await this.AccountModel.findById(id).exec();
 
     account.acceptedTerms = version;
     account.acceptedTermsAt = new Date();
@@ -131,7 +143,7 @@ export class UserAccountService {
     return UserAccountService.makeUserAccount(account);
   }
 
-  private static makeUserAccount(model: IUserAccount): UserAccount {
+  private static makeUserAccount(model: IUserAccount, accountEntityTypes?): UserAccount {
     const account: UserAccount = {
       id: model.authzId,
       phoneNumber: model.phoneNumber,
@@ -139,7 +151,7 @@ export class UserAccountService {
       mongodbId: model._id.toString(),
       stripeCustomerId: model.stripeCustomerId,
       createdAt: model.createdAt.toISOString(),
-      notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms),
+      notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms, accountEntityTypes),
     };
 
     if (model.isAdmin) {

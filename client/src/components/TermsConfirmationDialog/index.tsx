@@ -46,11 +46,7 @@ const TermsConfirmationDialog: FC = () => {
     </>
   );
 
-  if (
-    (account?.charity && !account?.influencerProfile && !account?.assistant) ||
-    !account?.notAcceptedTerms ||
-    ['/privacy-policy', '/terms', '/privacy'].includes(window.location.pathname)
-  ) {
+  if (!account?.notAcceptedTerms || ['/privacy-policy', '/terms', '/privacy'].includes(window.location.pathname)) {
     return null;
   }
 

@@ -113,12 +113,13 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       try {
         await updateAuction({ variables: { id: auctionId } });
         addToast(`Thank you for your purchase!`, { autoDismiss: true, appearance: 'success' });
+        executeQuery();
+        handleClose();
       } catch (error) {
+        setSubmitting(false);
+        setNewCard(false);
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
-
-      executeQuery();
-      handleClose();
     }, [auctionId, updateAuction, addToast, executeQuery, handleClose]);
 
     useImperativeHandle(ref, () => ({
