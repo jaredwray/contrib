@@ -59,13 +59,13 @@ const EditAuctionMediaPage = () => {
 
   const description = (
     <>
-      <p>
+      <span className="d-block mb-3">
         Provide a number of photos that show the item off from a couple of angles as well as any standout markings,
         signatures, etc.
-      </p>
-      <p>
+      </span>
+      <span>
         Provide a single video (preferably portrait mode) that shows the item off and talks to what makes it special.
-      </p>
+      </span>
     </>
   );
 

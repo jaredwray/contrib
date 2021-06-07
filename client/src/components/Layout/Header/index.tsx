@@ -16,13 +16,16 @@ export default function Header() {
   const { account } = useContext(UserAccountContext);
 
   const afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
+  const w = window as any;
 
   const handleLogin = useCallback(() => loginWithRedirect({ redirectUri: afterLoginUri }), [
     loginWithRedirect,
     afterLoginUri,
   ]);
-
-  const handleLogout = useCallback(() => logout({ returnTo: window.location.origin }), [logout]);
+  const handleLogout = useCallback(() => {
+    logout({ returnTo: w.location.origin });
+    w.Intercom('shutdown');
+  }, [logout, w]);
 
   return (
     <header className="p-0 pl-sm-4 pr-sm-4 navigation-header">
