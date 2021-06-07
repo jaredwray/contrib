@@ -1,3 +1,4 @@
+import { Dinero } from 'dinero.js';
 import { Stripe } from 'stripe';
 
 import { StripeService } from './StripeService';
@@ -45,8 +46,17 @@ export class PaymentService {
     paymentSource: string,
     amount: Dinero.Dinero,
     description: string,
+    charityStripeId: string,
+    charityId: string,
   ): Promise<string> {
-    return this.stripeService.createCharge(account.stripeCustomerId, paymentSource, amount, description);
+    return this.stripeService.createCharge(
+      account.stripeCustomerId,
+      paymentSource,
+      amount,
+      description,
+      charityStripeId,
+      charityId,
+    );
   }
 
   private static makePaymentInformationForCard(card: Stripe.Card): PaymentInformation {

@@ -32,10 +32,12 @@ import { AppConfig } from '../../../config';
 import { UrlShortenerService } from '../../Core';
 import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
+import { CharityModel } from '../../Charity/mongodb/CharityModel';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
+  private readonly CharityModel = CharityModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
   private readonly auctionRepository: IAuctionRepository = new AuctionRepository(this.connection);
 
@@ -215,6 +217,10 @@ export class AuctionService {
 
     const auction = await this.AuctionModel.findById(id, null, { session }).exec();
 
+    if (!auction.charity) {
+      throw new AppError('There is no charity attached to given auction');
+    }
+
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
     }
@@ -309,6 +315,11 @@ export class AuctionService {
     if (!auction) {
       throw new AppError('Auction not found');
     }
+
+    if (!auction.charity) {
+      throw new AppError('There is no charity attached to given auction');
+    }
+
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction status is not ACTIVE');
     }
@@ -321,11 +332,17 @@ export class AuctionService {
 
     for await (const bid of maxBids) {
       try {
+        const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
+        if (!charityAccount) {
+          throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
+        }
         bid.chargeId = await this.paymentService.chargeUser(
           bid.user,
           bid.paymentSource,
           this.makeBidDineroValue(bid.bid, bid.bidCurrency),
           `Contrib auction: ${auction.title}`,
+          charityAccount.stripeAccountId,
+          auction.charity.toString(),
         );
         AppLogger.info(`Auction with id ${auction.id} has been settled`);
         await auction.save();
@@ -429,12 +446,18 @@ export class AuctionService {
         if (b.type > a.type) return -1;
       });
   }
+
   public async buyAuction(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
     const auction = await this.AuctionModel.findOne({ _id: id });
 
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
     }
+
+    if (!auction.charity) {
+      throw new AppError('There is no charity attached to given auction');
+    }
+
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
     }
@@ -448,13 +471,18 @@ export class AuctionService {
     }
 
     try {
+      const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
+      if (!charityAccount) {
+        throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
+      }
       const chargeId = await this.paymentService.chargeUser(
         user,
         card.id,
         this.makeBidDineroValue(auction.itemPrice, auction.itemPriceCurrency as Dinero.Currency),
         `Contrib auction: ${auction.title}`,
+        charityAccount.stripeAccountId,
+        auction.charity.toString(),
       );
-
       const createdBid = {
         user: user.mongodbId,
         createdAt: dayjs(),
@@ -463,7 +491,6 @@ export class AuctionService {
         bidCurrency: auction.itemPriceCurrency as Dinero.Currency,
         chargeId: chargeId,
       };
-
       Object.assign(auction, {
         bids: [...auction.bids, createdBid],
       });
