@@ -54,12 +54,9 @@ export default function appRouteHandlers(
     }
 
     if (parsedBody.api_token !== AppConfig.googleCloud.task.googleTaskApiToken) {
-      AppLogger.info(
-        `Wrong google task ApiToken. Expected: ${AppConfig.googleCloud.task.googleTaskApiToken}, but received: ${parsedBody.api_token}`,
-      );
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
     }
-    AppLogger.info(`Sending message ${parsedBody.phoneNumber} to user with phone number ${parsedBody.phoneNumber}`);
+
     await twilioNotification.sendMessage(parsedBody.phoneNumber, parsedBody.message);
     res.sendStatus(200);
   });
