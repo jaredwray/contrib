@@ -27,12 +27,9 @@ export default function appRouteHandlers(
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    try {
-      const response = await auction.scheduleAuctionJobSettle();
-      return res.json(response);
-    } catch (e) {
-      res.sendStatus(403).json({ message: e.message });
-    }
+
+    const response = await auction.scheduleAuctionJobSettle();
+    return res.json(response);
   });
 
   app.post('/api/v1/auctions-start', async (req, res) => {
@@ -45,12 +42,9 @@ export default function appRouteHandlers(
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    try {
-      const response = await auction.scheduleAuctionJobStart();
-      return res.json(response);
-    } catch (e) {
-      res.sendStatus(403).json({ message: e.message });
-    }
+
+    const response = await auction.scheduleAuctionJobStart();
+    return res.json(response);
   });
 
   app.post('/api/v1/notification', bodyParser.raw({ type: 'application/octet-stream' }), async (req, res) => {

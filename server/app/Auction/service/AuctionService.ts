@@ -289,7 +289,11 @@ export class AuctionService {
         const currentAuction = await auction
           .populate({ path: 'bids.user', model: this.UserAccountModel })
           .execPopulate();
-        await this.settleAuctionAndCharge(currentAuction);
+        try {
+          await this.settleAuctionAndCharge(currentAuction);
+        } catch (error) {
+          AppLogger.warn(`Could not settle auction ${currentAuction.id.toString()} with error ${error.message}`);
+        }
       }
     }
     return { message: 'Scheduled' };
@@ -300,7 +304,13 @@ export class AuctionService {
 
     for await (const auction of auctions) {
       if (dayjs().utc().isAfter(auction.startsAt) || dayjs().utc().isSame(auction.startsAt)) {
-        await this.activateAuction(auction);
+        try {
+          await this.activateAuction(auction);
+        } catch (error) {
+          AppLogger.warn(
+            `Could not start auction with id ${auction.id.toString()} with error ${auction.id.toString()}`,
+          );
+        }
       }
     }
     return { message: 'Scheduled' };
