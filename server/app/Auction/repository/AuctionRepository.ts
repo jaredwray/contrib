@@ -182,7 +182,12 @@ export class AuctionRepository implements IAuctionRepository {
     const result: { min: number; max: number }[] = await this.AuctionModel.aggregate([
       {
         $match: {
-          status: { $eq: AuctionStatus.ACTIVE },
+          status: { $in: [
+            AuctionStatus.ACTIVE,
+            AuctionStatus.PENDING,
+            AuctionStatus.SETTLED,
+            AuctionStatus.SOLD
+          ]},
         },
       },
       {
@@ -193,10 +198,8 @@ export class AuctionRepository implements IAuctionRepository {
         },
       },
     ]);
-    if (!result || !result.length) {
-      throw new AppError('Cannot get min/max price limits', ErrorCode.NOT_FOUND);
-    }
-    return { min: result[0]?.min || 0, max: result[0]?.max || 0 };
+
+    return result?.length ? result[0] : { min: 0, max: 0};
   }
 
   public getInfluencersAuctions(id: string): Promise<IAuctionModel[]> {
