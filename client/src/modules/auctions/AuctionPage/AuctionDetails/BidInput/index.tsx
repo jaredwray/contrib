@@ -21,7 +21,7 @@ export const BidInput: FC<Props> = ({ minBid, onSubmit, fairMarketValue }) => {
   const initialFormValues = useMemo(() => ({ bid: minBid.toObject() }), [minBid.getAmount()]);
   const { account } = useContext(UserAccountContext);
   const [disabled, setDisabled] = useState(false);
-
+  const hasFairMarketValue = fairMarketValue && fairMarketValue.getAmount() > 0;
   const handleSubmit = useCallback(
     ({ bid }) => {
       return onSubmit(Dinero(bid));
@@ -43,7 +43,7 @@ export const BidInput: FC<Props> = ({ minBid, onSubmit, fairMarketValue }) => {
         setDisabled={setDisabled}
         title="Enter your max bid amount"
       />
-      {account?.isAdmin && fairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
+      {account?.isAdmin && hasFairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
       <Button className="w-100" disabled={disabled} title="Place your bid" type="submit" variant="dark">
         Place your bid
       </Button>
