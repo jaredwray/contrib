@@ -54,6 +54,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     [currentPrice, startPrice],
   );
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
+  const isBuyingParam = useUrlQueryParams().get('isBuying');
   const confirmationRef = useRef<BidConfirmationRef>(null);
 
   const buyingPrice = Dinero(itemPrice)?.toFormat('$0,0');
@@ -96,11 +97,22 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
       confirmationRef.current?.placeBid(Dinero(itemPrice));
       return;
     }
-  }, [isAuthenticated, itemPrice]);
+    const bidPath = `/auctions/${auction.id}?placeBid=${JSON.stringify(Dinero(itemPrice).toJSON())}&isBuying=true`;
+    const redirectUri = mergeUrlPath(
+      process.env.REACT_APP_PLATFORM_URL,
+      `/after-login?returnUrl=${encodeURIComponent(bidPath)}`,
+    );
+    loginWithRedirect({ redirectUri }).catch((error) => {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    });
+  }, [isAuthenticated, itemPrice, addToast, auction.id, loginWithRedirect]);
 
   useEffect(() => {
     if (!placeBidQueryParam) {
       return;
+    }
+    if (isBuyingParam) {
+      setIsBying(true);
     }
 
     const amount = Dinero(JSON.parse(placeBidQueryParam));
@@ -110,7 +122,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
       });
     }
     history.replace(`/auctions/${auction.id}`);
-  }, [placeBidQueryParam, auction.id, minBid, handleBid, history]);
+  }, [placeBidQueryParam, auction.id, minBid, handleBid, history, isBuyingParam]);
 
   return (
     <>
