@@ -108,8 +108,8 @@ const EditAuctionDetailsPage = () => {
   );
 
   const selectedOption = useCallback(() => {
-    const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
-    const endDate = max([toDate(auctionData.auction.endDate), addDays(startDate, 1)]);
+    const startDate = max([toDate(auctionData?.auction.startDate), new Date()]);
+    const endDate = max([toDate(auctionData?.auction.endDate), addDays(startDate, 1)]);
     const duration = differenceInCalendarDays(endDate, startDate);
 
     return durationOptions.find(({ value }) => parseInt(value, 10) === duration);
@@ -122,7 +122,7 @@ const EditAuctionDetailsPage = () => {
     }
     const defaultTimezone = utcTimeZones[0].value;
     const currentTimeZone = format(new Date(), 'x');
-    const startDate = max([toDate(auctionData.auction.startDate), new Date()]);
+    const startDate = max([toDate(auctionData?.auction.startDate), new Date()]);
     const date = utcToZonedTime(startDate, currentTimeZone);
     const time = format(startDate, 'H:mm');
     return {
