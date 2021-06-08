@@ -1,14 +1,19 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
+import { render } from 'enzyme';
 
-import WelcomePage from '..';
+import Status from '../About/Status';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
+const props: any = {
+  value: true,
+  text: 'test',
+};
+
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
-      <WelcomePage />
+      <Status {...props} />
     </Router>,
   );
 });

@@ -1,14 +1,14 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { shallow } from 'enzyme';
 
-import WelcomePage from '..';
+import PageForm from '../BasicPage/PageForm';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 test('renders without crashing', () => {
   shallow(
     <Router>
-      <WelcomePage />
+      <PageForm />
     </Router>,
   );
 });

@@ -16,7 +16,7 @@ import { Auction } from 'src/types/Auction';
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import styles from './styles.module.scss';
 
-export default function CharitiesPage(): any {
+export default function AuctionsPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
