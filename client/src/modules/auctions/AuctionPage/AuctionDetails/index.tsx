@@ -73,39 +73,30 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     ],
   };
 
-  const handleBid = useCallback(
-    async (amount: Dinero.Dinero) => {
+  const commonBidHandler = useCallback(
+    (amount: Dinero.Dinero, isBuying?: boolean) => {
+      const placeBid = JSON.stringify(amount.toJSON());
+      const redirectPath = `/auctions/${auction.id}?placeBid=${placeBid}${isBuying ? '&isBuying=true' : ''}`;
+
       if (isAuthenticated) {
         confirmationRef.current?.placeBid(amount);
         return;
       }
-
-      const bidPath = `/auctions/${auction.id}?placeBid=${JSON.stringify(amount.toJSON())}`;
       const redirectUri = mergeUrlPath(
         process.env.REACT_APP_PLATFORM_URL,
-        `/after-login?returnUrl=${encodeURIComponent(bidPath)}`,
+        `/after-login?returnUrl=${encodeURIComponent(redirectPath)}`,
       );
       loginWithRedirect({ redirectUri }).catch((error) => {
         addToast(error.message, { appearance: 'error', autoDismiss: true });
       });
     },
-    [loginWithRedirect, isAuthenticated, addToast, auction],
+    [addToast, isAuthenticated, loginWithRedirect, auction.id],
   );
+  const handleBid = useCallback(async (amount: Dinero.Dinero) => commonBidHandler(amount), [commonBidHandler]);
   const handleBuy = useCallback(async () => {
-    if (isAuthenticated) {
-      setIsBying(true);
-      confirmationRef.current?.placeBid(Dinero(itemPrice));
-      return;
-    }
-    const bidPath = `/auctions/${auction.id}?placeBid=${JSON.stringify(Dinero(itemPrice).toJSON())}&isBuying=true`;
-    const redirectUri = mergeUrlPath(
-      process.env.REACT_APP_PLATFORM_URL,
-      `/after-login?returnUrl=${encodeURIComponent(bidPath)}`,
-    );
-    loginWithRedirect({ redirectUri }).catch((error) => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true });
-    });
-  }, [isAuthenticated, itemPrice, addToast, auction.id, loginWithRedirect]);
+    setIsBying(true);
+    commonBidHandler(Dinero(itemPrice), true);
+  }, [itemPrice, commonBidHandler]);
 
   useEffect(() => {
     if (!placeBidQueryParam) {
