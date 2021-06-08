@@ -97,6 +97,14 @@ This value will be used to check webhook signature when event will be received.
 
 Every webhook will have personal sign in secret, so for every new webhook will require personal env var with defined secret value
 
+## Editing connected account's capabilities
+
+1. Sign in to Stripe `https://stripe.com/`
+2. Go to `Connected account` section
+3. Choose an account which you want to edit
+4. Scroll down to `Capabilities` section
+5. Press edit
+6. Request or remove any capability
 
 ## configuring scheduled jobs for the auctions:
 
