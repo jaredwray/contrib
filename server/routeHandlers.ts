@@ -4,7 +4,6 @@ import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
-import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
@@ -28,8 +27,12 @@ export default function appRouteHandlers(
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    const response = await auction.scheduleAuctionJobSettle();
-    return res.json(response);
+    try {
+      const response = await auction.scheduleAuctionJobSettle();
+      return res.json(response);
+    } catch (e) {
+      res.sendStatus(403).json({ message: e.message });
+    }
   });
 
   app.post('/api/v1/auctions-start', async (req, res) => {
@@ -42,8 +45,12 @@ export default function appRouteHandlers(
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       return;
     }
-    const response = await auction.scheduleAuctionJobStart();
-    return res.json(response);
+    try {
+      const response = await auction.scheduleAuctionJobStart();
+      return res.json(response);
+    } catch (e) {
+      res.sendStatus(403).json({ message: e.message });
+    }
   });
 
   app.post('/api/v1/notification', bodyParser.raw({ type: 'application/octet-stream' }), async (req, res) => {
