@@ -1,14 +1,19 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
+import { render } from 'enzyme';
 
-import WelcomePage from '..';
+import PriceRange from '../Filters/PriceRange';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
+const props: any = {
+  selectedSports: ['soccer', 'f1'],
+  changeFilters: jest.fn(),
+};
+
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
-      <WelcomePage />
+      <PriceRange {...props} />
     </Router>,
   );
 });

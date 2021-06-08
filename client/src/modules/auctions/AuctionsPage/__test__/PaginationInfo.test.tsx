@@ -1,14 +1,21 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
+import { render } from 'enzyme';
 
-import WelcomePage from '..';
+import PaginationInfo from '../PaginationInfo';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
+const props: any = {
+  totalItems: 1,
+  pageSize: 2,
+  pageSkip: 3,
+  perPage: 4,
+};
+
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
-      <WelcomePage />
+      <PaginationInfo {...props} />
     </Router>,
   );
 });

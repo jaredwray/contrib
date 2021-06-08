@@ -1,14 +1,18 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
+import { render } from 'enzyme';
 
-import WelcomePage from '..';
+import SortBy from '../SortBy';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
+const props: any = {
+  changeFilters: jest.fn(),
+};
+
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
-      <WelcomePage />
+      <SortBy {...props} />
     </Router>,
   );
 });
