@@ -5,9 +5,11 @@ import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionInput } from './model/AuctionInput';
+import { ChargeCurrentBidInput } from './model/ChargeCurrentBidInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 import { requireRole } from '../../../graphql/middleware/requireRole';
+import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { GraphqlResolver } from '../../../graphql/types';
 import { AuctionAssets } from '../dto/AuctionAssets';
@@ -41,6 +43,8 @@ interface AuctionResolversType {
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
     buyAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
+    chargeAuction: GraphqlResolver<{ id: string }, { id: string }>;
+    chargeCurrendBid: GraphqlResolver<{ id: string }, { input: ChargeCurrentBidInput }>;
   };
   InfluencerProfile: {
     auctions: GraphqlResolver<Auction[], Record<string, never>, InfluencerProfile>;
@@ -71,6 +75,14 @@ export const AuctionResolvers: AuctionResolversType = {
       } else {
         return null;
       }
+    }),
+    chargeAuction: requireAdmin(async (_, { id }, { auction }) => {
+      await auction.settleAndChargeCurrentAuction(id);
+      return { id };
+    }),
+    chargeCurrendBid: requireAdmin(async (_, { input }, { auction }) => {
+      await auction.chargeCurrendBid(input);
+      return { id: input.charityId };
     }),
     updateAuction: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencerId }) => {
       if (!currentAccount.isAdmin) {

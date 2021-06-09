@@ -5,7 +5,7 @@ import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';

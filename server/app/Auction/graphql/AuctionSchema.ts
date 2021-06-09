@@ -1,6 +1,24 @@
 import { gql } from 'apollo-server-express';
 
 export const AuctionSchema = gql`
+  enum AuctionStatus {
+    DRAFT
+    PENDING
+    ACTIVE
+    SETTLED
+    FAILED
+    SOLD
+  }
+
+  enum AuctionOrderBy {
+    CREATED_AT_DESC
+    TIME_ASC
+    TIME_DESC
+    SPORT
+    PRICE_ASC
+    PRICE_DESC
+  }
+
   type AuctionAttachment {
     id: String!
     type: String!
@@ -11,15 +29,6 @@ export const AuctionSchema = gql`
     originalFileName: String
   }
 
-  enum AuctionStatus {
-    DRAFT
-    PENDING
-    ACTIVE
-    SETTLED
-    FAILED
-    SOLD
-  }
-
   type AuctionStatusResponse {
     status: String!
   }
@@ -27,6 +36,8 @@ export const AuctionSchema = gql`
   type AuctionBid {
     bid: Money!
     createdAt: DateTime!
+    user: String!
+    paymentSource: String!
   }
 
   type TotalRaisedAmount {
@@ -65,22 +76,8 @@ export const AuctionSchema = gql`
     isSold: Boolean!
   }
 
-  input AuctionSearchFilters {
-    sports: [String]
-    minPrice: Int
-    maxPrice: Int
-    status: [String]
-    auctionOrganizer: String
-    charity: String
-  }
-
-  enum AuctionOrderBy {
-    CREATED_AT_DESC
-    TIME_ASC
-    TIME_DESC
-    SPORT
-    PRICE_ASC
-    PRICE_DESC
+  type ResponceId {
+    id: String!
   }
 
   type AuctionsPage {
@@ -95,19 +92,13 @@ export const AuctionSchema = gql`
     min: Money!
   }
 
-  extend type Query {
-    auctions(
-      size: Int
-      skip: Int
-      query: String
-      filters: AuctionSearchFilters
-      orderBy: String
-      statusFilter: [String]
-    ): AuctionsPage!
-    auctionPriceLimits: AuctionPriceLimits!
-    auction(id: String!): Auction
+  input AuctionSearchFilters {
     sports: [String]
-    getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
+    minPrice: Int
+    maxPrice: Int
+    status: [String]
+    auctionOrganizer: String
+    charity: String
   }
 
   input AuctionInput {
@@ -129,6 +120,29 @@ export const AuctionSchema = gql`
     itemPrice: Money
   }
 
+  input CurrentAuctionBid {
+    charityId: String
+    auctionTitle: String
+    paymentSource: String
+    bid: Money
+    user: String
+  }
+
+  extend type Query {
+    auctions(
+      size: Int
+      skip: Int
+      query: String
+      filters: AuctionSearchFilters
+      orderBy: String
+      statusFilter: [String]
+    ): AuctionsPage!
+    auctionPriceLimits: AuctionPriceLimits!
+    auction(id: String!): Auction
+    sports: [String]
+    getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
+  }
+
   extend type Mutation {
     createAuction(input: AuctionInput!): Auction!
     updateAuction(id: String, input: AuctionInput): Auction!
@@ -138,6 +152,8 @@ export const AuctionSchema = gql`
     addAuctionAttachment(id: String!, attachment: Upload!, organizerId: String): AuctionAttachment!
     removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
     deleteAuction(id: String!): AuctionStatusResponse!
+    chargeAuction(id: String!): ResponceId!
+    chargeCurrendBid(input: CurrentAuctionBid!): ResponceId!
   }
 
   extend type InfluencerProfile {

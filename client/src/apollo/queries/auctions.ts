@@ -39,6 +39,12 @@ export const AuctionQuery = gql`
       isSold
       startPrice
       totalBids
+      bids {
+        user
+        createdAt
+        bid
+        paymentSource
+      }
       link
       fairMarketValue
       currentPrice
@@ -116,6 +122,36 @@ export const getAuctionDetails = gql`
           name
         }
       }
+    }
+  }
+`;
+
+export const chargeCurrentAuction = gql`
+  mutation chargeCurrentAuction($id: String!) {
+    chargeAuction(id: $id) {
+      id
+    }
+  }
+`;
+
+export const chargeCurrendBid = gql`
+  mutation chargeCurrendBid(
+    $charityId: String!
+    $auctionTitle: String!
+    $bid: Money!
+    $paymentSource: String!
+    $user: String!
+  ) {
+    chargeCurrendBid(
+      input: {
+        charityId: $charityId
+        auctionTitle: $auctionTitle
+        bid: $bid
+        paymentSource: $paymentSource
+        user: $user
+      }
+    ) {
+      id
     }
   }
 `;

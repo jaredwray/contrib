@@ -9,7 +9,7 @@ import { Form as BsForm, Button } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
 
-import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import {
   ConfirmPhoneNumberMutation,
   ConfirmPhoneNumberWithInvitationMutation,
