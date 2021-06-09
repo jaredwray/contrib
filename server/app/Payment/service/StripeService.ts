@@ -88,23 +88,23 @@ export class StripeService {
   ): Promise<string> {
     const transferGroup = `CHARGE_FOR_CHARITY_${charityId}`;
 
-    const charge = await this.stripe.charges.create({
+    const charge = await this.stripe.paymentIntents.create({
       customer: customerId,
       amount: amount.getAmount(),
       currency: amount.getCurrency().toLowerCase(),
-      source: paymentSource,
       transfer_group: transferGroup,
+      payment_method_types: ['card'],
+      payment_method: paymentSource,
+      application_fee_amount: Math.round((amount.getAmount() * AppConfig.stripe.contribSharePercentage) / 100),
       description,
+      on_behalf_of: charityStripeId,
+      confirm: true,
+      transfer_data: {
+        destination: charityStripeId,
+      },
+      off_session: true,
     });
 
-    const transferAmount = Math.round((amount.getAmount() * AppConfig.stripe.charitySharePercentage) / 100);
-
-    await this.stripe.transfers.create({
-      amount: transferAmount,
-      currency: amount.getCurrency().toLowerCase(),
-      destination: charityStripeId,
-      transfer_group: transferGroup,
-    });
     return charge.id;
   }
 }
