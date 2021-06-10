@@ -268,7 +268,7 @@ export class AuctionService {
       try {
         const userAccount = await this.UserAccountModel.findOne({ _id: lastUserId }).exec();
         if (!userAccount) {
-          throw new Error(`Can not find account with id ${lastUserId}`);
+          throw new Error(`Can not find account with id ${lastUserId.toString()}`);
         }
         const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_BID_OVERLAP);
         await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
@@ -292,7 +292,7 @@ export class AuctionService {
           .execPopulate();
         try {
           await this.settleAuctionAndCharge(currentAuction);
-        } catch (error) { }
+        } catch {}
       }
     }
     return { message: 'Scheduled' };
@@ -379,8 +379,13 @@ export class AuctionService {
     }
 
     try {
+      const userAccount = await this.UserAccountModel.findOne({ _id: lastAuctionBid.user }).exec();
+      if (!userAccount) {
+        throw new Error(`Can not find account with id ${lastAuctionBid.user.toString()}`);
+      }
+
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
-      await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE);
+      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE);
 
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
@@ -391,7 +396,7 @@ export class AuctionService {
       auction.status = AuctionStatus.SETTLED;
       await auction.save();
     } catch (error) {
-      AppLogger.error(`Unable to charge user ${lastAuctionBid.user.id.toString()}, with error: ${error.message}`);
+      AppLogger.error(`Unable to charge user ${lastAuctionBid.user.toString()}, with error: ${error.message}`);
       auction.status = AuctionStatus.FAILED;
       await auction.save();
       throw new AppError('Unable to charge');
@@ -414,7 +419,7 @@ export class AuctionService {
     );
   }
 
-  async sendAuctionNotification(template: MessageTemplate, phoneNumber: string): Promise<void> {
+  async sendAuctionNotification(phoneNumber: string, template: MessageTemplate): Promise<void> {
     try {
       const message = await this.handlebarsService.renderTemplate(template);
       await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
