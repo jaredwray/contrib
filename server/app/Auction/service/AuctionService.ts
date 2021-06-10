@@ -6,7 +6,6 @@ import { AuctionModel, IAuctionBid, IAuctionModel } from '../mongodb/AuctionMode
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
-import { UserAccountStatus } from '../../UserAccount/dto/UserAccountStatus';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
@@ -322,43 +321,6 @@ export class AuctionService {
     return auctions.map((auction) => this.makeAuction(auction));
   }
 
-  public async settleAndChargeCurrentAuction(id: string): Promise<void> {
-    const auction = await this.AuctionModel.findOne({ _id: id });
-    if (auction.status === AuctionStatus.FAILED) {
-      auction.status = AuctionStatus.ACTIVE;
-      await auction.save();
-    }
-    return await this.settleAuctionAndCharge(auction);
-  }
-
-  public async chargeCurrendBid(input): Promise<string> {
-    const { user, bid, charityId, auctionTitle, paymentSource } = input;
-    const charityAccount = await this.CharityModel.findOne({ _id: charityId }).exec();
-    if (!charityAccount) {
-      throw new Error(`Can not find charity account with id ${charityId.toString()}`);
-    }
-    const userAccount = await this.UserAccountModel.findOne({ _id: user }).exec();
-    if (!userAccount) {
-      throw new Error(`Can not find userAccount account with id ${userAccount._id.toString()}`);
-    }
-    const currentUserAccount = {
-      id: userAccount.authzId,
-      phoneNumber: userAccount.phoneNumber,
-      status: UserAccountStatus.COMPLETED,
-      mongodbId: userAccount._id.toString(),
-      stripeCustomerId: userAccount.stripeCustomerId,
-      createdAt: userAccount.createdAt.toISOString(),
-    };
-    return await this.paymentService.chargeUser(
-      currentUserAccount,
-      paymentSource,
-      bid,
-      `Contrib auction: ${auctionTitle}`,
-      charityAccount.stripeAccountId,
-      charityId,
-    );
-  }
-
   public async settleAuctionAndCharge(auction: IAuctionModel): Promise<void> {
     if (!auction) {
       throw new AppError('Auction not found');
@@ -381,23 +343,9 @@ export class AuctionService {
     }
 
     try {
-      const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
-      if (!charityAccount) {
-        throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
-      }
+      lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
+      await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE);
 
-      lastAuctionBid.chargeId = await this.chargeUser(
-        lastAuctionBid,
-        auction.title,
-        charityAccount.stripeAccountId,
-        auction.charity.toString(),
-      );
-
-      try {
-        await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE);
-      } catch (error) {
-        AppLogger.warn(`Can not send the notification`, error.message);
-      }
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
           lastAuctionBid.chargeId
@@ -413,28 +361,32 @@ export class AuctionService {
     }
   }
 
-  async chargeUser(
-    lastAuctionBid: IAuctionBid,
-    title: string,
-    stripeAccountId: string,
-    charityId: string,
-  ): Promise<string> {
+  async chargeUser(lastAuctionBid: IAuctionBid, auction: IAuctionModel): Promise<string> {
+    const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
+    if (!charityAccount) {
+      throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
+    }
+
     return await this.paymentService.chargeUser(
       lastAuctionBid.user,
       lastAuctionBid.paymentSource,
       this.makeBidDineroValue(lastAuctionBid.bid, lastAuctionBid.bidCurrency),
-      `Contrib auction: ${title}`,
-      stripeAccountId,
-      charityId,
+      `Contrib auction: ${auction.title}`,
+      charityAccount.stripeAccountId,
+      auction.charity.toString(),
     );
   }
 
   async sendAuctionNotification(template: MessageTemplate, phoneNumber: string): Promise<void> {
-    const message = await this.handlebarsService.renderTemplate(template);
-    await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
-      message: message,
-      phoneNumber: phoneNumber,
-    });
+    try {
+      const message = await this.handlebarsService.renderTemplate(template);
+      await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
+        message: message,
+        phoneNumber: phoneNumber,
+      });
+    } catch (error) {
+      AppLogger.warn(`Can not send the notification`, error.message);
+    }
   }
 
   private makeBidDineroValue(amount: number, currency: Dinero.Currency) {
@@ -464,7 +416,6 @@ export class AuctionService {
       return null;
     }
     return {
-      paymentSource: model.paymentSource,
       user: model.user?._id?.toString(),
       bid: Dinero({ amount: model.bid, currency: model.bidCurrency }),
       createdAt: model.createdAt,
@@ -628,7 +579,7 @@ export class AuctionService {
       startDate: startsAt,
       timeZone: timeZone,
       charity: charity ? CharityService.makeCharity(charity) : null,
-      bids: bids?.map((bid) => AuctionService.makeAuctionBid(bid)) || [],
+      bids: bids?.map(AuctionService.makeAuctionBid) || [],
       totalBids: bids?.length ?? 0,
       currentPrice: Dinero({ currency: currentPriceCurrency as Dinero.Currency, amount: currentPrice }),
       startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
