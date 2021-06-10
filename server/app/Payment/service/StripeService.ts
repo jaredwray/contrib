@@ -13,6 +13,7 @@ export class StripeService {
       type: 'express',
       capabilities: {
         transfers: { requested: true },
+        card_payments: { requested: true },
       },
     });
   }

@@ -371,48 +371,70 @@ export class AuctionService {
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction status is not ACTIVE');
     }
-    auction.status = AuctionStatus.SETTLED;
-    const maxBids: IAuctionBid[] = auction.bids.sort((curr, next) => {
-      const nextBid = this.makeBidDineroValue(next.bid, next.bidCurrency);
-      const currBid = this.makeBidDineroValue(curr.bid, curr.bidCurrency);
-      return nextBid.lessThan(currBid) ? -1 : 1;
-    });
 
-    for await (const bid of maxBids) {
-      try {
-        const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
-        if (!charityAccount) {
-          throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
-        }
-        bid.chargeId = await this.paymentService.chargeUser(
-          bid.user,
-          bid.paymentSource,
-          this.makeBidDineroValue(bid.bid, bid.bidCurrency),
-          `Contrib auction: ${auction.title}`,
-          charityAccount.stripeAccountId,
-          auction.charity.toString(),
-        );
-        AppLogger.info(`Auction with id ${auction.id} has been settled`);
-        await auction.save();
-        try {
-          const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_WON_MESSAGE);
-          await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
-            message: message,
-            phoneNumber: bid.user.phoneNumber,
-          });
-        } catch (error) {
-          AppLogger.warn(`Can not send the notification`, error.message);
-        }
-        return;
-      } catch (error) {
-        throw new Error(`Unable to charge user ${bid.user._id.toString()}, with error: ${error.message}`);
-      }
+    const lastAuctionBid = auction.bids[auction.bids.length - 1];
+
+    if (!lastAuctionBid) {
+      auction.status = AuctionStatus.SETTLED;
+      await auction.save();
+      return;
     }
-    auction.status = AuctionStatus.FAILED;
-    await auction.save();
-    throw new Error(
-      `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
+
+    try {
+      const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
+      if (!charityAccount) {
+        throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
+      }
+
+      lastAuctionBid.chargeId = await this.chargeUser(
+        lastAuctionBid,
+        auction.title,
+        charityAccount.stripeAccountId,
+        auction.charity.toString(),
+      );
+
+      try {
+        await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE);
+      } catch (error) {
+        AppLogger.warn(`Can not send the notification`, error.message);
+      }
+      AppLogger.info(
+        `Auction with id ${auction.id} has been settled with charge id ${
+          lastAuctionBid.chargeId
+        } and user id ${lastAuctionBid.user.toString()}`,
+      );
+
+      auction.status = AuctionStatus.SETTLED;
+      await auction.save();
+    } catch (error) {
+      AppLogger.error(`Unable to charge user ${lastAuctionBid.user.id.toString()}, with error: ${error.message}`);
+      auction.status = AuctionStatus.FAILED;
+      await auction.save();
+    }
+  }
+
+  async chargeUser(
+    lastAuctionBid: IAuctionBid,
+    title: string,
+    stripeAccountId: string,
+    charityId: string,
+  ): Promise<string> {
+    return await this.paymentService.chargeUser(
+      lastAuctionBid.user,
+      lastAuctionBid.paymentSource,
+      this.makeBidDineroValue(lastAuctionBid.bid, lastAuctionBid.bidCurrency),
+      `Contrib auction: ${title}`,
+      stripeAccountId,
+      charityId,
     );
+  }
+
+  async sendAuctionNotification(template: MessageTemplate, phoneNumber: string): Promise<void> {
+    const message = await this.handlebarsService.renderTemplate(template);
+    await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
+      message: message,
+      phoneNumber: phoneNumber,
+    });
   }
 
   private makeBidDineroValue(amount: number, currency: Dinero.Currency) {

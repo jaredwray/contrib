@@ -55,6 +55,7 @@ export default function AdminAuctionPage() {
     try {
       await chargeAuction({ variables: { id: auctionId } });
       addToast('Charged', { autoDismiss: true, appearance: 'success' });
+      setShowDialog(false);
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'error' });
     }
