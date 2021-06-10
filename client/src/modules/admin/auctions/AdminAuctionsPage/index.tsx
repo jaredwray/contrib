@@ -16,7 +16,7 @@ import { Auction } from 'src/types/Auction';
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import styles from './styles.module.scss';
 
-export default function AuctionsPage(): any {
+export default function AdminAuctionsPage() {
   const [pageSkip, setPageSkip] = useState(0);
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
@@ -36,6 +36,7 @@ export default function AuctionsPage(): any {
             <th>Status</th>
             <th>Price</th>
             <th>Fair Market Value</th>
+            <th></th>
           </tr>
         </thead>
         <tbody className="font-weight-normal">
@@ -52,6 +53,9 @@ export default function AuctionsPage(): any {
               <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
               <td>
                 <ActionsDropdown>
+                  <Link className="dropdown-item text--body" to={`/admin/auctions/${auction.id}`}>
+                    View details
+                  </Link>
                   {(auction.isPending || auction.isDraft) && (
                     <Link className={'dropdown-item text--body'} to={`/auctions/${auction.id}/basic`}>
                       Edit

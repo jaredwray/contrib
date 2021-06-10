@@ -2,6 +2,7 @@ import { ClientSession, Connection, Model } from 'mongoose';
 import dayjs from 'dayjs';
 
 import { UserAccount } from '../dto/UserAccount';
+import { UserAccountForBid } from '../dto/UserAccountForBid';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
 import { IInvitation, InvitationModel } from '../../Invitation/mongodb/InvitationModel';
 import { ICharityModel, CharityModel } from '../../Charity/mongodb/CharityModel';
@@ -46,6 +47,19 @@ export class UserAccountService {
       status: UserAccountStatus.PHONE_NUMBER_REQUIRED,
       createdAt: dayjs().toISOString(),
     };
+  }
+
+  async getAccountById(id: string): Promise<UserAccountForBid> {
+    const account = await this.AccountModel.findOne({ _id: id }).exec();
+    if (account != null) {
+      return {
+        id: account._id.toString(),
+        createdAt: account.createdAt.toISOString(),
+        phoneNumber: account.phoneNumber,
+        stripeCustomerId: account.stripeCustomerId,
+      };
+    }
+    return null;
   }
 
   async getAccountByPhoneNumber(phoneNumber: string, session?: ClientSession): Promise<UserAccount> {

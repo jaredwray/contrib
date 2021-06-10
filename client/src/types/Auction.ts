@@ -25,6 +25,9 @@ export interface AuctionBid {
   id: string;
   bid: DineroObject;
   createdAt: Date;
+  paymentSource: string;
+  charityId: string;
+  user: string;
 }
 
 export interface Auction {

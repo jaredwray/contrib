@@ -25,6 +25,13 @@ export const UserAccountSchema = gql`
     PHONE_NUMBER_REQUIRED
   }
 
+  type UserAccountForBid {
+    id: String!
+    createdAt: String!
+    phoneNumber: String!
+    stripeCustomerId: String!
+  }
+
   type UserAccount {
     """
     ID is the user_id received from Auth0.
@@ -55,6 +62,7 @@ export const UserAccountSchema = gql`
 
   extend type Query {
     myAccount: UserAccount!
+    getAccountById(id: String!): UserAccountForBid!
   }
 
   extend type Mutation {

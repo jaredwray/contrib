@@ -7,7 +7,7 @@ import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
 
-import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { EnterPhoneNumberMutation, EnterInvitationCodeMutation } from 'src/apollo/queries/phoneNumberVerification';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';

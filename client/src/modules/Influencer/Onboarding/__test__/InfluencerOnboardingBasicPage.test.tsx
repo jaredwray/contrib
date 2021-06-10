@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 
-import { MyAccountQuery } from 'src/apollo/queries/myAccountQuery';
+import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 
 import { InfluencerOnboardingBasicPage } from '../InfluencerOnboardingBasicPage';
 

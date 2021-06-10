@@ -41,3 +41,14 @@ export const MyAccountQuery = gql`
     }
   }
 `;
+
+export const getAccountById = gql`
+  query getAccountById($id: String!) {
+    getAccountById(id: $id) {
+      id
+      createdAt
+      phoneNumber
+      stripeCustomerId
+    }
+  }
+`;

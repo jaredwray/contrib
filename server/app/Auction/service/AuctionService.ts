@@ -6,6 +6,7 @@ import { AuctionModel, IAuctionBid, IAuctionModel } from '../mongodb/AuctionMode
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountStatus } from '../../UserAccount/dto/UserAccountStatus';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
@@ -321,6 +322,43 @@ export class AuctionService {
     return auctions.map((auction) => this.makeAuction(auction));
   }
 
+  public async settleAndChargeCurrentAuction(id: string): Promise<void> {
+    const auction = await this.AuctionModel.findOne({ _id: id });
+    if (auction.status === AuctionStatus.FAILED) {
+      auction.status = AuctionStatus.ACTIVE;
+      await auction.save();
+    }
+    return await this.settleAuctionAndCharge(auction);
+  }
+
+  public async chargeCurrendBid(input): Promise<string> {
+    const { user, bid, charityId, auctionTitle, paymentSource } = input;
+    const charityAccount = await this.CharityModel.findOne({ _id: charityId }).exec();
+    if (!charityAccount) {
+      throw new Error(`Can not find charity account with id ${charityId.toString()}`);
+    }
+    const userAccount = await this.UserAccountModel.findOne({ _id: user }).exec();
+    if (!userAccount) {
+      throw new Error(`Can not find userAccount account with id ${userAccount._id.toString()}`);
+    }
+    const currentUserAccount = {
+      id: userAccount.authzId,
+      phoneNumber: userAccount.phoneNumber,
+      status: UserAccountStatus.COMPLETED,
+      mongodbId: userAccount._id.toString(),
+      stripeCustomerId: userAccount.stripeCustomerId,
+      createdAt: userAccount.createdAt.toISOString(),
+    };
+    return await this.paymentService.chargeUser(
+      currentUserAccount,
+      paymentSource,
+      bid,
+      `Contrib auction: ${auctionTitle}`,
+      charityAccount.stripeAccountId,
+      charityId,
+    );
+  }
+
   public async settleAuctionAndCharge(auction: IAuctionModel): Promise<void> {
     if (!auction) {
       throw new AppError('Auction not found');
@@ -367,15 +405,14 @@ export class AuctionService {
         }
         return;
       } catch (error) {
-        AppLogger.error(`Unable to charge user ${bid.user.id.toString()}, with error: ${error.message}`);
+        throw new Error(`Unable to charge user ${bid.user._id.toString()}, with error: ${error.message}`);
       }
     }
-    AppLogger.error(
-      `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
-    );
     auction.status = AuctionStatus.FAILED;
     await auction.save();
-    return;
+    throw new Error(
+      `Unable to charge any user for the auction ${auction.id.toString()}, moving auction to the FAILED status`,
+    );
   }
 
   private makeBidDineroValue(amount: number, currency: Dinero.Currency) {
@@ -405,6 +442,7 @@ export class AuctionService {
       return null;
     }
     return {
+      paymentSource: model.paymentSource,
       user: model.user?._id?.toString(),
       bid: Dinero({ amount: model.bid, currency: model.bidCurrency }),
       createdAt: model.createdAt,
@@ -568,7 +606,7 @@ export class AuctionService {
       startDate: startsAt,
       timeZone: timeZone,
       charity: charity ? CharityService.makeCharity(charity) : null,
-      bids: bids?.map(AuctionService.makeAuctionBid) || [],
+      bids: bids?.map((bid) => AuctionService.makeAuctionBid(bid)) || [],
       totalBids: bids?.length ?? 0,
       currentPrice: Dinero({ currency: currentPriceCurrency as Dinero.Currency, amount: currentPrice }),
       startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),

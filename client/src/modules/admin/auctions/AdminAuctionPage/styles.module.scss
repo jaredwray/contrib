@@ -1,0 +1,10 @@
+@import 'src/variables.scss';
+
+.page {
+  background-color: $barely-gray-color;
+  flex: 1;
+}
+
+.bidButton {
+  height: 20px;
+}
