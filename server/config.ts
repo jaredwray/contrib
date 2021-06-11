@@ -73,12 +73,12 @@ export const AppConfig = {
   stripe: {
     secretKey: requireEnvVar('STRIPE_SECRET_KEY'),
     webhookSecretKey: requireEnvVar('STRIPE_WEBHOOK_SECRET_KEY'),
-    contribSharePercentage: 15,
+    contribSharePercentage: requireEnvVar('STRIPE_CONTRIB_SHARE_PERCENTAGE'),
   },
   facebook: {
     appId: requireEnvVar('FACEBOOK_APP_ID'),
   },
   terms: {
     version: '1.0',
-  }
+  },
 };

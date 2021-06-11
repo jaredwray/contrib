@@ -88,6 +88,7 @@ export class StripeService {
     charityId: string,
   ): Promise<string> {
     const transferGroup = `CHARGE_FOR_CHARITY_${charityId}`;
+    const contribSharePercentage = parseInt(AppConfig.stripe.contribSharePercentage);
 
     const charge = await this.stripe.paymentIntents.create({
       customer: customerId,
@@ -96,7 +97,7 @@ export class StripeService {
       transfer_group: transferGroup,
       payment_method_types: ['card'],
       payment_method: paymentSource,
-      application_fee_amount: Math.round((amount.getAmount() * AppConfig.stripe.contribSharePercentage) / 100),
+      application_fee_amount: Math.round((amount.getAmount() * contribSharePercentage) / 100),
       description,
       on_behalf_of: charityStripeId,
       confirm: true,
