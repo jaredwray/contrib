@@ -276,7 +276,7 @@ export class AuctionService {
           phoneNumber: userAccount.phoneNumber,
         });
       } catch (error) {
-        AppLogger.warning(`Failed to send notification, error: ${error.message}`);
+        AppLogger.error(`Failed to send notification, error: ${error.message}`);
       }
     }
     return AuctionService.makeAuctionBid(createdBid);
