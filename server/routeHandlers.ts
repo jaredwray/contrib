@@ -4,6 +4,7 @@ import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
+import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
@@ -100,9 +101,12 @@ export default function appRouteHandlers(
       response.sendStatus(400).json({ message: err.message });
       return;
     }
+    AppLogger.info(`Webhook event ${event}`);
+    AppLogger.info(`Webhook event type ${event.type}`);
 
     if (event.type === 'account.updated') {
       try {
+        AppLogger.info(`Webhook event data object ${event.data.object}`);
         await charity.updateCharityByStripeAccount(event.data.object);
       } catch (err) {
         response.sendStatus(400).json({ message: err.message });
