@@ -47,9 +47,18 @@ export class CharityService {
     const session = await this.connection.startSession();
     const charity = CharityService.makeCharity(charityModel);
 
+    let isAccountActive;
+
+    if (account.details_submitted) {
+      isAccountActive =
+        account.capabilities.card_payments === 'active' && account.capabilities.card_payments === 'active';
+    } else {
+      isAccountActive = false;
+    }
+
     await this.updateCharityStatus({
       charity,
-      stripeStatus: account.details_submitted ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE,
+      stripeStatus: isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE,
       session,
     });
   }
