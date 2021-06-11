@@ -44,6 +44,7 @@ export default function AdminAuctionPage() {
           },
         });
         addToast('Charged', { autoDismiss: true, appearance: 'success' });
+        setShowDialog(false);
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
