@@ -9,48 +9,48 @@
 Yarn is used as a package manager. Therefore, npm commands are not used.
 
 1. Install dependencies:
-   -  `yarn --cwd client install`
-   -  `yarn --cwd server install`
+   - `yarn --cwd client install`
+   - `yarn --cwd server install`
 2. Get configuration properties for the backend:
-   -  create `./server/.env` file with contents from 1Password
+   - create `./server/.env` file with contents from 1Password
 3. Start up frontend:
-   -  `yarn --cwd client start`
+   - `yarn --cwd client start`
 4. Start up backend is separate tab:
-   -  `yarn --cwd server start`
+   - `yarn --cwd server start`
 
 ## Using Docker Locally
 
 1. Install Client / Server and Create Docker Image:
-   -  `yarn build`
+   - `yarn build`
 2. Run Docker with Local `./server/.env`
-   -  make sure your PORT in `./server/.env` is set to 3000
-   -  `yarn docker-run`
+   - make sure your PORT in `./server/.env` is set to 3000
+   - `yarn docker-run`
 
 ## Technology used
 
--  TypeScript
--  Jest
--  MongoDB
--  React + React/DOM
--  Auth0
--  Google Cloud
--  NewRelic
--  DotEnv (Config Management)
--  Twilio (SMS & Email)
+- TypeScript
+- Jest
+- MongoDB
+- React + React/DOM
+- Auth0
+- Google Cloud
+- NewRelic
+- DotEnv (Config Management)
+- Twilio (SMS & Email)
 
 ## Social support
 
 Social sign-in support is supported for:
 
--  FaceBook
--  Twitter
--  Google
--  Apple
+- FaceBook
+- Twitter
+- Google
+- Apple
 
 ## Docker
 
--  Build: `docker build --rm --pull -f "./Dockerfile" -t "contrib:latest" "./"`
--  Run: `docker run --rm -d -p 3000:3000/tcp contrib:latest`
+- Build: `docker build --rm --pull -f "./Dockerfile" -t "contrib:latest" "./"`
+- Run: `docker run --rm -d -p 3000:3000/tcp contrib:latest`
 
 # Deploy to [dev] and [live] environments
 
@@ -64,21 +64,21 @@ We use google cloud storage and there are two users for each environment (`dev` 
 
 ## `dev` environment:
 
--  url: content-dev.contrib.org
--  storage uri: content-dev.contrib.org
--  storage writer: `content-writer@contrib-dev.iam.gserviceaccount.com`
--  storage owner: `content-owner@contrib-dev.iam.gserviceaccount.com`
--  content-writer `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gg3iaanezncldb3d3yasco4n7a&h=contrib.1password.com
--  content-owner `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=iatusb6hubb2pozq4qfamwecgm&h=contrib.1password.com
+- url: content-dev.contrib.org
+- storage uri: content-dev.contrib.org
+- storage writer: `content-writer@contrib-dev.iam.gserviceaccount.com`
+- storage owner: `content-owner@contrib-dev.iam.gserviceaccount.com`
+- content-writer `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gg3iaanezncldb3d3yasco4n7a&h=contrib.1password.com
+- content-owner `dev`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=iatusb6hubb2pozq4qfamwecgm&h=contrib.1password.com
 
 ## `live` environment:
 
--  url: content.contrib.org
--  storage uri: content-live.contrib.org
--  storage writer: `content-writer@contrib-live.iam.gserviceaccount.com`
--  storage owner: `content-owner@contrib-live.iam.gserviceaccount.com`
--  content-writer `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gp42f74tfzg4vhsk5ifeamkd2i&h=contrib.1password.com
--  content-owner `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=unlptfa6jbaixeodiwtk22vkay&h=contrib.1password.com
+- url: content.contrib.org
+- storage uri: content-live.contrib.org
+- storage writer: `content-writer@contrib-live.iam.gserviceaccount.com`
+- storage owner: `content-owner@contrib-live.iam.gserviceaccount.com`
+- content-writer `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=gp42f74tfzg4vhsk5ifeamkd2i&h=contrib.1password.com
+- content-owner `live`: https://start.1password.com/open/i?a=HNGEPVTM65E5PCTBJRWRVIXSJU&v=w7wdwclxmm47sjsmfjeunxxqoa&i=unlptfa6jbaixeodiwtk22vkay&h=contrib.1password.com
 
 ## Setup webhook to notify application when an event happens in an account
 
@@ -97,6 +97,18 @@ This value will be used to check webhook signature when event will be received.
 
 Every webhook will have personal sign in secret, so for every new webhook will require personal env var with defined secret value
 
+### Setup charities for testing purposes
+
+1. Invite charity.
+2. During onboarding in Stripe dashboard verify that all entered data is correct and there are no `red` warnings, since later you will not have opportunities to edit this data.
+3. If all data is correct -in test mode Stripe accepts account immediately, you can check that account is completed in Stripe dasboard in `Connected accounts` section (before - enable button `Viewing Test data` )
+4. Then you can check that webhook event sent in `Webhooks` section (check previous point).
+5. You can verify in database that webhook event was processed and now `stripeAccountStatus` is `ACTIVE`
+6. Add the required fields in Contrib's charity dashboard
+7. Now you can attach given charity to auction
+
+##### This flow almost same with flow expected in production excluding Stripe verification - it could take several days
+
 ## Editing connected account's capabilities
 
 1. Sign in to Stripe `https://stripe.com/`
@@ -114,8 +126,8 @@ NOTE: `OUR_SECRET_KEY` is located inside 1Password under `AUCTION_SCHEDULER_SECR
 
 Run this via terminal on the correct projects
 
-
 `contrib-live` GCloud Project
+
 ```
 gcloud scheduler jobs create http contrib-auction-settle --schedule="*/5 * * * *" --uri="https://contrib.org/api/v1/auctions-settle" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"secret_key_for_auctions_scheduler\" }" --time-zone="America/Los_Angeles"
 
@@ -124,6 +136,7 @@ gcloud scheduler jobs create http contrib-auction-start --schedule="* * * * *" -
 ```
 
 `contrib-dev` GCloud Project
+
 ```
 gcloud scheduler jobs create http contrib-auction-settle --schedule="*/5 * * * *" --uri="https://dev.contrib.org/api/v1/auctions-settle" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"secret_key_for_auctions_scheduler\" }" --time-zone="America/Los_Angeles"
 

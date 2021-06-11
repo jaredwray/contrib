@@ -1,8 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId, Query } from 'mongoose';
-import { AuctionService } from '../../Auction';
-import { AuctionModel, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
-import { AuctionStatus } from '../../Auction/dto/AuctionStatus';
+import { AuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
 import { CharityInput } from '../graphql/model/CharityInput';
@@ -45,12 +43,10 @@ export class CharityService {
   }
 
   async updateCharityByStripeAccount(account: any): Promise<void> {
-    AppLogger.info(`Account id ${account.id}`);
     const charityModel = await this.CharityModel.findOne({ stripeAccountId: account.id }).exec();
     const session = await this.connection.startSession();
     const charity = CharityService.makeCharity(charityModel);
 
-    AppLogger.info(`Is account details submitted ${account.details_submitted}`);
     await this.updateCharityStatus({
       charity,
       stripeStatus: account.details_submitted ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE,
