@@ -1,19 +1,15 @@
 import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import SwipeableLink from '..';
-
+import { UserAccountProvider } from 'src/components/UserAccountProvider/UserAccountProvider';
 const props = {
-  to: '/test',
-  children: <>test</>,
+  children: <></>,
 };
-
 describe('Should render correctly "UserAccountProvider"', () => {
   let wrapper: any;
   beforeEach(() => {
     wrapper = mount(
       <MemoryRouter initialEntries={[`/`]}>
-        <SwipeableLink {...props} />
+        <UserAccountProvider {...props} />;
       </MemoryRouter>,
     );
   });
@@ -23,8 +19,5 @@ describe('Should render correctly "UserAccountProvider"', () => {
   });
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
-  });
-  it('should have Link to "/test"', () => {
-    expect(wrapper.find(Link).props().to).toBe('/test');
   });
 });

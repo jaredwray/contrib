@@ -18,5 +18,4 @@ describe('Should render correctly "ClickableTr"', () => {
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
   });
-
 });

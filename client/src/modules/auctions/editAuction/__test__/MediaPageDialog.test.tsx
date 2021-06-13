@@ -1,5 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 import { attachments } from '../../../../helpers/testHelpers/attachments';
 import Dialog from '../MediaPage/Dialog';
 
@@ -11,7 +11,7 @@ const props: any = {
 };
 
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
       <Dialog {...props} />
     </Router>,
