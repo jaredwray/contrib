@@ -172,7 +172,11 @@ export default function AdminAuctionPage() {
                         </td>
                         <td className="align-middle">{bid.user}</td>
                         <td className="align-middle">
-                          <Button className={styles.bidButton} onClick={() => onBidClickHandler(bid)}>
+                          <Button
+                            className={styles.bidButton}
+                            variant="secondary"
+                            onClick={() => onBidClickHandler(bid)}
+                          >
                             Process the bid
                           </Button>
                         </td>
