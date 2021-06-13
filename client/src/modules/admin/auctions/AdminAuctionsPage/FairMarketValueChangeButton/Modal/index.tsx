@@ -1,14 +1,18 @@
 import { FC, useCallback } from 'react';
 
 import { DocumentNode, useMutation } from '@apollo/client';
-import Dinero from 'dinero.js';
-import { Button } from 'react-bootstrap';
+import clsx from 'clsx';
+import Dinero, { DineroObject } from 'dinero.js';
+import { useToasts } from 'react-toast-notifications';
 
+import AsyncButton from 'src/components/AsyncButton';
 import Dialog from 'src/components/Dialog';
 import DialogContent from 'src/components/Dialog/DialogContent';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
 import { Auction } from 'src/types/Auction';
+
+import styles from './styles.module.scss';
 
 interface Props {
   open: boolean;
@@ -18,17 +22,19 @@ interface Props {
 }
 
 export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
-  const [updateAuctionfairMarketValue] = useMutation(mutation);
-
+  const [updateAuctionfairMarketValue, { loading: updating }] = useMutation(mutation);
+  const { addToast } = useToasts();
   const onSubmit = useCallback(
-    ({ fairMarketValue }: { fairMarketValue: string }) => {
-      if (fairMarketValue) {
-        updateAuctionfairMarketValue({
-          variables: { id: auction?.id, fairMarketValue },
-        }).then(() => window.location.reload(false));
+    ({ fairMarketValue }: { fairMarketValue: DineroObject }) => {
+      if (Dinero(fairMarketValue).getAmount() < 1) {
+        addToast('Fair market value should be more than $1', { autoDismiss: true, appearance: 'error' });
+        return;
       }
+      updateAuctionfairMarketValue({
+        variables: { id: auction?.id, fairMarketValue },
+      }).then(() => window.location.reload(false));
     },
-    [updateAuctionfairMarketValue, auction?.id],
+    [updateAuctionfairMarketValue, auction?.id, addToast],
   );
 
   const initialValues = {
@@ -42,9 +48,14 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
           <MoneyField name="fairMarketValue" title="Enter price" />
           <hr />
           <div className="float-right">
-            <Button className="text-label" type="submit" variant="secondary">
+            <AsyncButton
+              className={clsx('text-subhead', styles.button)}
+              loading={updating}
+              type="submit"
+              variant="secondary"
+            >
               Submit
-            </Button>
+            </AsyncButton>
           </div>
         </Form>
       </DialogContent>

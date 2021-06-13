@@ -20,6 +20,7 @@ export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
   const { loading, data, error } = useQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
+    fetchPolicy: 'network-only',
   });
   if (error) {
     return null;
