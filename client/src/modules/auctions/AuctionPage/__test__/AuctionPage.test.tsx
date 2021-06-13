@@ -2,6 +2,7 @@ import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 
@@ -21,7 +22,9 @@ test('renders without crashing', () => {
   render(
     <Router>
       <MockedProvider cache={cache}>
-        <AuctionPage />
+        act(() => {
+          <AuctionPage />
+        })
       </MockedProvider>
     </Router>,
   );

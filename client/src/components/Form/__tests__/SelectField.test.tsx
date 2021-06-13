@@ -7,6 +7,7 @@ const mockedSumbit = jest.fn();
 const props = {
   name: 'test',
   options: [],
+  selected: 'test',
 };
 test('renders without crashing', () => {
   render(

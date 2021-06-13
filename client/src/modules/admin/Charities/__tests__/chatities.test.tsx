@@ -2,6 +2,7 @@ import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 import { AllCharitiesQuery } from 'src/apollo/queries/charities';
 
@@ -26,7 +27,9 @@ test('renders without crashing', () => {
   render(
     <Router>
       <MockedProvider cache={cache}>
-        <Charities />
+        act(() => {
+          <Charities />
+        })
       </MockedProvider>
     </Router>,
   );

@@ -15,13 +15,13 @@ const props: any = {
 global.URL.createObjectURL = jest.fn();
 
 test('renders without crashing', async () => {
-  await act(async () => {
-    render(
-      <Router>
-        <MockedProvider>
+  render(
+    <Router>
+      <MockedProvider>
+        act(() => {
           <FilePreview {...props} />
-        </MockedProvider>
-      </Router>,
-    );
-  });
+        })
+      </MockedProvider>
+    </Router>,
+  );
 });
