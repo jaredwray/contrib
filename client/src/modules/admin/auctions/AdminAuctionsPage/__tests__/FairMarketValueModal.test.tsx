@@ -1,4 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ToastProvider } from 'react-toast-notifications';
 import { mount } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
@@ -23,10 +24,12 @@ const props: any = {
 
 test('renders without crashing', () => {
   mount(
-    <MockedProvider>
-      <Router>
-        <Modal {...props} />
-      </Router>
-    </MockedProvider>,
+    <ToastProvider>
+      <MockedProvider>
+        <Router>
+          <Modal {...props} />
+        </Router>
+      </MockedProvider>
+    </ToastProvider>,
   );
 });

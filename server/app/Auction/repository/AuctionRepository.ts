@@ -48,7 +48,7 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   private static searchSortOptionsByName(name: string = AuctionOrderBy.CREATED_AT_DESC): { [key: string]: string } {
-    return Object.assign({ status: 'asc'}, AuctionRepository.SEARCH_FILTERS[name]);
+    return Object.assign({ status: 'asc' }, AuctionRepository.SEARCH_FILTERS[name]);
   }
 
   private populateAuctionQuery<T>(query: Query<T, IAuctionModel>): Query<T, IAuctionModel> {
@@ -120,7 +120,11 @@ export class AuctionRepository implements IAuctionRepository {
   async updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, input.organizerId || organizerId);
 
-    if (auction.status !== AuctionStatus.DRAFT && auction.status !== AuctionStatus.PENDING && !input.fairMarketValue) {
+    if (
+      auction.status !== AuctionStatus.DRAFT &&
+      auction.status !== AuctionStatus.PENDING &&
+      typeof input.fairMarketValue !== undefined
+    ) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
     Object.assign(auction, input);
@@ -182,12 +186,7 @@ export class AuctionRepository implements IAuctionRepository {
     const result: { min: number; max: number }[] = await this.AuctionModel.aggregate([
       {
         $match: {
-          status: { $in: [
-            AuctionStatus.ACTIVE,
-            AuctionStatus.PENDING,
-            AuctionStatus.SETTLED,
-            AuctionStatus.SOLD
-          ]},
+          status: { $in: [AuctionStatus.ACTIVE, AuctionStatus.PENDING, AuctionStatus.SETTLED, AuctionStatus.SOLD] },
         },
       },
       {
@@ -199,7 +198,7 @@ export class AuctionRepository implements IAuctionRepository {
       },
     ]);
 
-    return result?.length ? result[0] : { min: 0, max: 0};
+    return result?.length ? result[0] : { min: 0, max: 0 };
   }
 
   public getInfluencersAuctions(id: string): Promise<IAuctionModel[]> {

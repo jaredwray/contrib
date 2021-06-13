@@ -20,6 +20,7 @@ export default function AdminAuctionsPage() {
   const [pageSkip, setPageSkip] = useState(0);
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
+    fetchPolicy: 'network-only',
   });
   if (error) {
     return null;
@@ -61,11 +62,13 @@ export default function AdminAuctionsPage() {
                       Edit
                     </Link>
                   )}
-                  <FairMarketValueChangeButton
-                    auction={auction}
-                    className={clsx(styles.actionBtn, 'dropdown-item text--body')}
-                    mutation={updateAuctionDetails}
-                  />
+                  {(auction.isActive || auction.isPending) && (
+                    <FairMarketValueChangeButton
+                      auction={auction}
+                      className={clsx(styles.actionBtn, 'dropdown-item text--body')}
+                      mutation={updateAuctionDetails}
+                    />
+                  )}
                 </ActionsDropdown>
               </td>
             </ClickableTr>
