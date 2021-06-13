@@ -26,35 +26,40 @@ export const Modal: FC<Props> = ({ onConfirm, onClose, open, isBid, loading, bid
   }
   const { bid, user } = currentBid;
   return (
-    <Dialog open={open} title={`Charge ${isBid ? 'bid' : 'auction'}`} onClose={onClose}>
-      <DialogContent className="font-weight-normal text-center">
-        <div>
+    <Dialog
+      className={clsx(styles.modal, 'font-weight-normal text-center')}
+      open={open}
+      title={`Charge ${isBid ? 'bid' : 'auction'}`}
+      onClose={onClose}
+    >
+      <DialogContent>
+        <p>
           Withdraw <b>${bid?.amount / 100}</b>
-        </div>
-        <div>
+        </p>
+        <p>
           from user with #id <b>{user}</b>?
-        </div>
-        <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-4">
-          <Button
-            className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
-            disabled={loading}
-            size="sm"
-            variant="light"
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <AsyncButton
-            className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
-            disabled={loading}
-            loading={loading}
-            variant="secondary"
-            onClick={onConfirm}
-          >
-            Submit {isBid ? 'bid' : 'charge'}
-          </AsyncButton>
-        </DialogActions>
+        </p>
       </DialogContent>
+      <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
+        <Button
+          className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+          disabled={loading}
+          size="sm"
+          variant="light"
+          onClick={onClose}
+        >
+          Cancel
+        </Button>
+        <AsyncButton
+          className={clsx(styles.actionBtn)}
+          disabled={loading}
+          loading={loading}
+          variant="secondary"
+          onClick={onConfirm}
+        >
+          Submit {isBid ? 'bid' : 'charge'}
+        </AsyncButton>
+      </DialogActions>
     </Dialog>
   );
 };

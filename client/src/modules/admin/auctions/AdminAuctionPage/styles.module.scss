@@ -7,4 +7,9 @@
 
 .bidButton {
   height: 20px;
+  &:hover {
+    color: $white-color !important;
+    background-color: $ochre-color !important;
+    border-color: $ochre-color !important;
+  }
 }
