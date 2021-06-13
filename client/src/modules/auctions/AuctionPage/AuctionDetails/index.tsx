@@ -35,14 +35,21 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const { addToast } = useToasts();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const history = useHistory();
-  const { startPrice, itemPrice, currentPrice, endDate, startDate, title, timeZone, isPending, isSold } = auction;
+  const { startPrice, itemPrice, currentPrice, endDate, startDate, title, timeZone, isPending, isSold, bids } = auction;
   const ended = toDate(endDate) <= new Date();
   const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
-  const endTime = format(utcToZonedTime(startDate, timeZone), 'p');
+  const endTime = format(utcToZonedTime(endDate, timeZone), 'p');
   const canBid = auction.isActive && !ended;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
+
+  let soldTime = '';
+  if (isSold) {
+    const maxBid = Math.max(...bids.map(({ bid }) => bid.amount));
+    const maxBidDate = auction.bids.filter(({ bid }) => bid.amount === maxBid)[0].createdAt;
+    soldTime = format(utcToZonedTime(maxBidDate, timeZone), 'MMM dd yyyy p');
+  }
 
   const durationTillEnd = toHumanReadableDuration(endDate);
   const endDateFormatted = dateFormat(toDate(utcToZonedTime(endDate, timeZone)), 'MMM dd yyyy');
@@ -154,7 +161,12 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
           </span>
         </div>
       )}
-      {isSold && <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">sold</div>}
+      {isSold && (
+        <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
+          <span className={styles.notBold}>sold on </span>
+          {soldTime} {timeZone}
+        </div>
+      )}
       <Elements options={stripeOptions} stripe={stripePromise}>
         <BidConfirmationModal
           ref={confirmationRef}
