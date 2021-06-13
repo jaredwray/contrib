@@ -1,6 +1,7 @@
 import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UserAccountStatus } from 'src/types/UserAccount';
@@ -36,7 +37,9 @@ jest.mock('react-router-dom', () => ({
 test('renders without crashing', () => {
   render(
     <MockedProvider cache={cache}>
+    act(() => {
       <PhoneNumberConfirmation />
+    })
     </MockedProvider>,
   );
 });
