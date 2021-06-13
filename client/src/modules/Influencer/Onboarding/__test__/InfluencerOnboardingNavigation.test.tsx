@@ -1,18 +1,31 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
-
+import { mount } from 'enzyme';
+import { MemoryRouter } from 'react-router-dom';
+import Form from 'src/components/Form/Form';
 import { InfluencerOnboardingNavigation } from '../InfluencerOnboardingNavigation';
-
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
-
-const props: any = {
-  step: 'basic',
-};
-
-test('renders without crashing', () => {
-  shallow(
-    <Router>
-      <InfluencerOnboardingNavigation {...props} />
-    </Router>,
-  );
+const mockedSumbit = jest.fn();
+describe('Should render correctly "InfluencerOnboardingNavigation"', () => {
+  let wrapper: any;
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('component is defined', () => {
+    wrapper = mount(
+      <MemoryRouter initialEntries={[`/`]}>
+        <Form onSubmit={mockedSumbit}>
+          <InfluencerOnboardingNavigation step="basic" />
+        </Form>
+      </MemoryRouter>,
+    );
+    expect(wrapper).toHaveLength(1);
+  });
+  it('component is defined', () => {
+    wrapper = mount(
+      <MemoryRouter initialEntries={[`/`]}>
+        <Form onSubmit={mockedSumbit}>
+          <InfluencerOnboardingNavigation step="charities" />
+        </Form>
+      </MemoryRouter>,
+    );
+    expect(wrapper).toHaveLength(1);
+  });
 });

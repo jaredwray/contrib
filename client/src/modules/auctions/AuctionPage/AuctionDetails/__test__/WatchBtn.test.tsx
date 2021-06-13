@@ -1,5 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 import { auction } from '../../../../../helpers/testHelpers/auction';
 
 import WatchBtn from '../WatchBtn';
@@ -11,7 +11,7 @@ const props: any = {
 };
 
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
       <WatchBtn {...props} />
     </Router>,

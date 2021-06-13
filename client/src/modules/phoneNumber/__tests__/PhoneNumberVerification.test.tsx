@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UserAccountStatus } from 'src/types/UserAccount';
 
-import PhoneNumberConfirmation from '../Confirmation';
+import PhoneNumberVerification from '../Verification';
 
 const cache = new InMemoryCache();
 cache.writeQuery({
@@ -36,7 +36,7 @@ jest.mock('react-router-dom', () => ({
 test('renders without crashing', () => {
   render(
     <MockedProvider cache={cache}>
-      <PhoneNumberConfirmation />
+      <PhoneNumberVerification />
     </MockedProvider>,
   );
 });

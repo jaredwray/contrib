@@ -1,12 +1,12 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import { InfluencerOnboardingDonePage } from '../InfluencerOnboardingDonePage';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
       <InfluencerOnboardingDonePage />
     </Router>,

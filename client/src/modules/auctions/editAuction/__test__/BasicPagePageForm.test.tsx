@@ -1,14 +1,16 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow } from 'enzyme';
-
+import { render } from '@testing-library/react';
+import Form from 'src/components/Form/Form';
 import PageForm from '../BasicPage/PageForm';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 test('renders without crashing', () => {
-  shallow(
+  render(
     <Router>
-      <PageForm />
+      <Form onSubmit={jest.fn()}>
+        <PageForm />
+      </Form>
     </Router>,
   );
 });
