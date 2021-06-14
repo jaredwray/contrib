@@ -6,6 +6,7 @@ export const AuctionSchema = gql`
     PENDING
     ACTIVE
     SETTLED
+    STOPPED
     FAILED
     SOLD
   }
