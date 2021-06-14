@@ -270,7 +270,10 @@ export class AuctionService {
         if (!userAccount) {
           throw new Error(`Can not find account with id ${lastUserId.toString()}`);
         }
-        const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_BID_OVERLAP);
+        const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_BID_OVERLAP, {
+          auctionTitle: auction.title,
+          auctionLink: auction.link,
+        });
         await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
           message: message,
           phoneNumber: userAccount.phoneNumber,
@@ -385,7 +388,10 @@ export class AuctionService {
       }
 
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
-      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE);
+      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE, {
+        auctionTitle: auction.title,
+        auctionLink: auction.link,
+      });
 
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
@@ -419,9 +425,13 @@ export class AuctionService {
     );
   }
 
-  async sendAuctionNotification(phoneNumber: string, template: MessageTemplate): Promise<void> {
+  async sendAuctionNotification(
+    phoneNumber: string,
+    template: MessageTemplate,
+    context?: { [key: string]: any },
+  ): Promise<void> {
     try {
-      const message = await this.handlebarsService.renderTemplate(template);
+      const message = await this.handlebarsService.renderTemplate(template, context);
       await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
         message: message,
         phoneNumber: phoneNumber,
