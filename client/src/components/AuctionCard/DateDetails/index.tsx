@@ -22,6 +22,9 @@ const DateDetails: FC<Props> = ({ auction, isDonePage, isSold }) => {
   if (isSold) {
     return <span className={styles.ended}>sold</span>;
   }
+  if (auction.isStopped) {
+    return <span className={styles.ended}>stopped</span>;
+  }
 
   if (isPast(toDate(auction.endDate))) {
     return <span className={styles.ended}>ended</span>;

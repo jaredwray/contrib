@@ -21,6 +21,7 @@ const AuctionPage = () => {
   const auctionId = useParams<{ auctionId: string }>().auctionId ?? 'me';
   const history = useHistory();
   const { account } = useContext(UserAccountContext);
+
   const [executeAuctionQuery, { data: auctionData, error }] = useLazyQuery(AuctionQuery, {
     variables: { id: auctionId },
     fetchPolicy: 'network-only',
@@ -33,12 +34,15 @@ const AuctionPage = () => {
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
 
-  if (error?.message === 'Auction was not found' || auction?.isDraft) {
-    history.push(`/`);
-  }
-
   if (error || !auction) {
     return null;
+  }
+  const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
+    auction.auctionOrganizer.id,
+  );
+
+  if (!account?.isAdmin && !isMyProfile && (auction?.isDraft || auction?.isStopped)) {
+    history.push(`/`);
   }
   const attachments = [...auction?.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
 

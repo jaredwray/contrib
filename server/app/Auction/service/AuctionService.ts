@@ -587,6 +587,28 @@ export class AuctionService {
     return { status: auction.status };
   }
 
+  public async stopAuction(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
+    const auction = await this.AuctionModel.findOne({ _id: id });
+    auction.status = AuctionStatus.STOPPED;
+    auction.stoppedAt = dayjs();
+    try {
+      await auction.save();
+    } catch (error) {
+      throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
+    }
+    return { status: auction.status };
+  }
+  public async activateAuctionById(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
+    const auction = await this.AuctionModel.findOne({ _id: id });
+    auction.endsAt < dayjs() ? (auction.status = AuctionStatus.SETTLED) : (auction.status = AuctionStatus.ACTIVE);
+    auction.stoppedAt = null;
+    try {
+      await auction.save();
+    } catch (error) {
+      throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
+    }
+    return { status: auction.status };
+  }
   public makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
       return null;
@@ -597,6 +619,7 @@ export class AuctionService {
       startsAt,
       timeZone,
       endsAt,
+      stoppedAt,
       charity,
       assets,
       status,
@@ -631,6 +654,7 @@ export class AuctionService {
       endDate: endsAt,
       startDate: startsAt,
       timeZone: timeZone,
+      stoppedAt: stoppedAt,
       charity: charity ? CharityService.makeCharity(charity) : null,
       bids: bids?.map((bid) => AuctionService.makeAuctionBid(bid)) || [],
       totalBids: bids?.length ?? 0,
@@ -649,6 +673,7 @@ export class AuctionService {
       isSettled: status === AuctionStatus.SETTLED,
       isFailed: status === AuctionStatus.FAILED,
       isSold: status === AuctionStatus.SOLD,
+      isStopped: status === AuctionStatus.STOPPED,
       ...rest,
     };
   }

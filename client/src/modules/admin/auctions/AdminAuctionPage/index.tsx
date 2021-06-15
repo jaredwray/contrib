@@ -139,6 +139,12 @@ export default function AdminAuctionPage() {
                     <td>Influencer id</td>
                     <td>{auction.auctionOrganizer.id}</td>
                   </tr>
+                  {auction.isStopped && (
+                    <tr>
+                      <td>Stop date</td>
+                      <td>{auction.stoppedAt}</td>
+                    </tr>
+                  )}
                 </tbody>
               </Table>
             </Col>

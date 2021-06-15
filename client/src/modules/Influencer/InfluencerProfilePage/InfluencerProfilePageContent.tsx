@@ -30,7 +30,13 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
     variables: {
       filters: {
         auctionOrganizer: influencer.id,
-        status: [AuctionStatus.DRAFT, AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.PENDING],
+        status: [
+          AuctionStatus.DRAFT,
+          AuctionStatus.ACTIVE,
+          AuctionStatus.SETTLED,
+          AuctionStatus.PENDING,
+          AuctionStatus.STOPPED,
+        ],
       },
     },
   });
@@ -42,6 +48,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const pendingAuctions = profileAuctions.PENDING;
   const pastAuctions = profileAuctions.SETTLED;
   const draftAuctions = profileAuctions.DRAFT;
+  const stoppedAuctions = profileAuctions.STOPPED;
 
   const profileDescriptionParagraphs = (influencer.profileDescription ?? '').split('\n');
 
@@ -49,6 +56,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const hasPendingAuctions = Boolean(pendingAuctions.length);
   const hasPastAuctions = Boolean(pastAuctions.length);
   const hasDraftAuctions = Boolean(draftAuctions.length);
+  const hasStoppedAuctions = Boolean(stoppedAuctions.length);
 
   const hasAuctions = hasLiveAuctions || hasPastAuctions || hasDraftAuctions;
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
@@ -60,6 +68,9 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
   ));
   const draftAuctionsLayout = draftAuctions.map((auction: Auction) => (
+    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
+  ));
+  const stoppedAuctionsLayout = stoppedAuctions.map((auction: Auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
   ));
   const pastAuctionsLayout = pastAuctions.map((auction: Auction) => (
@@ -149,9 +160,19 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
                 {influencer.name}'s outboarding auctions
               </ProfileSliderRow>
             )}
-            {hasDraftAuctions && (account?.isAdmin || isMyProfile) && (
-              <ProfileSliderRow items={draftAuctionsLayout}>{influencer.name}'s draft auctions</ProfileSliderRow>
+            {(account?.isAdmin || isMyProfile) && (
+              <>
+                {hasDraftAuctions && (
+                  <ProfileSliderRow items={draftAuctionsLayout}>{influencer.name}'s draft auctions</ProfileSliderRow>
+                )}
+                {hasStoppedAuctions && (
+                  <ProfileSliderRow items={stoppedAuctionsLayout}>
+                    {influencer.name}'s stopped auctions
+                  </ProfileSliderRow>
+                )}
+              </>
             )}
+
             {hasPastAuctions && (
               <ProfileSliderRow items={pastAuctionsLayout}>{influencer.name}'s past auctions</ProfileSliderRow>
             )}

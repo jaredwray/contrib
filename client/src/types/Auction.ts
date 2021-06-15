@@ -48,6 +48,7 @@ export interface Auction {
   totalBids: number;
   startDate: string;
   endDate: string;
+  stoppedAt?: string;
   startPrice: DineroObject;
   itemPrice?: DineroObject;
   currentPrice: DineroObject;
@@ -60,4 +61,5 @@ export interface Auction {
   isSettled: boolean;
   isFailed: boolean;
   isSold: boolean;
+  isStopped: boolean;
 }

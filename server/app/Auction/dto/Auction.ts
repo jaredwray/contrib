@@ -16,6 +16,7 @@ export interface Auction {
   charity: Charity;
   startDate: Dayjs;
   endDate: Dayjs;
+  stoppedAt: Dayjs;
   status: AuctionStatus;
   bids: object[];
   totalBids: number;
@@ -33,4 +34,5 @@ export interface Auction {
   isSettled: boolean;
   isFailed: boolean;
   isSold: boolean;
+  isStopped: boolean;
 }

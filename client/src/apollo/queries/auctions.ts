@@ -21,6 +21,7 @@ export const AuctionQuery = gql`
       id
       startDate
       endDate
+      stoppedAt
       startPrice
       title
       gameWorn
@@ -37,6 +38,7 @@ export const AuctionQuery = gql`
       isSettled
       isFailed
       isSold
+      isStopped
       startPrice
       totalBids
       bids {
@@ -336,6 +338,7 @@ export const AuctionsListQuery = gql`
         isSettled
         isFailed
         isSold
+        isStopped
         title
         description
         startPrice
@@ -361,6 +364,20 @@ export const AuctionsListQuery = gql`
 export const buyAuction = gql`
   mutation buyAuction($id: String!) {
     buyAuction(id: $id) {
+      status
+    }
+  }
+`;
+export const stopAuction = gql`
+  mutation stopAuction($id: String!) {
+    stopAuction(id: $id) {
+      status
+    }
+  }
+`;
+export const activateAuction = gql`
+  mutation activateAuction($id: String!) {
+    activateAuction(id: $id) {
       status
     }
   }

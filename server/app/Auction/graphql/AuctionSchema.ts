@@ -6,9 +6,9 @@ export const AuctionSchema = gql`
     PENDING
     ACTIVE
     SETTLED
-    STOPPED
     FAILED
     SOLD
+    STOPPED
   }
 
   enum AuctionOrderBy {
@@ -64,6 +64,7 @@ export const AuctionSchema = gql`
     sport: String!
     startDate: DateTime!
     endDate: DateTime!
+    stoppedAt: DateTime
     auctionOrganizer: InfluencerProfile!
     totalBids: Int!
     link: String!
@@ -75,6 +76,7 @@ export const AuctionSchema = gql`
     isSettled: Boolean!
     isFailed: Boolean!
     isSold: Boolean!
+    isStopped: Boolean!
   }
 
   type ResponceId {
@@ -149,6 +151,8 @@ export const AuctionSchema = gql`
     updateAuction(id: String, input: AuctionInput): Auction!
     finishAuctionCreation(id: String!): Auction!
     buyAuction(id: String): AuctionStatusResponse!
+    stopAuction(id: String): AuctionStatusResponse!
+    activateAuction(id: String): AuctionStatusResponse!
     createAuctionBid(id: String!, bid: Money!): Auction!
     addAuctionAttachment(id: String!, attachment: Upload!, organizerId: String): AuctionAttachment!
     removeAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
