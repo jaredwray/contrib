@@ -1,5 +1,53 @@
 import { gql } from '@apollo/client';
 
+export const CustomerInformation = gql`
+  query CustomerInformation($stripeCustomerId: String!) {
+    getCustomerInformation(stripeCustomerId: $stripeCustomerId) {
+      phone
+      email
+    }
+  }
+`;
+
+export const AuctionForAdminPage = gql`
+  query AuctionForAdminPage($id: String!) {
+    getAuctionForAdminPage(id: $id) {
+      title
+      status
+      startDate
+      endDate
+      timeZone
+      startPrice
+      currentPrice
+      fairMarketValue
+      auctionOrganizer {
+        id
+        name
+      }
+      charity {
+        id
+        name
+        stripeAccountId
+      }
+      bids {
+        user {
+          id
+          mongodbId
+          phoneNumber
+          status
+          stripeCustomerId
+          createdAt
+        }
+        bid
+        paymentSource
+        createdAt
+      }
+      isFailed
+      isSold
+    }
+  }
+`;
+
 export const AuctionPriceLimitsQuery = gql`
   query auctionPriceLimits {
     auctionPriceLimits {
@@ -139,14 +187,16 @@ export const chargeCurrentAuction = gql`
 export const chargeCurrendBid = gql`
   mutation chargeCurrendBid(
     $charityId: String!
+    $charityStripeAccountId: String!
     $auctionTitle: String!
     $bid: Money!
     $paymentSource: String!
-    $user: String!
+    $user: AuctionInputUser!
   ) {
     chargeCurrendBid(
       input: {
         charityId: $charityId
+        charityStripeAccountId: $charityStripeAccountId
         auctionTitle: $auctionTitle
         bid: $bid
         paymentSource: $paymentSource

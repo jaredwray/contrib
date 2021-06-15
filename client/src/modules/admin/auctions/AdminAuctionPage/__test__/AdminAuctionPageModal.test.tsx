@@ -7,7 +7,7 @@ import { Modal } from '../Modal';
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
-  bid: {},
+  bid: { user: {} },
   isBid: true,
   loading: true,
   open: true,

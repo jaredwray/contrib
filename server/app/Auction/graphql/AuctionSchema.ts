@@ -79,6 +79,49 @@ export const AuctionSchema = gql`
     isStopped: Boolean!
   }
 
+  type AuctionForAdminPage {
+    title: String!
+    status: AuctionStatus
+    startDate: DateTime!
+    endDate: DateTime!
+    timeZone: String!
+    charity: AuctionCharity
+    bids: [AuctionAdminBid]
+    currentPrice: Money!
+    startPrice: Money!
+    fairMarketValue: Money
+    auctionOrganizer: AuctionAdminOrganizer
+    isFailed: Boolean!
+    isSold: Boolean!
+  }
+
+  type AuctionAdminOrganizer {
+    id: String!
+    name: String!
+  }
+
+  type AuctionCharity {
+    id: String!
+    name: String!
+    stripeAccountId: String!
+  }
+
+  type AuctionAdminBid {
+    bid: Money!
+    user: AuctionUser
+    paymentSource: String!
+    createdAt: String!
+  }
+
+  type AuctionUser {
+    id: String!
+    mongodbId: String!
+    phoneNumber: String!
+    status: UserAccountStatus
+    stripeCustomerId: String!
+    createdAt: String!
+  }
+
   type ResponceId {
     id: String!
   }
@@ -93,6 +136,11 @@ export const AuctionSchema = gql`
   type AuctionPriceLimits {
     max: Money!
     min: Money!
+  }
+
+  type CustomerInformation {
+    email: String
+    phone: String
   }
 
   input AuctionSearchFilters {
@@ -125,10 +173,20 @@ export const AuctionSchema = gql`
 
   input CurrentAuctionBid {
     charityId: String
+    charityStripeAccountId: String!
     auctionTitle: String
     paymentSource: String
     bid: Money
-    user: String
+    user: AuctionInputUser
+  }
+
+  input AuctionInputUser {
+    id: String!
+    mongodbId: String!
+    phoneNumber: String!
+    status: UserAccountStatus
+    stripeCustomerId: String!
+    createdAt: String!
   }
 
   extend type Query {
@@ -144,6 +202,8 @@ export const AuctionSchema = gql`
     auction(id: String!): Auction
     sports: [String]
     getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
+    getAuctionForAdminPage(id: String!): AuctionForAdminPage
+    getCustomerInformation(stripeCustomerId: String!): CustomerInformation
   }
 
   extend type Mutation {
