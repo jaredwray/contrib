@@ -39,7 +39,7 @@ describe('InvitationPage', () => {
       );
     });
 
-    const signUpButton = wrapper!.find('.invitation-page-create-btn');
+    const signUpButton = wrapper!.find('.btn.invitation-page-create-btn');
     expect(signUpButton).toHaveLength(1);
 
     signUpButton.simulate('click');

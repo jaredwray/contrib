@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 
 import { useQuery } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetInvitation } from 'src/apollo/queries/getInvitation';
@@ -60,13 +60,13 @@ export default function InvitationPage() {
               <Col className="pt-5 pt-lg-0 pb-4 pb-lg-0" lg="6">
                 <div className="invitation-page-right-block p-4 p-md-5">
                   <div className="d-table w-100">
-                    <a
-                      className="btn btn-ochre btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
-                      href="/"
+                    <Button
+                      className="btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
+                      variant="ochre"
                       onClick={handleSignUp}
                     >
                       {invitation.accepted ? 'Log in' : 'Sign Up'}
-                    </a>
+                    </Button>
                   </div>
                 </div>
               </Col>
