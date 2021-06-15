@@ -34,10 +34,7 @@ const NewAuctionBasicPage = () => {
   const [createAuction, { loading }] = useMutation(createAuctionMutation, {
     onCompleted({ createAuction }) {
       if (createAuction.id) {
-        let newUrl = `/auctions/${createAuction.id}/media`;
-        if (account?.isAdmin) {
-          newUrl += `?orginizerId=${ownerId || account?.influencerProfile?.id}`;
-        }
+        const newUrl = `/auctions/${createAuction.id}/media?orginizerId=${ownerId || account?.influencerProfile?.id}`;
         history.push(newUrl);
       }
     },
