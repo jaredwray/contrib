@@ -108,7 +108,7 @@ export class AuctionRepository implements IAuctionRepository {
   async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, organizerId);
 
-    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
+    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING,AuctionStatus.STOPPED].includes(auction?.status)) {
       throw new AppError(`Cannot activate auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
 
@@ -122,6 +122,7 @@ export class AuctionRepository implements IAuctionRepository {
 
     if (
       auction.status !== AuctionStatus.DRAFT &&
+      auction.status !== AuctionStatus.STOPPED &&
       auction.status !== AuctionStatus.PENDING &&
       typeof input.fairMarketValue !== undefined
     ) {

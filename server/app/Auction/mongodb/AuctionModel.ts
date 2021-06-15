@@ -35,6 +35,7 @@ export interface IAuctionModel extends Document {
   charity: ICharityModel['_id'];
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
+  stoppedAt: dayjs.Dayjs;
   startPriceCurrency: string;
   startPrice: number;
   link: string;
@@ -77,6 +78,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
     startsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
     endsAt: { type: SchemaTypes.Date, default: dayjs().toISOString(), get: (v) => dayjs(v) },
+    stoppedAt: { type: SchemaTypes.Date },
     link: { type: SchemaTypes.String },
     fairMarketValue: { type: SchemaTypes.Number },
     fairMarketValueCurrency: { type: SchemaTypes.String },

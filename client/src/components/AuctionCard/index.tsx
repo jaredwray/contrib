@@ -99,6 +99,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
         </p>
 
         {isDraft && <p className="text-label text-all-cups mb-0 mt-1 text-left">DRAFT</p>}
+
         {isPending && (
           <p className="text-label text-all-cups mb-0 mt-1 text-left">{`starts in ${startTime} on ${startFormatted} `}</p>
         )}

@@ -43,6 +43,8 @@ interface AuctionResolversType {
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
     buyAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
+    stopAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
+    activateAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
     chargeAuction: GraphqlResolver<{ id: string }, { id: string }>;
     chargeCurrendBid: GraphqlResolver<{ id: string }, { input: ChargeCurrentBidInput }>;
   };
@@ -93,6 +95,12 @@ export const AuctionResolvers: AuctionResolversType = {
     deleteAuction: async () => Promise.resolve(null),
     buyAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
       auction.buyAuction(id, currentAccount),
+    ),
+    stopAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
+      auction.stopAuction(id, currentAccount),
+    ),
+    activateAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
+      auction.activateAuctionById(id, currentAccount),
     ),
     addAuctionAttachment: requireRole(
       async (_, { id, attachment, organizerId }, { auction, currentAccount, currentInfluencerId }) =>
