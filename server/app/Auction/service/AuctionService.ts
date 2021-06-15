@@ -162,7 +162,8 @@ export class AuctionService {
 
       return AuctionService.makeAuctionAttachment(asset, filename);
     } catch (error) {
-      throw error;
+      AppLogger.error(`Could not upload attacment for auction #${auction.id.toString()} with error ${error}`);
+      throw new AppError('Could not upload this file. Please, try later', ErrorCode.BAD_REQUEST);
     }
   }
 
@@ -363,9 +364,7 @@ export class AuctionService {
         try {
           await this.activateAuction(auction);
         } catch (error) {
-          AppLogger.warn(
-            `Could not start auction with id ${auction.id.toString()} with error ${auction.id.toString()}`,
-          );
+          AppLogger.warn(`Could not start auction with id ${auction.id.toString()} with error ${error}`);
         }
       }
     }
