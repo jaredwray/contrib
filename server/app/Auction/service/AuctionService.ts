@@ -383,7 +383,8 @@ export class AuctionService {
       auction.status = AuctionStatus.ACTIVE;
       await auction.save();
     }
-    return await this.settleAuctionAndCharge(auction);
+    const currentAuction = await auction.populate({ path: 'bids.user', model: this.UserAccountModel }).execPopulate();
+    return await this.settleAuctionAndCharge(currentAuction);
   }
 
   public async chargeCurrendBid(input): Promise<string> {
