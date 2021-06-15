@@ -1,4 +1,4 @@
-import { Dinero } from 'dinero.js';
+import Dinero from 'dinero.js';
 import Stripe from 'stripe';
 
 import { AppConfig, requireEnvVar } from '../../../config';
@@ -108,5 +108,9 @@ export class StripeService {
     });
 
     return charge.id;
+  }
+
+  public async getCustomerInformation(stripeCustomerId: string): Promise<Stripe.Customer | Stripe.DeletedCustomer> {
+    return await this.stripe.customers.retrieve(stripeCustomerId);
   }
 }

@@ -28,12 +28,13 @@ import { AppLogger } from '../../../logger';
 
 import { AuctionRepository } from '../repository/AuctionRepository';
 import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
-import { PaymentService } from '../../Payment';
+import { PaymentService, StripeService } from '../../Payment';
 import { AppConfig } from '../../../config';
 import { UrlShortenerService } from '../../Core';
 import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
+import Stripe from 'stripe';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -41,6 +42,7 @@ export class AuctionService {
   private readonly CharityModel = CharityModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
   private readonly auctionRepository: IAuctionRepository = new AuctionRepository(this.connection);
+  private readonly stripeService = new StripeService();
 
   constructor(
     private readonly connection: Connection,
@@ -55,6 +57,55 @@ export class AuctionService {
     let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
     auction = await this.auctionRepository.updateAuctionLink(auction._id, await this.makeShortAuctionLink(auction._id));
     return this.makeAuction(auction);
+  }
+
+  public async getAuctionForAdminPage(id: string) {
+    const auction = await this.auctionRepository.getAuctionForAdminPage(id);
+    const currentAuction = this.makeAuction(auction);
+    const { auctionOrganizer, charity, bids } = auction;
+    return {
+      ...currentAuction,
+      auctionOrganizer: {
+        id: auctionOrganizer._id.toString(),
+        name: auctionOrganizer.name,
+      },
+      charity: {
+        id: charity?._id.toString(),
+        name: charity?.name,
+        stripeAccountId: charity?.stripeAccountId,
+      },
+      bids: bids
+        .sort((a, b) => (a.bid > b.bid ? -1 : 1))
+        .map((bid) => {
+          return {
+            user: {
+              id: bid?.user?.authzId,
+              mongodbId: bid?.user?._id.toString(),
+              phoneNumber: bid?.user?.phoneNumber,
+              status: UserAccountStatus.COMPLETED,
+              stripeCustomerId: bid?.user?.stripeCustomerId,
+              createdAt: bid?.user?.createdAt.toISOString(),
+            },
+            bid: Dinero({ amount: bid?.bid, currency: bid?.bidCurrency }),
+            paymentSource: bid?.paymentSource,
+            createdAt: bid?.createdAt.toISOString(),
+          };
+        }),
+    };
+  }
+
+  public async getCustomerInformation(stripeCustomerId: string): Promise<{ email: string; phone: string } | null> {
+    try {
+      const customer = (await this.stripeService.getCustomerInformation(stripeCustomerId)) as Stripe.Customer;
+      const { email, phone } = customer;
+      return {
+        email,
+        phone,
+      };
+    } catch (error) {
+      AppLogger.error(`Can't find current customer. ${error.message}`);
+      return null;
+    }
   }
 
   public async listAuctions(
@@ -115,7 +166,10 @@ export class AuctionService {
     }
   }
 
-  public async getTotalRaisedAmount(charityId?: string, influencerId?: string): Promise<Object> {
+  public async getTotalRaisedAmount(
+    charityId?: string,
+    influencerId?: string,
+  ): Promise<{ totalRaisedAmount: Dinero.Dinero }> {
     if (!charityId && !influencerId) {
       throw new Error('Need to pass charityId or influencerId');
     }
@@ -333,29 +387,13 @@ export class AuctionService {
   }
 
   public async chargeCurrendBid(input): Promise<string> {
-    const { user, bid, charityId, auctionTitle, paymentSource } = input;
-    const charityAccount = await this.CharityModel.findOne({ _id: charityId }).exec();
-    if (!charityAccount) {
-      throw new Error(`Can not find charity account with id ${charityId.toString()}`);
-    }
-    const userAccount = await this.UserAccountModel.findOne({ _id: user }).exec();
-    if (!userAccount) {
-      throw new Error(`Can not find userAccount account with id ${userAccount._id.toString()}`);
-    }
-    const currentUserAccount = {
-      id: userAccount.authzId,
-      phoneNumber: userAccount.phoneNumber,
-      status: UserAccountStatus.COMPLETED,
-      mongodbId: userAccount._id.toString(),
-      stripeCustomerId: userAccount.stripeCustomerId,
-      createdAt: userAccount.createdAt.toISOString(),
-    };
+    const { user, bid, charityId, charityStripeAccountId, auctionTitle, paymentSource } = input;
     return await this.paymentService.chargeUser(
-      currentUserAccount,
+      user,
       paymentSource,
       bid,
       `Contrib auction: ${auctionTitle}`,
-      charityAccount.stripeAccountId,
+      charityStripeAccountId,
       charityId,
     );
   }

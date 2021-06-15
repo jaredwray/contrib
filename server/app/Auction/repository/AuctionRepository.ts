@@ -1,11 +1,13 @@
 import { Connection, FilterQuery, Query, Types } from 'mongoose';
 import dayjs from 'dayjs';
+import Dinero from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountStatus } from '../../UserAccount/dto/UserAccountStatus';
 import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
@@ -40,10 +42,7 @@ export class AuctionRepository implements IAuctionRepository {
       { path: 'charity', model: this.CharityModel },
       { path: 'assets', model: this.AuctionAsset },
       { path: 'auctionOrganizer', model: this.InfluencerModel },
-      {
-        path: 'bids',
-        populate: { path: 'user', model: this.UserAccountModel, select: ['_id'] },
-      },
+      { path: 'bids.user', model: this.UserAccountModel },
     ];
   }
 
@@ -103,6 +102,11 @@ export class AuctionRepository implements IAuctionRepository {
     ]);
 
     return this.populateAuctionModel(auction).execPopulate();
+  }
+
+  public async getAuctionForAdminPage(id: string) {
+    const auction = await this.AuctionModel.findOne({ _id: id });
+    return await this.populateAuctionModel(auction).execPopulate();
   }
 
   async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {

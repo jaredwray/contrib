@@ -1,7 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { Types } from 'mongoose';
 import { IAuctionModel } from '../mongodb/AuctionModel';
-import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -66,4 +65,5 @@ export interface IAuctionRepository {
   getAuctionSports(): Promise<string[]>;
   addAuctionAttachment(id: string, organizerId: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel>;
   getInfluencersAuctions(id: string): Promise<IAuctionModel[]>;
+  getAuctionForAdminPage(id: string): Promise<IAuctionModel>;
 }

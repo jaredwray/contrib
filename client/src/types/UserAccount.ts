@@ -18,6 +18,7 @@ export interface PaymentCard {
 
 export interface UserAccount {
   id: string;
+  mongodbId?: string;
   phoneNumber: string | null;
   status: UserAccountStatus;
   influencerProfile?: InfluencerProfile;

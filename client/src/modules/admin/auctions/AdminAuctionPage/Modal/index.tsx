@@ -12,6 +12,8 @@ import { AuctionBid } from 'src/types/Auction';
 import styles from './chargeModal.module.scss';
 
 interface Props {
+  customerLoading: boolean;
+  customerInformation: { email: string; phone: string } | null;
   bid: AuctionBid | null;
   isBid?: boolean;
   loading: boolean;
@@ -20,25 +22,42 @@ interface Props {
   onClose: () => void;
 }
 
-export const Modal: FC<Props> = ({ onConfirm, onClose, open, isBid, loading, bid: currentBid }) => {
-  if (!currentBid) {
+export const Modal: FC<Props> = ({
+  customerLoading,
+  onConfirm,
+  onClose,
+  open,
+  isBid,
+  loading,
+  bid: currentBid,
+  customerInformation,
+}) => {
+  if (!currentBid || (!customerInformation && customerLoading)) {
     return null;
   }
   const { bid, user } = currentBid;
   return (
     <Dialog
-      className={clsx(styles.modal, 'font-weight-normal text-center')}
+      className="font-weight-normal text-left"
       open={open}
       title={`Charge ${isBid ? 'bid' : 'auction'}`}
       onClose={onClose}
     >
-      <DialogContent>
+      <DialogContent className="text-center">
         <p>
           Withdraw <b>${bid?.amount / 100}</b>
+          <br />
+          from user with #id <b>{user.mongodbId}</b>?
         </p>
-        <p>
-          from user with #id <b>{user}</b>?
-        </p>
+        {!customerInformation && !customerLoading ? (
+          <>Cannot receive customer data from stripe</>
+        ) : (
+          <>
+            Email: <b>{customerInformation?.email}</b>
+            <br />
+            Phone: <b>{customerInformation?.phone}</b>
+          </>
+        )}
       </DialogContent>
       <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
         <Button

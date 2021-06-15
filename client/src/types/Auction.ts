@@ -1,6 +1,7 @@
 import { DineroObject } from 'dinero.js';
 
 import { InfluencerProfile } from './InfluencerProfile';
+import { UserAccount } from './UserAccount';
 
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
@@ -28,7 +29,7 @@ export interface AuctionBid {
   createdAt: Date;
   paymentSource: string;
   charityId: string;
-  user: string;
+  user: UserAccount;
 }
 
 export interface Auction {

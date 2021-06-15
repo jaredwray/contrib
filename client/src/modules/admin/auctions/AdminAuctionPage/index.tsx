@@ -1,14 +1,20 @@
 import { useCallback, useState } from 'react';
 
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { format, utcToZonedTime } from 'date-fns-tz';
 import Dinero from 'dinero.js';
-import { Button, Table, Col, Container, Row } from 'react-bootstrap';
+import { Table, Col, Container, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { AuctionQuery, chargeCurrentAuction, chargeCurrendBid } from 'src/apollo/queries/auctions';
+import {
+  AuctionForAdminPage,
+  chargeCurrentAuction,
+  chargeCurrendBid,
+  CustomerInformation,
+} from 'src/apollo/queries/auctions';
+import AsyncButton from 'src/components/AsyncButton';
 import Layout from 'src/components/Layout';
 import { AuctionBid } from 'src/types/Auction';
 
@@ -24,23 +30,29 @@ export default function AdminAuctionPage() {
   const [chargeBid, { loading: bidLoading }] = useMutation(chargeCurrendBid);
 
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { data: auctionData, error, loading } = useQuery(AuctionQuery, {
+  const { data: auctionData, error, loading } = useQuery(AuctionForAdminPage, {
     variables: { id: auctionId },
   });
-  const auction = auctionData?.auction;
+  const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformation);
+
+  const auction = auctionData?.getAuctionForAdminPage;
   const charity = auction?.charity;
   const bids = auction?.bids;
+  const customerInformation = customer?.getCustomerInformation;
 
   const handleChargeBid = useCallback(
     async (item) => {
       try {
+        const { id, mongodbId, phoneNumber, status, stripeCustomerId, createdAt } = item.user;
+        const user = { id, mongodbId, phoneNumber, status, stripeCustomerId, createdAt };
         await chargeBid({
           variables: {
             paymentSource: item.paymentSource,
             charityId: charity?.id,
+            charityStripeAccountId: charity?.stripeAccountId,
             bid: item.bid,
             auctionTitle: auction?.title,
-            user: item.user,
+            user,
           },
         });
         addToast('Charged', { autoDismiss: true, appearance: 'success' });
@@ -49,7 +61,7 @@ export default function AdminAuctionPage() {
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
     },
-    [addToast, chargeBid, auction?.title, charity?.id],
+    [addToast, chargeBid, auction?.title, charity?.id, charity?.stripeAccountId],
   );
 
   const handleChargeAuction = useCallback(async () => {
@@ -74,11 +86,13 @@ export default function AdminAuctionPage() {
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));
   const maxBid = auction.bids.filter(({ bid }: AuctionBid) => bid.amount === maxBidAmount)[0];
   const onChargeClickHandler = () => {
+    getCustomerInformation({ variables: { stripeCustomerId: maxBid.user.stripeCustomerId } });
     setShowDialog(true);
     setIsBid(false);
     setBid(maxBid);
   };
   const onBidClickHandler = (arg: any) => {
+    getCustomerInformation({ variables: { stripeCustomerId: arg.user.stripeCustomerId } });
     setShowDialog(true);
     setIsBid(true);
     setBid(arg);
@@ -111,10 +125,12 @@ export default function AdminAuctionPage() {
                     <td>Current Price</td>
                     <td>{Dinero(auction.currentPrice).toFormat('$0,0')}</td>
                   </tr>
-                  <tr>
-                    <td>Fair Market Value</td>
-                    <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
-                  </tr>
+                  {auction.fairMarketValue && (
+                    <tr>
+                      <td>Fair Market Value</td>
+                      <td>{Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
+                    </tr>
+                  )}
                   <tr>
                     <td>Start date</td>
                     <td>{auctionStartDate}</td>
@@ -150,9 +166,15 @@ export default function AdminAuctionPage() {
             </Col>
             <Col>
               {hasBids && auction.isFailed && (
-                <Button className="p-2" variant="dark" onClick={onChargeClickHandler}>
+                <AsyncButton
+                  className="p-2"
+                  disabled={customerLoading}
+                  loading={customerLoading}
+                  variant="dark"
+                  onClick={onChargeClickHandler}
+                >
                   Charge auction
-                </Button>
+                </AsyncButton>
               )}
             </Col>
           </Row>
@@ -165,7 +187,9 @@ export default function AdminAuctionPage() {
                     <tr>
                       <th>Bid</th>
                       <th>Date</th>
-                      <th>User Id</th>
+                      <th>User MongodbId</th>
+                      <th>User Authz0ID</th>
+                      <th>User Phone</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -176,15 +200,19 @@ export default function AdminAuctionPage() {
                         <td className="align-middle">
                           {format(utcToZonedTime(bid.createdAt, timeZone), 'MMM dd yyyy HH:mm:ssXXX')}
                         </td>
-                        <td className="align-middle">{bid.user}</td>
+                        <td className="align-middle">{bid.user.mongodbId}</td>
+                        <td className="align-middle">{bid.user.id}</td>
+                        <td className="align-middle">{bid.user.phoneNumber}</td>
                         <td className="align-middle">
-                          <Button
-                            className={styles.bidButton}
+                          <AsyncButton
+                            className={clsx(styles.bidButton)}
+                            disabled={customerLoading}
+                            loading={customerLoading}
                             variant="secondary"
                             onClick={() => onBidClickHandler(bid)}
                           >
                             Process the bid
-                          </Button>
+                          </AsyncButton>
                         </td>
                       </tr>
                     ))}
@@ -197,6 +225,8 @@ export default function AdminAuctionPage() {
       </section>
       <Modal
         bid={bid}
+        customerInformation={customerInformation}
+        customerLoading={customerLoading}
         isBid={isBid}
         loading={isBid ? bidLoading : chargeLoading}
         open={showDialog}
