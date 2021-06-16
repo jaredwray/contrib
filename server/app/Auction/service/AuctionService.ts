@@ -52,7 +52,28 @@ export class AuctionService {
     private readonly cloudTaskService: CloudTaskService,
     private readonly handlebarsService: HandlebarsService,
   ) {}
-
+  private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {
+    try {
+      const charity = await this.CharityModel.findById(auction.charity).exec();
+      if (!charity) {
+        throw new Error(`Can not find charity with id ${auction.charity.toString()}`);
+      }
+      const userAccount = await this.UserAccountModel.findById(charity.userAccount).exec();
+      if (!userAccount) {
+        throw new Error(`Can not find account with id ${charity.userAccount.toString()}`);
+      }
+      const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_IS_CREATED_MESSAGE, {
+        auctionTitle: auction.title,
+        auctionLink: auction.link,
+      });
+      await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
+        message: message,
+        phoneNumber: userAccount.phoneNumber,
+      });
+    } catch (error) {
+      AppLogger.error(`Failed to send notification, error: ${error.message}`);
+    }
+  }
   public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
     let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
     auction = await this.auctionRepository.updateAuctionLink(auction._id, await this.makeShortAuctionLink(auction._id));
@@ -141,6 +162,9 @@ export class AuctionService {
 
   public async maybeActivateAuction(id: string, organizerId: string): Promise<Auction> {
     const auction = await this.auctionRepository.activateAuction(id, organizerId);
+    if (auction.status === AuctionStatus.ACTIVE) {
+      await this.sendAuctionIsActivatedMessage(auction);
+    }
     return this.makeAuction(auction);
   }
 
@@ -427,10 +451,6 @@ export class AuctionService {
 
   public async settleAndChargeCurrentAuction(id: string): Promise<void> {
     const auction = await this.AuctionModel.findOne({ _id: id });
-    if (auction.status === AuctionStatus.FAILED) {
-      auction.status = AuctionStatus.ACTIVE;
-      await auction.save();
-    }
     const currentAuction = await auction.populate({ path: 'bids.user', model: this.UserAccountModel }).execPopulate();
     return await this.settleAuctionAndCharge(currentAuction);
   }
@@ -537,7 +557,10 @@ export class AuctionService {
       throw new AppError('Auction not found');
     }
     auction.status = AuctionStatus.ACTIVE;
+
     await auction.save();
+    await this.sendAuctionIsActivatedMessage(auction);
+
     return;
   }
 
@@ -687,15 +710,22 @@ export class AuctionService {
   }
   public async activateAuctionById(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
     const auction = await this.AuctionModel.findOne({ _id: id });
+
     auction.endsAt < dayjs() ? (auction.status = AuctionStatus.SETTLED) : (auction.status = AuctionStatus.ACTIVE);
     auction.stoppedAt = null;
+
     try {
       await auction.save();
+      if (auction.status === AuctionStatus.ACTIVE) {
+        await this.sendAuctionIsActivatedMessage(auction);
+      }
     } catch (error) {
       throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
     }
+
     return { status: auction.status };
   }
+
   public makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
       return null;
