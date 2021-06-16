@@ -10,6 +10,7 @@ export interface IHandlebarsService {
 export enum MessageTemplate {
   AUCTION_BID_OVERLAP = 'auctionBidOverlap.hbs',
   AUCTION_WON_MESSAGE = 'auctionWon.hbs',
+  AUCTION_ENDS_MESSAGE = 'auctionEnds.hbs',
 }
 
 export class HandlebarsService implements IHandlebarsService {

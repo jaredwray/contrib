@@ -46,6 +46,20 @@ export default function appRouteHandlers(
     const response = await auction.scheduleAuctionJobStart();
     return res.json(response);
   });
+  app.post('/api/v1/auctions-ends-notify', async (req, res) => {
+    if (!req.body.key) {
+      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      return;
+    }
+
+    if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
+      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      return;
+    }
+
+    const response = await auction.scheduleAuctionEndsNotification();
+    return res.json(response);
+  });
 
   app.post('/api/v1/notification', bodyParser.raw({ type: 'application/octet-stream' }), async (req, res) => {
     const parsedBody = JSON.parse(req.body);

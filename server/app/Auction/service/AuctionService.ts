@@ -356,6 +356,55 @@ export class AuctionService {
     return { message: 'Scheduled' };
   }
 
+  public async scheduleAuctionEndsNotification(): Promise<{ message: string }> {
+    const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
+
+    for await (const auction of auctions) {
+      if (
+        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsMinutes &&
+        !auction.isNotifiedOfClosure
+      ) {
+        const currentAuction = await auction
+          .populate({ path: 'bids.user', model: this.UserAccountModel })
+          .execPopulate();
+        try {
+          await this.notifyInfluencers(currentAuction);
+        } catch {}
+      }
+    }
+    return { message: 'Scheduled' };
+  }
+
+  public async notifyInfluencers(auction: IAuctionModel): Promise<void> {
+    if (!auction) {
+      throw new Error(`There is no auction for sending notification`);
+    }
+
+    if (!auction.bids) {
+      return;
+    }
+    const bids = auction.bids;
+    const cachedPhoneNumbers = [];
+
+    for (const bid of bids) {
+      if (!cachedPhoneNumbers.includes(bid.user.phoneNumber)) {
+        try {
+          await this.sendAuctionNotification(bid.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
+            auctionTitle: auction.title,
+            auctionLink: auction.link,
+          });
+          cachedPhoneNumbers.push(bid.user.phoneNumber);
+          auction.isNotifiedOfClosure = true;
+          await auction.save();
+        } catch (error) {
+          AppLogger.warn(
+            `Something went wrong during notification about action ending. Id of auction: ${auction.id.toString()}`,
+          );
+        }
+      }
+    }
+  }
+
   public async scheduleAuctionJobStart(): Promise<{ message: string }> {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.PENDING });
 
@@ -426,7 +475,7 @@ export class AuctionService {
       }
 
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
-      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE, {
+      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
         auctionTitle: auction.title,
         auctionLink: auction.link,
       });

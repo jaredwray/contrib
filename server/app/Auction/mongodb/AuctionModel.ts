@@ -42,6 +42,7 @@ export interface IAuctionModel extends Document {
   fairMarketValue: number;
   fairMarketValueCurrency: string;
   timeZone: string;
+  isNotifiedOfClosure: boolean;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -55,6 +56,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
     charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
     autographed: { type: SchemaTypes.Boolean, default: false },
+    isNotifiedOfClosure: { type: SchemaTypes.Boolean, default: false },
     authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
     gameWorn: { type: SchemaTypes.Boolean, default: false },
     bids: [
