@@ -55,6 +55,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
+  const canEdit = (isPending || isStopped) && (account?.isAdmin || isMyAuction);
 
   let soldTime = '';
   let stoppedTime = '';
@@ -198,7 +199,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
         />
       </Elements>
       {canBid && <BidInput fairMarketValue={Dinero(auction.fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
-      {isPending && (account?.isAdmin || isMyAuction) && (
+      {canEdit && (
         <Link className="w-100 btn btn-primary" to={`/auctions/${auction.id}/basic`}>
           Edit
         </Link>
