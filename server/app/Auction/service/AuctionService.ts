@@ -451,6 +451,11 @@ export class AuctionService {
 
   public async settleAndChargeCurrentAuction(id: string): Promise<void> {
     const auction = await this.AuctionModel.findOne({ _id: id });
+    if (auction.status !== AuctionStatus.ACTIVE) {
+      auction.status = AuctionStatus.ACTIVE;
+      await auction.save();
+    }
+
     const currentAuction = await auction.populate({ path: 'bids.user', model: this.UserAccountModel }).execPopulate();
     return await this.settleAuctionAndCharge(currentAuction);
   }
@@ -489,9 +494,9 @@ export class AuctionService {
     }
 
     try {
-      const userAccount = await this.UserAccountModel.findOne({ _id: lastAuctionBid.user }).exec();
+      const userAccount = await this.UserAccountModel.findById(lastAuctionBid.user._id).exec();
       if (!userAccount) {
-        throw new Error(`Can not find account with id ${lastAuctionBid.user.toString()}`);
+        throw new Error(`Can not find account with id ${lastAuctionBid.user._id.toString()}`);
       }
 
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
@@ -503,13 +508,13 @@ export class AuctionService {
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
           lastAuctionBid.chargeId
-        } and user id ${lastAuctionBid.user.toString()}`,
+        } and user id ${lastAuctionBid.user._id.toString()}`,
       );
 
       auction.status = AuctionStatus.SETTLED;
       await auction.save();
     } catch (error) {
-      AppLogger.error(`Unable to charge user ${lastAuctionBid.user.toString()}, with error: ${error.message}`);
+      AppLogger.error(`Unable to charge user ${lastAuctionBid.user._id.toString()}, with error: ${error.message}`);
       auction.status = AuctionStatus.FAILED;
       await auction.save();
       throw new AppError('Unable to charge');
