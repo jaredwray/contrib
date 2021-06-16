@@ -1,5 +1,6 @@
 import { FC, useCallback } from 'react';
 
+import clsx from 'clsx';
 import { Form } from 'react-bootstrap';
 
 import Select from 'src/components/Select';
@@ -27,7 +28,7 @@ const SortBy: FC<Props> = ({ changeFilters }) => {
   );
 
   return (
-    <div className="float-left float-sm-right pt-4 pt-sm-0 form-inline h-100">
+    <div className={clsx(styles.formGroup, 'float-left float-sm-right pt-4 pt-sm-0 form-inline h-100')}>
       <Form.Group className={styles.dropdownFormGroup}>
         <Form.Label className="pr-3 text-nowrap">Sort by</Form.Label>
         <Select className={styles.select} options={sortByEnum} selected={sortByEnum[0]} onChange={selectSortBy} />
