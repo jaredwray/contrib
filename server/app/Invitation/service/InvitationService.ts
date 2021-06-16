@@ -1,7 +1,12 @@
+import { UserAccount } from 'app/UserAccount/dto/UserAccount';
 import { ClientSession, Connection, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IInvitation, InvitationModel } from '../mongodb/InvitationModel';
+import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { CharityModel } from '../../Charity/mongodb/CharityModel';
+import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
+import { AssistantModel } from '../../Assistant/mongodb/AssistantModel';
 import { InfluencerService } from '../../Influencer';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { InviteInput } from '../graphql/model/InviteInput';
@@ -13,7 +18,6 @@ import { AppError, ErrorCode } from '../../../errors';
 import { Assistant } from '../../Assistant/dto/Assistant';
 import { AssistantService } from '../../Assistant';
 import { UserAccountService } from '../../UserAccount';
-import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { Events } from '../../Events';
 import { AppLogger } from '../../../logger';
 import { EventHub } from '../../EventHub';
@@ -25,6 +29,10 @@ import { CharityStatus } from '../../Charity/dto/CharityStatus';
 
 export class InvitationService {
   private readonly InvitationModel = InvitationModel(this.connection);
+  private readonly UserAccountModel = UserAccountModel(this.connection);
+  private readonly CharityModel = CharityModel(this.connection);
+  private readonly InfluencerModel = InfluencerModel(this.connection);
+  private readonly AssistantModel = AssistantModel(this.connection);
 
   constructor(
     private readonly connection: Connection,
@@ -61,8 +69,12 @@ export class InvitationService {
       const { firstName, lastName, phoneNumber, welcomeMessage } = input;
 
       await session.withTransaction(async () => {
-        if (await this.InvitationModel.exists({ phoneNumber, parentEntityType: InvitationParentEntityType.CHARITY })) {
-          throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+        if (
+          await this.CharityModel.exists({
+            userAccount: (await this.UserAccountModel.findOne({ phoneNumber: phoneNumber }))._id.toString(),
+          })
+        ) {
+          throw new AppError(`Account with phone number: ${phoneNumber} already has charity`, ErrorCode.BAD_REQUEST);
         }
 
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
@@ -129,6 +141,13 @@ export class InvitationService {
           await this.InvitationModel.exists({ phoneNumber, parentEntityType: InvitationParentEntityType.INFLUENCER })
         ) {
           throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+        }
+        if (
+          await this.InfluencerModel.exists({
+            userAccount: (await this.UserAccountModel.findOne({ phoneNumber: phoneNumber }))._id.toString(),
+          })
+        ) {
+          throw new AppError(`Account with phone number: ${phoneNumber} already has influencer`, ErrorCode.BAD_REQUEST);
         }
 
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
@@ -197,6 +216,13 @@ export class InvitationService {
           await this.InvitationModel.exists({ phoneNumber, parentEntityType: InvitationParentEntityType.ASSISTANT })
         ) {
           throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
+        }
+        if (
+          await this.AssistantModel.exists({
+            userAccount: (await this.UserAccountModel.findOne({ phoneNumber: phoneNumber }))._id.toString(),
+          })
+        ) {
+          throw new AppError(`Account with phone number: ${phoneNumber} already has assistant`, ErrorCode.BAD_REQUEST);
         }
 
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber);
