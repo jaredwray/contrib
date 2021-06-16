@@ -35,6 +35,7 @@ export default function AdminAuctionsPage() {
           <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Influencer</th>
             <th>Status</th>
             <th>Price</th>
             <th>Fair Market Value</th>
@@ -46,6 +47,7 @@ export default function AdminAuctionsPage() {
             <ClickableTr key={auction.id} linkTo={`/auctions/${auction.id}${auction.isDraft ? '/basic' : ''}`}>
               <td className={styles.idColumn}>{auction.id}</td>
               <td className="break-word">{auction.title}</td>
+              <td>{auction.auctionOrganizer.name}</td>
               <td>{auction.status}</td>
               <td>
                 {auction.currentPrice
