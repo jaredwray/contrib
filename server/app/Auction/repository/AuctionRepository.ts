@@ -1,13 +1,11 @@
 import { Connection, FilterQuery, Query, Types } from 'mongoose';
 import dayjs from 'dayjs';
-import Dinero from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
-import { UserAccountStatus } from '../../UserAccount/dto/UserAccountStatus';
 import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
@@ -112,11 +110,11 @@ export class AuctionRepository implements IAuctionRepository {
   async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, organizerId);
 
-    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING,AuctionStatus.STOPPED].includes(auction?.status)) {
+    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING, AuctionStatus.STOPPED].includes(auction?.status)) {
       throw new AppError(`Cannot activate auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
-
     auction.status = dayjs().utc().isAfter(auction.startsAt) ? AuctionStatus.ACTIVE : AuctionStatus.PENDING;
+
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
   }
