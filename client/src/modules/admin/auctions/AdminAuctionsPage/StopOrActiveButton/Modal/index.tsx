@@ -76,10 +76,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
       onClose={onClose}
     >
       <Form onSubmit={onSubmit}>
-        <DialogContent>
-          {confirmContent()}
-          <hr />
-        </DialogContent>
+        <DialogContent>{confirmContent()}</DialogContent>
 
         <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
           <Button
