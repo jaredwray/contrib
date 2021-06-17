@@ -7,6 +7,7 @@ import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
 
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
@@ -43,9 +44,10 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   }
 
   const priceFormatted = currentPrice.toFormat('$0,0');
-  const { startDate, timeZone, isSettled, isDraft, isPending, isSold } = auction;
-  const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
-  const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone)), 'MMM dd yyyy');
+  const { startDate, isSettled, isDraft, isPending, isSold } = auction;
+  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
+  const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
+  const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone || '')), 'MMM dd yyyy');
   const linkToAuction = `/auctions/${auction.id}${isDraft ? '/basic' : ''}`;
 
   return (

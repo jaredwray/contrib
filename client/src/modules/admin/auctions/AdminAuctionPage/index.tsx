@@ -16,6 +16,7 @@ import {
 } from 'src/apollo/queries/auctions';
 import AsyncButton from 'src/components/AsyncButton';
 import Layout from 'src/components/Layout';
+import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { AuctionBid } from 'src/types/Auction';
 
 import { Modal } from './Modal';
@@ -77,10 +78,10 @@ export default function AdminAuctionPage() {
   if (error || loading || !auction) {
     return null;
   }
-
-  const { startDate, endDate, timeZone } = auction;
-  const auctionStartDate = format(utcToZonedTime(startDate, timeZone), 'MMM dd yyyy HH:mm:ssXXX');
-  const auctionEndDate = format(utcToZonedTime(endDate, timeZone), 'MMM dd yyyy HH:mm:ssXXX');
+  const { startDate, endDate } = auction;
+  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
+  const auctionStartDate = format(utcToZonedTime(startDate, timeZone || ''), 'MMM dd yyyy HH:mm:ssXXX');
+  const auctionEndDate = format(utcToZonedTime(endDate, timeZone || ''), 'MMM dd yyyy HH:mm:ssXXX');
   const hasBids = bids.length > 0;
 
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));

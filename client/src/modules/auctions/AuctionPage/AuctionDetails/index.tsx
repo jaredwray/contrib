@@ -16,6 +16,7 @@ import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
+import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { Auction } from 'src/types/Auction';
 
 import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal';
@@ -42,15 +43,15 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     endDate,
     startDate,
     title,
-    timeZone,
     isPending,
     isSold,
     isStopped,
     bids,
   } = auction;
   const ended = toDate(endDate) <= new Date();
-  const startTime = format(utcToZonedTime(startDate, timeZone), 'p');
-  const endTime = format(utcToZonedTime(endDate, timeZone), 'p');
+  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
+  const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
+  const endTime = format(utcToZonedTime(endDate, timeZone || ''), 'p');
   const canBid = auction.isActive && !ended;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
@@ -62,15 +63,15 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   if (isSold) {
     const maxBid = Math.max(...bids.map(({ bid }) => bid.amount));
     const maxBidDate = auction.bids.filter(({ bid }) => bid.amount === maxBid)[0].createdAt;
-    soldTime = format(utcToZonedTime(maxBidDate, timeZone), 'MMM dd yyyy p');
+    soldTime = format(utcToZonedTime(maxBidDate, timeZone || ''), 'MMM dd yyyy p');
   }
   if (auction.stoppedAt) {
-    stoppedTime = format(utcToZonedTime(auction.stoppedAt, timeZone), 'MMM dd yyyy');
+    stoppedTime = format(utcToZonedTime(auction.stoppedAt, timeZone || ''), 'MMM dd yyyy');
   }
 
   const durationTillEnd = toHumanReadableDuration(endDate);
-  const endDateFormatted = dateFormat(toDate(utcToZonedTime(endDate, timeZone)), 'MMM dd yyyy');
-  const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone)), 'MMM dd yyyy');
+  const endDateFormatted = dateFormat(toDate(utcToZonedTime(endDate, timeZone || '')), 'MMM dd yyyy');
+  const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone || '')), 'MMM dd yyyy');
 
   const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
   const minBid = useMemo(
