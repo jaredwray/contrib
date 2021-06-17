@@ -43,11 +43,11 @@ export const Modal: FC<Props> = ({
       title={`Charge ${isBid ? 'bid' : 'auction'}`}
       onClose={onClose}
     >
-      <DialogContent className="text-center">
+      <DialogContent className="text-center pt-0">
         <p>
           Withdraw <b>${bid?.amount / 100}</b>
           <br />
-          from user with #id <b>{user.mongodbId}</b>?
+          from user with #id {user.mongodbId}?
         </p>
         {!customerInformation && !customerLoading ? (
           <>Cannot receive customer data from stripe</>
