@@ -7,8 +7,8 @@ export const durationOptions = [
 ];
 
 export const utcTimeZones = [
-  { value: 'Eastern Standard Time', label: 'EST' },
-  { value: 'Pacific Standard Time', label: 'PST' },
-  { value: 'Central Standard Time', label: 'CST' },
-  { value: 'Mountain Standard Time', label: 'MST' },
+  { value: 'America/Cancun', label: 'EST' },
+  { value: 'America/Los_Angeles', label: 'PST' },
+  { value: 'America/Chicago', label: 'CST' },
+  { value: 'America/Phoenix', label: 'MST' },
 ];
