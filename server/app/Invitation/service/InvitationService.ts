@@ -69,10 +69,12 @@ export class InvitationService {
       const { firstName, lastName, phoneNumber, welcomeMessage } = input;
 
       await session.withTransaction(async () => {
+        const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
         if (
-          await this.CharityModel.exists({
-            userAccount: (await this.UserAccountModel.findOne({ phoneNumber: phoneNumber }))._id.toString(),
-          })
+          findedAccount &&
+          (await this.CharityModel.exists({
+            userAccount: findedAccount._id.toString(),
+          }))
         ) {
           throw new AppError(`Account with phone number: ${phoneNumber} already has charity`, ErrorCode.BAD_REQUEST);
         }
@@ -137,15 +139,17 @@ export class InvitationService {
       const { firstName, lastName, phoneNumber, welcomeMessage } = input;
 
       await session.withTransaction(async () => {
+        const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
         if (
           await this.InvitationModel.exists({ phoneNumber, parentEntityType: InvitationParentEntityType.INFLUENCER })
         ) {
           throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
         }
         if (
-          await this.InfluencerModel.exists({
-            userAccount: (await this.UserAccountModel.findOne({ phoneNumber: phoneNumber }))._id.toString(),
-          })
+          findedAccount &&
+          (await this.InfluencerModel.exists({
+            userAccount: findedAccount._id.toString(),
+          }))
         ) {
           throw new AppError(`Account with phone number: ${phoneNumber} already has influencer`, ErrorCode.BAD_REQUEST);
         }
@@ -212,15 +216,17 @@ export class InvitationService {
       const { firstName, lastName, phoneNumber, welcomeMessage, influencerId } = input;
 
       await session.withTransaction(async () => {
+        const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
         if (
           await this.InvitationModel.exists({ phoneNumber, parentEntityType: InvitationParentEntityType.ASSISTANT })
         ) {
           throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
         }
         if (
-          await this.AssistantModel.exists({
-            userAccount: (await this.UserAccountModel.findOne({ phoneNumber: phoneNumber }))._id.toString(),
-          })
+          findedAccount &&
+          (await this.AssistantModel.exists({
+            userAccount: findedAccount._id.toString(),
+          }))
         ) {
           throw new AppError(`Account with phone number: ${phoneNumber} already has assistant`, ErrorCode.BAD_REQUEST);
         }
