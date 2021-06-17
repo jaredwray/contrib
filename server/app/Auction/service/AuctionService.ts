@@ -90,11 +90,6 @@ export class AuctionService {
         id: auctionOrganizer._id.toString(),
         name: auctionOrganizer.name,
       },
-      charity: {
-        id: charity?._id.toString(),
-        name: charity?.name,
-        stripeAccountId: charity?.stripeAccountId,
-      },
       bids: bids
         .sort((a, b) => (a.bid > b.bid ? -1 : 1))
         .map((bid) => {
