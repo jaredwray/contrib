@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Redirect } from 'react-router-dom';
 
 import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
@@ -17,8 +18,10 @@ import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
  */
 
 export const AfterLogin: FC = () => {
+  const { isAuthenticated } = useAuth0();
   const returnUrl = useReactiveVar(returnUrlVar);
   const redirectUrl = (returnUrl && returnUrl.startsWith('/') && returnUrl) || '/';
+  const redirectBackUrl = redirectUrl.split('?')[0];
 
-  return <Redirect to={redirectUrl} />;
+  return <Redirect to={isAuthenticated ? redirectUrl : redirectBackUrl} />;
 };
