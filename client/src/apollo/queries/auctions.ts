@@ -135,6 +135,9 @@ export const getAuctionBasics = gql`
       playedIn
       description
       fullPageDescription
+      auctionOrganizer {
+        id
+      }
     }
   }
 `;

@@ -25,7 +25,8 @@ const EditAuctionBasicPage = () => {
   });
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionBasics, {
     onCompleted() {
-      history.push(`/auctions/${auctionId}/media`);
+      const orginizerId = auctionData?.auction.auctionOrganizer.id;
+      history.push(`/auctions/${auctionId}/media?orginizerId=${orginizerId}`);
     },
   });
 

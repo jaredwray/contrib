@@ -105,12 +105,8 @@ export const AuctionResolvers: AuctionResolversType = {
     buyAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
       auction.buyAuction(id, currentAccount),
     ),
-    stopAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
-      auction.stopAuction(id, currentAccount),
-    ),
-    activateAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
-      auction.activateAuctionById(id, currentAccount),
-    ),
+    stopAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.stopAuction(id)),
+    activateAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.activateAuctionById(id)),
     addAuctionAttachment: requireRole(
       async (_, { id, attachment, organizerId }, { auction, currentAccount, currentInfluencerId }) =>
         auction.addAuctionAttachment(id, currentAccount.isAdmin ? organizerId : currentInfluencerId, attachment),

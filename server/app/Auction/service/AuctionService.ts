@@ -83,7 +83,7 @@ export class AuctionService {
   public async getAuctionForAdminPage(id: string) {
     const auction = await this.auctionRepository.getAuctionForAdminPage(id);
     const currentAuction = this.makeAuction(auction);
-    const { auctionOrganizer, charity, bids } = auction;
+    const { auctionOrganizer, bids } = auction;
     return {
       ...currentAuction,
       auctionOrganizer: {
@@ -494,15 +494,15 @@ export class AuctionService {
         throw new Error(`Can not find account with id ${lastAuctionBid.user._id.toString()}`);
       }
 
-      lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
-      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
+      auction.bids[auction.bids.length - 1].chargeId = await this.chargeUser(lastAuctionBid, auction);
+      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE, {
         auctionTitle: auction.title,
         auctionLink: auction.link,
       });
 
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
-          lastAuctionBid.chargeId
+          auction.bids[auction.bids.length - 1].chargeId
         } and user id ${lastAuctionBid.user._id.toString()}`,
       );
 
@@ -697,7 +697,7 @@ export class AuctionService {
     return { status: auction.status };
   }
 
-  public async stopAuction(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
+  public async stopAuction(id: string): Promise<AuctionStatusResponse> {
     const auction = await this.AuctionModel.findOne({ _id: id });
     auction.status = AuctionStatus.STOPPED;
     auction.stoppedAt = dayjs();
@@ -708,7 +708,7 @@ export class AuctionService {
     }
     return { status: auction.status };
   }
-  public async activateAuctionById(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
+  public async activateAuctionById(id: string): Promise<AuctionStatusResponse> {
     const auction = await this.AuctionModel.findOne({ _id: id });
 
     auction.endsAt < dayjs() ? (auction.status = AuctionStatus.SETTLED) : (auction.status = AuctionStatus.ACTIVE);
