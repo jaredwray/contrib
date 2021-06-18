@@ -28,6 +28,7 @@ export const CharitySchema = gql`
     profileDescription: String
     websiteUrl: String
     website: String
+    followers: [Follow]
   }
   input CharityInputID {
     id: String!
@@ -56,6 +57,8 @@ export const CharitySchema = gql`
     updateCharity(id: String!, input: CharityInput!): Charity!
     updateCharityProfileAvatar(charityId: String!, image: Upload): Charity!
     updateCharityProfile(charityId: String!, input: CharityProfileInput!): Charity!
+    followCharity(charityId: String!): Follow
+    unfollowCharity(charityId: String!): ResponceId
   }
   extend type UserAccount {
     charity: Charity

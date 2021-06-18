@@ -16,6 +16,38 @@ export const AllInfluencersQuery = gql`
   }
 `;
 
+export const GetInfluencerQuery = gql`
+  query GetInfluencerById($id: String!) {
+    influencer(id: $id) {
+      avatarUrl
+      id
+      name
+      profileDescription
+      sport
+      status
+      team
+      auctions {
+        id
+        attachments {
+          url
+          id
+        }
+        status
+        endDate
+        startPrice
+        startDate
+        title
+        totalBids
+        currentPrice
+      }
+      followers {
+        user
+        createdAt
+      }
+    }
+  }
+`;
+
 export const InviteInfluencerMutation = gql`
   mutation InviteInfluencer(
     $firstName: String!
@@ -46,30 +78,19 @@ export const CreateInfluencerMutation = gql`
   }
 `;
 
-export const GetInfluencerQuery = gql`
-  query GetInfluencerById($id: String!) {
-    influencer(id: $id) {
-      avatarUrl
+export const FollowInfluencer = gql`
+  mutation FollowInfluencer($influencerId: String!) {
+    followInfluencer(influencerId: $influencerId) {
+      user
+      createdAt
+    }
+  }
+`;
+
+export const UnfollowInfluencer = gql`
+  mutation UnfollowInfluencer($influencerId: String!) {
+    unfollowInfluencer(influencerId: $influencerId) {
       id
-      name
-      profileDescription
-      sport
-      status
-      team
-      auctions {
-        id
-        attachments {
-          url
-          id
-        }
-        status
-        endDate
-        startPrice
-        startDate
-        title
-        totalBids
-        currentPrice
-      }
     }
   }
 `;

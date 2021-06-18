@@ -37,7 +37,7 @@ export const UserAccountSchema = gql`
     ID is the user_id received from Auth0.
     """
     id: String!
-
+    mongodbId: String
     """
     Account verified phone number.
     """

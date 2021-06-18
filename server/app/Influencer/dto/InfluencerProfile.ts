@@ -1,4 +1,5 @@
 import { InfluencerStatus } from './InfluencerStatus';
+import { Follow } from '../../FollowDto';
 
 export interface InfluencerProfile {
   id: string;
@@ -11,4 +12,5 @@ export interface InfluencerProfile {
   userAccount: string;
   favoriteCharities: string[];
   assistants: string[];
+  followers: Follow[];
 }

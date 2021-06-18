@@ -1,3 +1,5 @@
+import { Follow } from './Follow';
+
 export enum CharityStatus {
   PENDING_INVITE = 'PENDING_INVITE',
   PENDING_ONBOARDING = 'PENDING_ONBOARDING',
@@ -25,4 +27,5 @@ export interface Charity {
   website?: string;
   profileDescription?: string;
   stripeAccountLink: string;
+  followers?: Follow[];
 }

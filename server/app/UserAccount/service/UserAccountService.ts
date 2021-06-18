@@ -166,6 +166,7 @@ export class UserAccountService {
       stripeCustomerId: model.stripeCustomerId,
       createdAt: model.createdAt.toISOString(),
       notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms, accountEntityTypes),
+      model
     };
 
     if (model.isAdmin) {

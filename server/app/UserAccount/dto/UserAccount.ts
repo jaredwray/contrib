@@ -1,3 +1,4 @@
+import { IUserAccount } from '../mongodb/UserAccountModel';
 import { UserAccountStatus } from './UserAccountStatus';
 
 export interface UserAccount {
@@ -9,4 +10,5 @@ export interface UserAccount {
   stripeCustomerId?: string;
   createdAt: string;
   notAcceptedTerms?: string;
+  model?: IUserAccount;
 }

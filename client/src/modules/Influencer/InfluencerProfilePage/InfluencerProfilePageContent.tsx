@@ -1,9 +1,11 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useCallback, useState } from 'react';
 
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
+import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
@@ -11,11 +13,14 @@ import Layout from 'src/components/Layout';
 import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import WatchBtn from 'src/components/WatchBtn';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import { FollowInfluencer, UnfollowInfluencer } from '../../../apollo/queries/influencers';
 import AdminDropdown from './AdminDropdown';
 import styles from './InfluencerProfilePageContent.module.scss';
 
@@ -25,7 +30,15 @@ interface Props {
 }
 
 export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaisedAmount }) => {
+  const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+
+  const [followed, setFollowed] = useState(() =>
+    influencer?.followers?.some((follower) => follower.user === account?.mongodbId),
+  );
+  const [followersNumber, setFollowersNumber] = useState(() => influencer?.followers?.length);
+
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
       filters: {
@@ -40,6 +53,44 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
       },
     },
   });
+
+  const [followInfluencer, { loading: followLoading }] = useMutation(FollowInfluencer);
+  const [unfollowInfluencer, { loading: unfollowLoading }] = useMutation(UnfollowInfluencer);
+
+  const handleFollowInfluencer = useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        await followInfluencer({ variables: { influencerId: influencer.id } });
+        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
+        setFollowed(true);
+        setFollowersNumber(followersNumber + 1);
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      }
+      return;
+    }
+
+    const followPath = `/profiles/${influencer.id}`;
+    const redirectUri = mergeUrlPath(
+      process.env.REACT_APP_PLATFORM_URL,
+      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
+    );
+    loginWithRedirect({ redirectUri }).catch((error) => {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    });
+  }, [influencer.id, addToast, followInfluencer, followersNumber, isAuthenticated, loginWithRedirect]);
+
+  const handleUnfollowInfluencer = useCallback(async () => {
+    try {
+      await unfollowInfluencer({ variables: { influencerId: influencer.id } });
+      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      setFollowed(false);
+      setFollowersNumber(followersNumber - 1);
+    } catch (error) {
+      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+    }
+  }, [influencer.id, addToast, unfollowInfluencer, followersNumber]);
+
   const auctions = data?.auctions?.items;
 
   const profileAuctions = profileAuctionsHash(auctions);
@@ -144,6 +195,19 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
                   {paragraph}
                 </p>
               ))}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <WatchBtn
+                disabled={isMyProfile}
+                entityType="influencer"
+                followHandler={handleFollowInfluencer}
+                followed={followed}
+                followersNumber={followersNumber}
+                loading={followLoading || unfollowLoading}
+                unfollowHandler={handleUnfollowInfluencer}
+              />
             </Col>
           </Row>
         </Container>

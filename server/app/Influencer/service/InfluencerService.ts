@@ -1,9 +1,9 @@
+import dayjs from 'dayjs';
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
-import { AuctionModel, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
-import { AuctionService } from '../../Auction';
-import { AuctionStatus } from '../../Auction/dto/AuctionStatus';
+import { IAuctionModel } from '../../Auction/mongodb/AuctionModel';
+import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { CharityService } from '../../Charity';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
@@ -18,9 +18,85 @@ interface TransientInfluencerInput {
 
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
-  private readonly AuctionModel = AuctionModel(this.connection);
 
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
+
+  async followInfluencer(influencerId: string, account: IUserAccount) {
+    try {
+      const influencer = await this.InfluencerModel.findById(influencerId).exec();
+      if (!influencer) {
+        throw new Error(`Influencer record #${influencerId} not found`);
+      }
+
+      const currentAccountId = account._id.toString();
+      const influencerAccountId = influencer.userAccount.toString();
+
+      if (currentAccountId === influencerAccountId) {
+        throw new Error(`You can't following to yourself`);
+      }
+
+      const followed = influencer.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+      if (followed) {
+        throw new Error('You have already followed to this influencer');
+      }
+
+      const createdFollower = {
+        user: currentAccountId,
+        createdAt: dayjs(),
+      };
+
+      const createdFollowing = {
+        user: influencerAccountId,
+        createdAt: dayjs(),
+      };
+
+      Object.assign(influencer, {
+        followers: [...influencer.followers, createdFollower],
+      });
+
+      Object.assign(account, {
+        followingInfluencers: [...account.followingInfluencers, createdFollowing],
+      });
+
+      await influencer.save();
+      await account.save();
+
+      return createdFollower;
+    } catch (error) {
+      AppLogger.error(`Cannot follow follow Influencer with id #${influencerId}: ${error.message}`);
+      throw new Error('Something went wrong. Please, try later');
+    }
+  }
+
+  async unfollowInfluencer(influencerId: string, account: IUserAccount) {
+    try {
+      const influencer = await this.InfluencerModel.findById(influencerId).exec();
+      if (!influencer) {
+        throw new Error(`Influencer record #${influencerId} not found`);
+      }
+
+      const currentAccountId = account._id.toString();
+      const influencerAccountId = influencer.userAccount.toString();
+      const followingInfluencersLength = account.followingInfluencers.length;
+
+      account.followingInfluencers = account.followingInfluencers.filter(
+        (follow) => follow.user.toString() !== influencerAccountId,
+      );
+      if (followingInfluencersLength === account.followingInfluencers.length) {
+        throw new Error('You are not followed to this influencer');
+      }
+      influencer.followers = influencer.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+
+      await influencer.save();
+      await account.save();
+
+      return { id: Date.now().toString() };
+    } catch (error) {
+      AppLogger.error(`Cannot unfollow follow Influencer with id #${influencerId}: ${error.message}`);
+      throw new Error('Something went wrong. Please, try later');
+    }
+  }
 
   async createTransientInfluencer(
     { name }: TransientInfluencerInput,
@@ -283,6 +359,12 @@ export class InfluencerService {
       userAccount: model.userAccount?.toString() ?? null,
       favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
       assistants: model.assistants?.map((m) => m.toString()) ?? [],
+      followers: model.followers.map((follower) => {
+        return {
+          user: follower.user,
+          createdAt: follower.createdAt,
+        };
+      }),
     };
   }
 }

@@ -1,6 +1,7 @@
 import { CharityStatus } from './CharityStatus';
 import { CharityProfileStatus } from './CharityProfileStatus';
 import { CharityStripeStatus } from './CharityStripeStatus';
+import { Follow } from '../../FollowDto';
 
 export interface Charity {
   id: string;
@@ -14,4 +15,5 @@ export interface Charity {
   profileDescription: string | null;
   website: string | null;
   websiteUrl: string | null;
+  followers: Follow[];
 }

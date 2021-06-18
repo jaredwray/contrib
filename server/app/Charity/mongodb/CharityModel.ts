@@ -1,8 +1,9 @@
+import dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { CharityStatus } from '../dto/CharityStatus';
 import { CharityProfileStatus } from '../dto/CharityProfileStatus';
 import { CharityStripeStatus } from '../dto/CharityStripeStatus';
-import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
+import { IUserAccount, UserAccountCollectionName, IFollowObject } from '../../UserAccount/mongodb/UserAccountModel';
 
 export interface ICharityModel extends Document {
   name: string;
@@ -14,6 +15,7 @@ export interface ICharityModel extends Document {
   avatarUrl: string | null;
   profileDescription: string | null;
   website: string | null;
+  followers: IFollowObject[];
 }
 
 export const CharityCollectionName = 'charity';
@@ -28,6 +30,12 @@ const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   avatarUrl: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
   website: { type: SchemaTypes.String },
+  followers: [
+    {
+      user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+      createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+    },
+  ],
 });
 CharitySchema.index({ name: 'text' });
 export const CharityModel = (connection: Connection): Model<ICharityModel> =>

@@ -3,6 +3,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import { DineroObject } from 'dinero.js';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ToastProvider } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 
@@ -30,7 +31,9 @@ test('renders without crashing', () => {
   render(
     <Router>
       <MockedProvider cache={cache}>
-        <CharityProfilePageContent {...props} />
+        <ToastProvider>
+          <CharityProfilePageContent {...props} />
+        </ToastProvider>
       </MockedProvider>
     </Router>,
   );
