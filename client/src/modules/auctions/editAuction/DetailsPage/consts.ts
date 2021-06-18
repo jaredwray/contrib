@@ -1,3 +1,5 @@
+import { getTimeZone } from './utils';
+
 export const durationOptions = [
   { value: '1', label: '1 Day' },
   { value: '2', label: '2 Days' },
@@ -7,8 +9,8 @@ export const durationOptions = [
 ];
 
 export const utcTimeZones = [
-  { value: 'America/Cancun', label: 'EST' },
-  { value: 'America/Los_Angeles', label: 'PST' },
-  { value: 'America/Chicago', label: 'CST' },
-  { value: 'America/Phoenix', label: 'MST' },
+  { value: 'America/Los_Angeles', label: getTimeZone('America/Los_Angeles') },
+  { value: 'America/Denver', label: getTimeZone('America/Denver') },
+  { value: 'America/Chicago', label: getTimeZone('America/Chicago') },
+  { value: 'America/New_York', label: getTimeZone('America/New_York') },
 ];
