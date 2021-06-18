@@ -49,7 +49,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     bids,
   } = auction;
   const ended = toDate(endDate) <= new Date();
-  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
+  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label;
   const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
   const endTime = format(utcToZonedTime(endDate, timeZone || ''), 'p');
   const canBid = auction.isActive && !ended;
@@ -146,7 +146,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
       <div className="text-headline">{price.toFormat('$0,0')}</div>
       {isPending && (
         <>
-          <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3">
+          <div className="justify-content-between flex-wrap text-all-cups pt-3">
             <span className={styles.notBold}>starts in </span>
             {startTime} {timeZone}
             <p>
@@ -154,7 +154,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
               {startFormatted}
             </p>
           </div>
-          <div className="d-flex justify-content-between flex-wrap text-all-cups pb-3">
+          <div className="justify-content-between flex-wrap text-all-cups pb-3">
             <span className={styles.notBold}>ends in </span>
             {endTime} {timeZone}
             <p>

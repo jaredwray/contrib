@@ -79,7 +79,7 @@ export default function AdminAuctionPage() {
     return null;
   }
   const { startDate, endDate } = auction;
-  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
+  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label;
   const auctionStartDate = format(utcToZonedTime(startDate, timeZone || ''), 'MMM dd yyyy HH:mm:ssXXX');
   const auctionEndDate = format(utcToZonedTime(endDate, timeZone || ''), 'MMM dd yyyy HH:mm:ssXXX');
   const hasBids = bids.length > 0;
