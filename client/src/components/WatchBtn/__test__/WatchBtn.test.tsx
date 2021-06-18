@@ -1,8 +1,8 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import { auction } from '../../../../../helpers/testHelpers/auction';
+import { auction } from '../../../helpers/testHelpers/auction';
 
-import WatchBtn from '../WatchBtn';
+import WatchBtn from '../';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 

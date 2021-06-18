@@ -1,9 +1,11 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useCallback, useState } from 'react';
 
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
+import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
@@ -12,11 +14,14 @@ import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
 import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import WatchBtn from 'src/components/WatchBtn';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
+import { FollowCharity, UnfollowCharity } from '../../../apollo/queries/charityProfile';
 import styles from './CharityProfilePageContent.module.scss';
 
 interface Props {
@@ -25,7 +30,9 @@ interface Props {
 }
 
 export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmount }) => {
+  const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
@@ -35,6 +42,49 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
       },
     },
   });
+
+  const [followCharity, { loading: followLoading }] = useMutation(FollowCharity);
+  const [unfollowCharity, { loading: unfollowLoading }] = useMutation(UnfollowCharity);
+
+  const [followed, setFollowed] = useState(() =>
+    charity?.followers?.some((follower) => follower.user === account?.mongodbId),
+  );
+  const [followersNumber, setFollowersNumber] = useState(() => charity?.followers?.length);
+
+  const handleFollowCharity = useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        await followCharity({ variables: { charityId: charity.id } });
+        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
+        setFollowed(true);
+        setFollowersNumber(followersNumber + 1);
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      }
+      return;
+    }
+
+    const followPath = `/charity/${charity.id}`;
+    const redirectUri = mergeUrlPath(
+      process.env.REACT_APP_PLATFORM_URL,
+      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
+    );
+    loginWithRedirect({ redirectUri }).catch((error) => {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    });
+  }, [charity.id, addToast, followCharity, followersNumber, isAuthenticated, loginWithRedirect]);
+
+  const handleUnfollowCharity = useCallback(async () => {
+    try {
+      await unfollowCharity({ variables: { charityId: charity.id } });
+      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      setFollowed(false);
+      setFollowersNumber(followersNumber - 1);
+    } catch (error) {
+      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+    }
+  }, [charity.id, addToast, unfollowCharity, followersNumber]);
+
   const auctions = data?.auctions?.items ?? [];
 
   const profileDescriptionParagraphs = (charity?.profileDescription ?? 'no description').split('\n');
@@ -100,6 +150,19 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
                   {paragraph}
                 </p>
               ))}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <WatchBtn
+                disabled={isMyProfile}
+                entityType="charity"
+                followHandler={handleFollowCharity}
+                followed={followed}
+                followersNumber={followersNumber}
+                loading={followLoading || unfollowLoading}
+                unfollowHandler={handleUnfollowCharity}
+              />
             </Col>
           </Row>
         </Container>

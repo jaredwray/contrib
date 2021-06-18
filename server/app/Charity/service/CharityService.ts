@@ -1,6 +1,7 @@
+import dayjs from 'dayjs';
 import { Storage } from '@google-cloud/storage';
-import { ClientSession, Connection, ObjectId, Query } from 'mongoose';
-import { AuctionModel } from '../../Auction/mongodb/AuctionModel';
+import { ClientSession, Connection, ObjectId } from 'mongoose';
+import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
 import { CharityInput } from '../graphql/model/CharityInput';
@@ -21,13 +22,89 @@ interface CharityCreationInput {
 
 export class CharityService {
   private readonly CharityModel = CharityModel(this.connection);
-  private readonly AuctionModel = AuctionModel(this.connection);
   private readonly stripe = new StripeService();
 
   constructor(private readonly connection: Connection, private readonly eventHub: EventHub) {
     eventHub.subscribe(Events.CHARITY_ONBOARDED, async ({ charity, session }) => {
       await this.createStripeAccountForCharity(charity, session);
     });
+  }
+
+  async followCharity(charityId: string, account: IUserAccount) {
+    try {
+      const charity = await this.CharityModel.findById(charityId).exec();
+      if (!charity) {
+        throw new Error(`Charity record #${charityId} not found`);
+      }
+
+      const currentAccountId = account._id.toString();
+      const charityAccountId = charity.userAccount.toString();
+
+      if (currentAccountId === charityAccountId) {
+        throw new Error(`You can't following to yourself`);
+      }
+
+      const followed = charity.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+      if (followed) {
+        throw new Error('You have already followed to this charity');
+      }
+
+      const createdFollower = {
+        user: currentAccountId,
+        createdAt: dayjs(),
+      };
+
+      const createdFollowing = {
+        user: charityAccountId,
+        createdAt: dayjs(),
+      };
+
+      Object.assign(charity, {
+        followers: [...charity.followers, createdFollower],
+      });
+
+      Object.assign(account, {
+        followingCharitis: [...account.followingCharitis, createdFollowing],
+      });
+
+      await charity.save();
+      await account.save();
+
+      return createdFollower;
+    } catch (error) {
+      AppLogger.error(`Cannot follow Charity with id #${charityId}: ${error.message}`);
+      throw new Error('Something went wrong. Please, try later');
+    }
+  }
+
+  async unfollowCharity(charityId: string, account: IUserAccount) {
+    try {
+      const charity = await this.CharityModel.findById(charityId).exec();
+      if (!charity) {
+        throw new Error(`Charity record #${charityId} not found`);
+      }
+
+      const currentAccountId = account._id.toString();
+      const charityAccountId = charity.userAccount.toString();
+      const followingCharityLength = account.followingCharitis.length;
+
+      account.followingCharitis = account.followingCharitis.filter(
+        (follow) => follow.user.toString() !== charityAccountId,
+      );
+      if (followingCharityLength === account.followingCharitis.length) {
+        throw new Error('You are not followed to this charity');
+      }
+      charity.followers = charity.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+
+      await charity.save();
+      await account.save();
+
+      return { id: Date.now().toString() };
+    } catch (error) {
+      AppLogger.error(`Cannot unfollow Charity with id #${charityId}: ${error.message}`);
+      throw new Error('Something went wrong. Please, try later');
+    }
   }
 
   async createStripeAccountForCharity(charity: Charity, session): Promise<Charity> {
@@ -313,6 +390,12 @@ export class CharityService {
       profileDescription: model.profileDescription,
       website: model.website,
       websiteUrl: CharityService.websiteUrl(model.website),
+      followers: model.followers.map((follower) => {
+        return {
+          user: follower.user,
+          createdAt: follower.createdAt,
+        };
+      }),
     };
   }
 }

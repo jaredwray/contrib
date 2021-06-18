@@ -1,4 +1,10 @@
+import dayjs, { Dayjs } from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
+
+export interface IFollowObject {
+  user: IUserAccount['_id'];
+  createdAt: Dayjs;
+}
 
 export interface IUserAccount extends Document {
   authzId: string;
@@ -8,6 +14,8 @@ export interface IUserAccount extends Document {
   createdAt: Date;
   acceptedTerms: string;
   acceptedTermsAt: Date;
+  followingInfluencers: IFollowObject[];
+  followingCharitis: IFollowObject[];
 }
 
 export const UserAccountCollectionName = 'account';
@@ -20,6 +28,18 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   createdAt: { type: SchemaTypes.Date, required: true },
   acceptedTerms: { type: SchemaTypes.String },
   acceptedTermsAt: { type: SchemaTypes.Date },
+  followingInfluencers: [
+    {
+      user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+      createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+    },
+  ],
+  followingCharitis: [
+    {
+      user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+      createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+    },
+  ],
 });
 
 export const UserAccountModel = (connection: Connection): Model<IUserAccount> => {

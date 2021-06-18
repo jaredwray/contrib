@@ -4,6 +4,7 @@ import { InfluencerProfile } from './InfluencerProfile';
 import { PaymentInformation } from './PaymentInformation';
 
 export interface UserProfile {
+  mongodbId: string;
   isAdmin?: boolean;
   influencerProfile: InfluencerProfile | null;
   charity: Charity | null;

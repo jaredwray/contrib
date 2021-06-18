@@ -4,6 +4,7 @@ export const MyAccountQuery = gql`
   query GetMyAccount {
     myAccount {
       id
+      mongodbId
       phoneNumber
       status
       isAdmin

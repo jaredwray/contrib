@@ -19,6 +19,7 @@ export const InfluencerSchema = gql`
     invitation: Invitation!
     favoriteCharities: [Charity!]!
     assistants: [Assistant!]!
+    followers: [Follow]
   }
 
   type InfluencersPage {
@@ -26,6 +27,11 @@ export const InfluencerSchema = gql`
     totalItems: Int!
     size: Int!
     skip: Int!
+  }
+
+  type Follow {
+    user: String
+    createdAt: DateTime
   }
 
   extend type Query {
@@ -54,6 +60,8 @@ export const InfluencerSchema = gql`
     updateMyInfluencerProfile(input: UpdateInfluencerProfileInput!): InfluencerProfile!
     updateMyInfluencerProfileAvatar(image: Upload!): InfluencerProfile!
     updateMyInfluencerProfileFavoriteCharities(charities: [String!]!): InfluencerProfile!
+    followInfluencer(influencerId: String!): Follow
+    unfollowInfluencer(influencerId: String!): ResponceId
   }
 
   extend type UserAccount {

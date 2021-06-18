@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { Invitation } from '../../Invitation/dto/Invitation';
 import { InviteInput } from '../../Invitation/graphql/model/InviteInput';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
@@ -13,6 +14,7 @@ import { GraphqlResolver } from '../../../graphql/types';
 import { Charity } from '../../Charity/dto/Charity';
 import { Assistant } from '../../Assistant/dto/Assistant';
 import { CreateInfluencerInput } from '../../Invitation/graphql/model/CreateInfluencerInput';
+import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 
 interface InfluencerResolversType {
   Query: {
@@ -37,6 +39,8 @@ interface InfluencerResolversType {
     updateMyInfluencerProfile: GraphqlResolver<InfluencerProfile, { input: UpdateInfluencerProfileInput }>;
     updateMyInfluencerProfileAvatar: GraphqlResolver<InfluencerProfile, { image: File }>;
     updateMyInfluencerProfileFavoriteCharities: GraphqlResolver<InfluencerProfile, { charities: [string] }>;
+    followInfluencer: GraphqlResolver<{ user: string; createdAt: Dayjs }, { influencerId: string }>;
+    unfollowInfluencer: GraphqlResolver<{ id: string }, { influencerId: string }>;
   };
   InfluencerProfile: {
     userAccount: GraphqlResolver<UserAccount, Record<string, never>, InfluencerProfile>;
@@ -70,6 +74,12 @@ export const InfluencerResolvers: InfluencerResolversType = {
     }),
   },
   Mutation: {
+    unfollowInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>
+      influencer.unfollowInfluencer(influencerId, currentAccount.model),
+    ),
+    followInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>
+      influencer.followInfluencer(influencerId, currentAccount.model),
+    ),
     createInfluencer: requireAdmin(async (_, { input }, { influencer }) => influencer.createTransientInfluencer(input)),
     inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
     updateInfluencerProfile: requireRole(
