@@ -70,7 +70,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
   };
   return (
     <Dialog
-      className={clsx(styles.modal, 'font-weight-normal text-center')}
+      className="font-weight-normal text-center"
       open={open}
       title={`Confirm ${isStopped ? 'activating' : 'stopping'}`}
       onClose={onClose}

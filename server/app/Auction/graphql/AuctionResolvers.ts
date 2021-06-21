@@ -15,6 +15,7 @@ import { GraphqlResolver } from '../../../graphql/types';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { loadRole } from '../../../graphql/middleware/loadRole';
+import { AppError, ErrorCode } from '../../../errors';
 
 interface AuctionResolversType {
   Query: {
@@ -42,7 +43,7 @@ interface AuctionResolversType {
   Mutation: {
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
     updateAuction: GraphqlResolver<Auction, { id: string; input: AuctionInput }>;
-    deleteAuction: GraphqlResolver<Auction, { id: string }>;
+    deleteAuction: GraphqlResolver<{ id: string }, { id: string }>;
     addAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachment: any; organizerId: string }>;
     removeAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
@@ -101,7 +102,15 @@ export const AuctionResolvers: AuctionResolversType = {
       }
       return auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input);
     }),
-    deleteAuction: async () => Promise.resolve(null),
+    deleteAuction: requireRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) => {
+      const foundAuction = await auction.getAuction(id);
+      const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencerId;
+      if (!currentAccount.isAdmin && !isOwner) {
+        throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+      }
+      auction.deleteAuction(id);
+      return { id };
+    }),
     buyAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
       auction.buyAuction(id, currentAccount),
     ),

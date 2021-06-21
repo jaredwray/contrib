@@ -763,6 +763,43 @@ export class AuctionService {
     return { status: auction.status };
   }
 
+  public async deleteAuctionAttachment(id: string, uid: string) {
+    try {
+      if (uid) {
+        const cloudflareStreaming = new CloudflareStreaming();
+        await cloudflareStreaming.deleteFromCloudFlare(uid);
+      }
+      const attachment = await this.attachmentsService.AuctionAsset.findOne({ _id: id });
+      await attachment.remove();
+      await this.attachmentsService.removeFileAttachment(attachment.url);
+    } catch (error) {
+      AppLogger.error(`Cannot delete auction attachment #${id}: ${error}`);
+      throw new AppError('Cannot delete attachment', ErrorCode.BAD_REQUEST);
+    }
+  }
+
+  public async deleteAuction(id: string) {
+    const auction = await this.AuctionModel.findOne({ _id: id }).populate({
+      path: 'assets',
+      model: this.attachmentsService.AuctionAsset,
+    });
+    if (!auction) {
+      return;
+    }
+
+    if (auction.status !== AuctionStatus.DRAFT) {
+      throw new AppError('Auction is not DRAFT', ErrorCode.BAD_REQUEST);
+    }
+
+    try {
+      auction.assets.map(async (asset) => await this.deleteAuctionAttachment(asset._id, asset.uid));
+      await this.AuctionModel.deleteOne({ _id: id });
+    } catch (error) {
+      AppLogger.error(`Cannot delete auction ${auction.id}: ${error}`);
+      throw new AppError('Cannot delete auction', ErrorCode.BAD_REQUEST);
+    }
+  }
+
   public makeAuction(model: IAuctionModel): Auction | null {
     if (!model) {
       return null;

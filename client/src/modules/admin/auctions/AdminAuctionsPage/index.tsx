@@ -6,13 +6,20 @@ import Dinero from 'dinero.js';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { AuctionsListQuery, updateAuctionDetails, stopAuction, activateAuction } from 'src/apollo/queries/auctions';
+import {
+  AuctionsListQuery,
+  updateAuctionDetails,
+  stopAuction,
+  activateAuction,
+  deleteAuctionMutation,
+} from 'src/apollo/queries/auctions';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
 import { PER_PAGE } from 'src/components/Pagination';
 import { Auction } from 'src/types/Auction';
 
+import { DeleteAuctionButton } from './DeleteAuctionButton';
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import { StopOrActiveButton } from './StopOrActiveButton';
 import styles from './styles.module.scss';
@@ -64,6 +71,13 @@ export default function AdminAuctionsPage() {
                     <Link className={'dropdown-item text--body'} to={`/auctions/${auction.id}/basic`}>
                       Edit
                     </Link>
+                  )}
+                  {auction.isDraft && (
+                    <DeleteAuctionButton
+                      auction={auction}
+                      className={clsx(styles.actionBtn, 'dropdown-item text--body')}
+                      mutation={deleteAuctionMutation}
+                    />
                   )}
                   {(auction.isActive || auction.isPending) && (
                     <FairMarketValueChangeButton

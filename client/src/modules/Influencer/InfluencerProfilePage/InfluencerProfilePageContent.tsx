@@ -52,6 +52,9 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
         ],
       },
     },
+    onCompleted({ auctions }) {
+      setDraftAuctions(profileAuctionsHash(auctions.items).DRAFT);
+    },
   });
 
   const [followInfluencer, { loading: followLoading }] = useMutation(FollowInfluencer);
@@ -98,19 +101,16 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const liveAuctions = profileAuctions.ACTIVE;
   const pendingAuctions = profileAuctions.PENDING;
   const pastAuctions = profileAuctions.SETTLED;
-  const draftAuctions = profileAuctions.DRAFT;
+  const [draftAuctions, setDraftAuctions] = useState<[Auction]>([]);
   const stoppedAuctions = profileAuctions.STOPPED;
 
   const profileDescriptionParagraphs = (influencer.profileDescription ?? '').split('\n');
 
-  const hasLiveAuctions = Boolean(liveAuctions.length);
-  const hasPendingAuctions = Boolean(pendingAuctions.length);
-  const hasPastAuctions = Boolean(pastAuctions.length);
-  const hasDraftAuctions = Boolean(draftAuctions.length);
-  const hasStoppedAuctions = Boolean(stoppedAuctions.length);
-
-  const hasAuctions = hasLiveAuctions || hasPastAuctions || hasDraftAuctions;
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
+
+  const onDelete = useCallback((auction: Auction) => {
+    setDraftAuctions((prevState: Auction[]) => prevState.filter((draft) => draft !== auction));
+  }, []);
 
   const liveAuctionsLayout = liveAuctions.map((auction: Auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
@@ -119,7 +119,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
   ));
   const draftAuctionsLayout = draftAuctions.map((auction: Auction) => (
-    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
+    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} onDelete={onDelete} />
   ));
   const stoppedAuctionsLayout = stoppedAuctions.map((auction: Auction) => (
     <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
@@ -213,23 +213,23 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
         </Container>
       </section>
 
-      {hasAuctions && (
+      {Boolean(auctions?.length) && (
         <section className={styles.sliders}>
           <Container>
-            {hasLiveAuctions && (
+            {Boolean(liveAuctions.length) && (
               <ProfileSliderRow items={liveAuctionsLayout}>{influencer.name}'s live auctions</ProfileSliderRow>
             )}
-            {hasPendingAuctions && (
+            {Boolean(pendingAuctions.length) && (
               <ProfileSliderRow items={pendingAuctionsLayout}>
                 {influencer.name}'s outboarding auctions
               </ProfileSliderRow>
             )}
             {(account?.isAdmin || isMyProfile) && (
               <>
-                {hasDraftAuctions && (
+                {Boolean(draftAuctions.length) && (
                   <ProfileSliderRow items={draftAuctionsLayout}>{influencer.name}'s draft auctions</ProfileSliderRow>
                 )}
-                {hasStoppedAuctions && (
+                {Boolean(stoppedAuctions.length) && (
                   <ProfileSliderRow items={stoppedAuctionsLayout}>
                     {influencer.name}'s stopped auctions
                   </ProfileSliderRow>
@@ -237,7 +237,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
               </>
             )}
 
-            {hasPastAuctions && (
+            {Boolean(pastAuctions.length) && (
               <ProfileSliderRow items={pastAuctionsLayout}>{influencer.name}'s past auctions</ProfileSliderRow>
             )}
           </Container>

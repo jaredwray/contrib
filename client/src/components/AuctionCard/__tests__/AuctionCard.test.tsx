@@ -1,4 +1,5 @@
 import { shallow } from 'enzyme';
+import { MockedProvider } from '@apollo/client/testing';
 
 import AuctionCard from '..';
 
@@ -34,10 +35,13 @@ describe('Should render correctly "AuctionCard"', () => {
       isSold: false,
     },
   };
-
   let wrapper: any;
   beforeEach(() => {
-    wrapper = shallow(<AuctionCard {...props} />);
+    wrapper = shallow(
+      <MockedProvider mocks={[]}>
+        <AuctionCard {...props} />
+      </MockedProvider>,
+    );
   });
   afterEach(() => {
     jest.clearAllMocks();

@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 import { format as dateFormat } from 'date-fns';
@@ -6,6 +6,9 @@ import { format, utcToZonedTime, toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
 
+import { deleteAuctionMutation } from 'src/apollo/queries/auctions';
+import { Modal } from 'src/components/AdminAuctionsPageModal';
+import { CloseButton } from 'src/components/CloseButton';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
@@ -22,9 +25,11 @@ type Props = {
   isDonePage?: boolean;
   horizontal?: boolean;
   auctionOrganizer?: InfluencerProfile;
+  onDelete?: (auction: Auction) => void;
 };
 
-const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage }) => {
+const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage, onDelete }) => {
+  const [showDialog, setShowDialog] = useState(false);
   const imageSrc = useAuctionPreviewAttachment(auction.attachments);
   const influencer = auctionOrganizer || auction.auctionOrganizer;
   const currentPrice = useMemo(() => {
@@ -54,6 +59,14 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     <figure
       className={clsx(styles.root, horizontal && styles.horizontalRoot, isDonePage && styles.horizontalOnMobileRoot)}
     >
+      {isDraft && <CloseButton action={() => setShowDialog(true)} auctionDeleteBtn={true} />}
+      <Modal
+        auction={auction}
+        mutation={deleteAuctionMutation}
+        open={showDialog}
+        onClose={() => setShowDialog(false)}
+        onConfirm={onDelete}
+      />
       <SwipeableLink to={linkToAuction}>
         <CoverImage
           alt="Auction image"

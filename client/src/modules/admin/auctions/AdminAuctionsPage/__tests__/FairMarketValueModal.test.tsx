@@ -5,7 +5,7 @@ import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 
 import { Modal } from '../FairMarketValueChangeButton/Modal';
-import { auction } from '../../../../../helpers/testHelpers/auction';
+import { auction } from 'src/helpers/testHelpers/auction';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
