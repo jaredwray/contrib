@@ -52,28 +52,69 @@ export class AuctionService {
     private readonly cloudTaskService: CloudTaskService,
     private readonly handlebarsService: HandlebarsService,
   ) {}
+
   private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {
+    const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
+
+    await this.sendNotificationForAuctionCharity(currentAuction);
+    await this.sendNotificationsForCharityFollowers(currentAuction);
+    await this.sendNotificationsForInfluencerFollowers(currentAuction);
+  }
+
+  private async sendNotificationForAuctionCharity(auction: IAuctionModel) {
     try {
-      const charity = await this.CharityModel.findById(auction.charity).exec();
-      if (!charity) {
-        throw new Error(`Can not find charity with id ${auction.charity.toString()}`);
+      const charityUserAccount = await this.UserAccountModel.findById(auction.charity.userAccount).exec();
+      if (!charityUserAccount) {
+        AppLogger.error(`Cannot find account ${auction.charity.userAccount}`);
+        return;
       }
-      const userAccount = await this.UserAccountModel.findById(charity.userAccount).exec();
-      if (!userAccount) {
-        throw new Error(`Can not find account with id ${charity.userAccount.toString()}`);
-      }
-      const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_IS_CREATED_MESSAGE, {
+
+      await this.sendAuctionNotification(charityUserAccount.phoneNumber, MessageTemplate.AUCTION_IS_CREATED_MESSAGE, {
         auctionTitle: auction.title,
         auctionLink: auction.link,
-      });
-      await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
-        message: message,
-        phoneNumber: userAccount.phoneNumber,
       });
     } catch (error) {
       AppLogger.error(`Failed to send notification, error: ${error.message}`);
     }
   }
+
+  private async sendNotificationsForCharityFollowers(auction: IAuctionModel) {
+    try {
+      const charityFollowers = auction.charity.followers;
+      charityFollowers?.forEach(async (follower) => {
+        await this.sendAuctionNotification(
+          follower.user.phoneNumber,
+          MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_CHARITY_FOLLOWERS,
+          {
+            auctionLink: auction.link,
+            charityName: auction.charity.name,
+          },
+        );
+      });
+    } catch (error) {
+      AppLogger.error(`Failed to send notification, error: ${error.message}`);
+    }
+  }
+
+  private async sendNotificationsForInfluencerFollowers(auction: IAuctionModel) {
+    try {
+      const auctionOrganizerFollowers = auction.auctionOrganizer.followers;
+
+      auctionOrganizerFollowers?.forEach(async (follower) => {
+        await this.sendAuctionNotification(
+          follower.user.phoneNumber,
+          MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_INFLUENCER_FOLLOWERS,
+          {
+            auctionLink: auction.link,
+            influencerName: auction.auctionOrganizer.name,
+          },
+        );
+      });
+    } catch (error) {
+      AppLogger.error(`Failed to send notification, error: ${error.message}`);
+    }
+  }
+
   public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
     let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
     auction = await this.auctionRepository.updateAuctionLink(auction._id, await this.makeShortAuctionLink(auction._id));
@@ -344,13 +385,9 @@ export class AuctionService {
         if (!userAccount) {
           throw new Error(`Can not find account with id ${lastUserId.toString()}`);
         }
-        const message = await this.handlebarsService.renderTemplate(MessageTemplate.AUCTION_BID_OVERLAP, {
+        await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
           auctionTitle: auction.title,
           auctionLink: auction.link,
-        });
-        await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
-          message: message,
-          phoneNumber: userAccount.phoneNumber,
         });
       } catch (error) {
         AppLogger.error(`Failed to send notification, error: ${error.message}`);
@@ -540,8 +577,8 @@ export class AuctionService {
     try {
       const message = await this.handlebarsService.renderTemplate(template, context);
       await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
-        message: message,
-        phoneNumber: phoneNumber,
+        message,
+        phoneNumber,
       });
     } catch (error) {
       AppLogger.warn(`Can not send the notification`, error.message);
