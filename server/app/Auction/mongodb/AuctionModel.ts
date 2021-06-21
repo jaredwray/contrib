@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import Dinero from 'dinero.js';
 
+import { AppConfig } from '../../../config';
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
@@ -29,18 +30,15 @@ export interface IAuctionModel extends Document {
   assets: IAuctionAssetModel[];
   bids: IAuctionBid[];
   currentPrice: number;
-  currentPriceCurrency: string;
   itemPrice?: number;
-  itemPriceCurrency?: string;
+  priceCurrency?: string;
   charity: ICharityModel['_id'];
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
   stoppedAt: dayjs.Dayjs;
-  startPriceCurrency: string;
   startPrice: number;
   link: string;
   fairMarketValue: number;
-  fairMarketValueCurrency: string;
   timeZone: string;
   isNotifiedOfClosure: boolean;
 }
@@ -63,18 +61,15 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
       {
         user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
         bid: { type: SchemaTypes.Number, required: true },
-        bidCurrency: { type: SchemaTypes.String, default: 'USD' },
         paymentSource: { type: SchemaTypes.String, required: true },
         createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
         chargeId: { type: SchemaTypes.String },
       },
     ],
     startPrice: { type: SchemaTypes.Number, default: 0 },
-    startPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     itemPrice: { type: SchemaTypes.Number },
-    itemPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
+    priceCurrency: { type: SchemaTypes.String, default: AppConfig.app.defaultCurrency },
     currentPrice: { type: SchemaTypes.Number, default: 0 },
-    currentPriceCurrency: { type: SchemaTypes.String, default: 'USD' },
     playedIn: { type: SchemaTypes.String },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
@@ -83,13 +78,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     stoppedAt: { type: SchemaTypes.Date },
     link: { type: SchemaTypes.String },
     fairMarketValue: { type: SchemaTypes.Number },
-    fairMarketValueCurrency: { type: SchemaTypes.String },
     timeZone: { type: SchemaTypes.String, default: 'EST' },
-    isActive: { type: SchemaTypes.Boolean },
-    isDraft: { type: SchemaTypes.Boolean },
-    isPending: { type: SchemaTypes.Boolean },
-    isSettled: { type: SchemaTypes.Boolean },
-    isFailed: { type: SchemaTypes.Boolean },
   },
   { optimisticConcurrency: true },
 );

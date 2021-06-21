@@ -186,8 +186,8 @@ export class AuctionService {
   public async getAuctionPriceLimits(): Promise<{ min: Dinero.Dinero; max: Dinero.Dinero }> {
     const { min, max } = await this.auctionRepository.getAuctionPriceLimits();
     return {
-      min: Dinero({ amount: min, currency: 'USD' }),
-      max: Dinero({ amount: max, currency: 'USD' }),
+      min: Dinero({ amount: min, currency: AppConfig.app.defaultCurrency as Dinero.Currency }),
+      max: Dinero({ amount: max, currency: AppConfig.app.defaultCurrency as Dinero.Currency }),
     };
   }
 
@@ -291,20 +291,17 @@ export class AuctionService {
         ? {
             startPrice: startPrice.getAmount(),
             currentPrice: startPrice.getAmount(),
-            startPriceCurrency: startPrice.getCurrency(),
-            currentPriceCurrency: startPrice.getCurrency(),
+            priceCurrency: startPrice.getCurrency(),
           }
         : {}),
       ...(itemPrice
         ? {
             itemPrice: itemPrice.getAmount(),
-            itemPriceCurrency: itemPrice.getCurrency(),
           }
         : {}),
       ...(fairMarketValue
         ? {
             fairMarketValue: fairMarketValue.getAmount(),
-            fairMarketValueCurrency: fairMarketValue.getCurrency(),
           }
         : {}),
       ...(charity ? { charity: Types.ObjectId(charity) } : {}),
@@ -347,7 +344,7 @@ export class AuctionService {
 
     const currentPrice = Dinero({
       amount: auction.currentPrice,
-      currency: auction.currentPriceCurrency as Currency,
+      currency: (auction.priceCurrency || AppConfig.app.defaultCurrency) as Currency,
     });
 
     if (bid.lessThanOrEqual(currentPrice)) {
@@ -586,7 +583,7 @@ export class AuctionService {
   }
 
   private makeBidDineroValue(amount: number, currency: Dinero.Currency) {
-    return Dinero({ amount: amount, currency: currency });
+    return Dinero({ amount: amount, currency: (currency ?? AppConfig.app.defaultCurrency) as Dinero.Currency });
   }
 
   public async activateAuction(auction: IAuctionModel): Promise<void> {
@@ -641,13 +638,19 @@ export class AuctionService {
 
   public static makeTotalRaisedAmount(auctions: IAuctionModel[]): Dinero.Dinero {
     if (!auctions) {
-      return Dinero({ amount: 0, currency: 'USD' });
+      return Dinero({ amount: 0, currency: AppConfig.app.defaultCurrency as Dinero.Currency });
     }
     return auctions
       .map((a) =>
-        Dinero({ amount: a.currentPrice ?? 0, currency: (a.currentPriceCurrency as Dinero.Currency) ?? 'USD' }),
+        Dinero({
+          amount: a.currentPrice ?? 0,
+          currency: (a.priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+        }),
       )
-      .reduce((total, next) => total.add(next), Dinero({ amount: 0, currency: 'USD' }));
+      .reduce(
+        (total, next) => total.add(next),
+        Dinero({ amount: 0, currency: AppConfig.app.defaultCurrency as Dinero.Currency }),
+      );
   }
 
   private makeLongAuctionLink(id: string) {
@@ -699,7 +702,7 @@ export class AuctionService {
       const chargeId = await this.paymentService.chargeUser(
         user,
         card.id,
-        this.makeBidDineroValue(auction.itemPrice, auction.itemPriceCurrency as Dinero.Currency),
+        this.makeBidDineroValue(auction.itemPrice, auction.priceCurrency as Dinero.Currency),
         `Contrib auction: ${auction.title}`,
         charityAccount.stripeAccountId,
         auction.charity.toString(),
@@ -709,13 +712,14 @@ export class AuctionService {
         createdAt: dayjs(),
         paymentSource: card.id,
         bid: auction.itemPrice,
-        bidCurrency: auction.itemPriceCurrency as Dinero.Currency,
+        bidCurrency: (auction.priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
         chargeId: chargeId,
       };
       Object.assign(auction, {
         bids: [...auction.bids, createdBid],
       });
     } catch (error) {
+      AppLogger.info(`Unable to charge auction id ${auction.id}: ${error}`);
       throw new AppError('Unable to charge');
     }
 
@@ -723,8 +727,6 @@ export class AuctionService {
 
     auction.status = AuctionStatus.SOLD;
     auction.currentPrice = auction.itemPrice;
-    auction.currentPriceCurrency = auction.itemPriceCurrency;
-
     try {
       await auction.save();
     } catch (error) {
@@ -819,11 +821,8 @@ export class AuctionService {
       currentPrice,
       startPrice,
       auctionOrganizer,
-      startPriceCurrency,
-      currentPriceCurrency,
-      itemPriceCurrency,
+      priceCurrency,
       fairMarketValue,
-      fairMarketValueCurrency,
       link: rawLink,
       ...rest
     } = model.toObject();
@@ -849,11 +848,25 @@ export class AuctionService {
       charity: charity ? CharityService.makeCharity(charity) : null,
       bids: bids?.map((bid) => AuctionService.makeAuctionBid(bid)) || [],
       totalBids: bids?.length ?? 0,
-      currentPrice: Dinero({ currency: currentPriceCurrency as Dinero.Currency, amount: currentPrice }),
-      startPrice: Dinero({ currency: startPriceCurrency as Dinero.Currency, amount: startPrice }),
-      itemPrice: itemPrice ? Dinero({ currency: itemPriceCurrency as Dinero.Currency, amount: itemPrice }) : null,
+      currentPrice: Dinero({
+        currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+        amount: currentPrice,
+      }),
+      startPrice: Dinero({
+        currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+        amount: startPrice,
+      }),
+      itemPrice: itemPrice
+        ? Dinero({
+            currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+            amount: itemPrice,
+          })
+        : null,
       fairMarketValue: fairMarketValue
-        ? Dinero({ currency: fairMarketValueCurrency as Dinero.Currency, amount: fairMarketValue })
+        ? Dinero({
+            currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+            amount: fairMarketValue,
+          })
         : null,
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       link,

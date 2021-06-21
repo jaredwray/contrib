@@ -17,6 +17,7 @@ export const AppConfig = {
   app: {
     port: Number(process.env.PORT ?? 3000),
     url: requireEnvVar('APP_URL').replace(/\/$/, ''),
+    defaultCurrency: 'USD',
   },
   environment: {
     isProduction: process.env.NODE_ENV === 'live',
