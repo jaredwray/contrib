@@ -66,4 +66,5 @@ export interface IAuctionRepository {
   addAuctionAttachment(id: string, organizerId: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel>;
   getInfluencersAuctions(id: string): Promise<IAuctionModel[]>;
   getAuctionForAdminPage(id: string): Promise<IAuctionModel>;
+  getPopulatedAuction(auction: IAuctionModel): Promise<IAuctionModel>;
 }
