@@ -1,7 +1,9 @@
 import { Connection } from 'mongoose';
+import { Storage } from '@google-cloud/storage';
 import { v4 as uuid } from 'uuid';
 
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
+import { AppConfig } from '../../../config';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
 
 export class AuctionAttachmentsService {

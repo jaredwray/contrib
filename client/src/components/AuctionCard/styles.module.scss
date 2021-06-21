@@ -6,6 +6,7 @@
   margin: 0;
   width: 305px;
   max-width: 305px;
+  position: relative;
 }
 
 .name {
@@ -57,6 +58,13 @@
 }
 .settled {
   opacity: 0.3;
+}
+
+.deleteBtn {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  line-height: 21px;
 }
 
 @media (max-width: $medium-weight) {

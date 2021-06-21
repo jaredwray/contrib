@@ -442,6 +442,13 @@ export const finishAuctionCreationMutation = gql`
     }
   }
 `;
+export const deleteAuctionMutation = gql`
+  mutation deleteAuction($id: String!) {
+    deleteAuction(id: $id) {
+      id
+    }
+  }
+`;
 
 export const SportsQuery = gql`
   query sports {

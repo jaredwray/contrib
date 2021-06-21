@@ -2,7 +2,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
-import { auction } from '../../../../../helpers/testHelpers/auction';
+import { auction } from 'src/helpers/testHelpers/auction';
 
 import AuctionDetails from '..';
 

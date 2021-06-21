@@ -27,4 +27,7 @@ export class CloudflareStreaming {
     }
     return response.data.result.uid;
   }
+  public async deleteFromCloudFlare(uid: string) {
+    await this.http.delete(`${CloudflareStreaming.cloudflareUrl}/${uid}`);
+  }
 }

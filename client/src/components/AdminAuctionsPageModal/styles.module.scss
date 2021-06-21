@@ -2,8 +2,11 @@
 
 .actionBtn {
   height: 50px !important;
-  width: 200px;
+
   @media (max-width: $small-weight) {
     width: 100%;
+  }
+  @media (min-width: $small-weight) {
+    width: 200px;
   }
 }

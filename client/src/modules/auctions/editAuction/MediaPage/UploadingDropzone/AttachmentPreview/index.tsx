@@ -5,11 +5,11 @@ import clsx from 'clsx';
 
 import { RemoveAuctionMedia } from 'src/apollo/queries/auctions';
 import VideoIcon from 'src/assets/icons/VideoIcon';
+import { CloseButton } from 'src/components/CloseButton';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentsStateInterface from '../../common/AttachmentsStateInterface';
 import previewStyles from '../../common/preview.module.scss';
-import styles from './styles.module.scss';
 
 interface Props {
   auctionId: string;
@@ -64,9 +64,7 @@ const AttachementPreview: FC<Props> = ({
           <img alt="" className={previewStyles.preview} src={srcUrl} onError={onImagePreviewError} />
         )}
       </div>
-      <span className={styles.mediaDeleteBnt} title="delete" onClick={handleMediaRemove}>
-        x
-      </span>
+      <CloseButton action={handleMediaRemove} />
     </div>
   );
 };

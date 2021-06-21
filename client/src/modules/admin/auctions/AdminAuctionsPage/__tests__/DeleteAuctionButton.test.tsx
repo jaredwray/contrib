@@ -1,10 +1,10 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 
-import { FairMarketValueChangeButton } from '../FairMarketValueChangeButton';
+import { DeleteAuctionButton } from '../DeleteAuctionButton';
 import { auction } from 'src/helpers/testHelpers/auction';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
@@ -22,11 +22,11 @@ const props: any = {
 };
 
 test('renders without crashing', () => {
-  shallow(
+  mount(
     <ToastProvider>
       <MockedProvider>
         <Router>
-          <FairMarketValueChangeButton {...props} />
+          <DeleteAuctionButton {...props} />
         </Router>
       </MockedProvider>
     </ToastProvider>,
