@@ -44,7 +44,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   }
 
   const priceFormatted = currentPrice.toFormat('$0,0');
-  const { startDate, isSettled, isDraft, isPending, isSold } = auction;
+  const { startDate, isActive, isSettled, isDraft, isPending, isSold } = auction;
   const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
   const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
   const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone || '')), 'MMM dd yyyy');
@@ -102,11 +102,11 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
 
         {isDraft && <p className="text-label text-all-cups mb-0 mt-1 text-left">DRAFT</p>}
 
-        {isPending && (
+        {isPending && !isDonePage && (
           <p className="text-label text-all-cups mb-0 mt-1 text-left">{`starts in ${startTime} on ${startFormatted} `}</p>
         )}
 
-        {!isDraft && !isPending && (
+        {(isActive || isSettled || isSold || isDonePage) && (
           <p className="text-label text-all-cups mb-0 mt-auto text-left">
             <DateDetails auction={auction} isDonePage={isDonePage} isSold={isSold} />
           </p>
