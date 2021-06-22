@@ -1,16 +1,17 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 
-import CoverImage from 'src/components/AuctionCard/CoverImage';
-
-describe('Should render correctly "CoverImage"', () => {
+import { AdminPage } from '..';
+describe('Should render correctly "AttachmentThumbnail"', () => {
   const props: any = {
-    src: 'test',
-    alt: 'test',
+    items: [{}, {}],
+    pageSkip: 20,
+    setPageSkip: jest.fn(),
+    loading: false,
   };
 
   let wrapper: ShallowWrapper;
   beforeEach(() => {
-    wrapper = shallow(<CoverImage {...props} />);
+    wrapper = shallow(<AdminPage {...props} />);
   });
   afterEach(() => {
     jest.clearAllMocks();

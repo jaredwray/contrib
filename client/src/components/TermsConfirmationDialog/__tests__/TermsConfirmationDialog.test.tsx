@@ -1,10 +1,10 @@
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { ToastProvider } from 'react-toast-notifications';
 import TermsConfirmationDialog from 'src/components/TermsConfirmationDialog';
 import { MockedProvider } from '@apollo/client/testing';
 
 describe('Should render correctly "TermsConfirmationDialog"', () => {
-  let wrapper: any;
+  let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(
       <MockedProvider mocks={[]}>

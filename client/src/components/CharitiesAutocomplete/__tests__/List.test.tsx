@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 
 import CharitiesList from 'src/components/CharitiesAutocomplete/List';
 
@@ -8,7 +8,7 @@ describe('Should render correctly "CharitiesList"', () => {
     onChange: jest.fn(),
   };
 
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<CharitiesList {...props} />);
   });

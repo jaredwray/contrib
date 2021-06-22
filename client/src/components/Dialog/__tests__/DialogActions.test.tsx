@@ -1,8 +1,8 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import DialogActions from 'src/components/Dialog/DialogActions';
 
 describe('Should render correctly "DialogActions "', () => {
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<DialogActions />);
   });

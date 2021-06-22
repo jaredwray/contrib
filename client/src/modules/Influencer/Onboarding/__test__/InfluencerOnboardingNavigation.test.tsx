@@ -1,10 +1,10 @@
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
 import Form from 'src/components/Form/Form';
 import { InfluencerOnboardingNavigation } from '../InfluencerOnboardingNavigation';
 const mockedSumbit = jest.fn();
 describe('Should render correctly "InfluencerOnboardingNavigation"', () => {
-  let wrapper: any;
+  let wrapper: ReactWrapper;
   afterEach(() => {
     jest.clearAllMocks();
   });

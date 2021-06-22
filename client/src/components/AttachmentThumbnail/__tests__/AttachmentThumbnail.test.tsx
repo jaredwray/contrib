@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount, shallow, ShallowWrapper } from 'enzyme';
 
 import AttachmentThumbnail from '..';
 
@@ -8,7 +8,7 @@ describe('Should render correctly "AttachmentThumbnail"', () => {
     className: 'test',
   };
 
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<AttachmentThumbnail {...props} />);
   });

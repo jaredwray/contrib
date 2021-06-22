@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import ClickableTr from 'src/components/ClickableTr';
 
 describe('Should render correctly "ClickableTr"', () => {
@@ -8,7 +8,7 @@ describe('Should render correctly "ClickableTr"', () => {
   };
   const mockFn = { push: jest.fn() };
 
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<ClickableTr {...props} history={mockFn} />);
   });

@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import PrivateRoute from 'src/components/PrivateRoute';
 
 describe('Should render correctly "PrivateRoute"', () => {
@@ -7,7 +7,7 @@ describe('Should render correctly "PrivateRoute"', () => {
     role: 'influencer',
     conmponent: <></>,
   };
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<PrivateRoute {...props} />);
   });

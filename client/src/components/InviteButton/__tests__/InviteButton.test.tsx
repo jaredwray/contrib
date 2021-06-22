@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { InviteButton } from '..';
@@ -14,7 +14,7 @@ describe('Should render correctly "InviteButton"', () => {
     `,
   };
   const mockFn = jest.fn();
-  let wrapper: any;
+  let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(
       <MockedProvider mocks={[]}>
