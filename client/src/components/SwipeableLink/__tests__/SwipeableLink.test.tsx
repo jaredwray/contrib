@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import SwipeableLink from '..';
@@ -9,7 +9,7 @@ const props = {
 };
 
 describe('Should render correctly "UserAccountProvider"', () => {
-  let wrapper: any;
+  let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(
       <MemoryRouter initialEntries={[`/`]}>

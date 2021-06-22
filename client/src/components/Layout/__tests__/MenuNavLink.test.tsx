@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import MenuNavLink from 'src/components/Layout/Header/MenuNavLink';
@@ -7,7 +7,7 @@ const props: any = {
   title: 'test',
 };
 describe('Should render correctly "MenuNavLink"', () => {
-  let wrapper: any;
+  let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(
       <Router>

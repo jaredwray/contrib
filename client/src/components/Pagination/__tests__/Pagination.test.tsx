@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import Pagination from 'src/components/Pagination';
 
 describe('Should render correctly "Pagination"', () => {
@@ -9,7 +9,7 @@ describe('Should render correctly "Pagination"', () => {
     showPrevPage: jest.fn(),
     showNextPage: jest.fn(),
   };
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<Pagination {...props} />);
   });

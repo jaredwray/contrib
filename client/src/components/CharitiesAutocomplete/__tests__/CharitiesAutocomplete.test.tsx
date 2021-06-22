@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 
 import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 
@@ -9,7 +9,7 @@ describe('Should render correctly "CharitiesAutocomplete"', () => {
     onChange: jest.fn(),
   };
 
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<CharitiesAutocomplete {...props} />);
   });

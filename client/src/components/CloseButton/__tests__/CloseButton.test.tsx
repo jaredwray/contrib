@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import { CloseButton } from 'src/components/CloseButton';
 
 describe('Should render correctly "CloseButton"', () => {
@@ -6,7 +6,7 @@ describe('Should render correctly "CloseButton"', () => {
     action: jest.fn(),
   };
 
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<CloseButton {...props} />);
   });

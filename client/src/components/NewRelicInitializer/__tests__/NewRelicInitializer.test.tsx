@@ -1,9 +1,9 @@
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 
 import NewRelicInitializer from 'src/components/NewRelicInitializer';
 
 describe('Should render correctly "NewRelicInitializer"', () => {
-  let wrapper: any;
+  let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(<NewRelicInitializer />);
   });

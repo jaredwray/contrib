@@ -1,4 +1,4 @@
-import { shallow, mount } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import Form from 'src/components/Form/Form';
 
 describe('Should render correctly "Form"', () => {
@@ -6,7 +6,7 @@ describe('Should render correctly "Form"', () => {
     onSubmit: jest.fn(),
   };
 
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<Form {...props} />);
   });

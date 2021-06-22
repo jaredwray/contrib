@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 
 import DateDetails from 'src/components/AuctionCard/DateDetails';
 
@@ -35,7 +35,7 @@ describe('Should render correctly "DateDetails"', () => {
     },
   };
 
-  let wrapper: any;
+  let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(<DateDetails {...props} />);
   });
