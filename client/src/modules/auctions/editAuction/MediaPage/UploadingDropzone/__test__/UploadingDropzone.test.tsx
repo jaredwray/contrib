@@ -1,9 +1,9 @@
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
-import UploadingDropzone from '..';
+import UploadingDropzone from '../';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 

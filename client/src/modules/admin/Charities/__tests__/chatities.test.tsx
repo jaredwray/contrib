@@ -6,7 +6,7 @@ import { act } from 'react-dom/test-utils';
 
 import { AllCharitiesQuery } from 'src/apollo/queries/charities';
 
-import Charities from '..';
+import CharitiesPage from '../';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
@@ -23,14 +23,14 @@ cache.writeQuery({
   },
 });
 
-test('renders without crashing', () => {
-  render(
-    <Router>
-      <MockedProvider cache={cache}>
-        act(() => {
-          <Charities />
-        })
-      </MockedProvider>
-    </Router>,
-  );
+test('renders without crashing', async () => {
+  await act(async () => {
+    render(
+      <Router>
+        <MockedProvider cache={cache}>
+          <CharitiesPage />
+        </MockedProvider>
+      </Router>,
+    );
+  });
 });
