@@ -417,9 +417,7 @@ export class AuctionService {
         auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsMinutes &&
         !auction.isNotifiedOfClosure
       ) {
-        const currentAuction = await auction
-          .populate({ path: 'bids.user', model: this.UserAccountModel })
-          .execPopulate();
+        const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
         try {
           await this.notifyInfluencers(currentAuction);
         } catch {}
@@ -443,7 +441,8 @@ export class AuctionService {
       if (!cachedPhoneNumbers.includes(bid.user.phoneNumber)) {
         try {
           await this.sendAuctionNotification(bid.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
-            auctionTitle: auction.title,
+            influencerName: auction.auctionOrganizer.name,
+            aunctionName: auction.title,
             auctionLink: auction.link,
           });
           cachedPhoneNumbers.push(bid.user.phoneNumber);
