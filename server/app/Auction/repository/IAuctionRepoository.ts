@@ -34,8 +34,7 @@ export interface ICreateAuction {
 
 export type IUpdateAuction = {
   itemPrice?: number;
-  itemPriceCurrency?: string;
-  startPriceCurrency?: string;
+  priceCurrency?: string;
   startPrice?: number;
   title?: string;
   sport?: string;
@@ -47,7 +46,6 @@ export type IUpdateAuction = {
   endDate?: dayjs.Dayjs;
   playedIn?: string;
   organizerId?: string;
-  fairMarketValueCurrency?: string;
   fairMarketValue?: number;
   timeZone?: string;
 };
