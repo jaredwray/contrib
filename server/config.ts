@@ -61,7 +61,7 @@ export const AppConfig = {
       googleTaskApiToken: requireEnvVar('GOOGLE_CLOUD_TASK_API_TOKEN'),
       notificationTaskTargetURL: requireEnvVar('NOTIFICATION_TASK_TARGET_URL'),
     },
-    auctionEndsMinutes: 5,
+    auctionEndsMinutes: 6, // 1 min takes to generate it and send ftom the task
   },
   cloudflare: {
     token: requireEnvVar('CLOUDFLARE_STREAMING_KEY'),
