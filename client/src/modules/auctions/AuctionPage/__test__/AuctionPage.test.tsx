@@ -6,7 +6,7 @@ import { act } from 'react-dom/test-utils';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 
-import AuctionPage from '..';
+import AuctionPage from '../';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
@@ -18,14 +18,14 @@ cache.writeQuery({
   },
 });
 
-test('renders without crashing', () => {
-  render(
-    <Router>
-      <MockedProvider cache={cache}>
-        act(() => {
+test('renders without crashing', async () => {
+  await act(async () => {
+    render(
+      <Router>
+        <MockedProvider cache={cache}>
           <AuctionPage />
-        })
-      </MockedProvider>
-    </Router>,
-  );
+        </MockedProvider>
+      </Router>,
+    );
+  });
 });

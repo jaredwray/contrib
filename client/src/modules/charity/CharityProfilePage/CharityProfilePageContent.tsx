@@ -49,7 +49,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
   const [followed, setFollowed] = useState(() =>
     charity?.followers?.some((follower) => follower.user === account?.mongodbId),
   );
-  const [followersNumber, setFollowersNumber] = useState(() => charity?.followers?.length);
+  const [followersNumber, setFollowersNumber] = useState(charity?.followers?.length || 0);
 
   const handleFollowCharity = useCallback(async () => {
     if (isAuthenticated) {
@@ -57,7 +57,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
         await followCharity({ variables: { charityId: charity.id } });
         addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
         setFollowed(true);
-        setFollowersNumber(followersNumber + 1);
+        setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'warning' });
       }

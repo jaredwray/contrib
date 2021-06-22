@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 
 interface Props {
   action: () => void;
-  auctionDeleteBtn: boolean;
+  auctionDeleteBtn?: boolean;
 }
 
 export const CloseButton: FC<Props> = ({ action, auctionDeleteBtn }) => {

@@ -22,6 +22,8 @@ cache.writeQuery({
       notAcceptedTerms: null,
       assistant: null,
       paymentInformation: null,
+      mongodbId: '321',
+      charity: null,
     },
   },
 });
@@ -34,12 +36,12 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-test('renders without crashing', () => {
-  render(
-    <MockedProvider cache={cache}>
-    act(() => {
-      <PhoneNumberConfirmation />
-    })
-    </MockedProvider>,
-  );
+test('renders without crashing', async () => {
+  await act(async () => {
+    render(
+      <MockedProvider cache={cache}>
+        <PhoneNumberConfirmation />
+      </MockedProvider>,
+    );
+  });
 });

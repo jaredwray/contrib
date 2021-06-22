@@ -1,14 +1,15 @@
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
+
 import FilePreview from '../FilePreview';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   file: {
-    type: 'test/type',
+    type: 'image/jpg',
   },
 };
 
@@ -18,9 +19,7 @@ test('renders without crashing', async () => {
   render(
     <Router>
       <MockedProvider>
-        act(() => {
-          <FilePreview {...props} />
-        })
+        <FilePreview {...props} />
       </MockedProvider>
     </Router>,
   );

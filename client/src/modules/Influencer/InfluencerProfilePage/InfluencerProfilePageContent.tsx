@@ -37,7 +37,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const [followed, setFollowed] = useState(() =>
     influencer?.followers?.some((follower) => follower.user === account?.mongodbId),
   );
-  const [followersNumber, setFollowersNumber] = useState(() => influencer?.followers?.length);
+  const [followersNumber, setFollowersNumber] = useState(influencer?.followers?.length || 0);
 
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
@@ -66,7 +66,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
         await followInfluencer({ variables: { influencerId: influencer.id } });
         addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
         setFollowed(true);
-        setFollowersNumber(followersNumber + 1);
+        setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'warning' });
       }
@@ -101,7 +101,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const liveAuctions = profileAuctions.ACTIVE;
   const pendingAuctions = profileAuctions.PENDING;
   const pastAuctions = profileAuctions.SETTLED;
-  const [draftAuctions, setDraftAuctions] = useState<[Auction]>([]);
+  const [draftAuctions, setDraftAuctions] = useState<Auction[]>([]);
   const stoppedAuctions = profileAuctions.STOPPED;
 
   const profileDescriptionParagraphs = (influencer.profileDescription ?? '').split('\n');

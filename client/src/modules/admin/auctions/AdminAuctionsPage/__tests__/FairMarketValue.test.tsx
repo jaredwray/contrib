@@ -1,6 +1,6 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 
@@ -22,7 +22,7 @@ const props: any = {
 };
 
 test('renders without crashing', () => {
-  shallow(
+  render(
     <ToastProvider>
       <MockedProvider>
         <Router>
