@@ -3,19 +3,15 @@ import { Storage } from '@google-cloud/storage';
 import { AppConfig } from '../config';
 import { AppError, ErrorCode } from '../errors';
 import { CloudflareStreaming } from './CloudflareStreaming';
+import { FileType, IGCloudStorage } from './IGCloudStorage';
 
 export type IFile = {
   createReadStream: () => Stream;
   filename: string;
   mimetype: string;
 };
-enum FileType {
-  VIDEO = 'VIDEO',
-  IMAGE = 'IMAGE',
-  UNKNOWN = 'UNKNOWN',
-}
 
-export class GCloudStorage {
+export class GCloudStorage implements IGCloudStorage {
   private readonly storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
   private static readonly cloudPath = 'https://storage.googleapis.com';
   private static readonly imageSupportedFormats = /png|jpeg|jpg|webp/i;
@@ -64,10 +60,13 @@ export class GCloudStorage {
     });
   }
 
-  async removeFile(fileUrl: string, bucketName: string = AppConfig.googleCloud.bucketName): Promise<void> {
+  async removeFile(fileUrl: string, bucketName?: string): Promise<void> {
     const fileName = GCloudStorage.getFileNameFromUrl(fileUrl);
     try {
-      await this.storage.bucket(bucketName).file(fileName).delete();
+      await this.storage
+        .bucket(bucketName ?? AppConfig.googleCloud.bucketName)
+        .file(fileName)
+        .delete();
     } catch (error) {
       throw new AppError(`Unable to remove file, threw error ${error.message}`, ErrorCode.INTERNAL_ERROR);
     }

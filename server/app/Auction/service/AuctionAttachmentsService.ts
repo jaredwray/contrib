@@ -1,15 +1,14 @@
 import { Connection } from 'mongoose';
-import { Storage } from '@google-cloud/storage';
 import { v4 as uuid } from 'uuid';
 
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
-import { AppConfig } from '../../../config';
-import { GCloudStorage, IFile } from '../../GCloudStorage';
+import { IFile } from '../../GCloudStorage';
+import { IGCloudStorage } from '../../IGCloudStorage';
 
 export class AuctionAttachmentsService {
   public readonly AuctionAsset = AuctionAssetModel(this.connection);
 
-  constructor(private readonly connection: Connection, private readonly cloudStorage: GCloudStorage) {}
+  constructor(private readonly connection: Connection, private readonly cloudStorage: IGCloudStorage) {}
 
   public async uploadFileAttachment(
     id: string,

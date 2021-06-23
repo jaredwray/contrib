@@ -1,0 +1,1 @@
+export const AssistantCollectionName = 'assistants';

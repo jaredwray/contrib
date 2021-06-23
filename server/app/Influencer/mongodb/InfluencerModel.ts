@@ -2,8 +2,9 @@ import dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { IUserAccount, UserAccountCollectionName, IFollowObject } from '../../UserAccount/mongodb/UserAccountModel';
-import { AssistantCollectionName, IAssistant } from '../../Assistant/mongodb/AssistantModel';
+import { IAssistant } from '../../Assistant/mongodb/AssistantModel';
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
+import { AssistantCollectionName } from '../../Assistant/mongodb/AssistantCollectionName';
 
 export interface IInfluencer extends Document {
   name: string;

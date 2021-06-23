@@ -1,8 +1,9 @@
 import { CloudTasksClient } from '@google-cloud/tasks';
 
 import { AppConfig } from '../config';
+import { ICloudTaskService } from './ICloudTaskSerivce';
 
-export class CloudTaskService {
+export class CloudTaskService implements ICloudTaskService {
   private readonly cloudTaskClient = new CloudTasksClient({
     projectId: AppConfig.googleCloud.task.googleProjectId,
     credentials: JSON.parse(AppConfig.googleCloud.keyDump),

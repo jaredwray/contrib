@@ -9,7 +9,7 @@
     "build": "tsc --build tsconfig.build.json && node copy-views.js",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
-    "test": "jest --passWithNoTests --detectOpenHandles",
+    "test": "jest --verbose --passWithNoTests --detectOpenHandles",
     "test:watch": "jest --watch --passWithNoTests",
     "test:cov": "jest --coverage --passWithNoTests"
   },

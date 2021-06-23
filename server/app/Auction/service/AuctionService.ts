@@ -16,7 +16,7 @@ import { AuctionBid } from '../dto/AuctionBid';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
 import { AuctionInput } from '../graphql/model/AuctionInput';
-import { GCloudStorage, IFile } from '../../GCloudStorage';
+import { IFile } from '../../GCloudStorage';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
 
 import { CloudflareStreaming } from '../../CloudflareStreaming';
@@ -31,10 +31,11 @@ import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoo
 import { PaymentService, StripeService } from '../../Payment';
 import { AppConfig } from '../../../config';
 import { UrlShortenerService } from '../../Core';
-import { CloudTaskService } from '../../CloudTaskService';
-import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
+import { IHandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import Stripe from 'stripe';
+import { IGCloudStorage } from '../../IGCloudStorage';
+import { ICloudTaskService } from '../../ICloudTaskSerivce';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -47,10 +48,10 @@ export class AuctionService {
   constructor(
     private readonly connection: Connection,
     private readonly paymentService: PaymentService,
-    private readonly cloudStorage: GCloudStorage,
+    private readonly cloudStorage: IGCloudStorage,
     private readonly urlShortenerService: UrlShortenerService,
-    private readonly cloudTaskService: CloudTaskService,
-    private readonly handlebarsService: HandlebarsService,
+    private readonly cloudTaskService: ICloudTaskService,
+    private readonly handlebarsService: IHandlebarsService,
   ) {}
 
   private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {

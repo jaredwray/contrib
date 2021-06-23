@@ -2,6 +2,7 @@ import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { AssistantStatus } from '../dto/AssistantStatus';
 import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
 import { IInfluencer, InfluencerCollectionName } from '../../Influencer/mongodb/InfluencerModel';
+import { AssistantCollectionName } from './AssistantCollectionName';
 
 export interface IAssistant extends Document {
   name: string;
@@ -9,8 +10,6 @@ export interface IAssistant extends Document {
   userAccount: IUserAccount['_id'];
   influencer: IInfluencer['_id'];
 }
-
-export const AssistantCollectionName = 'assistants';
 
 const AssistantSchema: Schema<IAssistant> = new Schema<IAssistant>({
   name: { type: SchemaTypes.String, required: true },
