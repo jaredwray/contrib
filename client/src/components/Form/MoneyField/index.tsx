@@ -50,7 +50,7 @@ const MoneyField: FC<Props> = ({
       if (setDisabled && minValue) {
         setDisabled(minValue > number);
       }
-      onChange({ ...value, amount: number ? parseInt(number, 10) * 100 - 1 : 0 });
+      onChange({ ...value, amount: number ? parseInt(number, 10) * 100 : 0 });
     },
     [onChange, value, minValue, setDisabled],
   );
