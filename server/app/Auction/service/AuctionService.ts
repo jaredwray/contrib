@@ -425,26 +425,34 @@ export class AuctionService {
 
     auctions.forEach(async (auction) => {
       if (
-        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.firstNotification &&
-        !auction.sentNotifications.includes('firstNotification')
-      ) {
-        const timeLeftText = `${AppConfig.googleCloud.auctionEndsTime.firstNotification - 1} minutes`;
-        try {
-          await this.notifyUsers(auction, timeLeftText);
-          auction.sentNotifications.push('firstNotification');
-          await auction.save();
-        } catch {}
-      }
-      if (
         auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.lastNotification &&
         !auction.sentNotifications.includes('lastNotification')
       ) {
-        const timeLeftText = `${Math.floor((AppConfig.googleCloud.auctionEndsTime.lastNotification - 1) / 60)} hour`;
+        const timeLeftText = `${AppConfig.googleCloud.auctionEndsTime.lastNotification - 1} minutes`;
         try {
           await this.notifyUsers(auction, timeLeftText);
           auction.sentNotifications.push('lastNotification');
           await auction.save();
-        } catch {}
+        } catch (error) {
+          AppLogger.warn(
+            `Something went wrong during notification about action ending. Id of auction: ${auction._id.toString()}: ${error}`,
+          );
+        }
+      }
+      if (
+        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.firstNotification &&
+        !auction.sentNotifications.includes('firstNotification')
+      ) {
+        const timeLeftText = `${Math.floor((AppConfig.googleCloud.auctionEndsTime.firstNotification - 1) / 60)} hour`;
+        try {
+          await this.notifyUsers(auction, timeLeftText);
+          auction.sentNotifications.push('firstNotification');
+          await auction.save();
+        } catch (error) {
+          AppLogger.warn(
+            `Something went wrong during notification about action ending. Id of auction: ${auction._id.toString()}: ${error}`,
+          );
+        }
       }
     });
     return { message: 'Scheduled' };
