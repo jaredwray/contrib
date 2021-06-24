@@ -622,7 +622,7 @@ export class AuctionService {
         phoneNumber,
       });
     } catch (error) {
-      AppLogger.warn(`Can not send the notification`, error.message);
+      AppLogger.warn(`Can not send the notification to ${phoneNumber}: ${error}`, error.message);
     }
   }
 
