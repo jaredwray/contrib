@@ -1,5 +1,6 @@
 import { DineroObject } from 'dinero.js';
 
+import { Follow } from './Follow';
 import { InfluencerProfile } from './InfluencerProfile';
 import { UserAccount } from './UserAccount';
 
@@ -55,6 +56,7 @@ export interface Auction {
   currentPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
+  followers?: Follow[];
   timeZone: string;
   isActive: boolean;
   isDraft: boolean;

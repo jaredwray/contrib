@@ -1,8 +1,11 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 
+import { AuctionCollectionName, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
+
 export interface IFollowObject {
-  user: IUserAccount['_id'];
+  user?: IUserAccount['_id'];
+  auction?: IAuctionModel['_id'];
   createdAt: Dayjs;
 }
 
@@ -16,6 +19,7 @@ export interface IUserAccount extends Document {
   acceptedTermsAt: Date;
   followingInfluencers: IFollowObject[];
   followingCharitis: IFollowObject[];
+  followingAuctions: IFollowObject[];
 }
 
 export const UserAccountCollectionName = 'account';
@@ -28,6 +32,12 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   createdAt: { type: SchemaTypes.Date, required: true },
   acceptedTerms: { type: SchemaTypes.String },
   acceptedTermsAt: { type: SchemaTypes.Date },
+  followingAuctions: [
+    {
+      auction: { type: SchemaTypes.ObjectId, ref: 'auction' },
+      createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+    },
+  ],
   followingInfluencers: [
     {
       user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },

@@ -4,6 +4,7 @@ import { AuctionAssets } from './AuctionAssets';
 import { Charity } from '../../Charity/dto/Charity';
 import { AuctionStatus } from './AuctionStatus';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
+import { Follow } from '../../FollowDto';
 
 export interface Auction {
   id: string;
@@ -27,6 +28,7 @@ export interface Auction {
   itemPrice?: Dinero.Dinero;
   link: string;
   fairMarketValue: Dinero.Dinero;
+  followers?: Follow[];
   timeZone: string;
   isActive: boolean;
   isDraft: boolean;

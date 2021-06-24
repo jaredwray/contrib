@@ -118,7 +118,72 @@ export const AuctionQuery = gql`
         websiteUrl
         status
       }
+      followers {
+        user
+        createdAt
+      }
     }
+  }
+`;
+
+export const AuctionsListQuery = gql`
+  query auctions(
+    $size: Int
+    $skip: Int
+    $query: String
+    $orderBy: String
+    $filters: AuctionSearchFilters
+    $statusFilter: [String]
+  ) {
+    auctions(
+      size: $size
+      skip: $skip
+      query: $query
+      orderBy: $orderBy
+      filters: $filters
+      statusFilter: $statusFilter
+    ) {
+      totalItems
+      size
+      skip
+      items {
+        id
+        currentPrice
+        totalBids
+        status
+        isActive
+        isDraft
+        isPending
+        isSettled
+        isFailed
+        isSold
+        isStopped
+        title
+        description
+        startPrice
+        itemPrice
+        startDate
+        timeZone
+        endDate
+        auctionOrganizer {
+          id
+          name
+          avatarUrl
+        }
+        attachments {
+          type
+          url
+          thumbnail
+        }
+        fairMarketValue
+      }
+    }
+  }
+`;
+
+export const SportsQuery = gql`
+  query sports {
+    sports
   }
 `;
 
@@ -360,60 +425,6 @@ export const RemoveAuctionMedia = gql`
   }
 `;
 
-export const AuctionsListQuery = gql`
-  query auctions(
-    $size: Int
-    $skip: Int
-    $query: String
-    $orderBy: String
-    $filters: AuctionSearchFilters
-    $statusFilter: [String]
-  ) {
-    auctions(
-      size: $size
-      skip: $skip
-      query: $query
-      orderBy: $orderBy
-      filters: $filters
-      statusFilter: $statusFilter
-    ) {
-      totalItems
-      size
-      skip
-      items {
-        id
-        currentPrice
-        totalBids
-        status
-        isActive
-        isDraft
-        isPending
-        isSettled
-        isFailed
-        isSold
-        isStopped
-        title
-        description
-        startPrice
-        itemPrice
-        startDate
-        timeZone
-        endDate
-        auctionOrganizer {
-          id
-          name
-          avatarUrl
-        }
-        attachments {
-          type
-          url
-          thumbnail
-        }
-        fairMarketValue
-      }
-    }
-  }
-`;
 export const buyAuction = gql`
   mutation buyAuction($id: String!) {
     buyAuction(id: $id) {
@@ -421,6 +432,7 @@ export const buyAuction = gql`
     }
   }
 `;
+
 export const stopAuction = gql`
   mutation stopAuction($id: String!) {
     stopAuction(id: $id) {
@@ -428,6 +440,7 @@ export const stopAuction = gql`
     }
   }
 `;
+
 export const activateAuction = gql`
   mutation activateAuction($id: String!) {
     activateAuction(id: $id) {
@@ -435,6 +448,7 @@ export const activateAuction = gql`
     }
   }
 `;
+
 export const finishAuctionCreationMutation = gql`
   mutation finishAuctionCreation($id: String!) {
     finishAuctionCreation(id: $id) {
@@ -442,6 +456,7 @@ export const finishAuctionCreationMutation = gql`
     }
   }
 `;
+
 export const deleteAuctionMutation = gql`
   mutation deleteAuction($id: String!) {
     deleteAuction(id: $id) {
@@ -450,8 +465,19 @@ export const deleteAuctionMutation = gql`
   }
 `;
 
-export const SportsQuery = gql`
-  query sports {
-    sports
+export const FollowAuctionMutation = gql`
+  mutation FollowAuction($auctionId: String!) {
+    followAuction(auctionId: $auctionId) {
+      user
+      createdAt
+    }
+  }
+`;
+
+export const UnfollowAuctionMutation = gql`
+  mutation UnfollowAuction($auctionId: String!) {
+    unfollowAuction(auctionId: $auctionId) {
+      id
+    }
   }
 `;

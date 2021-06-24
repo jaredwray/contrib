@@ -4,6 +4,7 @@ import { IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
+import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 
 export type IAuctionFilters = {
   size?: number;
@@ -65,4 +66,6 @@ export interface IAuctionRepository {
   getInfluencersAuctions(id: string): Promise<IAuctionModel[]>;
   getAuctionForAdminPage(id: string): Promise<IAuctionModel>;
   getPopulatedAuction(auction: IAuctionModel): Promise<IAuctionModel>;
+  followAuction(auctionId: string, account: IUserAccount): Promise<{ user: string; createdAt: Dayjs } | null>;
+  unfollowAuction(auctionId: string, account: IUserAccount): Promise<{ id: string }> | null;
 }

@@ -1,4 +1,5 @@
 import Dinero from 'dinero.js';
+import { Dayjs } from 'dayjs';
 
 import { Auction } from '../dto/Auction';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
@@ -53,6 +54,8 @@ interface AuctionResolversType {
     activateAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
     chargeAuction: GraphqlResolver<{ id: string }, { id: string }>;
     chargeCurrendBid: GraphqlResolver<{ id: string }, { input: ChargeCurrentBidInput }>;
+    followAuction: GraphqlResolver<{ user: string; createdAt: Dayjs } | null, { auctionId: string }>;
+    unfollowAuction: GraphqlResolver<{ id: string } | null, { auctionId: string }>;
   };
   InfluencerProfile: {
     auctions: GraphqlResolver<Auction[], Record<string, never>, InfluencerProfile>;
@@ -81,6 +84,12 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
   },
   Mutation: {
+    unfollowAuction: requireAuthenticated(async (_, { auctionId }, { auction, currentAccount }) =>
+      auction.unfollowAuction(auctionId, currentAccount.model),
+    ),
+    followAuction: requireAuthenticated(async (_, { auctionId }, { auction, currentAccount }) =>
+      auction.followAuction(auctionId, currentAccount.model),
+    ),
     createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencerId }) => {
       if (!input.organizerId || currentAccount.isAdmin || currentInfluencerId === input.organizerId) {
         return auction.createAuctionDraft(input.organizerId || currentInfluencerId, input);

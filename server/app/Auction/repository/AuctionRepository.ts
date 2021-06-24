@@ -1,11 +1,11 @@
 import { Connection, FilterQuery, Query, Types } from 'mongoose';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
-import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
@@ -82,6 +82,78 @@ export class AuctionRepository implements IAuctionRepository {
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {},
     );
+  }
+
+  public async followAuction(
+    auctionId: string,
+    account: IUserAccount,
+  ): Promise<{ user: string; createdAt: Dayjs } | null> {
+    const auction = await this.AuctionModel.findById(auctionId).exec();
+    if (!auction) {
+      throw new Error(`Auction record not found`);
+    }
+
+    const currentAuction = await auction
+      .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
+      .execPopulate();
+
+    const currentAccountId = account._id.toString();
+
+    const followed = currentAuction.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+    if (followed) {
+      throw new Error('You have already followed to this auction');
+    }
+    try {
+      const createdFollower = {
+        user: currentAccountId,
+        createdAt: dayjs(),
+      };
+
+      const createdFollowing = {
+        auction: currentAuction._id.toString(),
+        createdAt: dayjs(),
+      };
+
+      Object.assign(currentAuction, {
+        followers: [...currentAuction.followers, createdFollower],
+      });
+
+      Object.assign(account, {
+        followingAuctions: [...account.followingAuctions, createdFollowing],
+      });
+
+      await currentAuction.save();
+      await account.save();
+
+      return createdFollower;
+    } catch (error) {
+      AppLogger.error(`Cannot follow Auction with id #${auctionId}: ${error.message}`);
+      throw new Error('Something went wrong. Please, try later');
+    }
+  }
+
+  public async unfollowAuction(auctionId: string, account: IUserAccount): Promise<{ id: string }> | null {
+    const auction = await this.AuctionModel.findById(auctionId).exec();
+   
+    if (!auction) {
+      throw new Error(`Auction record not found`);
+    }
+    
+    try {
+      const currentAccountId = account._id.toString();
+
+      account.followingAuctions = account.followingAuctions.filter((follow) => follow.auction.toString() !== auctionId);
+      auction.followers = auction.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+
+      await auction.save();
+      await account.save();
+
+      return { id: Date.now().toString() };
+    } catch (error) {
+      AppLogger.error(`Cannot unfollow Auction with id #${auctionId}: ${error.message}`);
+      throw new Error('Something went wrong. Please, try later');
+    }
   }
 
   async createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel> {

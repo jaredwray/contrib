@@ -1,11 +1,11 @@
 import { Connection, Types } from 'mongoose';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Dinero, { Currency } from 'dinero.js';
 
 import { AuctionModel, IAuctionBid, IAuctionModel } from '../mongodb/AuctionModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
-import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { IUserAccount, UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 import { UserAccountStatus } from '../../UserAccount/dto/UserAccountStatus';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
@@ -52,6 +52,17 @@ export class AuctionService {
     private readonly cloudTaskService: CloudTaskService,
     private readonly handlebarsService: HandlebarsService,
   ) {}
+
+  public async followAuction(
+    auctionId: string,
+    account: IUserAccount,
+  ): Promise<{ user: string; createdAt: Dayjs }> | null {
+    return await this.auctionRepository.followAuction(auctionId, account);
+  }
+
+  public async unfollowAuction(auctionId: string, account: IUserAccount): Promise<{ id: string }> | null {
+    return await this.auctionRepository.unfollowAuction(auctionId, account);
+  }
 
   private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {
     const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
@@ -412,21 +423,34 @@ export class AuctionService {
   public async scheduleAuctionEndsNotification(): Promise<{ message: string }> {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
 
-    for await (const auction of auctions) {
+    auctions.forEach(async (auction) => {
       if (
-        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsMinutes &&
-        !auction.isNotifiedOfClosure
+        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.firstNotification &&
+        !auction.sentNotifications.includes('firstNotification')
       ) {
-        const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
+        const timeLeftText = `${AppConfig.googleCloud.auctionEndsTime.firstNotification - 1} minutes`;
         try {
-          await this.notifyInfluencers(currentAuction);
+          await this.notifyUsers(auction, timeLeftText);
+          auction.sentNotifications.push('firstNotification');
+          await auction.save();
         } catch {}
       }
-    }
+      if (
+        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.lastNotification &&
+        !auction.sentNotifications.includes('lastNotification')
+      ) {
+        const timeLeftText = `${Math.floor((AppConfig.googleCloud.auctionEndsTime.lastNotification - 1) / 60)} hour`;
+        try {
+          await this.notifyUsers(auction, timeLeftText);
+          auction.sentNotifications.push('lastNotification');
+          await auction.save();
+        } catch {}
+      }
+    });
     return { message: 'Scheduled' };
   }
 
-  public async notifyInfluencers(auction: IAuctionModel): Promise<void> {
+  public async notifyUsers(auction: IAuctionModel, timeLeftText: string): Promise<void> {
     if (!auction) {
       throw new Error(`There is no auction for sending notification`);
     }
@@ -434,27 +458,48 @@ export class AuctionService {
     if (!auction.bids) {
       return;
     }
-    const bids = auction.bids;
+
+    const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
+
+    const bids = currentAuction.bids;
+    const followers = currentAuction.followers;
     const cachedPhoneNumbers = [];
 
-    for (const bid of bids) {
+    bids.forEach(async (bid) => {
       if (!cachedPhoneNumbers.includes(bid.user.phoneNumber)) {
         try {
           await this.sendAuctionNotification(bid.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
-            influencerName: auction.auctionOrganizer.name,
-            aunctionName: auction.title,
-            auctionLink: auction.link,
+            timeLeftText,
+            influencerName: currentAuction.auctionOrganizer.name,
+            aunctionName: currentAuction.title,
+            auctionLink: currentAuction.link,
           });
           cachedPhoneNumbers.push(bid.user.phoneNumber);
-          auction.isNotifiedOfClosure = true;
-          await auction.save();
         } catch (error) {
           AppLogger.warn(
-            `Something went wrong during notification about action ending. Id of auction: ${auction.id.toString()}`,
+            `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error}`,
           );
         }
       }
-    }
+    });
+
+    followers.forEach(async (follower) => {
+      if (!cachedPhoneNumbers.includes(follower.user.phoneNumber)) {
+        try {
+          await this.sendAuctionNotification(follower.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
+            timeLeftText,
+            influencerName: currentAuction.auctionOrganizer.name,
+            aunctionName: currentAuction.title,
+            auctionLink: currentAuction.link,
+          });
+          cachedPhoneNumbers.push(follower.user.phoneNumber);
+        } catch (error) {
+          AppLogger.warn(
+            `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error}`,
+          );
+        }
+      }
+    });
   }
 
   public async scheduleAuctionJobStart(): Promise<{ message: string }> {
@@ -823,6 +868,7 @@ export class AuctionService {
       priceCurrency,
       fairMarketValue,
       link: rawLink,
+      followers,
       ...rest
     } = model.toObject();
 
@@ -868,6 +914,12 @@ export class AuctionService {
           })
         : null,
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
+      followers: followers.map((follower) => {
+        return {
+          user: follower.user,
+          createdAt: follower.createdAt,
+        };
+      }),
       link,
       status,
       isActive: status === AuctionStatus.ACTIVE,

@@ -56,7 +56,7 @@ const AuctionPage = () => {
           </Col>
           <Col md="1" />
           <Col md="4">
-            <AuctionDetails auction={auction} executeQuery={executeAuctionQuery} />
+            <AuctionDetails auction={auction} executeQuery={executeAuctionQuery} isOwner={isMyProfile} />
           </Col>
           <Col md="1" />
         </Row>
