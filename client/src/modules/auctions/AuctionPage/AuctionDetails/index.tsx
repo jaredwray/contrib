@@ -1,5 +1,6 @@
 import { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useContext, useState } from 'react';
 
+import { useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -11,7 +12,9 @@ import { Button } from 'react-bootstrap';
 import { useHistory, Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
+import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import WatchBtn from 'src/components/WatchBtn';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
@@ -25,18 +28,24 @@ import styles from './styles.module.scss';
 
 interface Props {
   auction: Auction;
+  isOwner: boolean;
   executeQuery: () => void;
 }
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
-const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
+const AuctionDetails: FC<Props> = ({ auction, executeQuery, isOwner }): ReactElement => {
   const [isBying, setIsBying] = useState(false);
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const history = useHistory();
+
+  const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
+  const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
+
   const {
+    followers,
     startPrice,
     itemPrice,
     currentPrice,
@@ -48,6 +57,10 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     isStopped,
     bids,
   } = auction;
+
+  const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
+  const [followersNumber, setFollowersNumber] = useState(followers?.length || 0);
+
   const ended = toDate(endDate) <= new Date();
   const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label;
   const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
@@ -140,6 +153,40 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     history.replace(`/auctions/${auction.id}`);
   }, [placeBidQueryParam, auction.id, minBid, handleBid, history, isBuyingParam]);
 
+  const handleFollowAuction = useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        await followAuction({ variables: { auctionId: auction.id } });
+        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
+        setFollowed(true);
+        setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      }
+      return;
+    }
+
+    const followPath = `/auctions/${auction.id}`;
+    const redirectUri = mergeUrlPath(
+      process.env.REACT_APP_PLATFORM_URL,
+      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
+    );
+    loginWithRedirect({ redirectUri }).catch((error) => {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    });
+  }, [auction.id, addToast, followAuction, followersNumber, isAuthenticated, loginWithRedirect]);
+
+  const handleUnfollowAuction = useCallback(async () => {
+    try {
+      await unfollowAuction({ variables: { auctionId: auction.id } });
+      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      setFollowed(false);
+      setFollowersNumber(followersNumber - 1);
+    } catch (error) {
+      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+    }
+  }, [auction.id, addToast, unfollowAuction, followersNumber]);
+
   return (
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
@@ -212,6 +259,15 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
           {buyingPrice}
         </Button>
       )}
+      <WatchBtn
+        disabled={isOwner}
+        entityType="auction"
+        followHandler={handleFollowAuction}
+        followed={followed}
+        followersNumber={followersNumber}
+        loading={followLoading || unfollowLoading}
+        unfollowHandler={handleUnfollowAuction}
+      />
     </>
   );
 };

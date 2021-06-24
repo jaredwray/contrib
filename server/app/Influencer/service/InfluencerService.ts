@@ -22,25 +22,21 @@ export class InfluencerService {
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
   async followInfluencer(influencerId: string, account: IUserAccount) {
+    const influencer = await this.InfluencerModel.findById(influencerId).exec();
+
+    if (!influencer) {
+      throw new Error(`Influencer not found`);
+    }
+
+    const currentAccountId = account._id.toString();
+    const influencerAccountId = influencer.userAccount.toString();
+    const followed = influencer.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+    if (followed) {
+      throw new Error('You have already followed to this influencer');
+    }
+
     try {
-      const influencer = await this.InfluencerModel.findById(influencerId).exec();
-      if (!influencer) {
-        throw new Error(`Influencer record #${influencerId} not found`);
-      }
-
-      const currentAccountId = account._id.toString();
-      const influencerAccountId = influencer.userAccount.toString();
-
-      if (currentAccountId === influencerAccountId) {
-        throw new Error(`You can't following to yourself`);
-      }
-
-      const followed = influencer.followers.some((follower) => follower.user.toString() === currentAccountId);
-
-      if (followed) {
-        throw new Error('You have already followed to this influencer');
-      }
-
       const createdFollower = {
         user: currentAccountId,
         createdAt: dayjs(),
@@ -70,22 +66,19 @@ export class InfluencerService {
   }
 
   async unfollowInfluencer(influencerId: string, account: IUserAccount) {
-    try {
-      const influencer = await this.InfluencerModel.findById(influencerId).exec();
-      if (!influencer) {
-        throw new Error(`Influencer record #${influencerId} not found`);
-      }
+    const influencer = await this.InfluencerModel.findById(influencerId).exec();
 
+    if (!influencer) {
+      throw new Error(`Influencer not found`);
+    }
+
+    try {
       const currentAccountId = account._id.toString();
       const influencerAccountId = influencer.userAccount.toString();
-      const followingInfluencersLength = account.followingInfluencers.length;
 
       account.followingInfluencers = account.followingInfluencers.filter(
         (follow) => follow.user.toString() !== influencerAccountId,
       );
-      if (followingInfluencersLength === account.followingInfluencers.length) {
-        throw new Error('You are not followed to this influencer');
-      }
       influencer.followers = influencer.followers.filter((follower) => follower.user.toString() !== currentAccountId);
 
       await influencer.save();

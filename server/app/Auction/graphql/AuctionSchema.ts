@@ -70,6 +70,7 @@ export const AuctionSchema = gql`
     link: String!
     fairMarketValue: Money
     timeZone: String
+    followers: [Follow]
     isActive: Boolean!
     isDraft: Boolean!
     isPending: Boolean!
@@ -219,6 +220,8 @@ export const AuctionSchema = gql`
     deleteAuction(id: String!): ResponceId!
     chargeAuction(id: String!): ResponceId!
     chargeCurrendBid(input: CurrentAuctionBid!): ResponceId!
+    followAuction(auctionId: String!): Follow
+    unfollowAuction(auctionId: String!): ResponceId
   }
 
   extend type InfluencerProfile {

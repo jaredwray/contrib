@@ -31,25 +31,21 @@ export class CharityService {
   }
 
   async followCharity(charityId: string, account: IUserAccount) {
+    const charity = await this.CharityModel.findById(charityId).exec();
+    
+    if (!charity) {
+      throw new Error(`Charity not found`);
+    }
+
+    const currentAccountId = account._id.toString();
+    const charityAccountId = charity.userAccount.toString();
+    const followed = charity.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+    if (followed) {
+      throw new Error('You have already followed to this charity');
+    }
+
     try {
-      const charity = await this.CharityModel.findById(charityId).exec();
-      if (!charity) {
-        throw new Error(`Charity record #${charityId} not found`);
-      }
-
-      const currentAccountId = account._id.toString();
-      const charityAccountId = charity.userAccount.toString();
-
-      if (currentAccountId === charityAccountId) {
-        throw new Error(`You can't following to yourself`);
-      }
-
-      const followed = charity.followers.some((follower) => follower.user.toString() === currentAccountId);
-
-      if (followed) {
-        throw new Error('You have already followed to this charity');
-      }
-
       const createdFollower = {
         user: currentAccountId,
         createdAt: dayjs(),
@@ -79,22 +75,19 @@ export class CharityService {
   }
 
   async unfollowCharity(charityId: string, account: IUserAccount) {
-    try {
-      const charity = await this.CharityModel.findById(charityId).exec();
-      if (!charity) {
-        throw new Error(`Charity record #${charityId} not found`);
-      }
+    const charity = await this.CharityModel.findById(charityId).exec();
+    
+    if (!charity) {
+      throw new Error(`Charity record #${charityId} not found`);
+    }
 
+    try {
       const currentAccountId = account._id.toString();
       const charityAccountId = charity.userAccount.toString();
-      const followingCharityLength = account.followingCharitis.length;
 
       account.followingCharitis = account.followingCharitis.filter(
         (follow) => follow.user.toString() !== charityAccountId,
       );
-      if (followingCharityLength === account.followingCharitis.length) {
-        throw new Error('You are not followed to this charity');
-      }
       charity.followers = charity.followers.filter((follower) => follower.user.toString() !== currentAccountId);
 
       await charity.save();
