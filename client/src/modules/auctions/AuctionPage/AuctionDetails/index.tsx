@@ -62,7 +62,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery, isOwner }): ReactEle
   const [followersNumber, setFollowersNumber] = useState(followers?.length || 0);
 
   const ended = toDate(endDate) <= new Date();
-  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label;
+  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
   const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
   const endTime = format(utcToZonedTime(endDate, timeZone || ''), 'p');
   const canBid = auction.isActive && !ended;
@@ -195,7 +195,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery, isOwner }): ReactEle
         <>
           <div className="justify-content-between flex-wrap text-all-cups pt-3">
             <span className={styles.notBold}>starts in </span>
-            {startTime} {timeZone}
+            {startTime} {auction.timeZone}
             <p>
               <span className={styles.notBold}> on </span>
               {startFormatted}
@@ -203,7 +203,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery, isOwner }): ReactEle
           </div>
           <div className="justify-content-between flex-wrap text-all-cups pb-3">
             <span className={styles.notBold}>ends in </span>
-            {endTime} {timeZone}
+            {endTime} {auction.timeZone}
             <p>
               <span className={styles.notBold}> on </span>
               {endDateFormatted}

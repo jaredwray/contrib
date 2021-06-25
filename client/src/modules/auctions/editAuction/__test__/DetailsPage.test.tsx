@@ -1,6 +1,6 @@
 import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { shallow } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -37,7 +37,7 @@ cache.writeQuery({
 
 test('renders without crashing', async () => {
   await act(async () => {
-    render(
+    shallow(
       <Router>
         <ToastProvider>
           <MockedProvider cache={cache}>

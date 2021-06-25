@@ -226,6 +226,7 @@ export const getAuctionDetails = gql`
     auction(id: $id) {
       id
       startDate
+      timeZone
       endDate
       itemPrice
       startPrice
