@@ -5,7 +5,7 @@ import Dinero, { Currency } from 'dinero.js';
 import { AuctionModel, IAuctionBid, IAuctionModel } from '../mongodb/AuctionModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
-import { IUserAccount, UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 import { UserAccountStatus } from '../../UserAccount/dto/UserAccountStatus';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
@@ -53,15 +53,12 @@ export class AuctionService {
     private readonly handlebarsService: HandlebarsService,
   ) {}
 
-  public async followAuction(
-    auctionId: string,
-    account: IUserAccount,
-  ): Promise<{ user: string; createdAt: Dayjs }> | null {
-    return await this.auctionRepository.followAuction(auctionId, account);
+  public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs }> | null {
+    return await this.auctionRepository.followAuction(auctionId, accountId);
   }
 
-  public async unfollowAuction(auctionId: string, account: IUserAccount): Promise<{ id: string }> | null {
-    return await this.auctionRepository.unfollowAuction(auctionId, account);
+  public async unfollowAuction(auctionId: string, accountId: string): Promise<{ id: string }> | null {
+    return await this.auctionRepository.unfollowAuction(auctionId, accountId);
   }
 
   private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {

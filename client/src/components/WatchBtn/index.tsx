@@ -2,19 +2,17 @@ import { FC } from 'react';
 
 import clsx from 'clsx';
 
-import HeartIcon from 'src/assets/images/Heart';
-
-import AsyncButton from '../AsyncButton';
+import HeartBtn from '../HeartButton';
 import styles from './styles.module.scss';
 
 interface Props {
   followed?: boolean | undefined;
-  entityType: string;
-  followersNumber: number | undefined;
-  loading: boolean;
-  disabled: boolean;
-  followHandler: () => Promise<void>;
-  unfollowHandler: () => Promise<void>;
+  entityType?: string;
+  followersNumber?: number | undefined;
+  loading?: boolean;
+  disabled?: boolean;
+  followHandler?: () => Promise<void>;
+  unfollowHandler?: () => Promise<void>;
 }
 
 const WatchBtn: FC<Props> = ({
@@ -28,15 +26,13 @@ const WatchBtn: FC<Props> = ({
 }) => {
   return (
     <div className={clsx(styles.container, 'mt-3 pt-3 pb-3 d-table  align-middle')}>
-      <AsyncButton
-        className={styles.watchBtn}
+      <HeartBtn
         disabled={disabled}
+        followHandler={followHandler}
+        followed={followed}
         loading={loading}
-        variant="link"
-        onClick={followed ? unfollowHandler : followHandler}
-      >
-        <HeartIcon followed={followed} />
-      </AsyncButton>
+        unfollowHandler={unfollowHandler}
+      />
       <div className="d-table-cell pl-4 align-middle">
         <div className={clsx(styles.subhead, 'text-subhead')}>Watch this {entityType}</div>
         <div className="text-label text-all-cups">
