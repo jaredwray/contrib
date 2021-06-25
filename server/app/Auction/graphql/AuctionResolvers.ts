@@ -85,10 +85,10 @@ export const AuctionResolvers: AuctionResolversType = {
   },
   Mutation: {
     unfollowAuction: requireAuthenticated(async (_, { auctionId }, { auction, currentAccount }) =>
-      auction.unfollowAuction(auctionId, currentAccount.model),
+      auction.unfollowAuction(auctionId, currentAccount.mongodbId),
     ),
     followAuction: requireAuthenticated(async (_, { auctionId }, { auction, currentAccount }) =>
-      auction.followAuction(auctionId, currentAccount.model),
+      auction.followAuction(auctionId, currentAccount.mongodbId),
     ),
     createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencerId }) => {
       if (!input.organizerId || currentAccount.isAdmin || currentInfluencerId === input.organizerId) {

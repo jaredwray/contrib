@@ -3,6 +3,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { auction } from 'src/helpers/testHelpers/auction';
+import { ToastProvider } from 'react-toast-notifications';
 
 import AuctionCard from '..';
 
@@ -16,9 +17,11 @@ describe('Should render correctly "AuctionCard"', () => {
   beforeEach(() => {
     wrapper = mount(
       <MockedProvider mocks={[]}>
-        <Router>
-          <AuctionCard {...props} />
-        </Router>
+        <ToastProvider>
+          <Router>
+            <AuctionCard {...props} />
+          </Router>
+        </ToastProvider>
       </MockedProvider>,
     );
   });

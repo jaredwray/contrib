@@ -1,20 +1,27 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useCallback, useMemo, useState, useContext } from 'react';
 
+import { useMutation } from '@apollo/client';
+import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { format as dateFormat } from 'date-fns';
 import { format, utcToZonedTime, toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
-import { deleteAuctionMutation } from 'src/apollo/queries/auctions';
+import { deleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { Modal } from 'src/components/AdminAuctionsPageModal';
 import { CloseButton } from 'src/components/CloseButton';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
+import HeartBtn from '../HeartButton';
 import SwipeableLink from '../SwipeableLink';
 import CoverImage from './CoverImage';
 import DateDetails from './DateDetails';
@@ -29,7 +36,23 @@ type Props = {
 };
 
 const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage, onDelete }) => {
+  const { account } = useContext(UserAccountContext);
+  const { addToast } = useToasts();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const hisory = useHistory();
+
+  const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
+  const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
+
+  const followers = auction.followers;
+  const loading = followLoading || unfollowLoading;
+  const isOwner = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
+    auction.auctionOrganizer.id,
+  );
+
   const [showDialog, setShowDialog] = useState(false);
+  const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
+
   const imageSrc = useAuctionPreviewAttachment(auction.attachments);
   const influencer = auctionOrganizer || auction.auctionOrganizer;
   const currentPrice = useMemo(() => {
@@ -43,6 +66,38 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
 
     return Dinero(auction.startPrice);
   }, [auction]);
+
+  const handleFollowAuction = useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        await followAuction({ variables: { auctionId: auction.id } });
+        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
+        setFollowed(true);
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      }
+      return;
+    }
+
+    const followPath = hisory.location.pathname;
+    const redirectUri = mergeUrlPath(
+      process.env.REACT_APP_PLATFORM_URL,
+      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
+    );
+    loginWithRedirect({ redirectUri }).catch((error) => {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    });
+  }, [auction.id, addToast, followAuction, isAuthenticated, loginWithRedirect, hisory.location.pathname]);
+
+  const handleUnfollowAuction = useCallback(async () => {
+    try {
+      await unfollowAuction({ variables: { auctionId: auction.id } });
+      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      setFollowed(false);
+    } catch (error) {
+      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+    }
+  }, [auction.id, addToast, unfollowAuction]);
 
   if (!auction) {
     return null;
@@ -67,19 +122,31 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
         onClose={() => setShowDialog(false)}
         onConfirm={onDelete}
       />
-      <SwipeableLink to={linkToAuction}>
-        <CoverImage
-          alt="Auction image"
-          className={clsx(
-            styles.image,
-            horizontal && styles.horizontalImage,
-            isDonePage && styles.horizontalOnMobileImage,
-            isSettled && styles.settled,
-            isSold && styles.settled,
-          )}
-          src={imageSrc}
-        />
-      </SwipeableLink>
+      <div className={clsx(styles.wrapper)}>
+        {(isActive || isPending) && (
+          <HeartBtn
+            className={clsx(styles.followBtn)}
+            disabled={isOwner}
+            followHandler={handleFollowAuction}
+            followed={followed}
+            loading={loading}
+            unfollowHandler={handleUnfollowAuction}
+          />
+        )}
+        <SwipeableLink to={linkToAuction}>
+          <CoverImage
+            alt="Auction image"
+            className={clsx(
+              styles.image,
+              horizontal && styles.horizontalImage,
+              isDonePage && styles.horizontalOnMobileImage,
+              isSettled && styles.settled,
+              isSold && styles.settled,
+            )}
+            src={imageSrc}
+          />
+        </SwipeableLink>
+      </div>
 
       <figcaption
         className={clsx(

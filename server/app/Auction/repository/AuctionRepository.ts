@@ -5,7 +5,7 @@ import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
-import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
@@ -84,75 +84,106 @@ export class AuctionRepository implements IAuctionRepository {
     );
   }
 
-  public async followAuction(
-    auctionId: string,
-    account: IUserAccount,
-  ): Promise<{ user: string; createdAt: Dayjs } | null> {
-    const auction = await this.AuctionModel.findById(auctionId).exec();
-    if (!auction) {
-      throw new Error(`Auction record not found`);
-    }
+  public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs } | null> {
+    const session = await this.connection.startSession();
 
-    const currentAuction = await auction
-      .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
-      .execPopulate();
+    let returnObject = null;
 
-    const currentAccountId = account._id.toString();
-
-    const followed = currentAuction.followers.some((follower) => follower.user.toString() === currentAccountId);
-
-    if (followed) {
-      throw new Error('You have already followed to this auction');
-    }
     try {
-      const createdFollower = {
-        user: currentAccountId,
-        createdAt: dayjs(),
-      };
+      await session.withTransaction(async () => {
+        const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
+        if (!auction) {
+          throw new AppError(`Auction record not found`);
+        }
 
-      const createdFollowing = {
-        auction: currentAuction._id.toString(),
-        createdAt: dayjs(),
-      };
+        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+        if (!account) {
+          throw new AppError(`Account record not found`);
+        }
 
-      Object.assign(currentAuction, {
-        followers: [...currentAuction.followers, createdFollower],
+        const currentAuction = await auction
+          .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
+          .execPopulate();
+
+        const currentAccountId = account._id.toString();
+
+        const followed = currentAuction.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+        if (followed) {
+          throw new AppError('You have already followed to this auction');
+        }
+        const createdFollower = {
+          user: currentAccountId,
+          createdAt: dayjs(),
+        };
+
+        const createdFollowing = {
+          auction: currentAuction._id.toString(),
+          createdAt: dayjs(),
+        };
+
+        Object.assign(currentAuction, {
+          followers: [...currentAuction.followers, createdFollower],
+        });
+
+        Object.assign(account, {
+          followingAuctions: [...account.followingAuctions, createdFollowing],
+        });
+
+        await currentAuction.save({ session });
+        await account.save({ session });
+
+        returnObject = createdFollower;
       });
 
-      Object.assign(account, {
-        followingAuctions: [...account.followingAuctions, createdFollowing],
-      });
-
-      await currentAuction.save();
-      await account.save();
-
-      return createdFollower;
+      return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot follow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 
-  public async unfollowAuction(auctionId: string, account: IUserAccount): Promise<{ id: string }> | null {
-    const auction = await this.AuctionModel.findById(auctionId).exec();
-   
-    if (!auction) {
-      throw new Error(`Auction record not found`);
-    }
-    
+  public async unfollowAuction(auctionId: string, accountId: string): Promise<{ id: string }> | null {
+    const session = await this.connection.startSession();
+
+    let returnObject = null;
+
     try {
-      const currentAccountId = account._id.toString();
+      await session.withTransaction(async () => {
+        const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
 
-      account.followingAuctions = account.followingAuctions.filter((follow) => follow.auction.toString() !== auctionId);
-      auction.followers = auction.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+        if (!auction) {
+          throw new AppError(`Auction record not found`);
+        }
 
-      await auction.save();
-      await account.save();
+        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+        if (!account) {
+          throw new AppError(`Account record not found`);
+        }
+        const currentAccountId = account._id.toString();
 
-      return { id: Date.now().toString() };
+        account.followingAuctions = account.followingAuctions.filter(
+          (follow) => follow.auction.toString() !== auctionId,
+        );
+        auction.followers = auction.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+
+        await auction.save({ session });
+        await account.save({ session });
+
+        await session.commitTransaction();
+        session.endSession();
+
+        returnObject = { id: Date.now().toString() };
+      });
+
+      return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot unfollow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 

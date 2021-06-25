@@ -176,6 +176,9 @@ export const AuctionsListQuery = gql`
           thumbnail
         }
         fairMarketValue
+        followers {
+          user
+        }
       }
     }
   }
