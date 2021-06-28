@@ -35,7 +35,10 @@ const PriceRange: FC<Props> = ({ initialBids, bids, changeFilters }) => {
       <Form.Label>Price range</Form.Label>
       <Nouislider
         connect
-        range={{ min: initialBids.minPrice, max: initialBids.maxPrice + 0.1 }}
+        range={{
+          min: initialBids.minPrice,
+          max: initialBids.minPrice === initialBids.maxPrice ? initialBids.maxPrice + 0.1 : initialBids.maxPrice,
+        }}
         start={[bids?.minPrice, bids?.maxPrice]}
         step={1}
         onChange={onSliderChange}

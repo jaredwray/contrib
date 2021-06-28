@@ -49,8 +49,8 @@ export const AuctionForAdminPage = gql`
 `;
 
 export const AuctionPriceLimitsQuery = gql`
-  query auctionPriceLimits {
-    auctionPriceLimits {
+  query auctionPriceLimits($filters: AuctionSearchFilters, $query: String, $statusFilter: [String]) {
+    auctionPriceLimits(filters: $filters, query: $query, statusFilter: $statusFilter) {
       max
       min
     }

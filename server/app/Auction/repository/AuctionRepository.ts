@@ -297,11 +297,12 @@ export class AuctionRepository implements IAuctionRepository {
       .exec();
   }
 
-  async getAuctionPriceLimits(): Promise<{ min: number; max: number }> {
+  async getAuctionPriceLimits({ query, filters, statusFilter }): Promise<{ min: number; max: number }> {
+    const searchOptions = AuctionRepository.getSearchOptions(query, filters, statusFilter);
     const result: { min: number; max: number }[] = await this.AuctionModel.aggregate([
       {
         $match: {
-          status: { $in: [AuctionStatus.ACTIVE, AuctionStatus.PENDING, AuctionStatus.SETTLED, AuctionStatus.SOLD] },
+          ...searchOptions,
         },
       },
       {

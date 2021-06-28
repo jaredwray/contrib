@@ -191,8 +191,8 @@ export class AuctionService {
     return this.auctionRepository.getAuctionSports();
   }
 
-  public async getAuctionPriceLimits(): Promise<{ min: Dinero.Dinero; max: Dinero.Dinero }> {
-    const { min, max } = await this.auctionRepository.getAuctionPriceLimits();
+  public async getAuctionPriceLimits(params: IAuctionFilters): Promise<{ min: Dinero.Dinero; max: Dinero.Dinero }> {
+    const { min, max } = await this.auctionRepository.getAuctionPriceLimits(params);
     return {
       min: Dinero({ amount: min, currency: AppConfig.app.defaultCurrency as Dinero.Currency }),
       max: Dinero({ amount: max, currency: AppConfig.app.defaultCurrency as Dinero.Currency }),

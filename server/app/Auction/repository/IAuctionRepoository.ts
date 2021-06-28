@@ -8,7 +8,7 @@ import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 
 export type IAuctionFilters = {
   size?: number;
-  skip: number;
+  skip?: number;
   query?: string;
   filters?: AuctionSearchFilters;
   orderBy?: AuctionOrderBy;
@@ -56,7 +56,7 @@ export interface IAuctionRepository {
   activateAuction(id: string, organizerId: string): Promise<IAuctionModel>;
   updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel>;
   updateAuctionLink(id: string, link: string): Promise<IAuctionModel>;
-  getAuctionPriceLimits(): Promise<{ min: number; max: number }>;
+  getAuctionPriceLimits({ query, statusFilter, filters }: IAuctionFilters): Promise<{ min: number; max: number }>;
   countAuctions({ query, filters }: { query?: string; filters?: AuctionSearchFilters }): Promise<number>;
   getAuctions({ query, size, skip, orderBy, filters }: IAuctionFilters): Promise<IAuctionModel[]>;
   getAuctionsCount({ query, size, skip, orderBy, filters }: IAuctionFilters): Promise<number>;
