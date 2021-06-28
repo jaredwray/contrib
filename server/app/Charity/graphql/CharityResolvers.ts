@@ -39,10 +39,10 @@ export const CharityResolvers = {
   },
   Mutation: {
     unfollowCharity: requireAuthenticated(async (_, { charityId }, { charity, currentAccount }) =>
-      charity.unfollowCharity(charityId, currentAccount.model),
+      charity.unfollowCharity(charityId, currentAccount.mongodbId),
     ),
     followCharity: requireAuthenticated(async (_, { charityId }, { charity, currentAccount }) =>
-      charity.followCharity(charityId, currentAccount.model),
+      charity.followCharity(charityId, currentAccount.mongodbId),
     ),
     inviteCharity: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteCharity(input)),
     updateCharity: async (

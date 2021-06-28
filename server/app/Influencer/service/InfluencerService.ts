@@ -3,14 +3,15 @@ import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
 import { IAuctionModel } from '../../Auction/mongodb/AuctionModel';
-import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { CharityService } from '../../Charity';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
-import { UserAccount } from '../../UserAccount/dto/UserAccount';
+import { AppError } from '../../../errors';
 
 interface TransientInfluencerInput {
   name: string;
@@ -18,76 +19,102 @@ interface TransientInfluencerInput {
 
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
+  private readonly UserAccountModel = UserAccountModel(this.connection);
 
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
-  async followInfluencer(influencerId: string, account: IUserAccount) {
-    const influencer = await this.InfluencerModel.findById(influencerId).exec();
+  async followInfluencer(influencerId: string, accountId: string) {
+    const session = await this.connection.startSession();
 
-    if (!influencer) {
-      throw new Error(`Influencer not found`);
-    }
-
-    const currentAccountId = account._id.toString();
-    const influencerAccountId = influencer.userAccount.toString();
-    const followed = influencer.followers.some((follower) => follower.user.toString() === currentAccountId);
-
-    if (followed) {
-      throw new Error('You have already followed to this influencer');
-    }
-
+    let returnObject = null;
     try {
-      const createdFollower = {
-        user: currentAccountId,
-        createdAt: dayjs(),
-      };
+      await session.withTransaction(async () => {
+        const influencer = await this.InfluencerModel.findById(influencerId, null, { session }).exec();
 
-      const createdFollowing = {
-        user: influencerAccountId,
-        createdAt: dayjs(),
-      };
+        if (!influencer) {
+          throw new AppError(`Influencer record #${influencerId} not found`);
+        }
 
-      Object.assign(influencer, {
-        followers: [...influencer.followers, createdFollower],
+        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+        if (!account) {
+          throw new AppError(`Account record #${accountId} not found`);
+        }
+
+        const currentAccountId = account._id.toString();
+        const influencerAccountId = influencer.userAccount.toString();
+        const followed = influencer.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+        if (followed) {
+          throw new AppError('You have already followed to this influencer');
+        }
+
+        const createdFollower = {
+          user: currentAccountId,
+          createdAt: dayjs(),
+        };
+
+        const createdFollowing = {
+          user: influencerAccountId,
+          createdAt: dayjs(),
+        };
+
+        Object.assign(influencer, {
+          followers: [...influencer.followers, createdFollower],
+        });
+
+        Object.assign(account, {
+          followingInfluencers: [...account.followingInfluencers, createdFollowing],
+        });
+
+        await influencer.save({ session });
+        await account.save({ session });
+
+        returnObject = createdFollower;
       });
-
-      Object.assign(account, {
-        followingInfluencers: [...account.followingInfluencers, createdFollowing],
-      });
-
-      await influencer.save();
-      await account.save();
-
-      return createdFollower;
+      return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot follow follow Influencer with id #${influencerId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 
-  async unfollowInfluencer(influencerId: string, account: IUserAccount) {
-    const influencer = await this.InfluencerModel.findById(influencerId).exec();
+  async unfollowInfluencer(influencerId: string, accountId: string) {
+    const session = await this.connection.startSession();
 
-    if (!influencer) {
-      throw new Error(`Influencer not found`);
-    }
-
+    let returnObject = null;
     try {
-      const currentAccountId = account._id.toString();
-      const influencerAccountId = influencer.userAccount.toString();
+      await session.withTransaction(async () => {
+        const influencer = await this.InfluencerModel.findById(influencerId, null, { session }).exec();
+        if (!influencer) {
+          throw new AppError(`Influencer record #${influencerId} not found`);
+        }
 
-      account.followingInfluencers = account.followingInfluencers.filter(
-        (follow) => follow.user.toString() !== influencerAccountId,
-      );
-      influencer.followers = influencer.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+        if (!account) {
+          throw new AppError(`Account record #${accountId} not found`);
+        }
 
-      await influencer.save();
-      await account.save();
+        const currentAccountId = account._id.toString();
+        const influencerAccountId = influencer.userAccount.toString();
 
-      return { id: Date.now().toString() };
+        account.followingInfluencers = account.followingInfluencers.filter(
+          (follow) => follow.user.toString() !== influencerAccountId,
+        );
+        influencer.followers = influencer.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+
+        await influencer.save({ session });
+        await account.save({ session });
+
+        returnObject = { id: Date.now().toString() };
+      });
+      return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot unfollow follow Influencer with id #${influencerId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 

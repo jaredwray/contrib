@@ -93,21 +93,16 @@ export class AuctionRepository implements IAuctionRepository {
       await session.withTransaction(async () => {
         const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
         if (!auction) {
-          throw new AppError(`Auction record not found`);
+          throw new AppError(`Auction record #${auctionId} not found`);
         }
 
         const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
         if (!account) {
-          throw new AppError(`Account record not found`);
+          throw new AppError(`Account record #${accountId} not found`);
         }
 
-        const currentAuction = await auction
-          .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
-          .execPopulate();
-
         const currentAccountId = account._id.toString();
-
-        const followed = currentAuction.followers.some((follower) => follower.user.toString() === currentAccountId);
+        const followed = auction.followers.some((follower) => follower.user.toString() === currentAccountId);
 
         if (followed) {
           throw new AppError('You have already followed to this auction');
@@ -118,19 +113,19 @@ export class AuctionRepository implements IAuctionRepository {
         };
 
         const createdFollowing = {
-          auction: currentAuction._id.toString(),
+          auction: auction._id.toString(),
           createdAt: dayjs(),
         };
 
-        Object.assign(currentAuction, {
-          followers: [...currentAuction.followers, createdFollower],
+        Object.assign(auction, {
+          followers: [...auction.followers, createdFollower],
         });
 
         Object.assign(account, {
           followingAuctions: [...account.followingAuctions, createdFollowing],
         });
 
-        await currentAuction.save({ session });
+        await auction.save({ session });
         await account.save({ session });
 
         returnObject = createdFollower;
@@ -155,12 +150,12 @@ export class AuctionRepository implements IAuctionRepository {
         const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
 
         if (!auction) {
-          throw new AppError(`Auction record not found`);
+          throw new AppError(`Auction record #${auctionId} not found`);
         }
 
         const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
         if (!account) {
-          throw new AppError(`Account record not found`);
+          throw new AppError(`Account record #${accountId} not found`);
         }
         const currentAccountId = account._id.toString();
 
