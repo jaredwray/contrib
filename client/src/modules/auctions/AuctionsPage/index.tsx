@@ -1,6 +1,6 @@
 import { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Row, Col, Container } from 'react-bootstrap';
 
@@ -18,7 +18,7 @@ import styles from './styles.module.scss';
 const PER_PAGE = 20;
 
 const AuctionsPage: FC = () => {
-  const { data: auctionPriceLimitsData } = useQuery(AuctionPriceLimitsQuery);
+  const [getPriceLimits, { data: auctionPriceLimitsData }] = useLazyQuery(AuctionPriceLimitsQuery);
   const auctionPriceLimits = auctionPriceLimitsData?.auctionPriceLimits;
 
   const initialBids = useMemo(() => {
@@ -37,12 +37,17 @@ const AuctionsPage: FC = () => {
     orderBy: 'CREATED_AT_DESC',
     pageSkip: 0,
   });
+
   const [executeAuctionsSearch, { data: auctionsData }] = useLazyQuery(AuctionsListQuery);
   const auctions = auctionsData?.auctions;
   const changeFilters = useCallback((key: string, value: any) => {
     setFilters((prevState: any) => {
       return { ...prevState, pageSkip: 0, [key]: value };
     });
+  }, []);
+
+  const auctionStatuses = useMemo(() => {
+    return [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD, AuctionStatus.PENDING];
   }, []);
 
   useEffect(() => {
@@ -64,10 +69,22 @@ const AuctionsPage: FC = () => {
         query: filters.query,
         orderBy: filters.orderBy,
         filters: queryFilters,
-        statusFilter: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD, AuctionStatus.PENDING],
+        statusFilter: auctionStatuses,
       },
     });
-  }, [executeAuctionsSearch, filters]);
+  }, [executeAuctionsSearch, filters, auctionStatuses]);
+
+  useEffect(() => {
+    const queryFilters = { sports: filters.sports };
+
+    getPriceLimits({
+      variables: {
+        query: filters.query,
+        filters: queryFilters,
+        statusFilter: auctionStatuses,
+      },
+    });
+  }, [getPriceLimits, filters, auctionStatuses]);
 
   return (
     <Layout>
