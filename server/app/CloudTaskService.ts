@@ -9,6 +9,10 @@ export class CloudTaskService {
   });
 
   public async createTask(returnURL: string, payload: { [key: string]: any }): Promise<void> {
+    if (AppConfig.app.url === 'http://127.0.0.1:3000') {
+      return;
+    }
+
     const parent = this.cloudTaskClient.queuePath(
       AppConfig.googleCloud.task.googleProjectId,
       AppConfig.googleCloud.task.location,
