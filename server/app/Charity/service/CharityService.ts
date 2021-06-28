@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
-import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
 import { CharityInput } from '../graphql/model/CharityInput';
@@ -15,6 +15,7 @@ import { Events } from '../../Events';
 import { StripeService } from '../../Payment';
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
+import { AppError } from '../../../errors';
 
 interface CharityCreationInput {
   name: string;
@@ -22,6 +23,7 @@ interface CharityCreationInput {
 
 export class CharityService {
   private readonly CharityModel = CharityModel(this.connection);
+  private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly stripe = new StripeService();
 
   constructor(private readonly connection: Connection, private readonly eventHub: EventHub) {
@@ -30,73 +32,97 @@ export class CharityService {
     });
   }
 
-  async followCharity(charityId: string, account: IUserAccount) {
-    const charity = await this.CharityModel.findById(charityId).exec();
-    
-    if (!charity) {
-      throw new Error(`Charity not found`);
-    }
+  async followCharity(charityId: string, accountId: string) {
+    const session = await this.connection.startSession();
 
-    const currentAccountId = account._id.toString();
-    const charityAccountId = charity.userAccount.toString();
-    const followed = charity.followers.some((follower) => follower.user.toString() === currentAccountId);
-
-    if (followed) {
-      throw new Error('You have already followed to this charity');
-    }
-
+    let returnObject = null;
     try {
-      const createdFollower = {
-        user: currentAccountId,
-        createdAt: dayjs(),
-      };
+      await session.withTransaction(async () => {
+        const charity = await this.CharityModel.findById(charityId, null, { session }).exec();
+        if (!charity) {
+          throw new AppError(`Charity record #${charityId} not found`);
+        }
 
-      const createdFollowing = {
-        user: charityAccountId,
-        createdAt: dayjs(),
-      };
+        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+        if (!account) {
+          throw new AppError(`Account record #${accountId} not found`);
+        }
 
-      Object.assign(charity, {
-        followers: [...charity.followers, createdFollower],
+        const currentAccountId = account._id.toString();
+        const charityAccountId = charity.userAccount.toString();
+        const followed = charity.followers.some((follower) => follower.user.toString() === currentAccountId);
+
+        if (followed) {
+          throw new AppError('You have already followed to this charity');
+        }
+
+        const createdFollower = {
+          user: currentAccountId,
+          createdAt: dayjs(),
+        };
+
+        const createdFollowing = {
+          user: charityAccountId,
+          createdAt: dayjs(),
+        };
+
+        Object.assign(charity, {
+          followers: [...charity.followers, createdFollower],
+        });
+
+        Object.assign(account, {
+          followingCharitis: [...account.followingCharitis, createdFollowing],
+        });
+
+        await charity.save({ session });
+        await account.save({ session });
+
+        returnObject = createdFollower;
       });
-
-      Object.assign(account, {
-        followingCharitis: [...account.followingCharitis, createdFollowing],
-      });
-
-      await charity.save();
-      await account.save();
-
-      return createdFollower;
+      return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot follow Charity with id #${charityId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 
-  async unfollowCharity(charityId: string, account: IUserAccount) {
-    const charity = await this.CharityModel.findById(charityId).exec();
-    
-    if (!charity) {
-      throw new Error(`Charity record #${charityId} not found`);
-    }
+  async unfollowCharity(charityId: string, accountId: string) {
+    const session = await this.connection.startSession();
 
+    let returnObject = null;
     try {
-      const currentAccountId = account._id.toString();
-      const charityAccountId = charity.userAccount.toString();
+      await session.withTransaction(async () => {
+        const charity = await this.CharityModel.findById(charityId, null, { session }).exec();
+        if (!charity) {
+          throw new AppError(`Charity record #${charityId} not found`);
+        }
 
-      account.followingCharitis = account.followingCharitis.filter(
-        (follow) => follow.user.toString() !== charityAccountId,
-      );
-      charity.followers = charity.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+        if (!account) {
+          throw new AppError(`Account record #${accountId} not found`);
+        }
 
-      await charity.save();
-      await account.save();
+        const currentAccountId = account._id.toString();
+        const charityAccountId = charity.userAccount.toString();
 
-      return { id: Date.now().toString() };
+        account.followingCharitis = account.followingCharitis.filter(
+          (follow) => follow.user.toString() !== charityAccountId,
+        );
+        charity.followers = charity.followers.filter((follower) => follower.user.toString() !== currentAccountId);
+
+        await charity.save({ session });
+        await account.save({ session });
+
+        returnObject = { id: Date.now().toString() };
+      });
+      return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot unfollow Charity with id #${charityId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 

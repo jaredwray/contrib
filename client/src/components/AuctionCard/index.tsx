@@ -183,7 +183,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
         {isDraft && <p className="text-label text-all-cups mb-0 mt-1 text-left">DRAFT</p>}
 
         {isPending && !isDonePage && (
-          <p className="text-label text-all-cups mb-0 mt-1 text-left">{`starts in ${startTime} on ${startFormatted} ${auction.timeZone}`}</p>
+          <p className="text-label text-all-cups mb-0 mt-1 text-left">{`starts in ${startTime} ${auction.timeZone} on ${startFormatted}`}</p>
         )}
 
         {(isActive || isSettled || isSold || isDonePage) && (

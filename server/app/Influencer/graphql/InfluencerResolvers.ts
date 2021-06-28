@@ -75,10 +75,10 @@ export const InfluencerResolvers: InfluencerResolversType = {
   },
   Mutation: {
     unfollowInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>
-      influencer.unfollowInfluencer(influencerId, currentAccount.model),
+      influencer.unfollowInfluencer(influencerId, currentAccount.mongodbId),
     ),
     followInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>
-      influencer.followInfluencer(influencerId, currentAccount.model),
+      influencer.followInfluencer(influencerId, currentAccount.mongodbId),
     ),
     createInfluencer: requireAdmin(async (_, { input }, { influencer }) => influencer.createTransientInfluencer(input)),
     inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
