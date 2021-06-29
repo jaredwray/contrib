@@ -26,4 +26,5 @@ export const auction = {
   isSettled: false,
   isFailed: false,
   isSold: false,
+  isStopped: true,
 };

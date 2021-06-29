@@ -12,6 +12,7 @@ export const CustomerInformation = gql`
 export const AuctionForAdminPage = gql`
   query AuctionForAdminPage($id: String!) {
     getAuctionForAdminPage(id: $id) {
+      id
       title
       status
       startDate
@@ -20,6 +21,25 @@ export const AuctionForAdminPage = gql`
       startPrice
       currentPrice
       fairMarketValue
+      link
+      bitly {
+        clicks {
+          date
+          clicks
+        }
+        clicksByDay {
+          date
+          clicks
+        }
+        referrers {
+          value
+          clicks
+        }
+        countries {
+          value
+          clicks
+        }
+      }
       auctionOrganizer {
         id
         name

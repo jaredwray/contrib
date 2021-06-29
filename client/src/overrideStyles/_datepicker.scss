@@ -6,6 +6,7 @@ input[type='time']::-webkit-calendar-picker-indicator {
 
 .DatePickerMainWrapper {
   position: relative;
+  min-width: 300px;
 }
 .react-datepicker-wrapper {
   width: 100%;
@@ -70,7 +71,6 @@ input[type='time']::-webkit-calendar-picker-indicator {
   }
 
   &__month {
-    margin-bottom: 30px !important;
   }
 
   &__current-month,
@@ -80,6 +80,7 @@ input[type='time']::-webkit-calendar-picker-indicator {
     color: $sage-color;
     font-weight: 700;
     font-size: 18px;
+    padding-bottom: 10px;
   }
 
   &__triangle {
@@ -94,11 +95,11 @@ input[type='time']::-webkit-calendar-picker-indicator {
     color: $sage-color;
     display: inline-block;
     line-height: 22px;
-    padding: 11px 12px;
+    padding: 0;
   }
   &__day,
   &__day-name {
-    width: 3.6rem;
+    min-width: 30px;
   }
   &__day--outside-month,
   &__day--disabled {
@@ -127,7 +128,7 @@ input[type='time']::-webkit-calendar-picker-indicator {
 
   &__navigation {
     line-height: 22px;
-    top: 20px;
+    top: 18px;
     display: inline-block;
     width: 10px;
     height: 10px;

@@ -128,16 +128,23 @@ export class AuctionService {
     auction = await this.auctionRepository.updateAuctionLink(auction._id, await this.makeShortAuctionLink(auction._id));
     return this.makeAuction(auction);
   }
-
   public async getAuctionForAdminPage(id: string) {
     const auction = await this.auctionRepository.getAuctionForAdminPage(id);
     const currentAuction = this.makeAuction(auction);
     const { auctionOrganizer, bids } = auction;
+    const { clicks, clicksByDay, referrers, countries } = await this.urlShortenerService.getMetricks(auction.link);
+  
     return {
       ...currentAuction,
       auctionOrganizer: {
         id: auctionOrganizer._id.toString(),
         name: auctionOrganizer.name,
+      },
+      bitly: {
+        clicks: clicks.link_clicks,
+        clicksByDay: clicksByDay.link_clicks,
+        referrers: referrers.metrics,
+        countries: countries.metrics,
       },
       bids: bids
         .sort((a, b) => (a.bid > b.bid ? -1 : 1))

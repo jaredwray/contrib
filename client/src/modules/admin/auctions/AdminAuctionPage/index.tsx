@@ -2,9 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { format, utcToZonedTime } from 'date-fns-tz';
-import Dinero from 'dinero.js';
-import { Table, Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
@@ -19,12 +17,16 @@ import Layout from 'src/components/Layout';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { AuctionBid } from 'src/types/Auction';
 
+import Bids from './Bids';
+import ClicksAnalytics from './ClicksAnalytics';
+import Details from './Details';
 import { Modal } from './Modal';
 import styles from './styles.module.scss';
 
 export default function AdminAuctionPage() {
   const [showDialog, setShowDialog] = useState(false);
   const [bid, setBid] = useState(null);
+
   const [isBid, setIsBid] = useState(false);
   const { addToast } = useToasts();
   const [chargeAuction, { loading: chargeLoading }] = useMutation(chargeCurrentAuction);
@@ -78,10 +80,7 @@ export default function AdminAuctionPage() {
   if (error || loading || !auction) {
     return null;
   }
-  const { startDate, endDate } = auction;
   const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label || '';
-  const auctionStartDate = format(utcToZonedTime(startDate, timeZone), 'MMM dd yyyy HH:mm:ssXXX');
-  const auctionEndDate = format(utcToZonedTime(endDate, timeZone), 'MMM dd yyyy HH:mm:ssXXX');
   const hasBids = bids.length > 0;
 
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));
@@ -104,71 +103,12 @@ export default function AdminAuctionPage() {
       <section className={clsx(styles.page, 'text-label p-sm-4 p-1 pt-4 pb-2')}>
         <Container fluid>
           <Row>
-            <Col className="text-headline">Auction details</Col>
-          </Row>
-          <Row>
-            <Col>
-              <Table className="d-inline table-bordered">
-                <tbody className="font-weight-normal">
-                  <tr>
-                    <td>Id</td>
-                    <td>{auctionId}</td>
-                  </tr>
-                  <tr>
-                    <td>Status</td>
-                    <td>{auction.status}</td>
-                  </tr>
-                  <tr>
-                    <td>Start Price</td>
-                    <td>{Dinero(auction.startPrice).toFormat('$0,0')}</td>
-                  </tr>
-                  <tr>
-                    <td>Current Price</td>
-                    <td>{Dinero(auction.currentPrice).toFormat('$0,0')}</td>
-                  </tr>
-                  {auction.fairMarketValue && (
-                    <tr>
-                      <td>Fair Market Value</td>
-                      <td>{Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
-                    </tr>
-                  )}
-                  <tr>
-                    <td>Start date</td>
-                    <td>{auctionStartDate}</td>
-                  </tr>
-                  <tr>
-                    <td>End date</td>
-                    <td>{auctionEndDate}</td>
-                  </tr>
-                  <tr>
-                    <td>Charity Name</td>
-                    <td>{charity?.name}</td>
-                  </tr>
-                  <tr>
-                    <td>Charity id</td>
-                    <td>{charity?.id}</td>
-                  </tr>
-                  <tr>
-                    <td>Influencer Name</td>
-                    <td>{auction.auctionOrganizer.name}</td>
-                  </tr>
-                  <tr>
-                    <td>Influencer id</td>
-                    <td>{auction.auctionOrganizer.id}</td>
-                  </tr>
-                  {auction.isStopped && (
-                    <tr>
-                      <td>Stop date</td>
-                      <td>{auction.stoppedAt}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
-            </Col>
-            <Col>
+            <Col lg="5">
+              <div className="text-headline">Auction details</div>
+              <Details auction={auction} charity={charity} timeZone={timeZone} />
               {hasBids && auction.isFailed && (
                 <AsyncButton
-                  className="p-2"
+                  className={clsx(styles.select, 'p-2 mb-2 ')}
                   disabled={customerLoading}
                   loading={customerLoading}
                   variant="dark"
@@ -178,48 +118,21 @@ export default function AdminAuctionPage() {
                 </AsyncButton>
               )}
             </Col>
+            <Col lg="7">
+              <>
+                <Row className="text-headline mb-2">Auction metrics </Row>
+                <ClicksAnalytics bitly={auction.bitly} />
+              </>
+            </Col>
           </Row>
           <Row>
             <Col>
-              {!hasBids && 'no bids for this auction'}
-              {hasBids && (
-                <Table className="d-inline">
-                  <thead>
-                    <tr>
-                      <th>Bid</th>
-                      <th>Date</th>
-                      <th>User MongodbId</th>
-                      <th>User Authz0ID</th>
-                      <th>User Phone</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody className="font-weight-normal">
-                    {bids.map((bid: AuctionBid, i: number) => (
-                      <tr key={i}>
-                        <td className="align-middle">{bid.bid && `$${bid.bid?.amount / 100}`}</td>
-                        <td className="align-middle">
-                          {format(utcToZonedTime(bid.createdAt, timeZone), 'MMM dd yyyy HH:mm:ssXXX')}
-                        </td>
-                        <td className="align-middle">{bid.user.mongodbId}</td>
-                        <td className="align-middle">{bid.user.id}</td>
-                        <td className="align-middle">{bid.user.phoneNumber}</td>
-                        <td className="align-middle">
-                          <AsyncButton
-                            className={clsx(styles.bidButton)}
-                            disabled={customerLoading}
-                            loading={customerLoading}
-                            variant="secondary"
-                            onClick={() => onBidClickHandler(bid)}
-                          >
-                            Process the bid
-                          </AsyncButton>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
+              <Bids
+                bids={auction.bids}
+                loading={customerLoading}
+                timeZone={timeZone}
+                onBidClickHandler={onBidClickHandler}
+              />
             </Col>
           </Row>
         </Container>
@@ -228,6 +141,7 @@ export default function AdminAuctionPage() {
         bid={bid}
         customerInformation={customerInformation}
         customerLoading={customerLoading}
+        data-direction="right"
         isBid={isBid}
         loading={isBid ? bidLoading : chargeLoading}
         open={showDialog}

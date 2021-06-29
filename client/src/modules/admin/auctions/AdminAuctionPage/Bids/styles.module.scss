@@ -1,10 +1,5 @@
 @import 'src/variables.scss';
 
-.page {
-  background-color: $barely-gray-color;
-  flex: 1;
-}
-
 .bidButton {
   padding: 17px !important;
   height: 20px;
@@ -18,22 +13,5 @@
     color: $white-color !important;
     background-color: $ochre-color !important;
     border-color: $ochre-color !important;
-  }
-}
-
-.select {
-  width: 50%;
-}
-.table {
-  word-wrap: break-word;
-  white-space: normal;
-}
-.datePicker {
-  min-width: 200px;
-}
-
-@media (max-width: $medium-weight) {
-  .select {
-    width: 100% !important;
   }
 }
