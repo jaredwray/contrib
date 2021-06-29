@@ -85,7 +85,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     stoppedAt: { type: SchemaTypes.Date },
     link: { type: SchemaTypes.String },
     fairMarketValue: { type: SchemaTypes.Number },
-    timeZone: { type: SchemaTypes.String, default: 'EST' },
+    timeZone: { type: SchemaTypes.String },
   },
   { optimisticConcurrency: true },
 );

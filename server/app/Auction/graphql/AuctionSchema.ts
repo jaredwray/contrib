@@ -81,6 +81,7 @@ export const AuctionSchema = gql`
   }
 
   type AuctionForAdminPage {
+    id: String!
     title: String!
     status: AuctionStatus
     startDate: DateTime!
@@ -94,8 +95,27 @@ export const AuctionSchema = gql`
     auctionOrganizer: AuctionAdminOrganizer
     isFailed: Boolean!
     isSold: Boolean!
+    link: String!
+    bitly: Metrics
   }
-
+  type Metrics {
+    clicks: [Clicks]
+    clicksByDay:[Clicks]
+    referrers: [Referrers]
+    countries: [Countries]
+  }
+  type Clicks {
+    date: String
+    clicks: String
+  }
+  type Referrers {
+    value: String
+    clicks: String
+  }
+  type Countries {
+    value: String
+    clicks: String
+  }
   type AuctionAdminOrganizer {
     id: String!
     name: String!
