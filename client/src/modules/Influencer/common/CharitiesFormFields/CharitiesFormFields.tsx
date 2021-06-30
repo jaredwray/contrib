@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Col, Row } from 'react-bootstrap';
 
-import { FavoriteCharitiesField } from './FavoriteCharitiesField';
+import { FavouriteCharitiesField } from './FavouriteCharitiesField';
 
 export const CharitiesFormFields: FC = () => {
   return (
@@ -15,7 +15,7 @@ export const CharitiesFormFields: FC = () => {
           </div>
         </Col>
         <Col className="pt-2 pt-md-0" md="6">
-          <FavoriteCharitiesField name="favoriteCharities" />
+          <FavouriteCharitiesField name="favoriteCharities" />
         </Col>
       </Row>
       <Row className="buffer d-none d-md-block" />
