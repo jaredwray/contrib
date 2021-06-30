@@ -5,15 +5,24 @@ import SwitchField from 'src/components/Form/SwitchField';
 
 import styles from './styles.module.scss';
 
-const BasicForm: FC<{}> = () => {
+interface Props {
+  isActive?: boolean;
+}
+
+const BasicForm: FC<Props> = ({ isActive }) => {
   return (
     <div>
       <InputField required name="title" placeholder="Enter auction title" title="Auction title" />
-      <InputField required name="sport" placeholder="Select a sport" title="Sport" />
-      <SwitchField className="mb-2" name="gameWorn" title="Game worn" />
-      <SwitchField className="mb-2" name="autographed" title="Autographed" />
-      <SwitchField className="mb-4" name="authenticityCertificate" title="Certificate of authenticity" />
-      <InputField name="playedIn" placeholder="Enter teams and date" title="Game played in" />
+      <InputField required disabled={isActive} name="sport" placeholder="Select a sport" title="Sport" />
+      <SwitchField className="mb-2" disabled={isActive} name="gameWorn" title="Game worn" />
+      <SwitchField className="mb-2" disabled={isActive} name="autographed" title="Autographed" />
+      <SwitchField
+        className="mb-4"
+        disabled={isActive}
+        name="authenticityCertificate"
+        title="Certificate of authenticity"
+      />
+      <InputField disabled={isActive} name="playedIn" placeholder="Enter teams and date" title="Game played in" />
       <InputField
         required
         textarea

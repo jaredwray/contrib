@@ -113,7 +113,12 @@ export const AuctionResolvers: AuctionResolversType = {
       if (!currentAccount.isAdmin) {
         delete input.fairMarketValue;
       }
-      return auction.updateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId, input);
+      return auction.updateAuction(
+        id,
+        currentAccount.isAdmin ? null : currentInfluencerId,
+        input,
+        currentAccount.isAdmin,
+      );
     }),
     deleteAuction: requireRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) => {
       const foundAuction = await auction.getAuction(id);

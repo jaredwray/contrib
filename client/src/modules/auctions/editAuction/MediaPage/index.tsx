@@ -28,18 +28,18 @@ const EditAuctionMediaPage = () => {
     loading: [],
   });
   const { data: auctionData } = useQuery(GetAuctionMedia, { variables: { id: auctionId } });
-
+  const auction = auctionData?.auction;
   useEffect(() => {
-    if (!auctionData) return;
+    if (!auction) return;
 
     setAttachments((prevState: any) => {
       return {
         ...prevState,
-        uploaded: auctionData.auction.attachments,
+        uploaded: auction.attachments,
         loading: [],
       };
     });
-  }, [auctionData]);
+  }, [auction]);
 
   const handlePrevAction = useCallback(() => {
     history.push(`/auctions/${auctionId}/basic`);
@@ -68,6 +68,10 @@ const EditAuctionMediaPage = () => {
       </span>
     </>
   );
+
+  if (auction?.isActive) {
+    history.push(`/`);
+  }
 
   return (
     <Layout>
