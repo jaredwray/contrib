@@ -99,7 +99,7 @@ input[type='time']::-webkit-calendar-picker-indicator {
   }
   &__day,
   &__day-name {
-    min-width: 30px;
+    width: calc(100% / 8) !important;
   }
   &__day--outside-month,
   &__day--disabled {

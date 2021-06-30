@@ -1,7 +1,6 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { shallow, mount, render, ShallowWrapper, ReactWrapper } from 'enzyme';
 import Form from 'src/components/Form/Form';
-// import { charity } from 'src/helpers/testHelpers/charity';
 import { FavouriteCharitiesField } from '../FavouriteCharitiesField';
 import useField from 'src/components/Form/hooks/useField';
 import { MockedProvider } from '@apollo/client/testing';

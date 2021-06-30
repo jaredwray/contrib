@@ -795,7 +795,7 @@ export class AuctionService {
   public async stopAuction(id: string): Promise<AuctionStatusResponse> {
     const auction = await this.AuctionModel.findOne({ _id: id });
     auction.status = AuctionStatus.STOPPED;
-    auction.stoppedAt = dayjs();
+    auction.stoppedAt = dayjs().second(0);
     try {
       await auction.save();
     } catch (error) {
