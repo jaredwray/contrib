@@ -9,9 +9,8 @@ interface Props {
   disabled?: boolean;
 }
 
-export const FavoriteCharitiesField: FC<Props> = ({ name, disabled }) => {
+export const FavouriteCharitiesField: FC<Props> = ({ name, disabled }) => {
   const field = useField(name, { disabled });
-
   const handleFavoriteCharityChange = useCallback(
     (charity: Charity, shouldBeFavorite: boolean) => {
       const favoriteCharities = field.value as Charity[];
