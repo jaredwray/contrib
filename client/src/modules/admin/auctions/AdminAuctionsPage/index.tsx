@@ -67,7 +67,7 @@ export default function AdminAuctionsPage() {
                   <Link className="dropdown-item text--body" to={`/admin/auctions/${auction.id}`}>
                     View details
                   </Link>
-                  {(auction.isPending || auction.isDraft || auction.isStopped) && (
+                  {(auction.isPending || auction.isDraft || auction.isStopped || auction.isActive) && (
                     <Link className={'dropdown-item text--body'} to={`/auctions/${auction.id}/basic`}>
                       Edit
                     </Link>

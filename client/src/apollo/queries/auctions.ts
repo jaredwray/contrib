@@ -223,6 +223,8 @@ export const getAuctionBasics = gql`
       playedIn
       description
       fullPageDescription
+      status
+      isActive
       auctionOrganizer {
         id
       }
@@ -233,6 +235,7 @@ export const getAuctionBasics = gql`
 export const GetAuctionMedia = gql`
   query getAuction($id: String!) {
     auction(id: $id) {
+      isActive
       attachments {
         uid
         url
@@ -254,6 +257,7 @@ export const getAuctionDetails = gql`
       itemPrice
       startPrice
       link
+      isActive
       charity {
         id
         name

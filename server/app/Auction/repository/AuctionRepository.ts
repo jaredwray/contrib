@@ -226,14 +226,18 @@ export class AuctionRepository implements IAuctionRepository {
     return this.populateAuctionModel(updatedAuction).execPopulate();
   }
 
-  async updateAuction(id: string, organizerId: string, input: IUpdateAuction): Promise<IAuctionModel> {
+  async updateAuction(
+    id: string,
+    organizerId: string,
+    input: IUpdateAuction,
+    isAdmin: boolean,
+  ): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, input.organizerId || organizerId);
 
     if (
-      auction.status !== AuctionStatus.DRAFT &&
-      auction.status !== AuctionStatus.STOPPED &&
-      auction.status !== AuctionStatus.PENDING &&
-      typeof input.fairMarketValue !== undefined
+      [AuctionStatus.SETTLED, AuctionStatus.FAILED, AuctionStatus.SOLD].includes(auction.status) ||
+      (auction.status === AuctionStatus.ACTIVE && !isAdmin) ||
+      (input.fairMarketValue !== undefined && !isAdmin)
     ) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }

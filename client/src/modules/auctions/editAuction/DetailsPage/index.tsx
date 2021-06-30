@@ -38,6 +38,7 @@ const EditAuctionDetailsPage = () => {
       }
     },
   });
+  const auction = auctionData?.auction;
   const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(finishAuctionCreationMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
@@ -108,26 +109,26 @@ const EditAuctionDetailsPage = () => {
   );
 
   const selectedOption = useCallback(() => {
-    const startDate = max([toDate(auctionData?.auction.startDate), new Date()]);
+    const startDate = max([toDate(auction?.startDate), new Date()]);
 
-    const endDate = max([toDate(auctionData?.auction.endDate), addDays(startDate, 1)]);
+    const endDate = max([toDate(auction?.endDate), addDays(startDate, 1)]);
     const duration = differenceInCalendarDays(endDate, startDate);
 
     return durationOptions.find(({ value }) => parseInt(value, 10) === duration);
-  }, [auctionData?.auction]);
+  }, [auction]);
 
-  const { startPrice, itemPrice, charity } = auctionData?.auction ?? {};
+  const { startPrice, itemPrice, charity, isActive } = auction ?? {};
   const initialValues = useMemo(() => {
-    if (!auctionData) {
+    if (!auction) {
       return undefined;
     }
-    const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auctionData.auction.timeZone)?.value;
+    const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
     const defaultTimezone = utcTimeZones[0].value;
-    const isNew = auctionData.auction.startPrice.amount === 0;
+    const isNew = auction.startPrice.amount === 0;
     let startDate;
     isNew
-      ? (startDate = max([toDate(auctionData?.auction.startDate), new Date()]))
-      : (startDate = utcToZonedTime(auctionData.auction.startDate, timeZone || ''));
+      ? (startDate = max([toDate(auction.startDate), new Date()]))
+      : (startDate = utcToZonedTime(auction.startDate, timeZone || ''));
     const time = format(startDate, 'H:mm');
     return {
       startPrice: Dinero.maximum([Dinero(startPrice), Dinero({ amount: 100 })]).toObject(),
@@ -140,10 +141,14 @@ const EditAuctionDetailsPage = () => {
         timeZone: defaultTimezone,
       },
     };
-  }, [auctionData, selectedOption, startPrice, charity, itemPrice]);
+  }, [auction, selectedOption, startPrice, charity, itemPrice]);
 
   if (loadingQuery) {
     return null;
+  }
+
+  if (isActive) {
+    history.push(`/`);
   }
 
   return (
@@ -182,7 +187,7 @@ const EditAuctionDetailsPage = () => {
             <Row description="What charity will benefit from the proceeds of this auction." title="Charity">
               <CharitiesAutocomplete
                 charities={charities}
-                favoriteCharities={auctionData?.auction?.auctionOrganizer?.favoriteCharities}
+                favoriteCharities={auction?.auctionOrganizer?.favoriteCharities}
                 onChange={handleCharityChange}
               />
               {/*

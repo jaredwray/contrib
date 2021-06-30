@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { Container, ProgressBar } from 'react-bootstrap';
@@ -9,6 +9,7 @@ import { updateAuctionBasics, getAuctionBasics } from 'src/apollo/queries/auctio
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import Row from '../../common/Row';
 import StepHeader from '../../common/StepHeader';
@@ -17,16 +18,24 @@ import styles from './styles.module.scss';
 
 const EditAuctionBasicPage = () => {
   const { addToast } = useToasts();
+  const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
   const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionBasics, {
     variables: { id: auctionId },
   });
+  const auction = auctionData?.auction;
+  const { isActive } = auction || {};
   const [updateAuction, { loading: updating }] = useMutation(updateAuctionBasics, {
     onCompleted() {
-      const orginizerId = auctionData?.auction.auctionOrganizer.id;
-      history.push(`/auctions/${auctionId}/media?orginizerId=${orginizerId}`);
+      if (isActive) {
+        history.goBack();
+        return;
+      }
+
+      const orginizerId = auction?.auctionOrganizer.id;
+      history.push(`/auctions/${account?.isAdmin ? `${orginizerId}/` : ''}${auctionId}/media`);
     },
   });
 
@@ -34,31 +43,37 @@ const EditAuctionBasicPage = () => {
     async (values) => {
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
+        if (isActive) {
+          addToast('Updated', { autoDismiss: true, appearance: 'success' });
+        }
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
     },
-    [auctionId, updateAuction, addToast],
+    [auctionId, updateAuction, addToast, isActive],
   );
+
+  if (!account?.isAdmin && isActive) {
+    history.push(`/`);
+  }
 
   return (
     <Layout>
-      <ProgressBar now={25} />
+      {!isActive && <ProgressBar now={25} />}
 
       <section className={styles.section}>
-        <Form initialValues={auctionData?.auction} onSubmit={handleSubmit}>
+        <Form initialValues={auction} onSubmit={handleSubmit}>
           <Container>
-            <StepHeader step="1" title="Basic info" />
-
+            <StepHeader step={isActive ? null : '1'} title={isActive ? 'Edit basic info' : 'Basic info'} />
             <Row
               description="Provide information about the item you are listing. This affects how the item is shown in social networks and on search results."
               title="Details"
             >
-              {!loadingQuery && <BasicForm />}
+              {!loadingQuery && <BasicForm isActive={isActive} />}
             </Row>
           </Container>
 
-          <StepByStepRow loading={updating} />
+          <StepByStepRow isActive={isActive} loading={updating} />
         </Form>
       </section>
     </Layout>

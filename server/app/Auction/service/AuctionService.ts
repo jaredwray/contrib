@@ -133,7 +133,7 @@ export class AuctionService {
     const currentAuction = this.makeAuction(auction);
     const { auctionOrganizer, bids } = auction;
     const { clicks, clicksByDay, referrers, countries } = await this.urlShortenerService.getMetricks(auction.link);
-  
+
     return {
       ...currentAuction,
       auctionOrganizer: {
@@ -282,7 +282,7 @@ export class AuctionService {
     }
   }
 
-  public async updateAuction(id: string, userId: string, input: AuctionInput): Promise<Auction> {
+  public async updateAuction(id: string, userId: string, input: AuctionInput, isAdmin: boolean): Promise<Auction> {
     const {
       title,
       startDate,
@@ -326,7 +326,7 @@ export class AuctionService {
       ...(playedIn ? { playedIn: playedIn.trim() } : {}),
       ...(timeZone ? { timeZone: timeZone } : {}),
       ...rest,
-    });
+    }, isAdmin);
 
     return this.makeAuction(auction);
   }
