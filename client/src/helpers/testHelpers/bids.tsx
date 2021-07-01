@@ -9,8 +9,7 @@ export const bids = [
       mongodbId: '123123123123',
       phoneNumber: '+18126681309',
       status: 'COMPLETED',
-      stripeCustomerId: 'cus_??????????',
-      __typename: 'AuctionUser',
+      stripeCustomerId: 'test',
     },
   },
 ];
