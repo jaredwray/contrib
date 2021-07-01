@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/client/testing';
 
 import { Modal } from '..';
 import { auction } from 'src/helpers/testHelpers/auction';
+import AsyncButton from 'src/components/AsyncButton';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 describe('Should render correctly "AuctionCard"', () => {
@@ -41,5 +42,10 @@ describe('Should render correctly "AuctionCard"', () => {
 
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
+  });
+  it('component is defined', () => {
+    const button = wrapper.find(AsyncButton);
+    button.simulate('click');
+    expect(wrapper).toBeDefined();
   });
 });

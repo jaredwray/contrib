@@ -1,4 +1,7 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ToastProvider } from 'react-toast-notifications';
+import { MockedProvider } from '@apollo/client/testing';
 
 import { AdminPage } from '..';
 describe('Should render correctly "AttachmentThumbnail"', () => {
@@ -9,9 +12,17 @@ describe('Should render correctly "AttachmentThumbnail"', () => {
     loading: false,
   };
 
-  let wrapper: ShallowWrapper;
+  let wrapper: ReactWrapper;
   beforeEach(() => {
-    wrapper = shallow(<AdminPage {...props} />);
+    wrapper = mount(
+      <Router>
+        <ToastProvider>
+          <MockedProvider>
+            <AdminPage {...props} />
+          </MockedProvider>
+        </ToastProvider>
+      </Router>,
+    );
   });
   afterEach(() => {
     jest.clearAllMocks();
