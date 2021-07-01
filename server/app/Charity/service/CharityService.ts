@@ -405,7 +405,7 @@ export class CharityService {
       stripeStatus: model.stripeStatus,
       userAccount: model.userAccount?.toString() ?? null,
       stripeAccountId: model.stripeAccountId,
-      avatarUrl: model.avatarUrl ?? `${AppConfig.app.url}/content/img/users/person.png`,
+      avatarUrl: model.avatarUrl ?? `/content/img/users/person.png`,
       profileDescription: model.profileDescription,
       website: model.website,
       websiteUrl: CharityService.websiteUrl(model.website),
