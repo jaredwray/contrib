@@ -5,7 +5,9 @@
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type='text/javascript'> window.smartlook||(function(d) { var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0]; var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript'; c.charset='utf-8';c.src='https://rec.smartlook.com/recorder.js';h.appendChild(c); })(document); smartlook('init', 'c031a1f247b15cdf34c3e5d534e1fbb316decae7'); </script>
+    <% if (process.env.REACT_APP_SMARTLOOK_ID) { %>
+    <script type='text/javascript'> window.smartlook||(function(d) { var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0]; var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript'; c.charset='utf-8';c.src='https://rec.smartlook.com/recorder.js';h.appendChild(c); })(document); smartlook('init', '%REACT_APP_SMARTLOOK_ID%'); </script>
+    <% } %>
     <% if (process.env.REACT_APP_USE_NEWRELIC === "true") { %>
     <!-- NewRelic start -->
     <script type="text/javascript">
