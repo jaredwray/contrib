@@ -11,6 +11,7 @@ import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
 import { InviteButton } from 'src/components/InviteButton';
 import { PER_PAGE } from 'src/components/Pagination';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
 
 import { CreateInfluencer } from './CreateInfluencer';
@@ -27,6 +28,9 @@ export default function InfluencersPage() {
   }
 
   const influencers = data?.influencers || { skip: 0, totalItems: 0, items: [] };
+
+  setPageTitle('Admin nfluencers auction page');
+
   const controlBtns = (
     <>
       <CreateInfluencer />

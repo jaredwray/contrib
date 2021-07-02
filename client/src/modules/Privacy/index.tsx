@@ -1,8 +1,11 @@
 import { Container, Row, Col } from 'react-bootstrap';
 
 import Layout from 'src/components/Layout';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 
 export default function Privacy() {
+  setPageTitle('Privacy');
+
   return (
     <Layout>
       <Container className="p-sm-4 pt-3 pl-2 pr-2 pb-3">

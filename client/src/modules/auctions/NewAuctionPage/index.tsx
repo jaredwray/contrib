@@ -3,10 +3,12 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Layout from 'src/components/Layout';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 
 import styles from './styles.module.scss';
 
 const NewAuctionPage = () => {
+  setPageTitle('New auction');
   return (
     <Layout>
       <section className={'pt-5 pb-0 pb-md-5'}>

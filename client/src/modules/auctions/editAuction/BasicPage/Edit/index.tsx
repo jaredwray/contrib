@@ -10,6 +10,7 @@ import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 
 import Row from '../../common/Row';
 import StepHeader from '../../common/StepHeader';
@@ -54,6 +55,12 @@ const EditAuctionBasicPage = () => {
   if (!account?.isAdmin && isActive) {
     history.push(`/`);
   }
+
+  if (!auction) {
+    return null;
+  }
+
+  setPageTitle(`Edit Auction ${auction.title} | Basic info`);
 
   return (
     <Layout>

@@ -8,6 +8,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { CharityStatus } from 'src/types/Charity';
 
 import About from './About';
@@ -45,6 +46,7 @@ const AuctionPage = () => {
     history.push(`/`);
   }
   const attachments = [...auction?.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
+  setPageTitle(`${auction.title} auction`);
 
   return (
     <Layout>

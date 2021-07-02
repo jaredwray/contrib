@@ -10,6 +10,7 @@ import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import { SubmitButton } from 'src/components/SubmitButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 
 import { FormFields } from './FormFields';
@@ -47,6 +48,7 @@ export const CharityProfileEditPage: FC = () => {
   if (!charityProfile) {
     return null;
   }
+  setPageTitle(charityId === 'me' ? 'My charity' : `Charity ${charityProfile.name} edit page`);
 
   return (
     <Layout>

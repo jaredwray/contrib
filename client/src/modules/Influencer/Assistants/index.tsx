@@ -9,6 +9,7 @@ import { AssistantsQuery, InviteAssistantMutation } from 'src/apollo/queries/ass
 import { InviteButton } from 'src/components/InviteButton';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import styles from './styles.module.scss';
@@ -26,6 +27,8 @@ export default function Assistants() {
   if (loading || error || !influencer) {
     return null;
   }
+
+  setPageTitle(`${influencerId === 'me' ? 'My' : `${influencer.name}'s`} assistants`);
 
   return (
     <Layout>

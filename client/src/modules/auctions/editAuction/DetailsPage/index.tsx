@@ -16,6 +16,7 @@ import MoneyField from 'src/components/Form/MoneyField';
 import SelectField from 'src/components/Form/SelectField';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
@@ -150,6 +151,8 @@ const EditAuctionDetailsPage = () => {
   if (isActive) {
     history.push(`/`);
   }
+
+  setPageTitle(`Auction ${auction.title} | Details page`);
 
   return (
     <Layout>

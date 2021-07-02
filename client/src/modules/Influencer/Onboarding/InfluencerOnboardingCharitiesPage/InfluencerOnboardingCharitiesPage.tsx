@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
@@ -9,6 +9,8 @@ import { UpdateMyFavoriteCharities } from 'src/apollo/queries/charities';
 import { MyProfileQuery } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
+import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 import { UserAccount } from 'src/types/UserAccount';
 
@@ -22,8 +24,10 @@ interface FormValues {
 
 export const InfluencerOnboardingCharitiesPage: FC = () => {
   const { addToast } = useToasts();
+  const { account } = useContext(UserAccountContext);
   const history = useHistory();
   const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyProfileQuery);
+
   const [updateMyFavoriteCharities] = useMutation(UpdateMyFavoriteCharities);
 
   const handleSubmit = useCallback(
@@ -42,6 +46,8 @@ export const InfluencerOnboardingCharitiesPage: FC = () => {
   if (!influencerProfile) {
     return null;
   }
+
+  setPageTitle(account?.isAdmin ? 'Influencer onboarding charities' : 'My charities');
 
   return (
     <Layout>

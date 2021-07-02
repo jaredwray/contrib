@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { GetTotalRaisedAmount } from 'src/apollo/queries/auctions';
 import { GetCharity } from 'src/apollo/queries/charityProfile';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 
 import { CharityProfilePageContent } from './CharityProfilePageContent';
@@ -25,6 +26,8 @@ export const CharityProfilePage: FC = () => {
   }
 
   const totalRaisedAmount = responce.data?.getTotalRaisedAmount.totalRaisedAmount;
+
+  setPageTitle(charityId === 'me' ? 'My charity' : `Charity ${charity.name}`);
 
   return <CharityProfilePageContent charity={charity} totalRaisedAmount={totalRaisedAmount} />;
 };

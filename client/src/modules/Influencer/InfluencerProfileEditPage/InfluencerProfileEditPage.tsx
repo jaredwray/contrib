@@ -11,6 +11,7 @@ import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import { SubmitButton } from 'src/components/SubmitButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -56,6 +57,8 @@ export const InfluencerProfileEditPage: FC = () => {
   if (!influencerProfile) {
     return null;
   }
+
+  setPageTitle(`${influencerId === 'me' ? 'My' : `${influencerProfile.name}'s`} Profile edit page`);
 
   return (
     <Layout>

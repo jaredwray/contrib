@@ -9,6 +9,7 @@ import { createAuctionMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 
 import StepHeader from '../../common/StepHeader';
 import BasicForm from '../PageForm';
@@ -53,6 +54,8 @@ const NewAuctionBasicPage = () => {
     },
     [createAuction, ownerId, addToast],
   );
+
+  setPageTitle('New Auction | Basic info');
 
   return (
     <Layout>

@@ -9,6 +9,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { GetInvitation } from 'src/apollo/queries/getInvitation';
 import Layout from 'src/components/Layout';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 
 import './styles.scss';
 
@@ -42,6 +43,8 @@ export default function InvitationPage() {
   if (!invitation) {
     return null;
   }
+
+  setPageTitle('Invitation page');
 
   return (
     <Layout>

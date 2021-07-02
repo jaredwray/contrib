@@ -18,6 +18,7 @@ import {
 } from 'src/apollo/queries/phoneNumberMutations';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
@@ -131,6 +132,8 @@ export default function PhoneNumberConfirmation() {
   if (!myAccountData) {
     return null;
   }
+
+  setPageTitle('Phone number confirmation');
 
   return (
     <Layout>

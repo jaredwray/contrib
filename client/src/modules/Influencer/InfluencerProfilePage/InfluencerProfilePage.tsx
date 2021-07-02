@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { GetTotalRaisedAmount } from 'src/apollo/queries/auctions';
 import { GetInfluencerQuery } from 'src/apollo/queries/influencers';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { InfluencerProfilePageContent } from './InfluencerProfilePageContent';
@@ -24,8 +25,9 @@ export const InfluencerProfilePage: FC = () => {
   if (!influencer) {
     return null;
   }
-
   const totalRaisedAmount = responce.data?.getTotalRaisedAmount.totalRaisedAmount;
+
+  setPageTitle(`${influencerId === 'me' ? 'My' : `${influencer.name}'s`} Profile`);
 
   return <InfluencerProfilePageContent influencer={influencer} totalRaisedAmount={totalRaisedAmount} />;
 };
