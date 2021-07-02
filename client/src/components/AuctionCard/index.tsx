@@ -170,7 +170,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
           </div>
         </SwipeableLink>
         <SwipeableLink
-          className={clsx(styles.auctionTitle, 'text-subhead mb-0 mb-md-1 text-left break-word')}
+          className={clsx(styles.auctionTitle, 'text-subhead mb-0 mb-md-1 text-left ')}
           title={auction.title}
           to={linkToAuction}
         >

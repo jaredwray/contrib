@@ -194,20 +194,24 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery, isOwner }): ReactEle
       {isPending && (
         <>
           <div className="justify-content-between flex-wrap text-all-cups pt-3">
-            <span className={styles.notBold}>starts in </span>
-            {startTime} {auction.timeZone}
-            <p>
-              <span className={styles.notBold}> on </span>
-              {startFormatted}
-            </p>
+            <div>
+              <span className={styles.notBold}>starts in </span>
+              {startTime} {auction.timeZone}
+              <p>
+                <span className={styles.notBold}> on </span>
+                {startFormatted}
+              </p>
+            </div>
           </div>
           <div className="justify-content-between flex-wrap text-all-cups pb-3">
-            <span className={styles.notBold}>ends in </span>
-            {endTime} {auction.timeZone}
-            <p>
-              <span className={styles.notBold}> on </span>
-              {endDateFormatted}
-            </p>
+            <div>
+              <span className={styles.notBold}>ends in </span>
+              {endTime} {auction.timeZone}
+              <p>
+                <span className={styles.notBold}> on </span>
+                {endDateFormatted}
+              </p>
+            </div>
           </div>
         </>
       )}
