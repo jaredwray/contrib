@@ -27,7 +27,7 @@ export default function createAppServices(connection: Connection): IAppServices 
   const stripe = new StripeService();
   const assistant = new AssistantService(connection);
   const charity = new CharityService(connection, eventHub);
-  const userAccount = new UserAccountService(connection, twilioVerification, eventHub);
+  const userAccount = new UserAccountService(connection, twilioVerification, eventHub, auth0);
   const influencer = new InfluencerService(connection, charity);
   const payment = new PaymentService(userAccount, stripe, auth0);
   const handlebarsService = new HandlebarsService();

@@ -15,6 +15,7 @@ import { AppError, ErrorCode } from '../../../errors';
 import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
+import { Auth0Service } from '../../../authz';
 
 export class UserAccountService {
   private readonly AccountModel: Model<IUserAccount> = UserAccountModel(this.connection);
@@ -27,10 +28,12 @@ export class UserAccountService {
     private readonly connection: Connection,
     private readonly twilioVerificationService: TwilioVerificationService,
     private readonly eventHub: EventHub,
+    private readonly auth0Service: Auth0Service,
   ) {}
 
   async getAccountByAuthzId(authzId: string): Promise<UserAccount> {
     const account = await this.AccountModel.findOne({ authzId }).exec();
+
     if (account != null) {
       const filter = { userAccount: account._id };
       const accountEntityTypes = {
@@ -40,7 +43,10 @@ export class UserAccountService {
       };
       return UserAccountService.makeUserAccount(account, accountEntityTypes);
     }
-
+    if (authzId.includes('sms')) {
+      const user = await this.auth0Service.getUser(authzId);
+      return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
+    }
     return {
       id: authzId,
       phoneNumber: null,
@@ -115,8 +121,11 @@ export class UserAccountService {
     if (await this.AccountModel.findOne({ authzId }).exec()) {
       throw new AppError('Account already exists', ErrorCode.BAD_REQUEST);
     }
-
-    if (await this.AccountModel.findOne({ phoneNumber }).exec()) {
+    const findedAccount = await this.AccountModel.findOne({ phoneNumber }).exec();
+    if (findedAccount && authzId.includes('sms')) {
+      return UserAccountService.makeUserAccount(findedAccount);
+    }
+    if (findedAccount) {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
 
