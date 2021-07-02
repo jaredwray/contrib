@@ -35,7 +35,9 @@
   overflow: hidden;
   -webkit-line-clamp: 3;
   font-weight: 700 !important;
-  line-height: 21px !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .horizontalRoot {
@@ -99,9 +101,6 @@
   }
   .horizontalOnMobileDescription {
     padding: 5px 10px;
-  }
-  .auctionTitle {
-    line-height: 18px !important;
   }
 }
 
