@@ -298,35 +298,40 @@ export class AuctionService {
       timeZone,
       ...rest
     } = input;
-    const auction = await this.auctionRepository.updateAuction(id, userId, {
-      ...(title ? { title: title.trim() } : {}),
-      ...(startDate ? { startsAt: startDate } : {}),
-      ...(endDate ? { endsAt: endDate } : {}),
-      ...(startPrice
-        ? {
-            startPrice: startPrice.getAmount(),
-            currentPrice: startPrice.getAmount(),
-            priceCurrency: startPrice.getCurrency(),
-          }
-        : {}),
-      ...(itemPrice
-        ? {
-            itemPrice: itemPrice.getAmount(),
-          }
-        : {}),
-      ...(fairMarketValue
-        ? {
-            fairMarketValue: fairMarketValue.getAmount(),
-          }
-        : {}),
-      ...(charity ? { charity: Types.ObjectId(charity) } : {}),
-      ...(description ? { description: description.trim() } : {}),
-      ...(fullPageDescription ? { fullPageDescription: fullPageDescription.trim() } : {}),
-      ...(sport ? { sport: sport.trim() } : {}),
-      ...(playedIn ? { playedIn: playedIn.trim() } : {}),
-      ...(timeZone ? { timeZone: timeZone } : {}),
-      ...rest,
-    }, isAdmin);
+    const auction = await this.auctionRepository.updateAuction(
+      id,
+      userId,
+      {
+        ...(title ? { title: title.trim() } : {}),
+        ...(startDate ? { startsAt: startDate } : {}),
+        ...(endDate ? { endsAt: endDate } : {}),
+        ...(startPrice
+          ? {
+              startPrice: startPrice.getAmount(),
+              currentPrice: startPrice.getAmount(),
+              priceCurrency: startPrice.getCurrency(),
+            }
+          : {}),
+        ...(itemPrice
+          ? {
+              itemPrice: itemPrice.getAmount(),
+            }
+          : {}),
+        ...(fairMarketValue
+          ? {
+              fairMarketValue: fairMarketValue.getAmount(),
+            }
+          : {}),
+        ...(charity ? { charity: Types.ObjectId(charity) } : {}),
+        ...(description ? { description: description.trim() } : {}),
+        ...(fullPageDescription ? { fullPageDescription: fullPageDescription.trim() } : {}),
+        ...(sport ? { sport: sport.trim() } : {}),
+        ...(playedIn ? { playedIn: playedIn.trim() } : {}),
+        ...(timeZone ? { timeZone: timeZone } : {}),
+        ...rest,
+      },
+      isAdmin,
+    );
 
     return this.makeAuction(auction);
   }
@@ -427,7 +432,7 @@ export class AuctionService {
   public async scheduleAuctionEndsNotification(): Promise<{ message: string }> {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
 
-    auctions.forEach(async (auction) => {
+    for await (const auction of auctions) {
       if (
         auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.lastNotification &&
         !auction.sentNotifications.includes('lastNotification')
@@ -458,7 +463,7 @@ export class AuctionService {
           );
         }
       }
-    });
+    }
     return { message: 'Scheduled' };
   }
 
@@ -477,7 +482,7 @@ export class AuctionService {
     const followers = currentAuction.followers;
     const cachedPhoneNumbers = [];
 
-    bids.forEach(async (bid) => {
+    for await (const bid of bids) {
       if (!cachedPhoneNumbers.includes(bid.user.phoneNumber)) {
         try {
           await this.sendAuctionNotification(bid.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
@@ -493,9 +498,9 @@ export class AuctionService {
           );
         }
       }
-    });
+    }
 
-    followers.forEach(async (follower) => {
+    for await (const follower of followers) {
       if (!cachedPhoneNumbers.includes(follower.user.phoneNumber)) {
         try {
           await this.sendAuctionNotification(follower.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
@@ -511,7 +516,7 @@ export class AuctionService {
           );
         }
       }
-    });
+    }
   }
 
   public async scheduleAuctionJobStart(): Promise<{ message: string }> {
