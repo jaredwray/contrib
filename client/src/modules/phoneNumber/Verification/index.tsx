@@ -10,6 +10,7 @@ import PhoneInput from 'react-phone-input-2';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { EnterPhoneNumberMutation, EnterInvitationCodeMutation } from 'src/apollo/queries/phoneNumberVerification';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
@@ -58,7 +59,7 @@ export default function PhoneNumberVerification() {
   if (invitationToken) {
     return null;
   }
-
+  setPageTitle('Phone number verification');
   return (
     <Layout>
       <section>

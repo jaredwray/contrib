@@ -14,6 +14,7 @@ import {
 } from 'src/apollo/queries/auctions';
 import AsyncButton from 'src/components/AsyncButton';
 import Layout from 'src/components/Layout';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { AuctionBid } from 'src/types/Auction';
 
@@ -97,6 +98,7 @@ export default function AdminAuctionPage() {
     setIsBid(true);
     setBid(arg);
   };
+  setPageTitle(`${auction.title} Auction info`);
 
   return (
     <Layout>

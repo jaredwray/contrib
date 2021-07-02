@@ -5,10 +5,13 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Layout from 'src/components/Layout';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 
 import styles from './InfluencerOnboardingDonePage.module.scss';
 
 export const InfluencerOnboardingDonePage: FC = () => {
+  setPageTitle('Done page');
+
   return (
     <Layout>
       <div className={clsx('flex-grow-1 d-flex flex-column justify-content-center', styles.wrapper)}>

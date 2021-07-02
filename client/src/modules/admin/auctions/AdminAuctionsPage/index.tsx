@@ -17,6 +17,7 @@ import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
 import { PER_PAGE } from 'src/components/Pagination';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction } from 'src/types/Auction';
 
 import { DeleteAuctionButton } from './DeleteAuctionButton';
@@ -34,6 +35,7 @@ export default function AdminAuctionsPage() {
     return null;
   }
   const auctions = data?.auctions || { skip: 0, totalItems: 0, items: [] };
+  setPageTitle('Auctions page');
 
   return (
     <AdminPage items={auctions} loading={loading} pageSkip={pageSkip} setPageSkip={setPageSkip}>

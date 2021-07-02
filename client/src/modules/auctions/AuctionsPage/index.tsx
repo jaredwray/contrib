@@ -7,6 +7,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import Filters from './Filters';
@@ -85,6 +86,8 @@ const AuctionsPage: FC = () => {
       },
     });
   }, [getPriceLimits, filters, auctionStatuses]);
+
+  setPageTitle('Auctions page');
 
   return (
     <Layout>

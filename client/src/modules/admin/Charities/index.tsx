@@ -11,6 +11,7 @@ import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
 import { InviteButton } from 'src/components/InviteButton';
 import { PER_PAGE } from 'src/components/Pagination';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 
 import styles from './styles.module.scss';
@@ -52,6 +53,7 @@ export default function CharitiesPage(): any {
   const controlBtns = (
     <InviteButton className={clsx(styles.inviteBtn, 'text--body d-inline-block')} mutation={InviteCharityMutation} />
   );
+  setPageTitle('Charities page');
 
   return (
     <AdminPage

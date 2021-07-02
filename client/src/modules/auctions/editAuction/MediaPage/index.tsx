@@ -9,6 +9,7 @@ import { GetAuctionMedia } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import Row from '../common/Row';
@@ -72,6 +73,12 @@ const EditAuctionMediaPage = () => {
   if (auction?.isActive) {
     history.push(`/`);
   }
+
+  if (!auction) {
+    return null;
+  }
+
+  setPageTitle(`Auction ${auction.title} | Media page`);
 
   return (
     <Layout>

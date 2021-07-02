@@ -12,6 +12,7 @@ import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
+import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction } from 'src/types/Auction';
 
 import ShareButton from './ShareButton';
@@ -37,6 +38,8 @@ const AuctionDonePage = () => {
   }
 
   const encodedAuctionLink = encodeURIComponent(auction.link);
+
+  setPageTitle(`Auction ${auction.title}`);
 
   return (
     <Layout>

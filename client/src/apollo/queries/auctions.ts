@@ -236,6 +236,7 @@ export const GetAuctionMedia = gql`
   query getAuction($id: String!) {
     auction(id: $id) {
       isActive
+      title
       attachments {
         uid
         url
@@ -251,6 +252,7 @@ export const getAuctionDetails = gql`
   query getAuction($id: String!) {
     auction(id: $id) {
       id
+      title
       startDate
       timeZone
       endDate
