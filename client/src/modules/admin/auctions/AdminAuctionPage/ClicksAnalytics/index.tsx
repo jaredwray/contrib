@@ -201,7 +201,7 @@ export const ClicksAnalytics: FC<Props> = ({ bitly }) => {
                   {referrers.labels.length > doughnutLabelsLimit ? (
                     <li>
                       <span>+{referrers.labels.length - doughnutLabelsLimit} more</span>
-                      {clickNum - refferersRest.reduce((acc: number, val: number) => acc + val)}
+                      {clickNum - refferersRest.reduce((acc: number, val: number) => acc + val, 0)}
                     </li>
                   ) : (
                     ''
@@ -243,7 +243,7 @@ export const ClicksAnalytics: FC<Props> = ({ bitly }) => {
                   {countries.labels.length > doughnutLabelsLimit && countries.labels.length !== totalClicks ? (
                     <li>
                       <span>+{countries.labels.length - doughnutLabelsLimit} more</span>
-                      {clickNum - countriesRest.reduce((acc: number, val: number) => acc + val)}
+                      {clickNum - countriesRest.reduce((acc: number, val: number) => acc + val, 0)}
                     </li>
                   ) : (
                     ''
