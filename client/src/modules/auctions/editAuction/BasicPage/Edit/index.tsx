@@ -33,9 +33,7 @@ const EditAuctionBasicPage = () => {
         history.goBack();
         return;
       }
-
-      const orginizerId = auction?.auctionOrganizer.id;
-      history.push(`/auctions/${account?.isAdmin ? `${orginizerId}/` : ''}${auctionId}/media`);
+      history.push(`/auctions/${auctionId}/media`);
     },
   });
 
