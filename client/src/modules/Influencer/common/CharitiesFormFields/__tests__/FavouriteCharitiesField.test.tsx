@@ -1,3 +1,4 @@
+import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { shallow, mount, render, ShallowWrapper, ReactWrapper } from 'enzyme';
 import Form from 'src/components/Form/Form';
@@ -6,7 +7,6 @@ import useField from 'src/components/Form/hooks/useField';
 import { MockedProvider } from '@apollo/client/testing';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
-
 jest.mock('src/components/Form/hooks/useField', () => () => {
   return {
     name: 'favoriteCharities',
@@ -35,14 +35,16 @@ describe('Should render correctly', () => {
   const props = {
     name: 'My Active Charity Name',
   };
-  beforeEach(() => {
-    wrapper = mount(
-      <MockedProvider>
-        <Form onSubmit={jest.fn()}>
-          <FavouriteCharitiesField {...props} />
-        </Form>
-      </MockedProvider>,
-    );
+  beforeEach(async () => {
+    await act(async () => {
+      wrapper = mount(
+        <MockedProvider>
+          <Form onSubmit={jest.fn()}>
+            <FavouriteCharitiesField {...props} />
+          </Form>
+        </MockedProvider>,
+      );
+    });
   });
   afterEach(() => {
     jest.clearAllMocks();
