@@ -25,6 +25,10 @@ export const Details: FC<Props> = ({ auction, timeZone, charity }) => {
           <td>{auction.id}</td>
         </tr>
         <tr>
+          <td>Link</td>
+          <td>{auction.link}</td>
+        </tr>
+        <tr>
           <td>Status</td>
           <td>{auction.status}</td>
         </tr>

@@ -1,4 +1,5 @@
 import { bids } from './bids';
+import { bitly } from './bitly';
 
 export const auction = {
   id: 'test',
@@ -41,32 +42,30 @@ export const auction = {
   isDraft: false,
   isPending: false,
   isSettled: false,
-  isFailed: false,
+  isFailed: true,
   isSold: false,
   isStopped: false,
 };
 
 export const auctionForAdminPage = {
-  getAuctionForAdminPage: {
-    auctionOrganizer: { id: '6089456271a69b3254201019', name: 'sf.admin/influencer' },
-    bids: bids,
-    bitly: [],
-    charity: {
-      id: '60c1f579ff49a51d6f2ee61b',
-      name: 'My Active Charity Name',
-      stripeAccountId: 'acct_1J0nltPSFS13RiaC',
-    },
-    currentPrice: { amount: 10000000199, currency: 'USD', precision: 2 },
-    endDate: '2021-06-24T08:00:18.000Z',
-    fairMarketValue: null,
-    id: '60cf0ade0092860f2c7a0bc1',
-    isFailed: true,
-    isSold: false,
-    link: 'https://go.contrib.org/3qbU9JG',
-    startDate: '2021-06-23T08:00:18.000Z',
-    startPrice: { amount: 100, currency: 'USD', precision: 2 },
-    status: 'FAILED',
-    timeZone: 'PDT',
-    title: '1',
+  auctionOrganizer: { id: '6089456271a69b3254201019', name: 'sf.admin/influencer' },
+  bids: bids,
+  bitly: bitly,
+  charity: {
+    id: '60c1f579ff49a51d6f2ee61b',
+    name: 'My Active Charity Name',
+    stripeAccountId: 'acct_1J0nltPSFS13RiaC',
   },
+  currentPrice: { amount: 10000000199, currency: 'USD', precision: 2 },
+  endDate: '2021-06-24T08:00:18.000Z',
+  fairMarketValue: null,
+  id: '60cf0ade0092860f2c7a0bc1',
+  isFailed: true,
+  isSold: false,
+  link: 'https://go.contrib.org/3qbU9JG',
+  startDate: '2021-06-23T08:00:18.000Z',
+  startPrice: { amount: 100, currency: 'USD', precision: 2 },
+  status: 'FAILED',
+  timeZone: 'PDT',
+  title: '1',
 };
