@@ -477,46 +477,26 @@ export class AuctionService {
     }
 
     const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
+    const followerIds = currentAuction.followers.map((follower) => follower.user);
+    const followerUsers = await this.UserAccountModel.find({ _id: followerIds }).exec();
+    const followers = followerUsers.map((user) => user.phoneNumber);
+    const bids = currentAuction.bids.map((bid) => bid.user.phoneNumber);
+    const phoneNumbers = new Set([...followers, ...bids]);
 
-    const bids = currentAuction.bids;
-    const followers = currentAuction.followers;
-    const cachedPhoneNumbers = [];
-
-    for await (const bid of bids) {
-      if (!cachedPhoneNumbers.includes(bid.user.phoneNumber)) {
-        try {
-          await this.sendAuctionNotification(bid.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
-            timeLeftText,
-            influencerName: currentAuction.auctionOrganizer.name,
-            aunctionName: currentAuction.title,
-            auctionLink: currentAuction.link,
-          });
-          cachedPhoneNumbers.push(bid.user.phoneNumber);
-        } catch (error) {
-          AppLogger.warn(
-            `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error}`,
-          );
-        }
+    phoneNumbers.forEach(async (phoneNumber) => {
+      try {
+        await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
+          timeLeftText,
+          influencerName: currentAuction.auctionOrganizer.name,
+          aunctionName: currentAuction.title,
+          auctionLink: currentAuction.link,
+        });
+      } catch (error) {
+        AppLogger.warn(
+          `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error}`,
+        );
       }
-    }
-
-    for await (const follower of followers) {
-      if (!cachedPhoneNumbers.includes(follower.user.phoneNumber)) {
-        try {
-          await this.sendAuctionNotification(follower.user.phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
-            timeLeftText,
-            influencerName: currentAuction.auctionOrganizer.name,
-            aunctionName: currentAuction.title,
-            auctionLink: currentAuction.link,
-          });
-          cachedPhoneNumbers.push(follower.user.phoneNumber);
-        } catch (error) {
-          AppLogger.warn(
-            `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error}`,
-          );
-        }
-      }
-    }
+    });
   }
 
   public async scheduleAuctionJobStart(): Promise<{ message: string }> {
