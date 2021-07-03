@@ -28,13 +28,12 @@ import styles from './styles.module.scss';
 
 interface Props {
   auction: Auction;
-  isOwner: boolean;
   executeQuery: () => void;
 }
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
-const AuctionDetails: FC<Props> = ({ auction, executeQuery, isOwner }): ReactElement => {
+const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const [isBying, setIsBying] = useState(false);
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
@@ -264,7 +263,6 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery, isOwner }): ReactEle
         </Button>
       )}
       <WatchBtn
-        disabled={isOwner}
         entityType="auction"
         followHandler={handleFollowAuction}
         followed={followed}

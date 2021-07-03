@@ -123,7 +123,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
         onConfirm={onDelete}
       />
       <div className={clsx(styles.wrapper)}>
-        {(isActive || isPending) && (
+        {!isDraft && (
           <HeartBtn
             className={clsx(styles.followBtn)}
             disabled={isOwner}
