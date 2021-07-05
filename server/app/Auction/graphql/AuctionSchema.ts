@@ -86,7 +86,7 @@ export const AuctionSchema = gql`
     status: AuctionStatus
     startDate: DateTime!
     endDate: DateTime!
-    timeZone: String!
+    timeZone: String
     charity: AuctionCharity
     bids: [AuctionAdminBid]
     currentPrice: Money!
@@ -100,7 +100,7 @@ export const AuctionSchema = gql`
   }
   type Metrics {
     clicks: [Clicks]
-    clicksByDay:[Clicks]
+    clicksByDay: [Clicks]
     referrers: [Referrers]
     countries: [Countries]
   }

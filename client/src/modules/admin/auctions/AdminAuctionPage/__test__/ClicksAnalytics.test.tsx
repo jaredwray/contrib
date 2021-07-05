@@ -1,8 +1,12 @@
 import { shallow, ShallowWrapper } from 'enzyme';
+
+import { auction } from 'src/helpers/testHelpers/auction';
+import { bids } from 'src/helpers/testHelpers/bids';
 import { bitly } from 'src/helpers/testHelpers/bitly';
 import { ClicksAnalytics } from '../ClicksAnalytics';
+
 describe('Should render correctly "ClicksAnalytics"', () => {
-  const props: any = { bitly };
+  const props: any = { bitly, auction };
 
   let wrapper: ShallowWrapper;
   beforeEach(() => {
