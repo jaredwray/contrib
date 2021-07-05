@@ -11,7 +11,7 @@ export class UrlShortenerService {
     const result = await this.bitly.shorten(url);
     return result.link;
   }
-  async getMetricks(url: string): Promise<any> {
+  async getMetrics(url: string): Promise<any> {
     const clicks = await this.bitly.clicks(url, 'hour');
     const clicksByDay = await this.bitly.clicks(url, 'day');
     const referrers = await this.bitly.referrers(url);

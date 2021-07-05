@@ -123,7 +123,7 @@ export default function AdminAuctionPage() {
             <Col lg="7">
               <>
                 <Row className="text-headline mb-2">Auction metrics </Row>
-                <ClicksAnalytics bitly={auction.bitly} />
+                <ClicksAnalytics auction={auction} bitly={auction.bitly} />
               </>
             </Col>
           </Row>

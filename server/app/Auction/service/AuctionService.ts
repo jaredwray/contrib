@@ -132,7 +132,7 @@ export class AuctionService {
     const auction = await this.auctionRepository.getAuctionForAdminPage(id);
     const currentAuction = this.makeAuction(auction);
     const { auctionOrganizer, bids } = auction;
-    const { clicks, clicksByDay, referrers, countries } = await this.urlShortenerService.getMetricks(auction.link);
+    const { clicks, clicksByDay, referrers, countries } = await this.urlShortenerService.getMetrics(auction.link);
 
     return {
       ...currentAuction,

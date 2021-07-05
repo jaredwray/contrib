@@ -27,7 +27,7 @@ export const auction = {
   endDate: '2021-05-31T14:22:48.000+00:00',
   stoppedAt: '2021-05-31T14:22:48.000+00:00',
   status: 'ACTIVE',
-  bids: [bids],
+  bids: bids,
   totalBids: 1,
   description: 'test',
   fullPageDescription: 'test',
