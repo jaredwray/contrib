@@ -34,6 +34,28 @@
     background-repeat: no-repeat;
   }
 
+  @media (min-width: 481px) {
+    .auth0-lock.auth0-lock .auth0-lock-widget {
+      width: 500px !important;
+    }
+  }
+
+  .auth0-lock-submit {
+    transition: 0.3s ease !important;
+  }
+
+  .auth0-lock.auth0-lock .auth0-lock-submit:hover:not([disabled]) span {
+    transform: none !important;
+  }
+
+  .auth0-lock-submit:hover {
+    background-color: #4a6252 !important;
+  }
+
+  .auth0-lock-list-code-highlighted {
+    background-color: #5a7864 !important;
+  }
+
   .btn,
   .btn:focus {
     background: #dcd28c;
@@ -229,7 +251,7 @@
 
       var showPasswordLessConfiguration = {
         "localhost:3000": true,
-        "dev.contrib.org": false,
+        "dev.contrib.org": true,
         "contrib.org": false,
         "live.contrib.org": false,
       };
@@ -259,6 +281,11 @@
             primaryColor: "#5A7864",
           },
           languageDictionary: {
+            error: {
+              passwordless: {
+                'lock.fallback': "We are sorry, something went wrong. Please, try another phone number"
+              },
+            },
             title: '',
           }
         }
@@ -355,5 +382,4 @@
     });
   </script>
 </body>
-
 </html>
