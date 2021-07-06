@@ -44,6 +44,19 @@
     }
   }
 }
+.link {
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 30px;
+}
+.active {
+  text-decoration: underline;
+  color: $dark-sage-color !important;
+}
+.normal {
+  text-decoration: none;
+  color: $gray-color !important;
+}
 .datePickerWrapper {
   padding: 0 5px 0 0 !important;
 }

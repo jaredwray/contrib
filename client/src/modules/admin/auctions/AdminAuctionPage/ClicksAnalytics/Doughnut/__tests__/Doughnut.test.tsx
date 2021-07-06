@@ -1,10 +1,7 @@
-import { render } from '@testing-library/react';
-
-import { ChartDoughnut } from 'src/components/Doughnut';
+import { ChartDoughnut } from 'src/modules/admin/auctions/AdminAuctionPage/ClicksAnalytics/Doughnut';
 
 import { shallow, mount, ShallowWrapper, ReactWrapper } from 'enzyme';
 
-import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
 
 describe('Should render correctly "ChartDoughnut"', () => {

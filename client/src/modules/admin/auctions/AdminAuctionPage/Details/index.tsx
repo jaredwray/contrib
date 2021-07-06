@@ -19,7 +19,7 @@ export const Details: FC<Props> = ({ auction, timeZone, charity }) => {
 
   return (
     <Table className="d-inline table-bordered">
-      <tbody className="font-weight-normal">
+      <tbody className="font-weight-normal pb-3">
         <tr>
           <td>Id</td>
           <td>{auction.id}</td>
