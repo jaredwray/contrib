@@ -110,7 +110,7 @@ export default function AdminAuctionPage() {
               <Details auction={auction} charity={charity} timeZone={timeZone} />
               {hasBids && auction.isFailed && (
                 <AsyncButton
-                  className={clsx(styles.select, 'p-2 mb-2 ')}
+                  className={clsx(styles.select, 'p-2')}
                   disabled={customerLoading}
                   loading={customerLoading}
                   variant="dark"
@@ -129,6 +129,7 @@ export default function AdminAuctionPage() {
           </Row>
           <Row>
             <Col>
+              <div className="text-headline">Bids</div>
               <Bids
                 bids={auction.bids}
                 loading={customerLoading}

@@ -26,7 +26,6 @@ export const bitly = {
     { date: '2021-06-28T10:00:00+0000', clicks: '0' },
     { date: '2021-06-28T09:00:00+0000', clicks: '0' },
   ],
-
   clicksByDay: [
     { date: '2021-06-29T00:00:00+0000', clicks: '0' },
     { date: '2021-06-28T00:00:00+0000', clicks: '0' },

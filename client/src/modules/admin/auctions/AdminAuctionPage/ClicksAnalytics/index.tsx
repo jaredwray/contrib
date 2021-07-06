@@ -1,11 +1,13 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
-import { sub, isSameDay, differenceInCalendarDays } from 'date-fns';
-import { format } from 'date-fns-tz';
-import { Col, Row } from 'react-bootstrap';
+import clsx from 'clsx';
+import { isSameDay } from 'date-fns';
+import { format, utcToZonedTime } from 'date-fns-tz';
+import { Row, Col } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
+import DatePicker from 'react-datepicker';
 
-import { ChartDoughnut } from 'src/components/Doughnut';
+import { ChartDoughnut } from 'src/modules/admin/auctions/AdminAuctionPage/ClicksAnalytics/Doughnut';
 import { Auction } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
@@ -16,23 +18,12 @@ interface Props {
 }
 
 export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
-  const maxBid = Math.max(...auction.bids.map(({ bid }) => bid.amount));
-  const maxBidDate = auction.bids.filter(({ bid }) => bid.amount === maxBid)[0]?.createdAt;
+  const auctionStartDate = utcToZonedTime(auction.startDate, auction.timeZone);
 
-  const daysLimit = 30;
-  const endDate = auction.isSold ? maxBidDate : auction.endDate;
-  const bitlyStartDate = sub(new Date(), { days: daysLimit });
+  const [startOfInterval, setStartOfInterval] = useState(auctionStartDate);
+  const [perDay, setPerDay] = useState(true);
+  const [endOfInterval, setEndOfInterval] = useState(utcToZonedTime(new Date().toISOString(), auction.timeZone));
 
-  const dayStartDiff = differenceInCalendarDays(new Date(auction.startDate), bitlyStartDate);
-  const dayEndDiff = differenceInCalendarDays(new Date(endDate), bitlyStartDate);
-
-  if (dayEndDiff <= 0) {
-    return <span>The auction link expired, no data for metric </span>;
-  }
-  const startOfInterval = sub(new Date(), { days: dayStartDiff > 0 ? daysLimit - dayStartDiff : daysLimit });
-  const endOfInterval = dayEndDiff > 0 && dayEndDiff <= daysLimit ? new Date(endDate) : new Date();
-
-  const doughnutLabelsLimit = 3;
   const ChartValues = (labels: any, values: any) => {
     return {
       labels: labels,
@@ -48,15 +39,31 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
       ],
     };
   };
+  const dateFormatterToTime = (date: string) => {
+    return format(utcToZonedTime(new Date(date.split('+')[0]).toISOString(), auction.timeZone), 'p').replace(':00', '');
+  };
   const dateFormatter = (date: string) => {
-    return format(new Date(date.split('+')[0]), 'MM.dd');
+    return format(utcToZonedTime(new Date(date.split('+')[0]).toISOString(), auction.timeZone), 'MM.dd');
   };
 
   const chosenStartDate = bitly.clicksByDay.filter((x: any) => isSameDay(new Date(x.date), startOfInterval))[0];
-  const chosenEndDate = bitly.clicksByDay.filter((x: any) => isSameDay(new Date(x.date), endOfInterval))[0];
+  const chosenEndDate = bitly.clicksByDay.filter((x: any) =>
+    isSameDay(utcToZonedTime(x.date, auction.timeZone), endOfInterval),
+  )[0];
 
   const startInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenStartDate?.date || 0) + 1;
   const endInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenEndDate?.date || 0);
+
+  const clicks = {
+    labels: bitly.clicks
+      .map((x: any) => `${dateFormatterToTime(x.date)} ${dateFormatter(x.date)}`)
+      .slice(endInterval * 24, startInterval * 24)
+      .reverse(),
+    values: bitly.clicks
+      .map((x: any) => x.clicks)
+      .slice(endInterval * 24, startInterval * 24)
+      .reverse(),
+  };
 
   const countries = {
     labels: bitly.countries.map((x: any) => x.value),
@@ -84,91 +91,93 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
     totalClicks = referrers.values.reduce((acc: number, el: number) => acc + el, 0);
   }
 
-  const refferersRest: number[] = [];
-  const countriesRest: number[] = [];
-  const clickNum = referrers.values.reduce((acc: number, val: number) => acc + val, 0);
-
   return (
     <>
-      {dayStartDiff <= 0 && (
-        <div className="mb-2">
-          The auction started before the link began its life. Metric starts at {format(bitlyStartDate, 'mm.dd.yy')}
-        </div>
-      )}
+      <Row>
+        <Col className="p-0">
+          <p className={clsx(styles.link, perDay ? styles.active : styles.normal)} onClick={() => setPerDay(true)}>
+            Per day
+          </p>
+          <p className={clsx(styles.link, !perDay ? styles.active : styles.normal)} onClick={() => setPerDay(false)}>
+            Per hour
+          </p>
+        </Col>
+      </Row>
+      <Row>
+        <Col className={clsx(styles.datePickerWrapper)}>
+          <div className="DatePickerMainWrapper mt-2 mb-3">
+            <label>from</label>
+            <DatePicker
+              className={clsx(styles.datePicker, 'form-control ')}
+              maxDate={endOfInterval}
+              minDate={auctionStartDate}
+              selected={startOfInterval}
+              onChange={(date: any) => setStartOfInterval(date)}
+            />
+          </div>
+        </Col>
+        <Col className={clsx(styles.datePickerWrapper)}>
+          <div className="DatePickerMainWrapper mt-2 mb-3 d-block ">
+            <label>to</label>
+            <DatePicker
+              className={clsx(styles.datePicker, 'form-control ')}
+              maxDate={utcToZonedTime(new Date().toISOString(), auction.timeZone)}
+              minDate={startOfInterval}
+              selected={endOfInterval}
+              onChange={(date: any) => setEndOfInterval(date)}
+            />
+          </div>
+        </Col>
+      </Row>
       <p className="text-all-cups">
         total clicks: <b>{totalClicks}</b>
       </p>
       {totalClicks !== 0 && (
         <>
           <Row>
-            <Bar
-              data={ChartValues(clicksByDay.labels, clicksByDay.values)}
-              height={200}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
+            {perDay ? (
+              <Bar
+                data={ChartValues(clicksByDay.labels, clicksByDay.values)}
+                height={200}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
                   },
-                },
-                responsive: true,
-              }}
-              type="bar"
-              width={600}
-            />
+                  responsive: true,
+                }}
+                type="bar"
+                width={600}
+              />
+            ) : (
+              <Bar
+                data={ChartValues(clicks.labels, clicks.values)}
+                height={200}
+                options={{
+                  scales: {
+                    y: {
+                      display: false,
+                    },
+                    x: {
+                      display: true,
+                    },
+                  },
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                  },
+                  responsive: true,
+                }}
+                type="bar"
+                width={600}
+              />
+            )}
           </Row>
           <Row className="pt-4 pb-3">
-            <Col>
-              <p className="text-all-cups">referrers</p>
-              <ul className={styles.doughnutLabelsReferrers}>
-                {referrers.labels.map((label: string, i: number) => {
-                  if (i < doughnutLabelsLimit) {
-                    refferersRest.push(referrers.values[i]);
-                    return (
-                      <li key={label}>
-                        <div title={label}>{label}</div>
-                        {referrers.values[i]}
-                      </li>
-                    );
-                  }
-                  return null;
-                })}
-                {referrers.labels.length > doughnutLabelsLimit ? (
-                  <li>
-                    <div>+{referrers.labels.length - doughnutLabelsLimit} more</div>
-                    {clickNum - refferersRest.reduce((acc: number, val: number) => acc + val, 0)}
-                  </li>
-                ) : (
-                  ''
-                )}
-              </ul>
-              <ChartDoughnut labels={referrers.labels} values={referrers.values} />
-            </Col>
-            <Col>
-              <p className="text-all-cups mb-2">countries</p>
-              <ul className={styles.doughnutLabelsCountries}>
-                {countries.labels.map((label: string, i: number) => {
-                  if (i < doughnutLabelsLimit) {
-                    refferersRest.push(countries.values[i]);
-                    return (
-                      <li key={label}>
-                        <div title={label}>{label}</div>
-                        {countries.values[i]}
-                      </li>
-                    );
-                  }
-                  return null;
-                })}
-                {countries.labels.length > doughnutLabelsLimit && countries.labels.length !== totalClicks ? (
-                  <li>
-                    <div>+{countries.labels.length - doughnutLabelsLimit} more</div>
-                    {clickNum - countriesRest.reduce((acc: number, val: number) => acc + val, 0)}
-                  </li>
-                ) : (
-                  ''
-                )}
-              </ul>
-              <ChartDoughnut labels={countries.labels} values={countries.values} />
-            </Col>
+            <ChartDoughnut labels={referrers.labels} values={referrers.values} />
+            <ChartDoughnut labels={countries.labels} values={countries.values} />
           </Row>
         </>
       )}
