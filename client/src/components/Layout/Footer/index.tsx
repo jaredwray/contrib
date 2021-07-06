@@ -20,7 +20,7 @@ export default function Footer() {
           </Col>
         </Row>
         <Row className={clsx('pt-4 pb-4', styles.info)}>
-          <Col className="p-0 pl-md-4 pr-md-4 text-headline">Direct influencer-to-fan charity auctions.</Col>
+          <Col className="p-0 pl-md-4 pr-md-4 text-headline">Auction your items quickly and hassle free.</Col>
         </Row>
         {/*
             <Row className={styles.socialMedia}>

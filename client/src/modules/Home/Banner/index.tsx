@@ -22,7 +22,7 @@ export default function Banner() {
           </Row>
           <Row>
             <Col className="pt-3 pb-3 text-headline" lg="6">
-              Auction your items quickly and hassle free
+              Direct influencer-to-fan charity auctions
             </Col>
           </Row>
           <Row>
