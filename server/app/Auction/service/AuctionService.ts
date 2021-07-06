@@ -63,7 +63,6 @@ export class AuctionService {
 
   private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {
     const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
-
     await this.sendNotificationForAuctionCharity(currentAuction);
     await this.sendNotificationsForCharityFollowers(currentAuction);
     await this.sendNotificationsForInfluencerFollowers(currentAuction);
@@ -125,7 +124,10 @@ export class AuctionService {
 
   public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
     let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
-    auction = await this.auctionRepository.updateAuctionLink(auction._id, await this.makeShortAuctionLink(auction._id));
+    auction = await this.auctionRepository.updateAuctionLink(
+      auction._id,
+      await this.makeShortAuctionLink(auction._id.toString()),
+    );
     return this.makeAuction(auction);
   }
   public async getAuctionForAdminPage(id: string) {
@@ -237,7 +239,9 @@ export class AuctionService {
 
       return AuctionService.makeAuctionAttachment(asset, filename);
     } catch (error) {
-      AppLogger.error(`Could not upload attacment for auction #${auction.id.toString()} with error ${error}`);
+      AppLogger.error(
+        `Could not upload attachment for auction #${auction._id.toString()} with error: ${error.message}`,
+      );
       throw new AppError('Could not upload this file. Please, try later', ErrorCode.BAD_REQUEST);
     }
   }
@@ -433,41 +437,87 @@ export class AuctionService {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
 
     for await (const auction of auctions) {
-      if (
-        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.lastNotification &&
-        !auction.sentNotifications.includes('lastNotification')
-      ) {
-        const timeLeftText = `${AppConfig.googleCloud.auctionEndsTime.lastNotification - 1} minutes`;
-        try {
-          await this.notifyUsers(auction, timeLeftText);
-          auction.sentNotifications.push('lastNotification');
-          await auction.save();
-        } catch (error) {
-          AppLogger.warn(
-            `Something went wrong during notification about action ending. Id of auction: ${auction._id.toString()}: ${error}`,
-          );
-        }
-      }
-      if (
-        auction.endsAt.diff(dayjs().utc(), 'minute') <= AppConfig.googleCloud.auctionEndsTime.firstNotification &&
-        !auction.sentNotifications.includes('firstNotification')
-      ) {
-        const timeLeftText = `${Math.floor((AppConfig.googleCloud.auctionEndsTime.firstNotification - 1) / 60)} hour`;
-        try {
-          await this.notifyUsers(auction, timeLeftText);
-          auction.sentNotifications.push('firstNotification');
-          await auction.save();
-        } catch (error) {
-          AppLogger.warn(
-            `Something went wrong during notification about action ending. Id of auction: ${auction._id.toString()}: ${error}`,
-          );
-        }
-      }
+      await this.sendLastNotificationForUsers(auction);
+      await this.sendFirstNotificationForUsers(auction);
+      await this.sendNotificationForAuctionOrganizer(auction);
     }
     return { message: 'Scheduled' };
   }
 
-  public async notifyUsers(auction: IAuctionModel, timeLeftText: string): Promise<void> {
+  private async sendLastNotificationForUsers(auction: IAuctionModel): Promise<void> {
+    if (
+      auction.endsAt.diff(dayjs().utc(), 'minute') > AppConfig.googleCloud.auctionEndsTime.lastNotification ||
+      auction.sentNotifications.includes('lastNotification')
+    ) {
+      return;
+    }
+    try {
+      const timeLeftText = `${AppConfig.googleCloud.auctionEndsTime.lastNotification - 1} minutes`;
+      await this.notifyUsers(auction, timeLeftText);
+      auction.sentNotifications.push('lastNotification');
+      await auction.save();
+    } catch (error) {
+      AppLogger.warn(
+        `Something went wrong during notification about action #${auction._id.toString()} ending. Error: ${error.message}`,
+      );
+    }
+  }
+
+  private async sendFirstNotificationForUsers(auction: IAuctionModel): Promise<void> {
+    if (
+      auction.endsAt.diff(dayjs().utc(), 'minute') > AppConfig.googleCloud.auctionEndsTime.firstNotification ||
+      auction.sentNotifications.includes('firstNotification')
+    ) {
+      return;
+    }
+    try {
+      const timeLeftText = `${Math.floor((AppConfig.googleCloud.auctionEndsTime.firstNotification - 1) / 60)} hour`;
+      await this.notifyUsers(auction, timeLeftText);
+      auction.sentNotifications.push('firstNotification');
+      await auction.save();
+    } catch (error) {
+      AppLogger.warn(
+        `Something went wrong during notification about action #${auction._id.toString()} ending. Error: ${error.message}`,
+      );
+    }
+  }
+
+  private async sendNotificationForAuctionOrganizer(auction: IAuctionModel): Promise<void> {
+    if (
+      auction.endsAt.diff(dayjs().utc(), 'minute') > AppConfig.googleCloud.auctionEndsTime.notificationForAuctionOrganizer ||
+      Math.abs(dayjs(auction.startsAt).diff(auction.endsAt, 'hour')) <= 24 ||
+      auction.sentNotifications.includes('notificationForAuctionOrganizer')
+    ) {
+      return;
+    }
+    try {
+      await this.notifyAuctionOrganizer(auction);
+      auction.sentNotifications.push('notificationForAuctionOrganizer');
+      await auction.save();
+    } catch (error) {
+      AppLogger.warn(
+        `Something went wrong during notification about action ending for auction organizer. Id of auction: ${auction._id.toString()}: ${error.message}`,
+      );
+    }
+  }
+
+  private async notifyAuctionOrganizer(auction: IAuctionModel): Promise<void> {
+    const currentAuction = await this.auctionRepository.getAuctionOrganizerUserAccountFromAuction(auction);
+
+    const phoneNumber = currentAuction.auctionOrganizer.userAccount.phoneNumber;
+    const shortUrl = await this.makeShortAuctionLink(currentAuction._id.toString());
+
+    await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_AUCTIONORGANIZER, {
+      auctionTitle: currentAuction.title,
+      auctionPrice: Dinero({
+        amount: currentAuction.currentPrice,
+        currency: currentAuction.priceCurrency as Currency,
+      }).toFormat('$0,0'),
+      shortUrl,
+    });
+  }
+
+  private async notifyUsers(auction: IAuctionModel, timeLeftText: string): Promise<void> {
     if (!auction) {
       throw new Error(`There is no auction for sending notification`);
     }
@@ -485,7 +535,7 @@ export class AuctionService {
 
     phoneNumbers.forEach(async (phoneNumber) => {
       try {
-        await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE, {
+        await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_USERS, {
           timeLeftText,
           influencerName: currentAuction.auctionOrganizer.name,
           aunctionName: currentAuction.title,
@@ -493,7 +543,7 @@ export class AuctionService {
         });
       } catch (error) {
         AppLogger.warn(
-          `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error}`,
+          `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error.message}`,
         );
       }
     });
@@ -507,7 +557,7 @@ export class AuctionService {
         try {
           await this.activateAuction(auction);
         } catch (error) {
-          AppLogger.warn(`Could not start auction with id ${auction.id.toString()} with error ${error}`);
+          AppLogger.warn(`Could not start auction with id ${auction.id.toString()} with error: ${error.message}`);
         }
       }
     }
@@ -619,7 +669,7 @@ export class AuctionService {
         phoneNumber,
       });
     } catch (error) {
-      AppLogger.warn(`Can not send the notification to ${phoneNumber}: ${error}`, error.message);
+      AppLogger.warn(`Can not send the notification to ${phoneNumber}: ${error.message}`);
     }
   }
 
@@ -760,7 +810,7 @@ export class AuctionService {
         bids: [...auction.bids, createdBid],
       });
     } catch (error) {
-      AppLogger.info(`Unable to charge auction id ${auction.id}: ${error}`);
+      AppLogger.info(`Unable to charge auction #${auction.id}: ${error.message}`);
       throw new AppError('Unable to charge');
     }
 
@@ -816,7 +866,7 @@ export class AuctionService {
       await attachment.remove();
       await this.attachmentsService.removeFileAttachment(attachment.url);
     } catch (error) {
-      AppLogger.error(`Cannot delete auction attachment #${id}: ${error}`);
+      AppLogger.error(`Cannot delete auction attachment #${id}: ${error.message}`);
       throw new AppError('Cannot delete attachment', ErrorCode.BAD_REQUEST);
     }
   }
@@ -838,7 +888,7 @@ export class AuctionService {
       auction.assets.map(async (asset) => await this.deleteAuctionAttachment(asset._id, asset.uid));
       await this.AuctionModel.deleteOne({ _id: id });
     } catch (error) {
-      AppLogger.error(`Cannot delete auction ${auction.id}: ${error}`);
+      AppLogger.error(`Cannot delete auction #${auction.id}: ${error.message}`);
       throw new AppError('Cannot delete auction', ErrorCode.BAD_REQUEST);
     }
   }

@@ -66,6 +66,7 @@ export interface IAuctionRepository {
   getInfluencersAuctions(id: string): Promise<IAuctionModel[]>;
   getAuctionForAdminPage(id: string): Promise<IAuctionModel>;
   getPopulatedAuction(auction: IAuctionModel): Promise<IAuctionModel>;
+  getAuctionOrganizerUserAccountFromAuction(auction: IAuctionModel): Promise<IAuctionModel>;
   followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs } | null>;
   unfollowAuction(auctionId: string, accountId: string): Promise<{ id: string }> | null;
 }

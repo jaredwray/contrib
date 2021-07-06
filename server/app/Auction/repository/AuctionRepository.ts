@@ -206,11 +206,28 @@ export class AuctionRepository implements IAuctionRepository {
     return await this.populateAuctionModel(auction).execPopulate();
   }
 
-  async getPopulatedAuction(auction: IAuctionModel) {
+  public async getPopulatedAuction(auction: IAuctionModel) {
     try {
       return this.populateAuctionModel(auction).execPopulate();
     } catch (error) {
-      AppLogger.error(`Cannot popelate auction model ${error}`);
+      throw new AppError(
+        `Cannot populate auction model #${auction._id.toString()} with error: ${error.message}`,
+        ErrorCode.BAD_REQUEST,
+      );
+    }
+  }
+
+  public async getAuctionOrganizerUserAccountFromAuction(auction: IAuctionModel) {
+    try {
+      return auction
+        .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
+        .populate({ path: 'auctionOrganizer', populate: { path: 'userAccount', model: this.UserAccountModel } })
+        .execPopulate();
+    } catch (error) {
+      throw new AppError(
+        `Cannot populate auction model #${auction._id.toString()} with error: ${error.message}`,
+        ErrorCode.BAD_REQUEST,
+      );
     }
   }
 

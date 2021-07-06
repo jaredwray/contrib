@@ -62,8 +62,9 @@ export const AppConfig = {
       notificationTaskTargetURL: requireEnvVar('NOTIFICATION_TASK_TARGET_URL'),
     },
     auctionEndsTime: {
-      firstNotification: 61, // 1 min takes to generate it and send ftom the task
-      lastNotification: 6, // 1 min takes to generate it and send ftom the task
+      firstNotification: 61, // 1 min takes to generate it and send from the task
+      lastNotification: 6, // 1 min takes to generate it and send from the task
+      notificationForAuctionOrganizer: 1441, // 24hours + 1 min takes to generate it and send from the task
     },
   },
   cloudflare: {
