@@ -6,13 +6,14 @@ import { Doughnut } from 'react-chartjs-2';
 import styles from '../styles.module.scss';
 
 interface Props {
-  labels: any[];
-  values: any[];
+  labels: string[];
+  values: number[];
+  name: string;
 }
 const DOUGHNUT_LABELS_LIMIT = 3;
 
-export const ChartDoughnut: FC<Props> = ({ labels, values }) => {
-  const ChartValues = (labels: any, values: any) => {
+export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
+  const ChartValues = (labels: string[], values: number[]) => {
     return {
       labels: labels,
       datasets: [
@@ -23,6 +24,10 @@ export const ChartDoughnut: FC<Props> = ({ labels, values }) => {
           backgroundColor: ['#476585', '#0f81b7', '#2492c9', '#27a7e0'],
           borderColor: ['#476585', '#0f81b7', '#2492c9', '#27a7e0'],
           borderWidth: 1,
+          hoverBorderWidth: 1,
+          hoverBorderColor: '#5a7864',
+          hoverBackgroundColor: '#5a7864',
+          hoverOffset: -20,
         },
       ],
     };
@@ -31,7 +36,7 @@ export const ChartDoughnut: FC<Props> = ({ labels, values }) => {
   const clickNum = values.reduce((acc: number, val: number) => acc + val, 0);
   return (
     <Col>
-      <p className="text-all-cups">referrers</p>
+      <p className="text-all-cups">{name}</p>
       <ul className={styles.doughnutLabelsReferrers}>
         {labels.map((label: string, i: number) => {
           if (i >= DOUGHNUT_LABELS_LIMIT) {

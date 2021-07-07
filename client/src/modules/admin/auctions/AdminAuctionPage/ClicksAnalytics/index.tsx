@@ -35,15 +35,17 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
           backgroundColor: ['#476585', '#0f81b7', '#2492c9', '#27a7e0'],
           borderColor: ['#476585', '#0f81b7', '#2492c9', '#27a7e0'],
           borderWidth: 1,
+          hoverBorderColor: '#5a7864',
+          hoverBackgroundColor: '#5a7864',
         },
       ],
     };
   };
   const dateFormatterToTime = (date: string) => {
-    return format(utcToZonedTime(new Date(date.split('+')[0]).toISOString(), auction.timeZone), 'p').replace(':00', '');
+    return format(new Date(date.split('+')[0]), 'p').replace(':00', '');
   };
   const dateFormatter = (date: string) => {
-    return format(utcToZonedTime(new Date(date.split('+')[0]).toISOString(), auction.timeZone), 'MM.dd');
+    return format(new Date(date.split('+')[0]), 'MM.dd');
   };
 
   const chosenStartDate = bitly.clicksByDay.filter((x: any) => isSameDay(new Date(x.date), startOfInterval))[0];
@@ -53,15 +55,21 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
 
   const startInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenStartDate?.date || 0) + 1;
   const endInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenEndDate?.date || 0);
+  const perHourStartInterval = bitly.clicks.map((x: any) => x.date).indexOf(chosenStartDate?.date || 0);
+  const perHourEndInterval = bitly.clicks.map((x: any) => x.date).indexOf(chosenEndDate?.date || 0) - 24;
 
   const clicks = {
     labels: bitly.clicks
-      .map((x: any) => `${dateFormatterToTime(x.date)} ${dateFormatter(x.date)}`)
-      .slice(endInterval * 24, startInterval * 24)
+      .map((x: any) => dateFormatterToTime(x.date))
+      .slice(perHourEndInterval + 1 < 0 ? 0 : perHourEndInterval + 1, perHourStartInterval + 1)
       .reverse(),
     values: bitly.clicks
       .map((x: any) => x.clicks)
-      .slice(endInterval * 24, startInterval * 24)
+      .slice(perHourEndInterval + 1 < 0 ? 0 : perHourEndInterval + 1, perHourStartInterval + 1)
+      .reverse(),
+    dates: bitly.clicks
+      .map((x: any) => dateFormatter(x.date))
+      .slice(perHourEndInterval + 1 < 0 ? 0 : perHourEndInterval + 1, perHourStartInterval + 1)
       .reverse(),
   };
 
@@ -90,7 +98,12 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
   if (referrers.values.length) {
     totalClicks = referrers.values.reduce((acc: number, el: number) => acc + el, 0);
   }
-
+  const dayCutter = (days: string[]) => {
+    if (days.length <= 4) {
+      return days.flatMap(() => ['12AM', '6AM', '12PM', '6PM']);
+    }
+    return days.flatMap(() => ['12AM', '12PM']);
+  };
   return (
     <>
       <Row>
@@ -112,7 +125,12 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
               maxDate={endOfInterval}
               minDate={auctionStartDate}
               selected={startOfInterval}
-              onChange={(date: any) => setStartOfInterval(date)}
+              onChange={(date: Date) => {
+                if (isSameDay(date, endOfInterval)) {
+                  setPerDay(false);
+                }
+                setStartOfInterval(date);
+              }}
             />
           </div>
         </Col>
@@ -124,7 +142,12 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
               maxDate={utcToZonedTime(new Date().toISOString(), auction.timeZone)}
               minDate={startOfInterval}
               selected={endOfInterval}
-              onChange={(date: any) => setEndOfInterval(date)}
+              onChange={(date: Date) => {
+                if (isSameDay(date, startOfInterval)) {
+                  setPerDay(false);
+                }
+                setEndOfInterval(date);
+              }}
             />
           </div>
         </Col>
@@ -141,6 +164,13 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
                 height={200}
                 options={{
                   plugins: {
+                    tooltip: {
+                      callbacks: {
+                        label: (context: any) => {
+                          return `${context.dataset.label}: ${context.parsed.y}`;
+                        },
+                      },
+                    },
                     legend: {
                       display: false,
                     },
@@ -160,12 +190,44 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
                       display: false,
                     },
                     x: {
-                      display: true,
+                      display: false,
+                      ticks: {
+                        display: false,
+                      },
+                    },
+                    AM_PM: {
+                      tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                      },
+                      display: clicksByDay.labels.length <= 8,
+                      position: 'bottom',
+                      labels: dayCutter(clicksByDay.labels),
+
+                      ticks: {
+                        beginAtZero: true,
+
+                        display: true,
+                        font: {
+                          size: 8,
+                        },
+                      },
+                    },
+                    Days: {
+                      position: 'bottom',
+                      labels: clicksByDay.labels,
                     },
                   },
                   plugins: {
                     legend: {
                       display: false,
+                    },
+                    tooltip: {
+                      callbacks: {
+                        title: (context: any) => {
+                          return `${context[0].label} ${clicks.dates[context[0].dataIndex]}`;
+                        },
+                      },
                     },
                   },
                   responsive: true,
@@ -176,8 +238,8 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
             )}
           </Row>
           <Row className="pt-4 pb-3">
-            <ChartDoughnut labels={referrers.labels} values={referrers.values} />
-            <ChartDoughnut labels={countries.labels} values={countries.values} />
+            <ChartDoughnut labels={referrers.labels} name="referrers" values={referrers.values} />
+            <ChartDoughnut labels={countries.labels} name="countries" values={countries.values} />
           </Row>
         </>
       )}
