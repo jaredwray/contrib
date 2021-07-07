@@ -9,6 +9,7 @@ describe('Should render correctly "Bids"', () => {
     onBidClickHandler: jest.fn(),
     timeZone: 'America/Los_Angeles',
     loading: false,
+    showProcessBtn: true,
   };
 
   let wrapper: ShallowWrapper;
@@ -20,10 +21,6 @@ describe('Should render correctly "Bids"', () => {
   });
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
-  });
-  it('it should run onBidClickHandler on click ', () => {
-    wrapper.find(AsyncButton).simulate('click');
-    expect(props.onBidClickHandler).toHaveBeenCalledTimes(1);
   });
   it('it should run onBidClickHandler on click ', () => {
     wrapper.find(AsyncButton).simulate('click');

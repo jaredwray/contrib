@@ -13,9 +13,10 @@ interface Props {
   onBidClickHandler: (b: AuctionBid) => void;
   timeZone: string;
   loading: boolean;
+  showProcessBtn: boolean;
 }
 
-export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone }) => {
+export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone, showProcessBtn }) => {
   if (bids.length === 0) {
     return <>no bids for this auction</>;
   }
@@ -29,7 +30,7 @@ export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone }) 
           <th>User MongodbId</th>
           <th>User Authz0ID</th>
           <th>User Phone</th>
-          <th></th>
+          {showProcessBtn && <th></th>}
         </tr>
       </thead>
       <tbody className="font-weight-normal">
@@ -42,17 +43,19 @@ export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone }) 
             <td className="align-middle">{bid.user.mongodbId}</td>
             <td className="align-middle">{bid.user.id}</td>
             <td className="align-middle">{bid.user.phoneNumber}</td>
-            <td className="align-middle">
-              <AsyncButton
-                className={styles.bidButton}
-                disabled={loading}
-                loading={loading}
-                variant="secondary"
-                onClick={() => onBidClickHandler(bid)}
-              >
-                Process
-              </AsyncButton>
-            </td>
+            {showProcessBtn && (
+              <td className="align-middle">
+                <AsyncButton
+                  className={styles.bidButton}
+                  disabled={loading}
+                  loading={loading}
+                  variant="secondary"
+                  onClick={() => onBidClickHandler(bid)}
+                >
+                  Process
+                </AsyncButton>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>

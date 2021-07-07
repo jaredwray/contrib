@@ -95,6 +95,7 @@ export const AuctionSchema = gql`
     auctionOrganizer: AuctionAdminOrganizer
     isFailed: Boolean!
     isSold: Boolean!
+    isActive: Boolean!
     link: String!
     bitly: Metrics
   }

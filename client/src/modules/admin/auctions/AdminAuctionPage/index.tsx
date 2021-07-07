@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
@@ -34,9 +34,15 @@ export default function AdminAuctionPage() {
   const [chargeBid, { loading: bidLoading }] = useMutation(chargeCurrendBid);
 
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { data: auctionData, error, loading } = useQuery(AuctionForAdminPage, {
+  const [getAuctionData, { data: auctionData, error, loading }] = useLazyQuery(AuctionForAdminPage, {
     variables: { id: auctionId },
+    fetchPolicy: 'network-only',
   });
+
+  useEffect(() => {
+    getAuctionData();
+  }, [getAuctionData]);
+
   const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformation);
 
   const auction = auctionData?.getAuctionForAdminPage;
@@ -73,10 +79,11 @@ export default function AdminAuctionPage() {
       await chargeAuction({ variables: { id: auctionId } });
       addToast('Charged', { autoDismiss: true, appearance: 'success' });
       setShowDialog(false);
+      getAuctionData();
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'error' });
     }
-  }, [auctionId, addToast, chargeAuction]);
+  }, [auctionId, addToast, chargeAuction, getAuctionData]);
 
   if (error || loading || !auction) {
     return null;
@@ -132,6 +139,7 @@ export default function AdminAuctionPage() {
               <Bids
                 bids={auction.bids}
                 loading={customerLoading}
+                showProcessBtn={auction.isActive || auction.isFailed}
                 timeZone={timeZone}
                 onBidClickHandler={onBidClickHandler}
               />
