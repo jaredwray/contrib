@@ -4,6 +4,7 @@ import { DocumentNode, useMutation } from '@apollo/client';
 import { Alert, Button, Form as RbForm, Spinner } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
+import { useToasts } from 'react-toast-notifications';
 
 import Dialog from 'src/components/Dialog';
 import DialogContent from 'src/components/Dialog/DialogContent';
@@ -14,10 +15,12 @@ interface Props {
   open: boolean;
   onClose: () => void;
   mutation: DocumentNode;
+  updateEntitisList: () => void;
   mutationVariables?: Record<string, string>;
 }
 
-export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables }) => {
+export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, updateEntitisList }) => {
+  const { addToast } = useToasts();
   const [inviteMutation] = useMutation(mutation);
   const [creating, setCreating] = useState(false);
   const [invitationError, setInvitationError] = useState();
@@ -39,14 +42,20 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables })
         inviteMutation({
           variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage, ...mutationVariables },
         })
-          .then(() => window.location.reload(false))
+          .then(() => {
+            updateEntitisList();
+            onClose();
+            addToast('Invited', { autoDismiss: true, appearance: 'success' });
+          })
           .catch((error) => {
             setInvitationError(error.message);
           })
-          .finally(() => setCreating(false));
+          .finally(() => {
+            setCreating(false);
+          });
       }
     },
-    [inviteMutation, mutationVariables],
+    [inviteMutation, mutationVariables, updateEntitisList, onClose, addToast],
   );
 
   return (

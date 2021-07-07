@@ -16,7 +16,7 @@ export const AssistantSchema = gql`
   }
 
   extend type Mutation {
-    inviteAssistant(input: InviteInput!): Assistant!
+    inviteAssistant(input: InviteInput!): InvitationId!
   }
 
   extend type UserAccount {

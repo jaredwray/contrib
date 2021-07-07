@@ -2,6 +2,7 @@ import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 import { AssistantsQuery } from '../../../apollo/queries/assistants';
 
@@ -25,12 +26,14 @@ cache.writeQuery({
   },
 });
 
-test('renders without crashing', () => {
-  render(
-    <Router>
-      <MockedProvider cache={cache}>
-        <Assistants />
-      </MockedProvider>
-    </Router>,
-  );
+test('renders without crashing', async () => {
+  await act(async () => {
+    render(
+      <Router>
+        <MockedProvider cache={cache}>
+          <Assistants />
+        </MockedProvider>
+      </Router>,
+    );
+  });
 });

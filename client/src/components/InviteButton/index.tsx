@@ -7,13 +7,21 @@ import { Modal } from './Modal';
 
 interface Props {
   mutation: DocumentNode;
+  updateEntitisList: () => void;
   mutationVariables?: Record<string, string>;
   text?: string;
   variant?: string;
   className?: string;
 }
 
-export const InviteButton: FC<Props> = ({ className, mutation, mutationVariables, text, variant }) => {
+export const InviteButton: FC<Props> = ({
+  className,
+  mutation,
+  mutationVariables,
+  text,
+  variant,
+  updateEntitisList,
+}) => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
@@ -29,6 +37,7 @@ export const InviteButton: FC<Props> = ({ className, mutation, mutationVariables
         mutation={mutation}
         mutationVariables={mutationVariables}
         open={showDialog}
+        updateEntitisList={updateEntitisList}
         onClose={() => setShowDialog(false)}
       />
     </>

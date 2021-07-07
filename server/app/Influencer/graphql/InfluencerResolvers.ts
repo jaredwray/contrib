@@ -26,7 +26,7 @@ interface InfluencerResolversType {
   };
   Mutation: {
     createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
-    inviteInfluencer: GraphqlResolver<InfluencerProfile, { input: InviteInput }>;
+    inviteInfluencer: GraphqlResolver<{ invitationId: string }, { input: InviteInput }>;
     updateInfluencerProfile: GraphqlResolver<
       InfluencerProfile,
       { influencerId: string; input: UpdateInfluencerProfileInput }

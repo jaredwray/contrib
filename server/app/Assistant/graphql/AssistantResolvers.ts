@@ -2,19 +2,14 @@ import { Assistant } from '../dto/Assistant';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { InviteInput } from '../../Invitation/graphql/model/InviteInput';
 import { Invitation } from '../../Invitation/dto/Invitation';
-import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
-import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
-import { AppError, ErrorCode } from '../../../errors';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
-import { requireInfluencer } from '../../../graphql/middleware/requireInfluencer';
 import { loadAccount } from '../../../graphql/middleware/loadAccount';
-import { loadInfluencer } from '../../../graphql/middleware/loadInfluencer';
 import { requireRole } from '../../../graphql/middleware/requireRole';
 import { GraphqlResolver } from '../../../graphql/types';
 
 interface AssistantResolversType {
   Mutation: {
-    inviteAssistant: GraphqlResolver<Assistant, { input: InviteInput }>;
+    inviteAssistant: GraphqlResolver<{ invitationId: string }, { input: InviteInput }>;
   };
   Assistant: {
     userAccount: GraphqlResolver<UserAccount, Record<string, never>, Assistant>;
