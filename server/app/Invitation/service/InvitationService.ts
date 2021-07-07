@@ -61,26 +61,38 @@ export class InvitationService {
     return models.map((model) => InvitationService.makeInvitation(model));
   }
 
-  async inviteCharity(input: InviteInput): Promise<Charity> {
+  async inviteCharity(input: InviteInput): Promise<{ invitationId: string }> {
     const session = await this.connection.startSession();
-    let charity: Charity = null;
+    let returnObject = null;
 
     try {
       const { firstName, lastName, phoneNumber, welcomeMessage } = input;
 
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
+
         if (
           findedAccount &&
           (await this.CharityModel.exists({
-            userAccount: findedAccount._id.toString(),
+            userAccount: findedAccount._id,
           }))
         ) {
           throw new AppError(`Account with phone number: ${phoneNumber} already has charity`, ErrorCode.BAD_REQUEST);
         }
 
+        const findedInvitation = await this.InvitationModel.findOne({
+          phoneNumber,
+          parentEntityType: InvitationParentEntityType.CHARITY,
+        });
+
+        if (findedInvitation) {
+          await this.sendInviteMessage(findedInvitation.slug, firstName, phoneNumber);
+          returnObject = { invitationId: findedInvitation._id.toString() };
+          return;
+        }
+
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
-        charity = await this.charityService.createCharity({ name: 'My Charity Name' }, session);
+        const charity = await this.charityService.createCharity({ name: 'My Charity Name' }, session);
 
         const inviteInput = {
           phoneNumber,
@@ -100,62 +112,68 @@ export class InvitationService {
             session,
           );
 
-          charity = await this.charityService.updateCharityStatus({
+          await this.charityService.updateCharityStatus({
             charity,
             userAccount,
             status: CharityStatus.PENDING_ONBOARDING,
             session,
           });
 
-          const link = await this.makeInvitationLink(invitation.slug);
-          const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
-          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+
           await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, { charity, session });
+          returnObject = { invitationId: invitation.id };
         } else {
           const invitation = await this.createInvitation(charity, inviteInput, session);
 
-          charity = await this.charityService.updateCharityStatus({
+          await this.charityService.updateCharityStatus({
             charity,
             status: CharityStatus.PENDING_INVITE,
             session,
           });
 
-          const link = await this.makeInvitationLink(invitation.slug);
-          const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
-          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          returnObject = { invitationId: invitation.id };
         }
       });
-      return charity;
+      return returnObject;
     } finally {
       session.endSession();
     }
   }
 
-  async inviteInfluencer(input: InviteInput): Promise<InfluencerProfile> {
+  async inviteInfluencer(input: InviteInput): Promise<{ invitationId: string }> {
     const session = await this.connection.startSession();
-    let influencerProfile: InfluencerProfile = null;
+    let returnObject = null;
 
     try {
       const { firstName, lastName, phoneNumber, welcomeMessage } = input;
 
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
-        if (
-          await this.InvitationModel.exists({ phoneNumber, parentEntityType: InvitationParentEntityType.INFLUENCER })
-        ) {
-          throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
-        }
+
         if (
           findedAccount &&
           (await this.InfluencerModel.exists({
-            userAccount: findedAccount._id.toString(),
+            userAccount: findedAccount._id,
           }))
         ) {
           throw new AppError(`Account with phone number: ${phoneNumber} already has influencer`, ErrorCode.BAD_REQUEST);
         }
 
+        const findedInvitation = await this.InvitationModel.findOne({
+          phoneNumber,
+          parentEntityType: InvitationParentEntityType.INFLUENCER,
+        });
+
+        if (findedInvitation) {
+          await this.sendInviteMessage(findedInvitation.slug, firstName, phoneNumber);
+          returnObject = { invitationId: findedInvitation._id.toString() };
+          return;
+        }
+
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
-        influencerProfile = await this.getOrCreateTransientInfluencer(input, session);
+        const influencerProfile = await this.getOrCreateTransientInfluencer(input, session);
 
         const inviteInput = {
           phoneNumber,
@@ -175,60 +193,66 @@ export class InvitationService {
             session,
           );
 
-          influencerProfile = await this.influencerService.updateInfluencerStatus(
+          await this.influencerService.updateInfluencerStatus(
             influencerProfile,
             InfluencerStatus.ONBOARDED,
             userAccount,
             session,
           );
 
-          const link = await this.makeInvitationLink(invitation.slug);
-          const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
-          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+
           await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
+          returnObject = { invitationId: invitation.id };
         } else {
           const invitation = await this.createInvitation(influencerProfile, inviteInput, session);
 
-          influencerProfile = await this.influencerService.updateInfluencerStatus(
+          await this.influencerService.updateInfluencerStatus(
             influencerProfile,
             InfluencerStatus.INVITATION_PENDING,
             null,
             session,
           );
 
-          const link = await this.makeInvitationLink(invitation.slug);
-          const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
-          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          returnObject = { invitationId: invitation.id };
         }
       });
 
-      return influencerProfile;
+      return returnObject;
     } finally {
       session.endSession();
     }
   }
 
-  async inviteAssistant(input: InviteInput): Promise<Assistant> {
+  async inviteAssistant(input: InviteInput): Promise<{ invitationId: string }> {
     const session = await this.connection.startSession();
-    let assistant: Assistant = null;
+    let returnObject = null;
 
     try {
       const { firstName, lastName, phoneNumber, welcomeMessage, influencerId } = input;
 
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
-        if (
-          await this.InvitationModel.exists({ phoneNumber, parentEntityType: InvitationParentEntityType.ASSISTANT })
-        ) {
-          throw new AppError(`Invitation to ${phoneNumber} has already been sent`, ErrorCode.BAD_REQUEST);
-        }
+
         if (
           findedAccount &&
           (await this.AssistantModel.exists({
-            userAccount: findedAccount._id.toString(),
+            userAccount: findedAccount._id,
           }))
         ) {
           throw new AppError(`Account with phone number: ${phoneNumber} already has assistant`, ErrorCode.BAD_REQUEST);
+        }
+
+        const findedInvitation = await this.InvitationModel.findOne({
+          phoneNumber,
+          parentEntityType: InvitationParentEntityType.ASSISTANT,
+        });
+
+        if (findedInvitation) {
+          await this.sendInviteMessage(findedInvitation.slug, firstName, phoneNumber);
+          returnObject = { invitationId: findedInvitation._id.toString() };
+          return;
         }
 
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber);
@@ -252,7 +276,7 @@ export class InvitationService {
             throw new AppError(`Invalid influencerId #${influencerId}`, ErrorCode.BAD_REQUEST);
           }
 
-          assistant = await this.assistantService.createAssistant(
+          const assistant = await this.assistantService.createAssistant(
             {
               name: `${firstName} ${lastName}`,
               userAccount: userAccount.mongodbId,
@@ -272,12 +296,12 @@ export class InvitationService {
 
           await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
 
-          const link = await this.makeInvitationLink(invitation.slug);
-          const message = `Hello, ${firstName}. You have been invited to Contrib at ${link}. Sign in with your phone number to begin.`;
-          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+
           await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, assistant });
+          returnObject = { invitationId: invitation.id };
         } else {
-          assistant = await this.assistantService.createAssistant(
+          const assistant = await this.assistantService.createAssistant(
             {
               name: `${firstName} ${lastName}`,
               userAccount: null,
@@ -287,18 +311,27 @@ export class InvitationService {
           );
 
           const invitation = await this.createInvitation(assistant, inviteInput, session);
-
           await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
 
-          const link = await this.makeInvitationLink(invitation.slug);
-          const message = `Hello, ${firstName}! You have been invited to join Contrib at ${link}`;
-          await this.twilioNotificationService.sendMessage(phoneNumber, message);
+          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          returnObject = { invitationId: invitation.id };
         }
       });
 
-      return assistant;
+      return returnObject;
     } finally {
       session.endSession();
+    }
+  }
+
+  private async sendInviteMessage(slug: string, name: string, phoneNumber: string): Promise<void> {
+    try {
+      const link = await this.makeInvitationLink(slug);
+      const message = `Hello, ${name}! You have been invited to join Contrib at ${link}. Sign in with your phone number to begin.`;
+      await this.twilioNotificationService.sendMessage(phoneNumber, message);
+    } catch (error) {
+      AppLogger.error(`Can not send invite message to phone number: ${phoneNumber}. Error: ${error.message}`);
+      throw new AppError(`Can not send invite message`, ErrorCode.BAD_REQUEST);
     }
   }
 

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -18,7 +18,7 @@ import styles from './styles.module.scss';
 
 export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
-  const { loading, data, error } = useQuery(AllCharitiesQuery, {
+  const [getCharitisList, { loading, data, error }] = useLazyQuery(AllCharitiesQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
     fetchPolicy: 'network-only',
   });
@@ -43,6 +43,10 @@ export default function CharitiesPage(): any {
     executeSearch({ variables: { query: searchQuery } });
   }, [executeSearch, searchQuery]);
 
+  useEffect(() => {
+    getCharitisList();
+  }, [getCharitisList]);
+
   if (error) {
     return null;
   }
@@ -51,7 +55,11 @@ export default function CharitiesPage(): any {
     ? { skip: 0, totalItems: charitiesSearch.length, items: charitiesSearch }
     : data?.charities || { skip: 0, totalItems: 0, items: [] };
   const controlBtns = (
-    <InviteButton className={clsx(styles.inviteBtn, 'text--body d-inline-block')} mutation={InviteCharityMutation} />
+    <InviteButton
+      className={clsx(styles.inviteBtn, 'text--body d-inline-block')}
+      mutation={InviteCharityMutation}
+      updateEntitisList={getCharitisList}
+    />
   );
   setPageTitle('Charities page');
 

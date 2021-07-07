@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -19,10 +19,15 @@ import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
-  const { loading, data, error } = useQuery(AllInfluencersQuery, {
+  const [getInfluencersList, { loading, data, error }] = useLazyQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
     fetchPolicy: 'network-only',
   });
+
+  useEffect(() => {
+    getInfluencersList();
+  }, [getInfluencersList]);
+
   if (error) {
     return null;
   }
@@ -37,6 +42,7 @@ export default function InfluencersPage() {
       <InviteButton
         className={clsx(styles.inviteBtn, 'text--body d-inline-block ml-3')}
         mutation={InviteInfluencerMutation}
+        updateEntitisList={getInfluencersList}
       />
     </>
   );
@@ -81,6 +87,7 @@ export default function InfluencersPage() {
                       mutation={InviteInfluencerMutation}
                       mutationVariables={{ influencerId: item.id }}
                       text="Invite"
+                      updateEntitisList={getInfluencersList}
                       variant="link"
                     />
                   )}

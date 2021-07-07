@@ -31,7 +31,7 @@ export const InviteAssistantMutation = gql`
         influencerId: $influencerId
       }
     ) {
-      id
+      invitationId
     }
   }
 `;

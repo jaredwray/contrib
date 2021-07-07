@@ -11,6 +11,10 @@ export const InvitationSchema = gql`
     updatedAt: String!
   }
 
+  type InvitationId {
+    invitationId: String!
+  }
+
   input InviteInput {
     phoneNumber: String!
     firstName: String!

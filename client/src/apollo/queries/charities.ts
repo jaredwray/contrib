@@ -22,7 +22,7 @@ export const InviteCharityMutation = gql`
     inviteCharity(
       input: { firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, welcomeMessage: $welcomeMessage }
     ) {
-      id
+      invitationId
     }
   }
 `;

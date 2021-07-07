@@ -2,6 +2,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { InviteButton } from '..';
+import { ToastProvider } from 'react-toast-notifications';
 
 describe('Should render correctly "InviteButton"', () => {
   const props: any = {
@@ -17,9 +18,11 @@ describe('Should render correctly "InviteButton"', () => {
   let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(
-      <MockedProvider mocks={[]}>
-        <InviteButton {...props} />
-      </MockedProvider>,
+      <ToastProvider>
+        <MockedProvider mocks={[]}>
+          <InviteButton {...props} />
+        </MockedProvider>
+      </ToastProvider>,
     );
   });
   afterEach(() => {

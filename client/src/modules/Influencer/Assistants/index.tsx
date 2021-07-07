@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
@@ -18,9 +18,18 @@ export default function Assistants() {
   const influencerId = useParams<{ influencerId?: string }>().influencerId ?? 'me';
   const { account } = useContext(UserAccountContext);
 
-  const { loading, data, error } = useQuery<{ influencer: InfluencerProfile }>(AssistantsQuery, {
-    variables: { id: influencerId },
-  });
+  const [getAssistatsList, { loading, data, error }] = useLazyQuery<{ influencer: InfluencerProfile }>(
+    AssistantsQuery,
+    {
+      variables: { id: influencerId },
+      fetchPolicy: 'network-only',
+    },
+  );
+
+  useEffect(() => {
+    getAssistatsList();
+  }, [getAssistatsList]);
+
   const influencer = data?.influencer;
   const isMyProfile = account?.influencerProfile?.id === influencer?.id;
 
@@ -39,7 +48,11 @@ export default function Assistants() {
               <span className="break-word">{isMyProfile ? 'My' : `${influencer.name}'s`}</span> assistants
             </Col>
             <Col className="pt-3 pt-md-0" md="2" sm="4">
-              <InviteButton mutation={InviteAssistantMutation} mutationVariables={{ influencerId: influencer.id }} />
+              <InviteButton
+                mutation={InviteAssistantMutation}
+                mutationVariables={{ influencerId: influencer.id }}
+                updateEntitisList={getAssistatsList}
+              />
             </Col>
           </Row>
         </Container>
