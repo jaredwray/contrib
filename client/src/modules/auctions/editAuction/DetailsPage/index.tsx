@@ -144,7 +144,7 @@ const EditAuctionDetailsPage = () => {
     };
   }, [auction, selectedOption, startPrice, charity, itemPrice]);
 
-  if (loadingQuery) {
+  if (loadingQuery || !auctionData) {
     return null;
   }
 
