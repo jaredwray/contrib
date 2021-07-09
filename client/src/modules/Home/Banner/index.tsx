@@ -21,8 +21,12 @@ export default function Banner() {
             </Col>
           </Row>
           <Row>
-            <Col className="pt-3 pb-3 text-headline" lg="6">
-              Direct influencer-to-fan charity auctions
+            <Col className={clsx(styles.message, 'pt-3 pb-3 text-super-headline text-capitalize')} lg="6">
+              Direct
+              <br />
+              influencer-to-fan
+              <br />
+              charity auctions
             </Col>
           </Row>
           <Row>

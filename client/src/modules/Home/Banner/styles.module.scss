@@ -73,6 +73,13 @@
   }
 }
 
+@media (max-width: 1286px) {
+  .message {
+    font-size: 32px !important;
+    line-height: 36px !important;
+  }
+}
+
 @media (max-width: $small-weight) {
   .button {
     height: 40px !important;
