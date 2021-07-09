@@ -1,16 +1,32 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'enzyme';
-import { MockedProvider } from '@apollo/client/testing';
 import { CreateInfluencer } from '../CreateInfluencer';
-
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
-
-test('renders without crashing', () => {
-  render(
-    <MockedProvider>
-      <Router>
-        <CreateInfluencer />
-      </Router>
-    </MockedProvider>,
-  );
+import { BrowserRouter as Router } from 'react-router-dom';
+import { auction } from 'src/helpers/testHelpers/auction';
+import { mount, ReactWrapper } from 'enzyme';
+import { gql } from '@apollo/client';
+import { MockedProvider } from '@apollo/client/testing';
+import { CreateInfluencerModal } from 'src/modules/admin/Influencers/CreateInfluencer/CreateInfluencerModal';
+describe('Should render correctly "StopOrActiveButton"', () => {
+  let wrapper: ReactWrapper;
+  beforeEach(() => {
+    wrapper = mount(
+      <MockedProvider>
+        <Router>
+          <CreateInfluencer />
+        </Router>
+      </MockedProvider>,
+    );
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('component is defined', () => {
+    expect(wrapper).toHaveLength(1);
+  });
+  it('it should open Modal when clicking', () => {
+    wrapper.children().find('Button').simulate('click');
+  });
+  it('it should close Modal when clicking', () => {
+    wrapper.children().find('Button').simulate('click');
+    wrapper.children().find(CreateInfluencerModal).children().find('.close').simulate('click');
+  });
 });
