@@ -140,7 +140,7 @@ export default function AdminAuctionPage() {
               <Bids
                 bids={auction.bids}
                 loading={customerLoading}
-                showProcessBtn={auction.isActive || auction.isFailed}
+                showProcessBtn={auction.isFailed}
                 timeZone={timeZone}
                 onBidClickHandler={onBidClickHandler}
               />

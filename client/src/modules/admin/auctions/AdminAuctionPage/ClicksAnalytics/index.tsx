@@ -3,9 +3,8 @@ import { FC, useState } from 'react';
 import clsx from 'clsx';
 import { isSameDay } from 'date-fns';
 import { format, utcToZonedTime } from 'date-fns-tz';
-import { Row, Col } from 'react-bootstrap';
+import { Row, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
-import DatePicker from 'react-datepicker';
 
 import { ChartDoughnut } from 'src/modules/admin/auctions/AdminAuctionPage/ClicksAnalytics/Doughnut';
 import { Auction } from 'src/types/Auction';
@@ -18,11 +17,9 @@ interface Props {
 }
 
 export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
-  const auctionStartDate = utcToZonedTime(auction.startDate, auction.timeZone);
-
-  const [startOfInterval, setStartOfInterval] = useState(auctionStartDate);
+  const startOfInterval = utcToZonedTime(auction.startDate, auction.timeZone);
+  const endOfInterval = utcToZonedTime(new Date().toISOString(), auction.timeZone);
   const [perDay, setPerDay] = useState(true);
-  const [endOfInterval, setEndOfInterval] = useState(utcToZonedTime(new Date().toISOString(), auction.timeZone));
 
   const ChartValues = (labels: any, values: any) => {
     return {
@@ -52,7 +49,6 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
   const chosenEndDate = bitly.clicksByDay.filter((x: any) =>
     isSameDay(utcToZonedTime(x.date, auction.timeZone), endOfInterval),
   )[0];
-
   const startInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenStartDate?.date || 0) + 1;
   const endInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenEndDate?.date || 0);
   const perHourStartInterval = bitly.clicks.map((x: any) => x.date).indexOf(chosenStartDate?.date || 0);
@@ -104,53 +100,28 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
     }
     return days.flatMap(() => ['12AM', '12PM']);
   };
+  const type = [
+    { value: 1, label: 'per day' },
+    { value: 0, label: 'per hour' },
+  ];
   return (
     <>
       <Row>
-        <Col className="p-0">
-          <p className={clsx(styles.link, perDay ? styles.active : styles.normal)} onClick={() => setPerDay(true)}>
-            Per day
-          </p>
-          <p className={clsx(styles.link, !perDay ? styles.active : styles.normal)} onClick={() => setPerDay(false)}>
-            Per hour
-          </p>
-        </Col>
-      </Row>
-      <Row>
-        <Col className={clsx(styles.datePickerWrapper)}>
-          <div className="DatePickerMainWrapper mt-2 mb-3">
-            <label>from</label>
-            <DatePicker
-              className={clsx(styles.datePicker, 'form-control ')}
-              maxDate={endOfInterval}
-              minDate={auctionStartDate}
-              selected={startOfInterval}
-              onChange={(date: Date) => {
-                if (isSameDay(date, endOfInterval)) {
-                  setPerDay(false);
-                }
-                setStartOfInterval(date);
-              }}
-            />
-          </div>
-        </Col>
-        <Col className={clsx(styles.datePickerWrapper)}>
-          <div className="DatePickerMainWrapper mt-2 mb-3 d-block ">
-            <label>to</label>
-            <DatePicker
-              className={clsx(styles.datePicker, 'form-control ')}
-              maxDate={utcToZonedTime(new Date().toISOString(), auction.timeZone)}
-              minDate={startOfInterval}
-              selected={endOfInterval}
-              onChange={(date: Date) => {
-                if (isSameDay(date, startOfInterval)) {
-                  setPerDay(false);
-                }
-                setEndOfInterval(date);
-              }}
-            />
-          </div>
-        </Col>
+        <ButtonGroup toggle className={clsx(styles.select, 'mt-2 mb-3')}>
+          {type.map((radio, idx) => (
+            <ToggleButton
+              key={idx}
+              checked={perDay === Boolean(radio.value)}
+              name="radio"
+              type="radio"
+              value={radio.value}
+              variant="outline-primary"
+              onChange={(e) => setPerDay(Boolean(Number(e.currentTarget.value)))}
+            >
+              {radio.label}
+            </ToggleButton>
+          ))}
+        </ButtonGroup>
       </Row>
       <p className="text-all-cups">
         total clicks: <b>{totalClicks}</b>
