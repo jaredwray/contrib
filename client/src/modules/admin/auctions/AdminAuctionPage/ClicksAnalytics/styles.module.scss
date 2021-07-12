@@ -12,6 +12,7 @@
   display: block;
   min-height: 60px;
   padding: 0;
+  margin-bottom: 10px !important;
   & li {
     display: flex;
     justify-content: space-between;
@@ -31,7 +32,7 @@
   & li {
     width: 60%;
     & div {
-      min-width: 155px !important;
+      min-width: 180px !important;
       max-width: 200px !important;
     }
   }
