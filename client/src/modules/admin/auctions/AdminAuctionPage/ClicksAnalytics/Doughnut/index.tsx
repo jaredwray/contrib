@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import clm from 'country-locale-map';
 import { Col } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
 
@@ -13,6 +14,7 @@ interface Props {
 const DOUGHNUT_LABELS_LIMIT = 3;
 
 export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
+  const isCountries = name === 'countries';
   const ChartValues = (labels: string[], values: number[]) => {
     return {
       labels: labels,
@@ -23,9 +25,8 @@ export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
           data: values,
           backgroundColor: ['#476585', '#0f81b7', '#2492c9', '#27a7e0'],
           borderColor: ['#476585', '#0f81b7', '#2492c9', '#27a7e0'],
-          borderWidth: 1,
-          hoverBorderWidth: 1,
-          hoverBorderColor: '#5a7864',
+          borderWidth: 0,
+          hoverBorderWidth: 0,
           hoverBackgroundColor: '#5a7864',
           hoverOffset: -20,
         },
@@ -45,7 +46,7 @@ export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
           refferersRest.push(values[i]);
           return (
             <li key={label}>
-              <div title={label}>{label}</div>
+              <div title={label}>{isCountries ? clm.getCountryNameByAlpha2(label) : label}</div>
               {values[i]}
             </li>
           );
@@ -65,6 +66,14 @@ export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
           plugins: {
             legend: {
               display: false,
+            },
+            tooltip: {
+              callbacks: {
+                title: (context: any) => {
+                  const label = context[0].label;
+                  return isCountries ? clm.getCountryNameByAlpha2(label) : label;
+                },
+              },
             },
           },
         }}
