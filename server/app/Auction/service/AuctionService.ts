@@ -494,7 +494,7 @@ export class AuctionService {
         ],
       },
     });
-    for (const auction of auctions) {
+    for await (const auction of auctions) {
       try {
         await this.createOrUpdateAuctionMetrics(auction.link, auction._id.toString());
       } catch (error) {
