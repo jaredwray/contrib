@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Dinero, { Currency } from 'dinero.js';
 
 import { AuctionModel, IAuctionBid, IAuctionModel } from '../mongodb/AuctionModel';
+import { AuctionMetrickModel } from '../mongodb/AuctionMetrickModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
@@ -13,6 +14,7 @@ import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionBid } from '../dto/AuctionBid';
+import { AuctionMetrics } from '../dto/AuctionMetrics';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
 import { AuctionInput } from '../graphql/model/AuctionInput';
@@ -25,6 +27,8 @@ import { CharityService } from '../../Charity';
 
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
+import { makeClicksByDay } from '../../../helpers/makeClicksByDay';
+import { concatMetrics } from '../../../helpers/concatMetrics';
 
 import { AuctionRepository } from '../repository/AuctionRepository';
 import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
@@ -38,6 +42,7 @@ import Stripe from 'stripe';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
+  private readonly AuctionMetrickModel = AuctionMetrickModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
@@ -59,6 +64,30 @@ export class AuctionService {
 
   public async unfollowAuction(auctionId: string, accountId: string): Promise<{ id: string }> | null {
     return await this.auctionRepository.unfollowAuction(auctionId, accountId);
+  }
+
+  public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | null> {
+    let metrics = await this.AuctionMetrickModel.findOne({ auction: auctionId });
+    if (metrics) {
+      const { clicks, countries, referrers } = metrics;
+      const clicksByDay = makeClicksByDay(clicks);
+      return {
+        clicks,
+        clicksByDay,
+        countries,
+        referrers,
+      };
+    }
+    const auction = await this.AuctionModel.findById(auctionId);
+    metrics = await this.urlShortenerService.getMetricsForTwoMonth(auction.link);
+    const { clicks, countries, referrers } = metrics;
+    const clicksByDay = makeClicksByDay(clicks);
+    return {
+      clicks,
+      clicksByDay,
+      countries,
+      referrers,
+    };
   }
 
   private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {
@@ -134,19 +163,12 @@ export class AuctionService {
     const auction = await this.auctionRepository.getAuctionForAdminPage(id);
     const currentAuction = this.makeAuction(auction);
     const { auctionOrganizer, bids } = auction;
-    const { clicks, clicksByDay, referrers, countries } = await this.urlShortenerService.getMetrics(auction.link);
 
     return {
       ...currentAuction,
       auctionOrganizer: {
         id: auctionOrganizer._id.toString(),
         name: auctionOrganizer.name,
-      },
-      bitly: {
-        clicks: clicks.link_clicks,
-        clicksByDay: clicksByDay.link_clicks,
-        referrers: referrers.metrics,
-        countries: countries.metrics,
       },
       bids: bids
         .sort((a, b) => (a.bid > b.bid ? -1 : 1))
@@ -267,6 +289,48 @@ export class AuctionService {
     return {
       totalRaisedAmount: AuctionService.makeTotalRaisedAmount(auctions),
     };
+  }
+
+  public async createOrUpdateAuctionMetrics(link: string, auctionId: string): Promise<void> {
+    const session = await this.connection.startSession();
+
+    try {
+      await session.withTransaction(async () => {
+        const metricsModel = await this.AuctionMetrickModel.findOne({ auction: auctionId }, null, { session });
+
+        if (metricsModel) {
+          const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsForLastHour(link);
+
+          Object.assign(metricsModel, {
+            clicks: [...metricsModel.clicks, ...clicks],
+            referrers: concatMetrics(metricsModel.referrers, referrers),
+            countries: concatMetrics(metricsModel.countries, countries),
+          });
+
+          metricsModel.save({ session });
+          return;
+        } else {
+          const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsForTwoMonth(link);
+
+          await this.AuctionMetrickModel.create(
+            [
+              {
+                auction: auctionId,
+                clicks,
+                referrers,
+                countries,
+              },
+            ],
+            { session },
+          );
+        }
+      });
+    } catch (error) {
+      AppLogger.error(`Something went wrong. Error: ${error.message}`);
+      await session.abortTransaction();
+    } finally {
+      await session.endSession();
+    }
   }
 
   public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<AuctionAssets> {
@@ -417,6 +481,29 @@ export class AuctionService {
     return AuctionService.makeAuctionBid(createdBid);
   }
 
+  public async scheduleAuctionMetrics(): Promise<{ message: string }> {
+    const auctions = await this.AuctionModel.find({
+      status: {
+        $in: [
+          AuctionStatus.ACTIVE,
+          AuctionStatus.FAILED,
+          AuctionStatus.PENDING,
+          AuctionStatus.SETTLED,
+          AuctionStatus.SOLD,
+          AuctionStatus.STOPPED,
+        ],
+      },
+    });
+    for (const auction of auctions) {
+      try {
+        await this.createOrUpdateAuctionMetrics(auction.link, auction._id.toString());
+      } catch (error) {
+        AppLogger.error(`Something went wrong during Auction Metrics update. Error: ${error.message}`);
+      }
+    }
+    return { message: 'Scheduled' };
+  }
+
   public async scheduleAuctionJobSettle(): Promise<{ message: string }> {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
 
@@ -458,7 +545,9 @@ export class AuctionService {
       await auction.save();
     } catch (error) {
       AppLogger.warn(
-        `Something went wrong during notification about action #${auction._id.toString()} ending. Error: ${error.message}`,
+        `Something went wrong during notification about action #${auction._id.toString()} ending. Error: ${
+          error.message
+        }`,
       );
     }
   }
@@ -477,14 +566,17 @@ export class AuctionService {
       await auction.save();
     } catch (error) {
       AppLogger.warn(
-        `Something went wrong during notification about action #${auction._id.toString()} ending. Error: ${error.message}`,
+        `Something went wrong during notification about action #${auction._id.toString()} ending. Error: ${
+          error.message
+        }`,
       );
     }
   }
 
   private async sendNotificationForAuctionOrganizer(auction: IAuctionModel): Promise<void> {
     if (
-      auction.endsAt.diff(dayjs().utc(), 'minute') > AppConfig.googleCloud.auctionEndsTime.notificationForAuctionOrganizer ||
+      auction.endsAt.diff(dayjs().utc(), 'minute') >
+        AppConfig.googleCloud.auctionEndsTime.notificationForAuctionOrganizer ||
       Math.abs(dayjs(auction.startsAt).diff(auction.endsAt, 'hour')) <= 24 ||
       auction.sentNotifications.includes('notificationForAuctionOrganizer')
     ) {
@@ -496,7 +588,9 @@ export class AuctionService {
       await auction.save();
     } catch (error) {
       AppLogger.warn(
-        `Something went wrong during notification about action ending for auction organizer. Id of auction: ${auction._id.toString()}: ${error.message}`,
+        `Something went wrong during notification about action ending for auction organizer. Id of auction: ${auction._id.toString()}: ${
+          error.message
+        }`,
       );
     }
   }
@@ -543,7 +637,9 @@ export class AuctionService {
         });
       } catch (error) {
         AppLogger.warn(
-          `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${error.message}`,
+          `Something went wrong during notification about action ending. Id of auction: ${currentAuction._id.toString()}: ${
+            error.message
+          }`,
         );
       }
     });
@@ -850,7 +946,7 @@ export class AuctionService {
         await this.sendAuctionIsActivatedMessage(auction);
       }
     } catch (error) {
-      throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
+      throw new AppError(`Something went wrong, ${error.message}`, ErrorCode.BAD_REQUEST);
     }
 
     return { status: auction.status };

@@ -1,5 +1,28 @@
 import { gql } from '@apollo/client';
 
+export const AuctionMetrics = gql`
+  query AuctionMetrics($auctionId: String!) {
+    getAuctionMetrics(auctionId: $auctionId) {
+      clicks {
+        date
+        clicks
+      }
+      clicksByDay {
+        date
+        clicks
+      }
+      countries {
+        value
+        clicks
+      }
+      referrers {
+        value
+        clicks
+      }
+    }
+  }
+`;
+
 export const CustomerInformation = gql`
   query CustomerInformation($stripeCustomerId: String!) {
     getCustomerInformation(stripeCustomerId: $stripeCustomerId) {
@@ -22,24 +45,6 @@ export const AuctionForAdminPage = gql`
       currentPrice
       fairMarketValue
       link
-      bitly {
-        clicks {
-          date
-          clicks
-        }
-        clicksByDay {
-          date
-          clicks
-        }
-        referrers {
-          value
-          clicks
-        }
-        countries {
-          value
-          clicks
-        }
-      }
       auctionOrganizer {
         id
         name
