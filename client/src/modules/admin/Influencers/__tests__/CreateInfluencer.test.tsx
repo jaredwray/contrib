@@ -5,7 +5,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { CreateInfluencerModal } from 'src/modules/admin/Influencers/CreateInfluencer/CreateInfluencerModal';
-describe('Should render correctly "StopOrActiveButton"', () => {
+describe('Should render correctly "CreateInfluencer"', () => {
   let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(

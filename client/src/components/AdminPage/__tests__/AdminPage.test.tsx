@@ -4,7 +4,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
 
 import { AdminPage } from '..';
-describe('Should render correctly "AttachmentThumbnail"', () => {
+describe('Should render correctly "AdminPage"', () => {
   const props: any = {
     items: [{}, {}],
     pageSkip: 20,

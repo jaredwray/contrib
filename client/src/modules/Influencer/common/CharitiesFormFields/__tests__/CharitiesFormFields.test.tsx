@@ -2,7 +2,7 @@ import { mount, shallow, ShallowWrapper } from 'enzyme';
 
 import { CharitiesFormFields } from '..';
 
-describe('Should render correctly "AttachmentThumbnail"', () => {
+describe('Should render correctly "CharitiesFormFields"', () => {
   let wrapper: ShallowWrapper;
 
   beforeEach(() => {

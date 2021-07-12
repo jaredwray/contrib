@@ -19,3 +19,15 @@ test('renders without crashing', () => {
     </Router>,
   );
 });
+test('component should return null', () => {
+  const props: any = {
+    expired: true,
+    isSubmitting: true,
+    onNewCardAdd: jest.fn(),
+  };
+  render(
+    <Router>
+      <CardInfo {...props} />
+    </Router>,
+  );
+});

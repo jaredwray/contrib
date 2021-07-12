@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { mount } from 'enzyme';
 
-describe('Should render correctly "StopOrActiveButton"', () => {
+describe('Should render correctly "Dialog"', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });

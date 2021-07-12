@@ -1,43 +1,81 @@
-import { InMemoryCache } from '@apollo/client';
+import { InfluencerProfileQuery } from 'src/apollo/queries/profile';
+import { InfluencerProfileEditPage } from '../InfluencerProfileEditPage';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { mount, ReactWrapper } from 'enzyme';
+import { MemoryRouter } from 'react-router-dom';
+import { InMemoryCache } from '@apollo/client';
+import Layout from 'src/components/Layout';
+import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 
-import { InfluencerProfileQuery } from '../../../apollo/queries/profile';
-
-import { InfluencerProfileEditPage } from '../InfluencerProfileEditPage';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => ({
+    influencerId: 'testId',
+  }),
+  useRouteMatch: () => ({ url: '/profiles/testId' }),
+}));
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
+
 cache.writeQuery({
   query: InfluencerProfileQuery,
+  variables: { id: 'testId' },
+
   data: {
     influencer: {
-      id: '123',
+      avatarUrl: 'test',
+      favoriteCharities: [],
+      id: 'testId',
+      name: 'test',
       profileDescription: 'test',
-      name: 'test name',
-      sport: 'soccer',
-      team: 'MU',
-      avatarUrl: 'test/avatarUrl',
-      status: 'status',
-      favoriteCharities: {
-        id: '234',
-        name: 'test name',
-      },
+      sport: 'test',
+      status: 'ONBOARDED',
+      team: 'test',
     },
   },
 });
 
-test('renders without crashing', () => {
-  render(
-    <Router>
-      <ToastProvider>
-        <MockedProvider cache={cache}>
-          <InfluencerProfileEditPage />
-        </MockedProvider>
-      </ToastProvider>
-    </Router>,
-  );
+describe('InfluencerProfileEditPage ', () => {
+  it('component return null', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider>
+              <InfluencerProfileEditPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    expect(wrapper!.find(Layout)).toHaveLength(0);
+  });
+  it('component is defined and have Layout', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache}>
+              <InfluencerProfileEditPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    expect(wrapper!).toHaveLength(1);
+    expect(wrapper!.find(Layout)).toHaveLength(1);
+  });
 });
