@@ -15,7 +15,6 @@ export const CharityProfilePage: FC = () => {
   const { data } = useQuery<{ charity: Charity }>(GetCharity, {
     variables: { id: charityId },
   });
-
   const responce = useQuery(GetTotalRaisedAmount, {
     variables: { charityId },
   });

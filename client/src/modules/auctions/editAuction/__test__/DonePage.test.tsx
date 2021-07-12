@@ -1,3 +1,4 @@
+import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
@@ -6,47 +7,56 @@ import { InMemoryCache } from '@apollo/client';
 import Layout from 'src/components/Layout';
 import { act } from 'react-dom/test-utils';
 import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
+import { ToastProvider } from 'react-toast-notifications';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: () => ({
-    auctionId: '60d0f0f4f7714a2f8ae247df',
+    auctionId: 'testId',
   }),
-  useRouteMatch: () => ({ url: '/auctions/60d0f0f4f7714a2f8ae247df/done' }),
+  useRouteMatch: () => ({ url: '/auctions/testId/done' }),
 }));
-
+jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
 
 cache.writeQuery({
   query: AuctionQuery,
-  variables: { id: '60d0f0f4f7714a2f8ae247df' },
+  variables: { id: 'testId' },
   data: {
     auction: {
-      attachments: [],
+      attachments: [{ cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test' }],
       auctionOrganizer: {
-        id: '602fd93aab319f3eea16a1a6',
-        name: 'Bob',
-        avatarUrl: 'https://storage.googleapis.com/content-dev.contrib.org/602fd93aab319f3eea16a1a6/avatar/avatar.webp',
+        id: 'test',
+        name: 'test',
+        avatarUrl: 'test',
       },
       authenticityCertificate: false,
       autographed: false,
-      bids: [],
+      bids: [
+        {
+          bid: { amount: 11222200, precision: 2 },
+          createdAt: 'test',
+          paymentSource: 'test',
+          user: 'test',
+        },
+      ],
       charity: {
-        id: '60c1f579ff49a51d6f2ee61b',
-        name: 'My Active Charity Name',
         avatarUrl: '/content/img/users/person.png',
+        id: 'test',
+        name: 'My Active Charity Name',
+        status: 'ACTIVE',
         websiteUrl: 'http://google.com',
       },
       currentPrice: { amount: 112200, currency: 'USD', precision: 2 },
       description: 'dd',
       endDate: '2021-08-29T08:05:21.000Z',
       fairMarketValue: null,
-      followers: [],
+      followers: [{ createdAt: '2021-06-28T12:52:49.463Z', user: '60d9ac0f650c813a783906b0' }],
       fullPageDescription: 'dd',
       gameWorn: false,
-      id: '60d0f0f4f7714a2f8ae247df',
+      id: 'testId',
       isActive: true,
       isDraft: false,
       isFailed: false,
@@ -86,14 +96,16 @@ describe('DonePage ', () => {
     });
     expect(wrapper!.find(Layout)).toHaveLength(0);
   });
-  xit('component is defined and have Layout', async () => {
+  it('component is defined and have Layout', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>
-          <MockedProvider cache={cache}>
-            <AuctionDonePage />
-          </MockedProvider>
+          <ToastProvider>
+            <MockedProvider cache={cache}>
+              <AuctionDonePage />
+            </MockedProvider>
+          </ToastProvider>
         </MemoryRouter>,
       );
     });

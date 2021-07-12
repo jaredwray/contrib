@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { MemoryRouter } from 'react-router-dom';
 
 import { AfterLogin } from '..';
-describe('Should render correctly "AttachmentThumbnail"', () => {
+describe('Should render correctly "AfterLogin"', () => {
   let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(
