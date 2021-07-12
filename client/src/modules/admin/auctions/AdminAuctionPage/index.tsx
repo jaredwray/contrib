@@ -11,6 +11,7 @@ import {
   chargeCurrentAuction,
   chargeCurrendBid,
   CustomerInformation,
+  AuctionMetrics,
 } from 'src/apollo/queries/auctions';
 import AsyncButton from 'src/components/AsyncButton';
 import Layout from 'src/components/Layout';
@@ -39,12 +40,21 @@ export default function AdminAuctionPage() {
     fetchPolicy: 'network-only',
   });
 
+  const [getAuctionMetrics, { data: auctionMetricsData }] = useLazyQuery(AuctionMetrics, {
+    variables: { auctionId },
+  });
+
+  const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformation);
+
   useEffect(() => {
     getAuctionData();
   }, [getAuctionData]);
 
-  const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformation);
+  useEffect(() => {
+    getAuctionMetrics();
+  }, [getAuctionMetrics]);
 
+  const metrics = auctionMetricsData?.getAuctionMetrics;
   const auction = auctionData?.getAuctionForAdminPage;
   const charity = auction?.charity;
   const bids = auction?.bids;
@@ -85,7 +95,7 @@ export default function AdminAuctionPage() {
     }
   }, [auctionId, addToast, chargeAuction, getAuctionData]);
 
-  if (error || loading || !auction) {
+  if (error || loading || !auction || !metrics) {
     return null;
   }
   const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label || '';
@@ -130,7 +140,7 @@ export default function AdminAuctionPage() {
             <Col lg="7">
               <>
                 <Row className="text-headline mb-2">Auction metrics </Row>
-                <ClicksAnalytics auction={auction} bitly={auction.bitly} />
+                <ClicksAnalytics auction={auction} bitly={metrics} />
               </>
             </Col>
           </Row>

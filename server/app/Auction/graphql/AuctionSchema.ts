@@ -97,7 +97,6 @@ export const AuctionSchema = gql`
     isSold: Boolean!
     isActive: Boolean!
     link: String!
-    bitly: Metrics
   }
   type Metrics {
     clicks: [Clicks]
@@ -226,6 +225,7 @@ export const AuctionSchema = gql`
     getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
     getAuctionForAdminPage(id: String!): AuctionForAdminPage
     getCustomerInformation(stripeCustomerId: String!): CustomerInformation
+    getAuctionMetrics(auctionId: String!): Metrics!
   }
 
   extend type Mutation {

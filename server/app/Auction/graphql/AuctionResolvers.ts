@@ -5,6 +5,7 @@ import { Auction } from '../dto/Auction';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionStatus } from '../dto/AuctionStatus';
+import { AuctionMetrics } from '../dto/AuctionMetrics';
 import { AuctionInput } from './model/AuctionInput';
 import { ChargeCurrentBidInput } from './model/ChargeCurrentBidInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
@@ -43,6 +44,7 @@ interface AuctionResolversType {
     >;
     getCustomerInformation: GraphqlResolver<{ phone: string; email: string } | null, { stripeCustomerId: string }>;
     getAuctionForAdminPage: GraphqlResolver<any, { id: string }>;
+    getAuctionMetrics: GraphqlResolver<AuctionMetrics, { auctionId: string }>;
   };
   Mutation: {
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
@@ -85,6 +87,9 @@ export const AuctionResolvers: AuctionResolversType = {
     getAuctionForAdminPage: requireAdmin(async (_, { id }, { auction }) => await auction.getAuctionForAdminPage(id)),
     getCustomerInformation: requireAdmin(
       async (_, { stripeCustomerId }, { auction }) => await auction.getCustomerInformation(stripeCustomerId),
+    ),
+    getAuctionMetrics: requireAdmin(
+      async (_, { auctionId }, { auction }) => await auction.getAuctionMetrics(auctionId),
     ),
   },
   Mutation: {
