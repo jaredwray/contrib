@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Dinero, { Currency } from 'dinero.js';
 
 import { AuctionModel, IAuctionBid, IAuctionModel } from '../mongodb/AuctionModel';
-import { AuctionMetrickModel } from '../mongodb/AuctionMetrickModel';
+import { AuctionMetricModel } from '../mongodb/AuctionMetricModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
@@ -42,7 +42,7 @@ import Stripe from 'stripe';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
-  private readonly AuctionMetrickModel = AuctionMetrickModel(this.connection);
+  private readonly AuctionMetricModel = AuctionMetricModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
@@ -67,7 +67,7 @@ export class AuctionService {
   }
 
   public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | null> {
-    let metrics = await this.AuctionMetrickModel.findOne({ auction: auctionId });
+    let metrics = await this.AuctionMetricModel.findOne({ auction: auctionId });
     if (metrics) {
       const { clicks, countries, referrers } = metrics;
       const clicksByDay = makeClicksByDay(clicks);
@@ -79,7 +79,7 @@ export class AuctionService {
       };
     }
     const auction = await this.AuctionModel.findById(auctionId);
-    metrics = await this.urlShortenerService.getMetricsForTwoMonth(auction.link);
+    metrics = await this.urlShortenerService.getAllMetrics(auction.link);
     const { clicks, countries, referrers } = metrics;
     const clicksByDay = makeClicksByDay(clicks);
     return {
@@ -293,40 +293,43 @@ export class AuctionService {
 
   public async createOrUpdateAuctionMetrics(link: string, auctionId: string): Promise<void> {
     const session = await this.connection.startSession();
+    const transactionOptions = {
+      readPreference: 'primary',
+      readConcern: { level: 'local' },
+      writeConcern: { w: 'majority' },
+    };
+    session.startTransaction(transactionOptions);
 
     try {
-      await session.withTransaction(async () => {
-        const metricsModel = await this.AuctionMetrickModel.findOne({ auction: auctionId }, null, { session });
+      const metricsModel = await this.AuctionMetricModel.findOne({ auction: auctionId }, null, { session });
 
-        if (metricsModel) {
-          const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsForLastHour(link);
+      if (metricsModel) {
+        const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsForLastHour(link);
 
-          Object.assign(metricsModel, {
-            clicks: [...metricsModel.clicks, ...clicks],
-            referrers: concatMetrics(metricsModel.referrers, referrers),
-            countries: concatMetrics(metricsModel.countries, countries),
-          });
+        Object.assign(metricsModel, {
+          clicks: [...metricsModel.clicks, ...clicks],
+          referrers: concatMetrics(metricsModel.referrers, referrers),
+          countries: concatMetrics(metricsModel.countries, countries),
+        });
 
-          metricsModel.save({ session });
-          return;
-        } else {
-          const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsForTwoMonth(link);
-
-          await this.AuctionMetrickModel.create(
-            [
-              {
-                auction: auctionId,
-                clicks,
-                referrers,
-                countries,
-              },
-            ],
-            { session },
-          );
-        }
-      });
+        await metricsModel.save({ session });
+      } else {
+        const { clicks, referrers, countries } = await this.urlShortenerService.getAllMetrics(link);
+        await this.AuctionMetricModel.create(
+          [
+            {
+              auction: auctionId,
+              clicks,
+              referrers,
+              countries,
+            },
+          ],
+          { session },
+        );
+      }
+      await session.commitTransaction();
     } catch (error) {
-      AppLogger.error(`Something went wrong. Error: ${error.message}`);
+      AppLogger.error(`Something went wrong during AuctionMertics update. Error: ${error.message}`);
       await session.abortTransaction();
     } finally {
       await session.endSession();
@@ -494,7 +497,7 @@ export class AuctionService {
         ],
       },
     });
-    for await (const auction of auctions) {
+    for (const auction of auctions) {
       try {
         await this.createOrUpdateAuctionMetrics(auction.link, auction._id.toString());
       } catch (error) {

@@ -33,7 +33,7 @@ export class UrlShortenerService {
     };
   }
 
-  async getMetricsForTwoMonth(url: string): Promise<any> {
+  async getAllMetrics(url: string): Promise<any> {
     const clicks = await this.bitly.clicks(url, 'hour');
     const referrers = await this.bitly.referrers(url);
     const countries = await this.bitly.countries(url);
@@ -45,7 +45,7 @@ export class UrlShortenerService {
   }
 
   private getHashFromUrl(url: string): string {
-    const BitlyHashPattern = /\/([A-z0-9_-]{6,})$/;
-    return BitlyHashPattern.exec(url)[1];
+    const pattern = /\/([A-z0-9_-]{6,})$/;
+    return pattern.exec(url)[1];
   }
 }
