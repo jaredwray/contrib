@@ -1,27 +1,22 @@
 import { FC, useState } from 'react';
 
 import clsx from 'clsx';
-import { isSameDay } from 'date-fns';
-import { format, utcToZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns-tz';
 import { Row, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
 
 import { ChartDoughnut } from 'src/modules/admin/auctions/AdminAuctionPage/ClicksAnalytics/Doughnut';
-import { Auction } from 'src/types/Auction';
+import { Click, Country, Referrer } from 'src/types/Metric';
 
 import styles from './styles.module.scss';
 
 interface Props {
   bitly: any;
-  auction: Auction;
 }
 
-export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
-  const startOfInterval = utcToZonedTime(auction.startDate, auction.timeZone);
-  const endOfInterval = utcToZonedTime(new Date().toISOString(), auction.timeZone);
+export const ClicksAnalytics: FC<Props> = ({ bitly }) => {
   const [perDay, setPerDay] = useState(true);
-
-  const ChartValues = (labels: any, values: any) => {
+  const ChartValues = (labels: [string], values: [string]) => {
     return {
       labels: labels,
       datasets: [
@@ -45,49 +40,25 @@ export const ClicksAnalytics: FC<Props> = ({ bitly, auction }) => {
     return format(new Date(date.split('+')[0]), 'MM.dd');
   };
 
-  const chosenStartDate = bitly.clicksByDay.filter((x: any) => isSameDay(new Date(x.date), startOfInterval))[0];
-  const chosenEndDate = bitly.clicksByDay.filter((x: any) =>
-    isSameDay(utcToZonedTime(x.date, auction.timeZone), endOfInterval),
-  )[0];
-  const startInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenStartDate?.date || 0) + 1;
-  const endInterval = bitly.clicksByDay.map((x: any) => x.date).indexOf(chosenEndDate?.date || 0);
-  const perHourStartInterval = bitly.clicks.map((x: any) => x.date).indexOf(chosenStartDate?.date || 0);
-  const perHourEndInterval = bitly.clicks.map((x: any) => x.date).indexOf(chosenEndDate?.date || 0) - 24;
-
   const clicks = {
-    labels: bitly.clicks
-      .map((x: any) => dateFormatterToTime(x.date))
-      .slice(perHourEndInterval + 1 < 0 ? 0 : perHourEndInterval + 1, perHourStartInterval + 1)
-      .reverse(),
-    values: bitly.clicks
-      .map((x: any) => x.clicks)
-      .slice(perHourEndInterval + 1 < 0 ? 0 : perHourEndInterval + 1, perHourStartInterval + 1)
-      .reverse(),
-    dates: bitly.clicks
-      .map((x: any) => dateFormatter(x.date))
-      .slice(perHourEndInterval + 1 < 0 ? 0 : perHourEndInterval + 1, perHourStartInterval + 1)
-      .reverse(),
+    labels: bitly.clicks.map((data: Click) => dateFormatterToTime(data.date)).reverse(),
+    values: bitly.clicks.map((data: Click) => data.clicks).reverse(),
+    dates: bitly.clicks.map((data: Click) => dateFormatter(data.date)).reverse(),
   };
 
   const countries = {
-    labels: bitly.countries.map((x: any) => x.value),
-    values: bitly.countries.map((x: any) => Number(x.clicks)),
+    labels: bitly.countries.map((data: Country) => data.value),
+    values: bitly.countries.map((data: Country) => Number(data.clicks)),
   };
 
   const referrers = {
-    labels: bitly.referrers.map((x: any) => x.value),
-    values: bitly.referrers.map((x: any) => Number(x.clicks)),
+    labels: bitly.referrers.map((data: Referrer) => data.value),
+    values: bitly.referrers.map((data: Referrer) => Number(data.clicks)),
   };
 
   const clicksByDay = {
-    labels: bitly.clicksByDay
-      .map((day: any) => dateFormatter(day.date))
-      .slice(endInterval, startInterval)
-      .reverse(),
-    values: bitly.clicksByDay
-      .map((day: any) => day.clicks)
-      .slice(endInterval, startInterval)
-      .reverse(),
+    labels: bitly.clicksByDay.map((data: Click) => dateFormatter(data.date)).reverse(),
+    values: bitly.clicksByDay.map((data: Click) => data.clicks).reverse(),
   };
 
   let totalClicks = 0;

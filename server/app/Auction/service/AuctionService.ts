@@ -1,9 +1,9 @@
-import { Connection, Types } from 'mongoose';
+import { Connection, Types, ClientSession } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
 import Dinero, { Currency } from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
-import { AuctionMetricModel } from '../mongodb/AuctionMetricModel';
+import { AuctionMetricModel, IAuctionMetricModel } from '../mongodb/AuctionMetricModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
@@ -12,8 +12,9 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
+
 import { Bid } from '../../Bid/dto/Bid';
-import { AuctionMetrics } from '../dto/AuctionMetrics';
+import { AuctionMetrics, BitlyClick } from '../dto/AuctionMetrics';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { BidService } from '../../Bid/service/BidService';
 import { BidModel, IBidModel } from '../../Bid/mongodb/BidModel';
@@ -29,6 +30,7 @@ import { CharityService } from '../../Charity';
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
 import { makeClicksByDay } from '../../../helpers/makeClicksByDay';
+import { fullBitlyClicks } from '../../../helpers/fullBitlyClicks';
 import { concatMetrics } from '../../../helpers/concatMetrics';
 
 import { AuctionRepository } from '../repository/AuctionRepository';
@@ -129,23 +131,26 @@ export class AuctionService {
 
   public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | null> {
     let metrics = await this.AuctionMetricModel.findOne({ auction: auctionId });
+    const auction = await this.AuctionModel.findById(auctionId);
+
     if (metrics) {
       const { clicks, countries, referrers } = metrics;
       const clicksByDay = makeClicksByDay(clicks);
+
       return {
-        clicks,
-        clicksByDay,
+        clicks: fullBitlyClicks(clicks, auction.startsAt, 'hour'),
+        clicksByDay: fullBitlyClicks(clicksByDay, auction.startsAt, 'day'),
         countries,
         referrers,
       };
     }
-    const auction = await this.AuctionModel.findById(auctionId);
+
     metrics = await this.urlShortenerService.getAllMetrics(auction.link);
     const { clicks, countries, referrers } = metrics;
     const clicksByDay = makeClicksByDay(clicks);
     return {
-      clicks,
-      clicksByDay,
+      clicks: fullBitlyClicks(clicks, auction.startsAt, 'hour'),
+      clicksByDay: fullBitlyClicks(clicksByDay, auction.startsAt, 'day'),
       countries,
       referrers,
     };
@@ -333,31 +338,7 @@ export class AuctionService {
 
     try {
       const metricsModel = await this.AuctionMetricModel.findOne({ auction: auctionId }, null, { session });
-
-      if (metricsModel) {
-        const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsForLastHour(link);
-
-        Object.assign(metricsModel, {
-          clicks: [...metricsModel.clicks, ...clicks],
-          referrers: concatMetrics(metricsModel.referrers, referrers),
-          countries: concatMetrics(metricsModel.countries, countries),
-        });
-
-        await metricsModel.save({ session });
-      } else {
-        const { clicks, referrers, countries } = await this.urlShortenerService.getAllMetrics(link);
-        await this.AuctionMetricModel.create(
-          [
-            {
-              auction: auctionId,
-              clicks,
-              referrers,
-              countries,
-            },
-          ],
-          { session },
-        );
-      }
+      await this.getMetrics(metricsModel, session, auctionId, link);
       await session.commitTransaction();
     } catch (error) {
       AppLogger.error(`Something went wrong during AuctionMertics update. Error: ${error.message}`);
@@ -367,6 +348,42 @@ export class AuctionService {
     }
   }
 
+  public async getMetrics(
+    metricsModel: IAuctionMetricModel,
+    session: ClientSession,
+    auctionId: string,
+    link: string,
+  ): Promise<any> {
+    if (metricsModel) {
+      const units = dayjs().diff(dayjs(metricsModel.lastUpdateAt), 'm');
+      const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsFromLastUpdate(link, units);
+
+      Object.assign(metricsModel, {
+        clicks: Array.from(
+          new Set([...metricsModel.clicks, ...clicks].map((value: BitlyClick) => JSON.stringify(value))),
+        ).map((value: string) => JSON.parse(value)),
+        referrers: concatMetrics(metricsModel.referrers, referrers),
+        countries: concatMetrics(metricsModel.countries, countries),
+        lastUpdateAt: dayjs().toISOString(),
+      });
+
+      await metricsModel.save({ session });
+    } else {
+      const { clicks, referrers, countries } = await this.urlShortenerService.getAllMetrics(link);
+      await this.AuctionMetricModel.create(
+        [
+          {
+            auction: auctionId,
+            clicks,
+            referrers,
+            countries,
+            lastUpdateAt: dayjs().toISOString(),
+          },
+        ],
+        { session },
+      );
+    }
+  }
   public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, userId);
     if (!auction) {
@@ -437,10 +454,7 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  public async addAuctionBid(
-    id: string,
-    { bid, user }: ICreateAuctionBidInput & { user: UserAccount },
-  ): Promise<Bid> {
+  public async addAuctionBid(id: string, { bid, user }: ICreateAuctionBidInput & { user: UserAccount }): Promise<Bid> {
     const session = await this.connection.startSession();
     session.startTransaction();
 
