@@ -356,6 +356,10 @@ export class AuctionService {
   ): Promise<any> {
     if (metricsModel) {
       const units = dayjs().diff(dayjs(metricsModel.lastUpdateAt), 'm');
+      if (units === 0) {
+        return;
+      }
+
       const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsFromLastUpdate(link, units);
 
       Object.assign(metricsModel, {
