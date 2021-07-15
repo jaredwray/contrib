@@ -19,7 +19,6 @@ export interface Auction {
   endDate: Dayjs;
   stoppedAt: Dayjs;
   status: AuctionStatus;
-  bids: object[];
   totalBids: number;
   description: string;
   fullPageDescription: string;

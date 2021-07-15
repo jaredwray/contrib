@@ -5,7 +5,7 @@ import { Container, ProgressBar } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { updateAuctionBasics, getAuctionBasics } from 'src/apollo/queries/auctions';
+import { UpdateAuctionBasicsMutation, GetAuctionBasicsQuery } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
@@ -23,12 +23,12 @@ const EditAuctionBasicPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
 
-  const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionBasics, {
+  const { loading: loadingQuery, data: auctionData } = useQuery(GetAuctionBasicsQuery, {
     variables: { id: auctionId },
   });
   const auction = auctionData?.auction;
   const { isActive } = auction || {};
-  const [updateAuction, { loading: updating }] = useMutation(updateAuctionBasics, {
+  const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionBasicsMutation, {
     onCompleted() {
       if (isActive) {
         history.goBack();

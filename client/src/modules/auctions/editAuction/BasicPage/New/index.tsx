@@ -5,7 +5,7 @@ import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { createAuctionMutation } from 'src/apollo/queries/auctions';
+import { CreateAuctionMutation } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
@@ -30,7 +30,7 @@ const NewAuctionBasicPage = () => {
   const { addToast } = useToasts();
   const { ownerId } = useParams<{ ownerId: string }>();
 
-  const [createAuction, { loading }] = useMutation(createAuctionMutation, {
+  const [createAuction, { loading }] = useMutation(CreateAuctionMutation, {
     onCompleted({ createAuction }) {
       if (createAuction.id) {
         const newUrl = `/auctions/${createAuction.id}/media`;

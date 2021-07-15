@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { GetInfluencerQuery } from '../../../apollo/queries/influencers';
-import { GetTotalRaisedAmount } from 'src/apollo/queries/auctions';
+import { GetTotalRaisedAmountQuery } from 'src/apollo/queries/auctions';
 
 import { InfluencerProfilePage } from '../InfluencerProfilePage/InfluencerProfilePage';
 
@@ -19,7 +19,7 @@ cache.writeQuery({
 });
 
 cache.writeQuery({
-  query: GetTotalRaisedAmount,
+  query: GetTotalRaisedAmountQuery,
   data: {
     getTotalRaisedAmount: {},
   },

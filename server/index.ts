@@ -47,7 +47,11 @@ app.set('view engine', 'pug');
   );
   createGraphqlServer(appServices).applyMiddleware({ app });
 
-  app.listen(AppConfig.app.port, () => {
+  app.listen(AppConfig.app.port, async () => {
     AppLogger.info(`server is listening on ${AppConfig.app.port}`);
+    //TODO: delete after bids in BidsModel relocation.
+    // await appServices.auction.relocateBidsFromBidsModelInAuctions()
+    //TODO: delete after bids in BidsModel relocation.
+    await appServices.auction.relocateAuctionBidsInBidCollection();
   });
 })();

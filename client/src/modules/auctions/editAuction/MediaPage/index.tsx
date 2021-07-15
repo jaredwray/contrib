@@ -5,7 +5,7 @@ import { Container, ProgressBar } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { GetAuctionMedia } from 'src/apollo/queries/auctions';
+import { GetAuctionMediaQuery } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
@@ -28,7 +28,7 @@ const EditAuctionMediaPage = () => {
     uploaded: [],
     loading: [],
   });
-  const { data: auctionData } = useQuery(GetAuctionMedia, { variables: { id: auctionId } });
+  const { data: auctionData } = useQuery(GetAuctionMediaQuery, { variables: { id: auctionId } });
   const auction = auctionData?.auction;
   useEffect(() => {
     if (!auction) return;

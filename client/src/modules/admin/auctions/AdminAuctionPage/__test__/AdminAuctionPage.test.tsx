@@ -1,7 +1,7 @@
 import AdminAuctionPage from '..';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
-import { AuctionForAdminPage, CustomerInformation } from 'src/apollo/queries/auctions';
+import { AuctionForAdminPageQuery, CustomerInformationQuery } from 'src/apollo/queries/auctions';
 import { auctionForAdminPage } from 'src/helpers/testHelpers/auction';
 import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
@@ -30,7 +30,7 @@ const cache = new InMemoryCache();
 const cache2 = new InMemoryCache();
 
 cache.writeQuery({
-  query: AuctionForAdminPage,
+  query: AuctionForAdminPageQuery,
   variables: {
     id: 'testId',
   },
@@ -39,7 +39,7 @@ cache.writeQuery({
   },
 });
 cache2.writeQuery({
-  query: CustomerInformation,
+  query: CustomerInformationQuery,
   variables: {
     stripeCustomerId: 'cus_Jcry1vA3iHj9Eh',
   },

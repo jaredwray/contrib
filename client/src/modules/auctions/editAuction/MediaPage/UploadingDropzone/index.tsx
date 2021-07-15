@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
 
-import { AddAuctionMedia } from 'src/apollo/queries/auctions';
+import { AddAuctionMediaMutation } from 'src/apollo/queries/auctions';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
 import { AuctionAttachment } from 'src/types/Auction';
 
@@ -30,7 +30,7 @@ const UploadingDropzone: FC<Props> = ({
   setErrorMessage,
   setSelectedAttachment,
 }): ReactElement => {
-  const [addAuctionMedia] = useMutation(AddAuctionMedia, {
+  const [addAuctionMedia] = useMutation(AddAuctionMediaMutation, {
     onError(error) {
       setErrorMessage(error.message);
       setAttachments((prevState: AttachmentsStateInterface) => {

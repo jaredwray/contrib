@@ -41,7 +41,6 @@ export class AuctionRepository implements IAuctionRepository {
       { path: 'assets', model: this.AuctionAsset },
       { path: 'auctionOrganizer', model: this.InfluencerModel },
       { path: 'auctionOrganizer', populate: { path: 'followers.user', model: this.UserAccountModel } },
-      { path: 'bids.user', model: this.UserAccountModel },
       { path: 'charity', model: this.CharityModel },
       { path: 'charity', populate: { path: 'followers.user', model: this.UserAccountModel } },
     ];
@@ -199,11 +198,6 @@ export class AuctionRepository implements IAuctionRepository {
     ]);
 
     return this.populateAuctionModel(auction).execPopulate();
-  }
-
-  public async getAuctionForAdminPage(id: string) {
-    const auction = await this.AuctionModel.findOne({ _id: id });
-    return await this.populateAuctionModel(auction).execPopulate();
   }
 
   public async getPopulatedAuction(auction: IAuctionModel) {

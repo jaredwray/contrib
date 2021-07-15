@@ -34,13 +34,6 @@ export const AuctionSchema = gql`
     status: String!
   }
 
-  type AuctionBid {
-    bid: Money!
-    createdAt: DateTime!
-    user: String!
-    paymentSource: String!
-  }
-
   type TotalRaisedAmount {
     totalRaisedAmount: Money!
   }
@@ -53,7 +46,6 @@ export const AuctionSchema = gql`
     playedIn: String
     status: AuctionStatus!
     attachments: [AuctionAttachment]
-    bids: [AuctionBid]
     startPrice: Money!
     itemPrice: Money
     currentPrice: Money!
@@ -88,7 +80,7 @@ export const AuctionSchema = gql`
     endDate: DateTime!
     timeZone: String
     charity: AuctionCharity
-    bids: [AuctionAdminBid]
+    bids: [AuctionBid]
     currentPrice: Money!
     startPrice: Money!
     fairMarketValue: Money
@@ -127,21 +119,6 @@ export const AuctionSchema = gql`
     stripeAccountId: String!
   }
 
-  type AuctionAdminBid {
-    bid: Money!
-    user: AuctionUser
-    paymentSource: String!
-    createdAt: String!
-  }
-
-  type AuctionUser {
-    id: String!
-    mongodbId: String!
-    phoneNumber: String!
-    status: UserAccountStatus
-    stripeCustomerId: String!
-    createdAt: String!
-  }
 
   type ResponceId {
     id: String!
@@ -223,7 +200,6 @@ export const AuctionSchema = gql`
     auction(id: String!): Auction
     sports: [String]
     getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
-    getAuctionForAdminPage(id: String!): AuctionForAdminPage
     getCustomerInformation(stripeCustomerId: String!): CustomerInformation
     getAuctionMetrics(auctionId: String!): Metrics!
   }

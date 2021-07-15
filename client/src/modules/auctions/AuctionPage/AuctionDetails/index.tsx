@@ -54,7 +54,11 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     isPending,
     isSold,
     isStopped,
-    bids,
+    stoppedAt,
+    isActive,
+    totalBids,
+    status,
+    fairMarketValue,
   } = auction;
 
   const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
@@ -64,7 +68,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
   const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
   const endTime = format(utcToZonedTime(endDate, timeZone || ''), 'p');
-  const canBid = auction.isActive && !ended;
+  const canBid = isActive && !ended;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
@@ -72,13 +76,12 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
 
   let soldTime = '';
   let stoppedTime = '';
-  if (isSold) {
-    const maxBid = Math.max(...bids.map(({ bid }) => bid.amount));
-    const maxBidDate = auction.bids.filter(({ bid }) => bid.amount === maxBid)[0].createdAt;
-    soldTime = format(utcToZonedTime(maxBidDate, timeZone || ''), 'MMM dd yyyy p');
+
+  if (isSold && stoppedAt) {
+    soldTime = format(utcToZonedTime(stoppedAt, timeZone || ''), 'MMM dd yyyy p');
   }
-  if (auction.stoppedAt) {
-    stoppedTime = format(utcToZonedTime(auction.stoppedAt, timeZone || ''), 'MMM dd yyyy');
+  if (isStopped && stoppedAt) {
+    stoppedTime = format(utcToZonedTime(stoppedAt, timeZone || ''), 'MMM dd yyyy');
   }
 
   const durationTillEnd = toHumanReadableDuration(endDate);
@@ -216,7 +219,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
       )}
       {!isPending && !isSold && (
         <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
-          <span className="pr-4 pr-sm-0">{pluralize(auction.totalBids, 'bid')}</span>
+          <span className="pr-4 pr-sm-0">{pluralize(totalBids, 'bid')}</span>
           <span>
             {!ended && (
               <>
@@ -231,13 +234,13 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
       )}
       {isStopped && (
         <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
-          {auction.status} on {stoppedTime}
+          {status} on {stoppedTime}
         </div>
       )}
       {isSold && (
         <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
           <span className={styles.notBold}>sold on </span>
-          {soldTime} {timeZone}
+          {soldTime} {auction.timeZone}
         </div>
       )}
       <Elements options={stripeOptions} stripe={stripePromise}>
@@ -249,7 +252,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
           setIsBying={setIsBying}
         />
       </Elements>
-      {canBid && <BidInput fairMarketValue={Dinero(auction.fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
+      {canBid && <BidInput fairMarketValue={Dinero(fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
       {canEdit && (
         <Link className="w-100 btn btn-primary" to={`/auctions/${auction.id}/basic`}>
           Edit

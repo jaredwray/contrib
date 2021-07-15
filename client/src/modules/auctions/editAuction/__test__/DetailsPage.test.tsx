@@ -4,7 +4,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { getAuctionDetails } from 'src/apollo/queries/auctions';
+import { GetAuctionDetailsQuery } from 'src/apollo/queries/auctions';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { MemoryRouter } from 'react-router-dom';
 import Layout from 'src/components/Layout';
@@ -22,7 +22,7 @@ jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
 cache.writeQuery({
-  query: getAuctionDetails,
+  query: GetAuctionDetailsQuery,
   variables: { id: 'testId' },
   data: {
     auction: {

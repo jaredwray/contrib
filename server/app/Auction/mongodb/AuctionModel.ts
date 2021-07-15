@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
-import Dinero from 'dinero.js';
 
 import { UserAccountCollectionName, IFollowObject, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppConfig } from '../../../config';
@@ -9,6 +8,7 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { InfluencerCollectionName, IInfluencer } from '../../Influencer/mongodb/InfluencerModel';
 
+//TODO: delete after bids in BidsModel relocation
 export interface IAuctionBid {
   user: IUserAccount['_id'];
   createdAt: dayjs.Dayjs;
@@ -29,7 +29,6 @@ export interface IAuctionModel extends Document {
   fullPageDescription: string;
   auctionOrganizer: IInfluencer['_id'];
   assets: IAuctionAssetModel[];
-  bids: IAuctionBid[];
   currentPrice: number;
   itemPrice?: number;
   priceCurrency?: string;
@@ -42,12 +41,25 @@ export interface IAuctionModel extends Document {
   fairMarketValue: number;
   timeZone: string;
   sentNotifications: [string];
+  totalBids: number;
+  //TODO: delete after bids in BidsModel relocation
+  bids: IAuctionBid[];
 }
 
 export const AuctionCollectionName = 'auction';
 
 const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
   {
+    //TODO: delete after bids in BidsModel relocation
+    bids: [
+      {
+        user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+        bid: { type: SchemaTypes.Number, required: true },
+        paymentSource: { type: SchemaTypes.String, required: true },
+        createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+        chargeId: { type: SchemaTypes.String },
+      },
+    ],
     title: { type: SchemaTypes.String, required: true },
     sport: { type: SchemaTypes.String, default: '' },
     description: { type: SchemaTypes.String, default: '' },
@@ -58,15 +70,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     sentNotifications: { type: SchemaTypes.Array, default: [] },
     authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
     gameWorn: { type: SchemaTypes.Boolean, default: false },
-    bids: [
-      {
-        user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
-        bid: { type: SchemaTypes.Number, required: true },
-        paymentSource: { type: SchemaTypes.String, required: true },
-        createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
-        chargeId: { type: SchemaTypes.String },
-      },
-    ],
+
     followers: [
       {
         user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
@@ -90,6 +94,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     link: { type: SchemaTypes.String },
     fairMarketValue: { type: SchemaTypes.Number },
     timeZone: { type: SchemaTypes.String },
+    totalBids: { type: SchemaTypes.Number, default: 0 },
   },
   { optimisticConcurrency: true },
 );
