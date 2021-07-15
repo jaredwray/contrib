@@ -1,6 +1,6 @@
 import { Bitly } from 'bitly';
 import { BitlyMetricsByCountryRes, BitlyMetricsByReferrers } from 'bitly/dist/types';
-
+import { BitlyClick } from '../../Auction/dto/AuctionMetrics';
 import { AppConfig } from '../../../config';
 
 export class UrlShortenerService {
@@ -13,21 +13,21 @@ export class UrlShortenerService {
     return result.link;
   }
 
-  async getMetricsForLastHour(url: string): Promise<any> {
+  async getMetricsFromLastUpdate(url: string, units: number): Promise<any> {
     const hash = this.getHashFromUrl(url);
     const clicks = await this.bitly.clicks(url, 'hour', 1);
     const referrers: BitlyMetricsByReferrers = await this.bitly.bitlyRequest(
       `bitlinks/bit.ly/${hash}/referrers`,
-      { unit: 'hour', units: 1 },
+      { unit: 'minute', units },
       'GET',
     );
     const countries: BitlyMetricsByCountryRes = await this.bitly.bitlyRequest(
       `bitlinks/bit.ly/${hash}/countries`,
-      { unit: 'hour', units: 1 },
+      { unit: 'minute', units },
       'GET',
     );
     return {
-      clicks: clicks.link_clicks,
+      clicks: clicks.link_clicks.filter((value: BitlyClick) => value.clicks > 0),
       referrers: referrers.metrics,
       countries: countries.metrics,
     };
@@ -38,7 +38,7 @@ export class UrlShortenerService {
     const referrers = await this.bitly.referrers(url);
     const countries = await this.bitly.countries(url);
     return {
-      clicks: clicks.link_clicks,
+      clicks: clicks.link_clicks.filter((value: BitlyClick) => value.clicks > 0),
       referrers: referrers.metrics,
       countries: countries.metrics,
     };

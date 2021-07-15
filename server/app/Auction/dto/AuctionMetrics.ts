@@ -4,3 +4,8 @@ export interface AuctionMetrics {
   countries: object[];
   referrers: object[];
 }
+
+export interface BitlyClick {
+  clicks: string | number;
+  date: string;
+}
