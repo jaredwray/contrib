@@ -17,7 +17,7 @@ import AsyncButton from 'src/components/AsyncButton';
 import Layout from 'src/components/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
-import { AuctionBid } from 'src/types/Auction';
+import { AuctionBid } from 'src/types/Bid';
 
 import Bids from './Bids';
 import ClicksAnalytics from './ClicksAnalytics';

@@ -7,7 +7,7 @@ import AsyncButton from 'src/components/AsyncButton';
 import Dialog from 'src/components/Dialog';
 import DialogActions from 'src/components/Dialog/DialogActions';
 import DialogContent from 'src/components/Dialog/DialogContent';
-import { AuctionBid } from 'src/types/Auction';
+import { AuctionBid } from 'src/types/Bid';
 
 import styles from './chargeModal.module.scss';
 

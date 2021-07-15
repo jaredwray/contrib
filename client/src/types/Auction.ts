@@ -2,7 +2,6 @@ import { DineroObject } from 'dinero.js';
 
 import { Follow } from './Follow';
 import { InfluencerProfile } from './InfluencerProfile';
-import { UserAccount } from './UserAccount';
 
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
@@ -24,15 +23,6 @@ export interface AuctionAttachment {
   originalFileName: string;
 }
 
-export interface AuctionBid {
-  id: string;
-  bid: DineroObject;
-  createdAt: Date;
-  paymentSource: string;
-  charityId: string;
-  user: UserAccount;
-}
-
 export interface Auction {
   id: string;
   title: string;
@@ -41,7 +31,6 @@ export interface Auction {
   playedIn: string;
   status: AuctionStatus;
   attachments: [AuctionAttachment];
-  bids: [AuctionBid];
   link: string;
   gameWorn: boolean;
   autographed: boolean;
