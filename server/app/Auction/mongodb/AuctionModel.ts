@@ -8,16 +8,6 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { InfluencerCollectionName, IInfluencer } from '../../Influencer/mongodb/InfluencerModel';
 
-//TODO: delete after bids in BidsModel relocation
-export interface IAuctionBid {
-  user: IUserAccount['_id'];
-  createdAt: dayjs.Dayjs;
-  paymentSource: string;
-  bid: number;
-  bidCurrency: Dinero.Currency;
-  chargeId: string;
-}
-
 export interface IAuctionModel extends Document {
   title: string;
   status: AuctionStatus;
@@ -42,24 +32,12 @@ export interface IAuctionModel extends Document {
   timeZone: string;
   sentNotifications: [string];
   totalBids: number;
-  //TODO: delete after bids in BidsModel relocation
-  bids: IAuctionBid[];
 }
 
 export const AuctionCollectionName = 'auction';
 
 const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
   {
-    //TODO: delete after bids in BidsModel relocation
-    bids: [
-      {
-        user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
-        bid: { type: SchemaTypes.Number, required: true },
-        paymentSource: { type: SchemaTypes.String, required: true },
-        createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
-        chargeId: { type: SchemaTypes.String },
-      },
-    ],
     title: { type: SchemaTypes.String, required: true },
     sport: { type: SchemaTypes.String, default: '' },
     description: { type: SchemaTypes.String, default: '' },
