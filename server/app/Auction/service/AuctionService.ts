@@ -2,20 +2,21 @@ import { Connection, Types } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
 import Dinero, { Currency } from 'dinero.js';
 
-import { AuctionModel, IAuctionBid, IAuctionModel } from '../mongodb/AuctionModel';
+import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionMetricModel } from '../mongodb/AuctionMetricModel';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
-import { UserAccountStatus } from '../../UserAccount/dto/UserAccountStatus';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
-import { AuctionBid } from '../dto/AuctionBid';
+import { Bid } from '../../Bid/dto/Bid';
 import { AuctionMetrics } from '../dto/AuctionMetrics';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
+import { BidService } from '../../Bid/service/BidService';
+import { BidModel, IBidModel } from '../../Bid/mongodb/BidModel';
 
 import { AuctionInput } from '../graphql/model/AuctionInput';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
@@ -45,9 +46,9 @@ export class AuctionService {
   private readonly AuctionMetricModel = AuctionMetricModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
+  private readonly BidModel = BidModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
   private readonly auctionRepository: IAuctionRepository = new AuctionRepository(this.connection);
-  private readonly stripeService = new StripeService();
 
   constructor(
     private readonly connection: Connection,
@@ -56,7 +57,67 @@ export class AuctionService {
     private readonly urlShortenerService: UrlShortenerService,
     private readonly cloudTaskService: CloudTaskService,
     private readonly handlebarsService: HandlebarsService,
+    private readonly bidService: BidService,
+    private readonly stripeService: StripeService,
   ) {}
+  //TODO: delete after bids in BidsModel relocation.
+  public async relocateAuctionBidsInBidCollection() {
+    const auctions = await this.AuctionModel.find({ bids: { $exists: true } });
+    if (auctions.length === 0) {
+      return;
+    }
+    for (const auction of auctions) {
+      const bids = auction.bids;
+      for (const bid of bids) {
+        if (bids.length === 0) {
+          break;
+        }
+        await this.BidModel.create([
+          {
+            auction: auction._id,
+            user: bid.user,
+            createdAt: bid.createdAt,
+            paymentSource: bid.paymentSource,
+            bid: bid.bid,
+            bidCurrency: auction.priceCurrency as Currency,
+            chargeId: bid.chargeId,
+          },
+        ]);
+      }
+      if (auction.status === AuctionStatus.SOLD && bids.length !== 0) {
+        let lastBid = bids.sort((a, b) => b.bid - a.bid)[0];
+        auction.stoppedAt = lastBid.createdAt;
+      }
+      auction.totalBids = bids.length;
+      await auction.save();
+    }
+    await this.AuctionModel.update({}, { $unset: { bids: 1 } }, { multi: true });
+  }
+  //TODO: delete after bids in BidsModel relocation.
+  public async relocateBidsFromBidsModelInAuctions() {
+    const bids = await this.BidModel.find({});
+    if (bids.length === 0) {
+      return;
+    }
+    for (const bid of bids) {
+      const auction = await this.AuctionModel.findById(bid.auction);
+
+      const inputBid = {
+        user: bid.user,
+        createdAt: bid.createdAt,
+        paymentSource: bid.paymentSource,
+        bid: bid.bid,
+        chargeId: bid.chargeId,
+      };
+
+      Object.assign(auction, {
+        bids: [...auction.bids, inputBid],
+      });
+
+      await bid.delete();
+      await auction.save();
+    }
+  }
 
   public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs }> | null {
     return await this.auctionRepository.followAuction(auctionId, accountId);
@@ -158,36 +219,6 @@ export class AuctionService {
       await this.makeShortAuctionLink(auction._id.toString()),
     );
     return this.makeAuction(auction);
-  }
-  public async getAuctionForAdminPage(id: string) {
-    const auction = await this.auctionRepository.getAuctionForAdminPage(id);
-    const currentAuction = this.makeAuction(auction);
-    const { auctionOrganizer, bids } = auction;
-
-    return {
-      ...currentAuction,
-      auctionOrganizer: {
-        id: auctionOrganizer._id.toString(),
-        name: auctionOrganizer.name,
-      },
-      bids: bids
-        .sort((a, b) => (a.bid > b.bid ? -1 : 1))
-        .map((bid) => {
-          return {
-            user: {
-              id: bid?.user?.authzId,
-              mongodbId: bid?.user?._id.toString(),
-              phoneNumber: bid?.user?.phoneNumber,
-              status: UserAccountStatus.COMPLETED,
-              stripeCustomerId: bid?.user?.stripeCustomerId,
-              createdAt: bid?.user?.createdAt.toISOString(),
-            },
-            bid: Dinero({ amount: bid?.bid, currency: bid?.bidCurrency }),
-            paymentSource: bid?.paymentSource,
-            createdAt: bid?.createdAt.toISOString(),
-          };
-        }),
-    };
   }
 
   public async getCustomerInformation(stripeCustomerId: string): Promise<{ email: string; phone: string } | null> {
@@ -403,14 +434,13 @@ export class AuctionService {
       },
       isAdmin,
     );
-
     return this.makeAuction(auction);
   }
 
   public async addAuctionBid(
     id: string,
     { bid, user }: ICreateAuctionBidInput & { user: UserAccount },
-  ): Promise<AuctionBid> {
+  ): Promise<Bid> {
     const session = await this.connection.startSession();
     session.startTransaction();
 
@@ -445,33 +475,32 @@ export class AuctionService {
       );
     }
 
-    const lastUserId = auction.bids[auction.bids.length - 1]?.user;
+    const [lastBid] = await this.BidModel.find({ auction: auction._id }, null, session).sort({ bid: -1 }).limit(1);
 
-    const createdBid = {
+    const bidInput = {
       user: user.mongodbId,
-      createdAt: dayjs(),
-      paymentSource: card.id,
+      auction: auction._id,
       bid: bid.getAmount(),
-      bidCurrency: bid.getCurrency(),
+      bidCurrency: (bid.getCurrency() ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+      paymentSource: card.id,
       chargeId: null,
     };
 
-    Object.assign(auction, {
-      bids: [...auction.bids, createdBid],
-    });
+    const createdBid = await this.bidService.createBid(bidInput, session);
 
     auction.currentPrice = bid.getAmount();
+    auction.totalBids += 1;
 
     await auction.save({ session });
 
     await session.commitTransaction();
     session.endSession();
 
-    if (lastUserId) {
+    if (lastBid) {
       try {
-        const userAccount = await this.UserAccountModel.findOne({ _id: lastUserId }).exec();
+        const userAccount = await this.UserAccountModel.findById(lastBid.user);
         if (!userAccount) {
-          throw new Error(`Can not find account with id ${lastUserId.toString()}`);
+          throw new AppError(`Cannot find user with #${lastBid.user}`);
         }
         await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
           auctionTitle: auction.title,
@@ -481,7 +510,7 @@ export class AuctionService {
         AppLogger.error(`Failed to send notification, error: ${error.message}`);
       }
     }
-    return AuctionService.makeAuctionBid(createdBid);
+    return createdBid;
   }
 
   public async scheduleAuctionMetrics(): Promise<{ message: string }> {
@@ -512,11 +541,8 @@ export class AuctionService {
 
     for await (const auction of auctions) {
       if (dayjs().utc().isAfter(auction.endsAt)) {
-        const currentAuction = await auction
-          .populate({ path: 'bids.user', model: this.UserAccountModel })
-          .execPopulate();
         try {
-          await this.settleAuctionAndCharge(currentAuction);
+          await this.settleAuctionAndCharge(auction);
         } catch {}
       }
     }
@@ -619,16 +645,13 @@ export class AuctionService {
       throw new Error(`There is no auction for sending notification`);
     }
 
-    if (!auction.bids) {
-      return;
-    }
-
     const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
     const followerIds = currentAuction.followers.map((follower) => follower.user);
     const followerUsers = await this.UserAccountModel.find({ _id: followerIds }).exec();
-    const followers = followerUsers.map((user) => user.phoneNumber);
-    const bids = currentAuction.bids.map((bid) => bid.user.phoneNumber);
-    const phoneNumbers = new Set([...followers, ...bids]);
+    const followersPhonenumber = followerUsers.map((user) => user.phoneNumber);
+    const bidModels = await this.bidService.getPopulatedBids(auction._id);
+    const bidsUserPhonenumber = bidModels.map((bid) => bid.user.phoneNumber);
+    const phoneNumbers = new Set([...followersPhonenumber, ...bidsUserPhonenumber]);
 
     phoneNumbers.forEach(async (phoneNumber) => {
       try {
@@ -674,9 +697,7 @@ export class AuctionService {
       auction.status = AuctionStatus.ACTIVE;
       await auction.save();
     }
-
-    const currentAuction = await auction.populate({ path: 'bids.user', model: this.UserAccountModel }).execPopulate();
-    return await this.settleAuctionAndCharge(currentAuction);
+    return await this.settleAuctionAndCharge(auction);
   }
 
   public async chargeCurrendBid(input): Promise<string> {
@@ -704,7 +725,7 @@ export class AuctionService {
       throw new AppError('Auction status is not ACTIVE');
     }
 
-    const lastAuctionBid = auction.bids[auction.bids.length - 1];
+    const [lastAuctionBid] = await this.BidModel.find({ auction: auction._id }).sort({ bid: -1 }).limit(1);
 
     if (!lastAuctionBid) {
       auction.status = AuctionStatus.SETTLED;
@@ -713,24 +734,21 @@ export class AuctionService {
     }
 
     try {
-      const userAccount = await this.UserAccountModel.findById(lastAuctionBid.user._id).exec();
-      if (!userAccount) {
-        throw new Error(`Can not find account with id ${lastAuctionBid.user._id.toString()}`);
-      }
-
-      auction.bids[auction.bids.length - 1].chargeId = await this.chargeUser(lastAuctionBid, auction);
-      await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE, {
+      await lastAuctionBid.populate({ path: 'user', model: this.UserAccountModel }).execPopulate();
+      lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
+      await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE, {
         auctionTitle: auction.title,
         auctionLink: auction.link,
       });
 
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
-          auction.bids[auction.bids.length - 1].chargeId
+          lastAuctionBid.chargeId
         } and user id ${lastAuctionBid.user._id.toString()}`,
       );
 
       auction.status = AuctionStatus.SETTLED;
+      await lastAuctionBid.save();
       await auction.save();
     } catch (error) {
       AppLogger.error(`Unable to charge user ${lastAuctionBid.user._id.toString()}, with error: ${error.message}`);
@@ -740,7 +758,7 @@ export class AuctionService {
     }
   }
 
-  async chargeUser(lastAuctionBid: IAuctionBid, auction: IAuctionModel): Promise<string> {
+  async chargeUser(lastAuctionBid: IBidModel, auction: IAuctionModel): Promise<string> {
     const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
     if (!charityAccount) {
       throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
@@ -795,18 +813,6 @@ export class AuctionService {
       appURL.port = AppConfig.app.port.toString();
     }
     return `${appURL.toString()}${AppConfig.googleCloud.task.notificationTaskTargetURL}`;
-  }
-
-  private static makeAuctionBid(model: IAuctionBid): AuctionBid | null {
-    if (!model) {
-      return null;
-    }
-    return {
-      paymentSource: model.paymentSource,
-      user: model.user?._id?.toString(),
-      bid: Dinero({ amount: model.bid, currency: model.bidCurrency }),
-      createdAt: model.createdAt,
-    };
   }
 
   private static makeAuctionAttachment(model: IAuctionAssetModel, fileName?: string): AuctionAssets | null {
@@ -897,17 +903,17 @@ export class AuctionService {
         charityAccount.stripeAccountId,
         auction.charity.toString(),
       );
-      const createdBid = {
+
+      const bidInput = {
         user: user.mongodbId,
-        createdAt: dayjs(),
-        paymentSource: card.id,
+        auction: auction._id,
         bid: auction.itemPrice,
         bidCurrency: (auction.priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        chargeId: chargeId,
+        paymentSource: card.id,
+        chargeId,
       };
-      Object.assign(auction, {
-        bids: [...auction.bids, createdBid],
-      });
+
+      await this.bidService.createBid(bidInput);
     } catch (error) {
       AppLogger.info(`Unable to charge auction #${auction.id}: ${error.message}`);
       throw new AppError('Unable to charge');
@@ -917,6 +923,8 @@ export class AuctionService {
 
     auction.status = AuctionStatus.SOLD;
     auction.currentPrice = auction.itemPrice;
+    auction.stoppedAt = dayjs().second(0);
+
     try {
       await auction.save();
     } catch (error) {
@@ -993,10 +1001,6 @@ export class AuctionService {
   }
 
   public makeAuction(model: IAuctionModel): Auction | null {
-    if (!model) {
-      return null;
-    }
-
     const {
       _id,
       startsAt,
@@ -1006,7 +1010,6 @@ export class AuctionService {
       charity,
       assets,
       status,
-      bids,
       itemPrice,
       currentPrice,
       startPrice,
@@ -1037,8 +1040,6 @@ export class AuctionService {
       timeZone: timeZone,
       stoppedAt: stoppedAt,
       charity: charity ? CharityService.makeCharity(charity) : null,
-      bids: bids?.map((bid) => AuctionService.makeAuctionBid(bid)) || [],
-      totalBids: bids?.length ?? 0,
       currentPrice: Dinero({
         currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
         amount: currentPrice,

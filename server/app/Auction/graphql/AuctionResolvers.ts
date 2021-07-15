@@ -43,7 +43,6 @@ interface AuctionResolversType {
       { charityId: string; influencerId: string }
     >;
     getCustomerInformation: GraphqlResolver<{ phone: string; email: string } | null, { stripeCustomerId: string }>;
-    getAuctionForAdminPage: GraphqlResolver<any, { id: string }>;
     getAuctionMetrics: GraphqlResolver<AuctionMetrics, { auctionId: string }>;
   };
   Mutation: {
@@ -84,7 +83,6 @@ export const AuctionResolvers: AuctionResolversType = {
     }),
     getTotalRaisedAmount: async (_, { charityId, influencerId }, { auction }) =>
       await auction.getTotalRaisedAmount(charityId, influencerId),
-    getAuctionForAdminPage: requireAdmin(async (_, { id }, { auction }) => await auction.getAuctionForAdminPage(id)),
     getCustomerInformation: requireAdmin(
       async (_, { stripeCustomerId }, { auction }) => await auction.getCustomerInformation(stripeCustomerId),
     ),

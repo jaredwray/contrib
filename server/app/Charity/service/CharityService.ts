@@ -24,9 +24,12 @@ interface CharityCreationInput {
 export class CharityService {
   private readonly CharityModel = CharityModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
-  private readonly stripe = new StripeService();
 
-  constructor(private readonly connection: Connection, private readonly eventHub: EventHub) {
+  constructor(
+    private readonly connection: Connection,
+    private readonly eventHub: EventHub,
+    private readonly stripeService: StripeService,
+  ) {
     eventHub.subscribe(Events.CHARITY_ONBOARDED, async ({ charity, session }) => {
       await this.createStripeAccountForCharity(charity, session);
     });
@@ -131,7 +134,7 @@ export class CharityService {
 
     model.status = CharityStatus.PENDING_ONBOARDING;
 
-    const stripeAccount = await this.stripe.createStripeAccount();
+    const stripeAccount = await this.stripeService.createStripeAccount();
     model.stripeAccountId = stripeAccount.id;
 
     await model.save();
@@ -176,7 +179,7 @@ export class CharityService {
   }
 
   async getLinkForStripeAccount(charity: Charity): Promise<string> {
-    const objLink = await this.stripe.createStripeObjLink(charity.stripeAccountId, charity.id);
+    const objLink = await this.stripeService.createStripeObjLink(charity.stripeAccountId, charity.id);
     return objLink.url;
   }
 

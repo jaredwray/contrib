@@ -5,6 +5,7 @@ import { InfluencerService } from './Influencer';
 import { InvitationService } from './Invitation';
 import { CharityService } from './Charity';
 import { AuctionService } from './Auction';
+import { BidService } from './Bid';
 import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
 import { UrlShortenerService } from './Core';
 import { PaymentService, StripeService } from './Payment';
@@ -14,6 +15,7 @@ import { IHandlebarsService } from './Message/service/HandlebarsService';
 export interface IAppServices {
   assistant: AssistantService;
   auth0: Auth0Service;
+  bidService: BidService;
   userAccount: UserAccountService;
   influencer: InfluencerService;
   invitation: InvitationService;
@@ -23,7 +25,7 @@ export interface IAppServices {
   twilioNotification: TwilioNotificationService;
   urlShortener: UrlShortenerService;
   payment: PaymentService;
-  stripe: StripeService;
+  stripeService: StripeService;
   cloudTaskService: CloudTaskService;
   handlebarsService: IHandlebarsService;
 }

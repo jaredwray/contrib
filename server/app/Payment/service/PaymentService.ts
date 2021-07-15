@@ -1,4 +1,3 @@
-import { Dinero } from 'dinero.js';
 import { Stripe } from 'stripe';
 
 import { StripeService } from './StripeService';

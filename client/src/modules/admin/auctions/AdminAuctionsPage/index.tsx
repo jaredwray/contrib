@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom';
 
 import {
   AuctionsListQuery,
-  updateAuctionDetails,
-  stopAuction,
-  activateAuction,
-  deleteAuctionMutation,
+  UpdateAuctionDetailsMutation,
+  StopAuctionMutation,
+  ActivateAuctionMutation,
+  DeleteAuctionMutation,
 } from 'src/apollo/queries/auctions';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
@@ -78,21 +78,21 @@ export default function AdminAuctionsPage() {
                     <DeleteAuctionButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
-                      mutation={deleteAuctionMutation}
+                      mutation={DeleteAuctionMutation}
                     />
                   )}
                   {(auction.isActive || auction.isPending) && (
                     <FairMarketValueChangeButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
-                      mutation={updateAuctionDetails}
+                      mutation={UpdateAuctionDetailsMutation}
                     />
                   )}
                   {(auction.isActive || auction.isPending || auction.isStopped) && (
                     <StopOrActiveButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
-                      mutation={auction.isStopped ? activateAuction : stopAuction}
+                      mutation={auction.isStopped ? ActivateAuctionMutation : StopAuctionMutation}
                     />
                   )}
                 </ActionsDropdown>

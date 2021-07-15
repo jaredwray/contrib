@@ -64,7 +64,6 @@ export interface IAuctionRepository {
   getAuctionSports(): Promise<string[]>;
   addAuctionAttachment(id: string, organizerId: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel>;
   getInfluencersAuctions(id: string): Promise<IAuctionModel[]>;
-  getAuctionForAdminPage(id: string): Promise<IAuctionModel>;
   getPopulatedAuction(auction: IAuctionModel): Promise<IAuctionModel>;
   getAuctionOrganizerUserAccountFromAuction(auction: IAuctionModel): Promise<IAuctionModel>;
   followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs } | null>;

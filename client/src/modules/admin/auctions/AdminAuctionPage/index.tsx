@@ -1,18 +1,18 @@
 import { useCallback, useState, useEffect } from 'react';
 
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import {
-  AuctionForAdminPage,
-  chargeCurrentAuction,
-  chargeCurrendBid,
-  CustomerInformation,
-  AuctionMetrics,
+  AuctionForAdminPageQuery,
+  ChargeCurrentAuctionMutation,
+  CustomerInformationQuery,
+  AuctionMetricsQuery,
 } from 'src/apollo/queries/auctions';
+import { AuctionBidsQuery, ChargeCurrentBidMutation } from 'src/apollo/queries/bids';
 import AsyncButton from 'src/components/AsyncButton';
 import Layout from 'src/components/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -31,35 +31,32 @@ export default function AdminAuctionPage() {
 
   const [isBid, setIsBid] = useState(false);
   const { addToast } = useToasts();
-  const [chargeAuction, { loading: chargeLoading }] = useMutation(chargeCurrentAuction);
-  const [chargeBid, { loading: bidLoading }] = useMutation(chargeCurrendBid);
+
+  const [chargeAuction, { loading: chargeLoading }] = useMutation(ChargeCurrentAuctionMutation);
+  const [chargeBid, { loading: bidLoading }] = useMutation(ChargeCurrentBidMutation);
 
   const { auctionId } = useParams<{ auctionId: string }>();
-  const [getAuctionData, { data: auctionData, error, loading }] = useLazyQuery(AuctionForAdminPage, {
+
+  const { data: auctionBids } = useQuery(AuctionBidsQuery, { variables: { auctionId } });
+  const { data: auctionMetricsData } = useQuery(AuctionMetricsQuery, {
+    variables: { auctionId },
+  });
+  const [getAuctionData, { data: auctionData, error, loading }] = useLazyQuery(AuctionForAdminPageQuery, {
     variables: { id: auctionId },
     fetchPolicy: 'network-only',
   });
 
-  const [getAuctionMetrics, { data: auctionMetricsData }] = useLazyQuery(AuctionMetrics, {
-    variables: { auctionId },
-  });
-
-  const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformation);
+  const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformationQuery);
 
   useEffect(() => {
     getAuctionData();
   }, [getAuctionData]);
 
-  useEffect(() => {
-    getAuctionMetrics();
-  }, [getAuctionMetrics]);
-
   const metrics = auctionMetricsData?.getAuctionMetrics;
-  const auction = auctionData?.getAuctionForAdminPage;
+  const auction = auctionData?.auction;
   const charity = auction?.charity;
-  const bids = auction?.bids;
+  const bids = auctionBids?.bids;
   const customerInformation = customer?.getCustomerInformation;
-
   const handleChargeBid = useCallback(
     async (item) => {
       try {
@@ -95,14 +92,14 @@ export default function AdminAuctionPage() {
     }
   }, [auctionId, addToast, chargeAuction, getAuctionData]);
 
-  if (error || loading || !auction || !metrics) {
+  if (error || loading || !auction || !metrics || !bids) {
     return null;
   }
   const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label || '';
   const hasBids = bids.length > 0;
 
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));
-  const maxBid = auction.bids.filter(({ bid }: AuctionBid) => bid.amount === maxBidAmount)[0];
+  const maxBid = bids.filter(({ bid }: AuctionBid) => bid.amount === maxBidAmount)[0];
   const onChargeClickHandler = () => {
     getCustomerInformation({ variables: { stripeCustomerId: maxBid.user.stripeCustomerId } });
     setShowDialog(true);
@@ -148,7 +145,7 @@ export default function AdminAuctionPage() {
             <Col>
               <div className="text-headline">Bids</div>
               <Bids
-                bids={auction.bids}
+                bids={bids}
                 loading={customerLoading}
                 showProcessBtn={auction.isFailed}
                 timeZone={timeZone}

@@ -7,7 +7,7 @@ import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
 
 export default function appRouteHandlers(
   app: express.Express,
-  { auction, charity, stripe, twilioNotification }: IAppServices,
+  { auction, charity, stripeService, twilioNotification }: IAppServices,
 ): void {
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
@@ -124,7 +124,7 @@ export default function appRouteHandlers(
 
     let event;
     try {
-      event = stripe.constructEvent(request.body, sig as string);
+      event = stripeService.constructEvent(request.body, sig as string);
     } catch (err) {
       response.sendStatus(400).json({ message: err.message });
       return;

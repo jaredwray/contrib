@@ -10,6 +10,7 @@ import { InvitationService } from './Invitation';
 import { CharityService } from './Charity';
 import { AssistantService } from './Assistant';
 import { AuctionService } from './Auction';
+import { BidService } from './Bid';
 import { GCloudStorage } from './GCloudStorage';
 import { CloudflareStreaming } from './CloudflareStreaming';
 import { UrlShortenerService } from './Core';
@@ -24,12 +25,12 @@ export default function createAppServices(connection: Connection): IAppServices 
   const twilioVerification = new TwilioVerificationService();
   const twilioNotification = new TwilioNotificationService();
   const cloudTaskService = new CloudTaskService();
-  const stripe = new StripeService();
+  const stripeService = new StripeService();
   const assistant = new AssistantService(connection);
-  const charity = new CharityService(connection, eventHub);
+  const charity = new CharityService(connection, eventHub, stripeService);
   const userAccount = new UserAccountService(connection, twilioVerification, eventHub, auth0);
   const influencer = new InfluencerService(connection, charity);
-  const payment = new PaymentService(userAccount, stripe, auth0);
+  const payment = new PaymentService(userAccount, stripeService, auth0);
   const handlebarsService = new HandlebarsService();
   const invitation = new InvitationService(
     connection,
@@ -44,6 +45,7 @@ export default function createAppServices(connection: Connection): IAppServices 
 
   const cloudflareStreaming = new CloudflareStreaming();
   const cloudStorage = new GCloudStorage(cloudflareStreaming);
+  const bidService = new BidService(connection);
 
   const auction = new AuctionService(
     connection,
@@ -52,6 +54,8 @@ export default function createAppServices(connection: Connection): IAppServices 
     urlShortener,
     cloudTaskService,
     handlebarsService,
+    bidService,
+    stripeService,
   );
 
   return {
@@ -66,8 +70,9 @@ export default function createAppServices(connection: Connection): IAppServices 
     charity,
     auction,
     payment,
-    stripe,
+    stripeService,
     cloudTaskService,
     handlebarsService,
+    bidService,
   };
 }

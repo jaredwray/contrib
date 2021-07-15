@@ -56,7 +56,8 @@ export const UserAccountSchema = gql`
     """
     User creation datetime
     """
-    createdAt: String!
+    createdAt: String
+    stripeCustomerId: String
     notAcceptedTerms: String
   }
 

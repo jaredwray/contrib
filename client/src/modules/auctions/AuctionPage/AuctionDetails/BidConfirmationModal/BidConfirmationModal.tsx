@@ -9,8 +9,9 @@ import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
 
-import { MakeAuctionBidMutation, buyAuction } from 'src/apollo/queries/auctions';
+import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
+import { MakeAuctionBidMutation } from 'src/apollo/queries/bids';
 import AsyncButton from 'src/components/AsyncButton';
 import Dialog from 'src/components/Dialog';
 import DialogActions from 'src/components/Dialog/DialogActions';
@@ -34,7 +35,7 @@ interface Props {
 
 export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
   ({ auctionId, isBuying, setIsBying, executeQuery }, ref) => {
-    const [updateAuction] = useMutation(buyAuction);
+    const [updateAuction] = useMutation(BuyAuctionMutation);
     const stripe = useStripe();
     const elements = useElements();
     const { addToast } = useToasts();
@@ -99,7 +100,10 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         setSubmitting(false);
         setActiveBid(null);
         setNewCard(false);
-        addToast(`Your bid of ${activeBid.toFormat('$0,0')} has been accepted.`, { appearance: 'success' });
+        addToast(`Your bid of ${activeBid.toFormat('$0,0')} has been accepted.`, {
+          appearance: 'success',
+          autoDismiss: true,
+        });
       } catch (error) {
         setSubmitting(false);
         setNewCard(false);

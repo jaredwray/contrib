@@ -9,7 +9,11 @@ import { Field } from 'react-final-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { getAuctionDetails, updateAuctionDetails, finishAuctionCreationMutation } from 'src/apollo/queries/auctions';
+import {
+  GetAuctionDetailsQuery,
+  UpdateAuctionDetailsMutation,
+  FinishAuctionCreationMutation,
+} from 'src/apollo/queries/auctions';
 import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
@@ -31,7 +35,7 @@ const EditAuctionDetailsPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
   const [charities, setCharities] = useState<Charity[]>([]);
-  const { loading: loadingQuery, data: auctionData } = useQuery(getAuctionDetails, {
+  const { loading: loadingQuery, data: auctionData } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
     onCompleted({ auction }) {
       if (auction.charity) {
@@ -40,13 +44,13 @@ const EditAuctionDetailsPage = () => {
     },
   });
   const auction = auctionData?.auction;
-  const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(finishAuctionCreationMutation, {
+  const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(FinishAuctionCreationMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
   });
 
-  const [updateAuction, { loading: updating }] = useMutation(updateAuctionDetails, {
+  const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionDetailsMutation, {
     async onCompleted() {
       try {
         await finishAuctionCreation({ variables: { id: auctionId } });

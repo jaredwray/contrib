@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { getAuctionBasics } from 'src/apollo/queries/auctions';
+import { GetAuctionBasicsQuery } from 'src/apollo/queries/auctions';
 
 import Edit from '../BasicPage/Edit';
 
@@ -12,7 +12,7 @@ jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
 cache.writeQuery({
-  query: getAuctionBasics,
+  query: GetAuctionBasicsQuery,
   data: {
     auction: {
       id: '123',

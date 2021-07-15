@@ -10,7 +10,7 @@ import { Image } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { deleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
+import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { Modal } from 'src/components/AdminAuctionsPageModal';
 import { CloseButton } from 'src/components/CloseButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
@@ -117,7 +117,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
       {isDraft && <CloseButton action={() => setShowDialog(true)} auctionDeleteBtn={true} />}
       <Modal
         auction={auction}
-        mutation={deleteAuctionMutation}
+        mutation={DeleteAuctionMutation}
         open={showDialog}
         onClose={() => setShowDialog(false)}
         onConfirm={onDelete}
