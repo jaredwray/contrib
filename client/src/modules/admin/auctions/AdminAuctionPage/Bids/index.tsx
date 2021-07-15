@@ -4,7 +4,7 @@ import { format, utcToZonedTime } from 'date-fns-tz';
 import { Table } from 'react-bootstrap';
 
 import AsyncButton from 'src/components/AsyncButton';
-import { AuctionBid } from 'src/types/Auction';
+import { AuctionBid } from 'src/types/Bid';
 
 import styles from './styles.module.scss';
 
