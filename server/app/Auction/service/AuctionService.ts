@@ -506,11 +506,10 @@ export class AuctionService {
     auction.totalBids += 1;
 
     await auction.save({ session });
-
     await session.commitTransaction();
     session.endSession();
 
-    if (lastBid) {
+    if (lastBid && lastBid.user !== user.mongodbId) {
       try {
         const userAccount = await this.UserAccountModel.findById(lastBid.user);
         if (!userAccount) {
