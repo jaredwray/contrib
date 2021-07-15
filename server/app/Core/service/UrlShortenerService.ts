@@ -2,6 +2,7 @@ import { Bitly } from 'bitly';
 import { BitlyMetricsByCountryRes, BitlyMetricsByReferrers } from 'bitly/dist/types';
 import { BitlyClick } from '../../Auction/dto/AuctionMetrics';
 import { AppConfig } from '../../../config';
+import { Metrics } from '../../Auction/dto/AuctionMetrics';
 
 export class UrlShortenerService {
   private readonly bitly = new Bitly(AppConfig.bitly.accessToken, {
@@ -13,7 +14,7 @@ export class UrlShortenerService {
     return result.link;
   }
 
-  async getMetricsFromLastUpdate(url: string, units: number): Promise<any> {
+  async getMetricsFromLastUpdate(url: string, units: number): Promise<Metrics> {
     const hash = this.getHashFromUrl(url);
     const clicks = await this.bitly.clicks(url, 'hour', 1);
     const referrers: BitlyMetricsByReferrers = await this.bitly.bitlyRequest(

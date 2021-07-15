@@ -126,7 +126,7 @@ export class InfluencerService {
       [
         {
           name,
-          avatarUrl: `${AppConfig.app.url}/content/img/users/person.png`,
+          avatarUrl: `/content/img/users/person.png`,
           status: InfluencerStatus.TRANSIENT,
           favoriteCharities: [],
           assistants: [],

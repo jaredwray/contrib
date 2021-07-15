@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { BitlyClick } from '../app/Auction/dto/AuctionMetrics';
 
-export const fullBitlyClicks = (shortBitlyClicks: any, startDate: Dayjs, flag: string) => {
+export const fullBitlyClicks = (shortBitlyClicks: BitlyClick[], startDate: Dayjs, flag: string) => {
   const startIntervalHours = dayjs(startDate).utc().minute(0).second(0).millisecond(0);
   const startIntervalDays = dayjs(startDate).utc().hour(0).minute(0).second(0).millisecond(0);
   const endDate = dayjs().utc().hour(23).minute(59).second(0).millisecond(0);
