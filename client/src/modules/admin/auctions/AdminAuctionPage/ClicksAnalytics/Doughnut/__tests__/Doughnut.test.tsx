@@ -1,17 +1,19 @@
 import { ChartDoughnut } from 'src/modules/admin/auctions/AdminAuctionPage/ClicksAnalytics/Doughnut';
 
-import { shallow, mount, ShallowWrapper, ReactWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 
 import { MockedProvider } from '@apollo/client/testing';
-
+jest.mock('react-chartjs-2', () => ({
+  Doughnut: () => null,
+}));
 describe('Should render correctly "ChartDoughnut"', () => {
   const props: any = {
-    labels: [],
-    values: [],
+    labels: ['test', 'test2', 'test3', 'test3', 'test5', 'test6'],
+    values: ['test', 'test2'],
   };
-  let wrapper: ShallowWrapper;
+  let wrapper: ReactWrapper;
   beforeEach(() => {
-    wrapper = shallow(
+    wrapper = mount(
       <MockedProvider>
         <ChartDoughnut {...props} />
       </MockedProvider>,

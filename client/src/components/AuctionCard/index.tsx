@@ -44,17 +44,17 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
 
-  const followers = auction.followers;
+  const followers = auction?.followers;
   const loading = followLoading || unfollowLoading;
   const isOwner = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
-    auction.auctionOrganizer.id,
+    auction?.auctionOrganizer.id,
   );
 
   const [showDialog, setShowDialog] = useState(false);
   const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
 
-  const imageSrc = useAuctionPreviewAttachment(auction.attachments);
-  const influencer = auctionOrganizer || auction.auctionOrganizer;
+  const imageSrc = useAuctionPreviewAttachment(auction?.attachments);
+  const influencer = auctionOrganizer || auction?.auctionOrganizer;
   const currentPrice = useMemo(() => {
     if (!auction) {
       return Dinero();
@@ -87,7 +87,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     loginWithRedirect({ redirectUri }).catch((error) => {
       addToast(error.message, { appearance: 'error', autoDismiss: true });
     });
-  }, [auction.id, addToast, followAuction, isAuthenticated, loginWithRedirect, hisory.location.pathname]);
+  }, [auction?.id, addToast, followAuction, isAuthenticated, loginWithRedirect, hisory.location.pathname]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {
@@ -97,7 +97,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'warning' });
     }
-  }, [auction.id, addToast, unfollowAuction]);
+  }, [auction?.id, addToast, unfollowAuction]);
 
   if (!auction) {
     return null;
