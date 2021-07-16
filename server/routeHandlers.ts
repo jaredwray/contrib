@@ -4,6 +4,7 @@ import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
+import { isAuthorizedRequest } from './helpers/isAuthorizedRequest';
 
 export default function appRouteHandlers(
   app: express.Express,
@@ -17,14 +18,26 @@ export default function appRouteHandlers(
     }
   });
 
-  app.post('/api/v1/auctions-settle', async (req, res) => {
-    if (!req.body.key) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+  app.post('/api/v1/relocate-bids-in-bid-collection', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
       return;
     }
 
-    if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+    const response = await auction.relocateAuctionBidsInBidCollection();
+    return res.json(response);
+  });
+
+  app.post('/api/v1/relocate-bids-in-auction-collection', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
+      return;
+    }
+
+    const response = await auction.relocateBidsFromBidsModelInAuctions();
+    return res.json(response);
+  });
+
+  app.post('/api/v1/auctions-settle', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
       return;
     }
 
@@ -33,27 +46,16 @@ export default function appRouteHandlers(
   });
 
   app.post('/api/v1/auctions-start', async (req, res) => {
-    if (!req.body.key) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
-      return;
-    }
-
-    if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+    if (!isAuthorizedRequest(req, res)) {
       return;
     }
 
     const response = await auction.scheduleAuctionJobStart();
     return res.json(response);
   });
-  app.post('/api/v1/auctions-ends-notify', async (req, res) => {
-    if (!req.body.key) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
-      return;
-    }
 
-    if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+  app.post('/api/v1/auctions-ends-notify', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
       return;
     }
 
@@ -62,13 +64,7 @@ export default function appRouteHandlers(
   });
 
   app.post('/api/v1/auctions-metrics', async (req, res) => {
-    if (!req.body.key) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
-      return;
-    }
-
-    if (req.body.key !== AppConfig.googleCloud.schedulerSecretKey) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+    if (!isAuthorizedRequest(req, res)) {
       return;
     }
 

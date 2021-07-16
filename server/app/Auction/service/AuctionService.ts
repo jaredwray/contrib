@@ -94,6 +94,7 @@ export class AuctionService {
       await auction.save();
     }
     await this.AuctionModel.update({}, { $unset: { bids: 1 } }, { multi: true });
+    return { message: 'Relocated' };
   }
   //TODO: delete after bids in BidsModel relocation.
   public async relocateBidsFromBidsModelInAuctions() {
@@ -119,6 +120,7 @@ export class AuctionService {
       await bid.delete();
       await auction.save();
     }
+    return { message: 'Relocated' };
   }
 
   public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs }> | null {
