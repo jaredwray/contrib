@@ -9,7 +9,7 @@ import { auction } from 'src/helpers/testHelpers/auction';
 import AsyncButton from 'src/components/AsyncButton';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
-describe('Should render correctly "AuctionCard"', () => {
+describe('Should render correctly "Modal"', () => {
   const props: any = {
     open: true,
     onClose: jest.fn(),
@@ -43,9 +43,11 @@ describe('Should render correctly "AuctionCard"', () => {
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
   });
-  it('component is defined', () => {
-    const button = wrapper.find(AsyncButton);
-    button.simulate('click');
-    expect(wrapper).toBeDefined();
+  it('should close modal', () => {
+    wrapper.find('Button').first().simulate('click');
+    expect(props.onClose).toBeCalledTimes(1);
+  });
+  it('', () => {
+    wrapper.find(AsyncButton).simulate('click');
   });
 });

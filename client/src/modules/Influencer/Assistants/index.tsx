@@ -22,7 +22,6 @@ export default function Assistants() {
     AssistantsQuery,
     {
       variables: { id: influencerId },
-      fetchPolicy: 'network-only',
     },
   );
 

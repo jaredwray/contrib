@@ -1,18 +1,24 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'enzyme';
-
 import SortBy from '../SortBy';
+import { ReactWrapper, mount } from 'enzyme';
+import Select from 'src/components/Select';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+describe('Should render correctly "SortBy"', () => {
+  const props: any = {
+    changeFilters: jest.fn(),
+  };
 
-const props: any = {
-  changeFilters: jest.fn(),
-};
-
-test('renders without crashing', () => {
-  render(
-    <Router>
-      <SortBy {...props} />
-    </Router>,
-  );
+  let wrapper: ReactWrapper;
+  beforeEach(() => {
+    wrapper = mount(<SortBy {...props} />);
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('component is defined', () => {
+    expect(wrapper).toHaveLength(1);
+  });
+  it('should call changeFilters when changing', () => {
+    wrapper.find(Select).props().onChange('SPORT');
+    expect(props.changeFilters).toBeCalledTimes(1);
+  });
 });
