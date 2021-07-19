@@ -332,7 +332,9 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   public getAuctionSports(): Promise<string[]> {
-    return this.AuctionModel.distinct('sport', { status: AuctionStatus.ACTIVE }).exec();
+    return this.AuctionModel.distinct('sport', {
+      status: { $in: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD, AuctionStatus.PENDING] },
+    }).exec();
   }
 
   async addAuctionAttachment(id: string, organizerId: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel> {
