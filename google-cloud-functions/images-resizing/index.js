@@ -13,6 +13,7 @@ const os = require("os");
 const storage = new Storage();
 const SIZES = {
   avatar: [32, 120, 194],
+  auctions: [100, 306, 550],
 };
 
 sharp.cache(false);
