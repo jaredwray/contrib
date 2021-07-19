@@ -23,17 +23,19 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
   const currentPage = Math.floor(pageSkip / perPage) + 1;
   const totalPages = Math.ceil(totalItems / perPage);
 
-  const renderPageNumber = (number: number | string) =>
+  const renderPageNumber = (number: number | string, index: number) =>
     typeof number === 'number' ? (
       <button
-        key={number}
+        key={index}
         className={clsx(styles.pageBtn, { [styles.activePageBnt]: number === currentPage }, 'btn-link')}
         onClick={() => goToPage(number)}
       >
         {number}
       </button>
     ) : (
-      <button className={clsx(styles.pageBtn, styles.dots)}>{number}</button>
+      <button key={index} className={clsx(styles.pageBtn, styles.dots)}>
+        {number}
+      </button>
     );
 
   const goToPage = (number: number) => {
@@ -62,7 +64,7 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
             currentPage + 1,
             DOTS,
             totalPagesArray[totalPages - 1],
-          ].map((e: number | string) => renderPageNumber(e))}
+          ].map((e: number | string, index) => renderPageNumber(e, index))}
         </>
       );
     }
@@ -70,8 +72,8 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
     if (currentPage <= PAGINATION_LIMIT && totalPages > TOTAL_LIMIT) {
       return (
         <>
-          {[...totalPagesArray.splice(0, PAGINATION_LIMIT), DOTS, totalPages].map((e: number | string) =>
-            renderPageNumber(e),
+          {[...totalPagesArray.splice(0, PAGINATION_LIMIT), DOTS, totalPages].map((e: number | string, index) =>
+            renderPageNumber(e, index),
           )}
         </>
       );
@@ -84,12 +86,12 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
             totalPagesArray[0],
             DOTS,
             ...totalPagesArray.splice(totalPages - PAGINATION_LIMIT, totalPages),
-          ].map((e: number | string) => renderPageNumber(e))}
+          ].map((e: number | string, index) => renderPageNumber(e, index))}
         </>
       );
     }
 
-    return <>{totalPagesArray.map((e: number) => renderPageNumber(e))}</>;
+    return <>{totalPagesArray.map((e: number, index) => renderPageNumber(e, index))}</>;
   };
 
   return (
