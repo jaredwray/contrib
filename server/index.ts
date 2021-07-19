@@ -49,9 +49,5 @@ app.set('view engine', 'pug');
 
   app.listen(AppConfig.app.port, async () => {
     AppLogger.info(`server is listening on ${AppConfig.app.port}`);
-    //TODO: delete after bids in BidsModel relocation.
-    // await appServices.auction.relocateBidsFromBidsModelInAuctions()
-    //TODO: delete after bids in BidsModel relocation.
-    await appServices.auction.relocateAuctionBidsInBidCollection();
   });
 })();
