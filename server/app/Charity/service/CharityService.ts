@@ -16,6 +16,7 @@ import { StripeService } from '../../Payment';
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
 import { AppError } from '../../../errors';
+import { webSiteFormatter } from '../../../helpers/webSiteFormatter';
 
 interface CharityCreationInput {
   name: string;
@@ -242,7 +243,7 @@ export class CharityService {
       charity.profileStatus = CharityProfileStatus.COMPLETED;
     }
 
-    Object.assign(charity, input);
+    Object.assign(charity, { ...input, website: webSiteFormatter(input.website) });
 
     this.maybeActivateCharity(charity);
 
