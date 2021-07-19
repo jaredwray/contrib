@@ -115,5 +115,7 @@ describe('DonePage ', () => {
     });
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
+    wrapper!.find('ShareButton').last().children().find('Button').first().simulate('click');
+    wrapper!.find('CopyToClipboard').children().find('Button').simulate('click');
   });
 });

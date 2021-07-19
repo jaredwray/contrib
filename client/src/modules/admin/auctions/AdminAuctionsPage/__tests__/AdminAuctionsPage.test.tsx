@@ -1,5 +1,4 @@
-import React from 'react';
-import SimilarAuctions from '../SimilarAuctions';
+import AdminAuctionsPage from '..';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
@@ -8,20 +7,15 @@ import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
 import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
-import { AuctionStatus } from 'src/types/Auction';
-
-jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
+import ClickableTr from 'src/components/ClickableTr';
 
 const cache = new InMemoryCache();
 
 cache.writeQuery({
   query: AuctionsListQuery,
   variables: {
-    size: 10,
+    size: 20,
     skip: 0,
-    filters: {
-      status: [AuctionStatus.ACTIVE],
-    },
   },
   data: {
     auctions: {
@@ -33,31 +27,31 @@ cache.writeQuery({
   },
 });
 
-describe('SimilarAuctions ', () => {
-  it('component is defined but has not section', async () => {
+describe('AdminAuctionsPage ', () => {
+  it('component is defined but has not ClickableTr', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider>
-              <SimilarAuctions />
+              <AdminAuctionsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
       );
     });
     expect(wrapper!).toHaveLength(1);
-    expect(wrapper!.find('section')).toHaveLength(0);
+    expect(wrapper!.find(ClickableTr)).toHaveLength(0);
   });
-  it('component is defined and has section', async () => {
+  it('component is defined and has ClickableTr', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache}>
-              <SimilarAuctions />
+              <AdminAuctionsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -68,6 +62,6 @@ describe('SimilarAuctions ', () => {
       wrapper.update();
     });
     expect(wrapper!).toHaveLength(1);
-    expect(wrapper!.find('section')).toHaveLength(1);
+    expect(wrapper!.find(ClickableTr)).toHaveLength(1);
   });
 });

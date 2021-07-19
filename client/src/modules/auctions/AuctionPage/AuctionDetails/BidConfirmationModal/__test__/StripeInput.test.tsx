@@ -1,28 +1,35 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from '@testing-library/react';
-
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-
 import StripeInput from '../StripeInput';
-
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
-
-const props: any = {
-  disabled: false,
-  showCancelBtn: true,
-  onChange: jest.fn(),
-  onCancel: jest.fn(),
-};
+import { mount, ReactWrapper } from 'enzyme';
+import { MemoryRouter } from 'react-router-dom';
+import { CardElement } from '@stripe/react-stripe-js';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
-
-test('renders without crashing', () => {
-  render(
-    <Router>
-      <Elements stripe={stripePromise}>
-        <StripeInput {...props} />
-      </Elements>
-    </Router>,
-  );
+describe('StripeInput ', () => {
+  const props: any = {
+    disabled: false,
+    showCancelBtn: true,
+    onChange: jest.fn(),
+    onCancel: jest.fn(),
+  };
+  let wrapper: ReactWrapper;
+  beforeEach(() => {
+    wrapper = mount(
+      <MemoryRouter>
+        <Elements stripe={stripePromise}>
+          <StripeInput {...props} />
+        </Elements>
+      </MemoryRouter>,
+    );
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('component is defined', () => {
+    expect(wrapper).toHaveLength(1);
+  });
+  it('should change focus', () => {
+    wrapper.find('div').first().simulate('click');
+  });
 });
