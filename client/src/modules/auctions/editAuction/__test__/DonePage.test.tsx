@@ -81,6 +81,7 @@ cache.writeQuery({
 describe('DonePage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
+    window.prompt = () => {};
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>

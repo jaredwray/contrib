@@ -78,14 +78,15 @@ cache.writeQuery({
 describe('AuctionPage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
-
-    wrapper = mount(
-      <MemoryRouter>
-        <MockedProvider>
-          <AuctionPage />
-        </MockedProvider>
-      </MemoryRouter>,
-    );
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <MockedProvider>
+            <AuctionPage />
+          </MockedProvider>
+        </MemoryRouter>,
+      );
+    });
     expect(wrapper!.find(Layout)).toHaveLength(0);
   });
   it('component is defined and have Layout', async () => {
@@ -100,8 +101,6 @@ describe('AuctionPage ', () => {
           </ToastProvider>
         </MemoryRouter>,
       );
-    });
-    await act(async () => {
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
     });
