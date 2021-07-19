@@ -4,7 +4,7 @@ jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 import { mount } from 'enzyme';
 
-describe('Should render correctly "Bids"', () => {
+describe('Should render correctly "Pagination"', () => {
   const props: any = {
     totalItems: 1,
     pageSize: 2,

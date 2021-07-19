@@ -13,6 +13,9 @@ jest.mock('react-router-dom', () => ({
   useParams: () => ({
     auctionId: 'testId',
   }),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
   useRouteMatch: () => ({ url: '/auctions/testId' }),
 }));
 
