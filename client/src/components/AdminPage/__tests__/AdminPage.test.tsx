@@ -2,6 +2,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
+import Pagination from '../../Pagination';
 
 import { AdminPage } from '..';
 describe('Should render correctly "AdminPage"', () => {
@@ -29,5 +30,10 @@ describe('Should render correctly "AdminPage"', () => {
   });
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
+  });
+  it('should call setPageSkip', () => {
+    wrapper.find(Pagination).props().showNextPage();
+    wrapper.find(Pagination).props().showPrevPage();
+    expect(props.setPageSkip).toHaveBeenCalledTimes(2);
   });
 });

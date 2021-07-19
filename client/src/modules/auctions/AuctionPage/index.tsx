@@ -25,9 +25,7 @@ const AuctionPage = () => {
 
   const [executeAuctionQuery, { data: auctionData, error }] = useLazyQuery(AuctionQuery, {
     variables: { id: auctionId },
-    fetchPolicy: 'network-only',
   });
-
   useEffect(() => {
     executeAuctionQuery();
   }, [executeAuctionQuery]);

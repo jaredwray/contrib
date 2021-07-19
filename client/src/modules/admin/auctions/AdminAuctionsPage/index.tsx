@@ -29,11 +29,11 @@ export default function AdminAuctionsPage() {
   const [pageSkip, setPageSkip] = useState(0);
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
-    fetchPolicy: 'network-only',
   });
   if (error) {
     return null;
   }
+
   const auctions = data?.auctions || { skip: 0, totalItems: 0, items: [] };
   setPageTitle('Auctions page');
 
