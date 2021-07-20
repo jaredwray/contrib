@@ -384,8 +384,8 @@ export const UpdateAuctionDetailsMutation = gql`
 `;
 
 export const AddAuctionMediaMutation = gql`
-  mutation AddAuctionMedia($id: String!, $file: Upload!, $organizerId: String) {
-    addAuctionAttachment(id: $id, attachment: $file, organizerId: $organizerId) {
+  mutation AddAuctionMedia($id: String!, $file: Upload!) {
+    addAuctionAttachment(id: $id, attachment: $file) {
       url
       type
       cloudflareUrl
