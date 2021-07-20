@@ -18,7 +18,6 @@ describe('Should render correctly "StopOrActiveButton"', () => {
     `,
     className: jest.fn(),
   };
-  const mockFn = jest.fn();
 
   let wrapper: ReactWrapper;
   beforeEach(() => {
