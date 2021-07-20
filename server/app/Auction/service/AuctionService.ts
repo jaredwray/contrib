@@ -281,18 +281,19 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  public async addAuctionAttachment(
-    id: string,
-    organizerId: string,
-    attachment: Promise<IFile>,
-  ): Promise<AuctionAssets> {
-    const auction = await this.auctionRepository.getAuction(id, organizerId);
+  public async addAuctionAttachment(id: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
+    const auction = await this.auctionRepository.getAuction(id);
+
     if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
 
     try {
-      const asset = await this.attachmentsService.uploadFileAttachment(id, organizerId, attachment);
+      const asset = await this.attachmentsService.uploadFileAttachment(
+        id,
+        auction.auctionOrganizer._id.toString(),
+        attachment,
+      );
       const { filename } = await attachment;
 
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });

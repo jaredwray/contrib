@@ -78,7 +78,7 @@ export class GCloudStorage {
     {
       bucketName = AppConfig.googleCloud.bucketName,
       fileName,
-      shouldResizeImage = false,
+      shouldResizeImage = true,
     }: { bucketName?: string; fileName: string; shouldResizeImage?: boolean },
   ): Promise<{ fileType: FileType; url: string; uid: string | undefined }> {
     const file = await filePromise;
@@ -92,13 +92,12 @@ export class GCloudStorage {
     const formattedFileName = `${fileName}.${extension}`;
     try {
       const buffer = await this.streamToBuffer(file.createReadStream());
-      let assetUrl = formattedFileName;
+      await this.storage.bucket(bucketName).file(formattedFileName).save(buffer);
 
       if (fileType === FileType.IMAGE && shouldResizeImage) {
-        assetUrl = `pending/${formattedFileName}`;
+        await this.storage.bucket(bucketName).file(`pending/${formattedFileName}`).save(buffer);
       }
 
-      await this.storage.bucket(bucketName).file(assetUrl).save(buffer);
       let uid = undefined;
 
       if (fileType === FileType.VIDEO) {
