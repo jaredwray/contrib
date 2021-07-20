@@ -4,7 +4,6 @@ import { Image } from 'react-bootstrap';
 
 import AddVideoIcon from 'src/assets/icons/VideoIcon';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import useAuctionPreviewAttachment from '../../modules/auctions/hooks/useAuctionPreviewAttachment';
@@ -23,7 +22,7 @@ const AttachmentThumbnail: FC<Props> = ({ attachment, className }): ReactElement
     return attachment.type === 'VIDEO' ? <AddVideoIcon hideAddSign={true} /> : <AddPhotoIcon hideAddSign={true} />;
   }
 
-  return <Image className={className} src={ResizedImageUrl(srcUrl, 100)} onError={onImagePreviewError} />;
+  return <Image className={className} src={srcUrl} onError={onImagePreviewError} />;
 };
 
 export default AttachmentThumbnail;

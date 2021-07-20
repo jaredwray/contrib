@@ -13,7 +13,7 @@ const os = require("os");
 const storage = new Storage();
 const SIZES = {
   avatar: [32, 120, 194],
-  auctions: [100, 480, 720],
+  auctions: [100, 306, 550],
 };
 
 sharp.cache(false);
@@ -24,6 +24,7 @@ exports.resizeUploadedImage = async (file, context) => {
   if (!originalFilePath.startsWith("pending/")) {
     return false;
   }
+
   if (!file.contentType.includes("image")) {
     return false;
   }
@@ -42,12 +43,6 @@ exports.resizeUploadedImage = async (file, context) => {
   const bucket = storage.bucket(file.bucket);
   const tmpDir = path.join(os.tmpdir(), fileFoldersPath);
   const tmpFilePath = path.join(tmpDir, fileName);
-  const fileExistsAtRootPath = await bucket.file(filePath).exists();
-
-  if (!fileExistsAtRootPath) {
-    await bucket.file(originalFilePath).delete();
-    return false;
-  }
 
   // create tmp dir
   await fs.mkdirs(tmpDir);

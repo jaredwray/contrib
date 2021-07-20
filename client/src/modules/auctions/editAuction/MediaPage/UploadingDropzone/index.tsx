@@ -2,6 +2,7 @@ import { FC, ReactElement, SetStateAction, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { useDropzone } from 'react-dropzone';
+import { useParams } from 'react-router-dom';
 
 import { AddAuctionMediaMutation } from 'src/apollo/queries/auctions';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
@@ -55,6 +56,7 @@ const UploadingDropzone: FC<Props> = ({
 
   const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
   const bytes = Math.pow(1024, 3);
+  const { ownerId: organizerId } = useParams<{ ownerId: string }>();
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: any) => {
@@ -68,7 +70,7 @@ const UploadingDropzone: FC<Props> = ({
 
       acceptedFiles.forEach((file) => {
         addAuctionMedia({
-          variables: { id: auctionId, file },
+          variables: { id: auctionId, file, organizerId },
         });
       });
 
@@ -84,7 +86,7 @@ const UploadingDropzone: FC<Props> = ({
         });
       });
     },
-    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
+    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB, organizerId],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
