@@ -1,7 +1,10 @@
 export const charity = [
   {
-    id: 'a13312312312sdasd',
+    id: 'testId',
     name: 'test',
-    stripeAccountId: 'acct_123123123123',
+    stripeAccountId: 'testId',
+    profileStatus: 'COMPLETED',
+    status: 'ACTIVE',
+    stripeStatus: 'ACTIVE',
   },
 ];
