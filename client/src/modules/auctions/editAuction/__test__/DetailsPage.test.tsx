@@ -60,7 +60,7 @@ describe('EditAuctionDetailsPage ', () => {
     });
     expect(wrapper!.find(Layout)).toHaveLength(0);
   });
-  it('component is defined and have Layout', async () => {
+  it('component is defined and has Layout', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
