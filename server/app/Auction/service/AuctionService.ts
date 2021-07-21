@@ -4,7 +4,7 @@ import Dinero, { Currency } from 'dinero.js';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionMetricModel, IAuctionMetricModel } from '../mongodb/AuctionMetricModel';
-import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
+import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 
@@ -49,6 +49,7 @@ export class AuctionService {
   private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
   private readonly BidModel = BidModel(this.connection);
+  private readonly AssetModel = AuctionAssetModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
   private readonly auctionRepository: IAuctionRepository = new AuctionRepository(this.connection);
 
@@ -62,6 +63,23 @@ export class AuctionService {
     private readonly bidService: BidService,
     private readonly stripeService: StripeService,
   ) {}
+
+  //TODO: delete after attachments update.
+  public async updateAttachments() {
+    try {
+      const auctions = await this.AuctionModel.find({});
+      for (const auction of auctions) {
+        for (const assetId of auction.assets) {
+          const asset = await this.AssetModel.findById(assetId);
+          await this.cloudStorage.updateAttachment(asset);
+        }
+      }
+      return { message: 'Updated' };
+    } catch (error) {
+      AppLogger.warn(`Unable to update old attachments: ${error.message}`);
+    }
+  }
+
   //TODO: delete after bids in BidsModel relocation.
   public async relocateAuctionBidsInBidCollection() {
     const auctions = await this.AuctionModel.find({ bids: { $exists: true } });
@@ -281,18 +299,17 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  public async addAuctionAttachment(
-    id: string,
-    organizerId: string,
-    attachment: Promise<IFile>,
-  ): Promise<AuctionAssets> {
-    const auction = await this.auctionRepository.getAuction(id, organizerId);
+  public async addAuctionAttachment(id: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
+    const auction = await this.auctionRepository.getAuction(id);
     if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
-
     try {
-      const asset = await this.attachmentsService.uploadFileAttachment(id, organizerId, attachment);
+      const asset = await this.attachmentsService.uploadFileAttachment(
+        id,
+        auction.auctionOrganizer._id.toString(),
+        attachment,
+      );
       const { filename } = await attachment;
 
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });

@@ -6,6 +6,7 @@ import { Image } from 'react-bootstrap';
 import Slider from 'react-slick';
 
 import AttachmentThumbnail from 'src/components/AttachmentThumbnail';
+import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import 'slick-carousel/slick/slick.css';
@@ -69,7 +70,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
         {attachments.map((attachment, i) => (
           <div key={i} className={styles.attachmentImageWrapper}>
             {attachment.type === 'IMAGE' ? (
-              <Image className={styles.attachment} src={attachment.url} />
+              <Image className={styles.attachment} src={ResizedImageUrl(attachment.url, 720)} />
             ) : (
               <Stream controls height="min(540px, 100vw)" src={attachment.uid} onPlay={onStreamPlay} />
             )}

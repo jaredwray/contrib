@@ -2,7 +2,9 @@ import Stream from 'stream';
 import { Storage } from '@google-cloud/storage';
 import { AppConfig } from '../config';
 import { AppError, ErrorCode } from '../errors';
+import { AppLogger } from '../logger';
 import { CloudflareStreaming } from './CloudflareStreaming';
+import { IAuctionAssetModel } from '../app/Auction/mongodb/AuctionAssetModel';
 
 export type IFile = {
   createReadStream: () => Stream;
@@ -46,6 +48,36 @@ export class GCloudStorage {
     return FileType.UNKNOWN;
   }
 
+  //TODO: delete after attachments update.
+  async updateAttachment(asset: IAuctionAssetModel, bucketName: string = AppConfig.googleCloud.bucketName) {
+    try {
+      const fileName = GCloudStorage.getFileNameFromUrl(asset.url);
+      const fileNameArray = fileName.split('/');
+      const extension = fileName.split('.')[1];
+      let currentFileName = null;
+
+      if (fileNameArray.length !== 5) {
+        const folderPath = fileNameArray[fileNameArray.length - 1].split('.')[0];
+        fileNameArray.splice(fileNameArray.length - 1, 0, folderPath);
+        currentFileName = fileNameArray.join('/');
+
+        asset.url = `https://storage.googleapis.com/content-dev.contrib.org/${currentFileName}`;
+        await asset.save();
+
+        await this.storage.bucket(bucketName).file(fileName).move(currentFileName);
+      }
+
+      if (GCloudStorage.imageSupportedFormats.test(extension)) {
+        await this.storage
+          .bucket(bucketName)
+          .file(currentFileName ?? fileName)
+          .copy(`pending/${currentFileName ?? fileName}`);
+      }
+    } catch (error) {
+      AppLogger.warn(`Unable to update file ${asset.url}: ${error.message}`);
+    }
+  }
+
   async streamToBuffer(stream: Stream): Promise<Buffer> {
     return new Promise((resolve, reject) => {
       const data = [];
@@ -65,9 +97,12 @@ export class GCloudStorage {
   }
 
   async removeFile(fileUrl: string, bucketName: string = AppConfig.googleCloud.bucketName): Promise<void> {
-    const fileName = GCloudStorage.getFileNameFromUrl(fileUrl);
+    const fileNameArray = GCloudStorage.getFileNameFromUrl(fileUrl).split('/');
+    fileNameArray.pop();
+    const currentFileName = fileNameArray.join('/');
+
     try {
-      await this.storage.bucket(bucketName).file(fileName).delete();
+      await this.storage.bucket(bucketName).deleteFiles({ prefix: `${currentFileName}/` });
     } catch (error) {
       throw new AppError(`Unable to remove file, threw error ${error.message}`, ErrorCode.INTERNAL_ERROR);
     }
@@ -78,7 +113,7 @@ export class GCloudStorage {
     {
       bucketName = AppConfig.googleCloud.bucketName,
       fileName,
-      shouldResizeImage = false,
+      shouldResizeImage = true,
     }: { bucketName?: string; fileName: string; shouldResizeImage?: boolean },
   ): Promise<{ fileType: FileType; url: string; uid: string | undefined }> {
     const file = await filePromise;
@@ -92,13 +127,12 @@ export class GCloudStorage {
     const formattedFileName = `${fileName}.${extension}`;
     try {
       const buffer = await this.streamToBuffer(file.createReadStream());
-      let assetUrl = formattedFileName;
+      await this.storage.bucket(bucketName).file(formattedFileName).save(buffer);
 
       if (fileType === FileType.IMAGE && shouldResizeImage) {
-        assetUrl = `pending/${formattedFileName}`;
+        await this.storage.bucket(bucketName).file(`pending/${formattedFileName}`).save(buffer);
       }
 
-      await this.storage.bucket(bucketName).file(assetUrl).save(buffer);
       let uid = undefined;
 
       if (fileType === FileType.VIDEO) {
