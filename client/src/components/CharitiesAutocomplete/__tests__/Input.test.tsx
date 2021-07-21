@@ -13,13 +13,13 @@ const cache = new InMemoryCache();
 cache.writeQuery({
   query: CharitiesSearch,
   variables: { query: 'test', status: ['ACTIVE'] },
-  data: { charitiesSearch: [charity, charity] },
+  data: { charitiesSearch: [charity] },
 });
 
 describe('Should render correctly "CharitiesSearchInput"', () => {
   const props: any = {
     charities: [{ id: 'test', name: 'test' }],
-    favoriteCharities: [charity],
+    favoriteCharities: [charity, charity],
     onChange: jest.fn(),
   };
 
@@ -33,7 +33,11 @@ describe('Should render correctly "CharitiesSearchInput"', () => {
 
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
+
+      wrapper.find(SearchInput).children().find('input').simulate('click');
       wrapper.find(SearchInput).props().onChange('test');
+      expect(wrapper.find('li')).toHaveLength(2);
+      wrapper.find('li').at(0).simulate('click');
     });
   });
 });

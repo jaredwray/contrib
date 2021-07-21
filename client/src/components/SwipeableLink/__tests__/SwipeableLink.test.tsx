@@ -24,6 +24,13 @@ describe('Should render correctly "UserAccountProvider"', () => {
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
   });
+  it('e.screenX !== state.current.x', () => {
+    wrapper.find(Link).simulate('click');
+  });
+  it(' state.current.x === e.screenX;', () => {
+    wrapper.find(Link).simulate('mouseDown');
+    wrapper.find(Link).simulate('click');
+  });
   it('should have Link to "/test"', () => {
     expect(wrapper.find(Link).props().to).toBe('/test');
   });

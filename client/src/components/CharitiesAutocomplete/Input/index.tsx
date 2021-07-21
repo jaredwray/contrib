@@ -76,9 +76,9 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
           onClick={onClickSearch}
         />
         <ul className={clsx('p-0 m-0', styles.searchResult)}>
-          {(charitiesSearch || []).map((charity: Charity) => (
+          {(charitiesSearch || []).map((charity: Charity, i) => (
             <li
-              key={charity.id}
+              key={i}
               className={clsx('text-label', styles.resultItem, isSelectedCharity(charity) && styles.selected)}
               title={charity.name}
               onClick={() => handleToggleCharity(charity)}

@@ -1,15 +1,21 @@
 import AdminAuctionPage from '..';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
-import { AuctionForAdminPageQuery, CustomerInformationQuery } from 'src/apollo/queries/auctions';
+import { AuctionForAdminPageQuery, CustomerInformationQuery, AuctionMetricsQuery } from 'src/apollo/queries/auctions';
+import { AuctionBidsQuery } from 'src/apollo/queries/bids';
 import { auctionForAdminPage } from 'src/helpers/testHelpers/auction';
+import { bitly } from 'src/helpers/testHelpers/bitly';
+import { bids } from 'src/helpers/testHelpers/bids';
 import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
 import Layout from 'src/components/Layout';
 import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
-import AsyncButton from 'src/components/AsyncButton';
+import { Modal } from 'src/modules/admin/auctions/AdminAuctionPage/Modal';
 import Bids from '../Bids';
+import DineroFactory from 'dinero.js';
+import { UserAccountStatus } from 'src/types/UserAccount';
+import AsyncButton from 'src/components/AsyncButton';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -27,7 +33,6 @@ jest.mock('react-chartjs-2', () => ({
 }));
 
 const cache = new InMemoryCache();
-const cache2 = new InMemoryCache();
 
 cache.writeQuery({
   query: AuctionForAdminPageQuery,
@@ -35,19 +40,51 @@ cache.writeQuery({
     id: 'testId',
   },
   data: {
-    getAuctionForAdminPage: auctionForAdminPage,
+    auction: auctionForAdminPage,
   },
 });
-cache2.writeQuery({
-  query: CustomerInformationQuery,
+cache.writeQuery({
+  query: AuctionMetricsQuery,
   variables: {
-    stripeCustomerId: 'cus_Jcry1vA3iHj9Eh',
+    auctionId: 'testId',
   },
   data: {
-    getCustomerInformation: { email: 'qwertman2018@gmail.com', phone: '+375291111111' },
+    getAuctionMetrics: bitly,
   },
 });
-
+cache.writeQuery({
+  query: AuctionBidsQuery,
+  variables: {
+    auctionId: 'testId',
+  },
+  data: {
+    bids,
+  },
+});
+cache.writeQuery({
+  query: CustomerInformationQuery,
+  variables: { stripeCustomerId: 'testId' },
+  data: {
+    getCustomerInformation: { email: 'test@gmail.com', phone: '+375290000000' },
+  },
+});
+const arg = {
+  id: 'testId',
+  bid: { amount: 2000, currency: DineroFactory.defaultCurrency, precision: 2 },
+  createdAt: new Date('2021-07-20T21:47:12.849Z'),
+  paymentSource: 'test',
+  charityId: '',
+  user: {
+    createdAt: new Date('2021-07-20T21:47:12.849Z'),
+    id: 'test',
+    mongodbId: 'test',
+    phoneNumber: '+000000000000',
+    stripeCustomerId: 'test',
+    notAcceptedTerms: null,
+    status: UserAccountStatus.COMPLETED,
+    paymentInformation: null,
+  },
+};
 describe('AdminAuctionPage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
@@ -61,8 +98,7 @@ describe('AdminAuctionPage ', () => {
           </ToastProvider>
         </MemoryRouter>,
       );
-    });
-    await act(async () => {
+
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
     });
@@ -80,35 +116,18 @@ describe('AdminAuctionPage ', () => {
           </ToastProvider>
         </MemoryRouter>,
       );
-    });
-    await act(async () => {
+
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
+
+      expect(wrapper!).toHaveLength(1);
+      expect(wrapper!.find(Layout)).toHaveLength(1);
+      wrapper!.find(Bids).props().onBidClickHandler(arg);
+
+      wrapper!.find(Modal).props().onClose();
+      wrapper!.find(Modal).props().onConfirm();
+
+      wrapper!.find(AsyncButton).at(0).simulate('click');
     });
-    expect(wrapper!).toHaveLength(1);
-    expect(wrapper!.find(Layout)).toBeDefined();
-  });
-  xit('component is defined and have Bids', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <MockedProvider cache={cache2}>
-              <MockedProvider cache={cache}>
-                <AdminAuctionPage />
-              </MockedProvider>
-            </MockedProvider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
-      wrapper!.find(Bids).children().find(AsyncButton).simulate('click');
-      wrapper.update();
-    });
-    expect(wrapper!.find(Layout)).toBeDefined();
   });
 });

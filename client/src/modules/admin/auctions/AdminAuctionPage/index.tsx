@@ -43,7 +43,6 @@ export default function AdminAuctionPage() {
   });
   const [getAuctionData, { data: auctionData, error, loading }] = useLazyQuery(AuctionForAdminPageQuery, {
     variables: { id: auctionId },
-    fetchPolicy: 'network-only',
   });
 
   const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformationQuery);
