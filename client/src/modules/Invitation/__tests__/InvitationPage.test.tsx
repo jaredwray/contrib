@@ -3,13 +3,22 @@ import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
+import { ToastProvider } from 'react-toast-notifications';
 
+import Layout from 'src/components/Layout';
 import { GetInvitation } from 'src/apollo/queries/getInvitation';
 import { mockedUseAuth0, withNotAuthenticatedUser } from 'src/helpers/testHelpers/auth0';
 
 import InvitationPage from '..';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+const mockHistoryPush = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: mockHistoryPush,
+  }),
+}));
 
 const cache = new InMemoryCache();
 cache.writeQuery({
@@ -24,6 +33,25 @@ cache.writeQuery({
 });
 
 describe('InvitationPage', () => {
+  it('component returns null', async () => {
+    withNotAuthenticatedUser();
+
+    let wrapper: ReactWrapper;
+
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <MemoryRouter initialEntries={['/invitation/fake-slug']}>
+            <MockedProvider>
+              <InvitationPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </ToastProvider>,
+      );
+    });
+    expect(wrapper!.find(Layout)).toHaveLength(0);
+  });
+
   it('renders sign up button', async () => {
     withNotAuthenticatedUser();
 
@@ -31,11 +59,13 @@ describe('InvitationPage', () => {
 
     await act(async () => {
       wrapper = mount(
-        <MemoryRouter initialEntries={['/invitation/fake-slug']}>
-          <MockedProvider cache={cache}>
-            <InvitationPage />
-          </MockedProvider>
-        </MemoryRouter>,
+        <ToastProvider>
+          <MemoryRouter initialEntries={['/invitation/fake-slug']}>
+            <MockedProvider cache={cache}>
+              <InvitationPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </ToastProvider>,
       );
     });
 
@@ -53,11 +83,13 @@ describe('InvitationPage', () => {
 
     await act(async () => {
       wrapper = mount(
-        <MemoryRouter initialEntries={['/invitation/fake-slug']}>
-          <MockedProvider cache={cache}>
-            <InvitationPage />
-          </MockedProvider>
-        </MemoryRouter>,
+        <ToastProvider>
+          <MemoryRouter initialEntries={['/invitation/fake-slug']}>
+            <MockedProvider cache={cache}>
+              <InvitationPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </ToastProvider>,
       );
     });
 

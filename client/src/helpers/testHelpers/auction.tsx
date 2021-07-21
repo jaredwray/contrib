@@ -60,6 +60,7 @@ export const auctionForAdminPage = {
   endDate: '2021-06-24T08:00:18.000Z',
   fairMarketValue: null,
   id: '60cf0ade0092860f2c7a0bc1',
+  isActive: false,
   isFailed: true,
   isSold: false,
   link: 'https://go.contrib.org/3qbU9JG',
