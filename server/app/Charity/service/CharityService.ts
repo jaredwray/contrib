@@ -146,7 +146,6 @@ export class CharityService {
     const charityModel = await this.CharityModel.findOne({ stripeAccountId: account.id }).exec();
     const session = await this.connection.startSession();
     const charity = CharityService.makeCharity(charityModel);
-
     let isAccountActive;
 
     if (account.details_submitted) {
@@ -156,11 +155,13 @@ export class CharityService {
       isAccountActive = false;
     }
 
-    await this.updateCharityStatus({
-      charity,
-      stripeStatus: isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE,
-      session,
-    });
+    try {
+      const stripeStatus = isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE;
+      await this.updateCharityStatus({ charity, stripeStatus, session });
+      AppLogger.info(`Charity #${charity.id} was updated by stripe account to ${stripeStatus}`);
+    } catch (err) {
+      AppLogger.warn(`Cannot update charity #${charity.id} by stripe account: ${err.message}`);
+    }
   }
 
   async maybeUpdateStripeLink(charity: Charity): Promise<Charity> {

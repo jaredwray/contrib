@@ -5,7 +5,7 @@ import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
 import { isAuthorizedRequest } from './helpers/isAuthorizedRequest';
-
+import { AppLogger } from 'logger';
 export default function appRouteHandlers(
   app: express.Express,
   { auction, charity, stripeService, twilioNotification }: IAppServices,
@@ -122,14 +122,21 @@ export default function appRouteHandlers(
     try {
       event = stripeService.constructEvent(request.body, sig as string);
     } catch (err) {
+      AppLogger.error(`Cannot handle stripe event with ${event.type} type: ${err.message}`);
       response.sendStatus(400).json({ message: err.message });
       return;
     }
 
+    const object = event.data.object;
+
+    AppLogger.info(
+      `New stripe event for charity received. Stripe account id: ${object.id}. Event type: ${event.type},`,
+    );
     if (event.type === 'account.updated') {
       try {
-        await charity.updateCharityByStripeAccount(event.data.object);
+        await charity.updateCharityByStripeAccount(object);
       } catch (err) {
+        AppLogger.warn(`Cannot update charity by stripe account #${object.id}: ${err.message}`);
         response.sendStatus(400).json({ message: err.message });
         return;
       }
