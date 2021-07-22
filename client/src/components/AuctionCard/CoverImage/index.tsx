@@ -2,6 +2,8 @@ import { FC, useState, useEffect, useRef } from 'react';
 
 import clsx from 'clsx';
 
+import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+
 import styles from './styles.module.scss';
 
 type Props = {
@@ -18,7 +20,6 @@ const CoverImage: FC<Props> = ({ src, alt, className }) => {
 
   const [loadedImageSrc, setLoadedImageSrc] = useState(placeholder);
   const imageRef = useRef<HTMLImageElement>(null);
-
   useEffect(() => {
     let observer: IntersectionObserver;
     const element = imageRef.current!;
@@ -58,7 +59,7 @@ const CoverImage: FC<Props> = ({ src, alt, className }) => {
 
   return (
     <div className={clsx(styles.root, className)}>
-      <img ref={imageRef} alt={alt} className={styles.image} src={loadedImageSrc} />
+      <img ref={imageRef} alt={alt} className={styles.image} src={ResizedImageUrl(loadedImageSrc, 480)} />
     </div>
   );
 };

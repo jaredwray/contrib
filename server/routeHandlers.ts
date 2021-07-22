@@ -18,6 +18,15 @@ export default function appRouteHandlers(
     }
   });
 
+  app.post('/api/v1/update-attachments', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
+      return;
+    }
+
+    const response = await auction.updateAttachments();
+    return res.json(response);
+  });
+
   app.post('/api/v1/relocate-bids-in-bid-collection', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {
       return;

@@ -1,9 +1,7 @@
 import { Connection } from 'mongoose';
-import { Storage } from '@google-cloud/storage';
 import { v4 as uuid } from 'uuid';
 
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
-import { AppConfig } from '../../../config';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
 
 export class AuctionAttachmentsService {
@@ -16,7 +14,8 @@ export class AuctionAttachmentsService {
     organizerId: string,
     attachment: Promise<IFile>,
   ): Promise<IAuctionAssetModel> {
-    const attachmentUrl = `${organizerId}/auctions/${id}/${uuid()}`;
+    const uuidValue = uuid();
+    const attachmentUrl = `${organizerId}/auctions/${id}/${uuidValue}/${uuidValue}`;
 
     const { fileType, url, uid } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentUrl });
     const assetUid = Boolean(uid) ? { uid } : {};
