@@ -42,7 +42,7 @@ app.set('view engine', 'pug');
     '/graphql',
     graphqlUploadExpress({
       maxFiles: 1,
-      maxFileSize: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytes ?? Infinity,
+      maxFileSize: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytes || Infinity,
     }),
   );
   createGraphqlServer(appServices).applyMiddleware({ app });
