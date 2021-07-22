@@ -155,12 +155,16 @@ export class CharityService {
     } else {
       isAccountActive = false;
     }
-
-    await this.updateCharityStatus({
-      charity,
-      stripeStatus: isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE,
-      session,
-    });
+    try {
+      await this.updateCharityStatus({
+        charity,
+        stripeStatus: isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE,
+        session,
+      });
+      AppLogger.info(`Charity was updated by stripe account`);
+    } catch (err) {
+      AppLogger.warn(`Cannot update charity with id#${charity.id} by stripe account: ${err.message}`);
+    }
   }
 
   async maybeUpdateStripeLink(charity: Charity): Promise<Charity> {

@@ -5,6 +5,7 @@ import { AppConfig } from './config';
 import { CharityStatus } from './app/Charity/dto/CharityStatus';
 import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
 import { isAuthorizedRequest } from './helpers/isAuthorizedRequest';
+import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
@@ -122,14 +123,18 @@ export default function appRouteHandlers(
     try {
       event = stripeService.constructEvent(request.body, sig as string);
     } catch (err) {
+      AppLogger.error(`Cannot handle the Stripe event, ${event.type}: ${err.message}`);
       response.sendStatus(400).json({ message: err.message });
       return;
     }
-
+    AppLogger.info(
+      `Received new stripe event for charity. Stripe account id: ${event.data.object.id}. Event type: ${event.type},`,
+    );
     if (event.type === 'account.updated') {
       try {
         await charity.updateCharityByStripeAccount(event.data.object);
       } catch (err) {
+        AppLogger.warn(`Cannot update charity by stripe account with id#${event.data.object.id}: ${err.message}`);
         response.sendStatus(400).json({ message: err.message });
         return;
       }
