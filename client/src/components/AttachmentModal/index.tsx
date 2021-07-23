@@ -9,12 +9,12 @@ import { AuctionAttachment } from 'src/types/Auction';
 import styles from './styles.module.scss';
 
 interface Props {
-  selectedAttachment: AuctionAttachment | null;
+  attachment: AuctionAttachment | null;
   closeModal: () => void;
 }
 
-const Dialog: FC<Props> = ({ selectedAttachment, closeModal }) => {
-  if (!selectedAttachment) {
+const AttachmentModal: FC<Props> = ({ attachment, closeModal }) => {
+  if (!attachment) {
     return null;
   }
 
@@ -24,14 +24,14 @@ const Dialog: FC<Props> = ({ selectedAttachment, closeModal }) => {
         <button className={styles.closeBtn} title="close" onClick={closeModal}>
           X
         </button>
-        {selectedAttachment.type === 'VIDEO' ? (
-          <Stream controls src={selectedAttachment.cloudflareUrl} />
+        {attachment.type === 'VIDEO' ? (
+          <Stream controls src={attachment.cloudflareUrl} />
         ) : (
-          <img alt="" className={styles.image} src={selectedAttachment.url} />
+          <img alt="" className={styles.image} src={attachment.url} />
         )}
       </Modal.Body>
     </Modal>
   );
 };
 
-export default Dialog;
+export default AttachmentModal;

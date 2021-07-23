@@ -52,26 +52,10 @@ export class GCloudStorage {
   async updateAttachment(asset: IAuctionAssetModel, bucketName: string = AppConfig.googleCloud.bucketName) {
     try {
       const fileName = GCloudStorage.getFileNameFromUrl(asset.url);
-      const fileNameArray = fileName.split('/');
       const extension = fileName.split('.')[1];
-      let currentFileName = null;
-
-      if (fileNameArray.length !== 5) {
-        const folderPath = fileNameArray[fileNameArray.length - 1].split('.')[0];
-        fileNameArray.splice(fileNameArray.length - 1, 0, folderPath);
-        currentFileName = fileNameArray.join('/');
-
-        asset.url = `https://storage.googleapis.com/content-dev.contrib.org/${currentFileName}`;
-        await asset.save();
-
-        await this.storage.bucket(bucketName).file(fileName).move(currentFileName);
-      }
 
       if (GCloudStorage.imageSupportedFormats.test(extension)) {
-        await this.storage
-          .bucket(bucketName)
-          .file(currentFileName ?? fileName)
-          .copy(`pending/${currentFileName ?? fileName}`);
+        await this.storage.bucket(bucketName).file(fileName).copy(`pending/${fileName}`);
       }
     } catch (error) {
       AppLogger.warn(`Unable to update file ${asset.url}: ${error.message}`);

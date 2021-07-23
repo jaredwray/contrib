@@ -137,8 +137,8 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
     stopAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.stopAuction(id)),
     activateAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.activateAuctionById(id)),
-    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction }) =>
-      auction.addAuctionAttachment(id, attachment),
+    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencerId }) =>
+      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachment),
     ),
     removeAuctionAttachment: requireRole(
       async (_, { id, attachmentUrl }, { auction, currentAccount, currentInfluencerId }) =>

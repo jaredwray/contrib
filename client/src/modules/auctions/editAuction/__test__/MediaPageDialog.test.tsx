@@ -1,5 +1,5 @@
-import { attachments } from '../../../../helpers/testHelpers/attachments';
-import Dialog from '../MediaPage/Dialog';
+import { attachments } from 'src/helpers/testHelpers/attachments';
+import AttachmentModal from 'src/components/AttachmentModal';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
@@ -17,19 +17,19 @@ describe('Should render correctly "Dialog"', () => {
     };
     const wrapper = mount(
       <Router>
-        <Dialog {...props} />
+        <AttachmentModal {...props} />
       </Router>,
     );
     expect(wrapper.find('Modal')).toHaveLength(0);
   });
   it('component is defined', () => {
     const props: any = {
-      selectedAttachment: attachments[0],
+      attachment: attachments[0],
       closeModal: jest.fn(),
     };
     const wrapper = mount(
       <Router>
-        <Dialog {...props} />
+        <AttachmentModal {...props} />
       </Router>,
     );
     expect(wrapper.find('Modal')).toHaveLength(2);

@@ -28,24 +28,6 @@ export default function appRouteHandlers(
     return res.json(response);
   });
 
-  app.post('/api/v1/relocate-bids-in-bid-collection', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-
-    const response = await auction.relocateAuctionBidsInBidCollection();
-    return res.json(response);
-  });
-
-  app.post('/api/v1/relocate-bids-in-auction-collection', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-
-    const response = await auction.relocateBidsFromBidsModelInAuctions();
-    return res.json(response);
-  });
-
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {
       return;

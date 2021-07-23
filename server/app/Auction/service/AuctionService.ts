@@ -79,68 +79,6 @@ export class AuctionService {
       AppLogger.warn(`Unable to update old attachments: ${error.message}`);
     }
   }
-
-  //TODO: delete after bids in BidsModel relocation.
-  public async relocateAuctionBidsInBidCollection() {
-    const auctions = await this.AuctionModel.find({ bids: { $exists: true } });
-    if (auctions.length === 0) {
-      return;
-    }
-    for (const auction of auctions) {
-      const bids = auction.bids;
-      for (const bid of bids) {
-        if (bids.length === 0) {
-          break;
-        }
-        await this.BidModel.create([
-          {
-            auction: auction._id,
-            user: bid.user,
-            createdAt: bid.createdAt,
-            paymentSource: bid.paymentSource,
-            bid: bid.bid,
-            bidCurrency: auction.priceCurrency as Currency,
-            chargeId: bid.chargeId,
-          },
-        ]);
-      }
-      if (auction.status === AuctionStatus.SOLD && bids.length !== 0) {
-        let lastBid = bids.sort((a, b) => b.bid - a.bid)[0];
-        auction.stoppedAt = lastBid.createdAt;
-      }
-      auction.totalBids = bids.length;
-      await auction.save();
-    }
-    await this.AuctionModel.update({}, { $unset: { bids: 1 } }, { multi: true });
-    return { message: 'Relocated' };
-  }
-  //TODO: delete after bids in BidsModel relocation.
-  public async relocateBidsFromBidsModelInAuctions() {
-    const bids = await this.BidModel.find({});
-    if (bids.length === 0) {
-      return;
-    }
-    for (const bid of bids) {
-      const auction = await this.AuctionModel.findById(bid.auction);
-
-      const inputBid = {
-        user: bid.user,
-        createdAt: bid.createdAt,
-        paymentSource: bid.paymentSource,
-        bid: bid.bid,
-        chargeId: bid.chargeId,
-      };
-
-      Object.assign(auction, {
-        bids: [...auction.bids, inputBid],
-      });
-
-      await bid.delete();
-      await auction.save();
-    }
-    return { message: 'Relocated' };
-  }
-
   public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs }> | null {
     return await this.auctionRepository.followAuction(auctionId, accountId);
   }
@@ -299,17 +237,18 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  public async addAuctionAttachment(id: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
-    const auction = await this.auctionRepository.getAuction(id);
+  public async addAuctionAttachment(
+    id: string,
+    organizerId: string,
+    attachment: Promise<IFile>,
+  ): Promise<AuctionAssets> {
+    const auction = await this.auctionRepository.getAuction(id, organizerId);
     if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
+
     try {
-      const asset = await this.attachmentsService.uploadFileAttachment(
-        id,
-        auction.auctionOrganizer._id.toString(),
-        attachment,
-      );
+      const asset = await this.attachmentsService.uploadFileAttachment(id, organizerId, attachment);
       const { filename } = await attachment;
 
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });
