@@ -38,6 +38,8 @@ app.set('view engine', 'pug');
   }
   const bytes = Math.pow(1024, 3);
 
+  app.use(express.urlencoded({ limit: '500mb', extended: false, parameterLimit: 500000 }));
+
   app.use(
     '/graphql',
     graphqlUploadExpress({
