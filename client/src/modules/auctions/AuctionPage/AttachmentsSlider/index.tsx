@@ -14,9 +14,10 @@ import styles from './styles.module.scss';
 
 interface Props {
   attachments: AuctionAttachment[];
+  onAttachmentClick: (attachment: AuctionAttachment) => void;
 }
 
-const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
+const AttachmentsSlider: FC<Props> = ({ attachments, onAttachmentClick }): ReactElement | null => {
   const [currentSlide, setCurrentSlide] = useState(1);
   const [activeStream, setActiveStream] = useState<HTMLStreamElement>();
 
@@ -68,7 +69,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
     <>
       <Slider {...settings}>
         {attachments.map((attachment, i) => (
-          <div key={i} className={styles.attachmentImageWrapper}>
+          <div key={i} className={styles.attachmentImageWrapper} onClick={() => onAttachmentClick(attachment)}>
             {attachment.type === 'IMAGE' ? (
               <Image className={styles.attachment} src={ResizedImageUrl(attachment.url, 720)} />
             ) : (

@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { GetAuctionMediaQuery } from 'src/apollo/queries/auctions';
+import AttachmentModal from 'src/components/AttachmentModal';
 import Form from 'src/components/Form/Form';
 import Layout from 'src/components/Layout';
 import StepByStepRow from 'src/components/StepByStepRow';
@@ -15,7 +16,6 @@ import { AuctionAttachment } from 'src/types/Auction';
 import Row from '../common/Row';
 import StepHeader from '../common/StepHeader';
 import AttachmentsStateInterface from './common/AttachmentsStateInterface';
-import Dialog from './Dialog';
 import styles from './styles.module.scss';
 import UploadingDropzone from './UploadingDropzone';
 
@@ -87,7 +87,7 @@ const EditAuctionMediaPage = () => {
         <Form initialValues={{ photos: [], videos: [] }} onSubmit={handleSubmit}>
           <Container>
             <StepHeader step="2" title="Photos & video" />
-            <Dialog closeModal={closeModal} selectedAttachment={selectedAttachment} />
+            <AttachmentModal attachment={selectedAttachment} closeModal={closeModal} />
             <Row childrenWrapperCLassName={styles.dropzoneWrapper} description={description}>
               <UploadingDropzone
                 accepted=".png, .jpeg, .jpg, .webp, .mp4, .webm, .opgg, .mov"
