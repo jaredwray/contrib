@@ -1,12 +1,16 @@
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
-
 import UploadingDropzone from '../';
-
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+import { mount, ReactWrapper } from 'enzyme';
+import { act } from 'react-dom/test-utils';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => ({
+    ownerId: 'testId',
+  }),
+}));
 jest.mock('src/modules/auctions/editAuction/MediaPage/UploadingDropzone/FilePreview', () => () => <></>);
+
+global.URL.createObjectURL = jest.fn(() => 'www.test');
 
 const props: any = {
   accepted: 'test accepted',
@@ -17,12 +21,12 @@ const props: any = {
     ],
     loading: [
       {
-        lastModified: 1619704709059,
-        lastModifiedDate: 'Thu Apr 29 2021 16:58:29 GMT+0300 (Москва, стандартное время',
-        name: '1.mp4',
-        path: '1.mp4',
-        size: 27561202,
-        type: 'video/mp4',
+        lastModified: 1,
+        lastModifiedDate: new Date(),
+        name: '1.jpeg',
+        path: '1.jpeg',
+        size: 1,
+        type: 'img/jpeg',
         webkitRelativePath: '',
       },
     ],
@@ -31,15 +35,34 @@ const props: any = {
   setErrorMessage: jest.fn(),
   setSelectedAttachment: jest.fn(),
 };
+const createFile = (name: string, size: number, type: string) => ({
+  name,
+  path: name,
+  size,
+  type,
+});
 
-test('renders without crashing', async () => {
-  await act(async () => {
-    render(
-      <Router>
-        <MockedProvider>
-          <UploadingDropzone {...props} />
-        </MockedProvider>
-      </Router>,
+const files = [createFile('1.png', 100, 'image/png'), createFile('1.mp4', 1073741825, 'video/mp4')];
+describe('AuctionPage ', () => {
+  let wrapper: ReactWrapper;
+  beforeEach(() => {
+    wrapper = mount(
+      <MockedProvider>
+        <UploadingDropzone {...props} />
+      </MockedProvider>,
     );
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('component is defined and has img', async () => {
+    expect(wrapper).toHaveLength(1);
+    expect(wrapper.find('img')).toHaveLength(1);
+
+    await act(async () => {
+      wrapper.find('input').simulate('change', {
+        target: { files },
+      });
+    });
   });
 });

@@ -12,8 +12,6 @@ import { AuctionStatus } from 'src/types/Auction';
 import Slider from 'src/components/Slider';
 
 jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
-const mockedSumbit = jest.fn();
 const cache = new InMemoryCache();
 const secondCache = new InMemoryCache();
 

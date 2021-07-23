@@ -1,15 +1,14 @@
-import { InMemoryCache } from '@apollo/client';
-import { MockedProvider } from '@apollo/client/testing';
-import { mount, ReactWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
-import { ToastProvider } from 'react-toast-notifications';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { GetAuctionDetailsQuery } from 'src/apollo/queries/auctions';
-import { auction } from 'src/helpers/testHelpers/auction';
+import { mount, ReactWrapper } from 'enzyme';
+import { InMemoryCache } from '@apollo/client';
 import { MemoryRouter } from 'react-router-dom';
-import Layout from 'src/components/Layout';
+import { MockedProvider } from '@apollo/client/testing';
+import { ToastProvider } from 'react-toast-notifications';
 
+import Layout from 'src/components/Layout';
+import Form from 'src/components/Form/Form';
 import EditAuctionDetailsPage from '../DetailsPage';
+import { GetAuctionDetailsQuery } from 'src/apollo/queries/auctions';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
