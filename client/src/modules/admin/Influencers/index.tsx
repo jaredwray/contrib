@@ -21,7 +21,6 @@ export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
   const [getInfluencersList, { loading, data, error }] = useLazyQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {

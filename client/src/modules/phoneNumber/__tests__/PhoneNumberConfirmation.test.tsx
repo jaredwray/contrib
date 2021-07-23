@@ -1,14 +1,22 @@
-import { InMemoryCache } from '@apollo/client';
-import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
-
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UserAccountStatus } from 'src/types/UserAccount';
-
 import PhoneNumberConfirmation from '../Confirmation';
+import { MockedProvider } from '@apollo/client/testing';
+import { mount, ReactWrapper } from 'enzyme';
+import { InMemoryCache } from '@apollo/client';
+import Layout from '../Layout';
+import { act } from 'react-dom/test-utils';
+
+const mockHistoryPush = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: mockHistoryPush,
+  }),
+}));
 
 const cache = new InMemoryCache();
+
 cache.writeQuery({
   query: MyAccountQuery,
   data: {
@@ -27,21 +35,30 @@ cache.writeQuery({
     },
   },
 });
-
-const mockHistoryReplace = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as object),
-  useHistory: () => ({
-    replace: mockHistoryReplace,
-  }),
-}));
-
-test('renders without crashing', async () => {
-  await act(async () => {
-    render(
-      <MockedProvider cache={cache}>
-        <PhoneNumberConfirmation />
-      </MockedProvider>,
-    );
+describe('AuctionPage ', () => {
+  it('component return null', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MockedProvider>
+          <PhoneNumberConfirmation />
+        </MockedProvider>,
+      );
+    });
+    expect(wrapper!.find(Layout)).toHaveLength(0);
+  });
+  it('component is defined and has Layout', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MockedProvider cache={cache}>
+          <PhoneNumberConfirmation />
+        </MockedProvider>,
+      );
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    expect(wrapper!).toHaveLength(1);
+    expect(wrapper!.find(Layout)).toHaveLength(1);
   });
 });

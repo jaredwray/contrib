@@ -1,10 +1,10 @@
 import { act } from 'react-dom/test-utils';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { shallow, mount, render, ShallowWrapper, ReactWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import Form from 'src/components/Form/Form';
 import { FavouriteCharitiesField } from '../FavouriteCharitiesField';
-import useField from 'src/components/Form/hooks/useField';
 import { MockedProvider } from '@apollo/client/testing';
+import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
+import { CharityStatus, CharityProfileStatus, CharityStripeStatus } from 'src/types/Charity';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 jest.mock('src/components/Form/hooks/useField', () => () => {
@@ -19,8 +19,8 @@ jest.mock('src/components/Form/hooks/useField', () => () => {
     onFocus: jest.fn(),
     value: [
       {
-        id: '60c1f579ff49a51d6f2ee61b',
-        name: 'My Active Charity Name',
+        id: 'testId',
+        name: 'test',
         profileStatus: 'COMPLETED',
         status: 'ACTIVE',
         stripeStatus: 'ACTIVE',
@@ -28,13 +28,20 @@ jest.mock('src/components/Form/hooks/useField', () => () => {
     ],
   };
 });
-
+const props = {
+  name: 'test',
+  disabled: false,
+};
+const charity = {
+  id: 'testId',
+  name: 'test',
+  profileStatus: CharityProfileStatus.COMPLETED,
+  status: CharityStatus.ACTIVE,
+  stripeStatus: CharityStripeStatus.ACTIVE,
+  stripeAccountLink: 'test',
+};
 describe('Should render correctly', () => {
   let wrapper: ReactWrapper;
-
-  const props = {
-    name: 'My Active Charity Name',
-  };
   beforeEach(async () => {
     await act(async () => {
       wrapper = mount(
@@ -49,7 +56,15 @@ describe('Should render correctly', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it('component is defined', () => {
+  it('', () => {
     expect(wrapper).toHaveLength(1);
+    wrapper.find(CharitiesAutocomplete).props().onChange(charity, false);
+  });
+  it('', () => {
+    expect(wrapper).toHaveLength(1);
+    wrapper
+      .find(CharitiesAutocomplete)
+      .props()
+      .onChange({ ...charity, id: 'testId2' }, true);
   });
 });

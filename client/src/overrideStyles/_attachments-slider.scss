@@ -2,7 +2,6 @@
 
 .auction-attachments-slider {
   margin-top: 10px;
-  margin-bottom: 60px;
 
   /* Arrows */
   .slick-arrow {
@@ -46,8 +45,7 @@
   }
 
   .slick-dots {
-    position: absolute;
-    bottom: -60px;
+    position: relative;
     display: block;
     width: 100%;
     padding: 0;
