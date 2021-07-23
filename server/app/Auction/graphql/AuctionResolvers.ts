@@ -50,7 +50,7 @@ interface AuctionResolversType {
     updateAuction: GraphqlResolver<Auction, { id: string; input: AuctionInput }>;
     deleteAuction: GraphqlResolver<{ id: string }, { id: string }>;
     addAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachment: any; organizerId: string }>;
-    removeAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
+    deleteAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
     buyAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
@@ -137,19 +137,19 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
     stopAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.stopAuction(id)),
     activateAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.activateAuctionById(id)),
-    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction }) =>
-      auction.addAuctionAttachment(id, attachment),
+    addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencerId }) =>
+      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachment),
     ),
-    removeAuctionAttachment: requireRole(
+    deleteAuctionAttachment: requireRole(
       async (_, { id, attachmentUrl }, { auction, currentAccount, currentInfluencerId }) =>
-        auction.removeAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachmentUrl),
+        auction.deleteAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachmentUrl),
     ),
     createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auction, currentAccount }) => {
       await auction.addAuctionBid(id, { bid, user: currentAccount });
       return auction.getAuction(id);
     }),
     finishAuctionCreation: requireRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) =>
-      auction.maybeActivateAuction(id, currentAccount?.isAdmin ? null : currentInfluencerId),
+      auction.maybeActivateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId),
     ),
   },
   InfluencerProfile: {

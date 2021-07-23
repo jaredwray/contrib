@@ -80,67 +80,6 @@ export class AuctionService {
     }
   }
 
-  //TODO: delete after bids in BidsModel relocation.
-  public async relocateAuctionBidsInBidCollection() {
-    const auctions = await this.AuctionModel.find({ bids: { $exists: true } });
-    if (auctions.length === 0) {
-      return;
-    }
-    for (const auction of auctions) {
-      const bids = auction.bids;
-      for (const bid of bids) {
-        if (bids.length === 0) {
-          break;
-        }
-        await this.BidModel.create([
-          {
-            auction: auction._id,
-            user: bid.user,
-            createdAt: bid.createdAt,
-            paymentSource: bid.paymentSource,
-            bid: bid.bid,
-            bidCurrency: auction.priceCurrency as Currency,
-            chargeId: bid.chargeId,
-          },
-        ]);
-      }
-      if (auction.status === AuctionStatus.SOLD && bids.length !== 0) {
-        let lastBid = bids.sort((a, b) => b.bid - a.bid)[0];
-        auction.stoppedAt = lastBid.createdAt;
-      }
-      auction.totalBids = bids.length;
-      await auction.save();
-    }
-    await this.AuctionModel.update({}, { $unset: { bids: 1 } }, { multi: true });
-    return { message: 'Relocated' };
-  }
-  //TODO: delete after bids in BidsModel relocation.
-  public async relocateBidsFromBidsModelInAuctions() {
-    const bids = await this.BidModel.find({});
-    if (bids.length === 0) {
-      return;
-    }
-    for (const bid of bids) {
-      const auction = await this.AuctionModel.findById(bid.auction);
-
-      const inputBid = {
-        user: bid.user,
-        createdAt: bid.createdAt,
-        paymentSource: bid.paymentSource,
-        bid: bid.bid,
-        chargeId: bid.chargeId,
-      };
-
-      Object.assign(auction, {
-        bids: [...auction.bids, inputBid],
-      });
-
-      await bid.delete();
-      await auction.save();
-    }
-    return { message: 'Relocated' };
-  }
-
   public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs }> | null {
     return await this.auctionRepository.followAuction(auctionId, accountId);
   }
@@ -299,8 +238,12 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  public async addAuctionAttachment(id: string, attachment: Promise<IFile>): Promise<AuctionAssets> {
-    const auction = await this.auctionRepository.getAuction(id);
+  public async addAuctionAttachment(
+    id: string,
+    organizerId: string | null,
+    attachment: Promise<IFile>,
+  ): Promise<AuctionAssets> {
+    const auction = await this.auctionRepository.getAuction(id, organizerId);
     if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
@@ -405,22 +348,6 @@ export class AuctionService {
         ],
         { session },
       );
-    }
-  }
-  public async removeAuctionAttachment(id: string, userId: string, attachmentUrl: string): Promise<AuctionAssets> {
-    const auction = await this.auctionRepository.getAuction(id, userId);
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
-    try {
-      const attachment = await this.attachmentsService.AuctionAsset.findOne({ url: attachmentUrl });
-      await auction.updateOne({ $pull: { assets: attachment._id } });
-      await attachment.remove();
-      await this.attachmentsService.removeFileAttachment(attachmentUrl);
-
-      return AuctionService.makeAuctionAttachment(attachment);
-    } catch (error) {
-      throw new AppError(error.message, ErrorCode.INTERNAL_ERROR);
     }
   }
 
@@ -999,28 +926,54 @@ export class AuctionService {
     return { status: auction.status };
   }
 
-  public async deleteAuctionAttachment(id: string, uid: string) {
+  private async deleteAttachmentFromCloud(url: string, uid: string | undefined): Promise<void> {
+    if (uid) {
+      const cloudflareStreaming = new CloudflareStreaming();
+      await cloudflareStreaming.deleteFromCloudFlare(uid);
+    }
+    await this.attachmentsService.removeFileAttachment(url);
+  }
+
+  public async deleteAuctionAttachment(
+    auctionId: string,
+    organizerId: string,
+    attachmentUrl: string,
+  ): Promise<AuctionAssets> {
+    const auction = await this.auctionRepository.getAuction(auctionId, organizerId);
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+    }
+    const attachment = await this.attachmentsService.AuctionAsset.findOne({ url: attachmentUrl });
+    if (!attachment) {
+      throw new AppError('Attachment not found', ErrorCode.NOT_FOUND);
+    }
     try {
-      if (uid) {
-        const cloudflareStreaming = new CloudflareStreaming();
-        await cloudflareStreaming.deleteFromCloudFlare(uid);
-      }
-      const attachment = await this.attachmentsService.AuctionAsset.findOne({ _id: id });
-      await attachment.remove();
-      await this.attachmentsService.removeFileAttachment(attachment.url);
+      await this.deleteAttachmentFromCloud(attachment.url, attachment.uid);
+
+      await auction.updateOne({ $pull: { assets: attachment._id } });
+      await attachment.delete();
+
+      return AuctionService.makeAuctionAttachment(attachment);
     } catch (error) {
-      AppLogger.error(`Cannot delete auction attachment #${id}: ${error.message}`);
+      AppLogger.error(`Cannot delete auction attachment #${attachment._id.toString()}: ${error.message}`);
+      throw new AppError(`Cannot delete attachment`, ErrorCode.BAD_REQUEST);
+    }
+  }
+
+  public async deleteAuctionAttachmentById(assetId: string) {
+    try {
+      const attachment = await this.attachmentsService.AuctionAsset.findByIdAndDelete(assetId);
+      await this.deleteAttachmentFromCloud(attachment.url, attachment.uid);
+    } catch (error) {
+      AppLogger.error(`Cannot delete auction attachment #${assetId}: ${error.message}`);
       throw new AppError('Cannot delete attachment', ErrorCode.BAD_REQUEST);
     }
   }
 
-  public async deleteAuction(id: string) {
-    const auction = await this.AuctionModel.findOne({ _id: id }).populate({
-      path: 'assets',
-      model: this.attachmentsService.AuctionAsset,
-    });
+  public async deleteAuction(auctionId: string) {
+    const auction = await this.AuctionModel.findById(auctionId);
     if (!auction) {
-      return;
+      throw new AppError('Can not find auction', ErrorCode.NOT_FOUND);
     }
 
     if (auction.status !== AuctionStatus.DRAFT) {
@@ -1028,8 +981,8 @@ export class AuctionService {
     }
 
     try {
-      auction.assets.map(async (asset) => await this.deleteAuctionAttachment(asset._id, asset.uid));
-      await this.AuctionModel.deleteOne({ _id: id });
+      auction.assets.forEach(async (assetId) => await this.deleteAuctionAttachmentById(assetId));
+      await this.AuctionModel.deleteOne({ _id: auctionId });
     } catch (error) {
       AppLogger.error(`Cannot delete auction #${auction.id}: ${error.message}`);
       throw new AppError('Cannot delete auction', ErrorCode.BAD_REQUEST);

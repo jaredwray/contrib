@@ -3,7 +3,7 @@ import { FC, useState, useCallback, ReactElement, SetStateAction } from 'react';
 import { useMutation } from '@apollo/client';
 import clsx from 'clsx';
 
-import { RemoveAuctionMediaMutation } from 'src/apollo/queries/auctions';
+import { DeleteAuctionMediaMutation } from 'src/apollo/queries/auctions';
 import VideoIcon from 'src/assets/icons/VideoIcon';
 import { CloseButton } from 'src/components/CloseButton';
 import { AuctionAttachment } from 'src/types/Auction';
@@ -27,7 +27,7 @@ const AttachementPreview: FC<Props> = ({
   setSelectedAttachment,
 }): ReactElement => {
   const [isInvalidPicture, setIsInvalidPicture] = useState(false);
-  const [removeAuctionMedia] = useMutation(RemoveAuctionMediaMutation, {
+  const [removeAuctionMedia] = useMutation(DeleteAuctionMediaMutation, {
     onError(error) {
       setErrorMessage('Something happened while deleting your file. Please, try later.');
     },

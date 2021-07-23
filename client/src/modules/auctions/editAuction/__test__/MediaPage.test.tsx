@@ -7,7 +7,7 @@ import { InMemoryCache } from '@apollo/client';
 import Layout from 'src/components/Layout';
 import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
-import Dialog from 'src/modules/auctions/editAuction/MediaPage/Dialog';
+import AttachmentModal from 'src/components/AttachmentModal';
 import UploadingDropzone from 'src/modules/auctions/editAuction/MediaPage/UploadingDropzone';
 import Form from 'src/components/Form/Form';
 import StepByStepRow from 'src/components/StepByStepRow';
@@ -81,7 +81,7 @@ describe('EditAuctionMediaPage ', () => {
     });
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
-    wrapper!.find(Dialog).props().closeModal();
+    wrapper!.find(AttachmentModal).props().closeModal();
     wrapper!.find(Form).props().onSubmit({ data: {} });
     wrapper!.find(StepByStepRow).children().find('Button').at(0).simulate('click');
     wrapper!.find(UploadingDropzone).props().setErrorMessage('test');

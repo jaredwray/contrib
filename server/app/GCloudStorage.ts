@@ -52,59 +52,50 @@ export class GCloudStorage {
   async updateAttachment(asset: IAuctionAssetModel, bucketName: string = AppConfig.googleCloud.bucketName) {
     try {
       const fileName = GCloudStorage.getFileNameFromUrl(asset.url);
-      const fileNameArray = fileName.split('/');
       const extension = fileName.split('.')[1];
-      let currentFileName = null;
-
-      if (fileNameArray.length !== 5) {
-        const folderPath = fileNameArray[fileNameArray.length - 1].split('.')[0];
-        fileNameArray.splice(fileNameArray.length - 1, 0, folderPath);
-        currentFileName = fileNameArray.join('/');
-
-        asset.url = `https://storage.googleapis.com/content-dev.contrib.org/${currentFileName}`;
-        await asset.save();
-
-        await this.storage.bucket(bucketName).file(fileName).move(currentFileName);
-      }
 
       if (GCloudStorage.imageSupportedFormats.test(extension)) {
-        await this.storage
-          .bucket(bucketName)
-          .file(currentFileName ?? fileName)
-          .copy(`pending/${currentFileName ?? fileName}`);
+        await this.storage.bucket(bucketName).file(fileName).copy(`pending/${fileName}`);
       }
     } catch (error) {
       AppLogger.warn(`Unable to update file ${asset.url}: ${error.message}`);
+      throw new AppError(`Unable to update file. Please, try later`, ErrorCode.INTERNAL_ERROR);
     }
   }
 
   async streamToBuffer(stream: Stream): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-      const data = [];
+    try {
+      return new Promise((resolve, reject) => {
+        const data = [];
 
-      stream.on('data', (chunk) => {
-        data.push(chunk);
-      });
+        stream.on('data', (chunk) => {
+          data.push(chunk);
+        });
 
-      stream.on('end', () => {
-        resolve(Buffer.concat(data));
-      });
+        stream.on('end', () => {
+          resolve(Buffer.concat(data));
+        });
 
-      stream.on('error', (err) => {
-        reject(err);
+        stream.on('error', (err) => {
+          reject(err);
+        });
       });
-    });
+    } catch (error) {
+      AppLogger.warn(`Unable to create buffer for uploading file: ${error.message}`);
+      throw error;
+    }
   }
 
   async removeFile(fileUrl: string, bucketName: string = AppConfig.googleCloud.bucketName): Promise<void> {
     const fileNameArray = GCloudStorage.getFileNameFromUrl(fileUrl).split('/');
     fileNameArray.pop();
-    const currentFileName = fileNameArray.join('/');
+    const folder = fileNameArray.join('/');
 
     try {
-      await this.storage.bucket(bucketName).deleteFiles({ prefix: `${currentFileName}/` });
+      await this.storage.bucket(bucketName).deleteFiles({ prefix: `${folder}/` });
     } catch (error) {
-      throw new AppError(`Unable to remove file, threw error ${error.message}`, ErrorCode.INTERNAL_ERROR);
+      AppLogger.warn(`Unable to remove files in ${folder}: ${error.message}`);
+      throw new AppError(`Unable to remove files. Please, try later`, ErrorCode.INTERNAL_ERROR);
     }
   }
 
@@ -143,6 +134,7 @@ export class GCloudStorage {
       }
       return { fileType, url: `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`, uid: uid };
     } catch (error) {
+      AppLogger.warn(`Cannot upload selected file: ${error.message}`);
       if (error.name === 'PayloadTooLargeError') {
         throw new AppError(
           `File is too big, max size is ${AppConfig.cloudflare.maxSizeGB} GB`,

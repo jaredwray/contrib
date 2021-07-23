@@ -396,9 +396,9 @@ export const AddAuctionMediaMutation = gql`
   }
 `;
 
-export const RemoveAuctionMediaMutation = gql`
-  mutation RemoveAuctionMedia($id: String!, $url: String!) {
-    removeAuctionAttachment(id: $id, attachmentUrl: $url) {
+export const DeleteAuctionMediaMutation = gql`
+  mutation DeleteAuctionMedia($id: String!, $url: String!) {
+    deleteAuctionAttachment(id: $id, attachmentUrl: $url) {
       url
       type
       cloudflareUrl
