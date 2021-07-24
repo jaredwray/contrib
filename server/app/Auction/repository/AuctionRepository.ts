@@ -100,17 +100,10 @@ export class AuctionRepository implements IAuctionRepository {
           throw new AppError(`Account record #${accountId} not found`);
         }
 
-        const currentAccountId = account._id.toString();
-        const followed = auction.followers.some((follower) => follower.user.toString() === currentAccountId);
-
-        if (followed) {
-          throw new AppError('You have already followed to this auction');
-        }
         const createdFollower = {
-          user: currentAccountId,
+          user: account._id.toString(),
           createdAt: dayjs(),
         };
-
         const createdFollowing = {
           auction: auction._id.toString(),
           createdAt: dayjs(),
@@ -119,7 +112,6 @@ export class AuctionRepository implements IAuctionRepository {
         Object.assign(auction, {
           followers: [...auction.followers, createdFollower],
         });
-
         Object.assign(account, {
           followingAuctions: [...account.followingAuctions, createdFollowing],
         });
