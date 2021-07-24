@@ -1,16 +1,14 @@
 /* eslint-disable react/jsx-sort-props */
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
-import AttachmentModal from 'src/components/AttachmentModal';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
-import { AuctionAttachment } from 'src/types/Auction';
 import { CharityStatus } from 'src/types/Charity';
 
 import About from './About';
@@ -21,7 +19,6 @@ import Benefits from './Benefits';
 import SimilarAuctions from './SimilarAuctions';
 
 const AuctionPage = () => {
-  const [attachmentToDisplay, setAttachmentToDisplay] = useState<AuctionAttachment | null>(null);
   const auctionId = useParams<{ auctionId: string }>().auctionId ?? 'me';
   const history = useHistory();
   const { account } = useContext(UserAccountContext);
@@ -35,19 +32,6 @@ const AuctionPage = () => {
 
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
-
-  const closeModal = useCallback(() => {
-    setAttachmentToDisplay(null);
-  }, [setAttachmentToDisplay]);
-
-  const onAttachmentClick = useCallback(
-    (attachment: AuctionAttachment) => {
-      if (attachment.type === 'IMAGE') {
-        setAttachmentToDisplay(attachment);
-      }
-    },
-    [setAttachmentToDisplay],
-  );
 
   if (error || !auction) {
     return null;
@@ -68,7 +52,7 @@ const AuctionPage = () => {
         <Row>
           <Col md="1" />
           <Col md="6">
-            <AttachmentsSlider attachments={attachments} onAttachmentClick={onAttachmentClick} />
+            <AttachmentsSlider attachments={attachments} />
           </Col>
           <Col md="1" />
           <Col md="4">
@@ -76,7 +60,6 @@ const AuctionPage = () => {
           </Col>
           <Col md="1" />
         </Row>
-        <AttachmentModal closeModal={closeModal} attachment={attachmentToDisplay} />
         <Row>
           <Col md="1" />
           <Col md="6">
