@@ -1,5 +1,4 @@
 import { graphqlUploadExpress } from 'graphql-upload';
-import bodyParser from 'body-parser';
 import express from 'express';
 import path from 'path';
 
@@ -37,17 +36,23 @@ app.set('view engine', 'pug');
       res.sendFile(clientBundlePath + '/index.html', { acceptRanges: false });
     });
   }
-  const bytes = Math.pow(1024, 3);
+  const bytesInGB = Math.pow(1024, 3);
 
   app.use(
     '/graphql',
     graphqlUploadExpress({
       maxFiles: 1,
-      maxFileSize: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytes || Infinity,
+      maxFileSize: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytesInGB || Infinity,
     }),
   );
-  app.use(bodyParser.json({ limit: '2gb' }));
-  app.use(bodyParser.urlencoded({ limit: '2gb', extended: true }));
+  app.use(express.json({ limit: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytesInGB }));
+  app.use(
+    express.urlencoded({
+      limit: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytesInGB,
+      parameterLimit: 100000,
+      extended: true,
+    }),
+  );
 
   createGraphqlServer(appServices).applyMiddleware({ app });
 
