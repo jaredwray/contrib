@@ -19,6 +19,9 @@ export default function appRouteHandlers(
     }
   });
 
+  app.use(bodyParser.json({ limit: '2gb' }));
+  app.use(express.urlencoded({ extended: false, limit: '2gb' }));
+
   app.post('/api/v1/update-attachments', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {
       return;
