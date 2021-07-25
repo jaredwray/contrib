@@ -1,4 +1,5 @@
 import { graphqlUploadExpress } from 'graphql-upload';
+import bodyParser from 'body-parser';
 import express from 'express';
 import path from 'path';
 
@@ -45,6 +46,9 @@ app.set('view engine', 'pug');
       maxFileSize: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytes || Infinity,
     }),
   );
+  app.use(bodyParser.json({ limit: '2gb' }));
+  app.use(bodyParser.urlencoded({ limit: '2gb', extended: true }));
+
   createGraphqlServer(appServices).applyMiddleware({ app });
 
   app.listen(AppConfig.app.port, async () => {
