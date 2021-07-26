@@ -36,21 +36,22 @@ app.set('view engine', 'pug');
       res.sendFile(clientBundlePath + '/index.html', { acceptRanges: false });
     });
   }
-  const bytesInGB = Math.pow(1024, 3);
 
+  app.use(express.json({ limit: '500mb' }));
+  app.use(
+    express.urlencoded({
+      limit: '500mb',
+      parameterLimit: 100000,
+      extended: true,
+    }),
+  );
+
+  const bytesInGB = Math.pow(1024, 3);
   app.use(
     '/graphql',
     graphqlUploadExpress({
       maxFiles: 1,
       maxFileSize: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytesInGB || Infinity,
-    }),
-  );
-  app.use(express.json({ limit: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytesInGB }));
-  app.use(
-    express.urlencoded({
-      limit: parseFloat(AppConfig.cloudflare.maxSizeGB) * bytesInGB,
-      parameterLimit: 100000,
-      extended: true,
     }),
   );
 

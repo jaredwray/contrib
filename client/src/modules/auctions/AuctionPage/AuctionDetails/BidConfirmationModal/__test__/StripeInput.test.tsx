@@ -1,9 +1,10 @@
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import StripeInput from '../StripeInput';
+import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
+import { loadStripe } from '@stripe/stripe-js';
 import { MemoryRouter } from 'react-router-dom';
-import { CardElement } from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
+import StripeInput from '../StripeInput';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 describe('StripeInput ', () => {
@@ -13,6 +14,13 @@ describe('StripeInput ', () => {
     onChange: jest.fn(),
     onCancel: jest.fn(),
   };
+
+  const mockedEvent = {
+    target: {
+      value: 'test',
+    },
+  } as any;
+
   let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(
@@ -31,5 +39,9 @@ describe('StripeInput ', () => {
   });
   it('should change focus', () => {
     wrapper.find('div').first().simulate('click');
+    wrapper.find('CardElement').props().onBlur!(mockedEvent);
+    act(() => {
+      wrapper.find('CardElement').props().onFocus!(mockedEvent);
+    });
   });
 });

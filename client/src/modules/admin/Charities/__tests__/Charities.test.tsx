@@ -1,28 +1,38 @@
 import { act } from 'react-dom/test-utils';
-import { AllInfluencersQuery } from 'src/apollo/queries/influencers';
-import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
-
-import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
-
+import { MemoryRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
-import Influencers from '..';
 
+import CharitiesPage from '..';
 import ClickableTr from 'src/components/ClickableTr';
+import SearchInput from 'src/components/SearchInput';
+import { AdminPage } from 'src/components/AdminPage';
+import { AllCharitiesQuery, CharitiesSearch } from 'src/apollo/queries/charities';
+
 
 const cache = new InMemoryCache();
 
 cache.writeQuery({
-  query: AllInfluencersQuery,
+  query: AllCharitiesQuery,
   variables: { size: 20, skip: 0 },
   data: {
-    influencers: {
-      items: [{ id: 'testId', name: 'test', sport: '1231', status: 'ONBOARDED' }],
+    charities: {
+      items: [{ id: 'testId1', name: 'test', profileStatus: 'COMPLETED', status: 'ACTIVE', stripeStatus: 'ACTIVE' }],
       size: 20,
       skip: 0,
       totalItems: 1,
     },
+  },
+});
+cache.writeQuery({
+  query: CharitiesSearch,
+  variables: { query: 'test' },
+  data: {
+    charitiesSearch: [
+      { id: 'testId2', name: 'test', profileStatus: 'COMPLETED', status: 'ACTIVE', stripeStatus: 'ACTIVE' },
+    ],
   },
 });
 
@@ -34,7 +44,7 @@ describe('AdminAuctionPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider>
-              <Influencers />
+              <CharitiesPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -49,7 +59,7 @@ describe('AdminAuctionPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache}>
-              <Influencers />
+              <CharitiesPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -60,6 +70,14 @@ describe('AdminAuctionPage ', () => {
 
       expect(wrapper!).toHaveLength(1);
       expect(wrapper!.find(ClickableTr)).toHaveLength(1);
+
+      await wrapper
+        .find(AdminPage)
+        .children()
+        .find('input')
+        .simulate('change', { target: { value: 'test' } });
+      expect(wrapper.find(AdminPage).children().find(SearchInput).children().find('button').text()).toEqual('Cancel');
+      wrapper.find(AdminPage).children().find(SearchInput).children().find('button').simulate('click');
     });
   });
 });

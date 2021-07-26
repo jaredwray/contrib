@@ -20,7 +20,6 @@ export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
   const [getCharitisList, { loading, data, error }] = useLazyQuery(AllCharitiesQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
-    fetchPolicy: 'network-only',
   });
 
   const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
