@@ -1,10 +1,14 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { StopOrActiveButton } from '../StopOrActiveButton';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { mount } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
+
+import { Modal } from '../StopOrActiveButton/Modal';
+import { StopOrActiveButton } from '../StopOrActiveButton';
+import { act } from 'react-dom/test-utils';
+
 describe('Should render correctly "StopOrActiveButton"', () => {
   const props: any = {
     auction,
@@ -44,7 +48,7 @@ describe('Should render correctly "StopOrActiveButton"', () => {
     );
     wrapper.children().find('Button').simulate('click');
   });
-  it('it should close Modal when clicking', () => {
+  it('it should open and close Modal', () => {
     const wrapper = mount(
       <ToastProvider>
         <MockedProvider>
@@ -56,6 +60,9 @@ describe('Should render correctly "StopOrActiveButton"', () => {
     );
     wrapper.children().find('Button').simulate('click');
     expect(wrapper.find('DialogContent').text()).toEqual('Do you want to stop an auction: test?');
+    act(() => {
+      wrapper.children().find(Modal).props().onClose();
+    });
   });
   it('when auction is settled and stopped it should change modal text', () => {
     const wrapper = mount(

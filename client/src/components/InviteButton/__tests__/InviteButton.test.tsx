@@ -1,8 +1,11 @@
-import { mount, ReactWrapper } from 'enzyme';
 import { gql } from '@apollo/client';
+import { act } from 'react-dom/test-utils';
+import { mount, ReactWrapper } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
-import { InviteButton } from '..';
 import { ToastProvider } from 'react-toast-notifications';
+
+import { InviteButton } from '..';
+import { Modal } from '../Modal';
 
 describe('Should render correctly "InviteButton"', () => {
   const props: any = {
@@ -31,8 +34,11 @@ describe('Should render correctly "InviteButton"', () => {
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
   });
-  it('it should open Modal when clicking', () => {
+  it('it should open and close Modal when clicking', () => {
     wrapper.children().find('Button').simulate('click');
     expect(wrapper.find('Dialog')).toHaveLength(1);
+    act(() => {
+      wrapper.children().find(Modal).props().onClose();
+    });
   });
 });
