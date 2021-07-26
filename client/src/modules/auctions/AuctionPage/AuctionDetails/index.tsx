@@ -26,6 +26,8 @@ import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal
 import { BidInput } from './BidInput';
 import styles from './styles.module.scss';
 
+const BIDS_STEP_CENTS = 1000;
+
 interface Props {
   auction: Auction;
   executeQuery: () => void;
@@ -90,7 +92,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
 
   const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
   const minBid = useMemo(
-    () => (currentPrice && Dinero(currentPrice).add(Dinero({ amount: 100 }))) || Dinero(startPrice),
+    () => (currentPrice && Dinero(currentPrice).add(Dinero({ amount: BIDS_STEP_CENTS }))) || Dinero(startPrice),
     [currentPrice, startPrice],
   );
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
