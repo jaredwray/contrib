@@ -459,7 +459,7 @@ export class AuctionService {
     await session.commitTransaction();
     session.endSession();
 
-    if (lastBid && lastBid.user !== user.mongodbId) {
+    if (lastBid && lastBid.user.toString() !== user.mongodbId) {
       try {
         const userAccount = await this.UserAccountModel.findById(lastBid.user);
         if (!userAccount) {
