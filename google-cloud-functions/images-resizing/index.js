@@ -71,7 +71,11 @@ exports.resizeUploadedImage = async (file, context) => {
     let content = await fs.readFile(tmpFilePath, { encoding: "base64" });
 
     // Create thumb image
-    await sharp(tmpFilePath).webp({ lossless: true }).resize(size, size, { fit: sharp.fit.inside }).toFile(thumbPath);
+    await sharp(tmpFilePath)
+      .webp({ lossless: true })
+      .resize(size, size, { fit: sharp.fit.inside })
+      .withMetadata()
+      .toFile(thumbPath);
 
     content = await fs.readFile(thumbPath, { encoding: "base64" });
 
