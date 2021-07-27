@@ -138,7 +138,7 @@ export class CharityService {
     const stripeAccount = await this.stripeService.createStripeAccount();
     model.stripeAccountId = stripeAccount.id;
 
-    await model.save();
+    await model.save({ session });
     return CharityService.makeCharity(model);
   }
 
@@ -166,6 +166,8 @@ export class CharityService {
       AppLogger.info(`Charity #${charity.id} was updated by stripe account to ${stripeStatus}`);
     } catch (err) {
       AppLogger.warn(`Cannot update charity #${charity.id} by stripe account: ${err.message}`);
+    } finally {
+      session.endSession();
     }
   }
 
@@ -361,7 +363,7 @@ export class CharityService {
     }
 
     this.maybeActivateCharity(model);
-    await model.save();
+    await model.save({ session });
     return CharityService.makeCharity(model);
   }
 
