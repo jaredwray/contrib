@@ -149,21 +149,23 @@ export class CharityService {
 
     let isAccountActive;
 
+    AppLogger.info(
+      `Charity's #${charity.id} stripe event details: details_submitted: ${account.details_submitted}; capabilities : ${account.capabilities}`,
+    );
+
     if (account.details_submitted) {
-      isAccountActive =
-        account.capabilities.card_payments === 'active' && account.capabilities.card_payments === 'active';
+      isAccountActive = account.capabilities.card_payments === 'active' && account.capabilities.transfers === 'active';
     } else {
       isAccountActive = false;
     }
+
     try {
-      await this.updateCharityStatus({
-        charity,
-        stripeStatus: isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE,
-        session,
-      });
-      AppLogger.info(`Charity was updated by stripe account`);
+      const stripeStatus = isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE;
+      await this.updateCharityStatus({ charity, stripeStatus, session });
+
+      AppLogger.info(`Charity #${charity.id} was updated by stripe account to ${stripeStatus}`);
     } catch (err) {
-      AppLogger.warn(`Cannot update charity with id#${charity.id} by stripe account: ${err.message}`);
+      AppLogger.warn(`Cannot update charity #${charity.id} by stripe account: ${err.message}`);
     }
   }
 
