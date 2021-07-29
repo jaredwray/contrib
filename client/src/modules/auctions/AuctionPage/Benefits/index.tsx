@@ -26,7 +26,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
           >
             {name}
           </Link>
-          {isNotActive && <NotActiveStatus />}
+          {isNotActive && <NotActiveStatus>Not Active Charity</NotActiveStatus>}
         </div>
       </Row>
       <BsRow className="pt-4">

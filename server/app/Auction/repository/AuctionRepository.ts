@@ -10,6 +10,7 @@ import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionStatus } from '../dto/AuctionStatus';
+import { InfluencerStatus } from '../../Influencer/dto/InfluencerStatus';
 import { IAuctionFilters, IAuctionRepository, ICreateAuction, IUpdateAuction } from './IAuctionRepoository';
 import { AppLogger } from '../../../logger';
 
@@ -174,6 +175,13 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   async createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel> {
+    const influencer = await this.InfluencerModel.findOne({ _id: organizerId }).exec();
+    if (influencer.status === InfluencerStatus.TRANSIENT) {
+      throw new AppError(
+        `Cannot create auction by influencer with status ${InfluencerStatus.TRANSIENT}`,
+        ErrorCode.BAD_REQUEST,
+      );
+    }
     if (!input.title) {
       throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
     }

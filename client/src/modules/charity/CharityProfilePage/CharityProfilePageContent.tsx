@@ -132,7 +132,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
         <Container className={styles.content}>
           <Row>
             <Col md="6">
-              {!isActive && <NotActiveStatus />}
+              {!isActive && <NotActiveStatus>Not Active Charity</NotActiveStatus>}
               <p className="text-headline break-word">{charity.name}</p>
               <TotalRaisedAmount value={totalRaisedAmount} />
               {charity.website && (

@@ -11,6 +11,7 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
 import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
+import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
@@ -18,7 +19,7 @@ import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionStatus, Auction } from 'src/types/Auction';
-import { InfluencerProfile } from 'src/types/InfluencerProfile';
+import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
 
 import { FollowInfluencer, UnfollowInfluencer } from '../../../apollo/queries/influencers';
 import AdminDropdown from './AdminDropdown';
@@ -33,7 +34,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated, loginWithRedirect } = useAuth0();
-
+  const isTransient = influencer.status === InfluencerStatus.TRANSIENT;
   const [followed, setFollowed] = useState(() =>
     influencer?.followers?.some((follower) => follower.user === account?.mongodbId),
   );
@@ -147,12 +148,14 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
                   >
                     Assistants
                   </Link>
-                  <Link
-                    className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
-                    to={`/auctions/${influencer.id}/new/basic`}
-                  >
-                    Create Auction
-                  </Link>
+                  {influencer.status !== InfluencerStatus.TRANSIENT && (
+                    <Link
+                      className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
+                      to={`/auctions/${influencer.id}/new/basic`}
+                    >
+                      Create Auction
+                    </Link>
+                  )}
                   <Link
                     className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
                     to={`/profiles/${influencer.id}/edit`}
@@ -171,6 +174,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
         <Container className={styles.content}>
           <Row>
             <Col md="6">
+              {isTransient && <NotActiveStatus>Influencer Status Is Transient</NotActiveStatus>}
               <p className="text-headline break-word">{influencer.name}</p>
               <TotalRaisedAmount value={totalRaisedAmount} />
               {/*<div className="d-flex">
