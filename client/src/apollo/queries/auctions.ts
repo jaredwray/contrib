@@ -54,6 +54,13 @@ export const AuctionForAdminPageQuery = gql`
         name
         stripeAccountId
       }
+      parcel {
+        width
+        length
+        height
+        weight
+        units
+      }
       isFailed
       isActive
       isSold
@@ -76,6 +83,7 @@ export const GetTotalRaisedAmountQuery = gql`
     }
   }
 `;
+
 export const AuctionQuery = gql`
   query Auction($id: String!) {
     auction(id: $id) {
@@ -186,6 +194,13 @@ export const AuctionsListQuery = gql`
         followers {
           user
         }
+        parcel {
+          width
+          length
+          height
+          weight
+          units
+        }
       }
     }
   }
@@ -257,6 +272,28 @@ export const GetAuctionDetailsQuery = gql`
           name
         }
       }
+    }
+  }
+`;
+
+export const UpdateAuctionParcelMutation = gql`
+  mutation UpdateAuctionParcel(
+    $auctionId: String!
+    $width: Int!
+    $height: Int!
+    $length: Int!
+    $weight: Int!
+    $units: String!
+  ) {
+    updateAuctionParcel(
+      auctionId: $auctionId
+      input: { width: $width, height: $height, length: $length, weight: $weight, units: $units }
+    ) {
+      width
+      height
+      length
+      weight
+      units
     }
   }
 `;

@@ -3,6 +3,7 @@ import { Dayjs } from 'dayjs';
 import { AuctionAssets } from './AuctionAssets';
 import { Charity } from '../../Charity/dto/Charity';
 import { AuctionStatus } from './AuctionStatus';
+import { AuctionParcel } from './AuctionParcel';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { Follow } from '../../FollowDto';
 
@@ -28,6 +29,7 @@ export interface Auction {
   link: string;
   fairMarketValue: Dinero.Dinero;
   followers?: Follow[];
+  parcel?: AuctionParcel;
   timeZone: string;
   isActive: boolean;
   isDraft: boolean;

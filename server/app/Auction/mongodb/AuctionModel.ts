@@ -5,6 +5,7 @@ import { UserAccountCollectionName, IFollowObject } from '../../UserAccount/mong
 import { AppConfig } from '../../../config';
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
+import { AuctionParcel } from '../dto/AuctionParcel';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { InfluencerCollectionName, IInfluencer } from '../../Influencer/mongodb/InfluencerModel';
 
@@ -16,6 +17,7 @@ export interface IAuctionModel extends Document {
   gameWorn: boolean;
   description: string;
   followers: IFollowObject[];
+  parcel: AuctionParcel;
   fullPageDescription: string;
   auctionOrganizer: IInfluencer['_id'];
   assets: IAuctionAssetModel['_id'][];
@@ -48,7 +50,13 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     sentNotifications: { type: SchemaTypes.Array, default: [] },
     authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
     gameWorn: { type: SchemaTypes.Boolean, default: false },
-
+    parcel: {
+      width: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.width },
+      length: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.length },
+      height: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.height },
+      weight: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.weight },
+      units: { type: SchemaTypes.String, default: AppConfig.delivery.auctionParcel.units },
+    },
     followers: [
       {
         user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },

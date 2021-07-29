@@ -3,13 +3,13 @@ import { FC, useCallback } from 'react';
 import { DocumentNode, useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import Dinero, { DineroObject } from 'dinero.js';
-import { useToasts } from 'react-toast-notifications';
 
 import AsyncButton from 'src/components/AsyncButton';
 import Dialog from 'src/components/Dialog';
 import DialogContent from 'src/components/Dialog/DialogContent';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Auction } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
@@ -19,22 +19,31 @@ interface Props {
   onClose: () => void;
   mutation: DocumentNode;
   auction: Auction;
+  getAuctionsList: () => void;
 }
 
-export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
+export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctionsList }) => {
   const [updateAuctionfairMarketValue, { loading: updating }] = useMutation(mutation);
-  const { addToast } = useToasts();
+  const { showMessage, showError } = useShowNotification();
   const onSubmit = useCallback(
     ({ fairMarketValue }: { fairMarketValue: DineroObject }) => {
       if (Dinero(fairMarketValue).getAmount() < 1) {
-        addToast('Fair market value should be more than $1', { autoDismiss: true, appearance: 'error' });
+        showError('Fair market value should be more than $1');
         return;
       }
       updateAuctionfairMarketValue({
         variables: { id: auction?.id, fairMarketValue },
-      }).then(() => window.location.reload(false));
+      })
+        .then(() => {
+          onClose();
+          getAuctionsList();
+          showMessage('Auction fair market value was updated');
+        })
+        .catch(() => {
+          showError('Cannot update auction fair market value');
+        });
     },
-    [updateAuctionfairMarketValue, auction?.id, addToast],
+    [updateAuctionfairMarketValue, auction?.id, showError, showMessage, getAuctionsList, onClose],
   );
 
   const initialValues = {

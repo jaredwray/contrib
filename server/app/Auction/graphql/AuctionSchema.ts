@@ -63,6 +63,7 @@ export const AuctionSchema = gql`
     fairMarketValue: Money
     timeZone: String
     followers: [Follow]
+    parcel: Parcel
     isActive: Boolean!
     isDraft: Boolean!
     isPending: Boolean!
@@ -85,11 +86,13 @@ export const AuctionSchema = gql`
     startPrice: Money!
     fairMarketValue: Money
     auctionOrganizer: AuctionAdminOrganizer
+    parcel: Parcel
     isFailed: Boolean!
     isSold: Boolean!
     isActive: Boolean!
     link: String!
   }
+
   type Metrics {
     clicks: [Clicks]
     clicksByDay: [Clicks]
@@ -119,7 +122,6 @@ export const AuctionSchema = gql`
     stripeAccountId: String!
   }
 
-
   type ResponceId {
     id: String!
   }
@@ -139,6 +141,14 @@ export const AuctionSchema = gql`
   type CustomerInformation {
     email: String
     phone: String
+  }
+
+  type Parcel {
+    width: Int!
+    length: Int!
+    height: Int!
+    weight: Int!
+    units: String!
   }
 
   input AuctionSearchFilters {
@@ -187,6 +197,14 @@ export const AuctionSchema = gql`
     createdAt: String!
   }
 
+  input ParcelInput {
+    width: Int!
+    length: Int!
+    height: Int!
+    weight: Int!
+    units: String!
+  }
+
   extend type Query {
     auctions(
       size: Int
@@ -219,6 +237,7 @@ export const AuctionSchema = gql`
     chargeCurrendBid(input: CurrentAuctionBid!): ResponceId!
     followAuction(auctionId: String!): Follow
     unfollowAuction(auctionId: String!): ResponceId
+    updateAuctionParcel(auctionId: String!, input: ParcelInput!): Parcel!
   }
 
   extend type InfluencerProfile {

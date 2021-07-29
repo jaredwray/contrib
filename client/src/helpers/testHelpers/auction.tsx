@@ -37,6 +37,7 @@ export const auction = {
   link: 'test',
   fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
   followers: [],
+  parcel: { width: 12, length: 12, height: 12, weight: 2, units: 'imperial' },
   timeZone: 'PDT',
   isActive: false,
   isDraft: false,
@@ -69,4 +70,5 @@ export const auctionForAdminPage = {
   status: 'FAILED',
   timeZone: 'PDT',
   title: '1',
+  parcel: { width: 12, length: 12, height: 12, weight: 2, units: 'imperial' },
 };
