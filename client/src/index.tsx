@@ -18,6 +18,7 @@ import Charities from 'src/modules/admin/Charities';
 import Influencers from 'src/modules/admin/Influencers';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import Auctions from 'src/modules/auctions/AuctionsPage';
+import DeliveryAddressPage from 'src/modules/auctions/DeliveryAddressPage';
 import EditAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/Edit';
 import NewAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/New';
 import EditAuctionDetailsPage from 'src/modules/auctions/editAuction/DetailsPage';
@@ -108,6 +109,7 @@ ReactDOM.render(
                 <PrivateRoute component={NewAuctionWizardPage} path="/auctions/new" role="influencer" />
                 <PrivateRoute component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" role="influencer" />
                 <PrivateRoute component={EditAuctionMediaPage} path="/auctions/:auctionId/media" role="influencer" />
+                <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery-address" />
                 <PrivateRoute
                   component={EditAuctionDetailsPage}
                   path="/auctions/:auctionId/details"

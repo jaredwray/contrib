@@ -47,6 +47,7 @@ export interface Auction {
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
   followers?: Follow[];
+  winner?: string;
   timeZone: string;
   isActive: boolean;
   isDraft: boolean;

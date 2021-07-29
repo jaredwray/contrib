@@ -1,0 +1,50 @@
+@import 'src/variables.scss';
+
+.invitation-page {
+  background: no-repeat center url('/assets/images/invitation-bg-lg.webp') $sage-color;
+  background-size: cover;
+  background-blend-mode: multiply;
+  flex-grow: 1;
+
+  @media (max-width: $medium-weight) {
+    background-image: url('/assets/images/invitation-bg-sm.webp');
+  }
+  @media (max-width: $small-weight) {
+    .container {
+      padding: 0;
+    }
+  }
+
+  .container {
+    color: $white-color;
+    min-height: calc(100vh - 369px);
+
+    .invitation-page-influencer {
+      word-wrap: break-word;
+    }
+
+    .invitation-page-congratulation-title {
+      margin: auto 0 auto 20px;
+    }
+    .invitation-auction-title {
+      color: $light-ochre-color;
+    }
+
+    .invitation-page-separator {
+      width: 102px;
+      height: 12px;
+      background-color: $ochre-color;
+
+      @media (max-width: $medium-weight) {
+        width: 68px;
+        height: 8px;
+      }
+    }
+
+    .invitation-page-right-block {
+      background-color: $barely-gray-color !important;
+      color: $dark-sage-color;
+      border-radius: 10px;
+    }
+  }
+}

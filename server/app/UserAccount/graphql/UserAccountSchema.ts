@@ -32,6 +32,15 @@ export const UserAccountSchema = gql`
     stripeCustomerId: String!
   }
 
+  type UserAccountAddress {
+    name: String
+    state: String
+    city: String
+    zipCode: String
+    country: String
+    street: String
+  }
+
   type UserAccount {
     """
     ID is the user_id received from Auth0.
@@ -59,6 +68,16 @@ export const UserAccountSchema = gql`
     createdAt: String
     stripeCustomerId: String
     notAcceptedTerms: String
+    address: UserAccountAddress
+  }
+
+  input UserAccountAddressInput {
+    name: String!
+    state: String!
+    city: String!
+    zipCode: String!
+    country: String!
+    street: String!
   }
 
   extend type Query {
@@ -70,5 +89,6 @@ export const UserAccountSchema = gql`
     acceptAccountTerms(version: String!): UserAccount!
     createAccountWithPhoneNumber(phoneNumber: String): UserAccount!
     confirmAccountWithPhoneNumber(phoneNumber: String!, otp: String!): UserAccount!
+    createOrUpdateUserAddress(auctionId: String!, userId: String, input: UserAccountAddressInput!): UserAccountAddress!
   }
 `;

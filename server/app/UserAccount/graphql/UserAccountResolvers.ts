@@ -20,5 +20,9 @@ export const UserAccountResolvers = {
       (parent: unknown, { phoneNumber }: { phoneNumber: string }, { user, userAccount }) =>
         userAccount.createAccountWithPhoneNumber(user.id, phoneNumber),
     ),
+    createOrUpdateUserAddress: requireAuthenticated(
+      async (_, { auctionId, input }, { currentAccount, userAccount }) =>
+        await userAccount.createOrUpdateUserAddress(auctionId, currentAccount.mongodbId, input),
+    ),
   },
 };

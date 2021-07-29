@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 
-import { UserAccountCollectionName, IFollowObject } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountCollectionName, IFollowObject, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppConfig } from '../../../config';
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
@@ -34,6 +34,7 @@ export interface IAuctionModel extends Document {
   timeZone: string;
   sentNotifications: [string];
   totalBids: number;
+  winner?: IUserAccount['_id'];
 }
 
 export const AuctionCollectionName = 'auction';
@@ -81,6 +82,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     fairMarketValue: { type: SchemaTypes.Number },
     timeZone: { type: SchemaTypes.String },
     totalBids: { type: SchemaTypes.Number, default: 0 },
+    winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   },
   { optimisticConcurrency: true },
 );

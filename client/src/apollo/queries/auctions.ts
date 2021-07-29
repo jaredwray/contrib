@@ -61,6 +61,7 @@ export const AuctionForAdminPageQuery = gql`
         weight
         units
       }
+      winner
       isFailed
       isActive
       isSold
@@ -137,6 +138,7 @@ export const AuctionQuery = gql`
         user
         createdAt
       }
+      winner
     }
   }
 `;

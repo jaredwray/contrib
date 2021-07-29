@@ -39,6 +39,14 @@ export const MyAccountQuery = gql`
         cardExpirationMonth
         cardExpirationYear
       }
+      address {
+        name
+        state
+        city
+        zipCode
+        country
+        street
+      }
     }
   }
 `;
@@ -50,6 +58,29 @@ export const getAccountById = gql`
       createdAt
       phoneNumber
       stripeCustomerId
+    }
+  }
+`;
+
+export const CreateOrUpdateUserAddressMutation = gql`
+  mutation CreateOrUpdateUserAddress(
+    $auctionId: String!
+    $name: String!
+    $state: String!
+    $city: String!
+    $zipCode: String!
+    $country: String!
+    $street: String!
+  ) {
+    createOrUpdateUserAddress(
+      auctionId: $auctionId
+      input: { state: $state, city: $city, zipCode: $zipCode, country: $country, street: $street, name: $name }
+    ) {
+      state
+      city
+      zipCode
+      country
+      street
     }
   }
 `;
