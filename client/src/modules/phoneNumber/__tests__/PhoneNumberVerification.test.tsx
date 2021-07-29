@@ -24,6 +24,14 @@ cache.writeQuery({
       paymentInformation: null,
       charity: null,
       mongodbId: '321',
+      address: {
+        name: 'test name',
+        state: 'test state',
+        city: 'test city',
+        zipCode: 'test zipCode',
+        country: 'test country',
+        street: 'test street',
+      },
     },
   },
 });
