@@ -1,5 +1,5 @@
-import { IUserAccount } from '../mongodb/UserAccountModel';
 import { UserAccountStatus } from './UserAccountStatus';
+import { UserAccountAddress } from './UserAccountAddress';
 
 export interface UserAccount {
   id: string;
@@ -10,5 +10,5 @@ export interface UserAccount {
   stripeCustomerId?: string;
   createdAt: string;
   notAcceptedTerms?: string;
-  model?: IUserAccount;
+  address?: UserAccountAddress;
 }

@@ -2,6 +2,7 @@ import { Assistant } from './Assistant';
 import { Charity } from './Charity';
 import { InfluencerProfile } from './InfluencerProfile';
 import { PaymentInformation } from './PaymentInformation';
+import { UserAccountAddress } from './UserAccountAddress';
 
 export interface UserProfile {
   mongodbId: string;
@@ -12,4 +13,5 @@ export interface UserProfile {
   paymentInformation: PaymentInformation | null;
   createdAt: Date;
   notAcceptedTerms: string | null;
+  address: UserAccountAddress;
 }

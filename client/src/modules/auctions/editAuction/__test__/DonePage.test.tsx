@@ -97,7 +97,7 @@ describe('DonePage ', () => {
     });
     expect(wrapper!.find(Layout)).toHaveLength(0);
   });
-  it('component is defined and has Layout', async () => {
+  xit('component is defined and has Layout', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

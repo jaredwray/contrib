@@ -2,24 +2,29 @@ import { ClientSession, Connection, Model } from 'mongoose';
 import dayjs from 'dayjs';
 
 import { UserAccount } from '../dto/UserAccount';
+import { UserAccountAddress } from '../dto/UserAccountAddress';
 import { UserAccountForBid } from '../dto/UserAccountForBid';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
 import { IInvitation, InvitationModel } from '../../Invitation/mongodb/InvitationModel';
 import { ICharityModel, CharityModel } from '../../Charity/mongodb/CharityModel';
 import { IAssistant, AssistantModel } from '../../Assistant/mongodb/AssistantModel';
 import { IInfluencer, InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
+import { IAuctionModel, AuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { InvitationParentEntityType } from '../../Invitation/mongodb/InvitationParentEntityType';
 import { UserAccountStatus } from '../dto/UserAccountStatus';
 import { TwilioVerificationService } from '../../../twilio-client';
-import { AppError, ErrorCode } from '../../../errors';
 import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
 import { Auth0Service } from '../../../authz';
 
+import { AppError, ErrorCode } from '../../../errors';
+import { AppLogger } from '../../../logger';
+
 export class UserAccountService {
   private readonly AccountModel: Model<IUserAccount> = UserAccountModel(this.connection);
   private readonly AssistantModel: Model<IAssistant> = AssistantModel(this.connection);
+  private readonly AuctionModel: Model<IAuctionModel> = AuctionModel(this.connection);
   private readonly CharityModel: Model<ICharityModel> = CharityModel(this.connection);
   private readonly InfluencerModel: Model<IInfluencer> = InfluencerModel(this.connection);
   private readonly InvitationModel: Model<IInvitation> = InvitationModel(this.connection);
@@ -30,6 +35,41 @@ export class UserAccountService {
     private readonly eventHub: EventHub,
     private readonly auth0Service: Auth0Service,
   ) {}
+
+  public async createOrUpdateUserAddress(
+    auctionId: string,
+    userId: string,
+    input: UserAccountAddress,
+  ): Promise<UserAccountAddress> {
+    const auction = await this.AuctionModel.findById(auctionId);
+
+    if (!auction) {
+      AppLogger.error(`Can not find auction #${auctionId}`);
+      throw new AppError('Something went wrong. Please, try again later');
+    }
+
+    if (auction.winner.toString() !== userId) {
+      AppLogger.error(`Current user #${userId} is not a winner for auction #${auctionId}`);
+      throw new AppError('Something went wrong. Please, try again later');
+    }
+    const user = await this.AccountModel.findById(userId);
+
+    if (!user) {
+      AppLogger.error(`Can not find user #${userId} for create or update user address`);
+      throw new AppError('Something went wrong. Please, try again later');
+    }
+    try {
+      Object.assign(user, {
+        address: { ...input },
+      });
+
+      await user.save();
+      return input;
+    } catch (error) {
+      AppLogger.error(`Can not create or update user address for user #${userId}`);
+      throw new AppError('Something went wrong. Please, try again later');
+    }
+  }
 
   async getAccountByAuthzId(authzId: string): Promise<UserAccount> {
     const account = await this.AccountModel.findOne({ authzId }).exec();
@@ -175,6 +215,7 @@ export class UserAccountService {
       stripeCustomerId: model.stripeCustomerId,
       createdAt: model.createdAt.toISOString(),
       notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms, accountEntityTypes),
+      address: model.address,
     };
 
     if (model.isAdmin) {

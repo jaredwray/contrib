@@ -30,6 +30,7 @@ export interface Auction {
   fairMarketValue: Dinero.Dinero;
   followers?: Follow[];
   parcel?: AuctionParcel;
+  winner?: string;
   timeZone: string;
   isActive: boolean;
   isDraft: boolean;

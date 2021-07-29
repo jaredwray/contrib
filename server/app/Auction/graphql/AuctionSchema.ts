@@ -64,6 +64,7 @@ export const AuctionSchema = gql`
     timeZone: String
     followers: [Follow]
     parcel: Parcel
+    winner: String
     isActive: Boolean!
     isDraft: Boolean!
     isPending: Boolean!
@@ -87,6 +88,7 @@ export const AuctionSchema = gql`
     fairMarketValue: Money
     auctionOrganizer: AuctionAdminOrganizer
     parcel: Parcel
+    winner: String
     isFailed: Boolean!
     isSold: Boolean!
     isActive: Boolean!

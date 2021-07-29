@@ -64,6 +64,26 @@ export class AuctionService {
     private readonly bidService: BidService,
     private readonly stripeService: StripeService,
   ) {}
+  //TODO: delete after auctions winner update.
+  public async updateAuctionsWinner() {
+    try {
+      const auctions = await this.AuctionModel.find({
+        status: { $in: [AuctionStatus.SOLD, AuctionStatus.SETTLED] },
+        winner: { $exists: false },
+      });
+      for (const auction of auctions) {
+        const [lastAuctionBid] = await this.BidModel.find({ auction: auction._id }).sort({ bid: -1 }).limit(1);
+
+        Object.assign(auction, {
+          winner: lastAuctionBid.user,
+        });
+
+        await auction.save();
+      }
+    } catch (error) {
+      AppLogger.warn(`Unable to update auction winner: ${error.message}`);
+    }
+  }
 
   //TODO: delete after auctions parcel update.
   public async updateAuctionsParcelAttributes() {
@@ -347,7 +367,9 @@ export class AuctionService {
       await this.getMetrics(metricsModel, session, auctionId, link);
       await session.commitTransaction();
     } catch (error) {
-      AppLogger.error(`Something went wrong during AuctionMertics update. Error: ${error.message}`);
+      AppLogger.error(
+        `Something went wrong during AuctionMertics update for auction #${auctionId}. Error: ${error.message}`,
+      );
       await session.abortTransaction();
     } finally {
       await session.endSession();
@@ -754,6 +776,7 @@ export class AuctionService {
         } and user id ${lastAuctionBid.user._id.toString()}`,
       );
 
+      auction.winner = lastAuctionBid.user._id.toString();
       auction.status = AuctionStatus.SETTLED;
       await lastAuctionBid.save();
       await auction.save();
@@ -928,6 +951,7 @@ export class AuctionService {
 
     AppLogger.info(`Auction with id ${auction.id} has been sold`);
 
+    auction.winner = user.mongodbId;
     auction.status = AuctionStatus.SOLD;
     auction.currentPrice = auction.itemPrice;
     auction.stoppedAt = dayjs().second(0);
@@ -1051,6 +1075,7 @@ export class AuctionService {
       fairMarketValue,
       link: rawLink,
       followers,
+      winner,
       ...rest
     } = model.toObject();
 
@@ -1067,6 +1092,7 @@ export class AuctionService {
 
     return {
       id: _id.toString(),
+      winner: winner?.toString(),
       attachments: this.makeAssets(assets),
       endDate: endsAt,
       startDate: startsAt,
