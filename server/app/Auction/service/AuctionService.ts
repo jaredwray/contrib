@@ -12,10 +12,11 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
-
+import { AuctionParcel } from '../dto/AuctionParcel';
 import { Bid } from '../../Bid/dto/Bid';
 import { AuctionMetrics, BitlyClick } from '../dto/AuctionMetrics';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
+
 import { BidService } from '../../Bid/service/BidService';
 import { BidModel, IBidModel } from '../../Bid/mongodb/BidModel';
 
@@ -64,6 +65,28 @@ export class AuctionService {
     private readonly stripeService: StripeService,
   ) {}
 
+  //TODO: delete after auctions parcel update.
+  public async updateAuctionsParcelAttributes() {
+    try {
+      const auctions = await this.AuctionModel.find({ parcel: { $exists: false } });
+      for (const auction of auctions) {
+        Object.assign(auction, {
+          parcel: {
+            width: AppConfig.delivery.auctionParcel.width,
+            length: AppConfig.delivery.auctionParcel.length,
+            height: AppConfig.delivery.auctionParcel.height,
+            weight: AppConfig.delivery.auctionParcel.weight,
+            units: AppConfig.delivery.auctionParcel.units,
+          },
+        });
+
+        await auction.save();
+      }
+    } catch (error) {
+      AppLogger.warn(`Unable to update auction parcel: ${error.message}`);
+    }
+  }
+
   //TODO: delete after attachments update.
   public async updateAttachments() {
     try {
@@ -86,6 +109,27 @@ export class AuctionService {
 
   public async unfollowAuction(auctionId: string, accountId: string): Promise<{ id: string }> | null {
     return await this.auctionRepository.unfollowAuction(auctionId, accountId);
+  }
+
+  public async updateAuctionParcel(auctionId: string, input: AuctionParcel): Promise<AuctionParcel> {
+    const auction = await this.AuctionModel.findById(auctionId);
+    if (!auction) {
+      throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
+    }
+    try {
+      const { width, length, height, weight, units } = input;
+
+      Object.assign(auction, {
+        parcel: { width, length, height, weight, units },
+      });
+
+      await auction.save();
+
+      return { width, length, height, weight, units };
+    } catch (error) {
+      AppLogger.error(`Failed to update auction parcel for auction #${auctionId}, error: ${error.message}`);
+      throw new AppError('Failed to update auction parcel. Please, try later');
+    }
   }
 
   public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | null> {

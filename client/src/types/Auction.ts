@@ -2,6 +2,7 @@ import { DineroObject } from 'dinero.js';
 
 import { Follow } from './Follow';
 import { InfluencerProfile } from './InfluencerProfile';
+import { Parcel } from './Parcel';
 
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
@@ -54,4 +55,5 @@ export interface Auction {
   isFailed: boolean;
   isSold: boolean;
   isStopped: boolean;
+  parcel?: Parcel;
 }

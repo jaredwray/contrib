@@ -4,6 +4,7 @@ import { format, utcToZonedTime } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Table } from 'react-bootstrap';
 
+import { ParcelProps } from 'src/helpers/ParcelProps';
 import { Auction } from 'src/types/Auction';
 import { Charity } from 'src/types/Charity';
 
@@ -74,6 +75,12 @@ export const Details: FC<Props> = ({ auction, timeZone, charity }) => {
           <tr>
             <td>Stop date</td>
             <td>{auction.stoppedAt}</td>
+          </tr>
+        )}
+        {auction.parcel && (
+          <tr>
+            <td>Delivery properties</td>
+            <td>{ParcelProps(auction)}</td>
           </tr>
         )}
       </tbody>

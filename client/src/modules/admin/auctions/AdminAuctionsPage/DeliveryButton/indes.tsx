@@ -10,16 +10,16 @@ import { Modal } from './Modal';
 interface Props {
   auction: Auction;
   mutation: DocumentNode;
-  className: string;
   getAuctionsList: () => void;
+  className: string;
 }
 
-export const FairMarketValueChangeButton: FC<Props> = ({ auction, className, mutation, getAuctionsList }) => {
+export const DeliveryButton: FC<Props> = ({ auction, className, mutation, getAuctionsList }) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
       <Button className={className} variant="link" onClick={() => setShowDialog(true)}>
-        Set Fair Market Value
+        Set Delivery Properties
       </Button>
       <Modal
         auction={auction}

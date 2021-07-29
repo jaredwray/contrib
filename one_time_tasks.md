@@ -9,3 +9,9 @@ NOTE: `OUR_SECRET_KEY` is located inside 1Password under `AUCTION_SCHEDULER_SECR
 ```
 curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST https://contrib.org/api/v1/update-attachments
 ```
+
+#### update auction parcel attributes
+
+```
+curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST https://contrib.org/api/v1/update-auctions-parcel
+```

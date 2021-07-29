@@ -6,6 +6,7 @@ import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionMetrics } from '../dto/AuctionMetrics';
+import { AuctionParcel } from '../dto/AuctionParcel';
 import { AuctionInput } from './model/AuctionInput';
 import { ChargeCurrentBidInput } from './model/ChargeCurrentBidInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
@@ -60,6 +61,7 @@ interface AuctionResolversType {
     chargeCurrendBid: GraphqlResolver<{ id: string }, { input: ChargeCurrentBidInput }>;
     followAuction: GraphqlResolver<{ user: string; createdAt: Dayjs } | null, { auctionId: string }>;
     unfollowAuction: GraphqlResolver<{ id: string } | null, { auctionId: string }>;
+    updateAuctionParcel: GraphqlResolver<AuctionParcel, { auctionId: string; input: AuctionParcel }>;
   };
   InfluencerProfile: {
     auctions: GraphqlResolver<Auction[], Record<string, never>, InfluencerProfile>;
@@ -150,6 +152,9 @@ export const AuctionResolvers: AuctionResolversType = {
     }),
     finishAuctionCreation: requireRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) =>
       auction.maybeActivateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId),
+    ),
+    updateAuctionParcel: requireAdmin(
+      async (_, { auctionId, input }, { auction }) => await auction.updateAuctionParcel(auctionId, input),
     ),
   },
   InfluencerProfile: {

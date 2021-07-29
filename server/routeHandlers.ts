@@ -19,6 +19,17 @@ export default function appRouteHandlers(
     }
   });
 
+  //TODO: delete after auction parcel update.
+  app.post('/api/v1/update-auctions-parcel', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
+      return;
+    }
+
+    const response = await auction.updateAuctionsParcelAttributes();
+    return res.json(response);
+  });
+
+  //TODO: delete after attachments update.
   app.post('/api/v1/update-attachments', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {
       return;

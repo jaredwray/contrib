@@ -87,4 +87,13 @@ export const AppConfig = {
   terms: {
     version: '1.0',
   },
+  delivery: {
+    auctionParcel: {
+      width: 1,
+      length: 1,
+      height: 1,
+      weight: 1,
+      units: 'imperial',
+    },
+  },
 };
