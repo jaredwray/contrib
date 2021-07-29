@@ -74,6 +74,7 @@ cache.writeQuery({
       timeZone: 'PDT',
       title: 'dd',
       totalBids: 1,
+      winner: 'test',
     },
   },
 });

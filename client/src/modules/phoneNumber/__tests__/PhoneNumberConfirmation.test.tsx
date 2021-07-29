@@ -32,6 +32,14 @@ cache.writeQuery({
       paymentInformation: null,
       mongodbId: '321',
       charity: null,
+      address: {
+        name: 'test name',
+        state: 'test state',
+        city: 'test city',
+        zipCode: 'test zipCode',
+        country: 'test country',
+        street: 'test street',
+      },
     },
   },
 });
@@ -47,7 +55,7 @@ describe('AuctionPage ', () => {
     });
     expect(wrapper!.find(Layout)).toHaveLength(0);
   });
-  xit('component is defined and has Layout', async () => {
+  it('component is defined and has Layout', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
