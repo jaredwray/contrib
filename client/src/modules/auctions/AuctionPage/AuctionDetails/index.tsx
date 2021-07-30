@@ -5,7 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import clsx from 'clsx';
-import { format as dateFormat } from 'date-fns';
+import { format as dateFormat, differenceInSeconds } from 'date-fns';
 import { format, toDate, utcToZonedTime } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
@@ -37,6 +37,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ??
 
 const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const [isBying, setIsBying] = useState(false);
+  const [minutesWithoutReload, SetMinutesinterval] = useState(0);
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
@@ -74,6 +75,24 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
+  let callAfterMs = 60000;
+  const secondsLeft = differenceInSeconds(toDate(endDate), new Date());
+  if (secondsLeft <= 120) {
+    callAfterMs = 1000;
+  }
+
+  useEffect(() => {
+    if (secondsLeft === 0) {
+      executeQuery();
+      return;
+    }
+
+    const timer = setInterval(() => {
+      SetMinutesinterval((minutesWithoutReload) => minutesWithoutReload + 1);
+    }, callAfterMs);
+    return () => clearInterval(timer);
+  }, [executeQuery, minutesWithoutReload, secondsLeft, callAfterMs]);
+
   const canEdit = (isPending || isStopped) && (account?.isAdmin || isMyAuction);
 
   let soldTime = '';
@@ -226,7 +245,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
             {!ended && (
               <>
                 <span className={styles.notBold}>ends in </span>
-                {durationTillEnd}
+                {secondsLeft <= 60 ? <span className={styles.secondsLeft}>{`${secondsLeft}s`}</span> : durationTillEnd}
               </>
             )}
             <span className={styles.notBold}>{ended && 'ended'} on </span>
