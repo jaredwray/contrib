@@ -4,6 +4,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import Layout from 'src/components/Layout';
 
@@ -24,13 +25,15 @@ describe('DeliveryAddressPage', () => {
 
     await act(async () => {
       wrapper = mount(
-        <ToastProvider>
-          <MemoryRouter initialEntries={['auctions/fake-id/invitation/fake-slug']}>
-            <MockedProvider>
-              <DeliveryAddressPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </ToastProvider>,
+        <Router>
+          <ToastProvider>
+            <MemoryRouter initialEntries={['auctions/fake-id/delivery-address']}>
+              <MockedProvider>
+                <DeliveryAddressPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </ToastProvider>
+        </Router>,
       );
     });
     expect(wrapper!.find(Layout)).toHaveLength(0);
