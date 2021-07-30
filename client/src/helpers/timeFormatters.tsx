@@ -3,6 +3,7 @@ import { toDate } from 'date-fns-tz';
 
 export function toHumanReadableDuration(date: string): string | null {
   let hours = differenceInHours(toDate(date), new Date());
+  const minutes = differenceInMinutes(toDate(date), new Date());
   let inPast = false;
 
   if (hours < 0) {
@@ -17,13 +18,13 @@ export function toHumanReadableDuration(date: string): string | null {
 
   const hoursLeft = hours % 24;
   const daysLeft = Math.floor(hours / 24);
-  const left = [daysLeft ? `${daysLeft}d` : '', hoursLeft ? `${hoursLeft}h` : ''];
-
+  const minutesLeft = minutes - Math.floor(minutes / 60) * 60;
+  const left = [daysLeft ? `${daysLeft}d` : '', hoursLeft ? `${hoursLeft}h` : '', minutesLeft ? `${minutesLeft}m` : ''];
   if (inPast) {
     left.push('ago');
   }
 
-  return left.join(' ');
+  return left.filter(Boolean).join(' ');
 }
 
 export function toFullHumanReadableDatetime(prop: Date): string | null {

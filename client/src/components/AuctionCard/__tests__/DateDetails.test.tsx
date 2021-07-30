@@ -40,7 +40,7 @@ describe('Should render correctly "DateDetails"', () => {
   it('component is defined and has text: "0 bids • 24d 8h"', () => {
     const wrapper = mount(<DateDetails {...props} />);
     expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('0 bids • 24d 8h');
+    expect(wrapper.text()).toEqual("0 bids • 24d 8h 5m");
   });
   it('component is defined', () => {
     const wrapper = mount(<DateDetails {...props} />);
