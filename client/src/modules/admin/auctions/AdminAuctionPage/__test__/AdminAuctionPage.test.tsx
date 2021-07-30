@@ -104,7 +104,7 @@ describe('AdminAuctionPage ', () => {
     });
     expect(wrapper!.find(Layout)).toHaveLength(0);
   });
-  xit('component is defined and has Layout', async () => {
+  it('component is defined and has Layout', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

@@ -14,6 +14,7 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  wrapperClassName?: string;
   constraints?: { [key: string]: any };
   textarea?: boolean;
   externalText?: string;
@@ -27,6 +28,7 @@ const InputField: FC<Props> = ({
   required,
   disabled,
   className,
+  wrapperClassName,
   textarea,
   constraints: inputConstraints,
   externalText,
@@ -36,7 +38,7 @@ const InputField: FC<Props> = ({
   const { hasError, errorMessage, ...inputProps } = useField(name, { constraints, disabled });
 
   return (
-    <Group>
+    <Group className={wrapperClassName}>
       {title && <Label className="d-block">{title}</Label>}
       <Control
         {...inputProps}

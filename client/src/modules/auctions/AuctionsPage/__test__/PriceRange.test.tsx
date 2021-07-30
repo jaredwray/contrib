@@ -1,5 +1,6 @@
 import PriceRange from '../Filters/PriceRange';
 import { mount } from 'enzyme';
+
 describe('Should render correctly "Filters"', () => {
   const props: any = {
     initialBids: {

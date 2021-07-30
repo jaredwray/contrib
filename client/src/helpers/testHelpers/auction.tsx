@@ -71,4 +71,5 @@ export const auctionForAdminPage = {
   timeZone: 'PDT',
   title: '1',
   parcel: { width: 12, length: 12, height: 12, weight: 2, units: 'imperial' },
+  winner: '60cf0ade0092860f2c7a0bc2',
 };

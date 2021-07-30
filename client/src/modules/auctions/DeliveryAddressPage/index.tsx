@@ -1,19 +1,22 @@
-import React, { useCallback, useContext, FC } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { useQuery, useMutation } from '@apollo/client';
+import clsx from 'clsx';
+import clm from 'country-locale-map';
 import { Button, Container, Row, Col } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQuery';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
-import InputField from 'src/components/Form/InputField';
+import SelectField from 'src/components/Form/SelectField';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
+import { ModalRow } from 'src/modules/auctions/DeliveryAddressPage/ModalRow';
 
-import './styles.scss';
+import styles from './styles.module.scss';
 
 export default function DeliveryAddressPage() {
   const { account } = useContext(UserAccountContext);
@@ -21,7 +24,6 @@ export default function DeliveryAddressPage() {
   const { showMessage, showError, showWarning } = useShowNotification();
   const [UpdateUserAddress, { loading: updating }] = useMutation(CreateOrUpdateUserAddressMutation);
   const history = useHistory();
-  const linkToAuction = `/auctions/${auctionId}`;
   const { data: auctionData } = useQuery(AuctionQuery, {
     variables: { id: auctionId },
   });
@@ -77,70 +79,60 @@ export default function DeliveryAddressPage() {
   if (!isWinner) {
     history.push(`/`);
   }
+  const countries = clm.getAllCountries().map((country) => {
+    return { value: country.alpha3, label: country.name };
+  });
+
+  const selectedOption = () => {
+    const { country } = initialValues;
+    const selected = countries.find((option) => option.value === country);
+    return selected || countries.find((option) => option.value === 'USA');
+  };
 
   setPageTitle(`Delivery address for ${title} auction`);
 
-  interface Props {
-    title: string;
-    children: React.ReactNode;
-  }
-  const ModalRow: FC<Props> = ({ title, children }) => (
-    <>
-      <Row className="d-flex align-items-baseline">
-        <span className="pt-1 pb-1">{title}</span>
-      </Row>
-      <Row className="d-flex align-items-baseline w-100">
-        <div className="w-100">{children}</div>
-      </Row>
-    </>
-  );
   return (
     <Layout>
-      <div className="w-100 invitation-page">
-        <Container className="d-md-table">
-          <Container className="h-100 d-md-table-cell align-middle">
+      <div className={clsx(styles.page, 'w-100')}>
+        <Container className="d-md-table p-0">
+          <Container className={clsx(styles.container, 'p-0 h-100 d-md-table-cell align-middle')}>
             <Row className="pt-lg-3 pb-2 align-items-center">
               <Col lg="6">
-                <div className="text-super pt-4">Hello</div>
-
-                <div className="invitation-page-separator" />
-                <div className="text-headline pt-4" data-test-id="invitation-page-welcome-message">
-                  You won the auction!
-                </div>
-                <div className="text-headline pt-4" data-test-id="invitation-page-welcome-message">
-                  To get the{' '}
-                  <a className="invitation-auction-title " href={linkToAuction}>
+                <div className={clsx(styles.title, 'text-super-headline pb-4 pt-mb-0 pt-4')}>Congratulations!</div>
+                <div className={styles.separator} />
+                <div className="text-headline pt-4">You won the auction!</div>
+                <div className="text-headline pt-4">
+                  To receiv4
+                  <Link className={styles.auctionTitle} to={`/auctions/${auctionId}`}>
                     {title}
-                  </a>
+                  </Link>
                   , fill in the delivery form
                 </div>
               </Col>
-              <Col className="pt-5 pt-lg-0 pb-4 pb-lg-0" lg="6">
-                <div className="invitation-page-right-block p-4 p-md-4">
+              <Col className="pt-4 pt-lg-0 pb-4 pb-lg-0" lg="6">
+                <div className={clsx(styles.rightBlock, 'p-4 p-md-4')}>
                   <div className="d-table w-100">
                     <Form initialValues={initialValues} onSubmit={onSubmit}>
-                      <div className="mb-3">
-                        <ModalRow title={`name`}>
-                          <InputField name="name" />
-                        </ModalRow>
-                        <ModalRow title={`country `}>
-                          <InputField name="country" />
-                        </ModalRow>
-                        <ModalRow title={`state`}>
-                          <InputField name="state" />
-                        </ModalRow>
-                        <ModalRow title={`city`}>
-                          <InputField name="city" />
-                        </ModalRow>
-                        <ModalRow title={`street `}>
-                          <InputField name="street" />
-                        </ModalRow>
-                        <ModalRow title={`zip code `}>
-                          <InputField name="zipCode" />
-                        </ModalRow>
-                      </div>
+                      <ModalRow title={'name'} />
+                      <Row className="d-flex align-items-baseline">
+                        <span className="pt-1 pb-1">country</span>
+                      </Row>
+                      <Row className="d-flex align-items-baseline w-100 mb-1">
+                        <div className="w-100">
+                          <SelectField
+                            className={styles.select}
+                            name="country"
+                            options={countries}
+                            selected={selectedOption()}
+                          />
+                        </div>
+                      </Row>
+                      <ModalRow title={'state'} />
+                      <ModalRow title={'city'} />
+                      <ModalRow title={'street'} />
+                      <ModalRow title={'zip code'} />
                       <Button
-                        className="btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
+                        className={clsx(styles.createBtn, 'align-middle w-100 mt-3')}
                         disabled={updating}
                         type="submit"
                         variant="ochre"
