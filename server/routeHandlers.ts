@@ -15,7 +15,7 @@ export default function appRouteHandlers(
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
     } else {
-      express.json()(req, res, next);
+      express.json({ limit: '500mb' })(req, res, next);
     }
   });
 
