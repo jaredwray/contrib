@@ -15,6 +15,7 @@ import { Charity } from '../../Charity/dto/Charity';
 import { Assistant } from '../../Assistant/dto/Assistant';
 import { CreateInfluencerInput } from '../../Invitation/graphql/model/CreateInfluencerInput';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
+import { query } from 'winston';
 
 interface InfluencerResolversType {
   Query: {
@@ -22,6 +23,7 @@ interface InfluencerResolversType {
       { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
       { size: number; skip: number }
     >;
+    influencersSearch: GraphqlResolver<InfluencerProfile[], { query: string }>;
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
   };
   Mutation: {
@@ -61,6 +63,10 @@ export const InfluencerResolvers: InfluencerResolversType = {
       size,
       skip,
     })),
+    influencersSearch: requireAdmin(async (_, { query }, { influencer }) => {
+      return await influencer.searchForInfluencer(query.trim());
+    }),
+
     influencer: loadRole(async (_, { id }, { currentAccount, influencer, currentAssistant }) => {
       if (id === 'me' && currentAccount) {
         if (currentAssistant) {

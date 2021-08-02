@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -30,24 +30,44 @@ import styles from './styles.module.scss';
 
 export default function AdminAuctionsPage() {
   const [pageSkip, setPageSkip] = useState(0);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [getAuctionsList, { loading, data, error }] = useLazyQuery(AuctionsListQuery, {
-    variables: { size: PER_PAGE, skip: pageSkip },
-    fetchPolicy: 'network-only',
+    variables: { size: PER_PAGE, skip: pageSkip, query: searchQuery },
+    fetchPolicy: 'cache-and-network',
   });
+
   useEffect(() => {
     getAuctionsList();
   }, [getAuctionsList]);
 
+  const clearAndCloseSearch = useCallback(() => {
+    setSearchQuery('');
+  }, [setSearchQuery]);
+
+  const onInputSearchChange = useCallback(
+    (value) => {
+      setSearchQuery(value);
+    },
+    [setSearchQuery],
+  );
+
   if (error) {
     return null;
   }
-
   const auctions = data?.auctions || { skip: 0, totalItems: 0, items: [] };
+
   setPageTitle('Auctions page');
 
   return (
-    <AdminPage items={auctions} loading={loading} pageSkip={pageSkip} setPageSkip={setPageSkip}>
+    <AdminPage
+      items={auctions}
+      loading={loading}
+      pageSkip={pageSkip}
+      setPageSkip={setPageSkip}
+      onCancel={clearAndCloseSearch}
+      onChange={onInputSearchChange}
+    >
       <Table className="d-block d-sm-table">
         <thead>
           <tr>

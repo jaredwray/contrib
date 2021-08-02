@@ -15,7 +15,7 @@ export default function appRouteHandlers(
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
     } else {
-      express.json({ limit: '500mb' })(req, res, next);
+      express.json()(req, res, next);
     }
   });
 
@@ -39,6 +39,7 @@ export default function appRouteHandlers(
     return res.json(response);
   });
 
+  //TODO: delete after auction winners update.
   app.post('/api/v1/update-auctions-winner', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {
       return;

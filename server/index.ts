@@ -1,7 +1,6 @@
 import { graphqlUploadExpress } from 'graphql-upload';
 import express from 'express';
 import path from 'path';
-import bodyParser from 'body-parser';
 
 import { createGraphqlServer } from './graphql';
 import { AppLogger } from './logger';
@@ -37,9 +36,6 @@ app.set('view engine', 'pug');
       res.sendFile(clientBundlePath + '/index.html', { acceptRanges: false });
     });
   }
-
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true, limit: '500mb' }));
 
   const bytesInGB = Math.pow(1024, 3);
   app.use(
