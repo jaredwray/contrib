@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
+import { AllInfluencersQuery, InviteInfluencerMutation, InfluencersSearch } from 'src/apollo/queries/influencers';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
@@ -19,19 +19,46 @@ import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [influencersSearch, setInfluencersSearch] = useState<InfluencerProfile[]>([]);
+
   const [getInfluencersList, { loading, data, error }] = useLazyQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
+    fetchPolicy: 'cache-and-network',
   });
 
+  const [executeSearch] = useLazyQuery(InfluencersSearch, {
+    onCompleted({ influencersSearch }) {
+      setInfluencersSearch(influencersSearch);
+    },
+    fetchPolicy: 'cache-and-network',
+  });
   useEffect(() => {
     getInfluencersList();
   }, [getInfluencersList]);
+
+  useEffect(() => {
+    executeSearch({ variables: { query: searchQuery } });
+  }, [executeSearch, searchQuery]);
+
+  const onInputSearchChange = useCallback(
+    (value) => {
+      setSearchQuery(value);
+    },
+    [setSearchQuery],
+  );
+  const clearAndCloseSearch = useCallback(() => {
+    setSearchQuery('');
+    setInfluencersSearch([]);
+  }, [setSearchQuery, setInfluencersSearch]);
 
   if (error) {
     return null;
   }
 
-  const influencers = data?.influencers || { skip: 0, totalItems: 0, items: [] };
+  const influencers = searchQuery
+    ? { skip: 0, totalItems: influencersSearch.length, items: influencersSearch }
+    : data?.influencers || { skip: 0, totalItems: 0, items: [] };
 
   setPageTitle('Admin nfluencers auction page');
 
@@ -52,6 +79,8 @@ export default function InfluencersPage() {
       loading={loading}
       pageSkip={pageSkip}
       setPageSkip={setPageSkip}
+      onCancel={clearAndCloseSearch}
+      onChange={onInputSearchChange}
     >
       <Table className="d-block d-sm-table">
         <thead>

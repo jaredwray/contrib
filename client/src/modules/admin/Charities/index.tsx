@@ -18,7 +18,7 @@ import styles from './styles.module.scss';
 
 export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
-  const [getCharitisList, { loading, data, error }] = useLazyQuery(AllCharitiesQuery, {
+  const [getCharitiesList, { loading, data, error }] = useLazyQuery(AllCharitiesQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
 
@@ -43,8 +43,8 @@ export default function CharitiesPage(): any {
   }, [executeSearch, searchQuery]);
 
   useEffect(() => {
-    getCharitisList();
-  }, [getCharitisList]);
+    getCharitiesList();
+  }, [getCharitiesList]);
 
   if (error) {
     return null;
@@ -57,7 +57,7 @@ export default function CharitiesPage(): any {
     <InviteButton
       className={clsx(styles.inviteBtn, 'text--body d-inline-block')}
       mutation={InviteCharityMutation}
-      updateEntitisList={getCharitisList}
+      updateEntitisList={getCharitiesList}
     />
   );
   setPageTitle('Charities page');
