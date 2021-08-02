@@ -140,8 +140,19 @@ export class UserAccountService {
     ) {
       return await this.confirmAccountWithPhoneNumber(authzId, phoneNumber);
     }
+    try {
+      await this.twilioVerificationService.createVerification(phoneNumber);
+    } catch (error) {
+      if (error.message.startsWith('Invalid parameter `To`')) {
+        throw new AppError(
+          `${error.message.replace('Invalid parameter `To`', 'Invalid phone number')}`,
+          ErrorCode.BAD_REQUEST,
+        );
+      }
 
-    await this.twilioVerificationService.createVerification(phoneNumber);
+      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}. Error: ${error.message}`);
+      throw new AppError(`Something went wrong. please try later.`, ErrorCode.BAD_REQUEST);
+    }
     return {
       id: authzId,
       phoneNumber,

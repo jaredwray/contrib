@@ -82,7 +82,7 @@ export default function InfluencersPage() {
       onCancel={clearAndCloseSearch}
       onChange={onInputSearchChange}
     >
-      <Table className="d-block d-sm-table">
+      <Table className="d-block d-sl-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -98,9 +98,9 @@ export default function InfluencersPage() {
               <td className={styles.idColumn} title={item.id}>
                 {item.id}
               </td>
-              <td className="break-word">{item.name}</td>
-              <td className="break-word">{item.sport}</td>
-              <td className="break-word">{item.status}</td>
+              <td className={styles.otherColumns}>{item.name}</td>
+              <td className={styles.otherColumns}>{item.sport}</td>
+              <td className={styles.otherColumns}>{item.status}</td>
               <td>
                 <ActionsDropdown>
                   <Link className="dropdown-item text--body" to={`/profiles/${item.id}/edit`}>

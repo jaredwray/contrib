@@ -311,7 +311,7 @@ export class AuctionService {
     if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
-
+    AppLogger.error(`Attachment uploading for auction #${auction._id.toString()} started`);
     try {
       const asset = await this.attachmentsService.uploadFileAttachment(
         id,

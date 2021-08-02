@@ -72,7 +72,7 @@ export default function CharitiesPage(): any {
       onCancel={clearAndCloseSearch}
       onChange={onInputSearchChange}
     >
-      <Table className="d-block d-sm-table">
+      <Table className="d-block d-sl-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -86,8 +86,8 @@ export default function CharitiesPage(): any {
           {charities.items.map((item: Charity) => (
             <ClickableTr key={item.id} linkTo={`/charity/${item.id}`}>
               <td className={styles.idColumn}>{item.id}</td>
-              <td className="break-word">{item.name}</td>
-              <td>{item.status}</td>
+              <td className={styles.otherColumns}>{item.name}</td>
+              <td className={styles.otherColumns}>{item.status}</td>
               <td>{item.profileStatus}</td>
               <td>{item.stripeStatus}</td>
               <td>
