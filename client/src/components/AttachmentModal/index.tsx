@@ -19,13 +19,13 @@ const AttachmentModal: FC<Props> = ({ attachment, closeModal }) => {
   }
 
   return (
-    <Modal centered contentClassName={styles.content} dialogClassName={styles.modal} show={true} onHide={closeModal}>
+    <Modal centered contentClassName="d-table" dialogClassName={styles.modal} show={true} onHide={closeModal}>
       <Modal.Body className={clsx(styles.body, 'text-center')}>
         <button className={styles.closeBtn} title="close" onClick={closeModal}>
           X
         </button>
         {attachment.type === 'VIDEO' ? (
-          <Stream controls src={attachment.cloudflareUrl} />
+          <Stream controls src={attachment.uid} />
         ) : (
           <Image fluid alt="" className={styles.image} src={attachment.url} />
         )}
