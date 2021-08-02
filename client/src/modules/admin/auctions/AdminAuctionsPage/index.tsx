@@ -70,8 +70,8 @@ export default function AdminAuctionsPage() {
     >
       <Table className="d-block d-sm-table">
         <thead>
-          <tr>
-            <th>ID</th>
+          <tr className={styles.tHead}>
+            <th className={styles.tId}>ID</th>
             <th>Name</th>
             <th>Influencer</th>
             <th>Status</th>
@@ -85,8 +85,8 @@ export default function AdminAuctionsPage() {
           {auctions.items.map((auction: Auction) => (
             <ClickableTr key={auction.id} linkTo={`/auctions/${auction.id}${auction.isDraft ? '/basic' : ''}`}>
               <td className={styles.idColumn}>{auction.id}</td>
-              <td className="break-word">{auction.title}</td>
-              <td className="break-word">{auction.auctionOrganizer.name}</td>
+              <td className={styles.otherColumns}>{auction.title}</td>
+              <td className={styles.otherColumns}>{auction.auctionOrganizer.name}</td>
               <td>{auction.status}</td>
               <td>
                 {auction.currentPrice

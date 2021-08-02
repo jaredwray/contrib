@@ -1,12 +1,12 @@
 @import 'src/variables.scss';
 
 .idColumn {
-  max-width: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: 215px;
 }
-
+.otherColumns {
+  max-width: 170px;
+  word-wrap: break-word;
+}
 .inviteActionBtn {
   height: 49px;
   padding-left: 36px;
