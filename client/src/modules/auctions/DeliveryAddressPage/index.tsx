@@ -12,6 +12,7 @@ import Form from 'src/components/Form/Form';
 import SelectField from 'src/components/Form/SelectField';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { RedirectWithReturnAfterLogin } from 'src/helpers/RedirectWithReturnAfterLogin';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { ModalRow } from 'src/modules/auctions/DeliveryAddressPage/ModalRow';
@@ -68,11 +69,16 @@ export default function DeliveryAddressPage() {
     },
     [UpdateUserAddress, showMessage, showError, showWarning, auctionId],
   );
-
-  if (!auctionData || !account) {
+  if (!auctionData) {
     return null;
   }
   const { auction } = auctionData;
+
+  if (!account) {
+    RedirectWithReturnAfterLogin(`/auctions/${auction.id}/delivery`);
+    return null;
+  }
+
   const { title } = auction;
   const isWinner = auction.winner === account?.mongodbId;
   const initialValues = account.address;
