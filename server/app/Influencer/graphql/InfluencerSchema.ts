@@ -36,7 +36,8 @@ export const InfluencerSchema = gql`
 
   extend type Query {
     influencers(size: Int!, skip: Int!): InfluencersPage!
-    influencer(id: String!): InfluencerProfile!
+    influencersSearch(query: String!): [InfluencerProfile!]
+    influencer(id: String!): InfluencerProfile
   }
 
   input UpdateInfluencerProfileInput {

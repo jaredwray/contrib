@@ -45,7 +45,12 @@ export const CharityProfileEditPage: FC = () => {
   };
 
   const charityProfile = charityProfileData?.charity;
-  if (!charityProfile) {
+
+  if (charityProfile === null) {
+    history.replace('/404');
+    return null;
+  }
+  if (charityProfile === undefined) {
     return null;
   }
   setPageTitle(charityId === 'me' ? 'My charity' : `Charity ${charityProfile.name} edit page`);

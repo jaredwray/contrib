@@ -34,7 +34,15 @@ const AuctionPage = () => {
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
 
-  if (error || !auction) {
+  if (auction === null) {
+    history.replace(`/404`);
+  }
+
+  if (auction?.isDraft) {
+    history.push(`/`);
+  }
+
+  if (error || auction === undefined) {
     return null;
   }
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(

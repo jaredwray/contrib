@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { useQuery } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { GetTotalRaisedAmountQuery } from 'src/apollo/queries/auctions';
 import { GetCharity } from 'src/apollo/queries/charityProfile';
@@ -11,6 +11,7 @@ import { Charity } from 'src/types/Charity';
 import { CharityProfilePageContent } from './CharityProfilePageContent';
 
 export const CharityProfilePage: FC = () => {
+  const history = useHistory();
   const charityId = useParams<{ charityId: string }>().charityId ?? 'me';
   const { data } = useQuery<{ charity: Charity }>(GetCharity, {
     variables: { id: charityId },
@@ -20,7 +21,11 @@ export const CharityProfilePage: FC = () => {
   });
 
   const charity = data?.charity;
-  if (!charity) {
+  if (charity === null) {
+    history.replace('/404');
+    return null;
+  }
+  if (charity === undefined) {
     return null;
   }
 

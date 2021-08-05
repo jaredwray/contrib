@@ -11,7 +11,7 @@ import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
-import { AppError } from '../../../errors';
+import { AppError, ErrorCode } from '../../../errors';
 
 interface TransientInfluencerInput {
   name: string;
@@ -138,13 +138,21 @@ export class InfluencerService {
   }
 
   async findInfluencer(id: string, session?: ClientSession): Promise<InfluencerProfile | null> {
-    const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
-    return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+    try {
+      const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
+      return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+    } catch (error) {
+      AppLogger.error(`Cannot find Influencer with id #${id}: ${error.message}`);
+    }
   }
 
   async findInfluencerByUserAccount(userAccount: string): Promise<InfluencerProfile | null> {
-    const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
-    return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+    try {
+      const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
+      return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+    } catch (error) {
+      AppLogger.error(`Cannot find Influencer with id #${userAccount}: ${error.message}`);
+    }
   }
 
   async updateInfluencerStatus(
