@@ -1,34 +1,29 @@
 import { mount } from 'enzyme';
+import { ToastProvider } from 'react-toast-notifications';
+import { act } from 'react-dom/test-utils';
 import { mocked } from 'ts-jest/utils';
 import { useAuth0 } from '@auth0/auth0-react';
-import { ToastProvider } from 'react-toast-notifications';
 
-import { RedirectWithReturnAfterLogin } from '../RedirectWithReturnAfterLogin';
+import { useRedirectWithReturnAfterLogin } from '../useRedirectWithReturnAfterLogin';
 
 jest.mock('@auth0/auth0-react');
-
 const mockedUseAuth0 = mocked(useAuth0, true);
-const verifiedUser = {
-  email: 'johndoe@me.com',
-  email_verified: true,
-  name: 'Julian Strait',
-  picture: 'link-to-a-picture',
-  sub: 'google-oauth2|12345678901234',
-};
-describe('RedirectWithReturnAfterLogin', () => {
-  const Component = () => {
-    try {
-      RedirectWithReturnAfterLogin('/test');
-    } catch (error) {
-      const errorFn = jest.fn();
-      if (error) {
-        errorFn();
-      }
-    }
-    return <>test</>;
-  };
 
-  it('should redirect  ', () => {
+const TestHook = (props: { callback: Function }) => {
+  const { callback } = props;
+  callback('/test');
+  return null;
+};
+
+describe('RedirectWithReturnAfterLogin', () => {
+  let RedirectWithReturnAfterLogin: any;
+  beforeEach(() => {
+    testHook(() => {
+      RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
+    });
+  });
+
+  const testHook = (callback: any) => {
     mockedUseAuth0.mockReturnValue({
       isAuthenticated: false,
       user: undefined,
@@ -43,16 +38,29 @@ describe('RedirectWithReturnAfterLogin', () => {
       buildLogoutUrl: jest.fn(),
       handleRedirectCallback: jest.fn(),
     });
-    const wrapper = mount(
+    mount(
       <ToastProvider>
-        <Component />
+        <TestHook callback={callback} />
       </ToastProvider>,
     );
+  };
+  it('should return function', () => {
+    expect(RedirectWithReturnAfterLogin).toBeInstanceOf(Function);
+  });
+  it('it should call function and redirect', () => {
+    RedirectWithReturnAfterLogin('/test');
+  });
+});
 
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalledTimes(1);
+describe('RedirectWithReturnAfterLogin', () => {
+  let RedirectWithReturnAfterLogin: any;
+  beforeEach(() => {
+    testHook(() => {
+      RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
+    });
   });
 
-  it('should redirect', () => {
+  const testHook = (callback: any) => {
     mockedUseAuth0.mockReturnValue({
       isAuthenticated: false,
       user: undefined,
@@ -67,12 +75,13 @@ describe('RedirectWithReturnAfterLogin', () => {
       buildLogoutUrl: jest.fn(),
       handleRedirectCallback: jest.fn(),
     });
-    const wrapper = mount(
+    mount(
       <ToastProvider>
-        <Component />
+        <TestHook callback={callback} />
       </ToastProvider>,
     );
-
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalledTimes(1);
+  };
+  it('it should call function and not redirect', () => {
+    RedirectWithReturnAfterLogin('/test');
   });
 });

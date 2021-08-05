@@ -15,8 +15,8 @@ import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
-import { RedirectWithReturnAfterLogin } from 'src/helpers/RedirectWithReturnAfterLogin';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -33,6 +33,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth0();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [followed, setFollowed] = useState(() =>
     influencer?.followers?.some((follower) => follower.user === account?.mongodbId),
@@ -74,7 +75,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
     }
 
     RedirectWithReturnAfterLogin(`/profiles/${influencer.id}`);
-  }, [influencer.id, addToast, followInfluencer, followersNumber, isAuthenticated]);
+  }, [influencer.id, addToast, followInfluencer, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowInfluencer = useCallback(async () => {
     try {

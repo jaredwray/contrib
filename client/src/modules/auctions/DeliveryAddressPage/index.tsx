@@ -12,8 +12,8 @@ import Form from 'src/components/Form/Form';
 import SelectField from 'src/components/Form/SelectField';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import { RedirectWithReturnAfterLogin } from 'src/helpers/RedirectWithReturnAfterLogin';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { ModalRow } from 'src/modules/auctions/DeliveryAddressPage/ModalRow';
 
@@ -25,6 +25,7 @@ export default function DeliveryAddressPage() {
   const { showMessage, showError, showWarning } = useShowNotification();
   const [UpdateUserAddress, { loading: updating }] = useMutation(CreateOrUpdateUserAddressMutation);
   const history = useHistory();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
   const { data: auctionData } = useQuery(AuctionQuery, {
     variables: { id: auctionId },
   });
