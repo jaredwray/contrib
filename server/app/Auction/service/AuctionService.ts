@@ -290,8 +290,12 @@ export class AuctionService {
   }
 
   public async getAuction(id: string, organizerId?: string): Promise<Auction> {
-    const auction = await this.auctionRepository.getAuction(id, organizerId);
-    return this.makeAuction(auction);
+    try {
+      const auction = await this.auctionRepository.getAuction(id, organizerId);
+      return this.makeAuction(auction);
+    } catch (error) {
+      AppLogger.error(`Cannot find auction with id #${id}: ${error.message}`);
+    }
   }
 
   public async maybeActivateAuction(id: string, organizerId: string): Promise<Auction> {

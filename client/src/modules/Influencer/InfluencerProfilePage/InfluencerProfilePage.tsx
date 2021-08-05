@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { useQuery } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { GetTotalRaisedAmountQuery } from 'src/apollo/queries/auctions';
 import { GetInfluencerQuery } from 'src/apollo/queries/influencers';
@@ -12,6 +12,7 @@ import { InfluencerProfilePageContent } from './InfluencerProfilePageContent';
 
 export const InfluencerProfilePage: FC = () => {
   const influencerId = useParams<{ influencerId?: string }>().influencerId ?? 'me';
+  const history = useHistory();
 
   const { data } = useQuery<{ influencer: InfluencerProfile }>(GetInfluencerQuery, {
     variables: { id: influencerId },
@@ -22,7 +23,13 @@ export const InfluencerProfilePage: FC = () => {
   });
 
   const influencer = data?.influencer;
-  if (!influencer) {
+
+  if (influencer === null) {
+    history.replace(`/404`);
+    return null;
+  }
+
+  if (influencer === undefined) {
     return null;
   }
   const totalRaisedAmount = responce.data?.getTotalRaisedAmount.totalRaisedAmount;

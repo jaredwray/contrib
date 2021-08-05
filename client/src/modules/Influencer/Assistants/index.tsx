@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row, Table } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { AssistantsQuery, InviteAssistantMutation } from 'src/apollo/queries/assistants';
 import { InviteButton } from 'src/components/InviteButton';
@@ -15,15 +15,13 @@ import { InfluencerProfile } from 'src/types/InfluencerProfile';
 import styles from './styles.module.scss';
 
 export default function Assistants() {
+  const history = useHistory();
   const influencerId = useParams<{ influencerId?: string }>().influencerId ?? 'me';
   const { account } = useContext(UserAccountContext);
 
-  const [getAssistatsList, { loading, data, error }] = useLazyQuery<{ influencer: InfluencerProfile }>(
-    AssistantsQuery,
-    {
-      variables: { id: influencerId },
-    },
-  );
+  const [getAssistatsList, { data }] = useLazyQuery<{ influencer: InfluencerProfile }>(AssistantsQuery, {
+    variables: { id: influencerId },
+  });
 
   useEffect(() => {
     getAssistatsList();
@@ -32,7 +30,12 @@ export default function Assistants() {
   const influencer = data?.influencer;
   const isMyProfile = account?.influencerProfile?.id === influencer?.id;
 
-  if (loading || error || !influencer) {
+  if (influencer === null) {
+    history.replace('/404');
+    return null;
+  }
+
+  if (influencer === undefined) {
     return null;
   }
 

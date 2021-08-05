@@ -73,8 +73,11 @@ const EditAuctionMediaPage = () => {
   if (auction?.isActive) {
     history.push(`/`);
   }
-
-  if (!auction) {
+  if (auction === null) {
+    history.replace('/404');
+    return null;
+  }
+  if (auction === undefined) {
     return null;
   }
 

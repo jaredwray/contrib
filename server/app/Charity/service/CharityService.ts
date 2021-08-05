@@ -236,8 +236,12 @@ export class CharityService {
   }
 
   async findCharity(id: string, session?: ClientSession): Promise<Charity | null> {
-    const charity = await this.CharityModel.findById(id, null, { session }).exec();
-    return (charity && CharityService.makeCharity(charity)) ?? null;
+    try {
+      const charity = await this.CharityModel.findById(id, null, { session }).exec();
+      return (charity && CharityService.makeCharity(charity)) ?? null;
+    } catch (error) {
+      AppLogger.error(`Cannot find charity with id #${id}: ${error.message}`);
+    }
   }
 
   async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity> {

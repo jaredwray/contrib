@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Button, InputGroup, Form, Modal, ProgressBar } from 'react-bootstrap';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import FacebookIcon from 'src/assets/images/Facebook';
@@ -20,6 +20,7 @@ import styles from './styles.module.scss';
 
 const AuctionDonePage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
+  const history = useHistory();
   const { data: auctionData } = useQuery<{ auction: Auction }>(AuctionQuery, {
     variables: { id: auctionId },
   });
@@ -32,8 +33,11 @@ const AuctionDonePage = () => {
   }, [setShowInstagramInstructions]);
 
   const [linkCopied, setLinkCopied] = useState(false);
-
-  if (!auction) {
+  if (auction === null) {
+    history.replace('/404');
+    return null;
+  }
+  if (auction === undefined) {
     return null;
   }
 

@@ -35,15 +35,20 @@ const EditAuctionDetailsPage = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
   const [charities, setCharities] = useState<Charity[]>([]);
-  const { loading: loadingQuery, data: auctionData } = useQuery(GetAuctionDetailsQuery, {
+  const { data: auctionData } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
     onCompleted({ auction }) {
-      if (auction.charity) {
+      if (auction?.charity) {
         setCharities([auction.charity]);
       }
     },
   });
   const auction = auctionData?.auction;
+
+  if (auction === null) {
+    history.replace('/404');
+  }
+
   const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(FinishAuctionCreationMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
@@ -148,7 +153,7 @@ const EditAuctionDetailsPage = () => {
     };
   }, [auction, selectedOption, startPrice, charity, itemPrice]);
 
-  if (loadingQuery || !auctionData) {
+  if (auctionData === undefined) {
     return null;
   }
 
@@ -156,12 +161,11 @@ const EditAuctionDetailsPage = () => {
     history.push(`/`);
   }
 
-  setPageTitle(`Auction ${auction.title} | Details page`);
+  setPageTitle(`Auction ${auction?.title?.toString()} | Details page`);
 
   return (
     <Layout>
       <ProgressBar now={75} />
-
       <section className={styles.section}>
         <Form initialValues={initialValues} onSubmit={handleSubmit}>
           <Container>

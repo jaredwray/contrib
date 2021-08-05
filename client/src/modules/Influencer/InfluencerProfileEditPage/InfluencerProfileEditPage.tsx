@@ -54,7 +54,13 @@ export const InfluencerProfileEditPage: FC = () => {
   };
 
   const influencerProfile = influencerProfileData?.influencer;
-  if (!influencerProfile) {
+
+  if (influencerProfile === null) {
+    history.replace('/404');
+    return null;
+  }
+
+  if (influencerProfile === undefined) {
     return null;
   }
 
