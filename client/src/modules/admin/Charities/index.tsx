@@ -18,7 +18,7 @@ import styles from './styles.module.scss';
 
 export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
-  const [getCharitiesList, { loading, data, error }] = useLazyQuery(AllCharitiesQuery, {
+  const [getCharitisList, { loading, data, error }] = useLazyQuery(AllCharitiesQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
   });
 
@@ -43,8 +43,8 @@ export default function CharitiesPage(): any {
   }, [executeSearch, searchQuery]);
 
   useEffect(() => {
-    getCharitiesList();
-  }, [getCharitiesList]);
+    getCharitisList();
+  }, [getCharitisList]);
 
   if (error) {
     return null;
@@ -57,7 +57,7 @@ export default function CharitiesPage(): any {
     <InviteButton
       className={clsx(styles.inviteBtn, 'text--body d-inline-block')}
       mutation={InviteCharityMutation}
-      updateEntitisList={getCharitiesList}
+      updateEntitisList={getCharitisList}
     />
   );
   setPageTitle('Charities page');
@@ -72,7 +72,7 @@ export default function CharitiesPage(): any {
       onCancel={clearAndCloseSearch}
       onChange={onInputSearchChange}
     >
-      <Table className="d-block d-sl-table">
+      <Table className="d-block d-sm-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -86,8 +86,8 @@ export default function CharitiesPage(): any {
           {charities.items.map((item: Charity) => (
             <ClickableTr key={item.id} linkTo={`/charity/${item.id}`}>
               <td className={styles.idColumn}>{item.id}</td>
-              <td className={styles.otherColumns}>{item.name}</td>
-              <td className={styles.otherColumns}>{item.status}</td>
+              <td className="break-word">{item.name}</td>
+              <td>{item.status}</td>
               <td>{item.profileStatus}</td>
               <td>{item.stripeStatus}</td>
               <td>

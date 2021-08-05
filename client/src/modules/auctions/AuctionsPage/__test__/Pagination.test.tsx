@@ -6,7 +6,7 @@ import { mount } from 'enzyme';
 
 describe('Should render correctly "Pagination"', () => {
   const props: any = {
-    totalItems: 1,
+    totalItems: 4,
     pageSize: 2,
     pageSkip: 3,
     perPage: 3,
@@ -30,6 +30,13 @@ describe('Should render correctly "Pagination"', () => {
   const props5: any = {
     ...props,
     totalItems: 0,
+  };
+  const props6: any = {
+    totalItems: 1,
+    pageSize: 1,
+    pageSkip: 0,
+    perPage: 3,
+    changeFilters: jest.fn(),
   };
 
   it('component is defined', () => {
@@ -56,6 +63,10 @@ describe('Should render correctly "Pagination"', () => {
   });
   it('component should return null', () => {
     const wrapper = mount(<Pagination {...props5} />);
-    expect(wrapper.find('div')).toHaveLength(0);
+    expect(wrapper.find('#pagination')).toHaveLength(0);
+  });
+  it('component should return null', () => {
+    const wrapper = mount(<Pagination {...props6} />);
+    expect(wrapper.find('#pagination')).toHaveLength(0);
   });
 });

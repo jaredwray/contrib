@@ -1,19 +1,12 @@
 .idColumn {
-  max-width: 215px;
-}
-.otherColumns {
-  max-width: 90px;
-  word-wrap: break-word;
+  max-width: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .actionBtn {
   height: 49px;
   padding-left: 36px;
   justify-content: flex-start !important;
-}
-.tHead {
-  & th {
-    vertical-align: middle !important;
-    white-space: normal;
-  }
 }

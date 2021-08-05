@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const AllCharitiesQuery = gql`
-  query GetCharities($size: Int!, $skip: Int!) {
-    charities(size: $size, skip: $skip) {
+  query GetCharities($size: Int!, $skip: Int!, $status: [CharityStatus]) {
+    charities(size: $size, skip: $skip, status: $status) {
       totalItems
       size
       skip
@@ -28,7 +28,7 @@ export const InviteCharityMutation = gql`
 `;
 
 export const CharitiesSearch = gql`
-  query charitiesSearch($query: String!, $status: [String]) {
+  query charitiesSearch($query: String!, $status: [CharityStatus]) {
     charitiesSearch(query: $query, status: $status) {
       id
       name

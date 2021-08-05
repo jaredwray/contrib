@@ -47,16 +47,6 @@ export const GetInfluencerQuery = gql`
     }
   }
 `;
-export const InfluencersSearch = gql`
-  query influencersSearch($query: String!) {
-    influencersSearch(query: $query) {
-      id
-      name
-      sport
-      status
-    }
-  }
-`;
 
 export const InviteInfluencerMutation = gql`
   mutation InviteInfluencer(

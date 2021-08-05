@@ -14,9 +14,9 @@ import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -32,8 +32,7 @@ interface Props {
 export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaisedAmount }) => {
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
-  const { isAuthenticated } = useAuth0();
-  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   const [followed, setFollowed] = useState(() =>
     influencer?.followers?.some((follower) => follower.user === account?.mongodbId),
@@ -50,6 +49,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
           AuctionStatus.SETTLED,
           AuctionStatus.PENDING,
           AuctionStatus.STOPPED,
+          AuctionStatus.SOLD,
         ],
       },
     },
@@ -74,8 +74,15 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
       return;
     }
 
-    RedirectWithReturnAfterLogin(`/profiles/${influencer.id}`);
-  }, [influencer.id, addToast, followInfluencer, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
+    const followPath = `/profiles/${influencer.id}`;
+    const redirectUri = mergeUrlPath(
+      process.env.REACT_APP_PLATFORM_URL,
+      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
+    );
+    loginWithRedirect({ redirectUri }).catch((error) => {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    });
+  }, [influencer.id, addToast, followInfluencer, followersNumber, isAuthenticated, loginWithRedirect]);
 
   const handleUnfollowInfluencer = useCallback(async () => {
     try {
@@ -89,12 +96,10 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
   }, [influencer.id, addToast, unfollowInfluencer, followersNumber]);
 
   const auctions = data?.auctions?.items;
-
   const profileAuctions = profileAuctionsHash(auctions);
-
   const liveAuctions = profileAuctions.ACTIVE;
   const pendingAuctions = profileAuctions.PENDING;
-  const pastAuctions = profileAuctions.SETTLED;
+  const pastAuctions = profileAuctions.SETTLED.concat(profileAuctions.SOLD);
   const [draftAuctions, setDraftAuctions] = useState<Auction[]>([]);
   const stoppedAuctions = profileAuctions.STOPPED;
 

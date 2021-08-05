@@ -37,6 +37,8 @@ const AuctionsPage: FC = () => {
     sports: [],
     orderBy: 'CREATED_AT_DESC',
     pageSkip: 0,
+    status: [],
+    charity: [],
   });
 
   const [executeAuctionsSearch, { data: auctionsData }] = useLazyQuery(AuctionsListQuery);
@@ -56,7 +58,7 @@ const AuctionsPage: FC = () => {
   }, [auctionPriceLimits, changeFilters, initialBids]);
 
   useEffect(() => {
-    const queryFilters = { sports: filters.sports } as any;
+    const queryFilters = { sports: filters.sports, charity: filters.charity } as any;
 
     if (filters.bids) {
       queryFilters['maxPrice'] = filters.bids.maxPrice * 100;
@@ -70,19 +72,19 @@ const AuctionsPage: FC = () => {
         query: filters.query,
         orderBy: filters.orderBy,
         filters: queryFilters,
-        statusFilter: auctionStatuses,
+        statusFilter: filters.status.length ? filters.status : auctionStatuses,
       },
     });
   }, [executeAuctionsSearch, filters, auctionStatuses]);
 
   useEffect(() => {
-    const queryFilters = { sports: filters.sports };
+    const queryFilters = { sports: filters.sports, charity: filters.charity };
 
     getPriceLimits({
       variables: {
         query: filters.query,
         filters: queryFilters,
-        statusFilter: auctionStatuses,
+        statusFilter: filters.status.length ? filters.status : auctionStatuses,
       },
     });
   }, [getPriceLimits, filters, auctionStatuses]);

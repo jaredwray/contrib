@@ -15,6 +15,8 @@ describe('Should render correctly "Filters"', () => {
         maxPrice: 10,
         minPrice: 1,
       },
+      status: ['ACTIVE'],
+      charity: [],
     },
     changeFilters: jest.fn(),
   };
