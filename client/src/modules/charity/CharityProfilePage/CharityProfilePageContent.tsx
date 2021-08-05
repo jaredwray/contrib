@@ -15,9 +15,9 @@ import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
-import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
@@ -32,8 +32,7 @@ interface Props {
 export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmount }) => {
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
-  const { isAuthenticated } = useAuth0();
-  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
@@ -65,8 +64,15 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
       return;
     }
 
-    RedirectWithReturnAfterLogin(`/charity/${charity.id}`);
-  }, [charity.id, addToast, followCharity, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
+    const followPath = `/charity/${charity.id}`;
+    const redirectUri = mergeUrlPath(
+      process.env.REACT_APP_PLATFORM_URL,
+      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
+    );
+    loginWithRedirect({ redirectUri }).catch((error) => {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    });
+  }, [charity.id, addToast, followCharity, followersNumber, isAuthenticated, loginWithRedirect]);
 
   const handleUnfollowCharity = useCallback(async () => {
     try {

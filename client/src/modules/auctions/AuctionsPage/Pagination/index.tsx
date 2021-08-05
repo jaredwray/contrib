@@ -42,8 +42,8 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
     changeFilters('pageSkip', (number - 1) * perPage);
   };
 
-  if (totalPages === 0) {
-    return null;
+  if (totalPages < 2) {
+    return <div className="pt-4"></div>;
   }
 
   const totalPagesArray = [
@@ -95,7 +95,7 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
   };
 
   return (
-    <div className="pt-4 pb-4 text-center text-md-left d-flex mt-auto align-items-center">
+    <div className="pt-4 pb-4 text-center text-md-left d-flex mt-auto align-items-center" id="pagination">
       <Button
         className={clsx(styles.navBtn, 'pl-0 font-weight-bold')}
         disabled={!hasPev}

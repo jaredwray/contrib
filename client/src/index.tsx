@@ -109,7 +109,7 @@ ReactDOM.render(
                 <PrivateRoute component={NewAuctionWizardPage} path="/auctions/new" role="influencer" />
                 <PrivateRoute component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" role="influencer" />
                 <PrivateRoute component={EditAuctionMediaPage} path="/auctions/:auctionId/media" role="influencer" />
-                <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery" />
+                <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery-address" />
                 <PrivateRoute
                   component={EditAuctionDetailsPage}
                   path="/auctions/:auctionId/details"

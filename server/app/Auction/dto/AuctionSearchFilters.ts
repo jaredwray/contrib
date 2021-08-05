@@ -6,5 +6,5 @@ export interface AuctionSearchFilters {
   maxPrice?: number;
   auctionOrganizer?: Types.ObjectId;
   status?: string[];
-  charity?: Types.ObjectId;
+  charity?: string[];
 }

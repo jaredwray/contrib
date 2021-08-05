@@ -13,7 +13,6 @@ export type IAuctionFilters = {
   filters?: AuctionSearchFilters;
   orderBy?: AuctionOrderBy;
   auctionOrganizer?: string;
-  charity?: string;
   statusFilter: string[];
 };
 

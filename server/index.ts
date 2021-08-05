@@ -37,6 +37,15 @@ app.set('view engine', 'pug');
     });
   }
 
+  app.use(express.json({ limit: '500mb' }));
+  app.use(
+    express.urlencoded({
+      limit: '500mb',
+      parameterLimit: 100000,
+      extended: true,
+    }),
+  );
+
   const bytesInGB = Math.pow(1024, 3);
   app.use(
     '/graphql',

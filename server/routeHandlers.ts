@@ -39,7 +39,6 @@ export default function appRouteHandlers(
     return res.json(response);
   });
 
-  //TODO: delete after auction winners update.
   app.post('/api/v1/update-auctions-winner', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {
       return;

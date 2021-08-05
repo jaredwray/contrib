@@ -377,8 +377,20 @@ export class CharityService {
     return CharityService.makeCharity(charity);
   }
 
-  async listCharities(skip: number, size: number): Promise<Charity[]> {
-    const charities = await this.CharityModel.find().skip(skip).limit(size).sort({ id: 'asc' }).exec();
+  async listCharities(skip: number, size: number, status: string[]): Promise<Charity[]> {
+    const charities = await this.CharityModel.find(
+      status
+        ? {
+            status: {
+              $in: status,
+            },
+          }
+        : {},
+    )
+      .skip(skip)
+      .limit(size)
+      .sort({ id: 'asc' })
+      .exec();
     return charities.map((charity) => CharityService.makeCharity(charity));
   }
 

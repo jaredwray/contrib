@@ -1,5 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import { AllInfluencersQuery, InfluencersSearch } from 'src/apollo/queries/influencers';
+import { AllInfluencersQuery } from 'src/apollo/queries/influencers';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
 
@@ -8,8 +8,8 @@ import { InMemoryCache } from '@apollo/client';
 
 import { ToastProvider } from 'react-toast-notifications';
 import Influencers from '..';
-import SearchInput from 'src/components/SearchInput';
-import { AdminPage } from 'src/components/AdminPage';
+
+import ClickableTr from 'src/components/ClickableTr';
 
 const cache = new InMemoryCache();
 
@@ -25,15 +25,9 @@ cache.writeQuery({
     },
   },
 });
-cache.writeQuery({
-  query: InfluencersSearch,
-  variables: { query: 'test' },
-  data: {
-    influencersSearch: [{ id: 'testId', name: 'test', sport: 'test', status: 'ONBOARDED' }],
-  },
-});
+
 describe('AdminAuctionPage ', () => {
-  it('component is defined and has input with close button on it', async () => {
+  it('component returns null', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -46,9 +40,9 @@ describe('AdminAuctionPage ', () => {
         </MemoryRouter>,
       );
     });
-    expect(wrapper!).toHaveLength(1);
+    expect(wrapper!.find(ClickableTr)).toHaveLength(0);
   });
-  it('component is defined and get data by query', async () => {
+  it('component is defined and has ClickableTr', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -65,14 +59,7 @@ describe('AdminAuctionPage ', () => {
       wrapper.update();
 
       expect(wrapper!).toHaveLength(1);
-
-      await wrapper
-        .find(AdminPage)
-        .children()
-        .find('input')
-        .simulate('change', { target: { value: 'test' } });
-      expect(wrapper.find(AdminPage).children().find(SearchInput).children().find('button').text()).toEqual('Cancel');
-      wrapper.find(AdminPage).children().find(SearchInput).children().find('button').simulate('click');
+      expect(wrapper!.find(ClickableTr)).toHaveLength(1);
     });
   });
 });

@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { AllInfluencersQuery, InviteInfluencerMutation, InfluencersSearch } from 'src/apollo/queries/influencers';
+import { AllInfluencersQuery, InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
@@ -19,46 +19,19 @@ import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
   const [pageSkip, setPageSkip] = useState(0);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [influencersSearch, setInfluencersSearch] = useState<InfluencerProfile[]>([]);
-
   const [getInfluencersList, { loading, data, error }] = useLazyQuery(AllInfluencersQuery, {
     variables: { size: PER_PAGE, skip: pageSkip },
-    fetchPolicy: 'cache-and-network',
   });
 
-  const [executeSearch] = useLazyQuery(InfluencersSearch, {
-    onCompleted({ influencersSearch }) {
-      setInfluencersSearch(influencersSearch);
-    },
-    fetchPolicy: 'cache-and-network',
-  });
   useEffect(() => {
     getInfluencersList();
   }, [getInfluencersList]);
-
-  useEffect(() => {
-    executeSearch({ variables: { query: searchQuery } });
-  }, [executeSearch, searchQuery]);
-
-  const onInputSearchChange = useCallback(
-    (value) => {
-      setSearchQuery(value);
-    },
-    [setSearchQuery],
-  );
-  const clearAndCloseSearch = useCallback(() => {
-    setSearchQuery('');
-    setInfluencersSearch([]);
-  }, [setSearchQuery, setInfluencersSearch]);
 
   if (error) {
     return null;
   }
 
-  const influencers = searchQuery
-    ? { skip: 0, totalItems: influencersSearch.length, items: influencersSearch }
-    : data?.influencers || { skip: 0, totalItems: 0, items: [] };
+  const influencers = data?.influencers || { skip: 0, totalItems: 0, items: [] };
 
   setPageTitle('Admin nfluencers auction page');
 
@@ -79,10 +52,8 @@ export default function InfluencersPage() {
       loading={loading}
       pageSkip={pageSkip}
       setPageSkip={setPageSkip}
-      onCancel={clearAndCloseSearch}
-      onChange={onInputSearchChange}
     >
-      <Table className="d-block d-sl-table">
+      <Table className="d-block d-sm-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -98,9 +69,9 @@ export default function InfluencersPage() {
               <td className={styles.idColumn} title={item.id}>
                 {item.id}
               </td>
-              <td className={styles.otherColumns}>{item.name}</td>
-              <td className={styles.otherColumns}>{item.sport}</td>
-              <td className={styles.otherColumns}>{item.status}</td>
+              <td className="break-word">{item.name}</td>
+              <td className="break-word">{item.sport}</td>
+              <td className="break-word">{item.status}</td>
               <td>
                 <ActionsDropdown>
                   <Link className="dropdown-item text--body" to={`/profiles/${item.id}/edit`}>
