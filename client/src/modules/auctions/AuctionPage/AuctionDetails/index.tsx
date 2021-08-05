@@ -16,8 +16,8 @@ import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queri
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
 import { pluralize } from 'src/helpers/pluralize';
-import { RedirectWithReturnAfterLogin } from 'src/helpers/RedirectWithReturnAfterLogin';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { Auction } from 'src/types/Auction';
@@ -42,6 +42,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const { addToast } = useToasts();
   const { isAuthenticated } = useAuth0();
   const history = useHistory();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
@@ -144,7 +145,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
       }
       RedirectWithReturnAfterLogin(`/auctions/${auction.id}?placeBid=${placeBid}${isBuying ? '&isBuying=true' : ''}`);
     },
-    [isAuthenticated, auction.id],
+    [isAuthenticated, auction.id, RedirectWithReturnAfterLogin],
   );
   const handleBid = useCallback(async (amount: Dinero.Dinero) => commonBidHandler(amount), [commonBidHandler]);
   const handleBuy = useCallback(async () => {
@@ -183,7 +184,7 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
     }
 
     RedirectWithReturnAfterLogin(`/auctions/${auction.id}`);
-  }, [auction.id, addToast, followAuction, followersNumber, isAuthenticated]);
+  }, [auction.id, addToast, followAuction, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {

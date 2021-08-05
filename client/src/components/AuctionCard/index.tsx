@@ -14,8 +14,8 @@ import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation }
 import { Modal } from 'src/components/AdminAuctionsPageModal';
 import { CloseButton } from 'src/components/CloseButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import { RedirectWithReturnAfterLogin } from 'src/helpers/RedirectWithReturnAfterLogin';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction } from 'src/types/Auction';
@@ -40,6 +40,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   const { addToast } = useToasts();
   const { isAuthenticated } = useAuth0();
   const hisory = useHistory();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
@@ -80,7 +81,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     }
 
     RedirectWithReturnAfterLogin(hisory.location.pathname);
-  }, [auction?.id, addToast, followAuction, isAuthenticated, hisory.location.pathname]);
+  }, [auction?.id, addToast, followAuction, isAuthenticated, hisory.location.pathname, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {

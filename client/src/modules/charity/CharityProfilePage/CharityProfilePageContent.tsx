@@ -16,8 +16,8 @@ import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
-import { RedirectWithReturnAfterLogin } from 'src/helpers/RedirectWithReturnAfterLogin';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
@@ -33,6 +33,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth0();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
@@ -65,7 +66,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
     }
 
     RedirectWithReturnAfterLogin(`/charity/${charity.id}`);
-  }, [charity.id, addToast, followCharity, followersNumber, isAuthenticated]);
+  }, [charity.id, addToast, followCharity, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowCharity = useCallback(async () => {
     try {
