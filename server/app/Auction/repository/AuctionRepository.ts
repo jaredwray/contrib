@@ -46,7 +46,17 @@ export class AuctionRepository implements IAuctionRepository {
     ];
   }
 
-  private static searchSortOptionsByName(name: string = AuctionOrderBy.CREATED_AT_DESC): { [key: string]: string } {
+  private static searchSortOptionsByName(
+    name: string = AuctionOrderBy.CREATED_AT_DESC,
+    statusFilter: string[],
+  ): { [key: string]: string } {
+    if (
+      statusFilter?.includes(AuctionStatus.SOLD) ||
+      name == AuctionOrderBy.PRICE_ASC ||
+      name == AuctionOrderBy.PRICE_DESC
+    ) {
+      return Object.assign(AuctionRepository.SEARCH_FILTERS[name]);
+    }
     return Object.assign({ status: 'asc' }, AuctionRepository.SEARCH_FILTERS[name]);
   }
 
@@ -120,14 +130,14 @@ export class AuctionRepository implements IAuctionRepository {
         await account.save({ session });
 
         returnObject = createdFollower;
-        await session.commitTransaction();
       });
 
       return returnObject;
     } catch (error) {
-      await session.abortTransaction();
       AppLogger.error(`Cannot follow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 
@@ -158,15 +168,18 @@ export class AuctionRepository implements IAuctionRepository {
         await auction.save({ session });
         await account.save({ session });
 
-        returnObject = { id: Date.now().toString() };
         await session.commitTransaction();
+        session.endSession();
+
+        returnObject = { id: Date.now().toString() };
       });
 
       return returnObject;
     } catch (error) {
-      await session.abortTransaction();
       AppLogger.error(`Cannot unfollow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 
@@ -284,7 +297,7 @@ export class AuctionRepository implements IAuctionRepository {
     )
       .skip(skip)
       .limit(size)
-      .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+      .sort(AuctionRepository.searchSortOptionsByName(orderBy, statusFilter));
     return await auctions.exec();
   }
 

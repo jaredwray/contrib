@@ -1,7 +1,6 @@
 import { graphqlUploadExpress } from 'graphql-upload';
 import express from 'express';
 import path from 'path';
-import { createServer } from 'http';
 
 import { createGraphqlServer } from './graphql';
 import { AppLogger } from './logger';
@@ -17,7 +16,6 @@ if (AppConfig.newRelic.enabled) {
 }
 
 const app = express();
-const httpServer = createServer(app);
 
 app.set('view engine', 'pug');
 
@@ -57,9 +55,9 @@ app.set('view engine', 'pug');
     }),
   );
 
-  createGraphqlServer(appServices, httpServer).applyMiddleware({ app });
+  createGraphqlServer(appServices).applyMiddleware({ app });
 
-  httpServer.listen(AppConfig.app.port, async () => {
+  app.listen(AppConfig.app.port, async () => {
     AppLogger.info(`server is listening on ${AppConfig.app.port}`);
   });
 })();

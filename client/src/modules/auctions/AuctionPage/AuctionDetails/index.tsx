@@ -30,11 +30,12 @@ const BIDS_STEP_CENTS = 1000;
 
 interface Props {
   auction: Auction;
+  executeQuery: () => void;
 }
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
-const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
+const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const [isBying, setIsBying] = useState(false);
   const [minutesWithoutReload, SetMinutesinterval] = useState(0);
   const { account } = useContext(UserAccountContext);
@@ -82,11 +83,17 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   useEffect(() => {
     if (!canBid) return;
+
+    if (secondsLeft === 0) {
+      executeQuery();
+      return;
+    }
+
     const timer = setInterval(() => {
       SetMinutesinterval((minutesWithoutReload) => minutesWithoutReload + 1);
     }, callAfterMs);
     return () => clearInterval(timer);
-  }, [canBid, minutesWithoutReload, secondsLeft, callAfterMs]);
+  }, [canBid, executeQuery, minutesWithoutReload, secondsLeft, callAfterMs]);
 
   const canEdit = (isPending || isStopped) && (account?.isAdmin || isMyAuction);
 
@@ -260,7 +267,13 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         </div>
       )}
       <Elements options={stripeOptions} stripe={stripePromise}>
-        <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} isBuying={isBying} setIsBying={setIsBying} />
+        <BidConfirmationModal
+          ref={confirmationRef}
+          auctionId={auction.id}
+          executeQuery={executeQuery}
+          isBuying={isBying}
+          setIsBying={setIsBying}
+        />
       </Elements>
       {canBid && <BidInput fairMarketValue={Dinero(fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
       {canEdit && (
