@@ -30,10 +30,6 @@ export const AuctionSchema = gql`
     originalFileName: String
   }
 
-  type AuctionStatusResponse {
-    status: String!
-  }
-
   type TotalRaisedAmount {
     totalRaisedAmount: Money!
   }
@@ -228,9 +224,9 @@ export const AuctionSchema = gql`
     createAuction(input: AuctionInput!): Auction!
     updateAuction(id: String, input: AuctionInput): Auction!
     finishAuctionCreation(id: String!): Auction!
-    buyAuction(id: String): AuctionStatusResponse!
-    stopAuction(id: String): AuctionStatusResponse!
-    activateAuction(id: String): AuctionStatusResponse!
+    buyAuction(id: String): Auction
+    stopAuction(id: String): Auction
+    activateAuction(id: String): Auction
     createAuctionBid(id: String!, bid: Money!): Auction!
     addAuctionAttachment(id: String!, attachment: Upload!, organizerId: String): AuctionAttachment!
     deleteAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
@@ -240,6 +236,10 @@ export const AuctionSchema = gql`
     followAuction(auctionId: String!): Follow
     unfollowAuction(auctionId: String!): ResponceId
     updateAuctionParcel(auctionId: String!, input: ParcelInput!): Parcel!
+  }
+
+  extend type Subscription {
+    auction: Auction
   }
 
   extend type InfluencerProfile {

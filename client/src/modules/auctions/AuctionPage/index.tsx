@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-sort-props */
 import { useContext, useEffect } from 'react';
 
-import { useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { AuctionQuery } from 'src/apollo/queries/auctions';
+import { AuctionQuery, AuctionSubscription } from 'src/apollo/queries/auctions';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -23,13 +23,21 @@ const AuctionPage = () => {
   const history = useHistory();
   const { account } = useContext(UserAccountContext);
 
-  const [executeAuctionQuery, { data: auctionData, error }] = useLazyQuery(AuctionQuery, {
+  const { subscribeToMore, data: auctionData, error } = useQuery(AuctionQuery, {
     variables: { id: auctionId },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
+
   useEffect(() => {
-    executeAuctionQuery();
-  }, [executeAuctionQuery]);
+    subscribeToMore({
+      document: AuctionSubscription,
+      updateQuery: (prev, incoming) => {
+        if (!incoming.subscriptionData.data) return prev;
+        const { auction } = incoming.subscriptionData.data;
+        return { auction: { ...prev.auction, ...auction } };
+      },
+    });
+  }, [subscribeToMore]);
 
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
@@ -65,7 +73,7 @@ const AuctionPage = () => {
           </Col>
           <Col md="1" />
           <Col md="4">
-            <AuctionDetails auction={auction} executeQuery={executeAuctionQuery} />
+            <AuctionDetails auction={auction} />
           </Col>
           <Col md="1" />
         </Row>
