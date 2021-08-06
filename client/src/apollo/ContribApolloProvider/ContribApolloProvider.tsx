@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache, split } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ApolloLink } from 'apollo-link';
 import { createUploadLink } from 'apollo-upload-client';
@@ -14,7 +16,25 @@ export function ContribApolloProvider({ children }: PropTypes) {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const apolloClient = useMemo(() => {
-    const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_URL });
+    const httpLink: any = createUploadLink({
+      uri: process.env.REACT_APP_API_URL,
+    });
+
+    const wsLink = new WebSocketLink({
+      uri: process.env.REACT_APP_API_URL?.replace(/^(https|http)/, 'ws') as string,
+      options: {
+        reconnect: true,
+      },
+    });
+
+    const splitLink = split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+      },
+      wsLink,
+      httpLink,
+    );
 
     const authLink = setContext(async (_, { headers }) => {
       if (!isAuthenticated) {
@@ -36,7 +56,7 @@ export function ContribApolloProvider({ children }: PropTypes) {
     });
 
     return new ApolloClient({
-      link: ApolloLink.from([authLink as any, httpLink as any]) as any,
+      link: ApolloLink.from([authLink as any, splitLink as any]) as any,
       cache: new InMemoryCache(),
       connectToDevTools: process.env.NODE_ENV === 'development',
     });

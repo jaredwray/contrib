@@ -17,6 +17,7 @@
     "@google-cloud/scheduler": "^2.2.0",
     "@google-cloud/storage": "^5.8.2",
     "@google-cloud/tasks": "^2.3.2",
+    "@graphql-tools/schema": "^8.0.1",
     "@newrelic/winston-enricher": "^1.0.0",
     "@types/dinero.js": "^1.6.5",
     "@types/fs-extra": "^9.0.8",
@@ -36,6 +37,7 @@
     "dotenv": "^8.2.0",
     "fs-extra": "^9.1.0",
     "graphql": "^15.5.0",
+    "graphql-subscriptions": "^1.2.1",
     "graphql-upload": "^12.0.0",
     "handlebars": "^4.7.7",
     "mongodb-memory-server": "^6.9.6",
@@ -44,6 +46,7 @@
     "newrelic": "^7.4.0",
     "pug": "^3.0.2",
     "stripe": "^8.139.0",
+    "subscriptions-transport-ws": "^0.9.19",
     "twilio": "^3.59.0",
     "typescript": "^4.2.3",
     "winston": "^3.3.3"
