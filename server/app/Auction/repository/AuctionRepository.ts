@@ -131,14 +131,14 @@ export class AuctionRepository implements IAuctionRepository {
         await account.save({ session });
 
         returnObject = createdFollower;
-        await session.commitTransaction();
       });
 
       return returnObject;
     } catch (error) {
-      await session.abortTransaction();
       AppLogger.error(`Cannot follow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 
@@ -169,15 +169,18 @@ export class AuctionRepository implements IAuctionRepository {
         await auction.save({ session });
         await account.save({ session });
 
-        returnObject = { id: Date.now().toString() };
         await session.commitTransaction();
+        session.endSession();
+
+        returnObject = { id: Date.now().toString() };
       });
 
       return returnObject;
     } catch (error) {
-      await session.abortTransaction();
       AppLogger.error(`Cannot unfollow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
+    } finally {
+      session.endSession();
     }
   }
 

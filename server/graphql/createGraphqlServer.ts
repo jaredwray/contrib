@@ -1,9 +1,4 @@
 import { ApolloError, ApolloServer, gql } from 'apollo-server-express';
-import { execute, subscribe } from '../node_modules/graphql';
-import { GraphQLUpload } from 'graphql-upload';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { Server } from 'http';
 
 import { createGraphqlContext } from './createGraphqlContext';
 import { UserAccountResolvers, UserAccountSchema } from '../app/UserAccount';
@@ -15,6 +10,7 @@ import { AuctionResolvers, AuctionSchema } from '../app/Auction';
 import { BidResolvers, BidSchema } from '../app/Bid';
 import { DateTimeResolver, DateTimeTypeDefs } from './scalars/dateTime';
 import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
+import { GraphQLUpload } from 'graphql-upload';
 
 import { AppLogger } from '../logger';
 import { AppError, ErrorCode } from '../errors';
@@ -30,49 +26,41 @@ export const DefaultSchema = gql`
     _empty: String
   }
 
-  type Subscription {
-    _empty: String
-  }
-
   scalar Upload
 `;
 
-const schema = makeExecutableSchema({
-  typeDefs: [
-    DefaultSchema,
-    DateTimeTypeDefs,
-    MoneyTypeDefs,
-    UserAccountSchema,
-    InfluencerSchema,
-    InvitationSchema,
-    AssistantSchema,
-    CharitySchema,
-    AuctionSchema,
-    PaymentSchema,
-    BidSchema,
-  ],
-  resolvers: [
-    DateTimeResolver,
-    MoneyResolver,
-    UserAccountResolvers,
-    InfluencerResolvers,
-    InvitationResolvers,
-    AssistantResolvers,
-    CharityResolvers,
-    AuctionResolvers,
-    BidResolvers,
-    PaymentResolvers,
-    {
-      Upload: GraphQLUpload,
-    },
-  ],
-});
-
-export function createGraphqlServer(appServices: IAppServices, httpServer: Server): ApolloServer {
-  const apolloServer = new ApolloServer({
+export function createGraphqlServer(appServices: IAppServices): ApolloServer {
+  return new ApolloServer({
     // don't use bundled file uploading capabilities, use graphql-upload package instead
     uploads: false,
-    schema,
+    typeDefs: [
+      DefaultSchema,
+      DateTimeTypeDefs,
+      MoneyTypeDefs,
+      UserAccountSchema,
+      InfluencerSchema,
+      InvitationSchema,
+      AssistantSchema,
+      CharitySchema,
+      AuctionSchema,
+      PaymentSchema,
+      BidSchema,
+    ],
+    resolvers: [
+      DateTimeResolver,
+      MoneyResolver,
+      UserAccountResolvers,
+      InfluencerResolvers,
+      InvitationResolvers,
+      AssistantResolvers,
+      CharityResolvers,
+      AuctionResolvers,
+      BidResolvers,
+      PaymentResolvers,
+      {
+        Upload: GraphQLUpload,
+      },
+    ],
     context: (ctx) => createGraphqlContext(ctx, appServices),
     playground: {
       endpoint: '/graphql',
@@ -100,23 +88,4 @@ export function createGraphqlServer(appServices: IAppServices, httpServer: Serve
       throw new ApolloError('Something went wrong. Please try again later.', ErrorCode.INTERNAL_ERROR);
     },
   });
-
-  const subscriptionServer = SubscriptionServer.create(
-    {
-      schema,
-      execute,
-      subscribe,
-    },
-    {
-      server: httpServer,
-      path: apolloServer.graphqlPath,
-    },
-  );
-  // Shut down in the case of interrupt and termination signals
-  // We expect to handle this more cleanly in the future. See (#5074)[https://github.com/apollographql/apollo-server/issues/5074] for reference.
-  ['SIGINT', 'SIGTERM'].forEach((signal) => {
-    process.on(signal, () => subscriptionServer.close());
-  });
-  
-  return apolloServer;
 }
