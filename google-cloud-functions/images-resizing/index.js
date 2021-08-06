@@ -74,7 +74,7 @@ exports.resizeUploadedImage = async (file, context) => {
     await sharp(tmpFilePath)
       .webp({ lossless: true })
       .resize(size, size, { fit: sharp.fit.inside })
-      .withMetadata()
+      .rotate()
       .toFile(thumbPath);
 
     content = await fs.readFile(thumbPath, { encoding: "base64" });
