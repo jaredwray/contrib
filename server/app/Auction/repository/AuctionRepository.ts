@@ -46,7 +46,17 @@ export class AuctionRepository implements IAuctionRepository {
     ];
   }
 
-  private static searchSortOptionsByName(name: string = AuctionOrderBy.CREATED_AT_DESC): { [key: string]: string } {
+  private static searchSortOptionsByName(
+    name: string = AuctionOrderBy.CREATED_AT_DESC,
+    statusFilter: string[],
+  ): { [key: string]: string } {
+    if (
+      statusFilter?.includes(AuctionStatus.SOLD) ||
+      name == AuctionOrderBy.PRICE_ASC ||
+      name == AuctionOrderBy.PRICE_DESC
+    ) {
+      return Object.assign(AuctionRepository.SEARCH_FILTERS[name]);
+    }
     return Object.assign({ status: 'asc' }, AuctionRepository.SEARCH_FILTERS[name]);
   }
 
@@ -287,7 +297,7 @@ export class AuctionRepository implements IAuctionRepository {
     )
       .skip(skip)
       .limit(size)
-      .sort(AuctionRepository.searchSortOptionsByName(orderBy));
+      .sort(AuctionRepository.searchSortOptionsByName(orderBy, statusFilter));
     return await auctions.exec();
   }
 
