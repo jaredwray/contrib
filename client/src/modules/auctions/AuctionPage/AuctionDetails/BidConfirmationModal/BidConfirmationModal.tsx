@@ -30,11 +30,10 @@ interface Props {
   auctionId: string;
   isBuying: boolean;
   setIsBying: (value: boolean | ((prevVar: boolean) => boolean)) => void;
-  executeQuery: () => void;
 }
 
 export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
-  ({ auctionId, isBuying, setIsBying, executeQuery }, ref) => {
+  ({ auctionId, isBuying, setIsBying }, ref) => {
     const [updateAuction] = useMutation(BuyAuctionMutation);
     const stripe = useStripe();
     const elements = useElements();
@@ -117,14 +116,13 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       try {
         await updateAuction({ variables: { id: auctionId } });
         addToast(`Thank you for your purchase!`, { autoDismiss: true, appearance: 'success' });
-        executeQuery();
         handleClose();
       } catch (error) {
         setSubmitting(false);
         setNewCard(false);
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
-    }, [auctionId, updateAuction, addToast, executeQuery, handleClose]);
+    }, [auctionId, updateAuction, addToast, handleClose]);
 
     useImperativeHandle(ref, () => ({
       placeBid: (amount: Dinero.Dinero) => {
