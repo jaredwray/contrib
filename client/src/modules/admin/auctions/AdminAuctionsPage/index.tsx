@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -30,28 +30,49 @@ import styles from './styles.module.scss';
 
 export default function AdminAuctionsPage() {
   const [pageSkip, setPageSkip] = useState(0);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [getAuctionsList, { loading, data, error }] = useLazyQuery(AuctionsListQuery, {
-    variables: { size: PER_PAGE, skip: pageSkip },
-    fetchPolicy: 'network-only',
+    variables: { size: PER_PAGE, skip: pageSkip, query: searchQuery },
+    fetchPolicy: 'cache-and-network',
   });
+
   useEffect(() => {
     getAuctionsList();
   }, [getAuctionsList]);
+
+  const clearAndCloseSearch = useCallback(() => {
+    setSearchQuery('');
+  }, [setSearchQuery]);
+
+  const onInputSearchChange = useCallback(
+    (value) => {
+      setSearchQuery(value);
+    },
+    [setSearchQuery],
+  );
 
   if (error) {
     return null;
   }
 
   const auctions = data?.auctions || { skip: 0, totalItems: 0, items: [] };
+
   setPageTitle('Auctions page');
 
   return (
-    <AdminPage items={auctions} loading={loading} pageSkip={pageSkip} setPageSkip={setPageSkip}>
-      <Table className="d-block d-sm-table">
+    <AdminPage
+      items={auctions}
+      loading={loading}
+      pageSkip={pageSkip}
+      setPageSkip={setPageSkip}
+      onCancel={clearAndCloseSearch}
+      onChange={onInputSearchChange}
+    >
+      <Table className="d-block d-lg-table">
         <thead>
-          <tr>
-            <th>ID</th>
+          <tr className={styles.tHead}>
+            <th className={styles.tId}>ID</th>
             <th>Name</th>
             <th>Influencer</th>
             <th>Status</th>
@@ -65,8 +86,8 @@ export default function AdminAuctionsPage() {
           {auctions.items.map((auction: Auction) => (
             <ClickableTr key={auction.id} linkTo={`/auctions/${auction.id}${auction.isDraft ? '/basic' : ''}`}>
               <td className={styles.idColumn}>{auction.id}</td>
-              <td className="break-word">{auction.title}</td>
-              <td className="break-word">{auction.auctionOrganizer.name}</td>
+              <td className={styles.otherColumns}>{auction.title}</td>
+              <td className={styles.otherColumns}>{auction.auctionOrganizer.name}</td>
               <td>{auction.status}</td>
               <td>
                 {auction.currentPrice

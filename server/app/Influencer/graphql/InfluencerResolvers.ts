@@ -23,6 +23,7 @@ interface InfluencerResolversType {
       { size: number; skip: number }
     >;
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
+    influencersSearch: GraphqlResolver<InfluencerProfile[], { query: string }>;
   };
   Mutation: {
     createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
@@ -61,6 +62,9 @@ export const InfluencerResolvers: InfluencerResolversType = {
       size,
       skip,
     })),
+    influencersSearch: requireAdmin(async (_, { query }, { influencer }) => {
+      return await influencer.searchForInfluencer(query.trim());
+    }),
     influencer: loadRole(async (_, { id }, { currentAccount, influencer, currentAssistant }) => {
       if (id === 'me' && currentAccount) {
         if (currentAssistant) {

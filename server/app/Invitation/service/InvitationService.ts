@@ -330,11 +330,13 @@ export class InvitationService {
       const message = `Hello, ${name}! You have been invited to join Contrib at ${link}. Sign in with your phone number to begin.`;
       await this.twilioNotificationService.sendMessage(phoneNumber, message);
     } catch (error) {
-      AppLogger.error(`Can not send invite message to phone number: ${phoneNumber}. Error: ${error.message}`);
-      throw new AppError(`Can not send invite message`, ErrorCode.BAD_REQUEST);
+      AppLogger.error(`Can not send verification message to phone number: ${phoneNumber}. Error: ${error.message}`);
+      if (error.message.startsWith("The 'To' number")) {
+        throw new AppError(`${error.message.replace("The 'To' number", 'The number')}`, ErrorCode.BAD_REQUEST);
+      }
+      throw new AppError(`Can not send verification message`, ErrorCode.BAD_REQUEST);
     }
   }
-
   private async getOrCreateTransientInfluencer(
     { influencerId, firstName, lastName }: InviteInput,
     session: ClientSession,
