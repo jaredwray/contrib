@@ -83,7 +83,7 @@ const AuctionPage = () => {
           <Col md="7" />
         </Row>
       </Container>
-      <SimilarAuctions />
+      <SimilarAuctions selectedAuction={auctionId} />
     </Layout>
   );
 };

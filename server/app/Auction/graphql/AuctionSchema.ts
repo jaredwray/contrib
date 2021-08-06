@@ -160,6 +160,7 @@ export const AuctionSchema = gql`
     status: [String]
     auctionOrganizer: String
     charity: [String]
+    selectedAuction: String
   }
 
   input AuctionInput {

@@ -12,13 +12,18 @@ import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
 
-export default function SimilarAuctions() {
+interface Props {
+  selectedAuction: string;
+}
+
+export default function SimilarAuctions({ selectedAuction }: Props) {
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: {
       size: 10,
       skip: 0,
       filters: {
         status: [AuctionStatus.ACTIVE],
+        selectedAuction,
       },
     },
   });

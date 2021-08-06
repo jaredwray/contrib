@@ -7,4 +7,5 @@ export interface AuctionSearchFilters {
   auctionOrganizer?: Types.ObjectId;
   status?: string[];
   charity?: string[];
+  selectedAuction?: string;
 }
