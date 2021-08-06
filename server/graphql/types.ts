@@ -14,7 +14,3 @@ export type GraphqlResolver<TResult, TArgs = { [argName: string]: any }, TSource
   context: GraphqlContext,
   info: GraphQLResolveInfo,
 ) => Promise<TResult>;
-
-export type GraphqlSubscription = {
-  subscribe: () => AsyncIterator<void>;
-};
