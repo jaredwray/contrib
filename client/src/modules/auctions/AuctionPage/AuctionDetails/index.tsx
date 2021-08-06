@@ -15,9 +15,9 @@ import { useToasts } from 'react-toast-notifications';
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
-import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { Auction } from 'src/types/Auction';
@@ -40,8 +40,9 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const [minutesWithoutReload, SetMinutesinterval] = useState(0);
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const history = useHistory();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
@@ -139,21 +140,15 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
   const commonBidHandler = useCallback(
     (amount: Dinero.Dinero, isBuying?: boolean) => {
       const placeBid = JSON.stringify(amount.toJSON());
-      const redirectPath = `/auctions/${auction.id}?placeBid=${placeBid}${isBuying ? '&isBuying=true' : ''}`;
 
       if (isAuthenticated) {
         confirmationRef.current?.placeBid(amount);
         return;
       }
-      const redirectUri = mergeUrlPath(
-        process.env.REACT_APP_PLATFORM_URL,
-        `/after-login?returnUrl=${encodeURIComponent(redirectPath)}`,
-      );
-      loginWithRedirect({ redirectUri }).catch((error) => {
-        addToast(error.message, { appearance: 'error', autoDismiss: true });
-      });
+
+      RedirectWithReturnAfterLogin(`/auctions/${auction.id}?placeBid=${placeBid}${isBuying ? '&isBuying=true' : ''}`);
     },
-    [addToast, isAuthenticated, loginWithRedirect, auction.id],
+    [isAuthenticated, auction.id, RedirectWithReturnAfterLogin],
   );
   const handleBid = useCallback(async (amount: Dinero.Dinero) => commonBidHandler(amount), [commonBidHandler]);
   const handleBuy = useCallback(async () => {
@@ -191,15 +186,8 @@ const AuctionDetails: FC<Props> = ({ auction, executeQuery }): ReactElement => {
       return;
     }
 
-    const followPath = `/auctions/${auction.id}`;
-    const redirectUri = mergeUrlPath(
-      process.env.REACT_APP_PLATFORM_URL,
-      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
-    );
-    loginWithRedirect({ redirectUri }).catch((error) => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true });
-    });
-  }, [auction.id, addToast, followAuction, followersNumber, isAuthenticated, loginWithRedirect]);
+    RedirectWithReturnAfterLogin(`/auctions/${auction.id}`);
+  }, [auction.id, addToast, followAuction, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {

@@ -13,6 +13,7 @@ import SelectField from 'src/components/Form/SelectField';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { ModalRow } from 'src/modules/auctions/DeliveryAddressPage/ModalRow';
 
@@ -24,6 +25,7 @@ export default function DeliveryAddressPage() {
   const { showMessage, showError, showWarning } = useShowNotification();
   const [UpdateUserAddress, { loading: updating }] = useMutation(CreateOrUpdateUserAddressMutation);
   const history = useHistory();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
   const { data: auctionData } = useQuery(AuctionQuery, {
     variables: { id: auctionId },
   });
@@ -69,10 +71,15 @@ export default function DeliveryAddressPage() {
     [UpdateUserAddress, showMessage, showError, showWarning, auctionId],
   );
 
-  if (!auctionData || !account) {
+  if (!auctionData) {
     return null;
   }
   const { auction } = auctionData;
+
+  if (!account) {
+    RedirectWithReturnAfterLogin(`/auctions/${auction.id}/delivery`);
+    return null;
+  }
   const { title } = auction;
   const isWinner = auction.winner === account?.mongodbId;
   const initialValues = account.address;
@@ -102,7 +109,7 @@ export default function DeliveryAddressPage() {
                 <div className={styles.separator} />
                 <div className="text-headline pt-4">You won the auction!</div>
                 <div className="text-headline pt-4">
-                  To receiv4
+                  To receive{' '}
                   <Link className={styles.auctionTitle} to={`/auctions/${auctionId}`}>
                     {title}
                   </Link>

@@ -14,8 +14,8 @@ import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation }
 import { Modal } from 'src/components/AdminAuctionsPageModal';
 import { CloseButton } from 'src/components/CloseButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction } from 'src/types/Auction';
@@ -38,8 +38,9 @@ type Props = {
 const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage, onDelete }) => {
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const hisory = useHistory();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
@@ -79,15 +80,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
       return;
     }
 
-    const followPath = hisory.location.pathname;
-    const redirectUri = mergeUrlPath(
-      process.env.REACT_APP_PLATFORM_URL,
-      `/after-login?returnUrl=${encodeURIComponent(followPath)}`,
-    );
-    loginWithRedirect({ redirectUri }).catch((error) => {
-      addToast(error.message, { appearance: 'error', autoDismiss: true });
-    });
-  }, [auction?.id, addToast, followAuction, isAuthenticated, loginWithRedirect, hisory.location.pathname]);
+    RedirectWithReturnAfterLogin(hisory.location.pathname);
+  }, [auction?.id, addToast, followAuction, isAuthenticated, hisory.location.pathname, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {

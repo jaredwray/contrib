@@ -48,7 +48,7 @@ export const AdminPage: FC<Props> = ({
       <section className={clsx(styles.page, 'text-label p-sm-4 p-1 pt-4 pb-2')}>
         <Container fluid>
           <Row>
-            <Col className={styles.searchInput} md="4">
+            <Col className={styles.searchInput} md={controlBtns ? '4' : '8'}>
               {onChange ? (
                 <SearchInput placeholder="Search" onCancel={onCancel} onChange={onChange!} />
               ) : (
@@ -64,9 +64,11 @@ export const AdminPage: FC<Props> = ({
                 total={items.totalItems}
               />
             </Col>
-            <Col className="pt-3 pt-md-0 text-sm-right text-center" md="5" sm="7">
-              {controlBtns}
-            </Col>
+            {controlBtns && (
+              <Col className="pt-3 pt-md-0 text-sm-right text-center" md="5" sm="7">
+                {controlBtns}
+              </Col>
+            )}
           </Row>
         </Container>
         <Container fluid>

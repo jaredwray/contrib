@@ -154,6 +154,16 @@ export class InfluencerService {
       AppLogger.error(`Cannot find Influencer with id #${userAccount}: ${error.message}`);
     }
   }
+  async searchForInfluencer(query: string): Promise<InfluencerProfile[] | null> {
+    if (!query) {
+      return [];
+    }
+    const influencers = await this.InfluencerModel.find(InfluencerService.influencerSearchSelector(query));
+    return influencers.map((influencer) => InfluencerService.makeInfluencerProfile(influencer));
+  }
+  private static influencerSearchSelector(query: string) {
+    return { name: { $regex: query, $options: 'i' } };
+  }
 
   async updateInfluencerStatus(
     profile: InfluencerProfile,
