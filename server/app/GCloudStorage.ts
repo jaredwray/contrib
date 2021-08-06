@@ -59,7 +59,6 @@ export class GCloudStorage {
       }
     } catch (error) {
       AppLogger.warn(`Unable to update file ${asset.url}: ${error.message}`);
-      throw new AppError(`Unable to update file. Please, try later`, ErrorCode.INTERNAL_ERROR);
     }
   }
 
