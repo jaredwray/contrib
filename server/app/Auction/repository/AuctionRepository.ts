@@ -87,6 +87,7 @@ export class AuctionRepository implements IAuctionRepository {
       [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
       [filters?.charity?.length, { charity: { $in: filters?.charity?.map((id: string) => Types.ObjectId(id)) } }],
       [filters?.status, { status: { $in: filters?.status } }],
+      [filters?.selectedAuction, { _id: { $ne: filters?.selectedAuction } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {},

@@ -9,7 +9,13 @@ interface Props {
 
 const MenuNavLink: FC<Props> = ({ link, title }) => {
   return (
-    <NavLink className="dropdown-item" to={link}>
+    <NavLink
+      className="dropdown-item"
+      to={link}
+      onClick={() => {
+        document.body.click();
+      }}
+    >
       <span>{title}</span>
     </NavLink>
   );
