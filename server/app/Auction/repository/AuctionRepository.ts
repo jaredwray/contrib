@@ -51,7 +51,7 @@ export class AuctionRepository implements IAuctionRepository {
     statusFilter: string[],
   ): { [key: string]: string } {
     if (
-      statusFilter?.includes(AuctionStatus.SOLD) ||
+      statusFilter == [AuctionStatus.SOLD, AuctionStatus.SETTLED] ||
       name == AuctionOrderBy.PRICE_ASC ||
       name == AuctionOrderBy.PRICE_DESC
     ) {
