@@ -12,6 +12,7 @@ import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { IAuctionFilters, IAuctionRepository, ICreateAuction, IUpdateAuction } from './IAuctionRepoository';
 import { AppLogger } from '../../../logger';
+import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
 type ISearchFilter = { [key in AuctionOrderBy]: { [key: string]: string } };
 type ISearchOptions = {
@@ -191,7 +192,7 @@ export class AuctionRepository implements IAuctionRepository {
 
     const [auction] = await this.AuctionModel.create([
       {
-        ...input,
+        ...objectTrimmer(input),
         auctionOrganizer: Types.ObjectId(organizerId),
         startPrice: input.startPrice?.getAmount(),
         currentPrice: input.startPrice?.getAmount(),
