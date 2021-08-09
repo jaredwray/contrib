@@ -17,6 +17,7 @@ import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
 import { AppError } from '../../../errors';
 import { webSiteFormatter } from '../../../helpers/webSiteFormatter';
+import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
 interface CharityCreationInput {
   name: string;
@@ -255,7 +256,7 @@ export class CharityService {
       charity.profileStatus = CharityProfileStatus.COMPLETED;
     }
 
-    Object.assign(charity, { ...input, website: webSiteFormatter(input.website) });
+    Object.assign(charity, { ...objectTrimmer(input), website: webSiteFormatter(input.website).trim() });
 
     this.maybeActivateCharity(charity);
 
@@ -376,7 +377,7 @@ export class CharityService {
     if (!charity) {
       throw new Error(`charity record not found`);
     }
-    Object.assign(charity, input);
+    Object.assign(charity, objectTrimmer(input));
     await charity.save();
     return CharityService.makeCharity(charity);
   }

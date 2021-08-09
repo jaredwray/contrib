@@ -26,6 +26,7 @@ import { InfluencerStatus } from '../../Influencer/dto/InfluencerStatus';
 import { Charity } from '../../Charity/dto/Charity';
 import { CharityService } from '../../Charity';
 import { CharityStatus } from '../../Charity/dto/CharityStatus';
+import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
 export class InvitationService {
   private readonly InvitationModel = InvitationModel(this.connection);
@@ -66,7 +67,7 @@ export class InvitationService {
     let returnObject = null;
 
     try {
-      const { firstName, lastName, phoneNumber, welcomeMessage } = input;
+      const { firstName, lastName, phoneNumber, welcomeMessage } = objectTrimmer(input);
 
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
@@ -147,7 +148,7 @@ export class InvitationService {
     let returnObject = null;
 
     try {
-      const { firstName, lastName, phoneNumber, welcomeMessage } = input;
+      const { firstName, lastName, phoneNumber, welcomeMessage } = objectTrimmer(input);
 
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
@@ -230,7 +231,7 @@ export class InvitationService {
     let returnObject = null;
 
     try {
-      const { firstName, lastName, phoneNumber, welcomeMessage, influencerId } = input;
+      const { firstName, lastName, phoneNumber, welcomeMessage, influencerId } = objectTrimmer(input);
 
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
@@ -355,7 +356,10 @@ export class InvitationService {
       return profile;
     }
 
-    return await this.influencerService.createTransientInfluencer({ name: `${firstName} ${lastName}` }, session);
+    return await this.influencerService.createTransientInfluencer(
+      { name: `${firstName.trim()} ${lastName.trim()}` },
+      session,
+    );
   }
 
   private async maybeFinalizeInvitation(userAccount: UserAccount): Promise<void> {

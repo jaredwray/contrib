@@ -12,6 +12,7 @@ import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerP
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
 import { AppError, ErrorCode } from '../../../errors';
+import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
 interface TransientInfluencerInput {
   name: string;
@@ -125,7 +126,7 @@ export class InfluencerService {
     const influencer = await this.InfluencerModel.create(
       [
         {
-          name,
+          name: name.trim(),
           avatarUrl: `/content/img/users/person.png`,
           status: InfluencerStatus.TRANSIENT,
           favoriteCharities: [],
@@ -235,7 +236,7 @@ export class InfluencerService {
       throw new Error(`influencer record #${id} not found`);
     }
 
-    Object.assign(influencer, input);
+    Object.assign(influencer, objectTrimmer(input));
 
     await influencer.save();
 
@@ -312,7 +313,7 @@ export class InfluencerService {
       throw new Error(`influencer record not found for user account ${userAccount}`);
     }
 
-    Object.assign(influencer, input);
+    Object.assign(influencer, objectTrimmer(input));
 
     await influencer.save();
 

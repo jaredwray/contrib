@@ -43,6 +43,7 @@ import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import Stripe from 'stripe';
+import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -437,12 +438,12 @@ export class AuctionService {
       fairMarketValue,
       timeZone,
       ...rest
-    } = input;
+    } = objectTrimmer(input);
     const auction = await this.auctionRepository.updateAuction(
       id,
       userId,
       {
-        ...(title ? { title: title.trim() } : {}),
+        ...(title ? { title } : {}),
         ...(startDate ? { startsAt: startDate } : {}),
         ...(endDate ? { endsAt: endDate } : {}),
         ...(startPrice
@@ -463,11 +464,11 @@ export class AuctionService {
             }
           : {}),
         ...(charity ? { charity: Types.ObjectId(charity) } : {}),
-        ...(description ? { description: description.trim() } : {}),
-        ...(fullPageDescription ? { fullPageDescription: fullPageDescription.trim() } : {}),
-        ...(sport ? { sport: sport.trim() } : {}),
-        ...(playedIn ? { playedIn: playedIn.trim() } : {}),
-        ...(timeZone ? { timeZone: timeZone } : {}),
+        ...(description ? { description } : {}),
+        ...(fullPageDescription ? { fullPageDescription } : {}),
+        ...(sport ? { sport } : {}),
+        ...(playedIn ? { playedIn } : {}),
+        ...(timeZone ? { timeZone } : {}),
         ...rest,
       },
       isAdmin,
