@@ -11,6 +11,7 @@ import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import IntercomStateManager from 'src/components/IntercomStateManager';
 import NewRelicInitializer from 'src/components/NewRelicInitializer';
 import PrivateRoute from 'src/components/PrivateRoute';
+import { ScrollToTop } from 'src/components/ScrollToTop';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
 import AdminAuctionPage from 'src/modules/admin/auctions/AdminAuctionPage';
 import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
@@ -62,6 +63,7 @@ ReactDOM.render(
       onRedirectCallback={onRedirectCallback}
     >
       <Router history={history}>
+        <ScrollToTop />
         <ContribApolloProvider>
           <UserAccountProvider>
             <>
