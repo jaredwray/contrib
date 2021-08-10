@@ -99,6 +99,7 @@ export class AuctionRepository implements IAuctionRepository {
     const session = await this.connection.startSession();
 
     let returnObject = null;
+
     try {
       await session.withTransaction(async () => {
         const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
@@ -131,14 +132,14 @@ export class AuctionRepository implements IAuctionRepository {
         await account.save({ session });
 
         returnObject = createdFollower;
+        await session.commitTransaction();
       });
 
       return returnObject;
     } catch (error) {
+      await session.abortTransaction();
       AppLogger.error(`Cannot follow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
-    } finally {
-      session.endSession();
     }
   }
 
@@ -146,9 +147,11 @@ export class AuctionRepository implements IAuctionRepository {
     const session = await this.connection.startSession();
 
     let returnObject = null;
+
     try {
       await session.withTransaction(async () => {
         const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
+
         if (!auction) {
           throw new AppError(`Auction record #${auctionId} not found`);
         }
@@ -157,7 +160,6 @@ export class AuctionRepository implements IAuctionRepository {
         if (!account) {
           throw new AppError(`Account record #${accountId} not found`);
         }
-
         const currentAccountId = account._id.toString();
 
         account.followingAuctions = account.followingAuctions.filter(
@@ -169,14 +171,14 @@ export class AuctionRepository implements IAuctionRepository {
         await account.save({ session });
 
         returnObject = { id: Date.now().toString() };
+        await session.commitTransaction();
       });
 
       return returnObject;
     } catch (error) {
+      await session.abortTransaction();
       AppLogger.error(`Cannot unfollow Auction with id #${auctionId}: ${error.message}`);
       throw new Error('Something went wrong. Please, try later');
-    } finally {
-      session.endSession();
     }
   }
 
