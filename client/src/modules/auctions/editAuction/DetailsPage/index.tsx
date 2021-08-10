@@ -44,17 +44,11 @@ const EditAuctionDetailsPage = () => {
     },
   });
   const auction = auctionData?.auction;
-
-  if (auction === null) {
-    history.replace('/404');
-  }
-
   const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(FinishAuctionCreationMutation, {
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
   });
-
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionDetailsMutation, {
     async onCompleted() {
       try {
@@ -152,6 +146,11 @@ const EditAuctionDetailsPage = () => {
       },
     };
   }, [auction, selectedOption, startPrice, charity, itemPrice]);
+
+  if (auction === null) {
+    history.replace('/404');
+    return null;
+  }
 
   if (auctionData === undefined) {
     return null;

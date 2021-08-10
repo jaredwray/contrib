@@ -25,7 +25,7 @@ export const InfluencerProfilePage: FC = () => {
   const influencer = data?.influencer;
 
   if (influencer === null) {
-    history.replace(`/404`);
+    history.replace('/404');
     return null;
   }
 

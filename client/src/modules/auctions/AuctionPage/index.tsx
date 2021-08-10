@@ -35,7 +35,8 @@ const AuctionPage = () => {
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
 
   if (auction === null) {
-    history.replace(`/404`);
+    history.replace('/404');
+    return null;
   }
 
   if (auction?.isDraft) {
