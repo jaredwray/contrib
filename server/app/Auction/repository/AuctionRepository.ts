@@ -99,7 +99,6 @@ export class AuctionRepository implements IAuctionRepository {
     const session = await this.connection.startSession();
 
     let returnObject = null;
-
     try {
       await session.withTransaction(async () => {
         const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
@@ -147,11 +146,9 @@ export class AuctionRepository implements IAuctionRepository {
     const session = await this.connection.startSession();
 
     let returnObject = null;
-
     try {
       await session.withTransaction(async () => {
         const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
-
         if (!auction) {
           throw new AppError(`Auction record #${auctionId} not found`);
         }
@@ -160,6 +157,7 @@ export class AuctionRepository implements IAuctionRepository {
         if (!account) {
           throw new AppError(`Account record #${accountId} not found`);
         }
+
         const currentAccountId = account._id.toString();
 
         account.followingAuctions = account.followingAuctions.filter(
@@ -169,9 +167,6 @@ export class AuctionRepository implements IAuctionRepository {
 
         await auction.save({ session });
         await account.save({ session });
-
-        await session.commitTransaction();
-        session.endSession();
 
         returnObject = { id: Date.now().toString() };
       });

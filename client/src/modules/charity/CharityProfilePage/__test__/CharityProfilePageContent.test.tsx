@@ -30,6 +30,9 @@ const newProps: any = {
   },
 };
 describe('Should render correctly "CharityProfilePageContent"', () => {
+  beforeAll(() => {
+    process.env = { ...process.env, REACT_APP_API_URL: 'https://dev.contrib.org/graphql' };
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });

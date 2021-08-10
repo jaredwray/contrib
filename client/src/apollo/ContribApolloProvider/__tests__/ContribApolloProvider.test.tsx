@@ -5,6 +5,9 @@ describe('Should render correctly "ContribApolloProvider"', () => {
   const Component = () => <div>Component</div>;
 
   let wrapper: ReactWrapper;
+  beforeAll(() => {
+    process.env = { ...process.env, REACT_APP_API_URL: 'https://dev.contrib.org/graphql' };
+  });
   beforeEach(() => {
     wrapper = mount(
       <ContribApolloProvider>
