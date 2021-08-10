@@ -1,5 +1,6 @@
 import { ApolloError, ApolloServer, gql } from 'apollo-server-express';
-import { execute, subscribe } from '../node_modules/graphql';
+import { subscribe } from 'graphql/subscription';
+import { execute } from 'graphql/execution';
 import { GraphQLUpload } from 'graphql-upload';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
@@ -117,6 +118,6 @@ export function createGraphqlServer(appServices: IAppServices, httpServer: Serve
   ['SIGINT', 'SIGTERM'].forEach((signal) => {
     process.on(signal, () => subscriptionServer.close());
   });
-  
+
   return apolloServer;
 }
