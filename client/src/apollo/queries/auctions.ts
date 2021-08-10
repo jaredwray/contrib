@@ -503,3 +503,27 @@ export const UnfollowAuctionMutation = gql`
     }
   }
 `;
+
+export const AuctionSubscription = gql`
+  subscription Auction {
+    auction {
+      followers {
+        user
+        createdAt
+      }
+      status
+      currentPrice
+      endDate
+      stoppedAt
+      totalBids
+      winner
+      isActive
+      isDraft
+      isPending
+      isSettled
+      isFailed
+      isSold
+      isStopped
+    }
+  }
+`;
