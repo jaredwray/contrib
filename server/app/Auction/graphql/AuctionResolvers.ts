@@ -1,15 +1,12 @@
 import Dinero from 'dinero.js';
 import { Dayjs } from 'dayjs';
-import { PubSub } from 'graphql-subscriptions';
 
 import { Auction } from '../dto/Auction';
-import { AuctionSubscriptions } from '../dto/AuctionSubscriptions';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionMetrics } from '../dto/AuctionMetrics';
 import { AuctionParcel } from '../dto/AuctionParcel';
-import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionInput } from './model/AuctionInput';
 import { ChargeCurrentBidInput } from './model/ChargeCurrentBidInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
@@ -17,7 +14,9 @@ import { requireAuthenticated } from '../../../graphql/middleware/requireAuthent
 import { requireRole } from '../../../graphql/middleware/requireRole';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
-import { GraphqlResolver, GraphqlSubscription } from '../../../graphql/types';
+import { GraphqlResolver } from '../../../graphql/types';
+import { AuctionAssets } from '../dto/AuctionAssets';
+import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { loadRole } from '../../../graphql/middleware/loadRole';
 import { AppError, ErrorCode } from '../../../errors';
 
@@ -55,24 +54,19 @@ interface AuctionResolversType {
     deleteAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
-    buyAuction: GraphqlResolver<Auction, { id: string }>;
-    stopAuction: GraphqlResolver<Auction, { id: string }>;
-    activateAuction: GraphqlResolver<Auction, { id: string }>;
+    buyAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
+    stopAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
+    activateAuction: GraphqlResolver<AuctionStatusResponse, { id: string }>;
     chargeAuction: GraphqlResolver<{ id: string }, { id: string }>;
     chargeCurrendBid: GraphqlResolver<{ id: string }, { input: ChargeCurrentBidInput }>;
     followAuction: GraphqlResolver<{ user: string; createdAt: Dayjs } | null, { auctionId: string }>;
     unfollowAuction: GraphqlResolver<{ id: string } | null, { auctionId: string }>;
     updateAuctionParcel: GraphqlResolver<AuctionParcel, { auctionId: string; input: AuctionParcel }>;
   };
-  Subscription: {
-    auction: GraphqlSubscription;
-  };
   InfluencerProfile: {
     auctions: GraphqlResolver<Auction[], Record<string, never>, InfluencerProfile>;
   };
 }
-
-const pubSub = new PubSub();
 
 export const AuctionResolvers: AuctionResolversType = {
   Query: {
@@ -140,21 +134,11 @@ export const AuctionResolvers: AuctionResolversType = {
       auction.deleteAuction(id);
       return { id };
     }),
-    buyAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) => {
-      const auctionUpdates = await auction.buyAuction(id, currentAccount);
-      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction: auctionUpdates });
-      return auctionUpdates;
-    }),
-    stopAuction: requireAuthenticated(async (_, { id }, { auction }) => {
-      const auctionUpdates = await auction.stopAuction(id);
-      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction: auctionUpdates });
-      return auctionUpdates;
-    }),
-    activateAuction: requireAuthenticated(async (_, { id }, { auction }) => {
-      const auctionUpdates = await auction.activateAuctionById(id);
-      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction: auctionUpdates });
-      return auctionUpdates;
-    }),
+    buyAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) =>
+      auction.buyAuction(id, currentAccount),
+    ),
+    stopAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.stopAuction(id)),
+    activateAuction: requireAuthenticated(async (_, { id }, { auction }) => auction.activateAuctionById(id)),
     addAuctionAttachment: requireRole(async (_, { id, attachment }, { auction, currentAccount, currentInfluencerId }) =>
       auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachment),
     ),
@@ -164,9 +148,7 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
     createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auction, currentAccount }) => {
       await auction.addAuctionBid(id, { bid, user: currentAccount });
-      const currentAuction = await auction.getAuction(id);
-      pubSub.publish(AuctionSubscriptions.NEW_BID, { auction: currentAuction });
-      return currentAuction;
+      return auction.getAuction(id);
     }),
     finishAuctionCreation: requireRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) =>
       auction.maybeActivateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId),
@@ -175,13 +157,8 @@ export const AuctionResolvers: AuctionResolversType = {
       async (_, { auctionId, input }, { auction }) => await auction.updateAuctionParcel(auctionId, input),
     ),
   },
-  Subscription: {
-    auction: {
-      subscribe: () => pubSub.asyncIterator([AuctionSubscriptions.AUCTION_UPDATE, AuctionSubscriptions.NEW_BID]),
-    },
-  },
   InfluencerProfile: {
-    auctions: loadRole(async (influencerProfile, _, { auction, currentInfluencerId }) => {
+    auctions: loadRole(async (influencerProfile, _, { auction, currentAccount, currentInfluencerId }) => {
       const auctions = await auction.getInfluencersAuctions(currentInfluencerId);
       const isOwner = influencerProfile.id === currentInfluencerId;
       return auctions.filter((foundAuction) => foundAuction.status !== AuctionStatus.DRAFT || isOwner);
