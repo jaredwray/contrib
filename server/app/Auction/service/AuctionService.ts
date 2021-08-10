@@ -9,7 +9,6 @@ import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
-import { AuctionStatusResponse } from '../dto/AuctionStatusResponse';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionParcel } from '../dto/AuctionParcel';
@@ -65,6 +64,7 @@ export class AuctionService {
     private readonly bidService: BidService,
     private readonly stripeService: StripeService,
   ) {}
+
   //TODO: delete after auctions winner update.
   public async updateAuctionsWinner() {
     try {
@@ -377,8 +377,6 @@ export class AuctionService {
         `Something went wrong during AuctionMertics update for auction #${auctionId}. Error: ${error.message}`,
       );
       await session.abortTransaction();
-    } finally {
-      await session.endSession();
     }
   }
 
@@ -510,42 +508,50 @@ export class AuctionService {
         ErrorCode.BAD_REQUEST,
       );
     }
+    try {
+      const [lastBid] = await this.BidModel.find({ auction: auction._id }, null, { session })
+        .sort({ bid: -1 })
+        .limit(1);
 
-    const [lastBid] = await this.BidModel.find({ auction: auction._id }, null, session).sort({ bid: -1 }).limit(1);
+      const bidInput = {
+        user: user.mongodbId,
+        auction: auction._id,
+        bid: bid.getAmount(),
+        bidCurrency: (bid.getCurrency() ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+        paymentSource: card.id,
+        chargeId: null,
+      };
 
-    const bidInput = {
-      user: user.mongodbId,
-      auction: auction._id,
-      bid: bid.getAmount(),
-      bidCurrency: (bid.getCurrency() ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-      paymentSource: card.id,
-      chargeId: null,
-    };
+      const createdBid = await this.bidService.createBid(bidInput, session);
 
-    const createdBid = await this.bidService.createBid(bidInput, session);
+      auction.currentPrice = bid.getAmount();
+      auction.totalBids += 1;
 
-    auction.currentPrice = bid.getAmount();
-    auction.totalBids += 1;
+      await auction.save({ session });
+      await session.commitTransaction();
 
-    await auction.save({ session });
-    await session.commitTransaction();
-    session.endSession();
-
-    if (lastBid && lastBid.user.toString() !== user.mongodbId) {
-      try {
-        const userAccount = await this.UserAccountModel.findById(lastBid.user);
-        if (!userAccount) {
-          throw new AppError(`Cannot find user with #${lastBid.user}`);
+      if (lastBid && lastBid.user.toString() !== user.mongodbId) {
+        try {
+          const userAccount = await this.UserAccountModel.findById(lastBid.user);
+          if (!userAccount) {
+            throw new AppError(`Cannot find user with #${lastBid.user}`);
+          }
+          await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
+            auctionTitle: auction.title,
+            auctionLink: auction.link,
+          });
+        } catch (error) {
+          AppLogger.error(`Failed to send notification for auction #${id}, error: ${error.message}`);
         }
-        await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
-          auctionTitle: auction.title,
-          auctionLink: auction.link,
-        });
-      } catch (error) {
-        AppLogger.error(`Failed to send notification, error: ${error.message}`);
       }
+      return createdBid;
+    } catch (error) {
+      await session.abortTransaction();
+      AppLogger.error(`Something went wrong when adding auction bid for auction #${id}, error: ${error.message}`);
+      throw new AppError('Something went wrong. Please, try again later');
+    } finally {
+      session.endSession();
     }
-    return createdBid;
   }
 
   public async scheduleAuctionMetrics(): Promise<{ message: string }> {
@@ -903,8 +909,8 @@ export class AuctionService {
       });
   }
 
-  public async buyAuction(id: string, user: UserAccount): Promise<AuctionStatusResponse> {
-    const auction = await this.AuctionModel.findOne({ _id: id });
+  public async buyAuction(id: string, user: UserAccount): Promise<Auction> {
+    const auction = await this.auctionRepository.getAuction(id);
 
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
@@ -927,17 +933,13 @@ export class AuctionService {
     }
 
     try {
-      const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
-      if (!charityAccount) {
-        throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
-      }
       const chargeId = await this.paymentService.chargeUser(
         user,
         card.id,
         this.makeBidDineroValue(auction.itemPrice, auction.priceCurrency as Dinero.Currency),
         `Contrib auction: ${auction.title}`,
-        charityAccount.stripeAccountId,
-        auction.charity.toString(),
+        auction.charity.stripeAccountId,
+        auction.charity._id.toString(),
       );
 
       const bidInput = {
@@ -967,23 +969,24 @@ export class AuctionService {
     } catch (error) {
       throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
     }
-
-    return { status: auction.status };
+    return this.makeAuction(auction);
   }
 
-  public async stopAuction(id: string): Promise<AuctionStatusResponse> {
-    const auction = await this.AuctionModel.findOne({ _id: id });
+  public async stopAuction(id: string): Promise<Auction> {
+    const auction = await this.auctionRepository.getAuction(id);
+
     auction.status = AuctionStatus.STOPPED;
     auction.stoppedAt = dayjs().second(0);
+
     try {
       await auction.save();
     } catch (error) {
       throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
     }
-    return { status: auction.status };
+    return this.makeAuction(auction);
   }
-  public async activateAuctionById(id: string): Promise<AuctionStatusResponse> {
-    const auction = await this.AuctionModel.findOne({ _id: id });
+  public async activateAuctionById(id: string): Promise<Auction> {
+    const auction = await this.auctionRepository.getAuction(id);
 
     auction.endsAt < dayjs() ? (auction.status = AuctionStatus.SETTLED) : (auction.status = AuctionStatus.ACTIVE);
     auction.stoppedAt = null;
@@ -996,8 +999,7 @@ export class AuctionService {
     } catch (error) {
       throw new AppError(`Something went wrong, ${error.message}`, ErrorCode.BAD_REQUEST);
     }
-
-    return { status: auction.status };
+    return this.makeAuction(auction);
   }
 
   private async deleteAttachmentFromCloud(url: string, uid: string | undefined): Promise<void> {
@@ -1067,9 +1069,7 @@ export class AuctionService {
     const {
       _id,
       startsAt,
-      timeZone,
       endsAt,
-      stoppedAt,
       charity,
       assets,
       status,
@@ -1102,8 +1102,6 @@ export class AuctionService {
       attachments: this.makeAssets(assets),
       endDate: endsAt,
       startDate: startsAt,
-      timeZone: timeZone,
-      stoppedAt: stoppedAt,
       charity: charity ? CharityService.makeCharity(charity) : null,
       currentPrice: Dinero({
         currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
