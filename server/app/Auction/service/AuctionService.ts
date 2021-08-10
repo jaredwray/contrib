@@ -476,7 +476,7 @@ export class AuctionService {
 
   public async addAuctionBid(id: string, { bid, user }: ICreateAuctionBidInput & { user: UserAccount }): Promise<Bid> {
     const session = await this.connection.startSession();
-    session.startTransaction();
+    await session.startTransaction();
 
     const card = await this.paymentService.getAccountPaymentInformation(user);
     if (!card) {
@@ -508,50 +508,41 @@ export class AuctionService {
         ErrorCode.BAD_REQUEST,
       );
     }
-    try {
-      const [lastBid] = await this.BidModel.find({ auction: auction._id }, null, { session })
-        .sort({ bid: -1 })
-        .limit(1);
 
-      const bidInput = {
-        user: user.mongodbId,
-        auction: auction._id,
-        bid: bid.getAmount(),
-        bidCurrency: (bid.getCurrency() ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        paymentSource: card.id,
-        chargeId: null,
-      };
+    const [lastBid] = await this.BidModel.find({ auction: auction._id }, null, session).sort({ bid: -1 }).limit(1);
 
-      const createdBid = await this.bidService.createBid(bidInput, session);
+    const bidInput = {
+      user: user.mongodbId,
+      auction: auction._id,
+      bid: bid.getAmount(),
+      bidCurrency: (bid.getCurrency() ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+      paymentSource: card.id,
+      chargeId: null,
+    };
 
-      auction.currentPrice = bid.getAmount();
-      auction.totalBids += 1;
+    const createdBid = await this.bidService.createBid(bidInput, session);
 
-      await auction.save({ session });
-      await session.commitTransaction();
+    auction.currentPrice = bid.getAmount();
+    auction.totalBids += 1;
 
-      if (lastBid && lastBid.user.toString() !== user.mongodbId) {
-        try {
-          const userAccount = await this.UserAccountModel.findById(lastBid.user);
-          if (!userAccount) {
-            throw new AppError(`Cannot find user with #${lastBid.user}`);
-          }
-          await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
-            auctionTitle: auction.title,
-            auctionLink: auction.link,
-          });
-        } catch (error) {
-          AppLogger.error(`Failed to send notification for auction #${id}, error: ${error.message}`);
+    await auction.save({ session });
+    await session.commitTransaction();
+
+    if (lastBid && lastBid.user.toString() !== user.mongodbId) {
+      try {
+        const userAccount = await this.UserAccountModel.findById(lastBid.user);
+        if (!userAccount) {
+          throw new AppError(`Cannot find user with #${lastBid.user}`);
         }
+        await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
+          auctionTitle: auction.title,
+          auctionLink: auction.link,
+        });
+      } catch (error) {
+        AppLogger.error(`Failed to send notification, error: ${error.message}`);
       }
-      return createdBid;
-    } catch (error) {
-      await session.abortTransaction();
-      AppLogger.error(`Something went wrong when adding auction bid for auction #${id}, error: ${error.message}`);
-      throw new AppError('Something went wrong. Please, try again later');
-    } finally {
-      session.endSession();
     }
+    return createdBid;
   }
 
   public async scheduleAuctionMetrics(): Promise<{ message: string }> {
