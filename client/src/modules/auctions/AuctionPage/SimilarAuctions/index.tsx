@@ -50,7 +50,7 @@ export default function SimilarAuctions({ selectedAuction }: Props) {
             </Link>
           </Col>
         </Row>
-        <Slider items={items} />
+        {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
       </Container>
     </section>
   );
