@@ -9,10 +9,15 @@ import { ToastProvider } from 'react-toast-notifications';
 import { GetAuctionBasicsQuery } from 'src/apollo/queries/auctions';
 import EditAuctionBasicPage from '../BasicPage/Edit';
 
+const mockHistoryFn = jest.fn();
+
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: () => ({
     auctionId: 'testId',
+  }),
+  useHistory: () => ({
+    replace: mockHistoryFn,
   }),
   useRouteMatch: () => ({ url: '/admin/auctions/testId' }),
 }));
@@ -20,6 +25,7 @@ jest.mock('react-router-dom', () => ({
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
+const nullDataCache = new InMemoryCache();
 
 cache.writeQuery({
   query: GetAuctionBasicsQuery,
@@ -42,6 +48,15 @@ cache.writeQuery({
       status: 'DRAFT',
       title: 'asd',
     },
+  },
+});
+nullDataCache.writeQuery({
+  query: GetAuctionBasicsQuery,
+  variables: {
+    id: 'testId',
+  },
+  data: {
+    auction: null,
   },
 });
 
@@ -82,6 +97,25 @@ describe('EditAuctionBasicPage ', () => {
 
       expect(wrapper!).toHaveLength(1);
       expect(wrapper!.find(Layout)).toHaveLength(1);
+    });
+  });
+  it('component should redirect to 404 page', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={nullDataCache}>
+              <EditAuctionBasicPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+
+      expect(mockHistoryFn).toBeCalled();
     });
   });
 });

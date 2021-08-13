@@ -26,6 +26,7 @@ cache.writeQuery({
         AuctionStatus.SETTLED,
         AuctionStatus.PENDING,
         AuctionStatus.STOPPED,
+        AuctionStatus.SOLD,
       ],
     },
   },

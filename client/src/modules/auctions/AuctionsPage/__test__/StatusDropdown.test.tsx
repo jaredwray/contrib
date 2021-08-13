@@ -25,6 +25,8 @@ describe('Should render correctly "StatusDropdown"', () => {
   });
   it('should call changeFilters when changing', () => {
     wrapper.find(Select).props().onChange('All');
-    expect(props.changeFilters).toHaveBeenCalledTimes(1);
+    wrapper.find(Select).props().onChange('Past');
+    wrapper.find(Select).props().onChange('Active');
+    expect(props.changeFilters).toHaveBeenCalledTimes(3);
   });
 });

@@ -88,7 +88,6 @@ const EditAuctionDetailsPage = () => {
         addToast('You should select charity', { autoDismiss: true, appearance: 'error' });
         return;
       }
-
       try {
         await updateAuction({ variables: { id: auctionId, ...clearValues } });
       } catch (error) {

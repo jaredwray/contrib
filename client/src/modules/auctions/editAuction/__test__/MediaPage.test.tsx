@@ -14,7 +14,7 @@ import StepByStepRow from 'src/components/StepByStepRow';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
-const mockHistoryPush = jest.fn();
+const mockHistoryFn = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -22,11 +22,13 @@ jest.mock('react-router-dom', () => ({
     auctionId: 'testId',
   }),
   useHistory: () => ({
-    push: mockHistoryPush,
+    push: mockHistoryFn,
+    replace: mockHistoryFn,
   }),
   useRouteMatch: () => ({ url: '/auctions/testId' }),
 }));
 const cache = new InMemoryCache();
+const nullDataCache = new InMemoryCache();
 
 cache.writeQuery({
   query: GetAuctionMediaQuery,
@@ -39,6 +41,13 @@ cache.writeQuery({
       isActive: true,
       title: 'test',
     },
+  },
+});
+nullDataCache.writeQuery({
+  query: GetAuctionMediaQuery,
+  variables: { id: 'testId' },
+  data: {
+    auction: null,
   },
 });
 
@@ -82,8 +91,28 @@ describe('EditAuctionMediaPage ', () => {
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
     wrapper!.find(AttachmentModal).props().closeModal();
+    
     wrapper!.find(Form).props().onSubmit({ data: {} });
     wrapper!.find(StepByStepRow).children().find('Button').at(0).simulate('click');
     wrapper!.find(UploadingDropzone).props().setErrorMessage('test');
+  });
+  it('component should redirect to 404 page', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={nullDataCache}>
+              <EditAuctionMediaPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    expect(mockHistoryFn).toBeCalled();
   });
 });

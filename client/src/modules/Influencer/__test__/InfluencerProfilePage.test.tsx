@@ -13,14 +13,20 @@ import { InfluencerProfilePage } from '../InfluencerProfilePage/InfluencerProfil
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
+const mockHistoryFn = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: () => ({
     influencerId: 'testId',
   }),
+  useHistory: () => ({
+    replace: mockHistoryFn,
+  }),
 }));
 
 const cache = new InMemoryCache();
+
+const nullDataCache = new InMemoryCache();
 
 cache.writeQuery({
   query: GetInfluencerQuery,
@@ -44,6 +50,14 @@ cache.writeQuery({
   query: GetTotalRaisedAmountQuery,
   data: {
     getTotalRaisedAmount: {},
+  },
+});
+
+nullDataCache.writeQuery({
+  query: GetInfluencerQuery,
+  variables: { id: 'testId' },
+  data: {
+    influencer: null,
   },
 });
 describe('InfluencerProfilePage', () => {
@@ -75,6 +89,23 @@ describe('InfluencerProfilePage', () => {
       wrapper.update();
 
       expect(wrapper.find(InfluencerProfilePageContent)).toHaveLength(1);
+    });
+  });
+  it('component should redirect to 404 page', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <Router>
+            <MockedProvider cache={nullDataCache}>
+              <InfluencerProfilePage />
+            </MockedProvider>
+          </Router>
+        </ToastProvider>,
+      );
+      await new Promise((resolve) => setTimeout(resolve));
+
+      expect(mockHistoryFn).toBeCalled();
     });
   });
 });

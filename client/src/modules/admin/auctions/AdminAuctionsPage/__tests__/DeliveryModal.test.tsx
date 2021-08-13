@@ -4,11 +4,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Form from 'src/components/Form/Form';
-import { Modal } from '../FairMarketValueChangeButton/Modal';
-import { UpdateAuctionDetailsMutation } from 'src/apollo/queries/auctions';
-
-delete window.location;
-window.location = { ...window.location, reload: jest.fn() };
+import { Modal } from '../DeliveryButton/Modal';
+import { UpdateAuctionParcelMutation } from 'src/apollo/queries/auctions';
 
 describe('Should render correctly "Modal"', () => {
   const props: any = {
@@ -18,7 +15,7 @@ describe('Should render correctly "Modal"', () => {
     auction: {
       attachments: [{ thumbnail: null, type: 'IMAGE', url: 'https://storage.googleapis.com/content-dev.con' }],
       auctionOrganizer: {
-        id: 'test',
+        id: 'testId',
         name: 'test',
         avatarUrl: 'test',
       },
@@ -27,7 +24,7 @@ describe('Should render correctly "Modal"', () => {
       endDate: '2021-07-31T08:00:00.000Z',
       fairMarketValue: { amount: 0, currency: 'USD', precision: 2 },
       followers: [{ user: 'test' }],
-      id: 'test',
+      id: 'testId',
       isActive: true,
       isDraft: false,
       isFailed: false,
@@ -41,27 +38,26 @@ describe('Should render correctly "Modal"', () => {
       timeZone: 'PDT',
       title: 'test',
     },
-    mutation: UpdateAuctionDetailsMutation,
+    mutation: UpdateAuctionParcelMutation,
   };
   const mockFn = jest.fn();
 
   const mocks = [
     {
       request: {
-        query: UpdateAuctionDetailsMutation,
-        variables: { id: 'test', fairMarketValue: { amount: 200, currency: 'USD', precision: 2 } },
+        query: UpdateAuctionParcelMutation,
+        variables: { auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1, units: 'imperial' },
       },
       newData: () => {
         mockFn();
         return {
           data: {
-            updateAuction: {
-              charity: { id: 'test', name: 'test' },
-              endDate: '2021-07-31T08:00:00.000Z',
-              id: 'test',
-              itemPrice: null,
-              startDate: '2021-07-23T08:00:00.000Z',
-              startPrice: { amount: 100, currency: 'USD', precision: 2 },
+            updateAuctionParcel: {
+              width: 1,
+              height: 1,
+              length: 1,
+              weight: 1,
+              units: 'imperial',
             },
           },
         };
@@ -79,20 +75,21 @@ describe('Should render correctly "Modal"', () => {
     );
     expect(wrapper).toHaveLength(1);
   });
-  it('should return when submitting value 0', async () => {
+
+  it('should submit the form, show warning and return before call the mutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
         <ToastProvider>
-          <MockedProvider>
+          <MockedProvider mocks={mocks}>
             <Modal {...props} />
           </MockedProvider>
         </ToastProvider>,
       );
-      wrapper
-        .find(Form)
-        .props()
-        .onSubmit({ fairMarketValue: { amount: 0, currency: 'USD', precision: 2 } });
+
+      wrapper.find(Form).props().onSubmit({ auctionId: 'testId' });
+
+      expect(mockFn).toHaveBeenCalledTimes(0);
     });
   });
   it('should submit the form and call the mutation', async () => {
@@ -109,7 +106,8 @@ describe('Should render correctly "Modal"', () => {
       wrapper
         .find(Form)
         .props()
-        .onSubmit({ fairMarketValue: { amount: 200, currency: 'USD', precision: 2 } });
+        .onSubmit({ auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1, units: 'imperial' });
+
       expect(mockFn).toHaveBeenCalledTimes(1);
 
       await new Promise((resolve) => setTimeout(resolve));
