@@ -1,35 +1,98 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { ToastProvider } from 'react-toast-notifications';
-import { mount } from 'enzyme';
-import { gql } from '@apollo/client';
+import { act } from 'react-dom/test-utils';
+import { mount, ReactWrapper } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
+import { ToastProvider } from 'react-toast-notifications';
 
+import Form from 'src/components/Form/Form';
 import { Modal } from '../StopOrActiveButton/Modal';
-import { auction } from 'src/helpers/testHelpers/auction';
+import { StopAuctionMutation } from 'src/apollo/queries/auctions';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+delete window.location;
+window.location = { ...window.location, reload: jest.fn() };
 
-const props: any = {
-  open: true,
-  onClose: jest.fn(),
-  auction,
-  mutation: gql`
-    mutation test($name: String!) {
-      test(name: $name) {
-        name
-      }
-    }
-  `,
-};
+describe('Should render correctly "Modal"', () => {
+  const props: any = {
+    open: true,
+    onClose: jest.fn(),
+    auction: {
+      attachments: [{ thumbnail: null, type: 'IMAGE', url: 'https://storage.googleapis.com/content-dev.con' }],
+      auctionOrganizer: {
+        id: 'test',
+        name: 'test',
+        avatarUrl: 'test',
+      },
+      itemPrice: null,
+      description: 'test',
+      endDate: '2021-07-31T08:00:00.000Z',
+      fairMarketValue: { amount: 0, currency: 'USD', precision: 2 },
+      followers: [{ user: 'test' }],
+      id: 'test',
+      isActive: true,
+      isDraft: false,
+      isFailed: false,
+      isPending: false,
+      isSettled: false,
+      isSold: false,
+      isStopped: false,
+      startDate: '2021-07-23T08:00:00.000Z',
+      startPrice: { amount: 100, currency: 'USD', precision: 2 },
+      status: 'ACTIVE',
+      timeZone: 'PDT',
+      title: 'test',
+    },
+    mutation: StopAuctionMutation,
+  };
+  const mockFn = jest.fn();
 
-test('renders without crashing', () => {
-  mount(
-    <ToastProvider>
-      <MockedProvider>
-        <Router>
+  const mocks = [
+    {
+      request: {
+        query: StopAuctionMutation,
+        variables: { id: 'test' },
+      },
+      newData: () => {
+        mockFn();
+        return {
+          data: {
+            stopAuction: {
+              status: 'test',
+            },
+          },
+        };
+      },
+    },
+  ];
+
+  it('component is defined', () => {
+    const wrapper = mount(
+      <ToastProvider>
+        <MockedProvider>
           <Modal {...props} />
-        </Router>
-      </MockedProvider>
-    </ToastProvider>,
-  );
+        </MockedProvider>
+      </ToastProvider>,
+    );
+    expect(wrapper).toHaveLength(1);
+  });
+
+  it('should submit the form and call the mutation', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <MockedProvider mocks={mocks}>
+            <Modal {...props} />
+          </MockedProvider>
+        </ToastProvider>,
+      );
+
+      wrapper
+        .find(Form)
+        .props()
+        .onSubmit(() => {});
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      await new Promise((resolve) => setTimeout(resolve));
+
+      expect(window.location.reload).toHaveBeenCalledTimes(1);
+    });
+  });
 });

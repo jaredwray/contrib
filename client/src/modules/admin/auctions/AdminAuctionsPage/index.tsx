@@ -23,7 +23,7 @@ import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction } from 'src/types/Auction';
 
 import { DeleteAuctionButton } from './DeleteAuctionButton';
-import { DeliveryButton } from './DeliveryButton/indes';
+import { DeliveryButton } from './DeliveryButton';
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import { StopOrActiveButton } from './StopOrActiveButton';
 import styles from './styles.module.scss';
