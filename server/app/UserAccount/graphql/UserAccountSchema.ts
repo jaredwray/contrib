@@ -76,7 +76,6 @@ export const UserAccountSchema = gql`
     state: String!
     city: String!
     zipCode: String!
-    country: String!
     street: String!
   }
 

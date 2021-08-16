@@ -2,13 +2,13 @@ import React, { useCallback, useContext } from 'react';
 
 import { useQuery, useMutation } from '@apollo/client';
 import clsx from 'clsx';
-import clm from 'country-locale-map';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQuery';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import Form from 'src/components/Form/Form';
+import InputField from 'src/components/Form/InputField';
 import SelectField from 'src/components/Form/SelectField';
 import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
@@ -16,6 +16,7 @@ import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { ModalRow } from 'src/modules/auctions/DeliveryAddressPage/ModalRow';
+import { USAStates } from 'src/modules/auctions/DeliveryAddressPage/USAStates';
 
 import styles from './styles.module.scss';
 
@@ -33,20 +34,18 @@ export default function DeliveryAddressPage() {
   const onSubmit = useCallback(
     ({
       name,
-      country,
       state,
       city,
       street,
       zipCode,
     }: {
       name: string;
-      country: string;
       state: string;
       city: string;
       street: string;
       zipCode: string;
     }) => {
-      if (!name || !country || !state || !city || !street || !zipCode) {
+      if (!name || !state || !city || !street || !zipCode) {
         showWarning('Please, check the data');
         return;
       }
@@ -54,7 +53,6 @@ export default function DeliveryAddressPage() {
         variables: {
           auctionId,
           name,
-          country,
           state,
           city,
           street,
@@ -65,7 +63,7 @@ export default function DeliveryAddressPage() {
           showMessage('Your address information was updated');
         })
         .catch(() => {
-          showError('Cannot update address information');
+          showError('Cannot update your address information');
         });
     },
     [UpdateUserAddress, showMessage, showError, showWarning, auctionId],
@@ -86,14 +84,11 @@ export default function DeliveryAddressPage() {
   if (!isWinner) {
     history.push(`/`);
   }
-  const countries = clm.getAllCountries().map((country) => {
-    return { value: country.alpha3, label: country.name };
-  });
 
   const selectedOption = () => {
-    const { country } = initialValues;
-    const selected = countries.find((option) => option.value === country);
-    return selected || countries.find((option) => option.value === 'USA');
+    const { state } = initialValues;
+    const selected = USAStates.find((option) => option.value === state);
+    return selected || USAStates[0];
   };
 
   setPageTitle(`Delivery address for ${title} auction`);
@@ -120,24 +115,35 @@ export default function DeliveryAddressPage() {
                 <div className={clsx(styles.rightBlock, 'p-4 p-md-4')}>
                   <div className="d-table w-100">
                     <Form initialValues={initialValues} onSubmit={onSubmit}>
-                      <ModalRow title={'name'} />
+                      <ModalRow title="recipient" />
                       <Row className="d-flex align-items-baseline">
-                        <span className="pt-1 pb-1">country</span>
+                        <span className="pt-1 pb-1">state</span>
                       </Row>
                       <Row className="d-flex align-items-baseline w-100 mb-1">
                         <div className="w-100">
                           <SelectField
                             className={styles.select}
-                            name="country"
-                            options={countries}
+                            name="state"
+                            options={USAStates}
                             selected={selectedOption()}
                           />
                         </div>
                       </Row>
-                      <ModalRow title={'state'} />
-                      <ModalRow title={'city'} />
-                      <ModalRow title={'street'} />
-                      <ModalRow title={'zip code'} />
+                      <ModalRow title="city" />
+                      <ModalRow title="street" />
+                      <Row className="d-flex align-items-baseline">
+                        <span className="pt-1 pb-1">zip code</span>
+                      </Row>
+                      <Row className="d-flex align-items-baseline w-100">
+                        <div className="w-100">
+                          <InputField
+                            required
+                            name="zipCode"
+                            type="number"
+                            wrapperClassName={clsx(styles.numberInput, 'mb-1')}
+                          />
+                        </div>
+                      </Row>
                       <Button
                         className={clsx(styles.createBtn, 'align-middle w-100 mt-3')}
                         disabled={updating}
