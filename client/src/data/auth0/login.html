@@ -158,8 +158,236 @@
     left: 50px;
   }
 
-  .disabled {
+  .modal-window {
     display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 40px;
+    overflow: auto;
+    font-size: 14px;
+    background-color: rgba(34, 34, 40, 0.94);
+    z-index: 2;
+  }
+
+  .modal-content-wrapper {
+    position: relative;
+    z-index: 3;
+    width: 350px;
+    border-radius: 6px;
+    background-color: #fefefe;
+    box-shadow: 0 0 40px 4px #111118;
+  }
+
+  .close-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #aaa;
+    border: none;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+  }
+
+  .close-modal:hover {
+    box-shadow: 0 3px 3px rgb(0 0 0 / 30%);
+  }
+
+  .input-wrapper {
+    position: relative;
+    margin: 0px 20px 14px 20px;
+    border-radius: 4px;
+    background: #f1f1f1;
+    transition: border-color 0.8s;
+  }
+
+  .note-allowed {
+    cursor: not-allowed;
+  }
+
+  .form-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px 0px 54px;
+    color: rgba(0, 0, 0, 0.87);
+    border: 2px solid #f1f1f1;
+    border-radius: 0 2px 2px 0;
+    transition: border 0.6s;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border: 2px solid #aaa;
+  }
+
+  .form-input:disabled {
+    background: #e7e7e7;
+  }
+
+  .form-button {
+    display: block;
+    width: 100%;
+    padding: 25px 14px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: rgb(90, 120, 100);
+    border: 0;
+    overflow: hidden;
+    border-radius: 0 0 4px 4px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+  }
+
+  .form-button:disabled {
+    background-color: #aaa;
+  }
+
+  .form-button:disabled:hover {
+    background-color: #747272;
+    cursor: not-allowed;
+  }
+
+  .form-button:focus {
+    box-shadow: inset 0 0 100px 20px rgb(0 0 0 / 20%);
+    outline: none;
+  }
+
+  .form-button:hover {
+    background-color: #4a6252
+  }
+
+  .input-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 38px;
+    height: 36px;
+    border-radius: 2px 2px 0px 0px;
+    background-color: #f1f1f1
+  }
+
+  .input-icon {
+    width: 10px;
+    height: 14px;
+    font-size: 12px;
+  }
+
+  .logo-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 26px 0;
+    margin-bottom: 26px;
+    background-color: #f1f1f1;
+    border-radius: 6px;
+  }
+
+  .info {
+    margin: 0 14px 26px 14px;
+    font-size: 12px;
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  .info,
+  .form-input::placeholder {
+    color: rgba(0, 0, 0, 0.54)
+  }
+
+  .warning {
+    margin: 0;
+    font-size: 12px;
+    padding: 14px 0;
+    text-align: center;
+    background-color: #f1f1f1;
+  }
+
+  .modal-error-message {
+    display: none;
+    margin: 0 20px 14px 20px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .back-to-phone-number:hover {
+    cursor: pointer;
+  }
+
+  .hide-modal {
+    z-index: -1;
+    opacity: 0;
+    animation: hide .25s;
+    transform: scale(0);
+  }
+
+  @keyframes hide {
+    from {
+      z-index: 2;
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    to {
+      z-index: -1;
+      transform: scale(0);
+      opacity: 0;
+    }
+  }
+
+  .show-modal {
+    opacity: 1;
+    z-index: 2;
+    animation: show .2s;
+    transform: scale(1);
+  }
+
+  @keyframes show {
+    from {
+      transform: scale(0);
+      opacity: 0;
+      z-index: -1;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+      z-index: 2;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .modal-window {
+      padding: 0;
+    }
+
+    .modal-content-wrapper {
+      height: 100%;
+      width: 100%;
+      border-radius: 0;
+    }
+
+    .form-button {
+      border-radius: 0;
+    }
   }
 </style>
 
@@ -205,7 +433,7 @@
               </button>
             </div>
 
-            <div id="magic-link-buttons" class="auth-buttons disabled" title="Authorize With Magic Link">
+            <div id="code-buttons" class="auth-buttons d-none" title="Authorize With Code">
               <button type="button" class="btn btn-icon btn-primary"
                 style="background-image: url('data:image/webp;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYEAQAAAAa7ikwAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAAAGAAAABgAPBrQs8AAAAHdElNRQflBwIKHBP9Kq1fAAAA5klEQVRIx+2WMQrCQBBF/wZRcogU9kEQtAnESPQUOY7exVvkBCsIsm0sNDmANsFmv4VFXIgwBsv9MMXMH/6DqQboEblek3VNseqadrXqy1K9AFuWUHneTc5n4HBwt4oCOJ3A2QxqPgfLUgXbrRCgNVQcA20LkcIQNEYFy6VonVZrcreThQPkfk+rdZ8XSEOGygM8wAM8wAP+odF3a7Mhx2NZTJoOACTJuwDg+QSMcf04BiaTrj8efwR8iE2jgsXCGfFyAabTgSd6PJxWRRFtVbk7UeT297vsnADILCNvN/nbcr1+e1tec+Clt7NHUzMAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjEtMDctMDJUMTA6Mjg6MTkrMDA6MDBZrPEUAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIxLTA3LTAyVDEwOjI4OjE5KzAwOjAwKPFJqAAAAABJRU5ErkJggg==');" />
               <button type="button" class="btn btn-text btn-primary text-left text-sm-center">
@@ -213,8 +441,96 @@
                 SMS code
               </button>
             </div>
-
           </form>
+          <div id="modal-window" class="modal-window hide-modal">
+            <div id='modal-content' class="modal-content-wrapper">
+              <div id="close-modal" class="close-modal">×</div>
+              <div class="logo-wrapper">
+                <img alt="" class="auth0-lock-header-logo centered" src="https://contrib.org/static/media/logo-with-text.97274cce.svg">
+              </div>
+              <p id='info' class="info"><span>Enter your phone to sign in<br>or create an account</span></p>
+              <p id="modal-error-message" class="modal-error-message alert alert-danger"></p>
+              <div class="enter-phone-number">
+                <form onsubmit="return sendCode(this)" class="modal-form">
+                  <div class="input-wrapper note-allowed">
+                    <div class="input-icon-container">
+                      <svg focusable="false" width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" class="auth0-lock-icon auth0-lock-icon-box auth0-lock-icon-location">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <g id="Lock" transform="translate(-201.000000, -3519.000000)" fill="#919191">
+                            <g id="SMS" transform="translate(153.000000, 3207.000000)">
+                              <g transform="translate(35.000000, 299.000000)">
+                                <path id="Fill-349-Copy"
+                                  d="M22.4023125,22.8 C22.543625,21.9425 22.625,20.9975 22.625,20 L26.125,20 C26.125,21.316875 25.69275,22.52 24.9853125,23.5175 C24.3255625,23.2025 23.4383125,22.953125 22.4023125,22.8 L22.4023125,22.8 Z M21.372875,25.954375 C21.72725,25.3725 22.0234375,24.5675 22.2404375,23.6225 C22.8975625,23.696875 23.483375,23.80625 23.9624375,23.9375 L24.67075,23.9375 C23.829875,24.92625 22.6849375,25.6525 21.372875,25.954375 L21.372875,25.954375 Z M20,26.125 C19.412875,26.125 18.896625,25.105625 18.579,23.5525 C19.034,23.521875 19.503875,23.5 20,23.5 C20.4956875,23.5 20.966,23.521875 21.421,23.5525 C21.1029375,25.105625 20.5866875,26.125 20,26.125 L20,26.125 Z M15.3288125,23.9375 L16.0375625,23.9375 C16.5161875,23.80625 17.1024375,23.696875 17.759125,23.6225 C17.976125,24.5675 18.2723125,25.3725 18.6266875,25.954375 C17.3150625,25.6525 16.170125,24.92625 15.3288125,23.9375 L15.3288125,23.9375 Z M15.0146875,23.5175 C14.3068125,22.52 13.875,21.316875 13.875,20 L17.375,20 C17.375,20.9975 17.4559375,21.9425 17.59725,22.8 C16.56125,22.953125 15.6744375,23.2025 15.0146875,23.5175 L15.0146875,23.5175 Z M15.030875,16.45625 C15.6796875,16.78 16.5634375,17.03375 17.60075,17.195625 C17.501,17.799375 17.428375,18.4425 17.3964375,19.125 L13.951125,19.125 C14.0933125,18.13625 14.477,17.230625 15.030875,16.45625 L15.030875,16.45625 Z M18.6266875,14.04125 C18.27275,14.623125 17.977,15.42375 17.760875,16.373125 C17.1265,16.294375 16.558625,16.189375 16.0944375,16.0625 L15.34325,16.0625 C16.180625,15.069375 17.3168125,14.343125 18.6266875,14.04125 L18.6266875,14.04125 Z M20,13.875 C20.585375,13.875 21.0959375,14.894375 21.4118125,16.443125 C20.959875,16.478125 20.492625,16.5 20,16.5 C19.5069375,16.5 19.0396875,16.478125 18.58775,16.443125 C18.903625,14.894375 19.4141875,13.875 20,13.875 L20,13.875 Z M18.2749375,19.125 C18.3020625,18.473125 18.362,17.865 18.441625,17.29625 C18.9408125,17.344375 19.4596875,17.375 20,17.375 C20.5403125,17.375 21.0591875,17.344375 21.5579375,17.29625 C21.638,17.865 21.6979375,18.473125 21.724625,19.125 L18.2749375,19.125 L18.2749375,19.125 Z M21.75,20 C21.75,20.97125 21.6786875,21.88125 21.5631875,22.699375 C21.06225,22.65125 20.5420625,22.625 20,22.625 C19.4579375,22.625 18.9373125,22.65125 18.436375,22.699375 C18.320875,21.88125 18.25,20.97125 18.25,20 L21.75,20 L21.75,20 Z M24.6563125,16.0625 L23.905125,16.0625 C23.441375,16.189375 22.8730625,16.294375 22.2386875,16.373125 C22.0225625,15.42375 21.7268125,14.623125 21.372875,14.04125 C22.68275,14.343125 23.8189375,15.069375 24.6563125,16.0625 L24.6563125,16.0625 Z M24.9686875,16.45625 C25.5225625,17.230625 25.90625,18.13625 26.048875,19.125 L22.603125,19.125 C22.5711875,18.4425 22.499,17.799375 22.39925,17.195625 C23.4365625,17.03375 24.3203125,16.78 24.9686875,16.45625 L24.9686875,16.45625 Z M20,13 C16.1338125,13 13,16.1325 13,20 C13,23.863125 16.1338125,27 20,27 C23.86575,27 27,23.863125 27,20 C27,16.1325 23.86575,13 20,13 L20,13 Z">
+                                </path>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <input type="text" class="form-input note-allowed" autocomplete="off" value='US +1' disabled>
+                  </div>
+                  <div class="input-wrapper">
+                    <div class="input-icon-container">
+                      <svg aria-hidden="true" focusable="false" width="9px" height="14px" viewBox="0 0 9 14" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="input-icon">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <g id="Lock" transform="translate(-204.000000, -3459.000000)" fill="#888888">
+                            <g id="SMS" transform="translate(153.000000, 3207.000000)">
+                              <g transform="translate(35.000000, 239.000000)">
+                                <path
+                                  d="M24.1,15.625 L16.9,15.625 L16.9,14.75 C16.9,14.264375 17.30275,13.875 17.8,13.875 L23.2,13.875 C23.6968,13.875 24.1,14.264375 24.1,14.75 L24.1,15.625 L24.1,15.625 Z M16.9,16.5 L24.1,16.5 L24.1,21.75 L16.9,21.75 L16.9,16.5 Z M24.1,25.25 C24.1,25.73125 23.6968,26.125 23.2,26.125 L17.8,26.125 C17.30275,26.125 16.9,25.73125 16.9,25.25 L16.9,22.625 L24.1,22.625 L24.1,25.25 L24.1,25.25 Z M23.2,13 L17.8,13 C16.80595,13 16,13.783125 16,14.75 L16,25.25 C16,26.216875 16.80595,27 17.8,27 L23.2,27 C24.19405,27 25,26.216875 25,25.25 L25,14.75 C25,13.783125 24.19405,13 23.2,13 L23.2,13 Z M20.5,25.25 C20.9968,25.25 21.4,24.85625 21.4,24.375 C21.4,23.889375 20.9968,23.5 20.5,23.5 C20.00275,23.5 19.6,23.889375 19.6,24.375 C19.6,24.85625 20.00275,25.25 20.5,25.25 L20.5,25.25 Z">
+                                </path>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 ||
+                      (event.charCode == 43 || (event.charCode >= 48 && event.charCode <= 57)))" id='enter-phone-number-input'
+                      class="form-input" autocomplete="off" maxlength="10" placeholder="your phone number">
+                  </div>
+
+                  <p class="warning">
+                    Support only US phone number
+                  </p>
+                  <button id='enter-phone-number-button' type="submit" class="form-button">Submit &#9658;</button>
+                </form>
+              </div>
+              <div class="d-none enter-the-code">
+                <form onsubmit="return enterTheCode(this)" class="modal-form">
+                  <div class="input-wrapper">
+                    <div class="input-icon-container">
+                      <svg aria-hidden="true" focusable="false" width="12px" height="14px" viewBox="0 0 12 14" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        class="auth0-lock-icon auth0-lock-icon-box">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <g transform="translate(-964.000000, -3509.000000)" fill="#888888">
+                            <g transform="translate(915.000000, 3207.000000)">
+                              <g transform="translate(35.000000, 289.000000)">
+                                <path id="Fill-42"
+                                  d="M25.0523108,22.8115806 L20.455448,26.0692401 L20.455448,20.6336024 L25.0523108,17.6924012 L25.0523108,22.8115806 L25.0523108,22.8115806 Z M20.1658456,19.763342 C20.1060864,19.786611 20.050924,19.8145338 19.9957617,19.8471103 C19.9451962,19.8191876 19.8946307,19.786611 19.8394683,19.7679958 L14.9392126,16.7616414 L19.986568,13.8949009 L25.0523108,16.7616414 L25.043117,16.7662952 L20.1658456,19.763342 L20.1658456,19.763342 Z M19.5360754,20.6336024 L19.5360754,26.0692401 L14.9392126,22.8115806 L14.9392126,17.6924012 L19.5360754,20.6336024 L19.5360754,20.6336024 Z M25.9716833,17.6924012 C25.9716833,17.5574411 25.9395053,17.4317885 25.8889398,17.3154435 C26.0728143,16.9664085 26.0314425,16.5242976 25.7418402,16.2311082 L20.4002856,13.2340614 C19.7980966,12.9408721 20.2393954,12.9036417 19.5590597,13.2340614 L14.2634738,16.2311082 C13.9692745,16.5242976 13.9279028,16.9571009 14.1071804,17.3107897 C14.0520181,17.4271347 14.01984,17.5527873 14.01984,17.6924012 L14.01984,22.8115806 C14.01984,23.3234985 14.4335577,23.7423404 14.9392126,23.7423404 L19.5360754,27 C19.7061593,27 19.8578558,26.9395006 19.9957617,26.8557322 C20.1336676,26.9395006 20.285364,27 20.455448,27 L25.511997,23.7423404 C26.017652,23.7423404 25.9716833,23.3234985 25.9716833,22.8115806 L25.9716833,17.6924012 L25.9716833,17.6924012 Z">
+                                </path>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <input type="text"
+                      onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                      id="enter-the-code-input" class="form-input" autocomplete="off" maxlength="6" placeholder="your code">
+                  </div>
+                  <p class="warning">
+                    <span id="back-to-phone-number" class="back-to-phone-number">Did not get the code?</span>
+                  </p>
+                  <button id="enter-the-code-button" type="tel" class="form-button">Submit &#9658;</button>
+                </form>
+              </div>
+            </div>
+          </div>
 
           <div class="hr"></div>
           <p class='log-in-block'>Don't have an account?</p>
@@ -245,141 +561,245 @@
   <script src="https://cdn.auth0.com/js/polyfills/1.0/object-assign.min.js"></script>
   <script src="https://cdn.auth0.com/js/lock/11.30.3/lock.min.js"></script>
   <script>
+    var config = JSON.parse(decodeURIComponent(escape(window.atob('@@config@@'))));
 
-    window.addEventListener('load', function () {
-      var config = JSON.parse(decodeURIComponent(escape(window.atob('@@config@@'))));
+    var isShowPasswordLessEverywhere = true
 
-      var showPasswordLessConfiguration = {
-        "localhost:3000": true,
-        "dev.contrib.org": true,
-        "contrib.org": false,
-        "live.contrib.org": false,
-      };
+    var showPasswordLessConfiguration = {
+      "localhost:3000": true || isShowPasswordLessEverywhere,
+      "dev.contrib.org": true || isShowPasswordLessEverywhere,
+      "contrib.org": false || isShowPasswordLessEverywhere,
+    };
 
-      var configurationKeys = Object.keys(showPasswordLessConfiguration);
-      var filteredKeys = configurationKeys.filter(param => showPasswordLessConfiguration[param] === true);
-      var isShowPasswordLess = filteredKeys.some(param => config.callbackURL.includes(param));
+    var configurationKeys = Object.keys(showPasswordLessConfiguration);
+    var filteredKeys = configurationKeys.filter(param => showPasswordLessConfiguration[param] === true);
+    var isShowPasswordLess = filteredKeys.some(param => config.callbackURL.includes(param));
 
-      if (isShowPasswordLess) {
-        document.getElementById('magic-link-buttons').classList.remove('disabled');
+    if (isShowPasswordLess) {
+      document.getElementById('code-buttons').classList.remove('d-none');
 
-        const passwordlessOptions = {
-          allowedConnections: ['sms'],
-          passwordlessMethod: 'code',
-          auth: {
-            redirectUrl: config.callbackURL,
-            responseType: 'code',
-            params: config.internalOptions,
-            sso: false,
-          },
-          overrides: {
-            __tenant: config.auth0Tenant,
-            __token_issuer: config.authorizationServer.issuer
-          },
-          theme: {
-            logo: 'https://contrib.org/static/media/logo-with-text.97274cce.svg',
-            primaryColor: "#5A7864",
-          },
-          languageDictionary: {
-            error: {
-              passwordless: {
-                'lock.fallback': "We are sorry, something went wrong. Please, try another phone number"
-              },
-            },
-            title: '',
+      let phoneNumber = null
+
+      const modalWindow = document.getElementById("modal-window");
+      const openModalButton = document.getElementById("code-buttons");
+      const closeModalButton = document.getElementById("close-modal");
+      const error = document.getElementById('modal-error-message')
+      const back = document.getElementById('back-to-phone-number')
+
+      openModalButton.addEventListener('click', showModal)
+      closeModalButton.addEventListener('click', closeModal)
+      modalWindow.addEventListener('click', () => {
+        clickOutsideModalAndClose(event)
+      })
+      back.addEventListener('click', backToPhoneNumber)
+
+      function showModal() {
+        modalWindow.style.display = "flex";
+        modalWindow.classList.add("show-modal");
+
+      }
+
+      function closeModal() {
+        modalWindow.classList.remove("show-modal");
+        if (!Array.from(document.getElementsByClassName('enter-phone-number')[0].classList).includes('d-none')) {
+          initialState()
+          return
+        }
+        initialState()
+        backToPhoneNumber()
+      }
+
+      function initialState() {
+        document.getElementById('enter-phone-number-input').value = ''
+        error.innerHTML = '';
+        error.style.display = 'none';
+      }
+
+      function clickOutsideModalAndClose(event) {
+        if (event.target == modalWindow) {
+          closeModal()
+        }
+      }
+
+      function backToPhoneNumber() {
+        hideShowElements("enter-the-code", 'hide')
+        document.getElementById('info').innerHTML = '<span>Enter your phone to sign in<br>or create an account</span>'
+        hideShowElements("enter-phone-number", 'show')
+      }
+
+      function modalErrorMessage(errorText) {
+        error.innerHTML = errorText;
+        error.style.display = 'block';
+      }
+
+      function sendCode(elem) {
+        const inputPhoneNumber = elem[1]
+        phoneNumber = "+1" + inputPhoneNumber.value;
+        const button = elem[2]
+        button.disabled = true
+
+        const isValid = phoneNumberValidate(inputPhoneNumber.value)
+        if (isValid) {
+          passwordlessStart(phoneNumber, button)
+          error.innerHTML = '';
+          error.style.display = 'none';
+          return false
+        }
+        button.disabled = false
+        return false
+      }
+
+      function phoneNumberValidate(phoneNumber) {
+        const codesStates = [
+          201, 202, 203, 205, 206, 207, 208, 209, 210, 212, 213, 214, 215, 216, 217, 218, 219, 220, 223, 224, 225, 228, 229, 231, 234, 239, 240,
+          248, 251, 252, 253, 254, 256, 260, 262, 267, 269, 270, 272, 276, 278, 281, 283, 301, 302, 303, 304, 305, 307, 308, 309, 310, 312, 313,
+          314, 315, 316, 317, 318, 319, 320, 321, 323, 325, 330, 331, 332, 334, 336, 337, 339, 346, 347, 351, 352, 360, 361, 380, 385, 386, 401,
+          402, 404, 405, 406, 407, 408, 409, 410, 412, 413, 414, 415, 417, 419, 423, 424, 425, 430, 432, 434, 435, 440, 442, 443, 447, 448, 458,
+          464, 469, 470, 475, 478, 479, 480, 484, 501, 502, 503, 504, 505, 507, 508, 509, 510, 512, 513, 515, 516, 517, 518, 520, 530, 539, 540,
+          541, 551, 557, 559, 561, 562, 563, 564, 567, 570, 571, 572, 573, 574, 575, 580, 585, 586, 601, 602, 603, 605, 606, 607, 608, 609, 610,
+          612, 614, 615, 616, 617, 618, 619, 620, 623, 626, 628, 629, 630, 631, 636, 641, 646, 650, 651, 657, 660, 661, 662, 667, 669, 678, 679,
+          681, 682, 689, 701, 702, 703, 704, 706, 707, 708, 712, 713, 714, 715, 716, 717, 718, 719, 720, 724, 725, 727, 731, 732, 734, 737, 740,
+          743, 747, 754, 757, 760, 762, 763, 765, 769, 770, 771, 772, 773, 774, 775, 779, 781, 786, 801, 802, 803, 804, 805, 806, 808, 810, 812,
+          813, 814, 815, 816, 817, 818, 828, 830, 831, 832, 835, 843, 845, 847, 848, 850, 856, 857, 858, 859, 860, 862, 863, 864, 865, 870, 872,
+          901, 903, 904, 906, 907, 908, 909, 910, 912, 913, 914, 915, 916, 917, 918, 919, 920, 925, 927, 928, 929, 931, 935, 936, 937, 940, 941,
+          945, 947, 949, 951, 952, 954, 956, 957, 959, 970, 971, 972, 973, 975, 978, 979, 980, 984, 985, 989,
+        ];
+        if (phoneNumber.length !== 10) {
+          modalErrorMessage('The number of characters in the phone number should be equal to 10.')
+          return false
+        }
+        const stateCode = phoneNumber.substr(0, 3);
+        if (!codesStates.includes(+stateCode)) {
+          modalErrorMessage('Wrong state code, please double-check')
+          return false
+        }
+        return true
+      }
+
+      function passwordlessStart(phoneNumber, button) {
+        webAuth.passwordlessStart({
+          connection: 'sms',
+          send: 'code',
+          phoneNumber
+        }, (err, res) => {
+          if (err) {
+            modalErrorMessage(err.description);
+            button.disabled = false
+            return
           }
+          button.disabled = false
+          hideShowElements("enter-the-code", 'show')
+          document.getElementById('info').innerHTML = `An SMS with the code has been sent to ${phoneNumber}.`
+          hideShowElements("enter-phone-number", 'hide')
         }
+        );
+      }
 
-        const lockPasswordless = new Auth0LockPasswordless(config.clientID, config.auth0Domain, passwordlessOptions);
+      function enterTheCode(elem) {
+        const input = elem[0]
+        const verificationCode = input.value;
+        const button = elem[1]
+        button.disabled = true
+        passwordlessLogin(verificationCode, button)
+        return false
+      }
 
-        function loginWithMagicLink() {
-          lockPasswordless.show();
-        };
-
-        document.getElementById('magic-link-buttons').addEventListener('click', loginWithMagicLink);
-      };
-
-      function hideShowElements(class_name, action) {
-        var elements = document.getElementsByClassName(class_name);
-
-        for (var i = 0; i < elements.length; i++) {
-          if (action == 'show') {
-            elements[i].classList.remove("d-none");
-          } else if (action == 'hide') {
-            elements[i].classList.add("d-none");
+      function passwordlessLogin(verificationCode, button) {
+        webAuth.passwordlessLogin({
+          connection: 'sms',
+          verificationCode,
+          phoneNumber,
+        }, (err, res) => {
+          if (err) {
+            modalErrorMessage(err.description);
           }
+          button.disabled = false
+        }
+        );
+      }
+    }
+
+    function hideShowElements(class_name, action) {
+      var elements = document.getElementsByClassName(class_name);
+
+      for (var i = 0; i < elements.length; i++) {
+        if (action == 'show') {
+          elements[i].classList.remove("d-none");
+        } else if (action == 'hide') {
+          elements[i].classList.add("d-none");
         }
       }
+    }
 
-      const url = new URL(window.location.href);
+    const url = new URL(window.location.href);
 
-      if (url.searchParams.get('page_type') == 'sign_up') {
-        hideShowElements('sign-up-block', 'show');
-        hideShowElements('log-in-block', 'hide');
+    if (url.searchParams.get('page_type') == 'sign_up') {
+      hideShowElements('sign-up-block', 'show');
+      hideShowElements('log-in-block', 'hide');
 
-        var signUpLink = document.getElementsByClassName('sign-up-link sign-up-block')[0];
-        url.searchParams.delete('page_type');
-      } else {
-        var signUpLink = document.getElementsByClassName('sign-up-link log-in-block')[0];
-        url.searchParams.append('page_type', 'sign_up');
+      var signUpLink = document.getElementsByClassName('sign-up-link sign-up-block')[0];
+      url.searchParams.delete('page_type');
+    } else {
+      var signUpLink = document.getElementsByClassName('sign-up-link log-in-block')[0];
+      url.searchParams.append('page_type', 'sign_up');
+    }
+
+    signUpLink.href = url;
+
+    var leeway = config.internalOptions.leeway;
+    if (leeway) {
+      var convertedLeeway = parseInt(leeway);
+      if (!isNaN(convertedLeeway)) {
+        config.internalOptions.leeway = convertedLeeway;
       }
+    }
 
-      signUpLink.href = url;
+    var params = Object.assign({
+      overrides: {
+        __tenant: config.auth0Tenant,
+        __token_issuer: config.authorizationServer.issuer
+      },
+      domain: config.auth0Domain,
+      clientID: config.clientID,
+      redirectUri: config.callbackURL,
+      responseType: 'code'
+    }, config.internalOptions);
 
-      var leeway = config.internalOptions.leeway;
-      if (leeway) {
-        var convertedLeeway = parseInt(leeway);
-        if (!isNaN(convertedLeeway)) {
-          config.internalOptions.leeway = convertedLeeway;
-        }
-      }
+    var webAuth = new auth0.WebAuth(params);
 
-      var params = Object.assign({
-        overrides: {
-          __tenant: config.auth0Tenant,
-          __token_issuer: config.authorizationServer.issuer
-        },
-        domain: config.auth0Domain,
-        clientID: config.clientID,
-        redirectUri: config.callbackURL,
-        responseType: 'code'
-      }, config.internalOptions);
+    document.getElementById('backLink').href = params.redirectUri;
 
-      var webAuth = new auth0.WebAuth(params);
+    function webAuthAuthorize(connectionClient) {
+      webAuth.authorize({
+        connection: connectionClient
+      }, function (err) {
+        if (err) displayError(err);
+      });
+    }
 
-      document.getElementById('backLink').href = params.redirectUri;
+    function loginWithGoogle() {
+      webAuthAuthorize('google-oauth2');
+    }
 
-      function webAuthAuthorize(connectionClient) {
-        webAuth.authorize({
-          connection: connectionClient
-        }, function (err) {
-          if (err) displayError(err);
-        });
-      }
+    function loginWithTwitter() {
+      webAuthAuthorize('twitter');
+    }
 
-      function loginWithGoogle() {
-        webAuthAuthorize('google-oauth2');
-      }
+    function loginWithFacebook() {
+      webAuthAuthorize('facebook');
+    }
 
-      function loginWithTwitter() {
-        webAuthAuthorize('twitter');
-      }
+    function displayError(err) {
+      var errorMessage = document.getElementById('error-message');
+      errorMessage.innerHTML = err.description;
+      errorMessage.style.display = 'block';
+    }
 
-      function loginWithFacebook() {
-        webAuthAuthorize('facebook');
-      }
+    document.getElementById('facebook-buttons').addEventListener('click', loginWithFacebook);
+    document.getElementById('google-buttons').addEventListener('click', loginWithGoogle);
+    document.getElementById('twitter-buttons').addEventListener('click', loginWithTwitter);
 
-      function displayError(err) {
-        var errorMessage = document.getElementById('error-message');
-        errorMessage.innerHTML = err.description;
-        errorMessage.style.display = 'block';
-      }
-
-      document.getElementById('facebook-buttons').addEventListener('click', loginWithFacebook);
-      document.getElementById('google-buttons').addEventListener('click', loginWithGoogle);
-      document.getElementById('twitter-buttons').addEventListener('click', loginWithTwitter);
-
-    });
   </script>
 </body>
+
 </html>

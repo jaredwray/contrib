@@ -1,6 +1,7 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState, useEffect } from 'react';
 
 import { DocumentNode, useMutation } from '@apollo/client';
+import clsx from 'clsx';
 import { Alert, Button, Form as RbForm, Spinner } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
@@ -10,6 +11,8 @@ import Dialog from 'src/components/Dialog';
 import DialogContent from 'src/components/Dialog/DialogContent';
 import Form from 'src/components/Form/Form';
 import InputField from 'src/components/Form/InputField';
+
+import styles from './styles.module.scss';
 
 interface Props {
   open: boolean;
@@ -23,43 +26,65 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
   const { addToast } = useToasts();
   const [inviteMutation] = useMutation(mutation);
   const [creating, setCreating] = useState(false);
-  const [invitationError, setInvitationError] = useState();
+  const [phoneInputValue, setPhoneInputValue] = useState('');
+  const [phoneInputIsValid, setPhoneInputIsValid] = useState(false);
+  const [invitationError, setInvitationError] = useState('');
+  const allowedCountryName = 'United States';
+
+  useEffect(() => {
+    if (!phoneInputValue) {
+      setPhoneInputValue('1');
+    }
+    if (phoneInputValue[0] !== '1') {
+      const passedValue = phoneInputValue.toString().split('');
+      passedValue.unshift('1');
+      setPhoneInputValue(passedValue.join(''));
+    }
+  }, [phoneInputValue]);
+  const handleOnClose = useCallback(() => {
+    setPhoneInputValue('');
+    setInvitationError('');
+    onClose();
+  }, [onClose]);
 
   const onSubmit = useCallback(
-    ({
-      firstName,
-      lastName,
-      phoneNumber,
-      welcomeMessage,
-    }: {
-      firstName: string;
-      lastName: string;
-      phoneNumber: string;
-      welcomeMessage: string;
-    }) => {
-      if (firstName && lastName && phoneNumber && welcomeMessage) {
-        setCreating(true);
-        inviteMutation({
-          variables: { firstName, lastName, phoneNumber: `+${phoneNumber}`, welcomeMessage, ...mutationVariables },
-        })
-          .then(() => {
-            updateEntitisList();
-            onClose();
-            addToast('Invited', { autoDismiss: true, appearance: 'success' });
-          })
-          .catch((error) => {
-            setInvitationError(error.message);
-          })
-          .finally(() => {
-            setCreating(false);
-          });
+    ({ firstName, lastName, welcomeMessage }: { firstName: string; lastName: string; welcomeMessage: string }) => {
+      if (!firstName || !lastName || !welcomeMessage) {
+        return;
       }
+
+      setCreating(true);
+      inviteMutation({
+        variables: { firstName, lastName, phoneNumber: `+${phoneInputValue}`, welcomeMessage, ...mutationVariables },
+      })
+        .then(() => {
+          updateEntitisList();
+          handleOnClose();
+          addToast('Invited', { autoDismiss: true, appearance: 'success' });
+        })
+        .catch((error) => {
+          setInvitationError(error.message);
+        })
+        .finally(() => {
+          setCreating(false);
+        });
     },
-    [inviteMutation, mutationVariables, updateEntitisList, onClose, addToast],
+    [inviteMutation, mutationVariables, updateEntitisList, addToast, phoneInputValue, handleOnClose],
   );
+  interface Country {
+    countryCode: string;
+    dialCode: string;
+    format: string;
+    name: string;
+  }
+
+  const handleChange = (value: string, country: Country) => {
+    setPhoneInputValue(value);
+    setPhoneInputIsValid(country.name === allowedCountryName && phoneInputValue.length === 11);
+  };
 
   return (
-    <Dialog open={open} title="Create Invitation" onClose={onClose}>
+    <Dialog open={open} title="Create Invitation" onClose={handleOnClose}>
       <DialogContent>
         <Form
           initialValues={{ firstName: null, lastName: null, phoneNumber: null, welcomeMessage: null }}
@@ -72,17 +97,31 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
           <RbForm.Group>
             <RbForm.Label>Phone Number</RbForm.Label>
             <Field name="phoneNumber">
-              {({ input }) => (
-                <PhoneInput
-                  copyNumbersOnly={false}
-                  country="us"
-                  inputClass="is-invalid"
-                  inputProps={{ required: true, name: 'phoneNumber' }}
-                  placeholder=""
-                  specialLabel=""
-                  {...input}
-                />
-              )}
+              {({ input }) => {
+                return (
+                  <PhoneInput
+                    copyNumbersOnly={false}
+                    country="us"
+                    inputClass="is-invalid"
+                    inputProps={{ required: true, name: 'phoneNumber', country: 'us' }}
+                    isValid={(_, country: any): any => {
+                      if (country.name !== allowedCountryName) {
+                        return (
+                          <span className={clsx('pt-1 mb-1 text-label error-message', styles.errorMessage)}>
+                            You can provide USA phone numbers only
+                          </span>
+                        );
+                      }
+                      return '';
+                    }}
+                    placeholder=""
+                    specialLabel=""
+                    {...input}
+                    value={phoneInputValue}
+                    onChange={handleChange}
+                  />
+                );
+              }}
             </Field>
           </RbForm.Group>
 
@@ -93,7 +132,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
             {creating ? (
               <Spinner animation="border" />
             ) : (
-              <Button className="text-label" type="submit" variant="secondary">
+              <Button className="text-label" disabled={!phoneInputIsValid} type="submit" variant="secondary">
                 Invite
               </Button>
             )}

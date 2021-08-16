@@ -1,10 +1,10 @@
 import { FC } from 'react';
 
-import clm from 'country-locale-map';
 import { Col } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
 
 import styles from '../styles.module.scss';
+import { countries } from './countries';
 
 interface Props {
   labels: string[];
@@ -35,6 +35,7 @@ export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
   };
   const refferersRest: number[] = [];
   const clickNum = values.reduce((acc: number, val: number) => acc + val, 0);
+  type country = { label: string; value: string };
   return (
     <Col>
       <p className="text-all-cups">{name}</p>
@@ -46,7 +47,11 @@ export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
           refferersRest.push(values[i]);
           return (
             <li key={label}>
-              <div title={label}>{isCountries ? clm.getCountryNameByAlpha2(label) : label}</div>
+              <div title={label}>
+                {isCountries
+                  ? countries.filter((country: country) => country.value === label)[0]?.label ?? label
+                  : label}
+              </div>
               {values[i]}
             </li>
           );
@@ -71,7 +76,9 @@ export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
               callbacks: {
                 title: (context: any) => {
                   const label = context[0].label;
-                  return isCountries ? clm.getCountryNameByAlpha2(label) : label;
+                  return isCountries
+                    ? countries.filter((country: country) => country.value === label)[0]?.label ?? label
+                    : label;
                 },
               },
             },

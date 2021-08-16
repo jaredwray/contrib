@@ -23,16 +23,25 @@ export default function PhoneNumberVerification() {
   });
   const [enterPhoneNumber, { loading: formSubmitting }] = useMutation(EnterPhoneNumberMutation);
   const [enterInvitationCode] = useMutation(EnterInvitationCodeMutation);
+  const [phoneInputValue, setPhoneInputValue] = useState('');
+  const [phoneInputisValid, setPhoneInputIsValid] = useState(false);
   const [error, setError] = useState();
   const invitationToken = useReactiveVar(invitationTokenVar);
-
-  const handleSubmit = useCallback(
-    ({ phoneNumber }) => {
-      phoneNumber &&
-        enterPhoneNumber({ variables: { phoneNumber: `+${phoneNumber}` } }).catch((error) => setError(error.message));
-    },
-    [enterPhoneNumber],
-  );
+  const countryName = 'United States';
+  useEffect(() => {
+    if (!phoneInputValue) {
+      setPhoneInputValue('1');
+    }
+    if (phoneInputValue[0] !== '1') {
+      const passedValue = phoneInputValue.toString().split('');
+      passedValue.unshift('1');
+      setPhoneInputValue(passedValue.join(''));
+    }
+  }, [phoneInputValue]);
+  const handleSubmit = useCallback(() => {
+    phoneInputValue &&
+      enterPhoneNumber({ variables: { phoneNumber: `+${phoneInputValue}` } }).catch((error) => setError(error.message));
+  }, [enterPhoneNumber, phoneInputValue]);
 
   const handleBack = useCallback(
     (e) => {
@@ -59,6 +68,16 @@ export default function PhoneNumberVerification() {
   if (invitationToken) {
     return null;
   }
+  interface Country {
+    countryCode: string;
+    dialCode: string;
+    format: string;
+    name: string;
+  }
+  const handleChange = (value: string, country: Country) => {
+    setPhoneInputValue(value);
+    setPhoneInputIsValid(country.name !== countryName);
+  };
   setPageTitle('Phone number verification');
   return (
     <Layout>
@@ -77,19 +96,31 @@ export default function PhoneNumberVerification() {
                 {(props) => (
                   <PhoneInput
                     disabled={formSubmitting}
+                    isValid={(_, country: any): any => {
+                      if (country.name !== countryName) {
+                        return (
+                          <span className={clsx('pt-1 mb-1 text-label error-message', styles.errorMessage)}>
+                            You can provide USA phone numbers only
+                          </span>
+                        );
+                      }
+                      return '';
+                    }}
                     {...props.input}
                     containerClass="mb-3 w-auto d-inline-block pr-3"
                     copyNumbersOnly={false}
-                    country={'us'}
+                    country="us"
                     inputProps={{ required: true }}
                     placeholder=""
                     specialLabel=""
+                    value={phoneInputValue}
+                    onChange={handleChange}
                   />
                 )}
               </Field>
               <Button
                 className="submit-btn mb-2 text-label d-inline-block"
-                disabled={formSubmitting}
+                disabled={formSubmitting || phoneInputisValid}
                 type="submit"
                 variant="secondary"
               >
