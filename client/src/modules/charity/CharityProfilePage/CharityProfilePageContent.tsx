@@ -167,7 +167,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
               <ProfileSliderRow items={liveAuctionCards}>Live auctions benefiting {charity.name}</ProfileSliderRow>
             )}
             {hasPastAuctions && (
-              <ProfileSliderRow items={pastAuctionCards}>Past auctions benefiting {charity.name}</ProfileSliderRow>
+              <ProfileSliderRow items={pastAuctionCards}>Ended auctions benefiting {charity.name}</ProfileSliderRow>
             )}
           </Container>
         </section>

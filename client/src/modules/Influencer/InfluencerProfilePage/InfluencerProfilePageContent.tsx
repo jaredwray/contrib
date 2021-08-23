@@ -212,10 +212,8 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
             {Boolean(liveAuctions.length) && (
               <ProfileSliderRow items={liveAuctionsLayout}>{influencer.name}'s live auctions</ProfileSliderRow>
             )}
-            {Boolean(pendingAuctions.length) && (
-              <ProfileSliderRow items={pendingAuctionsLayout}>
-                {influencer.name}'s outboarding auctions
-              </ProfileSliderRow>
+            {(account?.isAdmin || isMyProfile) && Boolean(pendingAuctions.length) && (
+              <ProfileSliderRow items={pendingAuctionsLayout}>{influencer.name}'s pending auctions</ProfileSliderRow>
             )}
             {(account?.isAdmin || isMyProfile) && (
               <>
@@ -231,7 +229,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
             )}
 
             {Boolean(pastAuctions.length) && (
-              <ProfileSliderRow items={pastAuctionsLayout}>{influencer.name}'s past auctions</ProfileSliderRow>
+              <ProfileSliderRow items={pastAuctionsLayout}>{influencer.name}'s ended auctions</ProfileSliderRow>
             )}
           </Container>
         </section>

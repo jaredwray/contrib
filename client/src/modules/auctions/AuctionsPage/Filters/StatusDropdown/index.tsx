@@ -22,8 +22,7 @@ const StatusDropdown: FC<Props> = ({ selectedStatuses, changeFilters }) => {
     return [
       { label: 'All', value: 'All' },
       { label: 'Active', value: AuctionStatus.ACTIVE },
-      { label: 'Past', value: 'Past' },
-      { label: 'Outboarding', value: AuctionStatus.PENDING },
+      { label: 'Ended', value: 'Past' },
     ];
   }, []);
 
@@ -31,7 +30,7 @@ const StatusDropdown: FC<Props> = ({ selectedStatuses, changeFilters }) => {
     (status: string) => {
       if (status === options[0].label) {
         changeFilters('status', statusesAll);
-      } else if (status === options[2].label) {
+      } else if (status === options[2].value) {
         changeFilters('status', statusesPast);
       } else {
         changeFilters('status', [status]);
