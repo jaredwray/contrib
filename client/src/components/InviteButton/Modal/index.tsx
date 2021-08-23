@@ -80,7 +80,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
 
   const handleChange = (value: string, country: Country) => {
     setPhoneInputValue(value);
-    setPhoneInputIsValid(country.name === allowedCountryName && phoneInputValue.length === 11);
+    setPhoneInputIsValid(country.name === allowedCountryName && value.length === 11);
   };
 
   return (
@@ -102,7 +102,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
                   <PhoneInput
                     copyNumbersOnly={false}
                     country="us"
-                    inputClass="is-invalid"
+                    inputClass={phoneInputIsValid ? '' : 'is-invalid'}
                     inputProps={{ required: true, name: 'phoneNumber', country: 'us' }}
                     isValid={(_, country: any): any => {
                       if (country.name !== allowedCountryName) {
