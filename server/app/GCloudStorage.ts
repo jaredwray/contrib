@@ -86,12 +86,17 @@ export class GCloudStorage {
   }
 
   async removeFile(fileUrl: string, bucketName: string = AppConfig.googleCloud.bucketName): Promise<void> {
-    const fileNameArray = GCloudStorage.getFileNameFromUrl(fileUrl).split('/');
+    const fileNameArray = GCloudStorage.getFileNameFromUrl(fileUrl).replace(/\%2F/g, '/').split('/');
+
     fileNameArray.pop();
     const folder = fileNameArray.join('/');
 
     try {
-      await this.storage.bucket(bucketName).deleteFiles({ prefix: `${folder}/` });
+      await this.storage.bucket(bucketName).deleteFiles({ prefix: `${folder}/` }, (err) => {
+        if (!err) {
+          AppLogger.warn(`All files in the ${folder} directory have been deleted`);
+        }
+      });
     } catch (error) {
       AppLogger.warn(`Unable to remove files in ${folder}: ${error.message}`);
       throw new AppError(`Unable to remove files. Please, try later`, ErrorCode.INTERNAL_ERROR);
@@ -99,15 +104,13 @@ export class GCloudStorage {
   }
 
   async uploadFile(
-    filePromise: Promise<IFile>,
+    filePromise: Promise<IFile> | null,
     {
-      bucketName = AppConfig.googleCloud.bucketName,
       fileName,
-      shouldResizeImage = true,
-    }: { bucketName?: string; fileName: string; shouldResizeImage?: boolean },
+      bucketName = AppConfig.googleCloud.bucketName,
+    }: { fileName: string; bucketName?: string; url?: string },
   ): Promise<{ fileType: FileType; url: string; uid: string | undefined }> {
     const file = await filePromise;
-
     const extension = file.filename.split('.').pop();
     const fileType = GCloudStorage.getFileType(extension);
 
@@ -119,19 +122,31 @@ export class GCloudStorage {
       const buffer = await this.streamToBuffer(file.createReadStream());
       await this.storage.bucket(bucketName).file(formattedFileName).save(buffer);
 
-      if (fileType === FileType.IMAGE && shouldResizeImage) {
+      if (fileType === FileType.IMAGE) {
         await this.storage.bucket(bucketName).file(`pending/${formattedFileName}`).save(buffer);
       }
 
-      let uid = undefined;
+      return { fileType, url: `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`, uid: '' };
+    } catch (error) {
+      AppLogger.warn(`Cannot upload selected file: ${error.message}`);
+      throw new AppError(`We cannot upload one of your selected file. Please, try later`, ErrorCode.INTERNAL_ERROR);
+    }
+  }
+  async cloudFlareVideoUpload({
+    fileName,
+    url,
+  }: {
+    fileName: string;
+    url: string;
+  }): Promise<{ fileType: FileType; url: string; uid: string | undefined }> {
+    try {
+      const replacedUrl = url.replace(
+        `firebasestorage.googleapis.com/v0/b/${AppConfig.googleCloud.bucketName}/o/`,
+        `storage.googleapis.com/${AppConfig.googleCloud.bucketName}/`,
+      );
 
-      if (fileType === FileType.VIDEO) {
-        uid = await this.cloudflareStreaming.uploadToCloudflare(
-          `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`,
-          { name: fileName },
-        );
-      }
-      return { fileType, url: `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`, uid: uid };
+      const uid = await this.cloudflareStreaming.uploadToCloudflare(replacedUrl, { name: fileName });
+      return { fileType: FileType.VIDEO, url: replacedUrl, uid };
     } catch (error) {
       AppLogger.warn(`Cannot upload selected file: ${error.message}`);
       if (error.name === 'PayloadTooLargeError') {

@@ -311,23 +311,25 @@ export class AuctionService {
     id: string,
     organizerId: string | null,
     attachment: Promise<IFile>,
+    url: string | null,
+    filename: string | null,
   ): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, organizerId);
     if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
-    AppLogger.error(`Attachment uploading for auction #${auction._id.toString()} started`);
+
     try {
       const asset = await this.attachmentsService.uploadFileAttachment(
         id,
         auction.auctionOrganizer._id.toString(),
         attachment,
+        url,
       );
-      const { filename } = await attachment;
 
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });
 
-      return AuctionService.makeAuctionAttachment(asset, filename);
+      return AuctionService.makeAuctionAttachment(asset, filename ?? (await attachment).filename);
     } catch (error) {
       AppLogger.error(
         `Could not upload attachment for auction #${auction._id.toString()} with error: ${error.message}`,
@@ -857,7 +859,7 @@ export class AuctionService {
     return `${appURL.toString()}${AppConfig.googleCloud.task.notificationTaskTargetURL}`;
   }
 
-  private static makeAuctionAttachment(model: IAuctionAssetModel, fileName?: string): AuctionAssets | null {
+  private static makeAuctionAttachment(model: IAuctionAssetModel, filename?: string): AuctionAssets | null {
     if (!model) {
       return null;
     }
@@ -870,7 +872,7 @@ export class AuctionService {
       cloudflareUrl: model.uid ? CloudflareStreaming.getVideoStreamUrl(model.uid) : null,
       thumbnail: model.uid ? CloudflareStreaming.getVideoPreviewUrl(model.uid) : null,
       uid,
-      originalFileName: fileName,
+      originalFileName: filename,
     };
   }
 

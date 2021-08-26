@@ -14,11 +14,16 @@ global.URL.createObjectURL = jest.fn(() => 'www.test');
 
 const props: any = {
   accepted: 'test accepted',
-  auctionId: 'test id',
+  auction: {
+    auctionOrganizer: {
+      id: 'testId',
+    },
+    id: 'testId',
+    isActive: false,
+  },
+  auctionId: 'testId',
   attachments: {
-    uploaded: [
-      { cloudflareUrl: null, originalFileName: 'test.jpg', thumbnail: null, type: 'IMAGE', uid: null, url: 'test' },
-    ],
+    uploaded: [{ cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test' }],
     loading: [
       {
         lastModified: 1,

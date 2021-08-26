@@ -73,6 +73,7 @@ jobs:
           REACT_APP_MAX_SIZE_VIDEO_GB: "1"
           REACT_APP_GOOGLE_ANALYTICS_APP_ID: "G-T3VD43X4L3"
           REACT_APP_SMARTLOOK_ID: ${{ secrets.LIVE_REACT_APP_SMARTLOOK_ID }}
+          REACT_APP_FIREBASE_CONFIG: ${{ secrets.LIVE_REACT_APP_FIREBASE_CONFIG }}
 
       # Test Client
       - name: Test Client

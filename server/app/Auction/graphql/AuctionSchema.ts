@@ -229,7 +229,7 @@ export const AuctionSchema = gql`
     stopAuction(id: String): Auction
     activateAuction(id: String): Auction
     createAuctionBid(id: String!, bid: Money!): Auction!
-    addAuctionAttachment(id: String!, attachment: Upload!, organizerId: String): AuctionAttachment!
+    addAuctionAttachment(id: String!, attachment: Upload, url: String, filename: String): AuctionAttachment!
     deleteAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
     deleteAuction(id: String!): ResponceId!
     chargeAuction(id: String!): ResponceId!

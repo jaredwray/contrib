@@ -1,20 +1,23 @@
 import { FC, ReactElement, SetStateAction, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
+import firebase from '@firebase/app';
 import { useDropzone } from 'react-dropzone';
+import { v4 as getUuid } from 'uuid';
 
 import { AddAuctionMediaMutation } from 'src/apollo/queries/auctions';
 import AddPhotoIcon from 'src/assets/images/ProtoIcon';
-import { AuctionAttachment } from 'src/types/Auction';
+import { Auction, AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentsStateInterface from '../common/AttachmentsStateInterface';
 import AttachmentPreview from './AttachmentPreview';
 import FilePreview from './FilePreview';
+import FirebaseInitializer from './FirebaseInitializer';
 import styles from './styles.module.scss';
 
 interface Props {
   accepted: string;
-  auctionId: string;
+  auction: Auction;
   attachments: { uploaded: AuctionAttachment[]; loading: File[] };
   setAttachments: (_: SetStateAction<AttachmentsStateInterface>) => void;
   setErrorMessage: (_: SetStateAction<string>) => void;
@@ -23,7 +26,7 @@ interface Props {
 
 const UploadingDropzone: FC<Props> = ({
   accepted,
-  auctionId,
+  auction,
   attachments,
   setAttachments,
   setErrorMessage,
@@ -53,8 +56,28 @@ const UploadingDropzone: FC<Props> = ({
     },
   });
 
+  const { id: auctionId, auctionOrganizer } = auction;
   const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
   const bytes = Math.pow(1024, 3);
+
+  const firebaseUpload = useCallback(
+    async (file: File) => {
+      const uuid = getUuid();
+      const extension = file.name.split('.').pop();
+      const name = `${auctionOrganizer.id}/auctions/${auctionId}/${uuid}/${uuid}.${extension}`;
+      try {
+        const blobUrl = URL.createObjectURL(file);
+        const blob = await fetch(blobUrl).then((r) => r.blob());
+        // @ts-ignore
+        const snapshot = await firebase.storage().ref().child(name).put(blob);
+        return await snapshot.ref.getDownloadURL();
+      } catch (error) {
+        setErrorMessage('Somethig went wrong');
+        return false;
+      }
+    },
+    [auctionId, auctionOrganizer.id, setErrorMessage],
+  );
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: any) => {
@@ -66,9 +89,17 @@ const UploadingDropzone: FC<Props> = ({
         };
       });
 
-      acceptedFiles.forEach((file) => {
+      acceptedFiles.forEach(async (file) => {
+        let url;
+
+        if (file.type.startsWith('video/')) {
+          url = await firebaseUpload(file);
+
+          if (!url) return;
+        }
+
         addAuctionMedia({
-          variables: { id: auctionId, file },
+          variables: { id: auctionId, file: url ? null : file, url, filename: file.name },
         });
       });
 
@@ -84,7 +115,7 @@ const UploadingDropzone: FC<Props> = ({
         });
       });
     },
-    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
+    [firebaseUpload, addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -95,6 +126,7 @@ const UploadingDropzone: FC<Props> = ({
 
   return (
     <>
+      <FirebaseInitializer />
       <div className="pl-md-0 pr-md-0 text-center text-sm-left d-table-row">
         {attachments.uploaded.map((attachment: AuctionAttachment, index: number) => (
           <AttachmentPreview

@@ -14,12 +14,20 @@ export class AuctionAttachmentsService {
   public async uploadFileAttachment(
     auctionId: string,
     organizerId: string,
-    attachment: Promise<IFile>,
+    attachment: Promise<IFile> | null,
+    uploadUrl: string,
   ): Promise<IAuctionAssetModel> {
     const uuid = getUuid();
     const attachmentPath = `${organizerId}/auctions/${auctionId}/${uuid}/${uuid}`;
+
     try {
-      const { fileType, url, uid } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentPath });
+      const { fileType, url, uid } = uploadUrl
+        ? await this.cloudStorage.cloudFlareVideoUpload({
+            fileName: attachmentPath,
+            url: uploadUrl,
+          })
+        : await this.cloudStorage.uploadFile(attachment, { fileName: attachmentPath });
+
       const assetUid = Boolean(uid) ? { uid } : {};
       const asset = new this.AuctionAsset({ url, type: fileType, ...assetUid });
       await asset.save();

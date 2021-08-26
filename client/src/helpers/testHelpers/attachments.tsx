@@ -6,7 +6,6 @@ export const attachments = [
     type: 'test',
     cloudflareUrl: 'test',
     thumbnail: 'test',
-    originalFileName: 'test',
   },
   {
     id: 'test',
@@ -15,6 +14,5 @@ export const attachments = [
     type: 'test',
     cloudflareUrl: 'test',
     thumbnail: 'test',
-    originalFileName: 'test',
   },
 ];

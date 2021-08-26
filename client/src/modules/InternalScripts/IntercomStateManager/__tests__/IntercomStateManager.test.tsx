@@ -1,11 +1,12 @@
 import { mount, ReactWrapper } from 'enzyme';
 
-import NewRelicInitializer from 'src/components/NewRelicInitializer';
+import IntercomStateManager from '../index';
 
-describe('Should render correctly "NewRelicInitializer"', () => {
+describe('Should render correctly "IntercomStateManager"', () => {
+  global.Intercom = jest.fn();
   let wrapper: ReactWrapper;
   beforeEach(() => {
-    wrapper = mount(<NewRelicInitializer />);
+    wrapper = mount(<IntercomStateManager />);
   });
   afterEach(() => {
     jest.clearAllMocks();
