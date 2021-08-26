@@ -61,7 +61,12 @@ export interface IAuctionRepository {
   getAuctionsCount({ query, size, skip, orderBy, filters }: IAuctionFilters): Promise<number>;
   getAuction(id: string, organizerId?: string): Promise<IAuctionModel>;
   getAuctionSports(): Promise<string[]>;
-  addAuctionAttachment(id: string, organizerId: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel>;
+  addAuctionAttachment(
+    id: string,
+    asset: IAuctionAssetModel,
+    url: string,
+    filename: string,
+  ): Promise<IAuctionAssetModel>;
   getInfluencersAuctions(id: string): Promise<IAuctionModel[]>;
   getPopulatedAuction(auction: IAuctionModel): Promise<IAuctionModel>;
   getAuctionOrganizerUserAccountFromAuction(auction: IAuctionModel): Promise<IAuctionModel>;

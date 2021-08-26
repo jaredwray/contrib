@@ -336,8 +336,8 @@ export class AuctionRepository implements IAuctionRepository {
     }).exec();
   }
 
-  async addAuctionAttachment(id: string, organizerId: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel> {
-    const auction = await this.getAuction(id, organizerId);
+  async addAuctionAttachment(id: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel> {
+    const auction = await this.getAuction(id);
     auction.assets.push(asset);
     await auction.save();
     return asset;

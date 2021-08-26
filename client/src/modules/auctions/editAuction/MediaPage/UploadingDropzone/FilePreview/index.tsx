@@ -15,22 +15,20 @@ const FilePreview: FC<Props> = ({ file }): ReactElement => {
   const src = URL.createObjectURL(file);
 
   return (
-    <>
-      <div className={previewStyles.previewWrapper}>
-        {type === 'image' ? (
-          <img alt="" className={clsx(previewStyles.preview, previewStyles.attachmentContent)} src={src} />
-        ) : (
-          <video
-            muted
-            autoPlay={false}
-            className={clsx(previewStyles.preview, previewStyles.attachmentContent)}
-            src={src}
-            onClick={(e) => e.preventDefault()}
-          />
-        )}
-      </div>
+    <div className={previewStyles.previewWrapper}>
+      {type === 'image' ? (
+        <img alt="" className={clsx(previewStyles.preview, previewStyles.attachmentContent)} src={src} />
+      ) : (
+        <video
+          muted
+          autoPlay={false}
+          className={clsx(previewStyles.preview, previewStyles.attachmentContent)}
+          src={src}
+          onClick={(e) => e.preventDefault()}
+        />
+      )}
       <Spinner animation="border" className={styles.spinner} title="loading" />
-    </>
+    </div>
   );
 };
 

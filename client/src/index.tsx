@@ -8,8 +8,6 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
-import IntercomStateManager from 'src/components/IntercomStateManager';
-import NewRelicInitializer from 'src/components/NewRelicInitializer';
 import PrivateRoute from 'src/components/PrivateRoute';
 import { ScrollToTop } from 'src/components/ScrollToTop';
 import { UserAccountProvider } from 'src/components/UserAccountProvider';
@@ -31,6 +29,7 @@ import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
 import Page404 from 'src/modules/errors/Page404';
 import HomePage from 'src/modules/Home';
 import Assistants from 'src/modules/Influencer/Assistants';
+import InternalScripts from 'src/modules/InternalScripts';
 import InvitationPage from 'src/modules/Invitation';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
@@ -67,8 +66,7 @@ ReactDOM.render(
         <ContribApolloProvider>
           <UserAccountProvider>
             <>
-              <IntercomStateManager />
-              <NewRelicInitializer />
+              <InternalScripts />
               <Switch>
                 <Route exact component={HomePage} path="/" />
                 <Route exact component={AfterLogin} path="/after-login" />

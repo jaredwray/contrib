@@ -239,8 +239,12 @@ export const GetAuctionBasicsQuery = gql`
 export const GetAuctionMediaQuery = gql`
   query GetAuctionMedia($id: String!) {
     auction(id: $id) {
+      id
       isActive
       title
+      auctionOrganizer {
+        id
+      }
       attachments {
         uid
         url
@@ -423,8 +427,8 @@ export const UpdateAuctionDetailsMutation = gql`
 `;
 
 export const AddAuctionMediaMutation = gql`
-  mutation AddAuctionMedia($id: String!, $file: Upload!) {
-    addAuctionAttachment(id: $id, attachment: $file) {
+  mutation AddAuctionMedia($id: String!, $file: Upload, $url: String, $filename: String) {
+    addAuctionAttachment(id: $id, attachment: $file, url: $url, filename: $filename) {
       url
       type
       cloudflareUrl

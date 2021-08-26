@@ -95,7 +95,7 @@ const EditAuctionMediaPage = () => {
               <UploadingDropzone
                 accepted=".png, .jpeg, .jpg, .webp, .mp4, .webm, .opgg, .mov"
                 attachments={attachments}
-                auctionId={auctionId}
+                auction={auction}
                 setAttachments={setAttachments}
                 setErrorMessage={(message) => addToast(message, { autoDismiss: true, appearance: 'warning' })}
                 setSelectedAttachment={setSelectedAttachment}

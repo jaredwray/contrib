@@ -17,11 +17,12 @@ const AttachmentModal: FC<Props> = ({ attachment, closeModal }) => {
   if (!attachment) {
     return null;
   }
+  const isVideo = attachment.type === 'VIDEO';
 
   return (
     <Modal
       centered
-      contentClassName={clsx(styles.content, 'd-table')}
+      contentClassName={clsx('d-table', isVideo || 'w-auto')}
       dialogClassName={styles.modal}
       show={true}
       onHide={closeModal}
@@ -30,7 +31,7 @@ const AttachmentModal: FC<Props> = ({ attachment, closeModal }) => {
         <button className={styles.closeBtn} title="close" onClick={closeModal}>
           X
         </button>
-        {attachment.type === 'VIDEO' ? (
+        {isVideo ? (
           <Stream controls src={attachment.uid} />
         ) : (
           <Image fluid alt="" className={styles.image} src={attachment.url} />

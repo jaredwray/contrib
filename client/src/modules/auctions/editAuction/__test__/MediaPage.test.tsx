@@ -40,6 +40,8 @@ cache.writeQuery({
       ],
       isActive: true,
       title: 'test',
+      auctionOrganizer: { id: 'testId' },
+      id: 'testId',
     },
   },
 });
@@ -91,7 +93,7 @@ describe('EditAuctionMediaPage ', () => {
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
     wrapper!.find(AttachmentModal).props().closeModal();
-    
+
     wrapper!.find(Form).props().onSubmit({ data: {} });
     wrapper!.find(StepByStepRow).children().find('Button').at(0).simulate('click');
     wrapper!.find(UploadingDropzone).props().setErrorMessage('test');

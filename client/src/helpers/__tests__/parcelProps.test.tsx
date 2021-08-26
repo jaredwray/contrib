@@ -16,7 +16,6 @@ describe('ParcelProps function test', () => {
         id: 'testId',
         uid: 'test',
         cloudflareUrl: 'test',
-        originalFileName: 'test',
         thumbnail: 'test',
       },
     ],
