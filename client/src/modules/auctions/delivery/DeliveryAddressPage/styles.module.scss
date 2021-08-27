@@ -1,0 +1,31 @@
+@import 'src/variables.scss';
+
+.page {
+  background: no-repeat center url('/assets/images/invitation-bg-lg.webp') $sage-color;
+  background-size: cover;
+  background-blend-mode: multiply;
+  flex-grow: 1;
+
+  @media (max-width: $medium-weight) {
+    background-image: url('/assets/images/invitation-bg-sm.webp');
+  }
+}
+
+.markedText {
+  color: $light-ochre-color;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.select {
+  background-color: $white-color;
+  border-radius: 10px;
+}
+
+.auctionTitle {
+  color: $light-ochre-color;
+  padding-left: 10px;
+  &:hover {
+    color: $light-ochre-color;
+  }
+}

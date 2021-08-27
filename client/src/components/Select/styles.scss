@@ -69,6 +69,13 @@
       color: $sage-color !important;
     }
 
+    &:disabled {
+      background-color: $barely-gray-color;
+      border: 1px solid $sage-color;
+      pointer-events: none !important;
+      color: $sage-color !important;
+    }
+
     &.btn,
     &.btn:focus {
       justify-content: start;
@@ -118,7 +125,6 @@
     position: relative;
     white-space: normal;
     word-wrap: break-word;
-    // padding-right: 0px;
 
     &.active::before {
       content: '';

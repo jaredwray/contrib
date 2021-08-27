@@ -29,7 +29,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
   const [updateAuctionMeasures, { loading: updating }] = useMutation(mutation);
   const [measureSystem, setSystem] = useState(true);
 
-  const { parcel: currentValues } = auction;
+  const currentValues = auction.delivery.parcel;
 
   const type = useMemo(
     () => [
@@ -40,7 +40,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
   );
 
   const onSubmit = useCallback(
-    ({ length, width, height, weight }: { length: number; width: number; height: number; weight: number }) => {
+    ({ length, width, height, weight }) => {
       if (!length || !width || !height || !weight) {
         showWarning('Please, check the data');
         return;
@@ -48,10 +48,10 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
       updateAuctionMeasures({
         variables: {
           auctionId: auction.id,
-          length: Number(length),
-          width: Number(width),
-          height: Number(height),
-          weight: Number(weight),
+          length: `${length}`,
+          width: `${width}`,
+          height: `${height}`,
+          weight: `${weight}`,
           units: measureSystem ? type[0].label : type[1].label,
         },
       })

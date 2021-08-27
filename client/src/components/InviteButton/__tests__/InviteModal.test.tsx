@@ -1,6 +1,5 @@
 import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
-import PhoneInput from 'react-phone-input-2';
 
 import { MockedProvider } from '@apollo/client/testing';
 import { Modal } from 'src/components/InviteButton/Modal';

@@ -10,6 +10,9 @@ export interface IHandlebarsService {
 export enum MessageTemplate {
   AUCTION_BID_OVERLAP = 'auctionBidOverlap.hbs',
   AUCTION_WON_MESSAGE = 'auctionWon.hbs',
+  AUCTION_WON_MESSAGE_WITH_DELIVERY_LINK = 'auctionWonWithDeliveryLink.hbs',
+  AUCTION_BOUGHT_MESSAGE = 'auctionBought.hbs',
+  AUCTION_BOUGHT_MESSAGE_WITH_DELIVERY_LINK = 'auctionBoughtWithDeliveryLink.hbs',
   AUCTION_ENDS_MESSAGE_FOR_USERS = 'auctionEndsForUsers.hbs',
   AUCTION_ENDS_MESSAGE_FOR_AUCTIONORGANIZER = 'auctionEndsForAuctionOrganizer.hbs',
   AUCTION_IS_CREATED_MESSAGE = 'auctionIsCreated.hbs',

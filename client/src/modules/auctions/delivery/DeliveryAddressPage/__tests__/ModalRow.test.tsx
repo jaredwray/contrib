@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 import Form from 'src/components/Form/Form';
 
-import { ModalRow } from 'src/modules/auctions/DeliveryAddressPage/ModalRow';
+import { ModalRow } from 'src/modules/auctions/delivery/DeliveryAddressPage/ModalRow';
 
 describe('Should render correctly "ModalRow"', () => {
   const props: any = {

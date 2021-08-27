@@ -9,7 +9,7 @@ import { format as dateFormat, differenceInSeconds } from 'date-fns';
 import { format, toDate, utcToZonedTime } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
@@ -20,7 +20,7 @@ import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
-import { Auction } from 'src/types/Auction';
+import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal';
 import { BidInput } from './BidInput';
@@ -42,6 +42,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const { isAuthenticated } = useAuth0();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
+  const { auctionId } = useParams<{ auctionId: string }>();
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
@@ -57,6 +58,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     isPending,
     isSold,
     isStopped,
+    isSettled,
     stoppedAt,
     isActive,
     totalBids,
@@ -75,6 +77,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
+  const isWinner = auction.winner?.mongodbId === account?.mongodbId;
   let callAfterMs = 60000;
   const secondsLeft = differenceInSeconds(toDate(endDate), new Date());
   if (secondsLeft <= 120) {
@@ -139,9 +142,9 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         return;
       }
 
-      RedirectWithReturnAfterLogin(`/auctions/${auction.id}?placeBid=${placeBid}${isBuying ? '&isBuying=true' : ''}`);
+      RedirectWithReturnAfterLogin(`/auctions/${auctionId}?placeBid=${placeBid}${isBuying ? '&isBuying=true' : ''}`);
     },
-    [isAuthenticated, auction.id, RedirectWithReturnAfterLogin],
+    [isAuthenticated, auctionId, RedirectWithReturnAfterLogin],
   );
   const handleBid = useCallback(async (amount: Dinero.Dinero) => commonBidHandler(amount), [commonBidHandler]);
   const handleBuy = useCallback(async () => {
@@ -163,13 +166,13 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         // any error should be handled by handleBid
       });
     }
-    history.replace(`/auctions/${auction.id}`);
-  }, [placeBidQueryParam, auction.id, minBid, handleBid, history, isBuyingParam]);
+    history.replace(`/auctions/${auctionId}`);
+  }, [placeBidQueryParam, auctionId, minBid, handleBid, history, isBuyingParam]);
 
   const handleFollowAuction = useCallback(async () => {
     if (isAuthenticated) {
       try {
-        await followAuction({ variables: { auctionId: auction.id } });
+        await followAuction({ variables: { auctionId } });
         addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
         setFollowed(true);
         setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
@@ -179,20 +182,21 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       return;
     }
 
-    RedirectWithReturnAfterLogin(`/auctions/${auction.id}`);
-  }, [auction.id, addToast, followAuction, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
+    RedirectWithReturnAfterLogin(`/auctions/${auctionId}`);
+  }, [auctionId, addToast, followAuction, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {
-      await unfollowAuction({ variables: { auctionId: auction.id } });
+      await unfollowAuction({ variables: { auctionId } });
       addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
       setFollowed(false);
       setFollowersNumber(followersNumber - 1);
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'warning' });
     }
-  }, [auction.id, addToast, unfollowAuction, followersNumber]);
+  }, [auctionId, addToast, unfollowAuction, followersNumber]);
 
+  const isPaid = auction.delivery.status === AuctionDeliveryStatus.PAID;
   return (
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
@@ -248,11 +252,11 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         </div>
       )}
       <Elements options={stripeOptions} stripe={stripePromise}>
-        <BidConfirmationModal ref={confirmationRef} auctionId={auction.id} isBuying={isBying} setIsBying={setIsBying} />
+        <BidConfirmationModal ref={confirmationRef} auctionId={auctionId} isBuying={isBying} setIsBying={setIsBying} />
       </Elements>
       {canBid && <BidInput fairMarketValue={Dinero(fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
       {canEdit && (
-        <Link className="w-100 btn btn-primary" to={`/auctions/${auction.id}/basic`}>
+        <Link className="w-100 btn btn-primary" to={`/auctions/${auctionId}/basic`}>
           Edit
         </Link>
       )}
@@ -271,6 +275,11 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         loading={followLoading || unfollowLoading}
         unfollowHandler={handleUnfollowAuction}
       />
+      {(isSold || isSettled) && isWinner && (
+        <Link className="d-inline-block mt-5" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
+          {isPaid ? 'Delivery status' : 'Pay for delivery'}
+        </Link>
+      )}
     </>
   );
 };

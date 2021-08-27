@@ -39,6 +39,7 @@ export const UserAccountSchema = gql`
     zipCode: String
     country: String
     street: String
+    phoneNumber: String
   }
 
   type UserAccount {
@@ -77,6 +78,7 @@ export const UserAccountSchema = gql`
     city: String!
     zipCode: String!
     street: String!
+    phoneNumber: String!
   }
 
   extend type Query {

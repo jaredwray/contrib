@@ -1,8 +1,10 @@
 import { DineroObject } from 'dinero.js';
 
+import { Address } from './Address';
 import { Follow } from './Follow';
 import { InfluencerProfile } from './InfluencerProfile';
 import { Parcel } from './Parcel';
+import { Winner } from './Winner';
 
 export enum AuctionStatus {
   DRAFT = 'DRAFT',
@@ -14,6 +16,11 @@ export enum AuctionStatus {
   STOPPED = 'STOPPED',
 }
 
+export enum AuctionDeliveryStatus {
+  ADDRESS_PROVIDED = 'ADDRESS_PROVIDED',
+  PAID = 'PAID',
+}
+
 export interface AuctionAttachment {
   id: string;
   uid: string;
@@ -22,6 +29,15 @@ export interface AuctionAttachment {
   cloudflareUrl: string;
   thumbnail: string;
   originalFileName: string;
+}
+
+export interface AuctionDelivery {
+  parcel: Parcel;
+  address?: Address;
+  status: AuctionDeliveryStatus;
+  updatedAt: string;
+  timeInTransit?: string;
+  identificationNumber?: string;
 }
 
 export interface Auction {
@@ -47,7 +63,8 @@ export interface Auction {
   auctionOrganizer: InfluencerProfile;
   fairMarketValue: DineroObject;
   followers?: Follow[];
-  winner?: string;
+  winner?: Winner;
+  delivery: AuctionDelivery;
   timeZone: string;
   isActive: boolean;
   isDraft: boolean;
@@ -56,5 +73,4 @@ export interface Auction {
   isFailed: boolean;
   isSold: boolean;
   isStopped: boolean;
-  parcel?: Parcel;
 }

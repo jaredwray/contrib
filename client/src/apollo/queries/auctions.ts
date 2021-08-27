@@ -54,14 +54,38 @@ export const AuctionForAdminPageQuery = gql`
         name
         stripeAccountId
       }
-      parcel {
-        width
-        length
-        height
-        weight
-        units
+      delivery {
+        parcel {
+          width
+          length
+          height
+          weight
+          units
+        }
+        address {
+          name
+          country
+          state
+          city
+          zipCode
+          street
+        }
+        timeInTransit
+        identificationNumber
+        status
+        updatedAt
       }
-      winner
+      winner {
+        mongodbId
+        address {
+          name
+          country
+          state
+          city
+          zipCode
+          street
+        }
+      }
       isFailed
       isActive
       isSold
@@ -138,7 +162,32 @@ export const AuctionQuery = gql`
         user
         createdAt
       }
-      winner
+      winner {
+        mongodbId
+        phoneNumber
+        address {
+          name
+          country
+          state
+          city
+          zipCode
+          street
+        }
+      }
+      delivery {
+        identificationNumber
+        timeInTransit
+        status
+        address {
+          name
+          country
+          state
+          city
+          zipCode
+          street
+          phoneNumber
+        }
+      }
     }
   }
 `;
@@ -196,12 +245,14 @@ export const AuctionsListQuery = gql`
         followers {
           user
         }
-        parcel {
-          width
-          length
-          height
-          weight
-          units
+        delivery {
+          parcel {
+            width
+            length
+            height
+            weight
+            units
+          }
         }
       }
     }
@@ -282,13 +333,44 @@ export const GetAuctionDetailsQuery = gql`
   }
 `;
 
+export const CalculateShippingCostQuery = gql`
+  query CalculateShippingCost($auctionId: String!, $deliveryMethod: String!) {
+    calculateShippingCost(auctionId: $auctionId, deliveryMethod: $deliveryMethod) {
+      deliveryPrice
+      timeInTransit
+    }
+  }
+`;
+
+export const ShippingRegistrationMutation = gql`
+  mutation ShippingRegistration(
+    $auctionId: String!
+    $deliveryMethod: String!
+    $type: String
+    $number: String
+    $expirationDate: String
+    $securityCode: String
+    $timeInTransit: DateTime
+  ) {
+    shippingRegistration(
+      auctionId: $auctionId
+      deliveryMethod: $deliveryMethod
+      paymentCard: { type: $type, number: $number, expirationDate: $expirationDate, securityCode: $securityCode }
+      timeInTransit: $timeInTransit
+    ) {
+      deliveryPrice
+      identificationNumber
+    }
+  }
+`;
+
 export const UpdateAuctionParcelMutation = gql`
   mutation UpdateAuctionParcel(
     $auctionId: String!
-    $width: Int!
-    $height: Int!
-    $length: Int!
-    $weight: Int!
+    $width: String!
+    $height: String!
+    $length: String!
+    $weight: String!
     $units: String!
   ) {
     updateAuctionParcel(
@@ -520,7 +602,6 @@ export const AuctionSubscription = gql`
       endDate
       stoppedAt
       totalBids
-      winner
       isActive
       isDraft
       isPending

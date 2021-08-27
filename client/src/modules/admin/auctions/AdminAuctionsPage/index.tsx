@@ -95,7 +95,7 @@ export default function AdminAuctionsPage() {
                   : Dinero(auction.startPrice).toFormat('$0,0')}
               </td>
               <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
-              <td>{auction.parcel && ParcelProps(auction)}</td>
+              <td>{auction.delivery.parcel && ParcelProps(auction)}</td>
               <td>
                 <ActionsDropdown>
                   <Link className="dropdown-item text--body" to={`/admin/auctions/${auction.id}`}>

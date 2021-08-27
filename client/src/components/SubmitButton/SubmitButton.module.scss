@@ -9,3 +9,8 @@
     opacity: 0.2;
   }
 }
+.buttonWrapper {
+  @media (max-width: $small-weight) {
+    width: 100%;
+  }
+}

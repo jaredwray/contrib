@@ -1,0 +1,37 @@
+export const testAccount = {
+  account: {
+    address: {
+      city: 'test',
+      country: 'USA',
+      name: 'test',
+      state: 'AZ',
+      street: 'test',
+      zipCode: '85027',
+    },
+    assistant: null,
+    charity: null,
+    createdAt: new Date('2021-04-13T08:09:54.943Z'),
+    id: 'testId',
+    influencerProfile: {
+      avatarUrl: 'test',
+      id: 'testId',
+      name: 'test',
+      profileDescription: 'test',
+      sport: 'test',
+      status: 'TRANSIENT',
+      team: 'test',
+    },
+    isAdmin: true,
+    mongodbId: 'ttestId',
+    notAcceptedTerms: null,
+    paymentInformation: {
+      cardBrand: 'Visa',
+      cardExpirationMonth: 5,
+      cardExpirationYear: 2026,
+      cardNumberLast4: '4242',
+      id: 'testId',
+    },
+    phoneNumber: '+00000000000',
+    status: 'COMPLETED',
+  },
+};

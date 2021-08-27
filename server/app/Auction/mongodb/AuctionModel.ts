@@ -5,7 +5,8 @@ import { UserAccountCollectionName, IFollowObject, IUserAccount } from '../../Us
 import { AppConfig } from '../../../config';
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
-import { AuctionParcel } from '../dto/AuctionParcel';
+import { AuctionDelivery } from '../dto/AuctionDelivery';
+import { AuctionDeliveryStatus } from '../dto/AuctionDeliveryStatus';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { InfluencerCollectionName, IInfluencer } from '../../Influencer/mongodb/InfluencerModel';
 
@@ -17,7 +18,7 @@ export interface IAuctionModel extends Document {
   gameWorn: boolean;
   description: string;
   followers: IFollowObject[];
-  parcel: AuctionParcel;
+  delivery: AuctionDelivery;
   fullPageDescription: string;
   auctionOrganizer: IInfluencer['_id'];
   assets: IAuctionAssetModel['_id'][];
@@ -39,6 +40,8 @@ export interface IAuctionModel extends Document {
 
 export const AuctionCollectionName = 'auction';
 
+const auctionDefaultParcelParameters = JSON.parse(AppConfig.delivery.UPSAuctionDefaultParcelParameters);
+
 const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
   {
     title: { type: SchemaTypes.String, required: true },
@@ -51,13 +54,6 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     sentNotifications: { type: SchemaTypes.Array, default: [] },
     authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
     gameWorn: { type: SchemaTypes.Boolean, default: false },
-    parcel: {
-      width: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.width },
-      length: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.length },
-      height: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.height },
-      weight: { type: SchemaTypes.Number, default: AppConfig.delivery.auctionParcel.weight },
-      units: { type: SchemaTypes.String, default: AppConfig.delivery.auctionParcel.units },
-    },
     followers: [
       {
         user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
@@ -83,6 +79,28 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     timeZone: { type: SchemaTypes.String },
     totalBids: { type: SchemaTypes.Number, default: 0 },
     winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+    delivery: {
+      parcel: {
+        width: { type: SchemaTypes.String, default: auctionDefaultParcelParameters.width },
+        length: { type: SchemaTypes.String, default: auctionDefaultParcelParameters.length },
+        height: { type: SchemaTypes.String, default: auctionDefaultParcelParameters.height },
+        weight: { type: SchemaTypes.String, default: auctionDefaultParcelParameters.weight },
+        units: { type: SchemaTypes.String, default: auctionDefaultParcelParameters.units },
+      },
+      address: {
+        name: { type: SchemaTypes.String },
+        state: { type: SchemaTypes.String },
+        city: { type: SchemaTypes.String },
+        zipCode: { type: SchemaTypes.String },
+        country: { type: SchemaTypes.String, default: 'USA' },
+        street: { type: SchemaTypes.String },
+        phoneNumber: { type: SchemaTypes.String },
+      },
+      status: { type: SchemaTypes.String },
+      updatedAt: { type: SchemaTypes.Date },
+      identificationNumber: { type: SchemaTypes.String },
+      timeInTransit: { type: SchemaTypes.Date },
+    },
   },
   { optimisticConcurrency: true },
 );

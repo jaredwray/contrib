@@ -70,15 +70,17 @@ export const CreateOrUpdateUserAddressMutation = gql`
     $city: String!
     $zipCode: String!
     $street: String!
+    $phoneNumber: String!
   ) {
     createOrUpdateUserAddress(
       auctionId: $auctionId
-      input: { state: $state, city: $city, zipCode: $zipCode, street: $street, name: $name }
+      input: { state: $state, city: $city, zipCode: $zipCode, street: $street, name: $name, phoneNumber: $phoneNumber }
     ) {
       state
       city
       zipCode
       street
+      phoneNumber
     }
   }
 `;

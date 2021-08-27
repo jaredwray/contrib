@@ -43,12 +43,14 @@ cache.writeQuery({
           isSold: false,
           isStopped: false,
           itemPrice: { amount: 10000, currency: 'USD', precision: 2 },
-          parcel: {
-            height: 1,
-            length: 1,
-            units: 'imperial',
-            weight: 1,
-            width: 1,
+          delivery: {
+            parcel: {
+              height: 1,
+              length: 1,
+              units: 'imperial',
+              weight: 1,
+              width: 1,
+            },
           },
           startPrice: { amount: 100, currency: 'USD', precision: 2 },
           status: 'ACTIVE',

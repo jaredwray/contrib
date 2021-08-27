@@ -303,7 +303,7 @@ export default function Privacy() {
             <p>
               Contrib Inc.
               <br />
-              524 9<sup>th</sup> Ave{' '}
+              524 9<sup>th</sup> Ave
             </p>
 
             <p>Kirkland WA 98033</p>

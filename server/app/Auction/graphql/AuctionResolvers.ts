@@ -46,6 +46,10 @@ interface AuctionResolversType {
     >;
     getCustomerInformation: GraphqlResolver<{ phone: string; email: string } | null, { stripeCustomerId: string }>;
     getAuctionMetrics: GraphqlResolver<AuctionMetrics, { auctionId: string }>;
+    calculateShippingCost: GraphqlResolver<
+      { deliveryPrice: Dinero.Dinero; timeInTransit: Dayjs },
+      { auctionId: string; deliveryMethod: string }
+    >;
   };
   Mutation: {
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
@@ -66,6 +70,10 @@ interface AuctionResolversType {
     followAuction: GraphqlResolver<{ user: string; createdAt: Dayjs } | null, { auctionId: string }>;
     unfollowAuction: GraphqlResolver<{ id: string } | null, { auctionId: string }>;
     updateAuctionParcel: GraphqlResolver<AuctionParcel, { auctionId: string; input: AuctionParcel }>;
+    shippingRegistration: GraphqlResolver<
+      { deliveryPrice: Dinero.Dinero; identificationNumber: string },
+      { auctionId: string; deliveryMethod: string; paymentCard: any; timeInTransit: Dayjs }
+    >;
   };
   Subscription: {
     auction: GraphqlSubscription;
@@ -99,6 +107,10 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
     getAuctionMetrics: requireAdmin(
       async (_, { auctionId }, { auction }) => await auction.getAuctionMetrics(auctionId),
+    ),
+    calculateShippingCost: requireAuthenticated(
+      async (_, { auctionId, deliveryMethod }, { auction, currentAccount }) =>
+        await auction.calculateShippingCost(auctionId, deliveryMethod, currentAccount.mongodbId),
     ),
   },
   Mutation: {
@@ -185,6 +197,16 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
     updateAuctionParcel: requireAdmin(
       async (_, { auctionId, input }, { auction }) => await auction.updateAuctionParcel(auctionId, input),
+    ),
+    shippingRegistration: requireAuthenticated(
+      async (_, { auctionId, deliveryMethod, paymentCard, timeInTransit }, { auction, currentAccount }) =>
+        await auction.shippingRegistration(
+          auctionId,
+          deliveryMethod,
+          paymentCard,
+          currentAccount.mongodbId,
+          timeInTransit,
+        ),
     ),
   },
   Subscription: {

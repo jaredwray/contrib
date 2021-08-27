@@ -1,7 +1,7 @@
 export interface Parcel {
-  length: number;
-  width: number;
-  height: number;
-  weight: number;
+  length: string;
+  width: string;
+  height: string;
+  weight: string;
   units: string;
 }

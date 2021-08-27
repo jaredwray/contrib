@@ -74,7 +74,7 @@ export const CharityProfileEditPage: FC = () => {
           <hr className="d-none d-md-block" />
           <FormFields charity={charityProfile} />
           <hr className="d-none d-md-block" />
-          <SubmitButton />
+          <SubmitButton text="Save" />
         </Container>
       </Form>
     </Layout>

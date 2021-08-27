@@ -1,0 +1,286 @@
+import Dinero from 'dinero.js';
+import axios from 'axios';
+import dayjs from 'dayjs';
+
+import { AppConfig } from '../config';
+import { AppLogger } from '../logger';
+import { AppError } from '../errors/AppError';
+
+export class UPSDeliveryService {
+  private readonly http = axios.create();
+
+  constructor() {}
+
+  public static get requestHeader() {
+    return AppConfig.delivery.UPSRequestHeader;
+  }
+
+  public static get ContribDeliveryData() {
+    return AppConfig.delivery.UPSContribDeliveryData;
+  }
+
+  public static get deliveryRateUrl(): string {
+    return AppConfig.delivery.UPSTestEnviroment
+      ? 'https://wwwcie.ups.com/ship/v1/rating/Rate?additionalinfo=timeintransit'
+      : 'https://onlinetools.ups.com/ship/v1/rating/Rate?additionalinfo=timeintransit';
+  }
+
+  public static get shippingUrl(): string {
+    return AppConfig.delivery.UPSTestEnviroment
+      ? 'https://wwwcie.ups.com/ship/v1701/shipments'
+      : 'https://onlinetools.ups.com/ship/v1701/shipments';
+  }
+
+  private static handleErrors(error) {
+    if (error.response) {
+      throw new AppError(`${error.response.headers.errordescription}`);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      AppLogger.error(`The request was made but no response was received, error: ${error.message}`);
+      throw new AppError('Something went wrong. Please try again later');
+    } else {
+      AppLogger.error(`Unhandled error when made reauest, error:${error.message}`);
+      throw new AppError('Something went wrong. Please try again later');
+    }
+  }
+
+  private static deliveryPriceBodyRequest(parcel, address, deliveryMethod) {
+    const { width: ParcelWidth, length: ParcelLength, height: ParcelHeight, weight: ParcelWeight } = parcel;
+
+    const {
+      name: RecipientName,
+      state: RecipientState,
+      city: RecipientCity,
+      zipCode: RecipientZipCode,
+      street: RecipientStreet,
+    } = address;
+
+    const {
+      city: ContribCity,
+      state: ContribState,
+      zipCode: ContribZipCode,
+      address: ContribAddress,
+      shipperNumber: ContribShipperNumber,
+    } = UPSDeliveryService.ContribDeliveryData;
+
+    return {
+      RateRequest: {
+        Request: {
+          SubVersion: '1703',
+        },
+        Shipment: {
+          ShipmentRatingOptions: {
+            UserLevelDiscountIndicator: 'TRUE',
+          },
+          DeliveryTimeInformation: {
+            PackageBillType: '03',
+          },
+          Shipper: {
+            Name: 'Contrib',
+            ShipperNumber: ContribShipperNumber,
+            Address: {
+              AddressLine: ContribAddress,
+              City: ContribCity,
+              StateProvinceCode: ContribState,
+              PostalCode: ContribZipCode,
+              CountryCode: 'US',
+            },
+          },
+          ShipTo: {
+            Name: RecipientName,
+            Address: {
+              AddressLine: RecipientStreet,
+              City: RecipientCity,
+              StateProvinceCode: RecipientState,
+              PostalCode: RecipientZipCode,
+              CountryCode: 'US',
+            },
+          },
+          ShipFrom: {
+            Name: 'Contrib',
+            Address: {
+              AddressLine: ContribAddress,
+              City: ContribCity,
+              StateProvinceCode: ContribState,
+              PostalCode: ContribZipCode,
+              CountryCode: 'US',
+            },
+          },
+          Service: {
+            Code: deliveryMethod,
+          },
+          Package: {
+            PackagingType: {
+              Code: '02',
+              Description: 'Package',
+            },
+            Dimensions: {
+              UnitOfMeasurement: {
+                Code: 'IN',
+              },
+              Length: ParcelLength,
+              Width: ParcelWidth,
+              Height: ParcelHeight,
+            },
+            PackageWeight: {
+              UnitOfMeasurement: {
+                Code: 'LBS',
+              },
+              Weight: ParcelWeight,
+            },
+          },
+        },
+      },
+    };
+  }
+
+  private static shippingBodyRequest(parcel, address, deliveryMethod, paymentCard) {
+    const {
+      type: CardType,
+      number: CardNumber,
+      expirationDate: CardExpirationDate,
+      securityCode: CardSecurityCode,
+    } = paymentCard;
+
+    const { width: ParcelWidth, length: ParcelLength, height: ParcelHeight, weight: ParcelWeight } = parcel;
+
+    const {
+      name: RecipientName,
+      state: RecipientState,
+      city: RecipientCity,
+      zipCode: RecipientZipCode,
+      street: RecipientStreet,
+    } = address;
+
+    const {
+      city: ContribCity,
+      state: ContribState,
+      zipCode: ContribZipCode,
+      address: ContribAddress,
+      shipperNumber: ContribShipperNumber,
+    } = UPSDeliveryService.ContribDeliveryData;
+
+    return {
+      ShipmentRequest: {
+        Shipment: {
+          Shipper: {
+            Name: 'Contrib',
+            ShipperNumber: ContribShipperNumber,
+            Address: {
+              AddressLine: ContribAddress,
+              City: ContribCity,
+              StateProvinceCode: ContribState,
+              PostalCode: ContribZipCode,
+              CountryCode: 'US',
+            },
+          },
+          ShipTo: {
+            Name: RecipientName,
+            Address: {
+              AddressLine: RecipientStreet,
+              City: RecipientCity,
+              StateProvinceCode: RecipientState,
+              PostalCode: RecipientZipCode,
+              CountryCode: 'US',
+            },
+          },
+          ShipFrom: {
+            Name: 'Contrib',
+            Address: {
+              AddressLine: ContribAddress,
+              City: ContribCity,
+              StateProvinceCode: ContribState,
+              PostalCode: ContribZipCode,
+              CountryCode: 'US',
+            },
+          },
+          PaymentInformation: {
+            ShipmentCharge: {
+              Type: '01',
+              BillShipper: {
+                CreditCard: {
+                  Type: CardType,
+                  Number: CardNumber,
+                  ExpirationDate: CardExpirationDate,
+                  SecurityCode: CardSecurityCode,
+                },
+              },
+            },
+          },
+          ItemizedChargesRequestedIndicator: '',
+          Service: {
+            Code: deliveryMethod,
+          },
+          ShipmentRatingOptions: {
+            RateChartIndicator: '0',
+          },
+          Package: {
+            Packaging: {
+              Code: '02',
+            },
+            Dimensions: {
+              UnitOfMeasurement: {
+                Code: 'IN',
+              },
+              Length: ParcelLength,
+              Width: ParcelWidth,
+              Height: ParcelHeight,
+            },
+            PackageWeight: {
+              UnitOfMeasurement: {
+                Code: 'LBS',
+              },
+              Weight: ParcelWeight,
+            },
+          },
+        },
+      },
+    };
+  }
+
+  public async getDeliveryPrice(parcel, address, deliveryMethod) {
+    try {
+      const request = UPSDeliveryService.deliveryPriceBodyRequest(parcel, address, deliveryMethod);
+
+      const responce = await this.http.post(UPSDeliveryService.deliveryRateUrl, request, {
+        headers: UPSDeliveryService.requestHeader,
+      });
+
+      const shipmentRate = responce.data.RateResponse.RatedShipment;
+      const totalCharges = shipmentRate.TotalCharges;
+      const timeInTransit = shipmentRate.TimeInTransit.ServiceSummary.EstimatedArrival.Arrival.Date;
+
+      return {
+        currency: totalCharges.CurrencyCode as Dinero.Currency,
+        amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
+        timeInTransit: dayjs(timeInTransit.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')).add(4, 'days'),
+      };
+    } catch (error) {
+      UPSDeliveryService.handleErrors(error);
+    }
+  }
+
+  public async shippingRegistration(parcel, address, deliveryMethod, paymentCard) {
+    try {
+      const request = UPSDeliveryService.shippingBodyRequest(parcel, address, deliveryMethod, paymentCard);
+
+      const responce = await this.http.post(UPSDeliveryService.shippingUrl, request, {
+        headers: UPSDeliveryService.requestHeader,
+      });
+
+      const shipmentResults = responce.data.ShipmentResponse.ShipmentResults;
+      const totalCharges = shipmentResults.ShipmentCharges.TotalCharges;
+      const identificationNumber = shipmentResults.ShipmentIdentificationNumber;
+
+      return {
+        currency: totalCharges.CurrencyCode as Dinero.Currency,
+        amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
+        identificationNumber,
+      };
+    } catch (error) {
+      UPSDeliveryService.handleErrors(error);
+    }
+  }
+}
