@@ -78,6 +78,9 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     auction.auctionOrganizer.id,
   );
   const isWinner = auction.winner?.mongodbId === account?.mongodbId;
+  const withLinkToDelivery =
+    (isSold || isSettled) && isWinner && (process.env.REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE ?? 'true') === 'true';
+
   let callAfterMs = 60000;
   const secondsLeft = differenceInSeconds(toDate(endDate), new Date());
   if (secondsLeft <= 120) {
@@ -275,7 +278,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         loading={followLoading || unfollowLoading}
         unfollowHandler={handleUnfollowAuction}
       />
-      {(isSold || isSettled) && isWinner && (
+      {withLinkToDelivery && (
         <Link className="d-inline-block mt-5" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
           {isPaid ? 'Delivery status' : 'Pay for delivery'}
         </Link>
