@@ -1,0 +1,78 @@
+@import 'src/variables.scss';
+
+.page {
+  background: no-repeat center url('/assets/images/invitation-bg-lg.webp') $sage-color;
+  background-size: cover;
+  background-blend-mode: multiply;
+  flex-grow: 1;
+
+  @media (max-width: $medium-weight) {
+    background-image: url('/assets/images/invitation-bg-sm.webp');
+  }
+}
+
+.markedText {
+  color: $light-ochre-color;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.select {
+  background-color: $white-color;
+  border-radius: 10px;
+}
+
+.label {
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.actionBtn,
+.actionLink,
+.actionLinkDisabled {
+  height: 50px !important;
+  width: 200px;
+  @media (max-width: $small-weight) {
+    width: 100%;
+  }
+}
+.auctionTitle {
+  color: $light-ochre-color;
+  padding-left: 5px;
+  &:hover {
+    color: $light-ochre-color;
+  }
+}
+.cardInputWrapper {
+  margin: 0 auto;
+
+  @media (max-width: $small-weight) {
+    max-width: 100%;
+  }
+}
+.deliveryInfo {
+  height: 85px;
+}
+.actionLink,
+.actionLinkDisabled {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $light-gray-color;
+  border-radius: 10px;
+  letter-spacing: 0.1em;
+  transition: 150ms ease-in-out;
+  &:hover {
+    background-color: $gray-color;
+    color: $white-color;
+  }
+}
+.actionLinkWrapper {
+  cursor: no-drop;
+}
+.actionLinkDisabled {
+  cursor: no-drop;
+  pointer-events: none;
+}

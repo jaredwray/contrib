@@ -12,9 +12,10 @@ interface Props {
   onChange(value: string): void;
   small?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
-const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, className }) => {
+const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, className, disabled }) => {
   const [selectedOption, setSelectedOption] = useState(selected);
 
   const isArrayOfObjects = options?.length ? typeof options[0] === 'object' : null;
@@ -41,6 +42,7 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
         !selectedOption && 'emptyState',
         className,
       )}
+      disabled={disabled}
       id="dropdown-select"
       size={small ? 'sm' : undefined}
       title={title || placeholder}

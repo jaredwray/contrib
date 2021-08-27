@@ -1,7 +1,7 @@
 export interface AuctionParcel {
-  width: number;
-  length: number;
-  height: number;
-  weight: number;
+  width: string;
+  length: string;
+  height: string;
+  weight: string;
   units: string;
 }

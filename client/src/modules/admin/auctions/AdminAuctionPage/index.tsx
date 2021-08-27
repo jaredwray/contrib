@@ -21,6 +21,7 @@ import { AuctionBid } from 'src/types/Bid';
 
 import Bids from './Bids';
 import ClicksAnalytics from './ClicksAnalytics';
+import Delivery from './Delivery';
 import Details from './Details';
 import { Modal } from './Modal';
 import styles from './styles.module.scss';
@@ -140,6 +141,14 @@ export default function AdminAuctionPage() {
               </>
             </Col>
           </Row>
+          {(auction.isSold || auction.isSettled) && auction.winner && (
+            <Row>
+              <Col>
+                <div className="text-headline">Delivery</div>
+                <Delivery auction={auction} />
+              </Col>
+            </Row>
+          )}
           <Row>
             <Col>
               <div className="text-headline">Bids</div>

@@ -9,33 +9,4 @@
   @media (max-width: $medium-weight) {
     background-image: url('/assets/images/invitation-bg-sm.webp');
   }
-
-  .container {
-    color: $white-color;
-    min-height: calc(100vh - 369px);
-
-    .invitation-page-influencer {
-      word-wrap: break-word;
-    }
-
-    .invitation-page-congratulation-title {
-      margin: auto 0 auto 20px;
-    }
-
-    .invitation-page-separator {
-      width: 102px;
-      height: 12px;
-      background-color: $ochre-color;
-
-      @media (max-width: $medium-weight) {
-        width: 68px;
-        height: 8px;
-      }
-    }
-
-    .invitation-page-right-block {
-      background-color: $barely-gray-color;
-      border-radius: 10px;
-    }
-  }
 }

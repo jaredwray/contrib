@@ -1,0 +1,21 @@
+@import 'src/variables.scss';
+
+.actionLink {
+  color: $ochre-color;
+  letter-spacing: 0.1em;
+  &:hover {
+    color: $white-color;
+  }
+}
+
+.successBlock {
+  width: 400px;
+}
+.copyBtn {
+  color: $sage-color !important;
+  background-color: $ochre-color !important;
+  &:hover {
+    background-color: $dark-ochre-color !important;
+    color: $white-color !important;
+  }
+}

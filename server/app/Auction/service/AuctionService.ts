@@ -7,8 +7,10 @@ import { AuctionMetricModel, IAuctionMetricModel } from '../mongodb/AuctionMetri
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { AuctionAttachmentsService } from './AuctionAttachmentsService';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UPSDeliveryService } from '../../UPSService';
 
 import { AuctionStatus } from '../dto/AuctionStatus';
+import { AuctionDeliveryStatus } from '../dto/AuctionDeliveryStatus';
 import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionParcel } from '../dto/AuctionParcel';
@@ -53,6 +55,7 @@ export class AuctionService {
   private readonly AssetModel = AuctionAssetModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
   private readonly auctionRepository: IAuctionRepository = new AuctionRepository(this.connection);
+  private readonly UPSService = new UPSDeliveryService();
 
   constructor(
     private readonly connection: Connection,
@@ -90,14 +93,15 @@ export class AuctionService {
   public async updateAuctionsParcelAttributes() {
     try {
       const auctions = await this.AuctionModel.find({ parcel: { $exists: false } });
+      const auctionDefaultParcelParameters = JSON.parse(AppConfig.delivery.UPSAuctionDefaultParcelParameters);
       for (const auction of auctions) {
         Object.assign(auction, {
           parcel: {
-            width: AppConfig.delivery.auctionParcel.width,
-            length: AppConfig.delivery.auctionParcel.length,
-            height: AppConfig.delivery.auctionParcel.height,
-            weight: AppConfig.delivery.auctionParcel.weight,
-            units: AppConfig.delivery.auctionParcel.units,
+            width: auctionDefaultParcelParameters.width,
+            length: auctionDefaultParcelParameters.length,
+            height: auctionDefaultParcelParameters.height,
+            weight: auctionDefaultParcelParameters.weight,
+            units: auctionDefaultParcelParameters.units,
           },
         });
 
@@ -124,6 +128,83 @@ export class AuctionService {
     }
   }
 
+  public async calculateShippingCost(
+    auctionId: string,
+    deliveryMethod: string,
+    userId: string,
+  ): Promise<{ deliveryPrice: Dinero.Dinero; timeInTransit: Dayjs }> {
+    const auction = await this.auctionRepository.getAuction(auctionId);
+    if (!auction) {
+      AppLogger.error(`Can not find auction with id #${auctionId} when calculate shipping cost`);
+      throw new AppError('Something went wrong. Please try again later');
+    }
+    if (auction.winner._id.toString() !== userId) {
+      AppLogger.error(`User #${userId} is not a winner for auction #${auctionId} when calculate shipping cost`);
+      throw new AppError('You are not a winner for this auction');
+    }
+    const { parcel, address } = auction.delivery;
+    try {
+      const deliveryPrice = await this.UPSService.getDeliveryPrice(parcel, address, deliveryMethod);
+      const { amount, currency, timeInTransit } = deliveryPrice;
+
+      return {
+        deliveryPrice: Dinero({
+          amount,
+          currency,
+        }),
+        timeInTransit,
+      };
+    } catch (error) {
+      AppLogger.error(
+        `Something went wrong when calculated shipping cost for auction #${auctionId}, ${error.message} `,
+      );
+      throw new AppError(error.message);
+    }
+  }
+
+  public async shippingRegistration(
+    auctionId: string,
+    deliveryMethod: string,
+    paymentCard: any,
+    userId: string,
+    timeInTransit: Dayjs,
+  ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string }> {
+    const auction = await this.auctionRepository.getAuction(auctionId);
+    if (!auction) {
+      AppLogger.error(`Can not find auction with id #${auctionId} when register shipping`);
+      throw new AppError('Something went wrong. Please try again later');
+    }
+    if (auction.winner._id.toString() !== userId) {
+      AppLogger.error(`User #${userId} is not a winner for auction #${auctionId} when register shipping`);
+      throw new AppError('You are not a winner for this auction');
+    }
+    const { parcel, address } = auction.delivery;
+    try {
+      const deliveryPrice = await this.UPSService.shippingRegistration(parcel, address, deliveryMethod, paymentCard);
+      const { amount, currency, identificationNumber } = deliveryPrice;
+
+      Object.assign(auction.delivery, {
+        status: AuctionDeliveryStatus.PAID,
+        updatedAt: dayjs().second(0),
+        timeInTransit,
+        identificationNumber,
+      });
+
+      await auction.save();
+
+      return {
+        deliveryPrice: Dinero({
+          amount,
+          currency,
+        }),
+        identificationNumber,
+      };
+    } catch (error) {
+      AppLogger.error(`Something went wrong when register shipping auction #${auctionId}, ${error.message} `);
+      throw new AppError(error.message);
+    }
+  }
+
   public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs }> | null {
     return await this.auctionRepository.followAuction(auctionId, accountId);
   }
@@ -140,7 +221,7 @@ export class AuctionService {
     try {
       const { width, length, height, weight, units } = input;
 
-      Object.assign(auction, {
+      Object.assign(auction.delivery, {
         parcel: { width, length, height, weight, units },
       });
 
@@ -160,7 +241,6 @@ export class AuctionService {
     if (metrics) {
       const { clicks, countries, referrers } = metrics;
       const clicksByDay = makeClicksByDay(clicks);
-
       return {
         clicks: fullBitlyClicks(clicks, auction.startsAt, 'hour'),
         clicksByDay: fullBitlyClicks(clicksByDay, auction.startsAt, 'day'),
@@ -777,10 +857,15 @@ export class AuctionService {
     try {
       await lastAuctionBid.populate({ path: 'user', model: this.UserAccountModel }).execPopulate();
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
-      await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, MessageTemplate.AUCTION_WON_MESSAGE, {
-        auctionTitle: auction.title,
-        auctionLink: auction.link,
-      });
+
+      const messageData = this.getMessageTemplateAndVariables(
+        AppConfig.delivery.UPSSMSWithDeliveryLink,
+        auction,
+        'won',
+      );
+      const { messageTemplate, messageVariables } = messageData;
+
+      await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, messageTemplate, messageVariables);
 
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
@@ -953,13 +1038,14 @@ export class AuctionService {
 
       await this.bidService.createBid(bidInput);
     } catch (error) {
-      AppLogger.info(`Unable to charge auction #${auction.id}: ${error.message}`);
+      AppLogger.error(`Unable to charge auction #${auction.id}: ${error.message}`);
       throw new AppError('Unable to charge');
     }
 
     AppLogger.info(`Auction with id ${auction.id} has been sold`);
 
     auction.winner = user.mongodbId;
+    auction.delivery.updatedAt = dayjs().second(0);
     auction.status = AuctionStatus.SOLD;
     auction.currentPrice = auction.itemPrice;
     auction.stoppedAt = dayjs().second(0);
@@ -967,7 +1053,20 @@ export class AuctionService {
     try {
       await auction.save();
     } catch (error) {
-      throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
+      throw new AppError('Something went wrong. Please, try again later', ErrorCode.BAD_REQUEST);
+    }
+    try {
+      const messageData = this.getMessageTemplateAndVariables(
+        AppConfig.delivery.UPSSMSWithDeliveryLink,
+        auction,
+        'BOUGHT',
+      );
+      const { messageTemplate, messageVariables } = messageData;
+
+      await this.sendAuctionNotification(user.phoneNumber, messageTemplate, messageVariables);
+    } catch (error) {
+      AppLogger.error(`Something went wrong when send bought notification for auction #${id}, error: ${error.message}`);
+      throw new AppError('Something went wrong. Please, try again later', ErrorCode.BAD_REQUEST);
     }
     return this.makeAuction(auction);
   }
@@ -1065,6 +1164,35 @@ export class AuctionService {
     }
   }
 
+  public getMessageTemplateAndVariables(enviroment, auction, type) {
+    const messageVariables: { auctionTitle: string; auctionLink: string; auctionDeliveryLink?: string } = {
+      auctionTitle: auction.title,
+      auctionLink: auction.link,
+    };
+
+    if (enviroment) {
+      messageVariables.auctionDeliveryLink = `${
+        process.env.APP_URL
+      }auctions/${auction._id.toString()}/delivery/address`;
+    }
+
+    return {
+      messageVariables,
+      messageTemplate: enviroment
+        ? MessageTemplate[`AUCTION_${type}_MESSAGE_WITH_DELIVERY_LINK`]
+        : MessageTemplate[`AUCTION_${type}_MESSAGE`],
+    };
+  }
+
+  public makeAuctionWinner(winner) {
+    const { _id, address, phoneNumber } = winner;
+    return {
+      mongodbId: _id.toString(),
+      address,
+      phoneNumber,
+    };
+  }
+
   public makeAuction(model: IAuctionModel): Auction | null {
     const {
       _id,
@@ -1098,7 +1226,6 @@ export class AuctionService {
 
     return {
       id: _id.toString(),
-      winner: winner?.toString(),
       attachments: this.makeAssets(assets),
       endDate: endsAt,
       startDate: startsAt,
@@ -1130,6 +1257,7 @@ export class AuctionService {
           createdAt: follower.createdAt,
         };
       }),
+      winner: winner ? this.makeAuctionWinner(winner) : null,
       link,
       status,
       isActive: status === AuctionStatus.ACTIVE,

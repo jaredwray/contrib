@@ -1,5 +1,5 @@
 import { ParcelProps } from '../ParcelProps';
-import { Auction, AuctionStatus } from 'src/types/Auction';
+import { Auction, AuctionStatus, AuctionDeliveryStatus } from 'src/types/Auction';
 
 describe('ParcelProps function test', () => {
   const auction: Auction = {
@@ -40,6 +40,11 @@ describe('ParcelProps function test', () => {
       favoriteCharities: [],
       assistants: [],
     },
+    delivery: {
+      parcel: { height: '1', length: '1', units: 'imperial', weight: '1', width: '1' },
+      status: AuctionDeliveryStatus.WAITING_FOR_THE_WINNER,
+      updatedAt: 'testDate',
+    },
     fairMarketValue: { amount: 1100, currency: 'USD', precision: 2 },
     timeZone: 'test',
     isActive: false,
@@ -50,20 +55,17 @@ describe('ParcelProps function test', () => {
     isSold: false,
     isStopped: false,
   };
-  const auctionWithImperialUnits = {
-    ...auction,
-    parcel: { height: 1, length: 1, units: 'imperial', weight: 1, width: 1 },
-  };
+
   const auctionWithMetricUnits = {
     ...auction,
-    parcel: { height: 1, length: 1, units: 'metric system', weight: 1, width: 1 },
+    delivery: {
+      ...auction.delivery,
+      parcel: { height: '1', length: '1', units: 'metric system', weight: '1', width: '1' },
+    },
   };
 
-  it('it should return ""', () => {
-    expect(ParcelProps(auction)).toBe('');
-  });
   it('it should return "1x1x1 (in), 1 (lb)"', () => {
-    expect(ParcelProps(auctionWithImperialUnits)).toBe('1x1x1 (in), 1 (lb)');
+    expect(ParcelProps(auction)).toBe('1x1x1 (in), 1 (lb)');
   });
   it('it should return "1x1x1 (cm), 1 (kg)"', () => {
     expect(ParcelProps(auctionWithMetricUnits)).toBe('1x1x1 (cm), 1 (kg)');

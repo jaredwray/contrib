@@ -3,11 +3,11 @@ import React, { useCallback, useEffect } from 'react';
 
 import { useQuery } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetInvitation } from 'src/apollo/queries/getInvitation';
-import Layout from 'src/components/Layout';
+import { UserDialogLayout } from 'src/components/UserDialogLayout';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 
@@ -43,40 +43,22 @@ export default function InvitationPage() {
   if (!invitation) {
     return null;
   }
-
+  const textBlock = (
+    <div className="text-headline pt-4" data-test-id="invitation-page-welcome-message">
+      {invitation.welcomeMessage}
+    </div>
+  );
   setPageTitle('Invitation page');
 
   return (
-    <Layout>
-      <div className="w-100 invitation-page">
-        <Container className="d-md-table">
-          <Container className="h-100 d-md-table-cell align-middle">
-            <Row className="pt-lg-3 pt-5 align-items-center">
-              <Col lg="6">
-                <div className="text-super pt-4">Hello,</div>
-                <div className="text-super pb-lg-5 pb-3 invitation-page-influencer">{invitation.firstName}</div>
-                <div className="invitation-page-separator" />
-                <div className="text-headline pt-4" data-test-id="invitation-page-welcome-message">
-                  {invitation.welcomeMessage}
-                </div>
-              </Col>
-              <Col className="pt-5 pt-lg-0 pb-4 pb-lg-0" lg="6">
-                <div className="invitation-page-right-block p-4 p-md-5">
-                  <div className="d-table w-100">
-                    <Button
-                      className="btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
-                      variant="ochre"
-                      onClick={handleSignUp}
-                    >
-                      {invitation.accepted ? 'Log in' : 'Sign Up'}
-                    </Button>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </Container>
-      </div>
-    </Layout>
+    <UserDialogLayout subtitle={invitation.firstName} textBlock={textBlock} title="Hello,">
+      <Button
+        className="btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
+        variant="ochre"
+        onClick={handleSignUp}
+      >
+        {invitation.accepted ? 'Log in' : 'Sign Up'}
+      </Button>
+    </UserDialogLayout>
   );
 }

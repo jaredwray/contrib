@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { forwardRef, BaseSyntheticEvent, KeyboardEventHandler } from 'react';
 
 import { Form as BsForm } from 'react-bootstrap';
 
@@ -19,39 +19,55 @@ interface Props {
   textarea?: boolean;
   externalText?: string;
   type?: string;
+  maxLength?: number;
+  onKeyPress?: KeyboardEventHandler<HTMLInputElement>;
+  onInput?: (event: BaseSyntheticEvent) => void;
+  ref?: HTMLInputElement | null;
 }
 
-const InputField: FC<Props> = ({
-  name,
-  title,
-  placeholder,
-  required,
-  disabled,
-  className,
-  wrapperClassName,
-  textarea,
-  constraints: inputConstraints,
-  externalText,
-  type,
-}) => {
-  const constraints = useFieldConstraints(inputConstraints, required);
-  const { hasError, errorMessage, ...inputProps } = useField(name, { constraints, disabled });
+const InputField = forwardRef<HTMLInputElement | null, Props>(
+  (
+    {
+      name,
+      title,
+      placeholder,
+      required,
+      disabled,
+      className,
+      wrapperClassName,
+      textarea,
+      constraints: inputConstraints,
+      externalText,
+      type,
+      maxLength,
+      onKeyPress,
+      onInput,
+    },
+    ref,
+  ) => {
+    const constraints = useFieldConstraints(inputConstraints, required);
+    const { hasError, errorMessage, ...inputProps } = useField(name, { constraints, disabled });
 
-  return (
-    <Group className={wrapperClassName}>
-      {title && <Label className="d-block">{title}</Label>}
-      <Control
-        {...inputProps}
-        as={textarea ? 'textarea' : 'input'}
-        className={className}
-        isInvalid={hasError}
-        placeholder={placeholder}
-        type={type}
-      />
-      <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
-      {externalText && <p className="text--body mt-2">{externalText}</p>}
-    </Group>
-  );
-};
+    return (
+      <Group className={wrapperClassName}>
+        {title && <Label className="d-block">{title}</Label>}
+        <Control
+          {...inputProps}
+          ref={ref}
+          as={textarea ? 'textarea' : 'input'}
+          className={className}
+          isInvalid={hasError}
+          maxLength={maxLength}
+          placeholder={placeholder}
+          type={type}
+          onInput={onInput ? (e: BaseSyntheticEvent) => onInput(e) : () => {}}
+          onKeyPress={onKeyPress}
+        />
+        <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
+        {externalText && <p className="text--body mt-2">{externalText}</p>}
+      </Group>
+    );
+  },
+);
 
 export default InputField;

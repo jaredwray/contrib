@@ -27,7 +27,7 @@ const CardInfo: FC<Props> = ({ expired, isSubmitting, paymentInfo, onNewCardAdd 
     <div className={clsx(styles.cardInfo, expired && styles.expired, 'flex-wrap')}>
       <div className="flex-column text-center">
         {paymentInfo.cardBrand} **** **** **** {paymentInfo.cardNumberLast4}, {paymentInfo.cardExpirationMonth}/
-        {`${paymentInfo.cardExpirationYear}`.slice(-2)}{' '}
+        {`${paymentInfo.cardExpirationYear}`.slice(-2)}
         {expired && <span className="text-all-cups font-weight-bold">expired</span>}
       </div>
 

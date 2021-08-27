@@ -10,14 +10,16 @@ interface Props {
   small?: boolean;
   selected?: any;
   className?: string;
+  isDisabled?: boolean;
 }
 
-const SelectField: FC<Props> = ({ name, options, placeholder, small, selected, className }) => {
-  const { hasError, errorMessage, value, ...inputProps } = useField(name, {});
+const SelectField: FC<Props> = ({ name, options, placeholder, small, selected, className, isDisabled }) => {
+  const { hasError, errorMessage, value, disabled, ...inputProps } = useField(name, {});
 
   return (
     <Select
       className={className}
+      disabled={isDisabled}
       options={options}
       selected={selected}
       small={small}

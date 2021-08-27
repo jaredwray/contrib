@@ -11,6 +11,11 @@ export const AuctionSchema = gql`
     STOPPED
   }
 
+  enum AuctionDeliveryStatus {
+    ADDRESS_PROVIDED
+    PAID
+  }
+
   enum AuctionOrderBy {
     CREATED_AT_DESC
     TIME_ASC
@@ -32,6 +37,15 @@ export const AuctionSchema = gql`
 
   type TotalRaisedAmount {
     totalRaisedAmount: Money!
+  }
+
+  type AuctionDelivery {
+    parcel: Parcel
+    address: Address
+    status: AuctionDeliveryStatus
+    updatedAt: DateTime
+    timeInTransit: DateTime
+    identificationNumber: String
   }
 
   type Auction {
@@ -59,8 +73,8 @@ export const AuctionSchema = gql`
     fairMarketValue: Money
     timeZone: String
     followers: [Follow]
-    parcel: Parcel
-    winner: String
+    delivery: AuctionDelivery
+    winner: Winner
     isActive: Boolean!
     isDraft: Boolean!
     isPending: Boolean!
@@ -83,12 +97,28 @@ export const AuctionSchema = gql`
     startPrice: Money!
     fairMarketValue: Money
     auctionOrganizer: AuctionAdminOrganizer
-    parcel: Parcel
-    winner: String
+    delivery: AuctionDelivery
+    winner: Winner
     isFailed: Boolean!
     isSold: Boolean!
     isActive: Boolean!
     link: String!
+  }
+
+  type Winner {
+    mongodbId: String
+    address: Address
+    phoneNumber: String
+  }
+
+  type Address {
+    name: String
+    state: String
+    city: String
+    zipCode: String
+    country: String
+    street: String
+    phoneNumber: String
   }
 
   type Metrics {
@@ -149,6 +179,23 @@ export const AuctionSchema = gql`
     units: String!
   }
 
+  type DeliveryRate {
+    deliveryPrice: Money
+    timeInTransit: DateTime
+  }
+
+  type ShippingRegistration {
+    deliveryPrice: Money
+    identificationNumber: String
+  }
+
+  input PaymentCard {
+    type: String
+    number: String
+    expirationDate: String
+    securityCode: String
+  }
+
   input AuctionSearchFilters {
     sports: [String]
     minPrice: Int
@@ -197,10 +244,10 @@ export const AuctionSchema = gql`
   }
 
   input ParcelInput {
-    width: Int!
-    length: Int!
-    height: Int!
-    weight: Int!
+    width: String!
+    length: String!
+    height: String!
+    weight: String!
     units: String!
   }
 
@@ -219,6 +266,7 @@ export const AuctionSchema = gql`
     getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
     getCustomerInformation(stripeCustomerId: String!): CustomerInformation
     getAuctionMetrics(auctionId: String!): Metrics!
+    calculateShippingCost(auctionId: String!, deliveryMethod: String!): DeliveryRate
   }
 
   extend type Mutation {
@@ -237,6 +285,12 @@ export const AuctionSchema = gql`
     followAuction(auctionId: String!): Follow
     unfollowAuction(auctionId: String!): ResponceId
     updateAuctionParcel(auctionId: String!, input: ParcelInput!): Parcel!
+    shippingRegistration(
+      auctionId: String!
+      deliveryMethod: String!
+      paymentCard: PaymentCard
+      timeInTransit: DateTime
+    ): ShippingRegistration
   }
 
   extend type Subscription {

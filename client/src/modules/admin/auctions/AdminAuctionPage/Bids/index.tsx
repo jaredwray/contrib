@@ -18,7 +18,7 @@ interface Props {
 
 export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone, showProcessBtn }) => {
   if (bids.length === 0) {
-    return <>no bids for this auction</>;
+    return <div className="pb-3">no bids for this auction</div>;
   }
 
   return (
@@ -33,7 +33,7 @@ export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone, sh
           {showProcessBtn && <th></th>}
         </tr>
       </thead>
-      <tbody className="font-weight-normal">
+      <tbody className="font-weight-normal pt-3">
         {bids.map((bid, i) => (
           <tr key={i}>
             <td className="align-middle">{bid.bid && `$${bid.bid?.amount / 100}`}</td>

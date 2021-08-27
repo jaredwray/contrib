@@ -88,7 +88,7 @@ export const InfluencerProfileEditPage: FC = () => {
           <hr className="d-none d-md-block" />
           <CharitiesFormFields />
 
-          <SubmitButton />
+          <SubmitButton text="Save" />
         </Container>
       </Form>
     </Layout>

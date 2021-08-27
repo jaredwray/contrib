@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { UserAccount } from '../dto/UserAccount';
 import { UserAccountAddress } from '../dto/UserAccountAddress';
 import { UserAccountForBid } from '../dto/UserAccountForBid';
+import { AuctionDeliveryStatus } from '../../Auction/dto/AuctionDeliveryStatus';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
 import { IInvitation, InvitationModel } from '../../Invitation/mongodb/InvitationModel';
 import { ICharityModel, CharityModel } from '../../Charity/mongodb/CharityModel';
@@ -17,6 +18,7 @@ import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
 import { Auth0Service } from '../../../authz';
+import { UPSDeliveryService } from '../../UPSService';
 
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
@@ -28,6 +30,7 @@ export class UserAccountService {
   private readonly CharityModel: Model<ICharityModel> = CharityModel(this.connection);
   private readonly InfluencerModel: Model<IInfluencer> = InfluencerModel(this.connection);
   private readonly InvitationModel: Model<IInvitation> = InvitationModel(this.connection);
+  private readonly UPSService = new UPSDeliveryService();
 
   constructor(
     private readonly connection: Connection,
@@ -42,7 +45,6 @@ export class UserAccountService {
     input: UserAccountAddress,
   ): Promise<UserAccountAddress> {
     const auction = await this.AuctionModel.findById(auctionId);
-
     if (!auction) {
       AppLogger.error(`Can not find auction #${auctionId}`);
       throw new AppError('Something went wrong. Please, try again later');
@@ -59,15 +61,27 @@ export class UserAccountService {
       throw new AppError('Something went wrong. Please, try again later');
     }
     try {
+      await this.UPSService.getDeliveryPrice(auction.delivery.parcel, input, '03');
+      // await this.UPSService.validateAddress(input);
+
+      Object.assign(auction.delivery, {
+        address: { ...input },
+        status: AuctionDeliveryStatus.ADDRESS_PROVIDED,
+        updatedAt: dayjs().second(0),
+      });
       Object.assign(user, {
         address: { ...input },
       });
 
+      await auction.save();
       await user.save();
       return input;
     } catch (error) {
-      AppLogger.error(`Can not create or update user address for user #${userId}`);
-      throw new AppError('Something went wrong. Please, try again later');
+      AppLogger.error(`Can not create or update user address for user #${userId}. Error:${error.message}`);
+      if (error.message.startsWith('The postal code')) {
+        throw new AppError(error.message);
+      }
+      throw new AppError('Something went wrong. Please, check the entered data');
     }
   }
 

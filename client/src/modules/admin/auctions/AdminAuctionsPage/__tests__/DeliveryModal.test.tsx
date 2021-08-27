@@ -37,6 +37,15 @@ describe('Should render correctly "Modal"', () => {
       status: 'ACTIVE',
       timeZone: 'PDT',
       title: 'test',
+      delivery: {
+        parcel: {
+          height: '1',
+          length: '1',
+          units: 'imperial',
+          weight: '1',
+          width: '1',
+        },
+      },
     },
     mutation: UpdateAuctionParcelMutation,
   };
@@ -46,17 +55,17 @@ describe('Should render correctly "Modal"', () => {
     {
       request: {
         query: UpdateAuctionParcelMutation,
-        variables: { auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1, units: 'imperial' },
+        variables: { auctionId: 'testId', width: '1', height: '1', length: '1', weight: '1', units: 'imperial' },
       },
       newData: () => {
         mockFn();
         return {
           data: {
             updateAuctionParcel: {
-              width: 1,
-              height: 1,
-              length: 1,
-              weight: 1,
+              width: '1',
+              height: '1',
+              length: '1',
+              weight: '1',
               units: 'imperial',
             },
           },

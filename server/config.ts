@@ -88,12 +88,10 @@ export const AppConfig = {
     version: '1.0',
   },
   delivery: {
-    auctionParcel: {
-      width: 1,
-      length: 1,
-      height: 1,
-      weight: 1,
-      units: 'imperial',
-    },
+    UPSContribDeliveryData: JSON.parse(requireEnvVar('UPS_DELIVERY_CONTRIB_DATA')),
+    UPSRequestHeader: JSON.parse(requireEnvVar('UPS_DELIVERY_REQUEST_HEADER')),
+    UPSAuctionDefaultParcelParameters: requireEnvVar('UPS_AUCTION_DEFAULT_PARCEL_PARAMETERS'),
+    UPSTestEnviroment: process.env['UPS_TEST_ENVIROMENT'] ?? true,
+    UPSSMSWithDeliveryLink: process.env['UPS_SMS_WITH_DELIVERY_LINK'] ?? false,
   },
 };
