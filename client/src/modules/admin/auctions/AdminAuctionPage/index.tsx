@@ -141,14 +141,12 @@ export default function AdminAuctionPage() {
               </>
             </Col>
           </Row>
-          {(auction.isSold || auction.isSettled) && auction.winner && (
-            <Row>
-              <Col>
-                <div className="text-headline">Delivery</div>
-                <Delivery auction={auction} />
-              </Col>
-            </Row>
-          )}
+          <Row>
+            <Col>
+              <div className="text-headline">Delivery</div>
+              <Delivery auction={auction} />
+            </Col>
+          </Row>
           <Row>
             <Col>
               <div className="text-headline">Bids</div>

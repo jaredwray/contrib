@@ -61,6 +61,7 @@ export default function DeliveryStatusPage() {
   const successBlock = (
     <DeliveryTextBlock
       arrivalDate={auction.delivery.timeInTransit}
+      auctionTitle={auction.title}
       city={city}
       incomingState={incomingState}
       isStatusPage={true}

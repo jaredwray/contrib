@@ -20,7 +20,7 @@ import ClickableTr from 'src/components/ClickableTr';
 import { PER_PAGE } from 'src/components/Pagination';
 import { ParcelProps } from 'src/helpers/ParcelProps';
 import { setPageTitle } from 'src/helpers/setPageTitle';
-import { Auction } from 'src/types/Auction';
+import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { DeleteAuctionButton } from './DeleteAuctionButton';
 import { DeliveryButton } from './DeliveryButton';
@@ -128,12 +128,14 @@ export default function AdminAuctionsPage() {
                       mutation={auction.isStopped ? ActivateAuctionMutation : StopAuctionMutation}
                     />
                   )}
-                  <DeliveryButton
-                    auction={auction}
-                    className={clsx(styles.actionBtn, 'dropdown-item text--body')}
-                    getAuctionsList={getAuctionsList}
-                    mutation={UpdateAuctionParcelMutation}
-                  />
+                  {auction.delivery.status !== AuctionDeliveryStatus.PAID && (
+                    <DeliveryButton
+                      auction={auction}
+                      className={clsx(styles.actionBtn, 'dropdown-item text--body')}
+                      getAuctionsList={getAuctionsList}
+                      mutation={UpdateAuctionParcelMutation}
+                    />
+                  )}
                 </ActionsDropdown>
               </td>
             </ClickableTr>
