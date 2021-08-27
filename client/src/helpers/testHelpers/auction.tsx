@@ -143,7 +143,7 @@ export const auctionForAdminPage = {
   title: '1',
   delivery: {
     identificationNumber: null,
-    status: 'WAITING_WINNER_PAYMENTS',
+    status: 'PAID',
     timeInTransit: null,
     updatedAt: '2021-08-24T18:12:00.639Z',
     address: {

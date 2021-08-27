@@ -12,12 +12,6 @@ interface Props {
 }
 
 export const Delivery: FC<Props> = ({ auction }) => {
-  if (!auction.delivery) {
-    return <>no delivery for this auction</>;
-  }
-  if (!auction.winner) {
-    return <>no winner for this auction</>;
-  }
   let deliveryAddress;
   if (auction.delivery.status) {
     const { name, state, city, street, zipCode } = auction.delivery.address!;
@@ -42,12 +36,13 @@ export const Delivery: FC<Props> = ({ auction }) => {
               <th>City</th>
               <th>Street</th>
               <th>Postal Code</th>
-              <th>Status</th>
             </>
           )}
+          <th>Status</th>
           <th>Parcel properties</th>
           {auction.delivery.identificationNumber && <th>Identification Number</th>}
           {auction.delivery.timeInTransit && <th>Estimated arrival date</th>}
+          {auction.delivery.updatedAt && <th>Updated at</th>}
         </tr>
       </thead>
       <tbody className="font-weight-normal">
@@ -60,8 +55,10 @@ export const Delivery: FC<Props> = ({ auction }) => {
               <td className="align-middle">{deliveryAddress?.street}</td>
               <td className="align-middle">{deliveryAddress?.zipCode}</td>
               <td className="align-middle">{auction.delivery.status}</td>
+              <td className="align-middle">{auction.delivery.updatedAt}</td>
             </>
           )}
+          <td className="align-middle">{auction.delivery.status || 'WAITING_WINNER'}</td>
           <td className="align-middle">{ParcelProps(auction)}</td>
           {auction.delivery.identificationNumber && (
             <td className="align-middle">{auction.delivery.identificationNumber}</td>

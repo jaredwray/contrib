@@ -65,7 +65,7 @@ export default function DeliveryAddressPage() {
           zipCode,
           phoneNumber:
             phoneInputValue ||
-            auctionData?.auction?.delivery?.address.phoneNumber.substring(1) ||
+            auctionData?.auction?.delivery?.address.phoneNumber ||
             auctionData?.auction?.winner?.phoneNumber.substring(1),
         },
       })

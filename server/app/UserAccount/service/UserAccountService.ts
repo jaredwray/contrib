@@ -54,6 +54,7 @@ export class UserAccountService {
       AppLogger.error(`Current user #${userId} is not a winner for auction #${auctionId}`);
       throw new AppError('Something went wrong. Please, try again later');
     }
+    
     const user = await this.AccountModel.findById(userId);
 
     if (!user) {
@@ -62,7 +63,6 @@ export class UserAccountService {
     }
     try {
       await this.UPSService.getDeliveryPrice(auction.delivery.parcel, input, '03');
-      // await this.UPSService.validateAddress(input);
 
       Object.assign(auction.delivery, {
         address: { ...input },

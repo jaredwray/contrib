@@ -18,6 +18,7 @@ interface Props {
   subtitle?: string;
   phoneNumber?: string;
   isStatusPage?: boolean;
+  auctionTitle?: string;
 }
 
 export const DeliveryTextBlock: FC<Props> = ({
@@ -32,6 +33,7 @@ export const DeliveryTextBlock: FC<Props> = ({
   subtitle,
   phoneNumber,
   isStatusPage,
+  auctionTitle,
   children,
 }) => {
   return (
@@ -43,10 +45,15 @@ export const DeliveryTextBlock: FC<Props> = ({
       ) : (
         <div className="text-subhead pt-3">
           {isStatusPage && (
-            <div className="text-center pt-1 pb-3">
-              Your parcel will be delivered by
-              <span className={styles.markedText}>{format(new Date(arrivalDate!), 'MM/dd/yyyy')}</span> to:
-            </div>
+            <>
+              <div className="text-center pt-1 pb-3">
+                <span className={styles.markedText}>{auctionTitle}</span>
+              </div>
+              <div className="text-center pt-1 pb-3">
+                Your parcel will be delivered by
+                <span className={styles.markedText}>{format(new Date(arrivalDate!), 'MM/dd/yyyy')}</span> to:
+              </div>
+            </>
           )}
           {subtitle && <p>{subtitle}</p>}
           <div>
