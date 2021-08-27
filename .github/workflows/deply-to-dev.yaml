@@ -76,6 +76,7 @@ jobs:
           REACT_APP_MAX_SIZE_VIDEO_GB: "1"
           REACT_APP_GOOGLE_ANALYTICS_APP_ID: "G-0VZJ4JNXP0"
           REACT_APP_SMARTLOOK_ID: ${{ secrets.DEV_REACT_APP_SMARTLOOK_ID }}
+          REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE: ${{ secrets.DEV_REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE }}
           REACT_APP_FIREBASE_CONFIG: '{"apiKey": "AIzaSyDuWYFWUjVxQAVNIM6EAoW4obbszC2Wdxc", "authDomain": "contrib-dev.firebaseapp.com", "projectId": "contrib-dev", "storageBucket": "content-dev.contrib.org", "messagingSenderId": "980164260648", "appId": "1:980164260648:web:fc5ec0ef1587944422561d"}'
 
       # Test Client
