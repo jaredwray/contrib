@@ -141,24 +141,26 @@ export default function AdminAuctionPage() {
               </>
             </Col>
           </Row>
-          <Row>
+          <Row className="pt-3">
             <Col>
               <div className="text-headline">Delivery</div>
-              <Delivery auction={auction} />
+              <Delivery auction={auction} timeZone={timeZone} />
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <div className="text-headline">Bids</div>
-              <Bids
-                bids={bids}
-                loading={customerLoading}
-                showProcessBtn={auction.isFailed}
-                timeZone={timeZone}
-                onBidClickHandler={onBidClickHandler}
-              />
-            </Col>
-          </Row>
+          {hasBids && (
+            <Row className="pt-3">
+              <Col>
+                <div className="text-headline">Bids</div>
+                <Bids
+                  bids={bids}
+                  loading={customerLoading}
+                  showProcessBtn={auction.isFailed}
+                  timeZone={timeZone}
+                  onBidClickHandler={onBidClickHandler}
+                />
+              </Col>
+            </Row>
+          )}
         </Container>
       </section>
       <Modal
