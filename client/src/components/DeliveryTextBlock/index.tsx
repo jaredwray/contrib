@@ -47,11 +47,11 @@ export const DeliveryTextBlock: FC<Props> = ({
           {isStatusPage && (
             <>
               <div className="text-center pt-1 pb-3">
-                <span className={styles.markedText}>{auctionTitle}</span>
+                of<span className={styles.markedText}>{auctionTitle}</span>auction
               </div>
               <div className="text-center pt-1 pb-3">
-                Your parcel will be delivered by
-                <span className={styles.markedText}>{format(new Date(arrivalDate!), 'MM/dd/yyyy')}</span> to:
+                Estimated delivery time is
+                <span className={styles.markedText}>{format(new Date(arrivalDate!), 'MM/dd/yyyy')}</span>
               </div>
             </>
           )}

@@ -863,7 +863,7 @@ export class AuctionService {
       const messageData = this.getMessageTemplateAndVariables(
         AppConfig.delivery.UPSSMSWithDeliveryLink,
         auction,
-        'won',
+        'WON',
       );
       const { messageTemplate, messageVariables } = messageData;
 
