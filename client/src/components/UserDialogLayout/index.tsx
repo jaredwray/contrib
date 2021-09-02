@@ -29,20 +29,20 @@ export const UserDialogLayout: FC<Props> = ({ title, subtitle, textBlock, succes
                       <div className="text-super pb-lg-5 pb-3 invitation-page-influencer">{subtitle}</div>
                     </>
                   ) : (
-                    <div className={clsx(styles.title, 'text-super-headline pb-2 pt-mb-0 pt-4')}>{title}</div>
+                    <div className={clsx(styles.title, 'text-super-headline pb-2 pt-0 pt-sm-4')}>{title}</div>
                   )}
                   <div className={styles.separator} />
                   {textBlock}
                 </Col>
                 <Col className="pt-4 pt-lg-0 pb-4 pb-lg-0" lg="6">
-                  <div className={clsx(styles.rightBlock, 'p-4 p-md-4')}>
+                  <div className={clsx(styles.rightBlock, 'p-2 p-sm-4')}>
                     <div className="w-100">{children}</div>
                   </div>
                 </Col>
               </>
             ) : (
               <Col className="d-flex justify-content-center">
-                <div className={clsx(styles.successBlock, 'text-subhead pt-4 text-justify')}>
+                <div className={clsx(styles.successBlock, 'text-subhead pt-sm-4 pt-0 text-justify')}>
                   <div className="text-super-headline text-center pb-3">{title}</div>
                   {successBlock}
                 </div>

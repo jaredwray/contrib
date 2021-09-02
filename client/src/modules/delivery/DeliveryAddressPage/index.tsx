@@ -17,8 +17,8 @@ import { UserDialogLayout } from 'src/components/UserDialogLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
-import { ModalRow } from 'src/modules/auctions/delivery/DeliveryAddressPage/ModalRow';
-import { USAStates } from 'src/modules/auctions/delivery/DeliveryAddressPage/USAStates';
+import { ModalRow } from 'src/modules/delivery/DeliveryAddressPage/ModalRow';
+import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
 import { AuctionDeliveryStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
@@ -191,7 +191,9 @@ export default function DeliveryAddressPage() {
           onChange={handleChange}
         />
 
-        <SubmitButton className="w-100"> {updating ? <Spinner animation="border" size="sm" /> : 'Submit'}</SubmitButton>
+        <SubmitButton className="w-100 pt-sm-3 pt-2">
+          {updating ? <Spinner animation="border" size="sm" /> : 'Submit'}
+        </SubmitButton>
       </Form>
     </UserDialogLayout>
   );

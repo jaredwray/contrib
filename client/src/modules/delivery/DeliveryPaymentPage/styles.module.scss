@@ -76,3 +76,8 @@
   cursor: no-drop;
   pointer-events: none;
 }
+.submitBtn {
+  @media (max-width: $small-weight) {
+    width: 100% !important;
+  }
+}

@@ -13,7 +13,7 @@ import DialogActions from 'src/components/Dialog/DialogActions';
 import DialogContent from 'src/components/Dialog/DialogContent';
 import Form from 'src/components/Form/Form';
 import { useShowNotification } from 'src/helpers/useShowNotification';
-import { deliveryMethods } from 'src/modules/auctions/delivery/DeliveryPaymentPage/consts';
+import { deliveryMethods } from 'src/modules/delivery/DeliveryPaymentPage/consts';
 
 import { MutationProps } from '../ModalMutationProps';
 import styles from './styles.module.scss';

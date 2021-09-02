@@ -2,31 +2,36 @@ import { useContext, useCallback, useEffect, useState, useRef, BaseSyntheticEven
 
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
+import creditCardType from 'credit-card-type';
 import { format } from 'date-fns';
 import Dinero from 'dinero.js';
 import { Row, Spinner, Col } from 'react-bootstrap';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { AuctionQuery, CalculateShippingCostQuery, ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
+import CVCInput from 'src/components/CVCInput';
 import DeliveryCardInput from 'src/components/DeliveryCardInput';
 import { DeliveryTextBlock } from 'src/components/DeliveryTextBlock';
 import DialogActions from 'src/components/Dialog/DialogActions';
 import Form from 'src/components/Form/Form';
-import SelectField from 'src/components/Form/SelectField';
 import Select from 'src/components/Select';
 import { SubmitButton } from 'src/components/SubmitButton/SubmitButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { UserDialogLayout } from 'src/components/UserDialogLayout';
+import { expirationDate } from 'src/helpers/expirationDate';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
-import { USAStates } from 'src/modules/auctions/delivery/DeliveryAddressPage/USAStates';
-import { deliveryMethods, cardTypes } from 'src/modules/auctions/delivery/DeliveryPaymentPage/consts';
-import { Modal } from 'src/modules/auctions/delivery/DeliveryPaymentPage/Modal';
+import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
+import { deliveryMethods, cardTypes } from 'src/modules/delivery/DeliveryPaymentPage/consts';
+import { Modal } from 'src/modules/delivery/DeliveryPaymentPage/Modal';
 import { AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { MutationProps } from './ModalMutationProps';
 import styles from './styles.module.scss';
+
+const minCardNumberLength = 9;
+const maxCardNumberLength = 16;
 
 export default function DeliveryPricePage() {
   const { account } = useContext(UserAccountContext);
@@ -36,12 +41,31 @@ export default function DeliveryPricePage() {
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
   const [showDialog, setShowDialog] = useState(false);
   const [modalProps, setModalProps] = useState<MutationProps | null>(null);
+  const [cardNumber, setCardNumber] = useState('');
+  const [selectedCardType, setCardType] = useState('');
+  const [enteredMonth, setMonth] = useState('');
+  const [enteredYear, setYear] = useState('');
+  const [currentCVC, setCurrentCVC] = useState('');
+
+  const selected = cardTypes.find((option) => option.value === selectedCardType);
   const selectedDeliveryMethod = useRef(deliveryMethods[0].value);
+
   const month = useRef<HTMLInputElement | null>(null);
   const year = useRef<HTMLInputElement | null>(null);
   const cvc = useRef<HTMLInputElement | null>(null);
 
   const initialDeliveryMethod = deliveryMethods[0].value;
+
+  const creditCardInfo = creditCardType(cardNumber);
+
+  const FoundType = cardTypes.find(
+    ({ value, label }: { value: string; label: string }) => label === creditCardType(cardNumber)[0]?.niceType,
+  );
+
+  const isValidCardNumber = cardNumber.length < minCardNumberLength;
+  const isValidYear = enteredYear.length < 2;
+  const isValidMonth = enteredMonth.length < 2;
+  const isValidCVC = currentCVC.length < (selected?.code?.size || 3);
 
   const [ExecuteAuctionData, { loading: executeAuctionLoading, data: auctionData }] = useLazyQuery(AuctionQuery, {
     fetchPolicy: 'network-only',
@@ -53,8 +77,12 @@ export default function DeliveryPricePage() {
       fetchPolicy: 'cache-and-network',
     },
   );
-
+  const handleCardTypeChange = (cardType: string) => {
+    setCardType(cardType);
+    setCurrentCVC('');
+  };
   useEffect(() => {
+    handleCardTypeChange(cardTypes[0].value);
     ExecuteAuctionData({ variables: { id: auctionId } });
     CalculateShippingCost({
       variables: {
@@ -68,37 +96,35 @@ export default function DeliveryPricePage() {
 
   const handleAccepting = useCallback(
     ({
-      type,
       number,
       expirationDateMonth,
       expirationDateYear,
       securityCode,
       deliveryMethod,
     }: {
-      type: string;
       number: string;
       expirationDateMonth: string;
       expirationDateYear: string;
       securityCode: string;
       deliveryMethod: string;
     }) => {
-      if (!type || !number || !expirationDateMonth || !expirationDateYear || !securityCode || !deliveryMethod) {
+      if (!number || !expirationDateMonth || !expirationDateYear || !deliveryMethod) {
         showWarning('Please, check the data');
         return;
       }
       setShowDialog(true);
       setModalProps({
         auctionId,
-        type,
+        type: selected?.value || cardTypes[0].value,
         number,
         expirationDateMonth,
         expirationDateYear,
-        securityCode,
+        securityCode: currentCVC || '',
         timeInTransit: shippingCost?.timeInTransit,
         deliveryMethod: selectedDeliveryMethod.current,
       });
     },
-    [showWarning, auctionId, shippingCost?.timeInTransit],
+    [showWarning, auctionId, shippingCost?.timeInTransit, selected?.value, currentCVC],
   );
 
   if (!auctionData) {
@@ -133,7 +159,7 @@ export default function DeliveryPricePage() {
 
   const { name, state, city, street, zipCode, phoneNumber } = auction.delivery.address;
 
-  const handleChange = (deliveryMethod: string) => {
+  const handleDeliveryMethodChange = (deliveryMethod: string) => {
     selectedDeliveryMethod.current = deliveryMethod;
     CalculateShippingCost({
       variables: {
@@ -180,17 +206,24 @@ export default function DeliveryPricePage() {
   const disabled = calculateShippingCostLoading || executeAuctionLoading;
   const arrivalDate = new Date(shippingCost?.timeInTransit || null);
 
-  const focusOnAtherInput = (e: BaseSyntheticEvent) => {
+  const handleInputChange = (e: BaseSyntheticEvent) => {
     const { name, maxLength, value } = e.target;
-    if (maxLength === value.length && name === 'number') {
-      month.current?.focus();
+    if (name === 'securityCode') {
+      setCurrentCVC(value);
     }
-    if (maxLength === value.length && name === 'expirationDateMonth') {
-      year.current?.focus();
+    if (name === 'number') {
+      setCurrentCVC('');
+
+      if (FoundType && creditCardInfo.length === 1) {
+        setCardType(FoundType.value);
+      }
+
+      setCardNumber(value);
+      if (maxLength === value.length) {
+        month.current?.focus();
+      }
     }
-    if (maxLength === value.length && name === 'expirationDateYear') {
-      cvc.current?.focus();
-    }
+    expirationDate(e, value, maxLength, name, year, cvc, setMonth, setYear);
   };
 
   return (
@@ -218,7 +251,7 @@ export default function DeliveryPricePage() {
               disabled={disabled}
               options={deliveryMethods}
               selected={deliveryMethods[0]}
-              onChange={handleChange}
+              onChange={handleDeliveryMethodChange}
             />
           </div>
         </Row>
@@ -238,25 +271,24 @@ export default function DeliveryPricePage() {
             </Row>
           </div>
         )}
-
         <Row className="d-flex align-items-baseline w-100 mb-1">
-          <SelectField
+          <Select
             className={styles.select}
-            isDisabled={disabled}
-            name="type"
+            disabled={disabled}
             options={cardTypes}
-            selected={cardTypes[0]}
+            selected={selected || cardTypes[0]}
+            onChange={handleCardTypeChange}
           />
         </Row>
-
         <Row className="d-flex align-items-baseline w-100">
           <DeliveryCardInput
             disabled={disabled}
+            isInvalid={isValidCardNumber}
             labelText="Card Number"
-            maxLength={16}
+            maxLength={maxCardNumberLength}
             name="number"
-            type="tel"
-            onInput={focusOnAtherInput}
+            type="string"
+            onInput={handleInputChange}
           />
         </Row>
         <Row className="d-flex align-items-baseline w-100 ">
@@ -264,49 +296,58 @@ export default function DeliveryPricePage() {
             <DeliveryCardInput
               ref={month}
               disabled={disabled}
+              isInvalid={isValidMonth}
               labelText="Month"
               maxLength={2}
               name="expirationDateMonth"
-              type="tel"
-              onInput={focusOnAtherInput}
+              placeholder="MM"
+              type="string"
+              onInput={handleInputChange}
             />
           </Col>
           <Col className="d-flex align-items-baseline">
             <DeliveryCardInput
               ref={year}
               disabled={disabled}
+              isInvalid={isValidYear}
               labelText="Year"
               maxLength={2}
               name="expirationDateYear"
-              type="tel"
-              onInput={focusOnAtherInput}
+              placeholder="YY"
+              type="string"
+              onInput={handleInputChange}
             />
           </Col>
           <Col className="d-flex align-items-baseline pr-0">
             <span className="glyphicon glyphicon-print"></span>
-            <DeliveryCardInput
+            <CVCInput
               ref={cvc}
+              required
               disabled={disabled}
-              labelText="CVC"
-              maxLength={4}
+              isInvalid={isValidCVC}
+              labelText={selected?.code?.name || 'CVC'}
+              maxLength={selected?.code?.size || 3}
               name="securityCode"
-              prompt={true}
               type="password"
-              onInput={focusOnAtherInput}
+              value={currentCVC}
+              onInput={handleInputChange}
             />
           </Col>
         </Row>
-        <Row>
+        <Row className="pt-sm-3 pt-0">
           <DialogActions className="justify-content-between flex-column-reverse flex-sm-row p-0 w-100">
             <div className={clsx(disabled ? styles.actionLinkWrapper : styles.actionLink)}>
               <Link
-                className={clsx(disabled ? styles.actionLinkDisabled : styles.actionLink, 'ml-0 mr-sm-auto p-3')}
+                className={clsx(disabled ? styles.actionLinkDisabled : styles.actionLink, 'ml-0 mr-sm-auto p-0')}
                 to={`/auctions/${auctionId}/delivery/address`}
               >
                 {disabled ? <Spinner animation="border" size="sm" /> : 'Back'}
               </Link>
             </div>
-            <SubmitButton className="w-100" disabled={disabled}>
+            <SubmitButton
+              className={clsx(styles.submitBtn, 'p-0')}
+              disabled={disabled || isValidCardNumber || isValidCVC || isValidYear || isValidMonth}
+            >
               {disabled ? <Spinner animation="border" size="sm" /> : 'Submit'}
             </SubmitButton>
           </DialogActions>

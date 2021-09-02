@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState, useEffect } from 'react';
 
 import clsx from 'clsx';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
@@ -17,7 +17,9 @@ interface Props {
 
 const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, className, disabled }) => {
   const [selectedOption, setSelectedOption] = useState(selected);
-
+  useEffect(() => {
+    setSelectedOption(selected);
+  }, [selected]);
   const isArrayOfObjects = options?.length ? typeof options[0] === 'object' : null;
 
   const handleSelect = useCallback(

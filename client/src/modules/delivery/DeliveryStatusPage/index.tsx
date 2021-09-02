@@ -11,7 +11,7 @@ import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccou
 import { UserDialogLayout } from 'src/components/UserDialogLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
-import { USAStates } from 'src/modules/auctions/delivery/DeliveryAddressPage/USAStates';
+import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
 import { AuctionDeliveryStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
@@ -87,7 +87,7 @@ export default function DeliveryStatusPage() {
           </InputGroup>
         </BForm.Group>
       </Row>
-      <div className="text-center pt-2">
+      <div className="text-center pt-2 pb-3">
         <Link className={styles.actionLink} to={`/auctions/${auctionId}`}>
           back to the auction
         </Link>
