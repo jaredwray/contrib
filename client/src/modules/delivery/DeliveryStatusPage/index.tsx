@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
+import clsx from 'clsx';
 import { Button, Row, InputGroup, Form as BForm } from 'react-bootstrap';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useHistory, useParams, Link } from 'react-router-dom';
@@ -72,9 +73,21 @@ export default function DeliveryStatusPage() {
       street={street}
       zipCode={zipCode}
     >
-      <div className="text-center pt-3 pb-3">To track the parcel use tracking ID:</div>
-      <Row>
-        <BForm.Group className="w-100">
+      <div className="text-center pt-3 pb-3">
+        You can track your parcel on
+        <a
+          className={clsx(styles.actionLink, 'pr-1 pl-1')}
+          href={`https://www.ups.com/track?trackingNumber=${auction.delivery.identificationNumber}`}
+          rel="noreferrer"
+          target="_blank"
+        >
+          UPS website
+        </a>
+        using follow tracking ID:
+      </div>
+
+      <Row className="justify-content-center">
+        <BForm.Group>
           <InputGroup>
             <BForm.Control disabled type="text" value={auction.delivery.identificationNumber} />
             <InputGroup.Append>

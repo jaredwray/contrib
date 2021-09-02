@@ -19,7 +19,7 @@ export const UserDialogLayout: FC<Props> = ({ title, subtitle, textBlock, succes
     <div className={clsx(styles.page, 'w-100 d-flex')}>
       <Container className="d-md-table p-0">
         <Container className={clsx(styles.container, 'p-0 h-100 d-md-table-cell align-middle')}>
-          <Row className="pt-lg-3 pt-5 align-items-center">
+          <Row className="pt-lg-3 pb-lg-3 pt-5 pb-5 align-items-center">
             {!successBlock ? (
               <>
                 <Col lg="6">
