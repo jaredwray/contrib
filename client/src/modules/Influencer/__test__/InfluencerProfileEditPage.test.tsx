@@ -163,13 +163,9 @@ describe('InfluencerProfileEditPage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!
-        .find(Form)
-        .props()
-        .onSubmit({ ...submitValues });
+      wrapper!.find(Form).props().onSubmit(submitValues);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
-
       expect(mockHistoryFn).toHaveBeenCalledTimes(0);
     });
   });

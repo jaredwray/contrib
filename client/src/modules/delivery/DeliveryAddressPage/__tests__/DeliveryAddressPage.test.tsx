@@ -6,12 +6,12 @@ import { MemoryRouter } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 import PhoneInput from 'react-phone-input-2';
 
-import { testAccount } from 'src/helpers/testHelpers/account';
-import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import Layout from 'src/components/Layout';
 import Form from 'src/components/Form/Form';
 import InputField from 'src/components/Form/InputField';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
+import { testAccount } from 'src/helpers/testHelpers/account';
+import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQuery';
 import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
@@ -235,10 +235,7 @@ describe('DeliveryAddressPage', () => {
     });
 
     await act(async () => {
-      wrapper!
-        .find(Form)
-        .props()
-        .onSubmit({ ...submitValues });
+      wrapper!.find(Form).props().onSubmit(submitValues);
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);

@@ -38,7 +38,6 @@ const AuctionPage = () => {
       },
     });
   }, [subscribeToMore]);
-
   const auction = auctionData?.auction;
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
 

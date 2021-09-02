@@ -196,10 +196,7 @@ describe('EditAuctionDetailsPage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!
-        .find(Form)
-        .props()
-        .onSubmit({ ...submitValues });
+      wrapper!.find(Form).props().onSubmit(submitValues);
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
@@ -222,10 +219,7 @@ describe('EditAuctionDetailsPage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!
-        .find(Form)
-        .props()
-        .onSubmit({ ...submitValues });
+      wrapper!.find(Form).props().onSubmit(submitValues);
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
