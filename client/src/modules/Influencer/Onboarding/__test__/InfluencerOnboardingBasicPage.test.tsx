@@ -133,45 +133,33 @@ describe('InfluencerOnboardingBasicPage ', () => {
     });
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
-
-    await act(async () => {
-      wrapper!
-        .find(Form)
-        .props()
-        .onSubmit({ ...submitValues });
-
-      expect(mockFn).toHaveBeenCalledTimes(1);
-    });
   });
-  it('should submit form and call the mutation', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <MockedProvider cache={cache} mocks={mocks}>
-              <InfluencerOnboardingBasicPage />
-            </MockedProvider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
-    });
-    expect(wrapper!).toHaveLength(1);
-    expect(wrapper!.find(Layout)).toHaveLength(1);
+});
 
-    await act(async () => {
-      wrapper!
-        .find(Form)
-        .props()
-        .onSubmit({ ...submitValues });
+it('should submit form and call the mutation', async () => {
+  let wrapper: ReactWrapper;
+  await act(async () => {
+    wrapper = mount(
+      <MemoryRouter>
+        <ToastProvider>
+          <MockedProvider cache={cache} mocks={mocks}>
+            <InfluencerOnboardingBasicPage />
+          </MockedProvider>
+        </ToastProvider>
+      </MemoryRouter>,
+    );
+  });
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve));
+    wrapper.update();
+  });
+  expect(wrapper!).toHaveLength(1);
+  expect(wrapper!.find(Layout)).toHaveLength(1);
 
-      expect(mockFn).toHaveBeenCalledTimes(1);
-      // await new Promise((resolve) => setTimeout(resolve));
-      expect(mockHistoryPush).toHaveBeenCalledTimes(0);
-    });
+  await act(async () => {
+    wrapper!.find(Form).props().onSubmit(submitValues);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockHistoryPush).toHaveBeenCalledTimes(0);
   });
 });

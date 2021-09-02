@@ -1,16 +1,23 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { MockedProvider } from '@apollo/client/testing';
+
+import HeartBtn from 'src/components/HeartButton';
+import AuctionCard from 'src/components/AuctionCard';
+import { CloseButton } from 'src/components/CloseButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { ToastProvider } from 'react-toast-notifications';
-import { CloseButton } from 'src/components/CloseButton';
 import { Modal } from 'src/components/AdminAuctionsPageModal';
-import AuctionCard from '..';
+import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
+import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
+
 const props: any = {
   auction,
 };
 const emptyProps: any = {};
+
 const newProps: any = {
   auction: {
     ...props.auction,
@@ -19,6 +26,49 @@ const newProps: any = {
     isFailed: false,
   },
 };
+jest.mock('@auth0/auth0-react');
+
+const mockFn = jest.fn();
+
+const mocks = [
+  {
+    request: {
+      query: FollowAuctionMutation,
+      variables: {
+        auctionId: 'testId',
+      },
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {
+          followAuction: {
+            user: 'testId',
+            createdAt: 'test Date',
+          },
+        },
+      };
+    },
+  },
+  {
+    request: {
+      query: UnfollowAuctionMutation,
+      variables: {
+        auctionId: 'testId',
+      },
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {
+          unfollowAuction: {
+            id: 'testId',
+          },
+        },
+      };
+    },
+  },
+];
 describe('Should render correctly "AuctionCard"', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -26,6 +76,7 @@ describe('Should render correctly "AuctionCard"', () => {
   jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
 
   it('component return null', () => {
+    withAuthenticatedUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -39,6 +90,7 @@ describe('Should render correctly "AuctionCard"', () => {
     wrapper.unmount();
   });
   it('component is defined', () => {
+    withAuthenticatedUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -53,6 +105,7 @@ describe('Should render correctly "AuctionCard"', () => {
     wrapper.unmount();
   });
   it('component is defined and has CloseButton,which should open modal when clicking', () => {
+    withAuthenticatedUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -65,5 +118,65 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(wrapper.find(CloseButton)).toHaveLength(1);
     wrapper.children().find(CloseButton).simulate('click');
     wrapper.children().find(Modal).children().find('Button').first().simulate('click');
+  });
+  it('should redirect and not call FollowAuctionMutation mutation', async () => {
+    withNotAuthenticatedUser();
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <Router>
+            <MockedProvider mocks={mocks}>
+              <AuctionCard {...props} />
+            </MockedProvider>
+          </Router>
+        </ToastProvider>,
+      );
+    });
+    await act(async () => {
+      wrapper!.find(HeartBtn).prop('followHandler')!();
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+  });
+  it('should call FollowAuctionMutation mutation', async () => {
+    withAuthenticatedUser();
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <Router>
+            <MockedProvider mocks={mocks}>
+              <AuctionCard {...props} />
+            </MockedProvider>
+          </Router>
+        </ToastProvider>,
+      );
+    });
+    await act(async () => {
+      wrapper!.find(HeartBtn).prop('followHandler')!();
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+  it('should call UnfollowAuctionMutation mutation', async () => {
+    withAuthenticatedUser();
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <Router>
+            <MockedProvider mocks={mocks}>
+              <AuctionCard {...props} />
+            </MockedProvider>
+          </Router>
+        </ToastProvider>,
+      );
+    });
+    await act(async () => {
+      wrapper!.find(HeartBtn).prop('unfollowHandler')!();
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockFn).toHaveBeenCalledTimes(1);
   });
 });

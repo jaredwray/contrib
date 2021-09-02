@@ -31,8 +31,4 @@ describe('Should render correctly "Select"', () => {
     });
     expect(wrapper.find('DropdownButton')).toHaveLength(1);
   });
-  it('component has options as array', () => {
-    expect(wrapper.find('DropdownButton')).toHaveLength(1);
-    wrapper.find('DropdownButton').simulate('click');
-  });
 });

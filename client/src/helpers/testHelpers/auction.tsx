@@ -71,7 +71,7 @@ export const AuctionQueryAuction = {
 };
 
 export const auction = {
-  id: 'test',
+  id: 'testId',
   title: 'test',
   sport: 'test',
   gameWorn: true,

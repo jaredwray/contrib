@@ -1,13 +1,13 @@
-import { ReactWrapper, shallow, mount, ShallowWrapper } from 'enzyme';
+import { ReactWrapper, mount } from 'enzyme';
 import CVCInput from 'src/components/CVCInput';
 import Form from 'src/components/Form/Form';
-import InputField from '../../Form/InputField';
+
 import { Form as BsForm } from 'react-bootstrap';
-import { Children } from 'react';
-const { Group, Label, Control } = BsForm;
+
+const { Control } = BsForm;
 
 const mockedSumbit = jest.fn();
-const event = new Event('input', { bubbles: true, cancelable: true });
+
 describe('Should render correctly "CVCInput"', () => {
   const props: any = {
     disabled: false,
