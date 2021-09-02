@@ -92,7 +92,7 @@ const UploadingDropzone: FC<Props> = ({
       acceptedFiles.forEach(async (file) => {
         let url;
 
-        if (file.type.startsWith('video/')) {
+        if (process.env.REACT_APP_FIREBASE_CONFIG && file.type.startsWith('video/')) {
           url = await firebaseUpload(file);
 
           if (!url) return;
