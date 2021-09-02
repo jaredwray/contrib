@@ -148,7 +148,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
           <Row>
             <Col>
               <WatchBtn
-                disabled={isMyProfile}
+                disabled={isMyProfile || !isActive}
                 entityType="charity"
                 followHandler={handleFollowCharity}
                 followed={followed}
