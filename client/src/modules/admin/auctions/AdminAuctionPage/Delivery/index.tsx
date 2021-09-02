@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { format, utcToZonedTime } from 'date-fns-tz';
 
 import { ParcelProps } from 'src/helpers/ParcelProps';
-import { USAStates } from 'src/modules/auctions/delivery/DeliveryAddressPage/USAStates';
+import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
 import { Auction } from 'src/types/Auction';
 
 interface Props {

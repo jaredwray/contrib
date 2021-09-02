@@ -23,6 +23,7 @@ interface Props {
   onKeyPress?: KeyboardEventHandler<HTMLInputElement>;
   onInput?: (event: BaseSyntheticEvent) => void;
   ref?: HTMLInputElement | null;
+  isInvalid?: boolean;
 }
 
 const InputField = forwardRef<HTMLInputElement | null, Props>(
@@ -42,6 +43,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
       maxLength,
       onKeyPress,
       onInput,
+      isInvalid,
     },
     ref,
   ) => {
@@ -56,7 +58,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           ref={ref}
           as={textarea ? 'textarea' : 'input'}
           className={className}
-          isInvalid={hasError}
+          isInvalid={hasError || isInvalid}
           maxLength={maxLength}
           placeholder={placeholder}
           type={type}
