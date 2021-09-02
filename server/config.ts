@@ -91,7 +91,7 @@ export const AppConfig = {
     UPSContribDeliveryData: JSON.parse(requireEnvVar('UPS_DELIVERY_CONTRIB_DATA')),
     UPSRequestHeader: JSON.parse(requireEnvVar('UPS_DELIVERY_REQUEST_HEADER')),
     UPSAuctionDefaultParcelParameters: requireEnvVar('UPS_AUCTION_DEFAULT_PARCEL_PARAMETERS'),
-    UPSTestEnviroment: process.env['UPS_TEST_ENVIROMENT'] ?? true,
-    UPSSMSWithDeliveryLink: process.env['UPS_SMS_WITH_DELIVERY_LINK'] ?? false,
+    UPSTestEnviroment: (process.env['UPS_TEST_ENVIROMENT'] ?? 'true') === 'true',
+    UPSSMSWithDeliveryLink: (process.env['UPS_SMS_WITH_DELIVERY_LINK'] ?? 'false') === 'true',
   },
 };
