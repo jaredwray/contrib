@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
-import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
 import { CharityInput } from '../graphql/model/CharityInput';
@@ -37,24 +37,43 @@ export class CharityService {
     });
   }
 
+  async handleFollowLogicErrors(
+    charityId: string,
+    accountId: string,
+    session: ClientSession,
+  ): Promise<{ charity: ICharityModel; account: IUserAccount }> {
+    const charity = await this.CharityModel.findById(charityId, null, { session }).exec();
+    if (!charity) {
+      AppLogger.error(`Charity record #${charityId} not found`);
+      throw new AppError('Something went wrong. Please, try later');
+    }
+
+    if (charity.status !== CharityStatus.ACTIVE) {
+      AppLogger.error(`Charity record #${charityId} not found`);
+      throw new AppError('Can not follow to incative Charity');
+    }
+
+    const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+    if (!account) {
+      AppLogger.error(`Account record #${accountId} not found`);
+      throw new AppError('Something went wrong. Please, try later');
+    }
+
+    return {
+      charity,
+      account,
+    };
+  }
+
   async followCharity(charityId: string, accountId: string) {
     const session = await this.connection.startSession();
 
     let returnObject = null;
     try {
       await session.withTransaction(async () => {
-        const charity = await this.CharityModel.findById(charityId, null, { session }).exec();
-        if (!charity) {
-          throw new AppError(`Charity record #${charityId} not found`);
-        }
-
-        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
-        if (!account) {
-          throw new AppError(`Account record #${accountId} not found`);
-        }
+        const { charity, account } = await this.handleFollowLogicErrors(charityId, accountId, session);
 
         const currentAccountId = account._id.toString();
-        const charityAccountId = charity.userAccount.toString();
         const followed = charity.followers.some((follower) => follower.user.toString() === currentAccountId);
 
         if (followed) {
@@ -66,8 +85,10 @@ export class CharityService {
           createdAt: dayjs(),
         };
 
+        const charityProfileId = charity._id.toString();
+
         const createdFollowing = {
-          user: charityAccountId,
+          charityProfile: charityProfileId,
           createdAt: dayjs(),
         };
 
@@ -87,7 +108,7 @@ export class CharityService {
       return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot follow Charity with id #${charityId}: ${error.message}`);
-      throw new Error('Something went wrong. Please, try later');
+      throw new AppError('Something went wrong. Please, try later');
     } finally {
       session.endSession();
     }
@@ -99,22 +120,16 @@ export class CharityService {
     let returnObject = null;
     try {
       await session.withTransaction(async () => {
-        const charity = await this.CharityModel.findById(charityId, null, { session }).exec();
-        if (!charity) {
-          throw new AppError(`Charity record #${charityId} not found`);
-        }
+        const { charity, account } = await this.handleFollowLogicErrors(charityId, accountId, session);
 
-        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
-        if (!account) {
-          throw new AppError(`Account record #${accountId} not found`);
-        }
-
-        const currentAccountId = account._id.toString();
-        const charityAccountId = charity.userAccount.toString();
+        const charityProfileId = charity._id.toString();
 
         account.followingCharitis = account.followingCharitis.filter(
-          (follow) => follow.user.toString() !== charityAccountId,
+          (follow) => follow?.charityProfile?.toString() !== charityProfileId,
         );
+
+        const currentAccountId = account._id.toString();
+
         charity.followers = charity.followers.filter((follower) => follower.user.toString() !== currentAccountId);
 
         await charity.save({ session });
@@ -125,7 +140,7 @@ export class CharityService {
       return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot unfollow Charity with id #${charityId}: ${error.message}`);
-      throw new Error('Something went wrong. Please, try later');
+      throw new AppError('Something went wrong. Please, try later');
     } finally {
       session.endSession();
     }

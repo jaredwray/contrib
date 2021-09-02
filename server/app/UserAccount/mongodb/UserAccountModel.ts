@@ -1,11 +1,15 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 
+import { InfluencerCollectionName, IInfluencer } from './../../Influencer/mongodb/InfluencerModel';
 import { AuctionCollectionName, IAuctionModel } from '../../Auction/mongodb/AuctionModel';
+import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { UserAccountAddress } from '../dto/UserAccountAddress';
 
 export interface IFollowObject {
   user?: IUserAccount['_id'];
+  influencerProfile?: IInfluencer['_id'];
+  charityProfile?: ICharityModel['_id'];
   auction?: IAuctionModel['_id'];
   createdAt: Dayjs;
 }
@@ -42,13 +46,13 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   ],
   followingInfluencers: [
     {
-      user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+      influencerProfile: { type: SchemaTypes.ObjectId, ref: 'influencer' },
       createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
     },
   ],
   followingCharitis: [
     {
-      user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+      charityProfile: { type: SchemaTypes.ObjectId, ref: 'charity' },
       createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
     },
   ],

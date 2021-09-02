@@ -3,7 +3,7 @@ import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
 import { IAuctionModel } from '../../Auction/mongodb/AuctionModel';
-import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { CharityService } from '../../Charity';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
@@ -24,25 +24,39 @@ export class InfluencerService {
 
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
+  async handleFollowLogicErrors(
+    influencerId: string,
+    accountId: string,
+    session: ClientSession,
+  ): Promise<{ account: IUserAccount; influencer: IInfluencer }> {
+    const influencer = await this.InfluencerModel.findById(influencerId, null, { session }).exec();
+
+    if (!influencer) {
+      AppLogger.error(`Influencer record #${influencerId} not found`);
+      throw new AppError('Something went wrong. Please, try later');
+    }
+
+    const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+    if (!account) {
+      AppLogger.error(`Account record #${accountId} not found`);
+      throw new AppError('Something went wrong. Please, try later');
+    }
+
+    return {
+      account,
+      influencer,
+    };
+  }
+
   async followInfluencer(influencerId: string, accountId: string) {
     const session = await this.connection.startSession();
 
     let returnObject = null;
     try {
       await session.withTransaction(async () => {
-        const influencer = await this.InfluencerModel.findById(influencerId, null, { session }).exec();
-
-        if (!influencer) {
-          throw new AppError(`Influencer record #${influencerId} not found`);
-        }
-
-        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
-        if (!account) {
-          throw new AppError(`Account record #${accountId} not found`);
-        }
+        const { account, influencer } = await this.handleFollowLogicErrors(influencerId, accountId, session);
 
         const currentAccountId = account._id.toString();
-        const influencerAccountId = influencer.userAccount.toString();
         const followed = influencer.followers.some((follower) => follower.user.toString() === currentAccountId);
 
         if (followed) {
@@ -54,8 +68,10 @@ export class InfluencerService {
           createdAt: dayjs(),
         };
 
+        const influencerProfileId = influencer._id.toString();
+
         const createdFollowing = {
-          user: influencerAccountId,
+          influencerProfile: influencerProfileId,
           createdAt: dayjs(),
         };
 
@@ -74,8 +90,8 @@ export class InfluencerService {
       });
       return returnObject;
     } catch (error) {
-      AppLogger.error(`Cannot follow follow Influencer with id #${influencerId}: ${error.message}`);
-      throw new Error('Something went wrong. Please, try later');
+      AppLogger.error(`Cannot follow Influencer with id #${influencerId}: ${error.message}`);
+      throw new AppError('Something went wrong. Please, try later');
     } finally {
       session.endSession();
     }
@@ -87,22 +103,16 @@ export class InfluencerService {
     let returnObject = null;
     try {
       await session.withTransaction(async () => {
-        const influencer = await this.InfluencerModel.findById(influencerId, null, { session }).exec();
-        if (!influencer) {
-          throw new AppError(`Influencer record #${influencerId} not found`);
-        }
+        const { account, influencer } = await this.handleFollowLogicErrors(influencerId, accountId, session);
 
-        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
-        if (!account) {
-          throw new AppError(`Account record #${accountId} not found`);
-        }
-
-        const currentAccountId = account._id.toString();
-        const influencerAccountId = influencer.userAccount.toString();
+        const influencerProfileId = influencer._id.toString();
 
         account.followingInfluencers = account.followingInfluencers.filter(
-          (follow) => follow.user.toString() !== influencerAccountId,
+          (follow) => follow?.influencerProfile?.toString() !== influencerProfileId,
         );
+
+        const currentAccountId = account._id.toString();
+
         influencer.followers = influencer.followers.filter((follower) => follower.user.toString() !== currentAccountId);
 
         await influencer.save({ session });
@@ -112,8 +122,8 @@ export class InfluencerService {
       });
       return returnObject;
     } catch (error) {
-      AppLogger.error(`Cannot unfollow follow Influencer with id #${influencerId}: ${error.message}`);
-      throw new Error('Something went wrong. Please, try later');
+      AppLogger.error(`Cannot unfollow Influencer with id #${influencerId}: ${error.message}`);
+      throw new AppError('Something went wrong. Please, try later');
     } finally {
       session.endSession();
     }

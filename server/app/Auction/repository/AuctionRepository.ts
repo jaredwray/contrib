@@ -1,11 +1,11 @@
-import { Connection, FilterQuery, Query, Types } from 'mongoose';
+import { ClientSession, Connection, FilterQuery, Query, Types } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
-import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppError, ErrorCode } from '../../../errors';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
@@ -96,21 +96,36 @@ export class AuctionRepository implements IAuctionRepository {
     );
   }
 
+  public async handleFollowLogicErrors(
+    auctionId: string,
+    accountId: string,
+    session: ClientSession,
+  ): Promise<{ account: IUserAccount; auction: IAuctionModel }> {
+    const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
+    if (!auction) {
+      AppLogger.error(`Auction record #${auctionId} not found`);
+      throw new AppError('Something went wrong. Please, try later');
+    }
+
+    const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+    if (!account) {
+      AppLogger.error(`Account record #${accountId} not found`);
+      throw new AppError('Something went wrong. Please, try later');
+    }
+
+    return {
+      account,
+      auction,
+    };
+  }
+
   public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs } | null> {
     const session = await this.connection.startSession();
 
     let returnObject = null;
     try {
       await session.withTransaction(async () => {
-        const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
-        if (!auction) {
-          throw new AppError(`Auction record #${auctionId} not found`);
-        }
-
-        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
-        if (!account) {
-          throw new AppError(`Account record #${accountId} not found`);
-        }
+        const { auction, account } = await this.handleFollowLogicErrors(auctionId, accountId, session);
 
         const createdFollower = {
           user: account._id.toString(),
@@ -149,15 +164,7 @@ export class AuctionRepository implements IAuctionRepository {
     let returnObject = null;
     try {
       await session.withTransaction(async () => {
-        const auction = await this.AuctionModel.findById(auctionId, null, { session }).exec();
-        if (!auction) {
-          throw new AppError(`Auction record #${auctionId} not found`);
-        }
-
-        const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
-        if (!account) {
-          throw new AppError(`Account record #${accountId} not found`);
-        }
+        const { auction, account } = await this.handleFollowLogicErrors(auctionId, accountId, session);
 
         const currentAccountId = account._id.toString();
 
