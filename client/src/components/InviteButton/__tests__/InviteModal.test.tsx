@@ -1,5 +1,6 @@
 import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
+import PhoneInput from 'react-phone-input-2';
 
 import { MockedProvider } from '@apollo/client/testing';
 import { Modal } from 'src/components/InviteButton/Modal';
@@ -26,7 +27,7 @@ describe('Should render correctly "InviteModal"', () => {
         variables: {
           firstName: 'test',
           lastName: 'test',
-          phoneNumber: '+1',
+          phoneNumber: '+',
           welcomeMessage: 'test',
         },
       },
@@ -54,7 +55,7 @@ describe('Should render correctly "InviteModal"', () => {
     expect(wrapper).toHaveLength(1);
   });
 
-  xit('should submit the form and call the mutation', async () => {
+  it('should submit form and not call the mutation becouse of none submit values', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -66,7 +67,25 @@ describe('Should render correctly "InviteModal"', () => {
           </MockedProvider>
         </ToastProvider>,
       );
-      // wrapper.find(PhoneInput).simulate('change', { target: { value: '+11234567899' } });
+
+      wrapper.find(Form).props().onSubmit({});
+
+      expect(mockFn).toHaveBeenCalledTimes(0);
+    });
+  });
+  it('should submit the form and call the mutation', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <MockedProvider mocks={mocks}>
+            <Router>
+              <Modal {...props} />
+            </Router>
+          </MockedProvider>
+        </ToastProvider>,
+      );
+
       wrapper.find(Form).props().onSubmit({
         firstName: 'test',
         lastName: 'test',
@@ -76,8 +95,23 @@ describe('Should render correctly "InviteModal"', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
 
       await new Promise((resolve) => setTimeout(resolve));
+
       expect(props.updateEntitisList).toHaveBeenCalledTimes(1);
       expect(props.onClose).toHaveBeenCalledTimes(1);
+
+      wrapper!
+        .find(PhoneInput)
+        .children()
+        .find('input')
+        .simulate('change', { target: { value: '11111111111' } });
+      expect(wrapper!.find(PhoneInput).props().inputClass).toEqual('');
+
+      wrapper!
+        .find(PhoneInput)
+        .children()
+        .find('input')
+        .simulate('change', { target: { value: '78011111111' } });
+      expect(wrapper!.find(PhoneInput).props().inputClass).toEqual('is-invalid');
     });
   });
 });

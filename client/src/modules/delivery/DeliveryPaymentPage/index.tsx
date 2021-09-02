@@ -68,7 +68,7 @@ export default function DeliveryPricePage() {
   const isValidCVC = currentCVC.length < (selected?.code?.size || 3);
 
   const [ExecuteAuctionData, { loading: executeAuctionLoading, data: auctionData }] = useLazyQuery(AuctionQuery, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: process.title === 'browser' ? 'network-only' : 'cache-and-network',
   });
 
   const [CalculateShippingCost, { loading: calculateShippingCostLoading, data: shippingCostData }] = useLazyQuery(
@@ -138,11 +138,6 @@ export default function DeliveryPricePage() {
 
   const { auction } = auctionData;
   const isWinner = auction?.winner?.mongodbId === account?.mongodbId;
-
-  if (!isWinner) {
-    history.goBack();
-    return null;
-  }
 
   if (auction?.delivery?.status === AuctionDeliveryStatus.PAID) {
     history.push(`/auctions/${auctionId}/delivery/status`);

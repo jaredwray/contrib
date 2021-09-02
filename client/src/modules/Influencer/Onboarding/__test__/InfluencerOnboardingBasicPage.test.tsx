@@ -1,14 +1,16 @@
-import { InMemoryCache } from '@apollo/client';
-import { MockedProvider } from '@apollo/client/testing';
-import { mount, ReactWrapper } from 'enzyme';
 import { act } from 'react-dom/test-utils';
-import { ToastProvider } from 'react-toast-notifications';
+import { mount, ReactWrapper } from 'enzyme';
+import { InMemoryCache } from '@apollo/client';
 import { MemoryRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
+import { ToastProvider } from 'react-toast-notifications';
+
 import Layout from 'src/components/Layout';
-import { InfluencerOnboardingBasicPage } from '../InfluencerOnboardingBasicPage';
+import Form from 'src/components/Form/Form';
 import { UserAccountStatus } from 'src/types/UserAccount';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
-import Form from 'src/components/Form/Form';
+import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';
+import { InfluencerOnboardingBasicPage } from '../InfluencerOnboardingBasicPage';
 
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
@@ -57,6 +59,41 @@ cache.writeQuery({
     },
   },
 });
+
+const mockFn = jest.fn();
+
+const mocks = [
+  {
+    request: {
+      query: UpdateMyInfluencerProfileMutation,
+      variables: { name: 'test', sport: 'test', team: 'test', profileDescription: 'test' },
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {
+          updateMyInfluencerProfile: {
+            id: 'testId',
+            name: 'test',
+            sport: 'test',
+            team: 'test',
+            profileDescription: 'test',
+            avatarUrl: 'test',
+            status: 'ONBOARDED',
+          },
+        },
+      };
+    },
+  },
+];
+
+const submitValues = {
+  name: 'test',
+  sport: 'test',
+  team: 'test',
+  profileDescription: 'test',
+};
+
 describe('InfluencerOnboardingBasicPage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
@@ -83,7 +120,7 @@ describe('InfluencerOnboardingBasicPage ', () => {
       wrapper = mount(
         <MemoryRouter>
           <ToastProvider>
-            <MockedProvider cache={cache}>
+            <MockedProvider cache={cache} mocks={mocks}>
               <InfluencerOnboardingBasicPage />
             </MockedProvider>
           </ToastProvider>
@@ -96,7 +133,45 @@ describe('InfluencerOnboardingBasicPage ', () => {
     });
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
-    wrapper!.find(Form).simulate('submit');
-    expect(mockHistoryPush).toHaveBeenCalledTimes(0);
+
+    await act(async () => {
+      wrapper!
+        .find(Form)
+        .props()
+        .onSubmit({ ...submitValues });
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+  });
+  it('should submit form and call the mutation', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache} mocks={mocks}>
+              <InfluencerOnboardingBasicPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    expect(wrapper!).toHaveLength(1);
+    expect(wrapper!.find(Layout)).toHaveLength(1);
+
+    await act(async () => {
+      wrapper!
+        .find(Form)
+        .props()
+        .onSubmit({ ...submitValues });
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      // await new Promise((resolve) => setTimeout(resolve));
+      expect(mockHistoryPush).toHaveBeenCalledTimes(0);
+    });
   });
 });
