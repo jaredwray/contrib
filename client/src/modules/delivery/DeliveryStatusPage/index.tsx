@@ -25,7 +25,7 @@ export default function DeliveryStatusPage() {
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [executeAuctionData, { loading: updating, data: auctionData }] = useLazyQuery(AuctionQuery, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
     executeAuctionData({ variables: { id: auctionId } });

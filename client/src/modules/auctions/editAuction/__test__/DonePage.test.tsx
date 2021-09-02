@@ -43,6 +43,7 @@ nullDataCache.writeQuery({
   data: { auction: null },
 });
 describe('DonePage ', () => {
+  document.execCommand = jest.fn();
   it('component return null', async () => {
     let wrapper: ReactWrapper;
     window.prompt = () => {};
@@ -82,6 +83,7 @@ describe('DonePage ', () => {
     expect(wrapper!.find(Layout)).toHaveLength(1);
     wrapper!.find('ShareButton').last().children().find('Button').first().simulate('click');
     wrapper!.find('CopyToClipboard').children().find('Button').simulate('click');
+    expect(document.execCommand).toHaveBeenCalledWith('copy');
   });
   it('component should redirect to 404 page', async () => {
     let wrapper: ReactWrapper;

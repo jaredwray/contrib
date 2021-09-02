@@ -7,18 +7,27 @@ import Form from 'src/components/Form/Form';
 import { Modal } from '../Modal/';
 import { ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
 
+const mockHistoryFn = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: mockHistoryFn,
+  }),
+}));
 describe('Should render correctly "Modal"', () => {
   const props: any = {
     open: true,
     onClose: jest.fn(),
-    props: {
+    shippingCost: { amount: 1170, currency: 'USD', precision: 2 },
+    mutationProps: {
       auctionId: 'testId',
       deliveryMethod: '03',
-      expirationDate: '11',
+      expirationDateMonth: '12',
+      expirationDateYear: '24',
       number: '4242424242424242',
       securityCode: '123',
-      shippingCost: { amount: 1170, currency: 'USD', precision: 2 },
       timeInTransit: '2021-08-27',
+      type: '01',
     },
     mutation: ShippingRegistrationMutation,
   };
@@ -30,11 +39,11 @@ describe('Should render correctly "Modal"', () => {
         query: ShippingRegistrationMutation,
         variables: {
           auctionId: 'testId',
-          deliveryMethod: '03',
-          type: '11',
+          type: '01',
           number: '4242424242424242',
-          expirationDate: '11',
+          expirationDate: `122024`,
           securityCode: '123',
+          deliveryMethod: '03',
           timeInTransit: '2021-08-27',
         },
       },
@@ -43,7 +52,7 @@ describe('Should render correctly "Modal"', () => {
         return {
           data: {
             shippingRegistration: {
-              deliveryPrice: { amount: 1, currency: 'USD' },
+              deliveryPrice: { amount: 1, currency: 'USD', precision: 2 },
               identificationNumber: '123',
             },
           },
@@ -63,7 +72,7 @@ describe('Should render correctly "Modal"', () => {
     expect(wrapper).toHaveLength(1);
   });
 
-  xit('should submit the form and call the mutation', async () => {
+  it('should submit the form and call the mutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -79,6 +88,10 @@ describe('Should render correctly "Modal"', () => {
         .props()
         .onSubmit(() => {});
       expect(mockFn).toHaveBeenCalledTimes(1);
+
+      await new Promise((resolve) => setTimeout(resolve));
+
+      expect(mockHistoryFn).toHaveBeenCalledTimes(1);
     });
   });
 });

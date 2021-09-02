@@ -24,6 +24,7 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
     goBack: mockHistoryFn,
+    push: mockHistoryFn,
   }),
   useParams: () => ({
     auctionId: 'testId',
@@ -76,7 +77,7 @@ const mocks = [
         state: 'AZ',
         street: 'test',
         zipCode: '85027',
-        phoneNumber: '1',
+        phoneNumber: '+1',
       },
     },
     newData: () => {
@@ -88,7 +89,7 @@ const mocks = [
             city: 'Phoenix',
             zipCode: '85027',
             street: 'test',
-            phoneNumber: '1',
+            phoneNumber: '+1',
           },
         },
       };
@@ -145,6 +146,24 @@ describe('DeliveryAddressPage', () => {
     });
     expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
   });
+  it('component should redirect becouse of status PAID', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache3}>
+                <DeliveryAddressPage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+      await new Promise((resolve) => setTimeout(resolve));
+      expect(mockHistoryFn).toHaveBeenCalled();
+    });
+  });
   it('component should redirect without winner', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
@@ -185,8 +204,17 @@ describe('DeliveryAddressPage', () => {
       wrapper!.find(Form).props().onSubmit({});
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
+
+    wrapper!.find(InputField).last().children().find('input').simulate('keypress', { key: 'q' });
+
+    wrapper!
+      .find(PhoneInput)
+      .children()
+      .find('input')
+      .simulate('change', { target: { value: '1' } });
+    expect(wrapper!.find(PhoneInput).props().value).toEqual('+1');
   });
-  xit('should submit form and call the mutation', async () => {
+  it('should submit form and call the mutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -212,9 +240,7 @@ describe('DeliveryAddressPage', () => {
         .props()
         .onSubmit({ ...submitValues });
     });
+    await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
-
-    wrapper!.find(InputField).last().children().find('input').simulate('keypress', { key: 'q' });
-    expect(wrapper!.find(InputField).last().text()).toEqual('');
   });
 });

@@ -22,11 +22,13 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
     push: mockHistoryFn,
+    goBack: mockHistoryFn,
   }),
   useParams: () => ({
     auctionId: 'testId',
   }),
 }));
+document.execCommand = jest.fn();
 
 const cache = new InMemoryCache();
 const cache2 = new InMemoryCache();
@@ -36,17 +38,17 @@ cache.writeQuery({
   query: AuctionQuery,
   variables: { id: 'testId' },
   data: {
-    auction: { ...AuctionQueryAuction, delivery: { ...AuctionQueryAuction.delivery, status: 'ADDRESS_PROVIDED' } },
+    auction: {
+      ...AuctionQueryAuction,
+      winner: { ...AuctionQueryAuction.winner, mongodbId: 'ttestId' },
+    },
   },
 });
 cache2.writeQuery({
   query: AuctionQuery,
   variables: { id: 'testId' },
   data: {
-    auction: {
-      ...AuctionQueryAuction,
-      delivery: { ...AuctionQueryAuction.delivery, status: 'PAID' },
-    },
+    auction: AuctionQueryAuction,
   },
 });
 cache3.writeQuery({
@@ -87,7 +89,7 @@ describe('DeliveryPaymentPage', () => {
     wrapper!.unmount();
   });
 
-  xit('component should redirect without account', async () => {
+  it('component should redirect without account', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -105,7 +107,7 @@ describe('DeliveryPaymentPage', () => {
     });
     expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
   });
-  xit('component should redirect when auctions status is ADDRESS_PROVIDED', async () => {
+  it('component should redirect when auctions status is ADDRESS_PROVIDED', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -123,7 +125,7 @@ describe('DeliveryPaymentPage', () => {
     });
     expect(mockHistoryFn).toHaveBeenCalled();
   });
-  xit('component should redirect without winner', async () => {
+  it('component should redirect without winner', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -141,7 +143,7 @@ describe('DeliveryPaymentPage', () => {
       expect(mockHistoryFn).toHaveBeenCalled();
     });
   });
-  xit('component defined', async () => {
+  it('component defined', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -158,6 +160,9 @@ describe('DeliveryPaymentPage', () => {
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
       expect(wrapper.find(UserDialogLayout)).toHaveLength(1);
+
+      wrapper!.find('CopyToClipboard').children().find('Button').simulate('click');
+      expect(document.execCommand).toHaveBeenCalledWith('copy');
     });
   });
 });
