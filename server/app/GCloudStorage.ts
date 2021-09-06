@@ -125,8 +125,14 @@ export class GCloudStorage {
       if (fileType === FileType.IMAGE) {
         await this.storage.bucket(bucketName).file(`pending/${formattedFileName}`).save(buffer);
       }
+      let uid;
+      const url = `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`;
 
-      return { fileType, url: `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`, uid: '' };
+      if (fileType === FileType.VIDEO) {
+        uid = await this.cloudflareStreaming.uploadToCloudflare(url, { name: fileName });
+      }
+
+      return { fileType, url, uid };
     } catch (error) {
       AppLogger.warn(`Cannot upload selected file: ${error.message}`);
       throw new AppError(`We cannot upload one of your selected file. Please, try later`, ErrorCode.INTERNAL_ERROR);
