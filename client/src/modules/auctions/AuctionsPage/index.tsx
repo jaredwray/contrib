@@ -34,7 +34,6 @@ const AuctionsPage: FC = () => {
   const [filters, setFilters] = useState({
     query: '',
     bids: initialBids,
-    sports: [],
     orderBy: 'CREATED_AT_DESC',
     pageSkip: 0,
     status: [],
@@ -50,7 +49,7 @@ const AuctionsPage: FC = () => {
   }, []);
 
   const auctionStatuses = useMemo(() => {
-    return [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD, AuctionStatus.PENDING];
+    return [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD];
   }, []);
 
   useEffect(() => {
@@ -58,7 +57,7 @@ const AuctionsPage: FC = () => {
   }, [auctionPriceLimits, changeFilters, initialBids]);
 
   useEffect(() => {
-    const queryFilters = { sports: filters.sports, charity: filters.charity } as any;
+    const queryFilters = { charity: filters.charity } as any;
 
     if (filters.bids) {
       queryFilters['maxPrice'] = filters.bids.maxPrice * 100;
@@ -78,7 +77,7 @@ const AuctionsPage: FC = () => {
   }, [executeAuctionsSearch, filters, auctionStatuses]);
 
   useEffect(() => {
-    const queryFilters = { sports: filters.sports, charity: filters.charity };
+    const queryFilters = { charity: filters.charity };
 
     getPriceLimits({
       variables: {

@@ -35,7 +35,7 @@ export const InfluencerOnboardingDonePage: FC = () => {
                         'text-subhead btn btn-ochre btn-with-arrows d-table-cell align-middle w-100',
                         styles.auctionButton,
                       )}
-                      to="/auctions/new"
+                      to="/auctions/title"
                     >
                       Create an auction
                     </Link>

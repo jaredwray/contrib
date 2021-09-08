@@ -3,7 +3,7 @@ import { FC, useCallback } from 'react';
 import { DocumentNode, useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { isAfter } from 'date-fns';
-import { zonedTimeToUtc, toDate, utcToZonedTime, format } from 'date-fns-tz';
+import { toDate, format } from 'date-fns-tz';
 import { Button } from 'react-bootstrap';
 
 import AsyncButton from 'src/components/AsyncButton';
@@ -24,10 +24,10 @@ interface Props {
 
 export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
   const [SetAuctionStatusToStopped, { loading: updating }] = useMutation(mutation);
-  const isSettled = isAfter(zonedTimeToUtc(new Date(), auction.timeZone), toDate(auction.endDate));
-  const { title, endDate, timeZone, isStopped } = auction;
-  const readableEndDate = (endDate: string, timeZone: string) => {
-    return `${format(utcToZonedTime(endDate, timeZone), 'MMM dd yyyy')}`;
+  const { title, endDate, isStopped } = auction;
+  const isSettled = isAfter(new Date(), toDate(endDate));
+  const readableEndDate = (endDate: string) => {
+    return `${format(new Date(endDate), 'MMM dd yyyy')}`;
   };
 
   const onSubmit = useCallback(() => {
@@ -41,7 +41,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
       return (
         <>
           <p>
-            The auction <b>{title}</b> has been expired on <b>{readableEndDate(endDate, timeZone)}</b>,
+            The auction <b>{title}</b> has been expired on <b>{readableEndDate(endDate)}</b>,
           </p>
           <p>
             so it will be changed to <b>SETTLED</b>.
@@ -63,7 +63,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
           Do you want to activate an auction: <b>{title}</b>?
         </p>
         <p>
-          It will end on <b>{readableEndDate(endDate, timeZone)}</b>
+          It will end on <b>{readableEndDate(endDate)}</b>
         </p>
       </>
     );

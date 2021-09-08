@@ -12,7 +12,7 @@ interface Props {
 
 const StatusDropdown: FC<Props> = ({ selectedStatuses, changeFilters }) => {
   const statusesAll = useMemo(() => {
-    return [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD, AuctionStatus.PENDING];
+    return [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD];
   }, []);
   const statusesPast = useMemo(() => {
     return [AuctionStatus.SOLD, AuctionStatus.SETTLED];
@@ -39,17 +39,10 @@ const StatusDropdown: FC<Props> = ({ selectedStatuses, changeFilters }) => {
     [changeFilters, statusesAll, statusesPast, options],
   );
 
-  const hasSelection = selectedStatuses.length;
-
   return (
     <Form.Group className="mb-1">
       <Form.Label>Status</Form.Label>
-      <Select
-        options={options}
-        placeholder="Select status"
-        selected={hasSelection ? selectedStatuses : options[0]}
-        onChange={selectStatus}
-      />
+      <Select options={options} placeholder="Select status" selected={options[0]} onChange={selectStatus} />
     </Form.Group>
   );
 };

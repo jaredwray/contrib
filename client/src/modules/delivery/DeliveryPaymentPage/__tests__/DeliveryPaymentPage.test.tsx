@@ -5,17 +5,15 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
-import { Modal } from '../Modal';
 import DeliveryPaymentPage from '..';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
-import { UserDialogLayout } from 'src/components/UserDialogLayout';
+import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import Layout from 'src/components/Layout';
-import { First } from 'react-bootstrap/esm/PageItem';
 
 const mockHistoryFn = jest.fn();
 
@@ -189,10 +187,9 @@ describe('DeliveryPaymentPage', () => {
       );
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
-      expect(wrapper.find(UserDialogLayout)).toHaveLength(1);
+      expect(wrapper.find(StepByStepPageLayout)).toHaveLength(1);
 
       wrapper.find('Button').first().simulate('click');
-      wrapper.find(Modal).props().onClose();
     });
   });
 });

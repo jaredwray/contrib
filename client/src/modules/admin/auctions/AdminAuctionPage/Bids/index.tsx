@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { format, utcToZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns-tz';
 import { Table } from 'react-bootstrap';
 
 import AsyncButton from 'src/components/AsyncButton';
@@ -11,12 +11,11 @@ import styles from './styles.module.scss';
 interface Props {
   bids: AuctionBid[];
   onBidClickHandler: (b: AuctionBid) => void;
-  timeZone: string;
   loading: boolean;
   showProcessBtn: boolean;
 }
 
-export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone, showProcessBtn }) => {
+export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, showProcessBtn }) => {
   if (bids.length === 0) {
     return <div className="pb-3">no bids for this auction</div>;
   }
@@ -37,9 +36,7 @@ export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, timeZone, sh
         {bids.map((bid, i) => (
           <tr key={i}>
             <td className="align-middle">{bid.bid && `$${bid.bid?.amount / 100}`}</td>
-            <td className="align-middle">
-              {format(utcToZonedTime(bid.createdAt, timeZone), 'MMM dd yyyy HH:mm:ssXXX')}
-            </td>
+            <td className="align-middle">{format(new Date(bid.createdAt), 'MMM dd yyyy HH:mm:ssXXX')}</td>
             <td className="align-middle">{bid.user.mongodbId}</td>
             <td className="align-middle">{bid.user.id}</td>
             <td className="align-middle">{bid.user.phoneNumber}</td>

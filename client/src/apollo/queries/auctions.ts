@@ -40,7 +40,6 @@ export const AuctionForAdminPageQuery = gql`
       status
       startDate
       endDate
-      timeZone
       startPrice
       currentPrice
       fairMarketValue
@@ -118,17 +117,11 @@ export const AuctionQuery = gql`
       stoppedAt
       startPrice
       title
-      gameWorn
-      autographed
-      authenticityCertificate
-      playedIn
       description
-      fullPageDescription
       status
       itemPrice
       isActive
       isDraft
-      isPending
       isSettled
       isFailed
       isSold
@@ -138,7 +131,6 @@ export const AuctionQuery = gql`
       link
       fairMarketValue
       currentPrice
-      timeZone
       auctionOrganizer {
         id
         name
@@ -219,17 +211,14 @@ export const AuctionsListQuery = gql`
         status
         isActive
         isDraft
-        isPending
         isSettled
         isFailed
         isSold
         isStopped
         title
-        description
         startPrice
         itemPrice
         startDate
-        timeZone
         endDate
         auctionOrganizer {
           id
@@ -259,34 +248,6 @@ export const AuctionsListQuery = gql`
   }
 `;
 
-export const SportsQuery = gql`
-  query Sports {
-    sports
-  }
-`;
-
-export const GetAuctionBasicsQuery = gql`
-  query GetAuctionBasics($id: String!) {
-    auction(id: $id) {
-      id
-      title
-      sport
-      gameWorn
-      link
-      autographed
-      authenticityCertificate
-      playedIn
-      description
-      fullPageDescription
-      status
-      isActive
-      auctionOrganizer {
-        id
-      }
-    }
-  }
-`;
-
 export const GetAuctionMediaQuery = gql`
   query GetAuctionMedia($id: String!) {
     auction(id: $id) {
@@ -302,32 +263,6 @@ export const GetAuctionMediaQuery = gql`
         type
         cloudflareUrl
         thumbnail
-      }
-    }
-  }
-`;
-
-export const GetAuctionDetailsQuery = gql`
-  query GetAuctionDetails($id: String!) {
-    auction(id: $id) {
-      id
-      title
-      startDate
-      timeZone
-      endDate
-      itemPrice
-      startPrice
-      link
-      isActive
-      charity {
-        id
-        name
-      }
-      auctionOrganizer {
-        favoriteCharities {
-          id
-          name
-        }
       }
     }
   }
@@ -395,114 +330,87 @@ export const ChargeCurrentAuctionMutation = gql`
 `;
 
 export const CreateAuctionMutation = gql`
-  mutation CreateAuction(
-    $organizerId: String
-    $title: String!
-    $sport: String!
-    $gameWorn: Boolean
-    $autographed: Boolean
-    $authenticityCertificate: Boolean
-    $playedIn: String
-    $description: String
-    $fullPageDescription: String
-  ) {
-    createAuction(
-      input: {
-        organizerId: $organizerId
-        description: $description
-        fullPageDescription: $fullPageDescription
-        gameWorn: $gameWorn
-        autographed: $autographed
-        playedIn: $playedIn
-        title: $title
-        sport: $sport
-        authenticityCertificate: $authenticityCertificate
-      }
-    ) {
+  mutation CreateAuction($organizerId: String, $title: String!) {
+    createAuction(input: { title: $title, organizerId: $organizerId }) {
       id
-      description
-      fullPageDescription
-      gameWorn
-      autographed
-      playedIn
       title
-      sport
-      authenticityCertificate
-      link
     }
   }
 `;
 
-export const UpdateAuctionBasicsMutation = gql`
-  mutation UpdateAuctionBasics(
-    $id: String!
-    $title: String!
-    $sport: String!
-    $gameWorn: Boolean
-    $autographed: Boolean
-    $authenticityCertificate: Boolean
-    $playedIn: String
-    $description: String
-    $fullPageDescription: String
-  ) {
-    updateAuction(
-      id: $id
-      input: {
-        description: $description
-        sport: $sport
-        fullPageDescription: $fullPageDescription
-        gameWorn: $gameWorn
-        autographed: $autographed
-        playedIn: $playedIn
-        title: $title
-        authenticityCertificate: $authenticityCertificate
-      }
-    ) {
+export const GetAuctionDetailsQuery = gql`
+  query GetAuctionDetails($id: String!) {
+    auction(id: $id) {
       id
-      description
-      sport
-      fullPageDescription
-      gameWorn
-      autographed
-      playedIn
+      endDate
+      itemPrice
       title
-      authenticityCertificate
       link
+      description
+      status
+      isActive
+      startPrice
+      startDate
+      charity {
+        id
+        name
+      }
+      auctionOrganizer {
+        id
+        favoriteCharities {
+          id
+          name
+        }
+      }
+      attachments {
+        type
+      }
     }
   }
 `;
 
-export const UpdateAuctionDetailsMutation = gql`
-  mutation UpdateAuctionDetails(
+export const UpdateAuctionMutation = gql`
+  mutation UpdateAuction(
     $id: String!
+    $title: String
+    $description: String
     $startDate: DateTime
     $endDate: DateTime
     $startPrice: Money
     $itemPrice: Money
     $charity: String
     $fairMarketValue: Money
-    $timeZone: String
+    $duration: Int
   ) {
     updateAuction(
       id: $id
       input: {
+        description: $description
+        title: $title
         startDate: $startDate
         endDate: $endDate
         startPrice: $startPrice
         itemPrice: $itemPrice
         charity: $charity
         fairMarketValue: $fairMarketValue
-        timeZone: $timeZone
+        duration: $duration
       }
     ) {
       id
+      description
+      title
+      link
       startDate
       endDate
       startPrice
       itemPrice
+      fairMarketValue
       charity {
         id
         name
+      }
+      attachments {
+        type
       }
     }
   }
@@ -604,7 +512,6 @@ export const AuctionSubscription = gql`
       totalBids
       isActive
       isDraft
-      isPending
       isSettled
       isFailed
       isSold

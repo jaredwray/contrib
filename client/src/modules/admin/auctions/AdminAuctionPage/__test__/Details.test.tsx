@@ -6,7 +6,6 @@ describe('Should render correctly "Details"', () => {
   const props: any = {
     auction: auction,
     charity: charity,
-    timeZone: 'America/Los_Angeles',
   };
 
   let wrapper: ShallowWrapper;

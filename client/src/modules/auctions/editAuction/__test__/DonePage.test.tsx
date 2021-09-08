@@ -28,6 +28,7 @@ jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
+const cache2 = new InMemoryCache();
 const nullDataCache = new InMemoryCache();
 
 cache.writeQuery({
@@ -35,6 +36,13 @@ cache.writeQuery({
   variables: { id: 'testId' },
   data: {
     auction: AuctionQueryAuction,
+  },
+});
+cache2.writeQuery({
+  query: AuctionQuery,
+  variables: { id: 'testId' },
+  data: {
+    auction: { ...AuctionQueryAuction, status: 'DRAFT' },
   },
 });
 nullDataCache.writeQuery({
@@ -92,6 +100,25 @@ describe('DonePage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={nullDataCache}>
+              <AuctionDonePage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    expect(mockHistoryFn).toBeCalled();
+  });
+  it('component should redirect to home page when auction status is DRAFT', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache2}>
               <AuctionDonePage />
             </MockedProvider>
           </ToastProvider>

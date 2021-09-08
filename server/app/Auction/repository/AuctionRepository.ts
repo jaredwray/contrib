@@ -32,7 +32,6 @@ export class AuctionRepository implements IAuctionRepository {
     [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'asc' },
     [AuctionOrderBy.TIME_ASC]: { endsAt: 'asc' },
     [AuctionOrderBy.TIME_DESC]: { endsAt: 'desc' },
-    [AuctionOrderBy.SPORT]: { sport: 'asc' },
     [AuctionOrderBy.PRICE_ASC]: { currentPrice: 'asc' },
     [AuctionOrderBy.PRICE_DESC]: { currentPrice: 'desc' },
   };
@@ -84,7 +83,6 @@ export class AuctionRepository implements IAuctionRepository {
     return ([
       [statusFilter, { status: { $in: statusFilter } }],
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
-      [filters?.sports?.length, { sport: { $in: filters?.sports } }],
       [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
       [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
       [filters?.charity?.length, { charity: { $in: filters?.charity?.map((id: string) => Types.ObjectId(id)) } }],
@@ -235,10 +233,15 @@ export class AuctionRepository implements IAuctionRepository {
   async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, organizerId);
 
-    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING, AuctionStatus.STOPPED].includes(auction?.status)) {
+    if (![AuctionStatus.DRAFT, AuctionStatus.STOPPED].includes(auction?.status)) {
       throw new AppError(`Cannot activate auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
-    auction.status = dayjs().utc().isAfter(auction.startsAt) ? AuctionStatus.ACTIVE : AuctionStatus.PENDING;
+
+    const duration = auction.startsAt.diff(auction.endsAt, 'days');
+
+    auction.startsAt = dayjs().second(0);
+    auction.endsAt = auction.startsAt.add(Math.abs(duration), 'days');
+    auction.status = AuctionStatus.ACTIVE;
 
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
@@ -336,12 +339,6 @@ export class AuctionRepository implements IAuctionRepository {
 
   public getInfluencersAuctions(id: string): Promise<IAuctionModel[]> {
     return this.populateAuctionQuery(this.AuctionModel.find({ auctionOrganizer: Types.ObjectId(id) })).exec();
-  }
-
-  public getAuctionSports(): Promise<string[]> {
-    return this.AuctionModel.distinct('sport', {
-      status: { $in: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD, AuctionStatus.PENDING] },
-    }).exec();
   }
 
   async addAuctionAttachment(id: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel> {

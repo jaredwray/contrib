@@ -38,7 +38,6 @@ interface AuctionResolversType {
       { min: Dinero.Dinero; max: Dinero.Dinero },
       { filters?: AuctionSearchFilters; query?: string; statusFilter: string[] }
     >;
-    sports: GraphqlResolver<string[]>;
     auction: GraphqlResolver<Auction, { id: string; organizerId?: string }>;
     getTotalRaisedAmount: GraphqlResolver<
       { totalRaisedAmount: Dinero.Dinero },
@@ -91,7 +90,6 @@ export const AuctionResolvers: AuctionResolversType = {
       auction.listAuctions({ query, filters, orderBy, size, skip, statusFilter }),
     auctionPriceLimits: (_, { filters, query, statusFilter }, { auction }) =>
       auction.getAuctionPriceLimits({ filters, query, statusFilter }),
-    sports: (_, __, { auction }) => auction.listSports(),
     auction: loadRole(async (_, { id, organizerId }, { auction, currentAccount, currentInfluencerId }) => {
       const foundAuction = await auction.getAuction(id, organizerId);
       const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencerId;

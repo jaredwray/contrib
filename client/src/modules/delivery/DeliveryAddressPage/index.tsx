@@ -2,18 +2,17 @@ import { useCallback, useContext, useState, KeyboardEvent } from 'react';
 
 import { useQuery, useMutation } from '@apollo/client';
 import clsx from 'clsx';
-import { Row, Spinner } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import PhoneInput from 'react-phone-input-2';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQuery';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
-import Form from 'src/components/Form/Form';
 import InputField from 'src/components/Form/InputField';
 import SelectField from 'src/components/Form/SelectField';
-import { SubmitButton } from 'src/components/SubmitButton/SubmitButton';
+import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
+import StepRow from 'src/components/StepByStepPageLayout/Row';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import { UserDialogLayout } from 'src/components/UserDialogLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
@@ -122,14 +121,10 @@ export default function DeliveryAddressPage() {
 
   const textBlock = (
     <>
-      <div className="text-headline pt-4">You won the auction!</div>
-      <div className="text-headline pt-4">
-        To receive
-        <Link className={styles.auctionTitle} to={`/auctions/${auctionId}`}>
-          {title}
-        </Link>
-        , fill in the delivery form
-      </div>
+      Please, fill the form to receive
+      <Link className={styles.auctionTitle} to={`/auctions/${auctionId}`}>
+        {title}
+      </Link>
     </>
   );
 
@@ -139,14 +134,19 @@ export default function DeliveryAddressPage() {
   setPageTitle(`Delivery address for ${title} auction`);
 
   return (
-    <UserDialogLayout textBlock={textBlock} title="Congratulations!">
-      <Form
-        initialValues={{
-          ...initialValues,
-          state: initialValues?.state || USAStates[0].value,
-        }}
-        onSubmit={onSubmit}
-      >
+    <StepByStepPageLayout
+      header="Delivery"
+      initialValues={{
+        ...initialValues,
+        state: initialValues?.state || USAStates[0].value,
+      }}
+      loading={updating}
+      progress={33.33}
+      step="1"
+      title="Delivery Address"
+      onSubmit={onSubmit}
+    >
+      <StepRow description={textBlock}>
         <ModalRow field="name" title="Recepient" />
         <Row className="d-flex align-items-baseline">
           <span className="pt-1 pb-1 text-label">State</span>
@@ -190,11 +190,7 @@ export default function DeliveryAddressPage() {
           value={auction.delivery.address.phoneNumber || auction.winner.phoneNumber}
           onChange={handleChange}
         />
-
-        <SubmitButton className="w-100 pt-sm-3 pt-2">
-          {updating ? <Spinner animation="border" size="sm" /> : 'Submit'}
-        </SubmitButton>
-      </Form>
-    </UserDialogLayout>
+      </StepRow>
+    </StepByStepPageLayout>
   );
 }

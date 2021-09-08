@@ -110,5 +110,12 @@ export default function DeliveryStatusPage() {
 
   setPageTitle(`Delivery status page for ${title} auction`);
 
-  return <UserDialogLayout successBlock={successBlock} title="Delivery status"></UserDialogLayout>;
+  return (
+    <UserDialogLayout
+      backGroundStyle={styles.statusPageBackground}
+      successBlock={successBlock}
+      textColorStyle={styles.statusPageTextColor}
+      title="Delivery status"
+    ></UserDialogLayout>
+  );
 }

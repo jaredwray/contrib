@@ -68,66 +68,6 @@ export class AuctionService {
     private readonly stripeService: StripeService,
   ) {}
 
-  //TODO: delete after auctions winner update.
-  public async updateAuctionsWinner() {
-    try {
-      const auctions = await this.AuctionModel.find({
-        status: { $in: [AuctionStatus.SOLD, AuctionStatus.SETTLED] },
-        winner: { $exists: false },
-      });
-      for (const auction of auctions) {
-        const [lastAuctionBid] = await this.BidModel.find({ auction: auction._id }).sort({ bid: -1 }).limit(1);
-
-        Object.assign(auction, {
-          winner: lastAuctionBid.user,
-        });
-
-        await auction.save();
-      }
-    } catch (error) {
-      AppLogger.warn(`Unable to update auction winner: ${error.message}`);
-    }
-  }
-
-  //TODO: delete after auctions parcel update.
-  public async updateAuctionsParcelAttributes() {
-    try {
-      const auctions = await this.AuctionModel.find({ parcel: { $exists: false } });
-      const auctionDefaultParcelParameters = JSON.parse(AppConfig.delivery.UPSAuctionDefaultParcelParameters);
-      for (const auction of auctions) {
-        Object.assign(auction, {
-          parcel: {
-            width: auctionDefaultParcelParameters.width,
-            length: auctionDefaultParcelParameters.length,
-            height: auctionDefaultParcelParameters.height,
-            weight: auctionDefaultParcelParameters.weight,
-            units: auctionDefaultParcelParameters.units,
-          },
-        });
-
-        await auction.save();
-      }
-    } catch (error) {
-      AppLogger.warn(`Unable to update auction parcel: ${error.message}`);
-    }
-  }
-
-  //TODO: delete after attachments update.
-  public async updateAttachments() {
-    try {
-      const auctions = await this.AuctionModel.find({});
-      for (const auction of auctions) {
-        for (const assetId of auction.assets) {
-          const asset = await this.AssetModel.findById(assetId);
-          await this.cloudStorage.updateAttachment(asset);
-        }
-      }
-      return { message: 'Updated' };
-    } catch (error) {
-      AppLogger.warn(`Unable to update old attachments: ${error.message}`);
-    }
-  }
-
   public async calculateShippingCost(
     auctionId: string,
     deliveryMethod: string,
@@ -358,10 +298,6 @@ export class AuctionService {
     };
   }
 
-  public async listSports(): Promise<string[]> {
-    return this.auctionRepository.getAuctionSports();
-  }
-
   public async getAuctionPriceLimits(params: IAuctionFilters): Promise<{ min: Dinero.Dinero; max: Dinero.Dinero }> {
     const { min, max } = await this.auctionRepository.getAuctionPriceLimits(params);
     return {
@@ -395,7 +331,7 @@ export class AuctionService {
     filename: string | null,
   ): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, organizerId);
-    if (![AuctionStatus.DRAFT, AuctionStatus.PENDING].includes(auction?.status)) {
+    if (auction?.status !== AuctionStatus.DRAFT) {
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
     }
 
@@ -511,12 +447,9 @@ export class AuctionService {
       charity,
       startPrice,
       itemPrice,
+      duration,
       description,
-      fullPageDescription,
-      playedIn,
-      sport,
       fairMarketValue,
-      timeZone,
       ...rest
     } = objectTrimmer(input);
     const auction = await this.auctionRepository.updateAuction(
@@ -526,11 +459,13 @@ export class AuctionService {
         ...(title ? { title } : {}),
         ...(startDate ? { startsAt: startDate } : {}),
         ...(endDate ? { endsAt: endDate } : {}),
+        ...(duration ? { endsAt: dayjs(endDate).add(duration, 'days') } : {}),
         ...(startPrice
           ? {
               startPrice: startPrice.getAmount(),
               currentPrice: startPrice.getAmount(),
               priceCurrency: startPrice.getCurrency(),
+              itemPrice: itemPrice?.getAmount() ?? startPrice.getAmount() * 20,
             }
           : {}),
         ...(itemPrice
@@ -545,10 +480,6 @@ export class AuctionService {
           : {}),
         ...(charity ? { charity: Types.ObjectId(charity) } : {}),
         ...(description ? { description } : {}),
-        ...(fullPageDescription ? { fullPageDescription } : {}),
-        ...(sport ? { sport } : {}),
-        ...(playedIn ? { playedIn } : {}),
-        ...(timeZone ? { timeZone } : {}),
         ...rest,
       },
       isAdmin,
@@ -642,7 +573,6 @@ export class AuctionService {
         $in: [
           AuctionStatus.ACTIVE,
           AuctionStatus.FAILED,
-          AuctionStatus.PENDING,
           AuctionStatus.SETTLED,
           AuctionStatus.SOLD,
           AuctionStatus.STOPPED,
@@ -792,21 +722,6 @@ export class AuctionService {
         );
       }
     });
-  }
-
-  public async scheduleAuctionJobStart(): Promise<{ message: string }> {
-    const auctions = await this.AuctionModel.find({ status: AuctionStatus.PENDING });
-
-    for await (const auction of auctions) {
-      if (dayjs().utc().isAfter(auction.startsAt) || dayjs().utc().isSame(auction.startsAt)) {
-        try {
-          await this.activateAuction(auction);
-        } catch (error) {
-          AppLogger.warn(`Could not start auction with id ${auction.id.toString()} with error: ${error.message}`);
-        }
-      }
-    }
-    return { message: 'Scheduled' };
   }
 
   public async getInfluencersAuctions(id: string): Promise<Auction[]> {
@@ -1240,12 +1155,13 @@ export class AuctionService {
         currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
         amount: startPrice,
       }),
-      itemPrice: itemPrice
-        ? Dinero({
-            currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-            amount: itemPrice,
-          })
-        : null,
+      itemPrice:
+        itemPrice || itemPrice === 0
+          ? Dinero({
+              currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+              amount: itemPrice,
+            })
+          : null,
       fairMarketValue: fairMarketValue
         ? Dinero({
             currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
@@ -1264,7 +1180,6 @@ export class AuctionService {
       status,
       isActive: status === AuctionStatus.ACTIVE,
       isDraft: status === AuctionStatus.DRAFT,
-      isPending: status === AuctionStatus.PENDING,
       isSettled: status === AuctionStatus.SETTLED,
       isFailed: status === AuctionStatus.FAILED,
       isSold: status === AuctionStatus.SOLD,

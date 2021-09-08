@@ -12,13 +12,29 @@ interface Props {
   subtitle?: string;
   textBlock?: ReactNode;
   successBlock?: ReactNode;
+  backGroundStyle?: string;
+  textColorStyle?: string;
 }
 
-export const UserDialogLayout: FC<Props> = ({ title, subtitle, textBlock, successBlock, children }) => (
+export const UserDialogLayout: FC<Props> = ({
+  title,
+  subtitle,
+  textBlock,
+  successBlock,
+  backGroundStyle,
+  textColorStyle,
+  children,
+}) => (
   <Layout>
-    <div className={clsx(styles.page, 'w-100 d-flex')}>
+    <div className={clsx(backGroundStyle || styles.page, 'w-100 d-flex')}>
       <Container className="d-md-table p-0">
-        <Container className={clsx(styles.container, 'p-0 h-100 d-md-table-cell align-middle')}>
+        <Container
+          className={clsx(
+            textColorStyle || styles.container,
+            styles.containerHeight,
+            'p-0 h-100 d-md-table-cell align-middle',
+          )}
+        >
           <Row className="pt-lg-3 pb-lg-3 pt-5 pb-5 align-items-center">
             {!successBlock ? (
               <>

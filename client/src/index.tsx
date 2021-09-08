@@ -17,12 +17,15 @@ import Charities from 'src/modules/admin/Charities';
 import Influencers from 'src/modules/admin/Influencers';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import Auctions from 'src/modules/auctions/AuctionsPage';
-import EditAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/Edit';
-import NewAuctionBasicPage from 'src/modules/auctions/editAuction/BasicPage/New';
-import EditAuctionDetailsPage from 'src/modules/auctions/editAuction/DetailsPage';
+import EditAuctionPhotoPage from 'src/modules/auctions/editAuction/AuctionPhotoPage';
+import EditAuctionVideoPage from 'src/modules/auctions/editAuction/AuctionVideoPage';
+import EditAuctionBuyNowPricePage from 'src/modules/auctions/editAuction/BuyNowPricePage';
+import EditAuctionCharityPage from 'src/modules/auctions/editAuction/CharityPage';
+import EditAuctionDescriptionPage from 'src/modules/auctions/editAuction/DescriptionPage';
 import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
-import EditAuctionMediaPage from 'src/modules/auctions/editAuction/MediaPage';
-import NewAuctionWizardPage from 'src/modules/auctions/NewAuctionPage';
+import EditAuctionDurationPage from 'src/modules/auctions/editAuction/DurationPage';
+import EditStartPricePage from 'src/modules/auctions/editAuction/StartPricePage';
+import EditAuctionPage from 'src/modules/auctions/editAuction/TitlePage';
 import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPage';
 import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
 import DeliveryAddressPage from 'src/modules/delivery/DeliveryAddressPage';
@@ -106,19 +109,39 @@ ReactDOM.render(
                 <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
 
                 <Route exact component={Auctions} path="/auctions" />
-                <PrivateRoute component={NewAuctionBasicPage} path="/auctions/:ownerId/new/basic" role="admin" />
-                <PrivateRoute component={NewAuctionBasicPage} path="/auctions/new/basic" role="influencer" />
-                <PrivateRoute component={NewAuctionWizardPage} path="/auctions/new" role="influencer" />
-                <PrivateRoute component={EditAuctionBasicPage} path="/auctions/:auctionId/basic" role="influencer" />
-                <PrivateRoute component={EditAuctionMediaPage} path="/auctions/:auctionId/media" role="influencer" />
+                <PrivateRoute component={EditAuctionPage} path="/auctions/:ownerId/new" role="admin" />
+                <PrivateRoute component={EditAuctionPage} path="/auctions/:auctionId/title" role="influencer" />
+                <PrivateRoute component={EditAuctionPage} path="/auctions/new" role="influencer" />
+                <PrivateRoute
+                  component={EditAuctionDescriptionPage}
+                  path="/auctions/:auctionId/description"
+                  role="influencer"
+                />
+                <PrivateRoute component={EditAuctionVideoPage} path="/auctions/:auctionId/video" role="influencer" />
+                <PrivateRoute component={EditAuctionPhotoPage} path="/auctions/:auctionId/photo" role="influencer" />
+                <PrivateRoute
+                  component={EditStartPricePage}
+                  path="/auctions/:auctionId/price/starting"
+                  role="influencer"
+                />
+                <PrivateRoute
+                  component={EditAuctionBuyNowPricePage}
+                  path="/auctions/:auctionId/price/buying"
+                  role="influencer"
+                />
+                <PrivateRoute
+                  component={EditAuctionDurationPage}
+                  path="/auctions/:auctionId/duration"
+                  role="influencer"
+                />
+                <PrivateRoute
+                  component={EditAuctionCharityPage}
+                  path="/auctions/:auctionId/charity"
+                  role="influencer"
+                />
                 <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery/address" />
                 <Route component={DeliveryPaymentPage} path="/auctions/:auctionId/delivery/payment" />
                 <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />
-                <PrivateRoute
-                  component={EditAuctionDetailsPage}
-                  path="/auctions/:auctionId/details"
-                  role="influencer"
-                />
                 <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                 <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
 

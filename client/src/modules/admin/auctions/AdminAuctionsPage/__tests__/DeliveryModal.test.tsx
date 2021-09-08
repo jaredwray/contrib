@@ -28,14 +28,12 @@ describe('Should render correctly "Modal"', () => {
       isActive: true,
       isDraft: false,
       isFailed: false,
-      isPending: false,
       isSettled: false,
       isSold: false,
       isStopped: false,
       startDate: '2021-07-23T08:00:00.000Z',
       startPrice: { amount: 100, currency: 'USD', precision: 2 },
       status: 'ACTIVE',
-      timeZone: 'PDT',
       title: 'test',
       delivery: {
         parcel: {

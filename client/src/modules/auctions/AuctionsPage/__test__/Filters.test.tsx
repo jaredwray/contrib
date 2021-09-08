@@ -10,7 +10,6 @@ describe('Should render correctly "Filters"', () => {
       minPrice: 1,
     },
     filters: {
-      sports: ['f1', 'soccer'],
       bids: {
         maxPrice: 10,
         minPrice: 1,

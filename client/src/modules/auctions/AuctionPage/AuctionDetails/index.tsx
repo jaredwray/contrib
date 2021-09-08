@@ -6,7 +6,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import clsx from 'clsx';
 import { format as dateFormat, differenceInSeconds } from 'date-fns';
-import { format, toDate, utcToZonedTime } from 'date-fns-tz';
+import { format, toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 import { useHistory, useParams, Link } from 'react-router-dom';
@@ -19,7 +19,6 @@ import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
-import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal';
@@ -35,7 +34,7 @@ interface Props {
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
 const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
-  const [isBying, setIsBying] = useState(false);
+  const [isBuying, setIsBuying] = useState(false);
   const [minutesWithoutReload, SetMinutesinterval] = useState(0);
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
@@ -53,9 +52,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     itemPrice,
     currentPrice,
     endDate,
-    startDate,
     title,
-    isPending,
     isSold,
     isStopped,
     isSettled,
@@ -70,9 +67,6 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const [followersNumber, setFollowersNumber] = useState(followers?.length || 0);
 
   const ended = toDate(endDate) <= new Date();
-  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
-  const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
-  const endTime = format(utcToZonedTime(endDate, timeZone || ''), 'p');
   const canBid = isActive && !ended;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
@@ -95,21 +89,20 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     return () => clearInterval(timer);
   }, [canBid, minutesWithoutReload, secondsLeft, callAfterMs]);
 
-  const canEdit = (isPending || isStopped) && (account?.isAdmin || isMyAuction);
+  const canEdit = isStopped && (account?.isAdmin || isMyAuction);
 
   let soldTime = '';
   let stoppedTime = '';
 
   if (isSold && stoppedAt) {
-    soldTime = format(utcToZonedTime(stoppedAt, timeZone || ''), 'MMM dd yyyy p');
+    soldTime = format(new Date(stoppedAt), 'MMM dd yyyy p');
   }
   if (isStopped && stoppedAt) {
-    stoppedTime = format(utcToZonedTime(stoppedAt, timeZone || ''), 'MMM dd yyyy');
+    stoppedTime = format(new Date(stoppedAt), 'MMM dd yyyy');
   }
 
   const durationTillEnd = toHumanReadableDuration(endDate);
-  const endDateFormatted = dateFormat(toDate(utcToZonedTime(endDate, timeZone || '')), 'MMM dd yyyy');
-  const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone || '')), 'MMM dd yyyy');
+  const endDateFormatted = dateFormat(new Date(endDate), 'MMM dd yyyy');
 
   const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
   const minBid = useMemo(
@@ -151,7 +144,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   );
   const handleBid = useCallback(async (amount: Dinero.Dinero) => commonBidHandler(amount), [commonBidHandler]);
   const handleBuy = useCallback(async () => {
-    setIsBying(true);
+    setIsBuying(true);
     commonBidHandler(Dinero(itemPrice), true);
   }, [itemPrice, commonBidHandler]);
 
@@ -160,7 +153,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       return;
     }
     if (isBuyingParam) {
-      setIsBying(true);
+      setIsBuying(true);
     }
 
     const amount = Dinero(JSON.parse(placeBidQueryParam));
@@ -204,31 +197,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
       <div className="text-headline">{price.toFormat('$0,0')}</div>
-      {isPending && (
-        <>
-          <div className="justify-content-between flex-wrap text-all-cups pt-3">
-            <div>
-              <span className={styles.notBold}>starts in </span>
-              {startTime} {auction.timeZone}
-              <p>
-                <span className={styles.notBold}> on </span>
-                {startFormatted}
-              </p>
-            </div>
-          </div>
-          <div className="justify-content-between flex-wrap text-all-cups pb-3">
-            <div>
-              <span className={styles.notBold}>ends in </span>
-              {endTime} {auction.timeZone}
-              <p>
-                <span className={styles.notBold}> on </span>
-                {endDateFormatted}
-              </p>
-            </div>
-          </div>
-        </>
-      )}
-      {!isPending && !isSold && (
+      {!isSold && (
         <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
           <span className="pr-4 pr-sm-0">{pluralize(totalBids, 'bid')}</span>
           <span>
@@ -251,15 +220,20 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       {isSold && (
         <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
           <span className={styles.notBold}>sold on </span>
-          {soldTime} {auction.timeZone}
+          {soldTime}
         </div>
       )}
       <Elements options={stripeOptions} stripe={stripePromise}>
-        <BidConfirmationModal ref={confirmationRef} auctionId={auctionId} isBuying={isBying} setIsBying={setIsBying} />
+        <BidConfirmationModal
+          ref={confirmationRef}
+          auctionId={auctionId}
+          isBuying={isBuying}
+          setIsBuying={setIsBuying}
+        />
       </Elements>
       {canBid && <BidInput fairMarketValue={Dinero(fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
       {canEdit && (
-        <Link className="w-100 btn btn-primary" to={`/auctions/${auctionId}/basic`}>
+        <Link className="w-100 btn btn-primary" to={`/auctions/${auction.auctionOrganizer.id}/${auctionId}/title`}>
           Edit
         </Link>
       )}

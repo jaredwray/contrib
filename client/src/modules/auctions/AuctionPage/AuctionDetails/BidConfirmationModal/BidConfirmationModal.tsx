@@ -29,11 +29,11 @@ export interface BidConfirmationRef {
 interface Props {
   auctionId: string;
   isBuying: boolean;
-  setIsBying: (value: boolean | ((prevVar: boolean) => boolean)) => void;
+  setIsBuying: (value: boolean | ((prevVar: boolean) => boolean)) => void;
 }
 
 export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
-  ({ auctionId, isBuying, setIsBying }, ref) => {
+  ({ auctionId, isBuying, setIsBuying }, ref) => {
     const [updateAuction] = useMutation(BuyAuctionMutation);
     const stripe = useStripe();
     const elements = useElements();
@@ -59,8 +59,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const handleClose = useCallback(() => {
       setActiveBid(null);
       setNewCard(false);
-      setIsBying(false);
-    }, [setIsBying]);
+      setIsBuying(false);
+    }, [setIsBuying]);
 
     const handleAddCard = useCallback(() => {
       setNewCard(true);

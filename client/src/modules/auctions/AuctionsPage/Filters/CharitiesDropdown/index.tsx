@@ -37,17 +37,10 @@ const CharitiesDropdown: FC<Props> = ({ selectedCharities, changeFilters }) => {
     }),
   ];
 
-  const hasSelection = selectedCharities.length;
-
   return (
     <Form.Group className="mb-1">
       <Form.Label>Charity</Form.Label>
-      <Select
-        options={options}
-        placeholder="Select charity"
-        selected={hasSelection ? selectedCharities : OptionAll}
-        onChange={selectCharity}
-      />
+      <Select options={options} placeholder="Select charity" selected={OptionAll} onChange={selectCharity} />
     </Form.Group>
   );
 };

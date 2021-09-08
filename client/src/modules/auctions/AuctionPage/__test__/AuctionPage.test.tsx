@@ -29,7 +29,6 @@ const auction = {
   isActive: false,
   isDraft: false,
   isFailed: false,
-  isPending: false,
   isSettled: false,
   isSold: false,
   isStopped: true,

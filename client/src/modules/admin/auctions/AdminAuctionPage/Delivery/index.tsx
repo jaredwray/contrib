@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { format, utcToZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns-tz';
 
 import { ParcelProps } from 'src/helpers/ParcelProps';
 import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
@@ -8,15 +8,14 @@ import { Auction } from 'src/types/Auction';
 
 interface Props {
   auction: Auction;
-  timeZone: string;
 }
 
-export const Delivery: FC<Props> = ({ auction, timeZone }) => {
+export const Delivery: FC<Props> = ({ auction }) => {
   const deliveryAddress = auction.delivery.address;
   const incomingState = USAStates.find((option) => option.value === deliveryAddress?.state)?.label;
   let updatedAt;
   if (auction.delivery?.updatedAt) {
-    updatedAt = format(utcToZonedTime(auction.delivery?.updatedAt, timeZone), 'MMM dd yyyy HH:mm:ssXXX');
+    updatedAt = format(new Date(auction.delivery?.updatedAt), 'MMM dd yyyy HH:mm:ssXXX');
   }
 
   return (

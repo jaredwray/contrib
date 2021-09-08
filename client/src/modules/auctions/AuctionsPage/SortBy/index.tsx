@@ -14,7 +14,6 @@ interface Props {
 const sortByEnum = [
   { value: 'CREATED_AT_DESC', label: 'Newest' },
   { value: 'TIME_ASC', label: 'Ending soon' },
-  { value: 'SPORT', label: 'Sport' },
   { value: 'PRICE_ASC', label: 'Price: Low to high' },
   { value: 'PRICE_DESC', label: 'Price: High to low' },
 ];
