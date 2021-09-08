@@ -16,7 +16,7 @@ import Row from '../common/Row';
 const StartPricePage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { showMessage, showError } = useShowNotification();
+  const { showMessage, showError, showWarning } = useShowNotification();
   const history = useHistory();
   const [submitValue, setSubmitValue] = useState();
 
@@ -41,6 +41,11 @@ const StartPricePage = () => {
 
   const handleSubmit = useCallback(
     async (values) => {
+      if (values.startPrice.amount === 0) {
+        showWarning('Starting Price should be greater than 0');
+        return;
+      }
+
       setSubmitValue(values.startPrice);
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
@@ -51,7 +56,7 @@ const StartPricePage = () => {
         showError(error.message);
       }
     },
-    [auctionId, updateAuction, showMessage, showError, isActive],
+    [auctionId, updateAuction, showMessage, showError, showWarning, isActive],
   );
 
   if (!account?.isAdmin && isActive) {

@@ -521,6 +521,15 @@ export class AuctionService {
         ErrorCode.BAD_REQUEST,
       );
     }
+
+    const maxBidAmount = AppConfig.bid.maxBidSize;
+    if (Number(bid.toFormat('0')) * 100 >= maxBidAmount) {
+      AppLogger.info(
+        `Unable to charge auction id ${auction.id}: Amount must be less than $${maxBidAmount.toLocaleString()}`,
+      );
+      throw new AppError('Unable to charge', ErrorCode.BAD_REQUEST);
+    }
+
     try {
       const [lastBid] = await this.BidModel.find({ auction: auction._id }, null, { session })
         .sort({ bid: -1 })
@@ -1135,6 +1144,18 @@ export class AuctionService {
         auctionData: JSON.stringify(model.toObject()),
       });
       return null;
+    }
+    const maxBidAmount = AppConfig.bid.maxBidSize;
+
+    if (startPrice >= maxBidAmount) {
+      AppLogger.info(
+        `Unable to create auction ${_id}. Start price must be less than $${maxBidAmount.toLocaleString()}`,
+      );
+      throw new AppError(`Unable to create auction`, ErrorCode.BAD_REQUEST);
+    }
+    if (itemPrice > maxBidAmount) {
+      AppLogger.info(`Unable to create auction ${_id}. Item price must be less than $${maxBidAmount.toLocaleString()}`);
+      throw new AppError(`Unable to create auction`, ErrorCode.BAD_REQUEST);
     }
 
     // temporal: some older auctions won't have a pre-populated link in dev environment

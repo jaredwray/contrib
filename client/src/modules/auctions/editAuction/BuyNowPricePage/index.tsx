@@ -16,7 +16,7 @@ import Row from '../common/Row';
 const BuyNowPricePage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { showMessage, showError } = useShowNotification();
+  const { showMessage, showError, showWarning } = useShowNotification();
   const [submitValue, setSubmitValue] = useState();
   const history = useHistory();
 
@@ -25,6 +25,7 @@ const BuyNowPricePage = () => {
   });
   const auction = auctionData?.auction;
   const { isActive } = auction || {};
+  const startPrice = Dinero(auction?.startPrice);
 
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
     onCompleted() {
@@ -41,6 +42,12 @@ const BuyNowPricePage = () => {
 
   const handleSubmit = useCallback(
     async (values) => {
+      const itemPrice = Dinero(values.itemPrice);
+      if (!itemPrice.isZero() && itemPrice.lessThan(startPrice)) {
+        showWarning(`Buy it Now Price should be greater than Starting Price ${startPrice.toFormat('$0')}`);
+        return;
+      }
+
       setSubmitValue(values.itemPrice);
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
@@ -51,7 +58,7 @@ const BuyNowPricePage = () => {
         showError(error.message);
       }
     },
-    [auctionId, updateAuction, showMessage, showError, isActive],
+    [auctionId, updateAuction, showMessage, showError, showWarning, isActive, startPrice],
   );
 
   if (!account?.isAdmin && isActive) {

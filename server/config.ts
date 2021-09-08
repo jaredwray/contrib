@@ -87,6 +87,9 @@ export const AppConfig = {
   terms: {
     version: '1.0',
   },
+  bid: {
+    maxBidSize: 99999999,
+  },
   delivery: {
     UPSContribDeliveryData: JSON.parse(requireEnvVar('UPS_DELIVERY_CONTRIB_DATA')),
     UPSRequestHeader: JSON.parse(requireEnvVar('UPS_DELIVERY_REQUEST_HEADER')),
