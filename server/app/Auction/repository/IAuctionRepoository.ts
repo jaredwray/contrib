@@ -18,17 +18,11 @@ export type IAuctionFilters = {
 
 export interface ICreateAuction {
   title?: string;
-  sport?: string;
-  gameWorn?: boolean;
-  autographed?: boolean;
   description?: string;
-  fullPageDescription?: string;
   startDate?: Dayjs;
-  timeZone?: string;
   endDate?: Dayjs;
   startPrice?: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
-  playedIn?: string;
   organizerId?: string;
 }
 
@@ -37,17 +31,12 @@ export type IUpdateAuction = {
   priceCurrency?: string;
   startPrice?: number;
   title?: string;
-  sport?: string;
-  gameWorn?: boolean;
-  autographed?: boolean;
-  fullPageDescription?: string;
+  description?: string;
   charity?: Types.ObjectId;
   startDate?: dayjs.Dayjs;
   endDate?: dayjs.Dayjs;
-  playedIn?: string;
   organizerId?: string;
   fairMarketValue?: number;
-  timeZone?: string;
 };
 
 export interface IAuctionRepository {
@@ -60,7 +49,6 @@ export interface IAuctionRepository {
   getAuctions({ query, size, skip, orderBy, filters }: IAuctionFilters): Promise<IAuctionModel[]>;
   getAuctionsCount({ query, size, skip, orderBy, filters }: IAuctionFilters): Promise<number>;
   getAuction(id: string, organizerId?: string): Promise<IAuctionModel>;
-  getAuctionSports(): Promise<string[]>;
   addAuctionAttachment(
     id: string,
     asset: IAuctionAssetModel,

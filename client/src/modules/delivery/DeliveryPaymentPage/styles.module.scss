@@ -12,7 +12,7 @@
 }
 
 .markedText {
-  color: $light-ochre-color;
+  color: $sage-color;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -37,13 +37,7 @@
     width: 100%;
   }
 }
-.auctionTitle {
-  color: $light-ochre-color;
-  padding-left: 5px;
-  &:hover {
-    color: $light-ochre-color;
-  }
-}
+
 .cardInputWrapper {
   margin: 0 auto;
 

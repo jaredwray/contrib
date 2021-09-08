@@ -37,6 +37,10 @@ const AuctionDonePage = () => {
     history.replace('/404');
     return null;
   }
+  if (auction?.status === 'DRAFT') {
+    history.replace('/');
+    return null;
+  }
   if (auction === undefined) {
     return null;
   }

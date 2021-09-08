@@ -41,9 +41,11 @@
   border-radius: 10px;
 }
 
+.containerHeight {
+  min-height: calc(100vh - 369px);
+}
 .container {
   color: $white-color;
-  min-height: calc(100vh - 369px);
 }
 .numberInput {
   input[type='number']::-webkit-inner-spin-button,

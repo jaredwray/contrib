@@ -3,12 +3,12 @@ import { gql } from 'apollo-server-express';
 export const AuctionSchema = gql`
   enum AuctionStatus {
     DRAFT
-    PENDING
     ACTIVE
     SETTLED
     FAILED
     SOLD
     STOPPED
+    PENDING
   }
 
   enum AuctionDeliveryStatus {
@@ -20,7 +20,6 @@ export const AuctionSchema = gql`
     CREATED_AT_DESC
     TIME_ASC
     TIME_DESC
-    SPORT
     PRICE_ASC
     PRICE_DESC
   }
@@ -52,32 +51,24 @@ export const AuctionSchema = gql`
     id: String!
     title: String!
     description: String
-    fullPageDescription: String
-    playedIn: String
     status: AuctionStatus!
     attachments: [AuctionAttachment]
-    startPrice: Money!
+    startPrice: Money
     itemPrice: Money
-    currentPrice: Money!
+    currentPrice: Money
     charity: Charity
-    gameWorn: Boolean!
-    autographed: Boolean!
-    authenticityCertificate: Boolean!
-    sport: String!
-    startDate: DateTime!
-    endDate: DateTime!
+    startDate: DateTime
+    endDate: DateTime
     stoppedAt: DateTime
-    auctionOrganizer: InfluencerProfile!
-    totalBids: Int!
-    link: String!
+    auctionOrganizer: InfluencerProfile
+    totalBids: Int
+    link: String
     fairMarketValue: Money
-    timeZone: String
     followers: [Follow]
     delivery: AuctionDelivery
     winner: Winner
     isActive: Boolean!
     isDraft: Boolean!
-    isPending: Boolean!
     isSettled: Boolean!
     isFailed: Boolean!
     isSold: Boolean!
@@ -90,7 +81,6 @@ export const AuctionSchema = gql`
     status: AuctionStatus
     startDate: DateTime!
     endDate: DateTime!
-    timeZone: String
     charity: AuctionCharity
     bids: [AuctionBid]
     currentPrice: Money!
@@ -197,7 +187,6 @@ export const AuctionSchema = gql`
   }
 
   input AuctionSearchFilters {
-    sports: [String]
     minPrice: Int
     maxPrice: Int
     status: [String]
@@ -210,19 +199,13 @@ export const AuctionSchema = gql`
     organizerId: String
     title: String
     description: String
-    fullPageDescription: String
     startDate: DateTime
     endDate: DateTime
     startPrice: Money
     charity: String
-    authenticityCertificate: Boolean
-    gameWorn: Boolean
-    autographed: Boolean
-    sport: String
-    playedIn: String
     fairMarketValue: Money
-    timeZone: String
     itemPrice: Money
+    duration: Int
   }
 
   input CurrentAuctionBid {
@@ -262,7 +245,6 @@ export const AuctionSchema = gql`
     ): AuctionsPage!
     auctionPriceLimits(query: String, filters: AuctionSearchFilters, statusFilter: [String]): AuctionPriceLimits!
     auction(id: String!): Auction
-    sports: [String]
     getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
     getCustomerInformation(stripeCustomerId: String!): CustomerInformation
     getAuctionMetrics(auctionId: String!): Metrics!

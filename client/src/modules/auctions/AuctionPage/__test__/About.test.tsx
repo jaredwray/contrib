@@ -6,10 +6,7 @@ import About from '../About';
 jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
-  fullPageDescription: 'test',
-  autographed: true,
-  authenticityCertificate: true,
-  gameWorn: true,
+  description: 'test',
 };
 
 test('renders without crashing', () => {

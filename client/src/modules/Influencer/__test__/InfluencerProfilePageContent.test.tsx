@@ -29,7 +29,6 @@ cache.writeQuery({
         AuctionStatus.DRAFT,
         AuctionStatus.ACTIVE,
         AuctionStatus.SETTLED,
-        AuctionStatus.PENDING,
         AuctionStatus.STOPPED,
         AuctionStatus.SOLD,
       ],
@@ -40,7 +39,6 @@ cache.writeQuery({
       items: [
         auction,
         { ...auction, isFailed: false, isDraft: true, status: AuctionStatus.DRAFT },
-        { ...auction, isFailed: false, isPending: true, status: AuctionStatus.PENDING },
         { ...auction, isFailed: false, isSettled: true, status: AuctionStatus.SETTLED },
         { ...auction, isFailed: false, isStopped: true, status: AuctionStatus.STOPPED },
       ],
@@ -59,7 +57,6 @@ cache2.writeQuery({
         AuctionStatus.DRAFT,
         AuctionStatus.ACTIVE,
         AuctionStatus.SETTLED,
-        AuctionStatus.PENDING,
         AuctionStatus.STOPPED,
         AuctionStatus.SOLD,
       ],

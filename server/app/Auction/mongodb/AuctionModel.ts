@@ -6,20 +6,15 @@ import { AppConfig } from '../../../config';
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionDelivery } from '../dto/AuctionDelivery';
-import { AuctionDeliveryStatus } from '../dto/AuctionDeliveryStatus';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { InfluencerCollectionName, IInfluencer } from '../../Influencer/mongodb/InfluencerModel';
 
 export interface IAuctionModel extends Document {
   title: string;
   status: AuctionStatus;
-  autographed: boolean;
-  sport: string;
-  gameWorn: boolean;
-  description: string;
   followers: IFollowObject[];
   delivery: AuctionDelivery;
-  fullPageDescription: string;
+  description: string;
   auctionOrganizer: IInfluencer['_id'];
   assets: IAuctionAssetModel['_id'][];
   currentPrice: number;
@@ -32,7 +27,6 @@ export interface IAuctionModel extends Document {
   startPrice: number;
   link: string;
   fairMarketValue: number;
-  timeZone: string;
   sentNotifications: [string];
   totalBids: number;
   winner?: IUserAccount['_id'];
@@ -45,26 +39,20 @@ const auctionDefaultParcelParameters = JSON.parse(AppConfig.delivery.UPSAuctionD
 const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
   {
     title: { type: SchemaTypes.String, required: true },
-    sport: { type: SchemaTypes.String, default: '' },
-    description: { type: SchemaTypes.String, default: '' },
-    fullPageDescription: { type: SchemaTypes.String, default: '' },
+    description: { type: SchemaTypes.String },
     status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
     charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
-    autographed: { type: SchemaTypes.Boolean, default: false },
     sentNotifications: { type: SchemaTypes.Array, default: [] },
-    authenticityCertificate: { type: SchemaTypes.Boolean, default: false },
-    gameWorn: { type: SchemaTypes.Boolean, default: false },
     followers: [
       {
         user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
         createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
       },
     ],
-    startPrice: { type: SchemaTypes.Number, default: 0 },
+    startPrice: { type: SchemaTypes.Number, default: 10000 },
     itemPrice: { type: SchemaTypes.Number },
     priceCurrency: { type: SchemaTypes.String, default: AppConfig.app.defaultCurrency },
     currentPrice: { type: SchemaTypes.Number, default: 0 },
-    playedIn: { type: SchemaTypes.String },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
     startsAt: {
@@ -72,11 +60,10 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
       default: dayjs().second(0).toISOString(),
       get: (v) => dayjs(v),
     },
-    endsAt: { type: SchemaTypes.Date, default: dayjs().second(0).toISOString(), get: (v) => dayjs(v) },
+    endsAt: { type: SchemaTypes.Date, default: dayjs().second(0).add(3, 'days').toISOString(), get: (v) => dayjs(v) },
     stoppedAt: { type: SchemaTypes.Date },
     link: { type: SchemaTypes.String },
     fairMarketValue: { type: SchemaTypes.Number },
-    timeZone: { type: SchemaTypes.String },
     totalBids: { type: SchemaTypes.Number, default: 0 },
     winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
     delivery: {

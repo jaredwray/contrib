@@ -28,7 +28,7 @@ export default function WelcomePage() {
                   <div className="d-table w-100">
                     <Link
                       className="text-subhead btn btn-ochre btn-with-arrows d-table-cell align-middle w-100 welcome-page-create-btn"
-                      to="/auctions/new"
+                      to="/auctions/title"
                     >
                       Create an auction
                     </Link>

@@ -16,9 +16,10 @@ interface Props {
   favoriteCharities: Charity[];
   onChange: (charity: Charity, isFavorite: boolean) => void;
   disabled?: boolean;
+  withTitle?: boolean;
 }
 
-const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChange, disabled }) => {
+const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChange, disabled, withTitle }) => {
   const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -66,7 +67,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
 
   return (
     <Form.Group className={clsx('charities-search-container', { active: charitiesSearch!.length })}>
-      <Form.Label>Search</Form.Label>
+      {withTitle && <Form.Label>Search</Form.Label>}
       <div ref={searchContainer} className={styles.wrapper}>
         <SearchInput
           disabled={disabled}

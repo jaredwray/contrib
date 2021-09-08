@@ -396,7 +396,7 @@ export class InfluencerService {
     await this.InfluencerModel.updateOne({ _id: influencerId }, { $addToSet: { assistants: assistantId } });
   }
 
-  public static makeInfluencerProfile(model: IInfluencer, auctions?: IAuctionModel[]): InfluencerProfile {
+  public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
     return {
       id: model._id.toString(),
       name: model.name,

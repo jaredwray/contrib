@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { format, utcToZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Table } from 'react-bootstrap';
 
@@ -10,12 +10,11 @@ import { Charity } from 'src/types/Charity';
 interface Props {
   auction: Auction;
   charity: Charity;
-  timeZone: string;
 }
 
-export const Details: FC<Props> = ({ auction, timeZone, charity }) => {
-  const auctionStartDate = format(utcToZonedTime(auction.startDate, timeZone), 'MMM dd yyyy HH:mm:ssXXX');
-  const auctionEndDate = format(utcToZonedTime(auction.endDate, timeZone), 'MMM dd yyyy HH:mm:ssXXX');
+export const Details: FC<Props> = ({ auction, charity }) => {
+  const auctionStartDate = format(new Date(auction.startDate), 'MMM dd yyyy HH:mm:ssXXX');
+  const auctionEndDate = format(new Date(auction.endDate), 'MMM dd yyyy HH:mm:ssXXX');
 
   return (
     <Table className="d-inline table-bordered">

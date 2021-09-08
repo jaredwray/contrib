@@ -7,7 +7,6 @@ describe('Should render correctly "Bids"', () => {
   const props: any = {
     bids: bids,
     onBidClickHandler: jest.fn(),
-    timeZone: 'America/Los_Angeles',
     loading: false,
     showProcessBtn: true,
   };

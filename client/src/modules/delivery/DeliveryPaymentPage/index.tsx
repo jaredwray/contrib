@@ -1,33 +1,27 @@
 import { useContext, useCallback, useEffect, useState, useRef, BaseSyntheticEvent } from 'react';
 
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import creditCardType from 'credit-card-type';
 import { format } from 'date-fns';
 import Dinero from 'dinero.js';
 import { Row, Spinner, Col } from 'react-bootstrap';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery, CalculateShippingCostQuery, ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
 import CVCInput from 'src/components/CVCInput';
 import DeliveryCardInput from 'src/components/DeliveryCardInput';
-import { DeliveryTextBlock } from 'src/components/DeliveryTextBlock';
-import DialogActions from 'src/components/Dialog/DialogActions';
-import Form from 'src/components/Form/Form';
 import Select from 'src/components/Select';
-import { SubmitButton } from 'src/components/SubmitButton/SubmitButton';
+import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
+import StepRow from 'src/components/StepByStepPageLayout/Row';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import { UserDialogLayout } from 'src/components/UserDialogLayout';
 import { expirationDate } from 'src/helpers/expirationDate';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
-import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
 import { deliveryMethods, cardTypes } from 'src/modules/delivery/DeliveryPaymentPage/consts';
-import { Modal } from 'src/modules/delivery/DeliveryPaymentPage/Modal';
 import { AuctionDeliveryStatus } from 'src/types/Auction';
 
-import { MutationProps } from './ModalMutationProps';
 import styles from './styles.module.scss';
 
 const minCardNumberLength = 9;
@@ -37,10 +31,9 @@ export default function DeliveryPricePage() {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
-  const { showWarning } = useShowNotification();
+  const { showWarning, showMessage, showError } = useShowNotification();
+  const [ShippingRegistration, { loading: shippingRegistrationLoading }] = useMutation(ShippingRegistrationMutation);
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
-  const [showDialog, setShowDialog] = useState(false);
-  const [modalProps, setModalProps] = useState<MutationProps | null>(null);
   const [cardNumber, setCardNumber] = useState('');
   const [selectedCardType, setCardType] = useState('');
   const [enteredMonth, setMonth] = useState('');
@@ -55,7 +48,6 @@ export default function DeliveryPricePage() {
   const cvc = useRef<HTMLInputElement | null>(null);
 
   const initialDeliveryMethod = deliveryMethods[0].value;
-
   const creditCardInfo = creditCardType(cardNumber);
 
   const FoundType = cardTypes.find(
@@ -77,6 +69,10 @@ export default function DeliveryPricePage() {
       fetchPolicy: 'cache-and-network',
     },
   );
+  const handlePrevAction = useCallback(() => {
+    history.push(`/auctions/${auctionId}/delivery/address`);
+  }, [auctionId, history]);
+
   const handleCardTypeChange = (cardType: string) => {
     setCardType(cardType);
     setCurrentCVC('');
@@ -94,37 +90,51 @@ export default function DeliveryPricePage() {
 
   const shippingCost = shippingCostData?.calculateShippingCost;
 
-  const handleAccepting = useCallback(
+  const handleSubmit = useCallback(
     ({
       number,
       expirationDateMonth,
       expirationDateYear,
-      securityCode,
-      deliveryMethod,
     }: {
       number: string;
       expirationDateMonth: string;
       expirationDateYear: string;
-      securityCode: string;
-      deliveryMethod: string;
     }) => {
-      if (!number || !expirationDateMonth || !expirationDateYear || !deliveryMethod) {
+      if (!number || !expirationDateMonth || !expirationDateYear || !currentCVC) {
         showWarning('Please, check the data');
         return;
       }
-      setShowDialog(true);
-      setModalProps({
-        auctionId,
-        type: selected?.value || cardTypes[0].value,
-        number,
-        expirationDateMonth,
-        expirationDateYear,
-        securityCode: currentCVC || '',
-        timeInTransit: shippingCost?.timeInTransit,
-        deliveryMethod: selectedDeliveryMethod.current,
-      });
+
+      ShippingRegistration({
+        variables: {
+          auctionId,
+          type: selected?.value || cardTypes[0].value,
+          number,
+          expirationDate: `${expirationDateMonth}20${expirationDateYear}`,
+          securityCode: currentCVC,
+          timeInTransit: shippingCost?.timeInTransit,
+          deliveryMethod: selectedDeliveryMethod.current,
+        },
+      })
+        .then(() => {
+          showMessage('Your address information was updated');
+          history.push(`/auctions/${auctionId}/delivery/status`);
+        })
+        .catch((error) => {
+          showError('Please, check your card data');
+        });
     },
-    [showWarning, auctionId, shippingCost?.timeInTransit, selected?.value, currentCVC],
+    [
+      ShippingRegistration,
+      history,
+      showError,
+      showMessage,
+      showWarning,
+      auctionId,
+      shippingCost?.timeInTransit,
+      selected?.value,
+      currentCVC,
+    ],
   );
 
   if (!auctionData) {
@@ -152,8 +162,6 @@ export default function DeliveryPricePage() {
     return null;
   }
 
-  const { name, state, city, street, zipCode, phoneNumber } = auction.delivery.address;
-
   const handleDeliveryMethodChange = (deliveryMethod: string) => {
     selectedDeliveryMethod.current = deliveryMethod;
     CalculateShippingCost({
@@ -164,39 +172,12 @@ export default function DeliveryPricePage() {
     });
   };
 
-  const incomingState = USAStates.find((option) => option.value === state)?.label;
-  const { title } = auction;
-
   if (!isWinner) {
     history.push(`/`);
     return null;
   }
 
-  const textBlock = (
-    <DeliveryTextBlock
-      city={city}
-      incomingState={incomingState}
-      loading={executeAuctionLoading}
-      name={name}
-      phoneNumber={phoneNumber}
-      state={state}
-      street={street}
-      subtitle="Your package will be delivered to:"
-      zipCode={zipCode}
-    >
-      <p className="text-headline pt-2">
-        Please choose the delivery method or
-        {
-          <Link to={`/auctions/${auctionId}/delivery/address`}>
-            {<span className={styles.markedText}>go back</span>}
-          </Link>
-        }
-        to edit the recipient or address.
-      </p>
-    </DeliveryTextBlock>
-  );
-
-  setPageTitle(`Delivery price for ${title} auction`);
+  setPageTitle(`Delivery price for ${auction.title} auction`);
 
   const disabled = calculateShippingCostLoading || executeAuctionLoading;
   const arrivalDate = new Date(shippingCost?.timeInTransit || null);
@@ -222,20 +203,16 @@ export default function DeliveryPricePage() {
   };
 
   return (
-    <UserDialogLayout textBlock={textBlock} title="UPS Delivery">
-      <Form
-        initialValues={{
-          auctionId: modalProps?.auctionId || '',
-          securityCode: modalProps?.securityCode || '',
-          timeInTransit: modalProps?.timeInTransit || '',
-          number: modalProps?.number || '',
-          expirationDateMonth: modalProps?.expirationDateMonth || '',
-          expirationDateYear: modalProps?.expirationDateYear || '',
-          deliveryMethod: deliveryMethods[0].value,
-          type: modalProps?.type || cardTypes[0].value,
-        }}
-        onSubmit={handleAccepting}
-      >
+    <StepByStepPageLayout
+      header="Delivery"
+      loading={calculateShippingCostLoading || executeAuctionLoading || shippingRegistrationLoading}
+      prevAction={handlePrevAction}
+      progress={66.66}
+      step="2"
+      title="Delivery payment"
+      onSubmit={handleSubmit}
+    >
+      <StepRow description="Choose a delivery method and pay for it">
         <Row className="d-flex align-items-baseline">
           <span className="pt-1 pb-1 text-label">Delivery Method</span>
         </Row>
@@ -329,32 +306,7 @@ export default function DeliveryPricePage() {
             />
           </Col>
         </Row>
-        <Row className="pt-sm-3 pt-0">
-          <DialogActions className="justify-content-between flex-column-reverse flex-sm-row p-0 w-100">
-            <div className={clsx(disabled ? styles.actionLinkWrapper : styles.actionLink)}>
-              <Link
-                className={clsx(disabled ? styles.actionLinkDisabled : styles.actionLink, 'ml-0 mr-sm-auto p-0')}
-                to={`/auctions/${auctionId}/delivery/address`}
-              >
-                {disabled ? <Spinner animation="border" size="sm" /> : 'Back'}
-              </Link>
-            </div>
-            <SubmitButton
-              className={clsx(styles.submitBtn, 'p-0')}
-              disabled={disabled || isValidCardNumber || isValidCVC || isValidYear || isValidMonth}
-            >
-              {disabled ? <Spinner animation="border" size="sm" /> : 'Submit'}
-            </SubmitButton>
-          </DialogActions>
-        </Row>
-      </Form>
-      <Modal
-        mutation={ShippingRegistrationMutation}
-        mutationProps={modalProps}
-        open={showDialog}
-        shippingCost={shippingCost?.deliveryPrice}
-        onClose={() => setShowDialog(false)}
-      />
-    </UserDialogLayout>
+      </StepRow>
+    </StepByStepPageLayout>
   );
 }

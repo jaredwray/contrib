@@ -11,9 +11,6 @@ import { Follow } from '../../FollowDto';
 export interface Auction {
   id: string;
   title: string;
-  sport: string;
-  gameWorn: boolean;
-  autographed: boolean;
   attachments: AuctionAssets[];
   auctionOrganizer: InfluencerProfile;
   charity: Charity;
@@ -23,7 +20,6 @@ export interface Auction {
   status: AuctionStatus;
   totalBids: number;
   description: string;
-  fullPageDescription: string;
   currentPrice: Dinero.Dinero;
   startPrice: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
@@ -32,10 +28,8 @@ export interface Auction {
   followers?: Follow[];
   winner?: AuctionWinner;
   delivery: AuctionDelivery;
-  timeZone: string;
   isActive: boolean;
   isDraft: boolean;
-  isPending: boolean;
   isSettled: boolean;
   isFailed: boolean;
   isSold: boolean;

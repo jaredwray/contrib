@@ -1,9 +1,0 @@
-@import 'src/variables.scss';
-
-.actionBtn {
-  height: 50px !important;
-  width: 200px;
-  @media (max-width: $small-weight) {
-    width: 100%;
-  }
-}

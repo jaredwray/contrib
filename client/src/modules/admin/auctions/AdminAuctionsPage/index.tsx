@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 import {
   AuctionsListQuery,
-  UpdateAuctionDetailsMutation,
+  UpdateAuctionMutation,
   StopAuctionMutation,
   ActivateAuctionMutation,
   DeleteAuctionMutation,
@@ -84,16 +84,12 @@ export default function AdminAuctionsPage() {
         </thead>
         <tbody className="font-weight-normal">
           {auctions.items.map((auction: Auction) => (
-            <ClickableTr key={auction.id} linkTo={`/auctions/${auction.id}${auction.isDraft ? '/basic' : ''}`}>
+            <ClickableTr key={auction.id} linkTo={`/auctions/${auction.isDraft ? `${auction.id}/title` : auction.id}`}>
               <td className={styles.idColumn}>{auction.id}</td>
               <td className={styles.otherColumns}>{auction.title}</td>
               <td className={styles.otherColumns}>{auction.auctionOrganizer.name}</td>
               <td>{auction.status}</td>
-              <td>
-                {auction.currentPrice
-                  ? Dinero(auction.currentPrice).toFormat('$0,0')
-                  : Dinero(auction.startPrice).toFormat('$0,0')}
-              </td>
+              <td>{Dinero(auction.currentPrice ?? auction.startPrice).toFormat('$0,0')}</td>
               <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
               <td>{auction.delivery.parcel && ParcelProps(auction)}</td>
               <td>
@@ -101,8 +97,11 @@ export default function AdminAuctionsPage() {
                   <Link className="dropdown-item text--body" to={`/admin/auctions/${auction.id}`}>
                     View details
                   </Link>
-                  {(auction.isPending || auction.isDraft || auction.isStopped || auction.isActive) && (
-                    <Link className={'dropdown-item text--body'} to={`/auctions/${auction.id}/basic`}>
+                  {(auction.isDraft || auction.isStopped || auction.isActive) && (
+                    <Link
+                      className={'dropdown-item text--body'}
+                      to={`/auctions/${auction.auctionOrganizer.id}/${auction.id}/title`}
+                    >
                       Edit
                     </Link>
                   )}
@@ -113,15 +112,15 @@ export default function AdminAuctionsPage() {
                       mutation={DeleteAuctionMutation}
                     />
                   )}
-                  {(auction.isActive || auction.isPending) && (
+                  {auction.isActive && (
                     <FairMarketValueChangeButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
                       getAuctionsList={getAuctionsList}
-                      mutation={UpdateAuctionDetailsMutation}
+                      mutation={UpdateAuctionMutation}
                     />
                   )}
-                  {(auction.isActive || auction.isPending || auction.isStopped) && (
+                  {(auction.isActive || auction.isStopped) && (
                     <StopOrActiveButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}

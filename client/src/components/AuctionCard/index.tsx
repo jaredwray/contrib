@@ -3,8 +3,6 @@ import { FC, useCallback, useMemo, useState, useContext } from 'react';
 import { useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
-import { format as dateFormat } from 'date-fns';
-import { format, utcToZonedTime, toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
@@ -16,7 +14,6 @@ import { CloseButton } from 'src/components/CloseButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
-import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
@@ -98,11 +95,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   }
 
   const priceFormatted = currentPrice.toFormat('$0,0');
-  const { startDate, isActive, isSettled, isDraft, isPending, isSold } = auction;
-  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.value;
-  const startTime = format(utcToZonedTime(startDate, timeZone || ''), 'p');
-  const startFormatted = dateFormat(toDate(utcToZonedTime(startDate, timeZone || '')), 'MMM dd yyyy');
-  const linkToAuction = `/auctions/${auction.id}${isDraft ? '/basic' : ''}`;
+  const { isActive, isSettled, isDraft, isSold } = auction;
+  const linkToAuction = `/auctions/${isDraft ? `${auction.auctionOrganizer.id}/${auction.id}/title` : auction.id}`;
 
   return (
     <figure
@@ -175,10 +169,6 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
         </p>
 
         {isDraft && <p className="text-label text-all-cups mb-0 mt-1 text-left">DRAFT</p>}
-
-        {isPending && !isDonePage && (
-          <p className="text-label text-all-cups mb-0 mt-1 text-left">{`starts in ${startTime} ${auction.timeZone} on ${startFormatted}`}</p>
-        )}
 
         {(isActive || isSettled || isSold || isDonePage) && (
           <p className="text-label text-all-cups mb-0 mt-auto text-left">

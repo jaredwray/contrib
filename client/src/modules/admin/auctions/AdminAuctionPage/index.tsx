@@ -16,7 +16,6 @@ import { AuctionBidsQuery, ChargeCurrentBidMutation } from 'src/apollo/queries/b
 import AsyncButton from 'src/components/AsyncButton';
 import Layout from 'src/components/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
-import { utcTimeZones } from 'src/modules/auctions/editAuction/DetailsPage/consts';
 import { AuctionBid } from 'src/types/Bid';
 
 import Bids from './Bids';
@@ -95,7 +94,6 @@ export default function AdminAuctionPage() {
   if (error || loading || !auction || !metrics || !bids) {
     return null;
   }
-  const timeZone = utcTimeZones.find((timeZone) => timeZone.label === auction.timeZone)?.label || '';
   const hasBids = bids.length > 0;
 
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));
@@ -121,7 +119,7 @@ export default function AdminAuctionPage() {
           <Row>
             <Col lg="5">
               <div className="text-headline">Auction details</div>
-              <Details auction={auction} charity={charity} timeZone={timeZone} />
+              <Details auction={auction} charity={charity} />
               {hasBids && auction.isFailed && (
                 <AsyncButton
                   className={clsx(styles.select, 'p-2')}
@@ -144,7 +142,7 @@ export default function AdminAuctionPage() {
           <Row className="pt-3">
             <Col>
               <div className="text-headline">Delivery</div>
-              <Delivery auction={auction} timeZone={timeZone} />
+              <Delivery auction={auction} />
             </Col>
           </Row>
           {hasBids && (
@@ -155,7 +153,6 @@ export default function AdminAuctionPage() {
                   bids={bids}
                   loading={customerLoading}
                   showProcessBtn={auction.isFailed}
-                  timeZone={timeZone}
                   onBidClickHandler={onBidClickHandler}
                 />
               </Col>

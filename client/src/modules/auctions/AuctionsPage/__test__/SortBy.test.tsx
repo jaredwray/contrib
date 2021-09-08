@@ -18,7 +18,7 @@ describe('Should render correctly "SortBy"', () => {
     expect(wrapper).toHaveLength(1);
   });
   it('should call changeFilters when changing', () => {
-    wrapper.find(Select).props().onChange('SPORT');
+    wrapper.find(Select).props().onChange('TIME_ASC');
     expect(props.changeFilters).toBeCalledTimes(1);
   });
 });

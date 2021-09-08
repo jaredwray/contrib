@@ -4,7 +4,7 @@ import { Follow } from '../../FollowDto';
 export interface InfluencerProfile {
   id: string;
   name: string;
-  sport: string | null;
+  sport: string;
   team: string | null;
   profileDescription: string | null;
   avatarUrl: string;

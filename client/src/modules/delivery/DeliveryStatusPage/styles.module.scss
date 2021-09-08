@@ -1,10 +1,10 @@
 @import 'src/variables.scss';
 
 .actionLink {
-  color: $ochre-color;
+  color: $sage-color;
   letter-spacing: 0.1em;
   &:hover {
-    color: $white-color;
+    color: $dark-sage-color;
   }
 }
 
@@ -12,10 +12,16 @@
   width: 400px;
 }
 .copyBtn {
-  color: $sage-color !important;
-  background-color: $ochre-color !important;
+  color: $white-color !important;
+  background-color: $sage-color !important;
   &:hover {
-    background-color: $dark-ochre-color !important;
+    background-color: $dark-sage-color !important;
     color: $white-color !important;
   }
+}
+.statusPageBackground {
+  background-color: $white-color;
+}
+.statusPageTextColor {
+  color: $black-color;
 }
