@@ -22,6 +22,7 @@ interface Props {
 }
 
 const MaxLength = 11;
+const MaxBidValue = 999999;
 
 const MoneyField: FC<Props> = ({
   name,
@@ -48,7 +49,7 @@ const MoneyField: FC<Props> = ({
       const targetValue = event.target.value;
       const number = targetValue.replace(/[^0-9]/g, '');
       if (setDisabled && minValue) {
-        setDisabled(minValue > number);
+        setDisabled(minValue > number || number > MaxBidValue);
       }
       onChange({ ...value, amount: number ? parseInt(number, 10) * 100 : 0 });
     },

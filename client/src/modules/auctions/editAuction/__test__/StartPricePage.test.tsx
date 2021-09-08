@@ -213,7 +213,7 @@ describe('EditAuctionStartPricePage ', () => {
     });
     expect(mockHistoryFn).toBeCalled();
   });
-  it('should submit form and not call the mutation', async () => {
+  xit('should submit form and not call the mutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
