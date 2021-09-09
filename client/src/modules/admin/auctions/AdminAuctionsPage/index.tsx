@@ -98,10 +98,7 @@ export default function AdminAuctionsPage() {
                     View details
                   </Link>
                   {(auction.isDraft || auction.isStopped || auction.isActive) && (
-                    <Link
-                      className={'dropdown-item text--body'}
-                      to={`/auctions/${auction.auctionOrganizer.id}/${auction.id}/title`}
-                    >
+                    <Link className={'dropdown-item text--body'} to={`/auctions/${auction.id}/title`}>
                       Edit
                     </Link>
                   )}
