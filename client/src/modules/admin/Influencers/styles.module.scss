@@ -11,8 +11,20 @@
 
 .inviteActionBtn {
   height: 49px;
+  min-width: 306px !important;
   padding-left: 36px;
   justify-content: flex-start !important;
+}
+
+.toastTitle {
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+.toastParam {
+  margin-bottom: 2px;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 :global(.btn).inviteBtn {

@@ -1,11 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import clsx from 'clsx';
-import { Table } from 'react-bootstrap';
+import { Table, Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
-import { AllInfluencersQuery, InviteInfluencerMutation, InfluencersSearch } from 'src/apollo/queries/influencers';
+import {
+  AllInfluencersQuery,
+  InviteInfluencerMutation,
+  InfluencersSearch,
+  ResendInviteMessageMutation,
+} from 'src/apollo/queries/influencers';
 import { ActionsDropdown } from 'src/components/ActionsDropdown';
 import { AdminPage } from 'src/components/AdminPage';
 import ClickableTr from 'src/components/ClickableTr';
@@ -18,6 +24,7 @@ import { CreateInfluencer } from './CreateInfluencer';
 import styles from './styles.module.scss';
 
 export default function InfluencersPage() {
+  const { addToast } = useToasts();
   const [pageSkip, setPageSkip] = useState(0);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [influencersSearch, setInfluencersSearch] = useState<InfluencerProfile[]>([]);
@@ -32,6 +39,8 @@ export default function InfluencersPage() {
     },
     fetchPolicy: 'cache-and-network',
   });
+  const [resendInviteMessage, { loading: resendInviteLoading }] = useMutation(ResendInviteMessageMutation);
+
   useEffect(() => {
     getInfluencersList();
   }, [getInfluencersList]);
@@ -51,6 +60,34 @@ export default function InfluencersPage() {
     setInfluencersSearch([]);
   }, [setSearchQuery, setInfluencersSearch]);
 
+  const toastContent = useCallback(
+    (link: string, firstName: string, phoneNumber: string) => (
+      <>
+        <div className="pb-2">Successfully resended!</div>
+        <div>Phonenumber: {phoneNumber}</div>
+        <div>Name: {firstName}</div>
+        <div>Invitation Link: {link}</div>
+      </>
+    ),
+    [],
+  );
+
+  const resendMessage = useCallback(
+    async (item) => {
+      try {
+        await resendInviteMessage({ variables: { influencerId: item.id, name: item.name } }).then(({ data }) => {
+          const { link, firstName, phoneNumber } = data.resendInviteMessage;
+          addToast(toastContent(link, firstName, phoneNumber), {
+            autoDismiss: true,
+            appearance: 'success',
+          });
+        });
+      } catch (error) {
+        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      }
+    },
+    [addToast, resendInviteMessage, toastContent],
+  );
   if (error) {
     return null;
   }
@@ -118,6 +155,21 @@ export default function InfluencersPage() {
                       variant="link"
                     />
                   )}
+
+                  {item.status === InfluencerStatus.INVITATION_PENDING &&
+                    (resendInviteLoading ? (
+                      <div className={clsx(styles.inviteActionBtn, 'dropdown-item text-center')}>
+                        <Spinner animation="border" aria-hidden="true" as="span" role="status" size="sm" />
+                      </div>
+                    ) : (
+                      <Button
+                        className={clsx(styles.inviteActionBtn, 'dropdown-item text--body w-100 ')}
+                        variant="link"
+                        onClick={() => resendMessage(item)}
+                      >
+                        Resend Invite Message
+                      </Button>
+                    ))}
                 </ActionsDropdown>
               </td>
             </ClickableTr>

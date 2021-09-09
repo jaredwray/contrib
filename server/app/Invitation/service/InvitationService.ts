@@ -226,6 +226,26 @@ export class InvitationService {
     }
   }
 
+  async resendInviteMessage(influencerId: string) {
+    try {
+      const inviteObject = await this.InvitationModel.findOne({ parentEntityId: influencerId });
+
+      const { slug, phoneNumber, firstName } = inviteObject;
+      const link = await this.sendInviteMessage(slug, firstName, phoneNumber);
+      
+      return {
+        link,
+        phoneNumber,
+        firstName,
+      };
+    } catch (error) {
+      AppLogger.error(
+        `Somethink whent wrong, when resend invite message for influencer #${influencerId}, error: ${error.message}`,
+      );
+      throw new AppError('Somethink whent wrong. Please, try again later');
+    }
+  }
+
   async inviteAssistant(input: InviteInput): Promise<{ invitationId: string }> {
     const session = await this.connection.startSession();
     let returnObject = null;
@@ -325,11 +345,12 @@ export class InvitationService {
     }
   }
 
-  private async sendInviteMessage(slug: string, name: string, phoneNumber: string): Promise<void> {
+  private async sendInviteMessage(slug: string, name: string, phoneNumber: string): Promise<string> {
     try {
       const link = await this.makeInvitationLink(slug);
       const message = `Hello, ${name}! You have been invited to join Contrib at ${link}. Sign in with your phone number to begin.`;
       await this.twilioNotificationService.sendMessage(phoneNumber, message);
+      return link;
     } catch (error) {
       AppLogger.error(`Can not send verification message to phone number: ${phoneNumber}. Error: ${error.message}`);
       if (error.message.startsWith("The 'To' number")) {

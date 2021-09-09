@@ -79,6 +79,16 @@ export const InviteInfluencerMutation = gql`
   }
 `;
 
+export const ResendInviteMessageMutation = gql`
+  mutation ResendInviteMessage($influencerId: String!) {
+    resendInviteMessage(influencerId: $influencerId) {
+      link
+      phoneNumber
+      firstName
+    }
+  }
+`;
+
 export const CreateInfluencerMutation = gql`
   mutation CreateInfluencer($name: String!) {
     createInfluencer(input: { name: $name }) {
