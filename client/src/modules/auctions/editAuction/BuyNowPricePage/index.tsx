@@ -42,13 +42,14 @@ const BuyNowPricePage = () => {
 
   const handleSubmit = useCallback(
     async (values) => {
+      setSubmitValue(values.itemPrice);
+
       const itemPrice = Dinero(values.itemPrice);
       if (!itemPrice.isZero() && itemPrice.lessThan(startPrice)) {
         showWarning(`Buy it Now Price should be greater than Starting Price ${startPrice.toFormat('$0')}`);
         return;
       }
 
-      setSubmitValue(values.itemPrice);
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
         if (isActive) {
