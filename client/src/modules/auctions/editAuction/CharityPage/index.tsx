@@ -26,7 +26,6 @@ const CharityPage = () => {
 
   const { data: auctionData, loading: loadingQuery } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
-    // fetchPolicy: 'cache-and-network',
     onCompleted({ auction }) {
       if (auction?.charity) {
         setCharities([auction.charity]);

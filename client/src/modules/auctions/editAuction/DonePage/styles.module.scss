@@ -21,13 +21,12 @@
 
 .contentLeft {
   flex-grow: 0;
-
+  padding: 10px;
   @media (min-width: $medium-weight) {
     max-width: 50%;
     padding: 0 50px;
   }
 }
-
 .contentRight {
   flex-grow: 1;
   background-color: $barely-gray-color;
@@ -49,4 +48,3 @@
   align-items: flex-start;
   max-width: 400px;
 }
-

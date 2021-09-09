@@ -53,7 +53,7 @@ const EditAuctionPage = () => {
     async (values) => {
       if (auctionId) {
         try {
-          await updateAuction({ variables: { id: auctionId, title: values.title } });
+          await updateAuction({ variables: { id: auctionId, ...values } });
           if (isActive) {
             showMessage('Updated');
           }
