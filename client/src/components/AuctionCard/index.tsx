@@ -96,7 +96,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
 
   const priceFormatted = currentPrice.toFormat('$0,0');
   const { isActive, isSettled, isDraft, isSold } = auction;
-  const linkToAuction = `/auctions/${isDraft ? `${auction.auctionOrganizer.id}/${auction.id}/title` : auction.id}`;
+  const linkToAuction = `/auctions/${isDraft ? `${auction.id}/title` : auction.id}`;
 
   return (
     <figure
