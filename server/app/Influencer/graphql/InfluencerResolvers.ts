@@ -28,6 +28,10 @@ interface InfluencerResolversType {
   Mutation: {
     createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
     inviteInfluencer: GraphqlResolver<{ invitationId: string }, { input: InviteInput }>;
+    resendInviteMessage: GraphqlResolver<
+      { link: string; phoneNumber: string; firstName: string },
+      { influencerId: string }
+    >;
     updateInfluencerProfile: GraphqlResolver<
       InfluencerProfile,
       { influencerId: string; input: UpdateInfluencerProfileInput }
@@ -86,6 +90,9 @@ export const InfluencerResolvers: InfluencerResolversType = {
     ),
     createInfluencer: requireAdmin(async (_, { input }, { influencer }) => influencer.createTransientInfluencer(input)),
     inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
+    resendInviteMessage: requireAdmin(
+      async (_, { influencerId }, { invitation }) => await invitation.resendInviteMessage(influencerId),
+    ),
     updateInfluencerProfile: requireRole(
       async (_, { influencerId, input }, { influencer, currentAccount, currentInfluencerId }) => {
         const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;
