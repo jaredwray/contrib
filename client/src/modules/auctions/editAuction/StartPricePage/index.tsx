@@ -41,12 +41,11 @@ const StartPricePage = () => {
 
   const handleSubmit = useCallback(
     async (values) => {
+      setSubmitValue(values.startPrice);
       if (values.startPrice.amount === 0) {
-        showWarning('Starting Price should be greater than 0');
+        showWarning('Starting Price cannot be zero');
         return;
       }
-
-      setSubmitValue(values.startPrice);
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
         if (isActive) {
