@@ -2,14 +2,14 @@ import { useContext, useState, useEffect } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { Button, Row, InputGroup, Form as BForm } from 'react-bootstrap';
+import { format } from 'date-fns';
+import { Button, Row, InputGroup, Form as BForm, Col, Container } from 'react-bootstrap';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
-import { DeliveryTextBlock } from 'src/components/DeliveryTextBlock';
+import Layout from 'src/components/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import { UserDialogLayout } from 'src/components/UserDialogLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
@@ -25,7 +25,7 @@ export default function DeliveryStatusPage() {
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
-  const [executeAuctionData, { loading: updating, data: auctionData }] = useLazyQuery(AuctionQuery, {
+  const [executeAuctionData, { loading, data: auctionData }] = useLazyQuery(AuctionQuery, {
     fetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
@@ -57,65 +57,90 @@ export default function DeliveryStatusPage() {
   const { name, state, city, street, zipCode, phoneNumber } = auction.delivery.address;
   const incomingState = USAStates.find((option) => option.value === state)?.label;
 
-  const { title } = auction;
-
-  const successBlock = (
-    <DeliveryTextBlock
-      arrivalDate={auction.delivery.timeInTransit}
-      auctionTitle={auction.title}
-      city={city}
-      incomingState={incomingState}
-      isStatusPage={true}
-      loading={updating}
-      name={name}
-      phoneNumber={phoneNumber}
-      state={state}
-      street={street}
-      zipCode={zipCode}
-    >
-      <div className="text-center pt-3 pb-3">
-        You can track your parcel on
-        <a
-          className={clsx(styles.actionLink, 'pr-1 pl-1')}
-          href={`https://www.ups.com/track?trackingNumber=${auction.delivery.identificationNumber}`}
-          rel="noreferrer"
-          target="_blank"
-        >
-          UPS website
-        </a>
-        using follow tracking ID:
-      </div>
-
-      <Row className="justify-content-center">
-        <BForm.Group>
-          <InputGroup>
-            <BForm.Control disabled type="text" value={auction.delivery.identificationNumber} />
-            <InputGroup.Append>
-              <CopyToClipboard text={auction.delivery.identificationNumber} onCopy={() => setLinkCopied(true)}>
-                <Button className={styles.copyBtn} type="button">
-                  {(linkCopied && 'Copied') || 'Copy'}
-                </Button>
-              </CopyToClipboard>
-            </InputGroup.Append>
-          </InputGroup>
-        </BForm.Group>
-      </Row>
-      <div className="text-center pt-2 pb-3">
-        <Link className={styles.actionLink} to={`/auctions/${auctionId}`}>
-          back to the auction
-        </Link>
-      </div>
-    </DeliveryTextBlock>
-  );
-
-  setPageTitle(`Delivery status page for ${title} auction`);
+  setPageTitle(`Delivery status page for ${auction.title} auction`);
 
   return (
-    <UserDialogLayout
-      backGroundStyle={styles.statusPageBackground}
-      successBlock={successBlock}
-      textColorStyle={styles.statusPageTextColor}
-      title="Delivery status"
-    ></UserDialogLayout>
+    <Layout>
+      <div className="d-flex flex-column justify-content-between flex-grow-1 pt-3 pt-md-5">
+        <Container>
+          <Row>
+            <Col className="text-label label-with-separator">Delivery</Col>
+          </Row>
+          <h2 className="text-headline">Delivery status</h2>
+          <hr className="d-none d-md-block" />
+          <Row className="pt-3 pt-md-0">
+            <Col md="6">
+              <p>
+                Status of
+                <Link className={(styles.actionLink, styles.markedText)} to={`/auctions/${auctionId}`}>
+                  {auction.title}
+                </Link>
+                auction
+              </p>
+              <p>
+                Estimated delivery time is
+                <span className={styles.markedText}>
+                  {format(new Date(auction.delivery.timeInTransit!), 'MM/dd/yyyy')}
+                </span>
+              </p>
+
+              <p>
+                You can track your parcel on
+                <a
+                  className={clsx(styles.actionLink, styles.markedText)}
+                  href={`https://www.ups.com/track?trackingNumber=${auction.delivery.identificationNumber}`}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  UPS website
+                </a>
+                using follow tracking ID:
+              </p>
+              <BForm.Group>
+                <InputGroup>
+                  <BForm.Control disabled type="text" value={auction.delivery.identificationNumber} />
+                  <InputGroup.Append>
+                    <CopyToClipboard text={auction.delivery.identificationNumber} onCopy={() => setLinkCopied(true)}>
+                      <Button className={styles.copyBtn} type="button">
+                        {(linkCopied && 'Copied') || 'Copy'}
+                      </Button>
+                    </CopyToClipboard>
+                  </InputGroup.Append>
+                </InputGroup>
+              </BForm.Group>
+            </Col>
+            {!loading && (
+              <Col className="pt-4 pt-md-0 pb-3" md="6">
+                Delivery address:
+                <div className="text-subhead pt-3">
+                  <div>
+                    Recepient:<span className={styles.markedText}>{name}</span>
+                  </div>
+                  <div>
+                    City:<span className={styles.markedText}>{city}</span>
+                  </div>
+                  <div>
+                    Street:<span className={styles.markedText}>{street}</span>
+                  </div>
+                  <div>
+                    State:<span className={styles.markedText}>{incomingState}</span>
+                  </div>
+                  <div>
+                    Post code:
+                    <span className={styles.markedText}>
+                      {state}-{zipCode}
+                    </span>
+                  </div>
+                  <div>
+                    Phone number:
+                    <span className={styles.markedText}>+{phoneNumber}</span>
+                  </div>
+                </div>
+              </Col>
+            )}
+          </Row>
+        </Container>
+      </div>
+    </Layout>
   );
 }
