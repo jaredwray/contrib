@@ -103,6 +103,24 @@ export class GCloudStorage {
     }
   }
 
+  async uploadBase64(
+    base64,
+    { bucketName = AppConfig.googleCloud.bucketName, organizerId, auctionId, identificationNumber },
+  ) {
+    const buffer = Buffer.from(base64, 'base64');
+    const attachmentPath = `${organizerId}/auctions/${auctionId}/shipping_label/${identificationNumber}`;
+    const formattedFileName = `${attachmentPath}.png`;
+    await this.storage
+      .bucket(bucketName)
+      .file(formattedFileName)
+      .save(buffer, {
+        metadata: { contentType: 'png' },
+        public: true,
+        validation: 'md5',
+      });
+    return `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`;
+  }
+
   async uploadFile(
     filePromise: Promise<IFile> | null,
     {

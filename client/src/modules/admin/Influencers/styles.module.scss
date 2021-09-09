@@ -16,17 +16,6 @@
   justify-content: flex-start !important;
 }
 
-.toastTitle {
-  margin-bottom: 6px;
-  font-size: 16px;
-}
-
-.toastParam {
-  margin-bottom: 2px;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
 :global(.btn).inviteBtn {
   @media (max-width: $medium-weight) {
     line-height: 7px !important;

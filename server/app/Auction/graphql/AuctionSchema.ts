@@ -39,6 +39,7 @@ export const AuctionSchema = gql`
   }
 
   type AuctionDelivery {
+    shippingLabel: String
     parcel: Parcel
     address: Address
     status: AuctionDeliveryStatus

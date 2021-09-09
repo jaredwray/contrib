@@ -67,6 +67,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     totalBids: { type: SchemaTypes.Number, default: 0 },
     winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
     delivery: {
+      shippingLabel: { type: SchemaTypes.String },
       parcel: {
         width: { type: SchemaTypes.String, default: auctionDefaultParcelParameters.width },
         length: { type: SchemaTypes.String, default: auctionDefaultParcelParameters.length },

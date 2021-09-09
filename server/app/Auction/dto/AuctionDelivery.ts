@@ -5,6 +5,7 @@ import { AuctionDeliveryStatus } from './AuctionDeliveryStatus';
 import { UserAccountAddress } from 'app/UserAccount/dto/UserAccountAddress';
 
 export interface AuctionDelivery {
+  shippingLabel: string;
   parcel: AuctionParcel;
   address: UserAccountAddress;
   status: AuctionDeliveryStatus;

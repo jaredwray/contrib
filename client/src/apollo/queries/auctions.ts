@@ -54,6 +54,7 @@ export const AuctionForAdminPageQuery = gql`
         stripeAccountId
       }
       delivery {
+        shippingLabel
         parcel {
           width
           length
