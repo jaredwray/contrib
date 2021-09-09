@@ -121,13 +121,19 @@ export class AuctionService {
     const { parcel, address } = auction.delivery;
     try {
       const deliveryPrice = await this.UPSService.shippingRegistration(parcel, address, deliveryMethod, paymentCard);
-      const { amount, currency, identificationNumber } = deliveryPrice;
+      const { amount, currency, identificationNumber, shippingLabel } = deliveryPrice;
+      const barcode = await this.cloudStorage.uploadBase64(shippingLabel, {
+        identificationNumber,
+        auctionId,
+        organizerId: auction.auctionOrganizer._id.toString(),
+      });
 
       Object.assign(auction.delivery, {
         status: AuctionDeliveryStatus.PAID,
         updatedAt: dayjs().second(0),
         timeInTransit,
         identificationNumber,
+        shippingLabel: barcode,
       });
 
       await auction.save();

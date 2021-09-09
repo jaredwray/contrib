@@ -6,6 +6,8 @@ import { ParcelProps } from 'src/helpers/ParcelProps';
 import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
 import { Auction } from 'src/types/Auction';
 
+import styles from './styles.module.scss';
+
 interface Props {
   auction: Auction;
 }
@@ -65,6 +67,16 @@ export const Delivery: FC<Props> = ({ auction }) => {
               <tr>
                 <td>Estimated arrival date</td>
                 <td>{format(new Date(auction.delivery.timeInTransit), 'MM/dd/yyyy')}</td>
+              </tr>
+            )}
+            {auction.delivery?.shippingLabel && (
+              <tr>
+                <td>UPS delivery shippingLabel</td>
+                <td>
+                  <a className={styles.link} href={auction.delivery.shippingLabel} rel="noreferrer" target="_blank">
+                    show
+                  </a>
+                </td>
               </tr>
             )}
           </>

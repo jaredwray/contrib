@@ -27,7 +27,6 @@ export class AuctionAttachmentsService {
             url: uploadUrl,
           })
         : await this.cloudStorage.uploadFile(attachment, { fileName: attachmentPath });
-
       const assetUid = Boolean(uid) ? { uid } : {};
       const asset = new this.AuctionAsset({ url, type: fileType, ...assetUid });
       await asset.save();

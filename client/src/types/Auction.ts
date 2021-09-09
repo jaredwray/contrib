@@ -32,6 +32,7 @@ export interface AuctionAttachment {
 }
 
 export interface AuctionDelivery {
+  shippingLabel: string;
   parcel: Parcel;
   address?: Address;
   status: AuctionDeliveryStatus;

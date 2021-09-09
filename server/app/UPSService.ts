@@ -273,11 +273,13 @@ export class UPSDeliveryService {
       const shipmentResults = responce.data.ShipmentResponse.ShipmentResults;
       const totalCharges = shipmentResults.ShipmentCharges.TotalCharges;
       const identificationNumber = shipmentResults.ShipmentIdentificationNumber;
+      const shippingLabel = shipmentResults.PackageResults.ShippingLabel.GraphicImage;
 
       return {
         currency: totalCharges.CurrencyCode as Dinero.Currency,
         amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
         identificationNumber,
+        shippingLabel,
       };
     } catch (error) {
       UPSDeliveryService.handleErrors(error);

@@ -1,0 +1,12 @@
+@import 'src/variables.scss';
+
+.link {
+  width: 100%;
+  display: block;
+  padding: 0 5px;
+  font-weight: bold;
+
+  &:hover {
+    color: $dark-gray-color;
+  }
+}
