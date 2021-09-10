@@ -163,22 +163,16 @@ export class CharityService {
     const session = await this.connection.startSession();
     const charity = CharityService.makeCharity(charityModel);
 
-    let isAccountActive;
-
     AppLogger.info(
-      `Charity's #${charity.id} stripe event details: details_submitted: ${account.details_submitted}; capabilities : ${account.capabilities}`,
+      `Charity's #${charity.id} stripe capabilities: card_payments: ${account.capabilities.card_paymentss}, transfers: ${account.capabilities.transfers}`,
     );
 
-    if (account.details_submitted) {
-      isAccountActive = account.capabilities.card_payments === 'active' && account.capabilities.transfers === 'active';
-    } else {
-      isAccountActive = false;
-    }
+    const isAccountActive =
+      account.capabilities.card_payments === 'active' && account.capabilities.transfers === 'active';
+    const stripeStatus = isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE;
 
     try {
-      const stripeStatus = isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE;
       await this.updateCharityStatus({ charity, stripeStatus, session });
-
       AppLogger.info(`Charity #${charity.id} was updated by stripe account to ${stripeStatus}`);
     } catch (err) {
       AppLogger.warn(`Cannot update charity #${charity.id} by stripe account: ${err.message}`);
