@@ -2,13 +2,14 @@ import { useCallback, useContext, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { useHistory, useParams } from 'react-router-dom';
+import Select from 'react-select';
 
 import {
   GetAuctionDetailsQuery,
   UpdateAuctionMutation,
   FinishAuctionCreationMutation,
 } from 'src/apollo/queries/auctions';
-import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
+import { AllCharitiesQuery } from 'src/apollo/queries/charities';
 import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -16,21 +17,23 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
+import { customStyles, selectStyles } from './customStyles';
+import styles from './styles.module.scss';
 
 const CharityPage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const { showError } = useShowNotification();
-  const [charities, setCharities] = useState<Charity[]>([]);
+  const [selectedOption, setselectedOption] = useState<any>(null);
+  const [menuIsOpen, setmenuIsOpen] = useState(false);
   const history = useHistory();
+
+  const { data: charitiesListData } = useQuery(AllCharitiesQuery, {
+    variables: { size: 100, skip: 0 },
+  });
 
   const { data: auctionData, loading: loadingQuery } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
-    onCompleted({ auction }) {
-      if (auction?.charity) {
-        setCharities([auction.charity]);
-      }
-    },
   });
   const auction = auctionData?.auction;
   const { isActive } = auction || {};
@@ -53,19 +56,6 @@ const CharityPage = () => {
     history.push(`/auctions/${auctionId}/duration`);
   }, [auctionId, history]);
 
-  const handleCharityChange = useCallback(
-    (charity: Charity, shouldBeFavorite: boolean) => {
-      const index = charities.findIndex((c: Charity) => c.id === charity.id);
-      const isFavorite = index >= 0;
-
-      if (isFavorite && !shouldBeFavorite) {
-        setCharities([...charities.slice(0, index), ...charities.slice(index + 1)]);
-      } else if (!isFavorite && shouldBeFavorite) {
-        setCharities([charity]);
-      }
-    },
-    [charities, setCharities],
-  );
   const { description, itemPrice, startPrice, attachments } = auction || {};
   const videoAttachments = attachments?.filter((attachment: any) => attachment?.type === 'VIDEO');
   const isFullObject = Boolean(description && itemPrice && videoAttachments.length);
@@ -89,7 +79,7 @@ const CharityPage = () => {
     return;
   }, [videoAttachments?.length, auctionId, description, history, startPrice, itemPrice, showError]);
   const handleSubmit = useCallback(async () => {
-    if (!charities[0]?.id) {
+    if (!selectedOption) {
       showError('You should select charity');
       return;
     }
@@ -98,11 +88,11 @@ const CharityPage = () => {
       return;
     }
     try {
-      await updateAuction({ variables: { id: auctionId, charity: charities[0]?.id } });
+      await updateAuction({ variables: { id: auctionId, charity: selectedOption.value } });
     } catch (error: any) {
       showError(error.message);
     }
-  }, [auctionId, updateAuction, showError, charities, isFullObject, submitValidationRedirect]);
+  }, [auctionId, updateAuction, showError, selectedOption, isFullObject, submitValidationRedirect]);
 
   if (!account?.isAdmin && isActive) {
     history.push(`/`);
@@ -115,6 +105,27 @@ const CharityPage = () => {
   if (auction === undefined) {
     return null;
   }
+  if (!charitiesListData) {
+    return null;
+  }
+
+  const favouriteCharities = auction.auctionOrganizer.favoriteCharities.map((charity: { id: string; name: string }) => {
+    return { label: charity.name, value: charity.id };
+  });
+  const notFavouriteCharities = charitiesListData?.charities.items
+    .filter(
+      (charity: Charity) =>
+        charity.status === 'ACTIVE' &&
+        !favouriteCharities.map((charity: { label: string; value: string }) => charity.value).includes(charity.id),
+    )
+    .map((charity: Charity) => {
+      return { label: charity.name, value: charity.id };
+    });
+
+  const handleChange = (selectedOption: any) => {
+    setselectedOption(selectedOption);
+  };
+  const options = favouriteCharities.concat(notFavouriteCharities);
 
   const textBlock = 'What charity will benefit from the proceeds of this auction.';
 
@@ -134,10 +145,22 @@ const CharityPage = () => {
     >
       <Row description={textBlock}>
         {!loadingQuery && (
-          <CharitiesAutocomplete
-            charities={charities}
-            favoriteCharities={auction?.auctionOrganizer?.favoriteCharities}
-            onChange={handleCharityChange}
+          <Select
+            className={styles.charitiesSelect}
+            noOptionsMessage={() => 'no charities found'}
+            options={options}
+            placeholder="Search charity by name"
+            styles={customStyles(setmenuIsOpen, menuIsOpen)}
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary50: selectStyles.color,
+                primary: selectStyles.color,
+              },
+            })}
+            value={selectedOption}
+            onChange={handleChange}
           />
         )}
       </Row>

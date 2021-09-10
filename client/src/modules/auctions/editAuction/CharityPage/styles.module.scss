@@ -1,29 +1,5 @@
 @import 'src/variables.scss';
-
-.suggestButton {
-  font-size: 14px !important;
-}
-
-.divider {
-  border-bottom: 1px solid $barely-gray-color;
-  padding-bottom: 60px;
-  margin-bottom: 27px;
-
-  @media (max-width: $small-weight) {
-    padding-bottom: 30px;
-    margin-bottom: 27px;
-  }
-}
-
-.section {
-  padding-bottom: 0;
-
-  @media (max-width: $small-weight) {
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
-}
-
-.description {
-  min-height: 200px;
+.charitiesSelect {
+  font-size: 1.25rem;
+  line-height: 1.25;
 }
