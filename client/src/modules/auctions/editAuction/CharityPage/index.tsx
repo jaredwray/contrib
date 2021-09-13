@@ -9,7 +9,7 @@ import {
   UpdateAuctionMutation,
   FinishAuctionCreationMutation,
 } from 'src/apollo/queries/auctions';
-import { AllCharitiesQuery } from 'src/apollo/queries/charities';
+import { ActiveCharitiesList } from 'src/apollo/queries/charities';
 import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -28,9 +28,7 @@ const CharityPage = () => {
   const [menuIsOpen, setmenuIsOpen] = useState(false);
   const history = useHistory();
 
-  const { data: charitiesListData } = useQuery(AllCharitiesQuery, {
-    variables: { size: 100, skip: 0 },
-  });
+  const { data: charitiesListData } = useQuery(ActiveCharitiesList);
 
   const { data: auctionData, loading: loadingQuery } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
@@ -88,7 +86,7 @@ const CharityPage = () => {
       return;
     }
     try {
-      await updateAuction({ variables: { id: auctionId, charity: selectedOption.value } });
+      await updateAuction({ variables: { id: auctionId, charity: selectedOption.id } });
     } catch (error: any) {
       showError(error.message);
     }
@@ -110,16 +108,17 @@ const CharityPage = () => {
   }
 
   const favouriteCharities = auction.auctionOrganizer.favoriteCharities.map((charity: { id: string; name: string }) => {
-    return { label: charity.name, value: charity.id };
+    return { label: charity.name, value: charity.name, id: charity.id };
   });
-  const notFavouriteCharities = charitiesListData?.charities.items
+  const notFavouriteCharities = charitiesListData.charitiesSelectList.items
     .filter(
       (charity: Charity) =>
-        charity.status === 'ACTIVE' &&
-        !favouriteCharities.map((charity: { label: string; value: string }) => charity.value).includes(charity.id),
+        !favouriteCharities
+          .map((charity: { label: string; value: string; id: string }) => charity.id)
+          .includes(charity.id),
     )
     .map((charity: Charity) => {
-      return { label: charity.name, value: charity.id };
+      return { label: charity.name, value: charity.name, id: charity.id };
     });
 
   const handleChange = (selectedOption: any) => {

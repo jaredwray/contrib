@@ -25,6 +25,11 @@ export const CharityResolvers = {
     ): Promise<Charity[] | null> => {
       return await charity.searchForCharity(query.trim(), status);
     },
+    charitiesSelectList: async (parent: unknown, _, { charity }: GraphqlContext): Promise<{ items: Charity[] }> => {
+      return {
+        items: await charity.activeCharitiesList(),
+      };
+    },
     charities: async (
       parent: unknown,
       { size, skip, status }: { size: number; skip: number; status?: CharityStatus[] },

@@ -16,6 +16,16 @@ export const AllCharitiesQuery = gql`
     }
   }
 `;
+export const ActiveCharitiesList = gql`
+  query GetActiveCharities {
+    charitiesSelectList {
+      items {
+        id
+        name
+      }
+    }
+  }
+`;
 
 export const InviteCharityMutation = gql`
   mutation InviteCharity($firstName: String!, $lastName: String!, $phoneNumber: String!, $welcomeMessage: String!) {

@@ -407,6 +407,14 @@ export class CharityService {
       .exec();
     return charities.map((charity) => CharityService.makeCharity(charity));
   }
+  async activeCharitiesList(): Promise<Charity[]> {
+    const charities = await this.CharityModel.find({
+      status: {
+        $in: CharityStatus.ACTIVE,
+      },
+    }).exec();
+    return charities.map((charity) => CharityService.makeCharity(charity));
+  }
 
   async listCharitiesByUserAccountIds(userAccountIds: readonly string[]): Promise<Charity[]> {
     const models = await this.CharityModel.find({ userAccount: { $in: userAccountIds } });

@@ -16,6 +16,7 @@ export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void
       borderRadius: '10px',
       borderColor: selectStyles.sageColor,
       marginTop: '4px',
+      zIndex: 2,
     }),
     menuList: (provided: any) => ({
       ...provided,
