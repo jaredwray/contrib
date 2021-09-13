@@ -47,9 +47,13 @@ export const CharitySchema = gql`
     size: Int!
     skip: Int!
   }
+  type SelectCharitiesList {
+    items: [Charity]!
+  }
   extend type Query {
     charity(id: String!): Charity!
     charitiesSearch(query: String!, status: [CharityStatus]): [Charity!]!
+    charitiesSelectList: SelectCharitiesList!
     charities(size: Int!, skip: Int!, status: [CharityStatus]): CharitiesPage!
   }
   extend type Mutation {
