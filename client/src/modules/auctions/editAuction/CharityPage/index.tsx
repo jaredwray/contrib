@@ -2,7 +2,6 @@ import { useCallback, useContext, useState } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { useHistory, useParams } from 'react-router-dom';
-import Select from 'react-select';
 
 import {
   GetAuctionDetailsQuery,
@@ -10,6 +9,7 @@ import {
   FinishAuctionCreationMutation,
 } from 'src/apollo/queries/auctions';
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
+import { CharitySearchSelect } from 'src/components/CharitySearchSelect';
 import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -17,15 +17,12 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Charity } from 'src/types/Charity';
 
 import Row from '../common/Row';
-import { customStyles, selectStyles } from './customStyles';
-import styles from './styles.module.scss';
 
 const CharityPage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const { showError } = useShowNotification();
   const [selectedOption, setselectedOption] = useState<any>(null);
-  const [menuIsOpen, setmenuIsOpen] = useState(false);
   const history = useHistory();
 
   const { data: charitiesListData } = useQuery(ActiveCharitiesList);
@@ -144,23 +141,7 @@ const CharityPage = () => {
     >
       <Row description={textBlock}>
         {!loadingQuery && (
-          <Select
-            className={styles.charitiesSelect}
-            noOptionsMessage={() => 'no charities found'}
-            options={options}
-            placeholder="Search charity by name"
-            styles={customStyles(setmenuIsOpen, menuIsOpen)}
-            theme={(theme) => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary50: selectStyles.color,
-                primary: selectStyles.color,
-              },
-            })}
-            value={selectedOption}
-            onChange={handleChange}
-          />
+          <CharitySearchSelect options={options} selectedOption={selectedOption} onChange={handleChange} />
         )}
       </Row>
     </StepByStepPageLayout>

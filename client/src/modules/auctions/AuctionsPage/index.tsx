@@ -47,6 +47,11 @@ const AuctionsPage: FC = () => {
       return { ...prevState, pageSkip: 0, [key]: value };
     });
   }, []);
+  const charityChangeFilter = useCallback((key: string, value: any) => {
+    setFilters((prevState: any) => {
+      return { ...prevState, pageSkip: 0, [key]: value };
+    });
+  }, []);
 
   const auctionStatuses = useMemo(() => {
     return [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD];
@@ -95,7 +100,12 @@ const AuctionsPage: FC = () => {
       <Container fluid className="d-flex flex-column flex-grow-1">
         <Row className="h-100 flex-grow-1">
           <Col className={clsx(styles.filtersWrapper, 'pb-0 pb-sm-4')} lg="3" md="4" sm="12">
-            <Filters changeFilters={changeFilters} filters={filters} initialBids={initialBids} />
+            <Filters
+              changeFilters={changeFilters}
+              charityChangeFilter={charityChangeFilter}
+              filters={filters}
+              initialBids={initialBids}
+            />
           </Col>
           <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5 mt-1')} md="8">
             <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
