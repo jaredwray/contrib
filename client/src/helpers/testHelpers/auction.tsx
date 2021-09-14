@@ -128,6 +128,7 @@ export const auctionForAdminPage = {
   status: 'FAILED',
   title: '1',
   delivery: {
+    shippingLabel: '222',
     identificationNumber: null,
     status: 'PAID',
     timeInTransit: null,
