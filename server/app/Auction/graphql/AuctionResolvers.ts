@@ -71,7 +71,7 @@ interface AuctionResolversType {
     updateAuctionParcel: GraphqlResolver<AuctionParcel, { auctionId: string; input: AuctionParcel }>;
     shippingRegistration: GraphqlResolver<
       { deliveryPrice: Dinero.Dinero; identificationNumber: string },
-      { auctionId: string; deliveryMethod: string; paymentCard: any; timeInTransit: Dayjs }
+      { input: { auctionId: string; deliveryMethod: string; timeInTransit: Dayjs; auctionWinnerId: string } }
     >;
   };
   Subscription: {
@@ -197,14 +197,8 @@ export const AuctionResolvers: AuctionResolversType = {
       async (_, { auctionId, input }, { auction }) => await auction.updateAuctionParcel(auctionId, input),
     ),
     shippingRegistration: requireAuthenticated(
-      async (_, { auctionId, deliveryMethod, paymentCard, timeInTransit }, { auction, currentAccount }) =>
-        await auction.shippingRegistration(
-          auctionId,
-          deliveryMethod,
-          paymentCard,
-          currentAccount.mongodbId,
-          timeInTransit,
-        ),
+      async (_, { input }, { auction, currentAccount }) =>
+        await auction.shippingRegistration(input, currentAccount.mongodbId),
     ),
   },
   Subscription: {

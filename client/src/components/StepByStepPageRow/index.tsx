@@ -8,20 +8,21 @@ import AsyncButton from '../AsyncButton';
 import styles from './styles.module.scss';
 
 interface Props {
+  disabled?: boolean;
   prevAction?(): void;
   loading: boolean;
   last?: boolean;
   isActive?: boolean;
 }
 
-const StepByStepPageRow: FC<Props> = ({ prevAction, loading, last, isActive }) => {
+const StepByStepPageRow: FC<Props> = ({ prevAction, disabled, loading, last, isActive }) => {
   const history = useHistory();
   return (
     <div className={styles.root}>
       <Container fluid className="d-flex h-100 justify-content-between align-items-center">
         <Button
           className="text-subhead font-weight-bold"
-          disabled={!isActive && (loading || !prevAction)}
+          disabled={(!isActive && (loading || !prevAction)) || disabled}
           variant="link"
           onClick={isActive ? () => history.goBack() : prevAction}
         >
@@ -29,6 +30,7 @@ const StepByStepPageRow: FC<Props> = ({ prevAction, loading, last, isActive }) =
         </Button>
         <AsyncButton
           className={clsx('text-subhead', styles.button, !loading && 'btn-with-arrows')}
+          disabled={disabled}
           loading={loading}
           type="submit"
         >

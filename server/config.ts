@@ -92,6 +92,7 @@ export const AppConfig = {
   },
   delivery: {
     UPSContribDeliveryData: JSON.parse(requireEnvVar('UPS_DELIVERY_CONTRIB_DATA')),
+    UPSContribCardData: JSON.parse(process.env['UPS_CONTRIB_CARD_DATA'] ?? '{}'),
     UPSRequestHeader: JSON.parse(requireEnvVar('UPS_DELIVERY_REQUEST_HEADER')),
     UPSAuctionDefaultParcelParameters: requireEnvVar('UPS_AUCTION_DEFAULT_PARCEL_PARAMETERS'),
     UPSTestEnviroment: (process.env['UPS_TEST_ENVIROMENT'] ?? 'true') === 'true',

@@ -10,6 +10,7 @@ import StepPageHeader from './StepPageHeader';
 import styles from './styles.module.scss';
 
 interface Props {
+  disabled?: boolean;
   loading: boolean;
   progress: number;
   initialValues?: any;
@@ -22,6 +23,7 @@ interface Props {
   prevAction?: () => void;
 }
 const StepByStepPageLayout: FC<Props> = ({
+  disabled,
   loading,
   progress,
   isActive,
@@ -42,7 +44,7 @@ const StepByStepPageLayout: FC<Props> = ({
             <StepPageHeader header={header} step={isActive ? null : step} title={title} />
             {children}
           </Container>
-          <StepByStepPageRow isActive={isActive} loading={loading} prevAction={prevAction} />
+          <StepByStepPageRow disabled={disabled} isActive={isActive} loading={loading} prevAction={prevAction} />
         </Form>
       </section>
     </Layout>

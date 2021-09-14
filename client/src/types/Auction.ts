@@ -19,6 +19,8 @@ export enum AuctionStatus {
 export enum AuctionDeliveryStatus {
   ADDRESS_PROVIDED = 'ADDRESS_PROVIDED',
   PAID = 'PAID',
+  DELIVERY_PAID = 'DELIVERY_PAID',
+  DELIVERY_PAYMENT_FAILED = 'DELIVERY_PAYMENT_FAILED',
 }
 
 export interface AuctionAttachment {
@@ -33,6 +35,7 @@ export interface AuctionAttachment {
 
 export interface AuctionDelivery {
   shippingLabel: string;
+  deliveryMethod: string;
   parcel: Parcel;
   address?: Address;
   status: AuctionDeliveryStatus;

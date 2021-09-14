@@ -30,6 +30,7 @@ import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPa
 import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
 import DeliveryAddressPage from 'src/modules/delivery/DeliveryAddressPage';
 import DeliveryPaymentPage from 'src/modules/delivery/DeliveryPaymentPage';
+import { withStripe } from 'src/modules/delivery/DeliveryPaymentPage/WithStripe';
 import DeliveryStatusPage from 'src/modules/delivery/DeliveryStatusPage';
 import Page404 from 'src/modules/errors/Page404';
 import HomePage from 'src/modules/Home';
@@ -140,7 +141,7 @@ ReactDOM.render(
                   role="influencer"
                 />
                 <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery/address" />
-                <Route component={DeliveryPaymentPage} path="/auctions/:auctionId/delivery/payment" />
+                <Route component={() => withStripe(DeliveryPaymentPage)} path="/auctions/:auctionId/delivery/payment" />
                 <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />
                 <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                 <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />

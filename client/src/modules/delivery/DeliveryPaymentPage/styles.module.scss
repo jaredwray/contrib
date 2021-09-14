@@ -38,15 +38,12 @@
   }
 }
 
-.cardInputWrapper {
-  margin: 0 auto;
-
-  @media (max-width: $small-weight) {
-    max-width: 100%;
-  }
-}
 .deliveryInfo {
-  height: 85px;
+  min-height: 75px;
+  white-space: nowrap;
+  & span {
+    text-align: center;
+  }
 }
 .actionLink,
 .actionLinkDisabled {
@@ -73,5 +70,31 @@
 .submitBtn {
   @media (max-width: $small-weight) {
     width: 100% !important;
+  }
+}
+.deliveryCardInfo {
+  color: $sage-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+}
+.deliveryStripeInput {
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid $light-sage-color;
+  will-change: opacity, transform;
+  border-radius: 8px;
+  cursor: text;
+  height: 50px;
+  padding: 15px;
+}
+.deliveryCardCancelButton {
+  position: absolute !important;
+  right: 0;
+  top: 50px;
+
+  @media (max-width: $small-weight) {
+    top: 50px;
   }
 }

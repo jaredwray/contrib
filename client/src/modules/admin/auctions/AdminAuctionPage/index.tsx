@@ -41,8 +41,9 @@ export default function AdminAuctionPage() {
   const { data: auctionMetricsData } = useQuery(AuctionMetricsQuery, {
     variables: { auctionId },
   });
-  const [getAuctionData, { data: auctionData, error, loading }] = useLazyQuery(AuctionForAdminPageQuery, {
+  const [getAuctionData, { data: auctionData }] = useLazyQuery(AuctionForAdminPageQuery, {
     variables: { id: auctionId },
+    fetchPolicy: 'cache-and-network',
   });
 
   const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformationQuery);
@@ -91,7 +92,7 @@ export default function AdminAuctionPage() {
     }
   }, [auctionId, addToast, chargeAuction, getAuctionData]);
 
-  if (error || loading || !auction || !metrics || !bids) {
+  if (!auction || !metrics || !bids) {
     return null;
   }
   const hasBids = bids.length > 0;
@@ -142,7 +143,7 @@ export default function AdminAuctionPage() {
           <Row className="pt-3">
             <Col>
               <div className="text-headline">Delivery</div>
-              <Delivery auction={auction} />
+              <Delivery auction={auction} refreshAuctionData={getAuctionData} />
             </Col>
           </Row>
           {hasBids && (

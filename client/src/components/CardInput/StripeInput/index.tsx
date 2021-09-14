@@ -8,13 +8,22 @@ import { Button } from 'react-bootstrap';
 import styles from './styles.module.scss';
 
 interface Props {
+  inputClassName?: string;
+  cancelButtonClassName?: string;
   disabled: boolean;
   showCancelBtn: boolean;
   onChange?(event: StripeCardElementChangeEvent): void;
   onCancel: () => void;
 }
 
-const StripeInput: FC<Props> = ({ disabled, onChange, onCancel, showCancelBtn }) => {
+const StripeInput: FC<Props> = ({
+  disabled,
+  onChange,
+  onCancel,
+  showCancelBtn,
+  inputClassName,
+  cancelButtonClassName,
+}) => {
   const [node, setNode] = useState<StripeCardElement | null>(null);
   const [focused, setFocused] = useState(false);
 
@@ -45,7 +54,10 @@ const StripeInput: FC<Props> = ({ disabled, onChange, onCancel, showCancelBtn })
   );
 
   return (
-    <div className={clsx(styles.root, 'mb-4 mb-sm-0', focused && styles.focused)} onClick={() => node?.focus()}>
+    <div
+      className={clsx(inputClassName || styles.root, 'mb-4 mb-sm-0', focused && styles.focused)}
+      onClick={() => node?.focus()}
+    >
       <CardElement
         options={options}
         onBlur={() => setFocused(false)}
@@ -54,7 +66,13 @@ const StripeInput: FC<Props> = ({ disabled, onChange, onCancel, showCancelBtn })
         onReady={setNode}
       />
       {showCancelBtn && (
-        <Button className={clsx(styles.newCardCancelBtn, 'pr-0')} size="sm" variant="link" onClick={onCancel}>
+        <Button
+          className={clsx(cancelButtonClassName || styles.newCardCancelBtn, 'pr-0')}
+          disabled={disabled}
+          size="sm"
+          variant="link"
+          onClick={onCancel}
+        >
           Cancel
         </Button>
       )}

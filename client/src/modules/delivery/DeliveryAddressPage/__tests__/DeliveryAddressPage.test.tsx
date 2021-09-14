@@ -58,7 +58,7 @@ cache3.writeQuery({
   data: {
     auction: {
       ...AuctionQueryAuction,
-      delivery: { ...AuctionQueryAuction.delivery, status: 'PAID' },
+      delivery: { ...AuctionQueryAuction.delivery, status: 'DELIVERY_PAID' },
       winner: { ...AuctionQueryAuction.winner, mongodbId: 'ttestId' },
     },
   },
