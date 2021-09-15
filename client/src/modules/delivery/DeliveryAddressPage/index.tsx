@@ -106,7 +106,10 @@ export default function DeliveryAddressPage() {
     return null;
   }
 
-  if (auction.delivery.status === AuctionDeliveryStatus.PAID) {
+  if (
+    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAID ||
+    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED
+  ) {
     history.push(`/auctions/${auctionId}/delivery/status`);
     return null;
   }

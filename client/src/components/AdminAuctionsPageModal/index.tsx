@@ -51,7 +51,7 @@ export const Modal: FC<Props> = ({ open, onClose, onConfirm, mutation, auction }
         >
           Cancel
         </Button>
-        <AsyncButton className={clsx(styles.actionBtn)} loading={updating} variant="secondary" onClick={onSubmit}>
+        <AsyncButton className={styles.actionBtn} loading={updating} variant="secondary" onClick={onSubmit}>
           Submit
         </AsyncButton>
       </DialogActions>

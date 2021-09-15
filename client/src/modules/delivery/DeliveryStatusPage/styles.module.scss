@@ -11,6 +11,10 @@
 .successBlock {
   width: 400px;
 }
+.copyInput {
+  flex: 0 1 auto !important;
+  max-width: calc(100% - 80px);
+}
 .copyBtn {
   color: $white-color !important;
   background-color: $sage-color !important;

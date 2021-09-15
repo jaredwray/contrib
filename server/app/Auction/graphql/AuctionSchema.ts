@@ -13,6 +13,8 @@ export const AuctionSchema = gql`
 
   enum AuctionDeliveryStatus {
     ADDRESS_PROVIDED
+    DELIVERY_PAID
+    DELIVERY_PAYMENT_FAILED
     PAID
   }
 
@@ -39,6 +41,7 @@ export const AuctionSchema = gql`
   }
 
   type AuctionDelivery {
+    deliveryMethod: String
     shippingLabel: String
     parcel: Parcel
     address: Address
@@ -180,13 +183,6 @@ export const AuctionSchema = gql`
     identificationNumber: String
   }
 
-  input PaymentCard {
-    type: String
-    number: String
-    expirationDate: String
-    securityCode: String
-  }
-
   input AuctionSearchFilters {
     minPrice: Int
     maxPrice: Int
@@ -235,6 +231,13 @@ export const AuctionSchema = gql`
     units: String!
   }
 
+  input ShippingRegistrationInput {
+    auctionId: String!
+    deliveryMethod: String
+    timeInTransit: DateTime
+    auctionWinnerId: String
+  }
+
   extend type Query {
     auctions(
       size: Int
@@ -268,12 +271,7 @@ export const AuctionSchema = gql`
     followAuction(auctionId: String!): Follow
     unfollowAuction(auctionId: String!): ResponceId
     updateAuctionParcel(auctionId: String!, input: ParcelInput!): Parcel!
-    shippingRegistration(
-      auctionId: String!
-      deliveryMethod: String!
-      paymentCard: PaymentCard
-      timeInTransit: DateTime
-    ): ShippingRegistration
+    shippingRegistration(input: ShippingRegistrationInput): ShippingRegistration
   }
 
   extend type Subscription {

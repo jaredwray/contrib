@@ -16,6 +16,7 @@ export const AuctionQueryAuction = {
     websiteUrl: 'test',
   },
   delivery: {
+    deliveryMethod: '03',
     identificationNumber: '1Z3W090X0399152336',
     status: 'ADDRESS_PROVIDED',
     timeInTransit: '2021-08-27',
@@ -118,7 +119,7 @@ export const auctionForAdminPage = {
   currentPrice: { amount: 10000000199, currency: 'USD', precision: 2 },
   endDate: '2021-06-24T08:00:18.000Z',
   fairMarketValue: null,
-  id: '60cf0ade0092860f2c7a0bc1',
+  id: 'testId',
   isActive: false,
   isFailed: true,
   isSold: false,
@@ -130,7 +131,7 @@ export const auctionForAdminPage = {
   delivery: {
     shippingLabel: '222',
     identificationNumber: null,
-    status: 'PAID',
+    status: 'DELIVERY_PAID',
     timeInTransit: null,
     updatedAt: '2021-08-24T18:12:00.639Z',
     address: {

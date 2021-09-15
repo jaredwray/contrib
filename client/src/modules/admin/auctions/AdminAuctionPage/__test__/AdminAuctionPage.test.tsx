@@ -86,6 +86,9 @@ const arg = {
   },
 };
 describe('AdminAuctionPage ', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it('component return null', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
@@ -118,16 +121,16 @@ describe('AdminAuctionPage ', () => {
       );
 
       await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
-
-      expect(wrapper!).toHaveLength(1);
-      expect(wrapper!.find(Layout)).toHaveLength(1);
-      wrapper!.find(Bids).props().onBidClickHandler(arg);
-
-      wrapper!.find(Modal).props().onClose();
-      wrapper!.find(Modal).props().onConfirm();
-
-      wrapper!.find(AsyncButton).at(0).simulate('click');
+      wrapper!.update();
     });
+
+    await expect(wrapper!).toHaveLength(1);
+    expect(wrapper!.find(Layout)).toHaveLength(1);
+    wrapper!.find(Bids).props().onBidClickHandler(arg);
+
+    wrapper!.find(Modal).props().onClose();
+    wrapper!.find(Modal).props().onConfirm();
+
+    wrapper!.find(AsyncButton).at(0).simulate('click');
   });
 });

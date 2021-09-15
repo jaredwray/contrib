@@ -1,6 +1,9 @@
 import Dinero from 'dinero.js';
 import axios from 'axios';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+
+import { UserAccountAddress } from 'app/UserAccount/dto/UserAccountAddress';
+import { AuctionParcel } from './Auction/dto/AuctionParcel';
 
 import { AppConfig } from '../config';
 import { AppLogger } from '../logger';
@@ -19,6 +22,10 @@ export class UPSDeliveryService {
     return AppConfig.delivery.UPSContribDeliveryData;
   }
 
+  public static get ContribCardData() {
+    return AppConfig.delivery.UPSContribCardData;
+  }
+
   public static get deliveryRateUrl(): string {
     return AppConfig.delivery.UPSTestEnviroment
       ? 'https://wwwcie.ups.com/ship/v1/rating/Rate?additionalinfo=timeintransit'
@@ -31,12 +38,12 @@ export class UPSDeliveryService {
       : 'https://onlinetools.ups.com/ship/v1701/shipments';
   }
 
-  private static handleErrors(error) {
+  private static handleErrors(error): void {
     if (error.response) {
       throw new AppError(`${error.response.headers.errordescription}`);
     } else if (error.request) {
       // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      //f `error.request` is an instance of XMLHttpRequest in the browser and an instance of
       // http.ClientRequest in node.js
       AppLogger.error(`The request was made but no response was received, error: ${error.message}`);
       throw new AppError('Something went wrong. Please try again later');
@@ -46,7 +53,11 @@ export class UPSDeliveryService {
     }
   }
 
-  private static deliveryPriceBodyRequest(parcel, address, deliveryMethod) {
+  private static deliveryPriceBodyRequest(
+    parcel: AuctionParcel,
+    address: UserAccountAddress,
+    deliveryMethod: string,
+  ): object {
     const { width: ParcelWidth, length: ParcelLength, height: ParcelHeight, weight: ParcelWeight } = parcel;
 
     const {
@@ -136,7 +147,12 @@ export class UPSDeliveryService {
     };
   }
 
-  private static shippingBodyRequest(parcel, address, deliveryMethod, paymentCard) {
+  private static shippingBodyRequest(
+    parcel: AuctionParcel,
+    address: UserAccountAddress,
+    deliveryMethod: string,
+  ): object {
+    const paymentCard = UPSDeliveryService.ContribCardData;
     const {
       type: CardType,
       number: CardNumber,
@@ -240,7 +256,11 @@ export class UPSDeliveryService {
     };
   }
 
-  public async getDeliveryPrice(parcel, address, deliveryMethod) {
+  public async getDeliveryPrice(
+    parcel: AuctionParcel,
+    address: UserAccountAddress,
+    deliveryMethod: string,
+  ): Promise<{ deliveryPrice: Dinero.Dinero; timeInTransit: Dayjs }> {
     try {
       const request = UPSDeliveryService.deliveryPriceBodyRequest(parcel, address, deliveryMethod);
 
@@ -253,8 +273,10 @@ export class UPSDeliveryService {
       const timeInTransit = shipmentRate.TimeInTransit.ServiceSummary.EstimatedArrival.Arrival.Date;
 
       return {
-        currency: totalCharges.CurrencyCode as Dinero.Currency,
-        amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
+        deliveryPrice: Dinero({
+          amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
+          currency: totalCharges.CurrencyCode as Dinero.Currency,
+        }),
         timeInTransit: dayjs(timeInTransit.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')).add(4, 'days'),
       };
     } catch (error) {
@@ -262,9 +284,13 @@ export class UPSDeliveryService {
     }
   }
 
-  public async shippingRegistration(parcel, address, deliveryMethod, paymentCard) {
+  public async shippingRegistration(
+    parcel: AuctionParcel,
+    address: UserAccountAddress,
+    deliveryMethod: string,
+  ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string; shippingLabel: string }> {
     try {
-      const request = UPSDeliveryService.shippingBodyRequest(parcel, address, deliveryMethod, paymentCard);
+      const request = UPSDeliveryService.shippingBodyRequest(parcel, address, deliveryMethod);
 
       const responce = await this.http.post(UPSDeliveryService.shippingUrl, request, {
         headers: UPSDeliveryService.requestHeader,
@@ -276,8 +302,10 @@ export class UPSDeliveryService {
       const shippingLabel = shipmentResults.PackageResults.ShippingLabel.GraphicImage;
 
       return {
-        currency: totalCharges.CurrencyCode as Dinero.Currency,
-        amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
+        deliveryPrice: Dinero({
+          amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
+          currency: totalCharges.CurrencyCode as Dinero.Currency,
+        }),
         identificationNumber,
         shippingLabel,
       };

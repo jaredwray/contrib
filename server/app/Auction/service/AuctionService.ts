@@ -84,16 +84,7 @@ export class AuctionService {
     }
     const { parcel, address } = auction.delivery;
     try {
-      const deliveryPrice = await this.UPSService.getDeliveryPrice(parcel, address, deliveryMethod);
-      const { amount, currency, timeInTransit } = deliveryPrice;
-
-      return {
-        deliveryPrice: Dinero({
-          amount,
-          currency,
-        }),
-        timeInTransit,
-      };
+      return await this.UPSService.getDeliveryPrice(parcel, address, deliveryMethod);
     } catch (error) {
       AppLogger.error(
         `Something went wrong when calculated shipping cost for auction #${auctionId}, ${error.message} `,
@@ -101,35 +92,66 @@ export class AuctionService {
       throw new AppError(error.message);
     }
   }
+  public async chargeUserForShippingRegistration(auction: IAuctionModel, deliveryMethod: string): Promise<void> {
+    const { _id: winnerId } = auction.winner;
+    try {
+      const { id: cardId } = await this.paymentService.getAccountPaymentInformation(auction.winner);
+      if (!cardId) {
+        AppLogger.error(
+          `Can not find payment information for user #${winnerId.toString()} in shippingRegistration method`,
+        );
+        throw new AppError('Something went wrong. Please try again later');
+      }
 
-  public async shippingRegistration(
-    auctionId: string,
-    deliveryMethod: string,
-    paymentCard: any,
-    userId: string,
-    timeInTransit: Dayjs,
-  ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string }> {
-    const auction = await this.auctionRepository.getAuction(auctionId);
-    if (!auction) {
-      AppLogger.error(`Can not find auction with id #${auctionId} when register shipping`);
+      const { deliveryPrice } = await this.calculateShippingCost(
+        auction._id.toString(),
+        deliveryMethod,
+        winnerId.toString(),
+      );
+
+      await this.paymentService.chargeUser(
+        auction.winner,
+        cardId,
+        deliveryPrice,
+        `Contrib register shipping for auction: ${auction.title}`,
+      );
+
+      Object.assign(auction.delivery, {
+        status: AuctionDeliveryStatus.PAID,
+        updatedAt: dayjs().second(0),
+      });
+      await auction.save();
+    } catch (error) {
+      AppLogger.error(
+        `Something went wrong when charge user #${winnerId.toString()} in stipe in shippingRegistration method, error: ${
+          error.message
+        }`,
+      );
       throw new AppError('Something went wrong. Please try again later');
     }
-    if (auction.winner._id.toString() !== userId) {
-      AppLogger.error(`User #${userId} is not a winner for auction #${auctionId} when register shipping`);
-      throw new AppError('You are not a winner for this auction');
-    }
+  }
+
+  public async sendRequestForShippingRegistration(
+    auction: IAuctionModel,
+    deliveryMethod: string | undefined,
+    timeInTransit: Dayjs | undefined,
+  ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string }> {
     const { parcel, address } = auction.delivery;
     try {
-      const deliveryPrice = await this.UPSService.shippingRegistration(parcel, address, deliveryMethod, paymentCard);
-      const { amount, currency, identificationNumber, shippingLabel } = deliveryPrice;
+      const { deliveryPrice, identificationNumber, shippingLabel } = await this.UPSService.shippingRegistration(
+        parcel,
+        address,
+        deliveryMethod || auction.delivery.deliveryMethod,
+      );
+
       const barcode = await this.cloudStorage.uploadBase64(shippingLabel, {
         identificationNumber,
-        auctionId,
+        auctionId: auction._id.toString(),
         organizerId: auction.auctionOrganizer._id.toString(),
       });
 
       Object.assign(auction.delivery, {
-        status: AuctionDeliveryStatus.PAID,
+        status: AuctionDeliveryStatus.DELIVERY_PAID,
         updatedAt: dayjs().second(0),
         timeInTransit,
         identificationNumber,
@@ -138,16 +160,79 @@ export class AuctionService {
 
       await auction.save();
 
+      await this.sendAuctionNotification(
+        auction.winner.phoneNumber,
+        MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_WINNER,
+        {
+          auctionTitle: auction.title,
+          trackingLink: `https://www.ups.com/track?trackingNumber=${identificationNumber}`,
+          identificationNumber,
+        },
+      );
+
       return {
-        deliveryPrice: Dinero({
-          amount,
-          currency,
-        }),
+        deliveryPrice,
         identificationNumber,
       };
     } catch (error) {
-      AppLogger.error(`Something went wrong when register shipping auction #${auctionId}, ${error.message} `);
-      throw new AppError(error.message);
+      Object.assign(auction.delivery, {
+        status: AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED,
+        updatedAt: dayjs().second(0),
+      });
+      await auction.save();
+      throw new Error(error.message);
+    }
+  }
+
+  public async shippingRegistration(
+    input: {
+      auctionId: string;
+      timeInTransit?: Dayjs;
+      auctionWinnerId?: string;
+      deliveryMethod?: string;
+    },
+    currentUserId: string,
+  ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string }> {
+    const { timeInTransit, auctionWinnerId, deliveryMethod, auctionId } = input;
+
+    const auction = await this.auctionRepository.getAuction(auctionId);
+    if (!auction) {
+      AppLogger.error(`Can not find auction with id #${auctionId} when register shipping`);
+      throw new AppError('Something went wrong. Please try again later');
+    }
+
+    const currentAuctionWinnerId = auctionWinnerId || currentUserId;
+    if (auction.winner._id.toString() !== currentAuctionWinnerId) {
+      AppLogger.error(
+        `User #${currentAuctionWinnerId} is not a winner for auction #${auctionId} when register shipping`,
+      );
+      throw new AppError('You are not a winner for this auction');
+    }
+
+    if (auction.delivery.status === AuctionDeliveryStatus.ADDRESS_PROVIDED) {
+      await this.chargeUserForShippingRegistration(auction, deliveryMethod);
+    }
+
+    if (deliveryMethod) {
+      try {
+        auction.delivery.deliveryMethod = deliveryMethod;
+
+        await auction.save();
+      } catch (error) {
+        AppLogger.error(
+          `Something went wrong when update deliveryMethod in shippingRegistration method for auction #${auctionId}, error: ${error.message} `,
+        );
+        throw new AppError('Something went wrong. Please try again later');
+      }
+    }
+
+    try {
+      return await this.sendRequestForShippingRegistration(auction, deliveryMethod, timeInTransit);
+    } catch (error) {
+      AppLogger.error(error.message);
+      if (!deliveryMethod) {
+        throw new AppError(error.message);
+      }
     }
   }
 

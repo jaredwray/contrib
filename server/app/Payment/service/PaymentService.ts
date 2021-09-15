@@ -44,9 +44,9 @@ export class PaymentService {
     account: UserAccount,
     paymentSource: string,
     amount: Dinero.Dinero,
-    description: string,
-    charityStripeId: string,
-    charityId: string,
+    description?: string,
+    charityStripeId?: string,
+    charityId?: string,
   ): Promise<string> {
     return this.stripeService.createCharge(
       account.stripeCustomerId,

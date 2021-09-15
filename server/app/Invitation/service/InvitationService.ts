@@ -240,9 +240,9 @@ export class InvitationService {
       };
     } catch (error) {
       AppLogger.error(
-        `Somethink whent wrong, when resend invite message for influencer #${influencerId}, error: ${error.message}`,
+        `Something went wrong, when resend invite message for influencer #${influencerId}, error: ${error.message}`,
       );
-      throw new AppError('Somethink whent wrong. Please, try again later');
+      throw new AppError('Something went wrong. Please, try again later');
     }
   }
 

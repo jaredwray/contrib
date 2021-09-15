@@ -13,14 +13,13 @@ import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { MakeAuctionBidMutation } from 'src/apollo/queries/bids';
 import AsyncButton from 'src/components/AsyncButton';
+import { CardInput } from 'src/components/CardInput';
 import Dialog from 'src/components/Dialog';
 import DialogActions from 'src/components/Dialog/DialogActions';
 import DialogContent from 'src/components/Dialog/DialogContent';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import styles from './BidConfirmationModal.module.scss';
-import CardInfo from './CardInfo';
-import StripeInput from './StripeInput';
 
 export interface BidConfirmationRef {
   placeBid: (amount: Dinero.Dinero) => void;
@@ -150,24 +149,15 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
               </p>
             )}
             <p>Please make sure this card has enough available funds at time of auction finalization.</p>
-
-            {(expired || paymentInformation) && !newCard && (
-              <CardInfo
-                expired={expired}
-                isSubmitting={isSubmitting}
-                paymentInfo={paymentInformation}
-                onNewCardAdd={handleAddCard}
-              />
-            )}
-            {(!paymentInformation || newCard) && (
-              <StripeInput
-                disabled={isSubmitting}
-                showCancelBtn={Boolean(paymentInformation)}
-                onCancel={handleNewCardCancelBtnClick}
-                onChange={handleCardInputChange}
-              />
-            )}
-
+            <CardInput
+              expired={expired}
+              handleAddCard={handleAddCard}
+              isSubmitting={isSubmitting}
+              newCard={newCard}
+              paymentInformation={paymentInformation}
+              onCancel={handleNewCardCancelBtnClick}
+              onChange={handleCardInputChange}
+            />
             <p className="text-center pt-0 pt-sm-3 mb-0">
               {isBuying ? 'Price is' : 'Your bid is'}
               <span className="pl-1 font-weight-bold">{activeBid?.toFormat('$0,0')}</span>
@@ -185,7 +175,6 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
           >
             Cancel
           </Button>
-
           <AsyncButton
             className={styles.actionBtn}
             disabled={buttonsAreDisabled}

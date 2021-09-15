@@ -281,18 +281,17 @@ export const CalculateShippingCostQuery = gql`
 export const ShippingRegistrationMutation = gql`
   mutation ShippingRegistration(
     $auctionId: String!
-    $deliveryMethod: String!
-    $type: String
-    $number: String
-    $expirationDate: String
-    $securityCode: String
+    $deliveryMethod: String
     $timeInTransit: DateTime
+    $auctionWinnerId: String
   ) {
     shippingRegistration(
-      auctionId: $auctionId
-      deliveryMethod: $deliveryMethod
-      paymentCard: { type: $type, number: $number, expirationDate: $expirationDate, securityCode: $securityCode }
-      timeInTransit: $timeInTransit
+      input: {
+        auctionId: $auctionId
+        deliveryMethod: $deliveryMethod
+        timeInTransit: $timeInTransit
+        auctionWinnerId: $auctionWinnerId
+      }
     ) {
       deliveryPrice
       identificationNumber

@@ -49,7 +49,10 @@ export default function DeliveryStatusPage() {
     return null;
   }
 
-  if (auction.delivery.status !== AuctionDeliveryStatus.PAID) {
+  if (
+    auction.delivery.status !== AuctionDeliveryStatus.DELIVERY_PAID &&
+    auction.delivery.status !== AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED
+  ) {
     history.push(`/auctions/${auctionId}/delivery/payment`);
     return null;
   }
@@ -73,7 +76,7 @@ export default function DeliveryStatusPage() {
               <p>
                 Status of
                 <Link className={(styles.actionLink, styles.markedText)} to={`/auctions/${auctionId}`}>
-                  {auction.title}
+                  {auction?.title}
                 </Link>
                 auction
               </p>
@@ -83,31 +86,45 @@ export default function DeliveryStatusPage() {
                   {format(new Date(auction.delivery.timeInTransit!), 'MM/dd/yyyy')}
                 </span>
               </p>
-
-              <p>
-                You can track your parcel on
-                <a
-                  className={clsx(styles.actionLink, styles.markedText)}
-                  href={`https://www.ups.com/track?trackingNumber=${auction.delivery.identificationNumber}`}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  UPS website
-                </a>
-                using follow tracking ID:
-              </p>
-              <BForm.Group>
-                <InputGroup>
-                  <BForm.Control disabled type="text" value={auction.delivery.identificationNumber} />
-                  <InputGroup.Append>
-                    <CopyToClipboard text={auction.delivery.identificationNumber} onCopy={() => setLinkCopied(true)}>
-                      <Button className={styles.copyBtn} type="button">
-                        {(linkCopied && 'Copied') || 'Copy'}
-                      </Button>
-                    </CopyToClipboard>
-                  </InputGroup.Append>
-                </InputGroup>
-              </BForm.Group>
+              {!auction.delivery.identificationNumber && (
+                <p>We will message you with your shipping tracking information when it is shipped!</p>
+              )}
+              {auction.delivery.identificationNumber && (
+                <>
+                  <p>
+                    You can track your parcel on
+                    <a
+                      className={clsx(styles.actionLink, styles.markedText)}
+                      href={`https://www.ups.com/track?trackingNumber=${auction.delivery.identificationNumber}`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      UPS website
+                    </a>
+                    using follow tracking ID:
+                  </p>
+                  <BForm.Group>
+                    <InputGroup>
+                      <BForm.Control
+                        disabled
+                        className={clsx(styles.copyInput, 'w-auto')}
+                        type="text"
+                        value={auction.delivery.identificationNumber}
+                      />
+                      <InputGroup.Append>
+                        <CopyToClipboard
+                          text={auction.delivery.identificationNumber}
+                          onCopy={() => setLinkCopied(true)}
+                        >
+                          <Button className={styles.copyBtn} type="button">
+                            {(linkCopied && 'Copied') || 'Copy'}
+                          </Button>
+                        </CopyToClipboard>
+                      </InputGroup.Append>
+                    </InputGroup>
+                  </BForm.Group>
+                </>
+              )}
             </Col>
             {!loading && (
               <Col className="pt-4 pt-md-0 pb-3" md="6">
