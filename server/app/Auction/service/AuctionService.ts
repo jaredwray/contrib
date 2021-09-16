@@ -92,7 +92,11 @@ export class AuctionService {
       throw new AppError(error.message);
     }
   }
-  public async chargeUserForShippingRegistration(auction: IAuctionModel, deliveryMethod: string): Promise<void> {
+  public async chargeUserForShippingRegistration(
+    auction: IAuctionModel,
+    deliveryMethod: string,
+    timeInTransit: Dayjs | undefined,
+  ): Promise<void> {
     const { _id: winnerId } = auction.winner;
     try {
       const { id: cardId } = await this.paymentService.getAccountPaymentInformation(auction.winner);
@@ -119,6 +123,7 @@ export class AuctionService {
       Object.assign(auction.delivery, {
         status: AuctionDeliveryStatus.PAID,
         updatedAt: dayjs().second(0),
+        timeInTransit,
       });
       await auction.save();
     } catch (error) {
@@ -134,7 +139,6 @@ export class AuctionService {
   public async sendRequestForShippingRegistration(
     auction: IAuctionModel,
     deliveryMethod: string | undefined,
-    timeInTransit: Dayjs | undefined,
   ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string }> {
     const { parcel, address } = auction.delivery;
     try {
@@ -153,7 +157,6 @@ export class AuctionService {
       Object.assign(auction.delivery, {
         status: AuctionDeliveryStatus.DELIVERY_PAID,
         updatedAt: dayjs().second(0),
-        timeInTransit,
         identificationNumber,
         shippingLabel: barcode,
       });
@@ -210,7 +213,7 @@ export class AuctionService {
     }
 
     if (auction.delivery.status === AuctionDeliveryStatus.ADDRESS_PROVIDED) {
-      await this.chargeUserForShippingRegistration(auction, deliveryMethod);
+      await this.chargeUserForShippingRegistration(auction, deliveryMethod, timeInTransit);
     }
 
     if (deliveryMethod) {
@@ -227,7 +230,7 @@ export class AuctionService {
     }
 
     try {
-      return await this.sendRequestForShippingRegistration(auction, deliveryMethod, timeInTransit);
+      return await this.sendRequestForShippingRegistration(auction, deliveryMethod);
     } catch (error) {
       AppLogger.error(error.message);
       if (!deliveryMethod) {

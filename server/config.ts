@@ -77,6 +77,10 @@ export const AppConfig = {
     domain: requireEnvVar('BITLY_DOMAIN'),
   },
   stripe: {
+    stripeFee: {
+      fixedFee: 0.3,
+      percentFee: 2.9 / 100,
+    }, // constants for calculation stripe fee and including it to charge, relevant information on stripe fee constants can be found here: https://stripe.com/pricing#pricing-details
     secretKey: requireEnvVar('STRIPE_SECRET_KEY'),
     webhookSecretKey: requireEnvVar('STRIPE_WEBHOOK_SECRET_KEY'),
     contribSharePercentage: requireEnvVar('STRIPE_CONTRIB_SHARE_PERCENTAGE'),
