@@ -83,6 +83,7 @@ We use google cloud storage and there are two users for each environment (`dev` 
 ## UPS delivery:
 
 To deliver auction winnings, we use UPS service.
+
 You can find all the necessary information about UPS for development here: `https://www.ups.com/upsdeveloperkit?loc=en_US`.
 
 Description of fields of the required data specified in the .env file:
@@ -108,23 +109,23 @@ UPS_CONTRIB_CARD_DATA='{"type":"06", "number":"4242424242424242", "expirationDat
 ```
 # type
 
-Card type value. You need to choose the right option for your card from the list below:
+Card type value. You need to choose the right option for your card from the list below:\
 
-01 = American Express
-03 = Discover
-04 = MasterCard
-05 = Optima
-06 = VISA
-07 = Bravo
-08 = Diners Club
-13 = Dankort
-14 = Hipercard
-15 = JCB
+01 = American Express\
+03 = Discover\
+04 = MasterCard\
+05 = Optima\
+06 = VISA\
+07 = Bravo\
+08 = Diners Club\
+13 = Dankort\
+14 = Hipercard\
+15 = JCB\
 17 = Postepay
-18 = UnionPay/ExpressPay
-19 = Visa Electron
-20 = VPAY
-21 = Carte Bleue
+18 = UnionPay/ExpressPay\
+19 = Visa Electron\
+20 = VPAY\
+21 = Carte Bleue\
 
 # expirationDate
 
