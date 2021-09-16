@@ -3,7 +3,7 @@ import { FC, ReactElement, useState, useCallback } from 'react';
 import { Image } from 'react-bootstrap';
 
 import AddVideoIcon from 'src/assets/icons/VideoIcon';
-import AddPhotoIcon from 'src/assets/images/ProtoIcon';
+import AddPhotoIcon from 'src/assets/images/PhotoIcon';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionAttachment } from 'src/types/Auction';
 
