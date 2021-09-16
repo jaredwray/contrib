@@ -79,14 +79,14 @@ export class UPSDeliveryService {
     return {
       RateRequest: {
         Request: {
-          SubVersion: '1703',
+          SubVersion: '1703', //Indicates Rate API to display the new release features in Rate API  response based on Rate release. See  the What's New section for the latest  Rate release. Supported values: 1601, 1607, 1701, 1801
         },
         Shipment: {
           ShipmentRatingOptions: {
-            UserLevelDiscountIndicator: 'TRUE',
+            UserLevelDiscountIndicator: 'TRUE', // UserLevelDiscountIndicator - required  to obtain rates for User Level Promotions.
           },
           DeliveryTimeInformation: {
-            PackageBillType: '03',
+            PackageBillType: '03', //Valid values are: 02 - Document only  03 - Non-Document 04 - WWEF Pallet 07 - Domestic Palle
           },
           Shipper: {
             Name: 'Contrib',
@@ -120,12 +120,11 @@ export class UPSDeliveryService {
             },
           },
           Service: {
-            Code: deliveryMethod,
+            Code: deliveryMethod, // Delivery Services: UPS Ground (03) UPS 3 Day Select (12)  UPS 2nd Day Air (02) (13)
           },
           Package: {
             PackagingType: {
-              Code: '02',
-              Description: 'Package',
+              Code: '02', //  Packaging type:  01 = UPS Letter 02 = Customer Supplied Package  03 = Tube 04 = PAK  21 = UPS Express Box  24 = UPS 25KG Box  25 = UPS 10KG Box ...
             },
             Dimensions: {
               UnitOfMeasurement: {
@@ -214,7 +213,7 @@ export class UPSDeliveryService {
           },
           PaymentInformation: {
             ShipmentCharge: {
-              Type: '01',
+              Type: '01', // Valid values: 01 = Transportation 02 = Duties and Taxes 03 = Broker of Choice  A shipment charge type of 01 = Transportation is required.
               BillShipper: {
                 CreditCard: {
                   Type: CardType,
@@ -225,16 +224,12 @@ export class UPSDeliveryService {
               },
             },
           },
-          ItemizedChargesRequestedIndicator: '',
           Service: {
-            Code: deliveryMethod,
-          },
-          ShipmentRatingOptions: {
-            RateChartIndicator: '0',
+            Code: deliveryMethod, // Delivery Services: UPS Ground (03) UPS 3 Day Select (12)  UPS 2nd Day Air (02) (13)
           },
           Package: {
             Packaging: {
-              Code: '02',
+              Code: '02', //  Packaging type:  01 = UPS Letter 02 = Customer Supplied Package  03 = Tube 04 = PAK  21 = UPS Express Box  24 = UPS 25KG Box  25 = UPS 10KG Box ...
             },
             Dimensions: {
               UnitOfMeasurement: {
