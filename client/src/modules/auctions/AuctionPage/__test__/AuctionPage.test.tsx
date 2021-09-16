@@ -65,6 +65,13 @@ cache2.writeQuery({
     auction: AuctionQueryAuction,
   },
 });
+cache3.writeQuery({
+  query: AuctionQuery,
+  variables: { id: 'testId' },
+  data: {
+    auction: { ...AuctionQueryAuction, isDraft: true, isStopped: false },
+  },
+});
 
 describe('AuctionPage ', () => {
   it('component should redirect to 404 page', async () => {
@@ -97,7 +104,7 @@ describe('AuctionPage ', () => {
     });
     expect(wrapper!.find(Layout)).toHaveLength(0);
   });
-  it('should redirect to Home page', async () => {
+  it('should redirect to Home page becouse auction is stopped', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -112,6 +119,23 @@ describe('AuctionPage ', () => {
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
     });
-    expect(mockHistoryFn).toHaveBeenCalledTimes(1);
+    expect(mockHistoryFn).toHaveBeenCalled();
+  });
+  it('should redirect to Home page becouse auction is draft', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache3}>
+              <AuctionPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    expect(mockHistoryFn).toHaveBeenCalled();
   });
 });

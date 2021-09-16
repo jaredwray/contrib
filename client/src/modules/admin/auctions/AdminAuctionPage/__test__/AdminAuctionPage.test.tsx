@@ -122,15 +122,22 @@ describe('AdminAuctionPage ', () => {
 
       await new Promise((resolve) => setTimeout(resolve));
       wrapper!.update();
+
+      expect(wrapper!).toHaveLength(1);
+      expect(wrapper!.find(Layout)).toHaveLength(1);
     });
 
-    await expect(wrapper!).toHaveLength(1);
-    expect(wrapper!.find(Layout)).toHaveLength(1);
-    wrapper!.find(Bids).props().onBidClickHandler(arg);
-
-    wrapper!.find(Modal).props().onClose();
-    wrapper!.find(Modal).props().onConfirm();
-
-    wrapper!.find(AsyncButton).at(0).simulate('click');
+    act(() => {
+      wrapper!.find(Modal).props().onClose();
+    });
+    act(() => {
+      wrapper!.find(Modal).props().onConfirm();
+    });
+    await act(async () => {
+      await wrapper!.find(Bids).props().onBidClickHandler(arg);
+    });
+    await act(async () => {
+      await wrapper!.find(AsyncButton).at(0).simulate('click');
+    });
   });
 });

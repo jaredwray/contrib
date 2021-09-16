@@ -1,16 +1,33 @@
-import { render } from '@testing-library/react';
+import { mount, ReactWrapper } from 'enzyme';
+
+import { Form as BForm } from 'react-bootstrap';
 
 import InputField from '../InputField';
 import Form from 'src/components/Form/Form';
 
+const { Control } = BForm;
 const mockedSumbit = jest.fn();
-const props = {
-  name: 'test',
-};
-test('renders without crashing', () => {
-  render(
-    <Form onSubmit={mockedSumbit}>
-      <InputField {...props} />
-    </Form>,
-  );
+
+describe('Should render correctly "Form"', () => {
+  const props = {
+    name: 'test',
+    onInput: jest.fn(),
+  };
+
+  let wrapper: ReactWrapper;
+  beforeEach(() => {
+    wrapper = mount(
+      <Form onSubmit={mockedSumbit}>
+        <InputField {...props} />
+      </Form>,
+    );
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('component is defined', () => {
+    expect(wrapper).toHaveLength(1);
+    wrapper.find(Control).prop('onInput')('test');
+    expect(props.onInput).toBeCalled();
+  });
 });

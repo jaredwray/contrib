@@ -91,7 +91,6 @@ export default function DeliveryPricePage() {
         const token = tokenResult?.token ?? { id: '' };
         await RegisterPaymentMethod({ variables: { token: token.id } });
       }
-
       await ShippingRegistration({
         variables: {
           auctionId,

@@ -43,6 +43,18 @@ describe('Should render correctly "InviteModal"', () => {
       },
     },
   ];
+  const errorMocks = [
+    {
+      request: {
+        query: InviteInfluencerMutation,
+        variables: {},
+      },
+      newData: () => {
+        mockFn();
+        return {};
+      },
+    },
+  ];
 
   it('component is defined', () => {
     const wrapper = mount(
@@ -112,6 +124,24 @@ describe('Should render correctly "InviteModal"', () => {
         .find('input')
         .simulate('change', { target: { value: '78011111111' } });
       expect(wrapper!.find(PhoneInput).props().inputClass).toEqual('is-invalid');
+    });
+  });
+  it('should not call mutation becouse of error', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <MockedProvider mocks={errorMocks}>
+            <Router>
+              <Modal {...props} />
+            </Router>
+          </MockedProvider>
+        </ToastProvider>,
+      );
+
+      wrapper.find(Form).props().onSubmit({});
+
+      expect(mockFn).toHaveBeenCalledTimes(0);
     });
   });
 });

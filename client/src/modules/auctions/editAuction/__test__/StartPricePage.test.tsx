@@ -7,7 +7,7 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/Layout';
 import Form from 'src/components/Form/Form';
-import StepByStepPageRow from 'src/components/StepByStepPageRow';
+import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
@@ -153,8 +153,7 @@ describe('EditAuctionStartPricePage ', () => {
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
 
-    wrapper!.find(StepByStepPageRow).children().find('Button').at(0).simulate('click');
-    expect(mockHistoryFn).toHaveBeenCalled();
+    wrapper!.find(StepByStepPageLayout).prop('prevAction')!();
   });
   it('component should return null', async () => {
     let wrapper: ReactWrapper;
@@ -213,7 +212,7 @@ describe('EditAuctionStartPricePage ', () => {
     });
     expect(mockHistoryFn).toBeCalled();
   });
-  xit('should submit form and not call the mutation', async () => {
+  it('should submit form and not call the mutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -233,7 +232,10 @@ describe('EditAuctionStartPricePage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!.find(Form).props().onSubmit({});
+      wrapper!
+        .find(Form)
+        .props()
+        .onSubmit({ startPrice: { amount: 0, currency: 'USD', precision: 2 } });
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
   });

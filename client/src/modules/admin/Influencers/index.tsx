@@ -97,7 +97,6 @@ export default function InfluencersPage() {
     : data?.influencers || { skip: 0, totalItems: 0, items: [] };
 
   setPageTitle('Admin nfluencers auction page');
-
   const controlBtns = (
     <>
       <CreateInfluencer />

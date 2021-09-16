@@ -238,7 +238,7 @@ describe('EditAuctionTitlePageEdit ', () => {
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
-  xit('should submit form and call the mutation and goBack', async () => {
+  it('should submit form and call the mutation and goBack', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -263,7 +263,7 @@ describe('EditAuctionTitlePageEdit ', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockHistoryFn).toHaveBeenCalled();
   });
-  xit('should submit form and call the mutation and push', async () => {
+  it('should submit form and call the mutation and push', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
