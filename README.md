@@ -83,91 +83,74 @@ We use google cloud storage and there are two users for each environment (`dev` 
 ## UPS delivery:
 
 To deliver auction winnings, we use UPS service.
+You can find all the necessary information about UPS for development here: `https://www.ups.com/upsdeveloperkit?loc=en_US`.
 
 Description of fields of the required data specified in the .env file:
 
-1. UPS_DELIVERY_CONTRIB_DATA - required sender data, further in more detail about some of these data fields:
+### UPS_DELIVERY_CONTRIB_DATA
+required sender data, further in more detail about some of these data fields:
 
-   # address
+#### example
+```
+UPS_DELIVERY_CONTRIB_DATA='{"address":"524 9th Ave", "city":"Kirkland", "state":"WA", "zipCode":"98033", "shipperNumber":"3W090X"}'
+```
 
-   The Shipper street address including name and number (when applicable). Up to three occurrences are allowed; only the first is printed on the
-   label. 35 characters are accepted, but for the first occurrence, only 30 characters will be printed on the label for return shipments.
+##### shipperNumber
 
-   # city
+Shipper’s six digit alphanumeric account number. Must be associated with the UserId specified in the AccessRequest. The account must be a valid UPS account number that is active.
 
-   Shipper's City. For forward Shipment 30 characters are accepted, but only 15 characters will be printed on the label.
+### UPS_CONTRIB_CARD_DATA
+details of the card from which payment for delivery will be made, further in more detail about some of these data fields:
 
-   # state
+#### example
+```
+UPS_CONTRIB_CARD_DATA='{"type":"06", "number":"4242424242424242", "expirationDate":"022022", "securityCode":"777"}'
+```
+# type
 
-   Shipper's state or province code.
+Card type value. You need to choose the right option for your card from the list below:
 
-   # zipCode
+01 = American Express
+03 = Discover
+04 = MasterCard
+05 = Optima
+06 = VISA
+07 = Bravo
+08 = Diners Club
+13 = Dankort
+14 = Hipercard
+15 = JCB
+17 = Postepay
+18 = UnionPay/ExpressPay
+19 = Visa Electron
+20 = VPAY
+21 = Carte Bleue
 
-   Shipper's postal code.
+# expirationDate
 
-   # phoneNumber
+Format is MMYYYY where MM is the 2 digit month and YYYY is the 4 digit year. Valid month values are 01-12 and valid year
+values are Present Year – (Present Year + 10 years).
 
-   Shipper's phone number.
+## UPS_DELIVERY_REQUEST_HEADER
+data required to form a request to UPS, further in more detail about some of these data fields:
 
-   # shipperNumber
+#### example
+```
+UPS_DELIVERY_REQUEST_HEADER='{"AccessLicenseNumber": "number", "Password": "password", "Username": "username"}'
+```
 
-   Shipper’s six digit alphanumeric account number. Must be associated with the UserId specified in the AccessRequest. The account must be a valid UPS account number that is active.
+####  AccessLicenseNumber
 
-2. UPS_CONTRIB_CARD_DATA - details of the card from which payment for delivery will be made, further in more detail about some of these data fields:
+Authorization: Access Key obtained through on-boarding process. Contact your UPS representative for additional information.
 
-   # type
+####  Password
 
-   Card type value. You need to choose the right option for your card from the list below:
+The customers MyUPS password.
 
-   01 = American Express
-   03 = Discover
-   04 = MasterCard
-   05 = Optima
-   06 = VISA
-   07 = Bravo
-   08 = Diners Club
-   13 = Dankort
-   14 = Hipercard
-   15 = JCB
-   17 = Postepay
-   18 = UnionPay/ExpressPay
-   19 = Visa Electron
-   20 = VPAY
-   21 = Carte Bleue
+####  Username
 
-   # number
+The customers MyUPS username.
 
-   Credit Card number. Length: 9-16.
-
-   # expirationDate
-
-   Format is MMYYYY where MM is the 2 digit month and YYYY is the 4 digit year. Valid month values are 01-12 and valid year
-   values are Present Year – (Present Year + 10 years).
-
-   # securityCode
-
-   Three or four digits that can be found either on top of credit card number or on the back of credit card. Number of digits varies for
-   different type of credit card.
-
-3. UPS_DELIVERY_REQUEST_HEADER - data required to form a request to UPS, further in more detail about some of these data fields:
-
-   # AccessLicenseNumber
-
-   Authorization: Access Key obtained through on-boarding process. Contact your UPS representative for additional information.
-
-   # Password
-
-   The customers MyUPS password.
-
-   # Username
-
-   The customers MyUPS username.
-
-   ====================
-
-   You can find all the necessary information about UPS for development here: `https://www.ups.com/upsdeveloperkit?loc=en_US`.
-
-   ====================
 
 ## Setup webhook to notify application when an event happens in an account
 
