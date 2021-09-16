@@ -127,7 +127,15 @@ const UploadingDropzone: FC<Props> = ({
       fileRejections.forEach((file: any) => {
         file.errors.forEach((err: any) => {
           if (err.code === 'file-too-large') {
-            setErrorMessage(`File is too big, max size is ${maxSizeGB} GB`);
+            const sizeGB = parseFloat(maxSizeGB || '');
+            let quantity;
+
+            if (sizeGB >= 1) {
+              quantity = `${sizeGB} GB`;
+            } else {
+              quantity = `${sizeGB * 1000} MB`;
+            }
+            setErrorMessage(`File is too big, max size is ${quantity}`);
           }
 
           if (err.code === 'file-invalid-type') {

@@ -109,7 +109,7 @@ UPS_CONTRIB_CARD_DATA='{"type":"06", "number":"4242424242424242", "expirationDat
 ```
 # type
 
-Card type value. You need to choose the right option for your card from the list below:\
+Card type value. You need to choose the right option for your card from the list below:
 
 01 = American Express\
 03 = Discover\
@@ -121,11 +121,11 @@ Card type value. You need to choose the right option for your card from the list
 13 = Dankort\
 14 = Hipercard\
 15 = JCB\
-17 = Postepay
+17 = Postepay\
 18 = UnionPay/ExpressPay\
 19 = Visa Electron\
 20 = VPAY\
-21 = Carte Bleue\
+21 = Carte Bleue
 
 # expirationDate
 
