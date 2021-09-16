@@ -78,7 +78,7 @@ jobs:
           REACT_APP_GOOGLE_ANALYTICS_APP_ID: "G-0VZJ4JNXP0"
           REACT_APP_SMARTLOOK_ID: ${{ secrets.DEV_REACT_APP_SMARTLOOK_ID }}
           REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE: ${{ secrets.DEV_REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE }}
-          REACT_APP_FIREBASE_CONFIG: '{"apiKey": "AIzaSyDuWYFWUjVxQAVNIM6EAoW4obbszC2Wdxc", "authDomain": "contrib-dev.firebaseapp.com", "projectId": "contrib-dev", "storageBucket": "content-dev.contrib.org", "messagingSenderId": "980164260648", "appId": "1:980164260648:web:fc5ec0ef1587944422561d"}'
+          REACT_APP_GOOGLE_STORAGE_DATA: '{"clientId": "980164260648-clttk32fgfp5kc90eqjb866kuc39m94k.apps.googleusercontent.com","clientSecret": "4V2bSnp0E1t795vhCcgwUxWj","refreshToken": "1//04yfqP25wb9rECgYIARAAGAQSNwF-L9IrH3tjiRcln5FZMloLSUvS5s-z38I2v2VS_5xkoL2aibTnE0PiflO5HNFSjPDAUxyspUE","buketName": "content-dev.contrib.org"}'
 
       # Test Client
       - name: Test Client

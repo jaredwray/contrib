@@ -1,7 +1,6 @@
 import { FC, ReactElement, SetStateAction, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
-import firebase from '@firebase/app';
 import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
 import { v4 as getUuid } from 'uuid';
@@ -13,7 +12,6 @@ import { Auction, AuctionAttachment } from 'src/types/Auction';
 import AttachmentPreview from './AttachmentPreview';
 import AttachmentsStateInterface from './common/AttachmentsStateInterface';
 import FilePreview from './FilePreview';
-import FirebaseInitializer from './FirebaseInitializer';
 import styles from './styles.module.scss';
 
 interface Props {
@@ -62,24 +60,45 @@ const UploadingDropzone: FC<Props> = ({
   const { id: auctionId, auctionOrganizer } = auction;
   const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
   const bytes = Math.pow(1024, 3);
+  const storageData = JSON.parse(process.env.REACT_APP_GOOGLE_STORAGE_DATA || '{}');
 
-  const firebaseUpload = useCallback(
+  const refreshGoogleAuthToken = useCallback(async () => {
+    const res = await fetch('https://accounts.google.com/o/oauth2/token', {
+      method: 'POST',
+      body: JSON.stringify({
+        client_id: storageData.clientId,
+        client_secret: storageData.clientSecret,
+        refresh_token: storageData.refreshToken,
+        grant_type: 'refresh_token',
+      }),
+    });
+
+    const tokenDetails = await res.json();
+    return tokenDetails.access_token;
+  }, [storageData.clientId, storageData.clientSecret, storageData.refreshToken]);
+
+  const googleCLoudUpload = useCallback(
     async (file: File) => {
+      const authToken = await refreshGoogleAuthToken();
       const uuid = getUuid();
       const extension = file.name.split('.').pop();
       const name = `${auctionOrganizer.id}/auctions/${auctionId}/${uuid}/${uuid}.${extension}`;
       try {
-        const blobUrl = URL.createObjectURL(file);
-        const blob = await fetch(blobUrl).then((r) => r.blob());
-        // @ts-ignore
-        const snapshot = await firebase.storage().ref().child(name).put(blob);
-        return await snapshot.ref.getDownloadURL();
+        await fetch(
+          `https://storage.googleapis.com/upload/storage/v1/b/${storageData.buketName}/o?uploadType=media&name=${name}`,
+          {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${authToken}` },
+            body: file,
+          },
+        );
+        return `https://storage.googleapis.com/${storageData.buketName}/${name}`;
       } catch (error) {
         setErrorMessage('Somethig went wrong');
         return false;
       }
     },
-    [auctionId, auctionOrganizer.id, setErrorMessage],
+    [refreshGoogleAuthToken, auctionId, auctionOrganizer.id, setErrorMessage, storageData.buketName],
   );
 
   const onDrop = useCallback(
@@ -95,9 +114,8 @@ const UploadingDropzone: FC<Props> = ({
       acceptedFiles.forEach(async (file) => {
         let url;
 
-        if (process.env.REACT_APP_FIREBASE_CONFIG && file.type.startsWith('video/')) {
-          url = await firebaseUpload(file);
-
+        if (process.env.REACT_APP_GOOGLE_STORAGE_DATA && file.type.startsWith('video/')) {
+          url = await googleCLoudUpload(file);
           if (!url) return;
         }
 
@@ -118,7 +136,7 @@ const UploadingDropzone: FC<Props> = ({
         });
       });
     },
-    [firebaseUpload, addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
+    [googleCLoudUpload, addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -134,7 +152,6 @@ const UploadingDropzone: FC<Props> = ({
 
   return (
     <>
-      <FirebaseInitializer />
       <div className={clsx('pl-md-0 pr-md-0 text-center text-sm-left', hasAttachments && 'd-table-row')}>
         {uploadedAttachments.map((attachment: AuctionAttachment, index: number) => (
           <AttachmentPreview
