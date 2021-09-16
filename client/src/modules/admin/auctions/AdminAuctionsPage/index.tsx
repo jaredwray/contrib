@@ -23,7 +23,7 @@ import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { DeleteAuctionButton } from './DeleteAuctionButton';
-import { DeliveryButton } from './DeliveryButton';
+import { EditDeliveryParcelButton } from './EditDeliveryParcelButton';
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import { StopOrActiveButton } from './StopOrActiveButton';
 import styles from './styles.module.scss';
@@ -78,7 +78,7 @@ export default function AdminAuctionsPage() {
             <th>Status</th>
             <th>Price</th>
             <th>Fair Market Value</th>
-            <th>Delivery properties</th>
+            <th>Delivery parcel properties</th>
             <th></th>
           </tr>
         </thead>
@@ -124,8 +124,8 @@ export default function AdminAuctionsPage() {
                       mutation={auction.isStopped ? ActivateAuctionMutation : StopAuctionMutation}
                     />
                   )}
-                  {auction.delivery.status !== AuctionDeliveryStatus.PAID && (
-                    <DeliveryButton
+                  {(!auction.delivery.status || auction.delivery.status !== AuctionDeliveryStatus.ADDRESS_PROVIDED) && (
+                    <EditDeliveryParcelButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
                       getAuctionsList={getAuctionsList}

@@ -14,7 +14,7 @@ interface Props {
   className: string;
 }
 
-export const DeliveryButton: FC<Props> = ({ auction, className, mutation, getAuctionsList }) => {
+export const EditDeliveryParcelButton: FC<Props> = ({ auction, className, mutation, getAuctionsList }) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>

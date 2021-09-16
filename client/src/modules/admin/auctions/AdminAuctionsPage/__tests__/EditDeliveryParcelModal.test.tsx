@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Form from 'src/components/Form/Form';
-import { Modal } from '../DeliveryButton/Modal';
+import { Modal } from '../EditDeliveryParcelButton/Modal';
 import { UpdateAuctionParcelMutation } from 'src/apollo/queries/auctions';
 
 describe('Should render correctly "Modal"', () => {

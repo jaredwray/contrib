@@ -192,7 +192,9 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     }
   }, [auctionId, addToast, unfollowAuction, followersNumber]);
 
-  const isPaid = auction.delivery.status === AuctionDeliveryStatus.PAID;
+  const isPaid =
+    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAID ||
+    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED;
   return (
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>

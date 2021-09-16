@@ -256,6 +256,12 @@ export class UPSDeliveryService {
     };
   }
 
+  public calculateDeliveryPriceValueWithStripeFee(deliveryPrice: number): number {
+    const { fixedFee, percentFee } = AppConfig.stripe.stripeFee;
+    return Math.round(Number((((deliveryPrice + fixedFee) / (1 - percentFee)) * 100).toFixed(2)));
+    // add to the shipping cost stripeFee. Formula for calculation is here: https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
+  }
+
   public async getDeliveryPrice(
     parcel: AuctionParcel,
     address: UserAccountAddress,
@@ -274,7 +280,7 @@ export class UPSDeliveryService {
 
       return {
         deliveryPrice: Dinero({
-          amount: Number((totalCharges.MonetaryValue * 100).toFixed(2)),
+          amount: this.calculateDeliveryPriceValueWithStripeFee(Number(totalCharges.MonetaryValue)),
           currency: totalCharges.CurrencyCode as Dinero.Currency,
         }),
         timeInTransit: dayjs(timeInTransit.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')).add(4, 'days'),
