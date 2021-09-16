@@ -2,12 +2,16 @@ import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
 import { InMemoryCache } from '@apollo/client';
 import { MemoryRouter } from 'react-router-dom';
+import { CardInput } from 'src/components/CardInput';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
+import type { StripeCardElementChangeEvent } from '@stripe/stripe-js';
 
 import DeliveryPaymentPage from '..';
+import Form from 'src/components/Form/Form';
+import Select from 'src/components/Select';
 import { testAccount } from 'src/helpers/testHelpers/account';
-import { AuctionQuery } from 'src/apollo/queries/auctions';
+import { AuctionQuery, ShippingRegistrationMutation, CalculateShippingCostQuery } from 'src/apollo/queries/auctions';
 import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
@@ -17,6 +21,14 @@ import Layout from 'src/components/Layout';
 import { withStripe } from '../WithStripe';
 
 const mockHistoryFn = jest.fn();
+
+jest.mock('@stripe/react-stripe-js', () => {
+  const Actual = jest.requireActual('@stripe/react-stripe-js');
+  return {
+    ...Actual,
+    useElements: () => ({ test: 'test' }),
+  };
+});
 
 jest.mock('@auth0/auth0-react');
 jest.mock('react-router-dom', () => ({
@@ -29,6 +41,14 @@ jest.mock('react-router-dom', () => ({
     auctionId: 'testId',
   }),
 }));
+const e: StripeCardElementChangeEvent = {
+  brand: 'visa',
+  complete: false,
+  elementType: 'card',
+  empty: false,
+  error: undefined,
+  value: { postalCode: '11111' },
+};
 
 const cache = new InMemoryCache();
 const cache2 = new InMemoryCache();
@@ -47,7 +67,7 @@ cache2.writeQuery({
   data: {
     auction: {
       ...AuctionQueryAuction,
-      delivery: { ...AuctionQueryAuction.delivery, status: 'PAID' },
+      delivery: { ...AuctionQueryAuction.delivery, status: 'DELIVERY_PAID' },
       winner: { ...AuctionQueryAuction.winner, mongodbId: 'ttestId' },
     },
   },
@@ -73,6 +93,45 @@ cache4.writeQuery({
     },
   },
 });
+cache4.writeQuery({
+  query: CalculateShippingCostQuery,
+  variables: {
+    deliveryMethod: '03',
+    auctionId: 'testId',
+  },
+  data: {
+    calculateShippingCost: {
+      deliveryPrice: { amount: 1, currency: 'USD' },
+      timeInTransit: '2021-09-23T21:00:00.000Z',
+    },
+  },
+});
+
+const mockFn = jest.fn();
+
+const mocks = [
+  {
+    request: {
+      query: ShippingRegistrationMutation,
+      variables: {
+        timeInTransit: '2021-09-23T21:00:00.000Z',
+        deliveryMethod: '03',
+        auctionId: 'testId',
+      },
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {
+          shippingRegistration: {
+            deliveryPrice: { amount: 1, currency: 'USD' },
+            identificationNumber: 'test',
+          },
+        },
+      };
+    },
+  },
+];
 describe('DeliveryPaymentPage', () => {
   beforeEach(() => {
     withAuthenticatedUser();
@@ -130,7 +189,7 @@ describe('DeliveryPaymentPage', () => {
       expect(mockHistoryFn).toHaveBeenCalled();
     });
   });
-  it('component should redirect when auctions status is PAID', async () => {
+  it('component should redirect when auctions status is DELIVERY_PAID ', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -146,14 +205,14 @@ describe('DeliveryPaymentPage', () => {
     });
     expect(mockHistoryFn).toHaveBeenCalled();
   });
-  it('component should redirect when auctions status is not PAID or ADDRESS_PROVIDED', async () => {
+  it('component should redirect when auctions status is not ADDRESS_PROVIDED', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache}>{withStripe(DeliveryPaymentPage)}</MockedProvider>
+              <MockedProvider cache={cache3}>{withStripe(DeliveryPaymentPage)}</MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
         </MemoryRouter>,
@@ -162,7 +221,7 @@ describe('DeliveryPaymentPage', () => {
     });
     expect(mockHistoryFn).toHaveBeenCalled();
   });
-  it('component defined', async () => {
+  it('component is defined', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -178,7 +237,39 @@ describe('DeliveryPaymentPage', () => {
       wrapper.update();
       expect(wrapper.find(StepByStepPageLayout)).toHaveLength(1);
 
-      wrapper.find('Button').first().simulate('click');
+      wrapper.find(Select).prop('onChange')('03');
+      expect(wrapper.find(Select).text()).toEqual('UPS Ground');
+
+      wrapper.find(CardInput).prop('handleAddCard')!();
+      wrapper.find(CardInput).prop('onCancel')!();
+      wrapper.find(CardInput).prop('onChange')!(e);
+      expect(wrapper.find(CardInput).text()).toEqual('Visa **** **** **** 4242, 5/26Use another card');
+
+      wrapper!.find(StepByStepPageLayout).prop('prevAction')!();
+      expect(mockHistoryFn).toHaveBeenCalled();
+    });
+  });
+  it('component is defined', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache4} mocks={mocks}>
+                {withStripe(DeliveryPaymentPage)}
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+      wrapper.find(CardInput).prop('onChange')!(e);
+      expect(wrapper.find(CardInput).text()).toEqual('Visa **** **** **** 4242, 5/26Use another card');
+
+      wrapper!.find(Form).props().onSubmit({});
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
   });
 });

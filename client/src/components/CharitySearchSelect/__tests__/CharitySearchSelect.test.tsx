@@ -1,4 +1,5 @@
 import { mount, ReactWrapper } from 'enzyme';
+import Select from 'react-select';
 
 import { CharitySearchSelect } from 'src/components/CharitySearchSelect';
 
@@ -18,5 +19,8 @@ describe('Should render correctly "CharitySearchSelect"', () => {
   });
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
+  });
+  it('component shpuld return "no charities found"', () => {
+    expect(wrapper.find(Select).prop('noOptionsMessage')()).toEqual('no charities found');
   });
 });

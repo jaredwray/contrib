@@ -9,9 +9,7 @@ const mockedSumbit = jest.fn();
 test('renders without crashing', () => {
   render(
     <Form onSubmit={mockedSumbit}>
-      <SubmitButton>
-        <AsyncButton loading={true} />
-      </SubmitButton>
+      <AsyncButton loading={true} />
     </Form>,
   );
 });

@@ -1,5 +1,7 @@
-import PriceRange from '../Filters/PriceRange';
+import Nouislider from 'nouislider-react';
 import { mount } from 'enzyme';
+
+import PriceRange from '../Filters/PriceRange';
 
 describe('Should render correctly "Filters"', () => {
   const props: any = {
@@ -23,9 +25,9 @@ describe('Should render correctly "Filters"', () => {
     const wrapper = mount(<PriceRange {...props} />);
     expect(wrapper.find('.form-group')).toHaveLength(1);
   });
-  xit('should call changeFilters when changing', () => {
+  it('should call changeFilters when changing', () => {
     const wrapper = mount(<PriceRange {...props} />);
-    wrapper.find('Nouislider').simulate('change');
+    wrapper.find(Nouislider).prop('onChange')!(['1', '2'], 1, [], true, []);
     expect(props.changeFilters).toHaveBeenCalledTimes(1);
   });
 });

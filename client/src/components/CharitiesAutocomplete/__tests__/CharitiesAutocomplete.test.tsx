@@ -1,5 +1,6 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 
+import SearchInput from 'src/components/SearchInput';
 import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 
 describe('Should render correctly "CharitiesAutocomplete"', () => {

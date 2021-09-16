@@ -118,7 +118,7 @@ const CharityPage = () => {
       return { label: charity.name, value: charity.name, id: charity.id };
     });
 
-  const handleChange = (selectedOption: any) => {
+  const handleChange = (selectedOption: { label: string; value: string; id: string } | null) => {
     setselectedOption(selectedOption);
   };
   const options = favouriteCharities.concat(notFavouriteCharities);

@@ -38,6 +38,8 @@ describe('Should render correctly "CharitiesSearchInput"', () => {
       wrapper.find(SearchInput).props().onChange('test');
       expect(wrapper.find('li')).toHaveLength(2);
       wrapper.find('li').at(0).simulate('click');
+
+      wrapper.find(SearchInput).prop('onCancel')!();
     });
   });
 });

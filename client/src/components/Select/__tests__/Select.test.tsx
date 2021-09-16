@@ -1,7 +1,12 @@
+import React from 'react';
 import Select from '..';
 import { mount, ReactWrapper } from 'enzyme';
+import { DropdownButton } from 'react-bootstrap';
+import { act } from '@testing-library/react';
 
 describe('Should render correctly "Select"', () => {
+  let e: React.SyntheticEvent;
+
   const props: any = {
     options: ['1', '2', '3'],
     onChange: jest.fn(),
@@ -30,5 +35,8 @@ describe('Should render correctly "Select"', () => {
       ],
     });
     expect(wrapper.find('DropdownButton')).toHaveLength(1);
+    act(() => {
+      wrapper.find(DropdownButton).prop('onSelect')!('1', e);
+    });
   });
 });

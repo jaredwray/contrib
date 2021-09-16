@@ -2,7 +2,7 @@ import { mount, ShallowWrapper } from 'enzyme';
 
 import DateDetails from 'src/components/AuctionCard/DateDetails';
 
-jest.useFakeTimers('modern').setSystemTime(new Date('2021-07-05'));
+jest.useFakeTimers('modern').setSystemTime(new Date('2021-07-05T05:21:00.000Z'));
 
 const props: any = {
   isDonePage: false,
@@ -35,10 +35,10 @@ const props: any = {
   },
 };
 describe('Should render correctly "DateDetails"', () => {
-  it('component is defined and has text: "0 bids • 24d 8h"', () => {
+  it('component is defined and has text: "0 bids • 24d 2h 44m"', () => {
     const wrapper = mount(<DateDetails {...props} />);
     expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('0 bids • 24d 8h 5m');
+    expect(wrapper.text()).toEqual('0 bids • 24d 2h 44m');
   });
   it('component is defined', () => {
     const wrapper = mount(<DateDetails {...props} />);
@@ -72,13 +72,13 @@ describe('Should render correctly "DateDetails"', () => {
     expect(wrapper).toHaveLength(1);
     expect(wrapper.text()).toEqual('stopped');
   });
-  xit('component is defined and has text: "starts on 3.07.21 @ 05:43 AM"', () => {
+  xit('component is defined and has text: "ends on 29.07.21 @ 08:05 AM"', () => {
     const wrapper = mount(<DateDetails {...props} />);
     wrapper.setProps({
       ...props,
       ...{ isDonePage: true },
     });
     expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('starts on 3.07.21 @ 05:43 AM');
+    expect(wrapper.text()).toEqual('ends on 29.07.21 @ 08:05 AM');
   });
 });
