@@ -6,7 +6,7 @@ import { useDropzone } from 'react-dropzone';
 import { v4 as getUuid } from 'uuid';
 
 import { AddAuctionMediaMutation } from 'src/apollo/queries/auctions';
-import AddPhotoIcon from 'src/assets/images/ProtoIcon';
+import AddPhotoIcon from 'src/assets/images/PhotoIcon';
 import { Auction, AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentPreview from './AttachmentPreview';
