@@ -21,7 +21,7 @@ interface Props {
   setDisabled?: (_: SetStateAction<boolean>) => void;
 }
 
-const MaxLength = 11;
+const MaxLength = 8;
 const MaxBidValue = 999999;
 
 const MoneyField: FC<Props> = ({

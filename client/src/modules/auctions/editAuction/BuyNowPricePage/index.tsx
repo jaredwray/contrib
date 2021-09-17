@@ -45,7 +45,7 @@ const BuyNowPricePage = () => {
       setSubmitValue(values.itemPrice);
 
       const itemPrice = Dinero(values.itemPrice);
-      if (!itemPrice.isZero() && itemPrice.lessThan(startPrice)) {
+      if (!itemPrice.isZero() && itemPrice.getAmount() <= startPrice.getAmount()) {
         showWarning(`Buy it Now Price should be greater than Starting Price ${startPrice.toFormat('$0')}`);
         return;
       }

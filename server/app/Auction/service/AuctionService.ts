@@ -563,7 +563,10 @@ export class AuctionService {
               startPrice: startPrice.getAmount(),
               currentPrice: startPrice.getAmount(),
               priceCurrency: startPrice.getCurrency(),
-              itemPrice: itemPrice?.getAmount() ?? startPrice.getAmount() * 20,
+              itemPrice:
+                itemPrice?.getAmount() ?? startPrice.getAmount() * 20 > AppConfig.bid.maxBidSize
+                  ? AppConfig.bid.maxBidSize
+                  : startPrice.getAmount() * 20,
             }
           : {}),
         ...(itemPrice
@@ -621,7 +624,7 @@ export class AuctionService {
     }
 
     const maxBidAmount = AppConfig.bid.maxBidSize;
-    if (Number(bid.toFormat('0')) * 100 >= maxBidAmount) {
+    if (Number(bid.toFormat('0')) * 100 > maxBidAmount) {
       AppLogger.info(
         `Unable to charge auction id ${auction.id}: Amount must be less than $${maxBidAmount.toLocaleString()}`,
       );
@@ -1244,18 +1247,22 @@ export class AuctionService {
       return null;
     }
     const maxBidAmount = AppConfig.bid.maxBidSize;
-
-    if (startPrice >= maxBidAmount) {
+    if (startPrice > maxBidAmount - 100) {
       AppLogger.info(
-        `Unable to create auction ${_id}. Start price must be less than $${maxBidAmount.toLocaleString()}`,
+        `Unable to create auction ${_id}. Start price should be less than $${maxBidAmount.toLocaleString()}`,
       );
-      throw new AppError(`Unable to create auction`, ErrorCode.BAD_REQUEST);
+      throw new AppError(
+        `Unable to create auction. Starting price should be less than $${(maxBidAmount / 100).toLocaleString()}`,
+        ErrorCode.BAD_REQUEST,
+      );
     }
-    if (itemPrice > maxBidAmount) {
-      AppLogger.info(`Unable to create auction ${_id}. Item price must be less than $${maxBidAmount.toLocaleString()}`);
-      throw new AppError(`Unable to create auction`, ErrorCode.BAD_REQUEST);
+    if (itemPrice <= startPrice) {
+      AppLogger.info(`Unable to create auction ${_id}. Item price must more than $${startPrice.toLocaleString()}`);
+      throw new AppError(
+        `Unable to create auction. Item price should be more than $${(startPrice / 100).toLocaleString()}`,
+        ErrorCode.BAD_REQUEST,
+      );
     }
-
     // temporal: some older auctions won't have a pre-populated link in dev environment
     // one day we'll clear our dev database, and this line can removed then
     const link = rawLink || this.makeLongAuctionLink(_id.toString());

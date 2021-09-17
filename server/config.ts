@@ -93,7 +93,7 @@ export const AppConfig = {
     version: '1.0',
   },
   bid: {
-    maxBidSize: 99999999,
+    maxBidSize: 99999900,
   },
   delivery: {
     UPSContribDeliveryData: JSON.parse(requireEnvVar('UPS_DELIVERY_CONTRIB_DATA')),

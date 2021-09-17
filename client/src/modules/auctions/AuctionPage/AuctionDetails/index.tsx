@@ -26,6 +26,7 @@ import { BidInput } from './BidInput';
 import styles from './styles.module.scss';
 
 const BIDS_STEP_CENTS = 1000;
+const FINAL_BID = 999999;
 
 interface Props {
   auction: Auction;
@@ -67,7 +68,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const [followersNumber, setFollowersNumber] = useState(followers?.length || 0);
 
   const ended = toDate(endDate) <= new Date();
-  const canBid = isActive && !ended;
+  const canBid = isActive && !ended && currentPrice.amount !== FINAL_BID * 100;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
@@ -105,9 +106,16 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const endDateFormatted = dateFormat(new Date(endDate), 'MMM dd yyyy');
 
   const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
+  const isFinalBid = currentPrice.amount / 100 > FINAL_BID - 10;
+
   const minBid = useMemo(
-    () => (currentPrice && Dinero(currentPrice).add(Dinero({ amount: BIDS_STEP_CENTS }))) || Dinero(startPrice),
-    [currentPrice, startPrice],
+    () =>
+      (currentPrice &&
+        (!isFinalBid
+          ? Dinero(currentPrice).add(Dinero({ amount: BIDS_STEP_CENTS }))
+          : Dinero({ amount: FINAL_BID * 100, currency: currentPrice.currency }))) ||
+      Dinero(startPrice),
+    [currentPrice, startPrice, isFinalBid],
   );
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
   const isBuyingParam = useUrlQueryParams().get('isBuying');
@@ -118,7 +126,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   let isShowBuyButton;
 
   if (itemPrice) {
-    isShowBuyButton = itemPrice?.amount >= minBid.getAmount();
+    isShowBuyButton = itemPrice?.amount > minBid.getAmount();
   }
 
   const stripeOptions = {
