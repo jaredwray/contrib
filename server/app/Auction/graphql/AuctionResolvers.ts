@@ -49,6 +49,7 @@ interface AuctionResolversType {
       { deliveryPrice: Dinero.Dinero; timeInTransit: Dayjs },
       { auctionId: string; deliveryMethod: string }
     >;
+    getContentStorageAuthData: GraphqlResolver<{ authToken: string; bucketName: string }, void>;
   };
   Mutation: {
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
@@ -109,6 +110,9 @@ export const AuctionResolvers: AuctionResolversType = {
     calculateShippingCost: requireAuthenticated(
       async (_, { auctionId, deliveryMethod }, { auction, currentAccount }) =>
         await auction.calculateShippingCost(auctionId, deliveryMethod, currentAccount.mongodbId),
+    ),
+    getContentStorageAuthData: requireAuthenticated(
+      async (_, __, { auction }) => await auction.getContentStorageAuthData(),
     ),
   },
   Mutation: {

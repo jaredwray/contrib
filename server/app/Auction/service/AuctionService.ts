@@ -68,6 +68,10 @@ export class AuctionService {
     private readonly stripeService: StripeService,
   ) {}
 
+  public async getContentStorageAuthData(): Promise<{ authToken: string; bucketName: string }> {
+    return await this.attachmentsService.contentStorageAuthTokenRequest();
+  }
+
   public async calculateShippingCost(
     auctionId: string,
     deliveryMethod: string,
@@ -253,15 +257,15 @@ export class AuctionService {
       throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
     }
     try {
-      const { width, length, height, weight, units } = input;
+      const { width, length, height, weight } = input;
 
       Object.assign(auction.delivery, {
-        parcel: { width, length, height, weight, units },
+        parcel: { width, length, height, weight },
       });
 
       await auction.save();
 
-      return { width, length, height, weight, units };
+      return { width, length, height, weight };
     } catch (error) {
       AppLogger.error(`Failed to update auction parcel for auction #${auctionId}, error: ${error.message}`);
       throw new AppError('Failed to update auction parcel. Please, try later');

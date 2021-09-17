@@ -3,5 +3,4 @@ export interface Parcel {
   width: string;
   height: string;
   weight: string;
-  units: string;
 }

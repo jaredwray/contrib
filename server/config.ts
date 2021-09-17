@@ -53,6 +53,7 @@ export const AppConfig = {
   googleCloud: {
     bucketName: requireEnvVar('CONTENT_STORAGE_NAME'),
     keyDump: requireEnvVar('CONTENT_STORAGE_KEY'),
+    contentStorageAuth: JSON.parse(process.env['CONTENT_STORAGE_AUTH'] || '{}'),
     schedulerSecretKey: requireEnvVar('AUCTION_SCHEDULER_SECRET'),
     task: {
       googleProjectId: requireEnvVar('GOOGLE_CLOUD_PROJECT'),
@@ -98,7 +99,7 @@ export const AppConfig = {
     UPSContribDeliveryData: JSON.parse(requireEnvVar('UPS_DELIVERY_CONTRIB_DATA')),
     UPSContribCardData: JSON.parse(process.env['UPS_CONTRIB_CARD_DATA'] || '{}'),
     UPSRequestHeader: JSON.parse(requireEnvVar('UPS_DELIVERY_REQUEST_HEADER')),
-    UPSAuctionDefaultParcelParameters: requireEnvVar('UPS_AUCTION_DEFAULT_PARCEL_PARAMETERS'),
+    UPSAuctionDefaultParcelParameters: JSON.parse(requireEnvVar('UPS_AUCTION_DEFAULT_PARCEL_PARAMETERS')),
     UPSTestEnviroment: (process.env['UPS_TEST_ENVIROMENT'] || 'true') === 'true',
     UPSSMSWithDeliveryLink: (process.env['UPS_SMS_WITH_DELIVERY_LINK'] || 'false') === 'true',
   },

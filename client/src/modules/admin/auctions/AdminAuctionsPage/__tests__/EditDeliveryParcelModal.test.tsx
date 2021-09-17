@@ -39,7 +39,6 @@ describe('Should render correctly "Modal"', () => {
         parcel: {
           height: '1',
           length: '1',
-          units: 'imperial',
           weight: '1',
           width: '1',
         },
@@ -53,7 +52,7 @@ describe('Should render correctly "Modal"', () => {
     {
       request: {
         query: UpdateAuctionParcelMutation,
-        variables: { auctionId: 'testId', width: '1', height: '1', length: '1', weight: '1', units: 'imperial' },
+        variables: { auctionId: 'testId', width: '1', height: '1', length: '1', weight: '1' },
       },
       newData: () => {
         mockFn();
@@ -64,7 +63,6 @@ describe('Should render correctly "Modal"', () => {
               height: '1',
               length: '1',
               weight: '1',
-              units: 'imperial',
             },
           },
         };
@@ -113,7 +111,7 @@ describe('Should render correctly "Modal"', () => {
       wrapper
         .find(Form)
         .props()
-        .onSubmit({ auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1, units: 'imperial' });
+        .onSubmit({ auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1});
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 

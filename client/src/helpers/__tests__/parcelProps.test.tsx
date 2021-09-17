@@ -35,7 +35,7 @@ describe('ParcelProps function test', () => {
       assistants: [],
     },
     delivery: {
-      parcel: { height: '1', length: '1', units: 'imperial', weight: '1', width: '1' },
+      parcel: { height: '1', length: '1', weight: '1', width: '1' },
       status: AuctionDeliveryStatus.ADDRESS_PROVIDED,
       updatedAt: 'testDate',
     },
@@ -48,18 +48,7 @@ describe('ParcelProps function test', () => {
     isStopped: false,
   };
 
-  const auctionWithMetricUnits = {
-    ...auction,
-    delivery: {
-      ...auction.delivery,
-      parcel: { height: '1', length: '1', units: 'metric system', weight: '1', width: '1' },
-    },
-  };
-
   it('it should return "1x1x1 (in), 1 (lb)"', () => {
     expect(ParcelProps(auction)).toBe('1x1x1 (in), 1 (lb)');
-  });
-  it('it should return "1x1x1 (cm), 1 (kg)"', () => {
-    expect(ParcelProps(auctionWithMetricUnits)).toBe('1x1x1 (cm), 1 (kg)');
   });
 });

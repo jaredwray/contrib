@@ -170,7 +170,6 @@ export const AuctionSchema = gql`
     length: Int!
     height: Int!
     weight: Int!
-    units: String!
   }
 
   type DeliveryRate {
@@ -181,6 +180,11 @@ export const AuctionSchema = gql`
   type ShippingRegistration {
     deliveryPrice: Money
     identificationNumber: String
+  }
+
+  type ContentStorageAuthData {
+    authToken: String
+    bucketName: String
   }
 
   input AuctionSearchFilters {
@@ -228,7 +232,6 @@ export const AuctionSchema = gql`
     length: String!
     height: String!
     weight: String!
-    units: String!
   }
 
   input ShippingRegistrationInput {
@@ -253,6 +256,7 @@ export const AuctionSchema = gql`
     getCustomerInformation(stripeCustomerId: String!): CustomerInformation
     getAuctionMetrics(auctionId: String!): Metrics!
     calculateShippingCost(auctionId: String!, deliveryMethod: String!): DeliveryRate
+    getContentStorageAuthData: ContentStorageAuthData
   }
 
   extend type Mutation {
