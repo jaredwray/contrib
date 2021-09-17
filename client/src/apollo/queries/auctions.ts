@@ -1,5 +1,14 @@
 import { gql } from '@apollo/client';
 
+export const ContentStorageAuthDataQuery = gql`
+  query ContentStorageAuthDataQuery {
+    getContentStorageAuthData {
+      authToken
+      bucketName
+    }
+  }
+`;
+
 export const AuctionMetricsQuery = gql`
   query AuctionMetrics($auctionId: String!) {
     getAuctionMetrics(auctionId: $auctionId) {
@@ -60,7 +69,6 @@ export const AuctionForAdminPageQuery = gql`
           length
           height
           weight
-          units
         }
         address {
           name
@@ -241,7 +249,6 @@ export const AuctionsListQuery = gql`
             length
             height
             weight
-            units
           }
         }
       }
@@ -306,17 +313,15 @@ export const UpdateAuctionParcelMutation = gql`
     $height: String!
     $length: String!
     $weight: String!
-    $units: String!
   ) {
     updateAuctionParcel(
       auctionId: $auctionId
-      input: { width: $width, height: $height, length: $length, weight: $weight, units: $units }
+      input: { width: $width, height: $height, length: $length, weight: $weight }
     ) {
       width
       height
       length
       weight
-      units
     }
   }
 `;

@@ -42,7 +42,6 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
           width: `${width}`,
           height: `${height}`,
           weight: `${weight}`,
-          units: 'imperial',
         },
       })
         .then(() => {

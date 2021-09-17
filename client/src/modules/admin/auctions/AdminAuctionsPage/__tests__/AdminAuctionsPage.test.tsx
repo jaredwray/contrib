@@ -46,7 +46,6 @@ cache.writeQuery({
             parcel: {
               height: 1,
               length: 1,
-              units: 'imperial',
               weight: 1,
               width: 1,
             },

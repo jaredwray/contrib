@@ -1,15 +1,37 @@
 import { Connection } from 'mongoose';
 import { v4 as getUuid } from 'uuid';
+import axios from 'axios';
 
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
+import { AppConfig } from '../../../config';
 
 export class AuctionAttachmentsService {
   public readonly AuctionAsset = AuctionAssetModel(this.connection);
 
   constructor(private readonly connection: Connection, private readonly cloudStorage: GCloudStorage) {}
+
+  public async contentStorageAuthTokenRequest(): Promise<{ authToken: string; bucketName: string }> {
+    const {
+      clientId: client_id,
+      clientSecret: client_secret,
+      refreshToken: refresh_token,
+    } = AppConfig.googleCloud.contentStorageAuth;
+
+    const { data } = await axios.post('https://accounts.google.com/o/oauth2/token', {
+      client_id,
+      client_secret,
+      refresh_token,
+      grant_type: 'refresh_token',
+    });
+
+    return {
+      authToken: data.access_token,
+      bucketName: AppConfig.googleCloud.bucketName,
+    };
+  }
 
   public async uploadFileAttachment(
     auctionId: string,

@@ -1,11 +1,11 @@
-import { FC, ReactElement, SetStateAction, useCallback } from 'react';
+import { FC, ReactElement, SetStateAction, useCallback, useEffect, useState } from 'react';
 
-import { useMutation } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
 import { v4 as getUuid } from 'uuid';
 
-import { AddAuctionMediaMutation } from 'src/apollo/queries/auctions';
+import { AddAuctionMediaMutation, ContentStorageAuthDataQuery } from 'src/apollo/queries/auctions';
 import AddPhotoIcon from 'src/assets/images/PhotoIcon';
 import { Auction, AuctionAttachment } from 'src/types/Auction';
 
@@ -33,6 +33,18 @@ const UploadingDropzone: FC<Props> = ({
   setErrorMessage,
   setSelectedAttachment,
 }): ReactElement => {
+  const [storageAuthData, setStorageAuthData] = useState<{ authToken: string; bucketName: string }>({
+    authToken: '',
+    bucketName: '',
+  });
+
+  const [getContentStorageAuthData] = useLazyQuery(ContentStorageAuthDataQuery, {
+    fetchPolicy: 'network-only',
+    onCompleted({ getContentStorageAuthData }) {
+      setStorageAuthData(getContentStorageAuthData);
+    },
+  });
+
   const [addAuctionMedia] = useMutation(AddAuctionMediaMutation, {
     onError(error) {
       setErrorMessage(error.networkError ? `Something went wrong. Please, try later` : error.message);
@@ -57,48 +69,37 @@ const UploadingDropzone: FC<Props> = ({
     },
   });
 
+  useEffect(() => {
+    getContentStorageAuthData();
+  }, [getContentStorageAuthData]);
+
   const { id: auctionId, auctionOrganizer } = auction;
   const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
   const bytes = Math.pow(1024, 3);
-  const storageData = JSON.parse(process.env.REACT_APP_GOOGLE_STORAGE_DATA || '{}');
-
-  const refreshGoogleAuthToken = useCallback(async () => {
-    const res = await fetch('https://accounts.google.com/o/oauth2/token', {
-      method: 'POST',
-      body: JSON.stringify({
-        client_id: storageData.clientId,
-        client_secret: storageData.clientSecret,
-        refresh_token: storageData.refreshToken,
-        grant_type: 'refresh_token',
-      }),
-    });
-
-    const tokenDetails = await res.json();
-    return tokenDetails.access_token;
-  }, [storageData.clientId, storageData.clientSecret, storageData.refreshToken]);
+  const { authToken, bucketName } = storageAuthData;
 
   const googleCLoudUpload = useCallback(
     async (file: File) => {
-      const authToken = await refreshGoogleAuthToken();
+      getContentStorageAuthData();
       const uuid = getUuid();
       const extension = file.name.split('.').pop();
       const name = `${auctionOrganizer.id}/auctions/${auctionId}/${uuid}/${uuid}.${extension}`;
       try {
         await fetch(
-          `https://storage.googleapis.com/upload/storage/v1/b/${storageData.buketName}/o?uploadType=media&name=${name}`,
+          `https://storage.googleapis.com/upload/storage/v1/b/${bucketName}/o?uploadType=media&name=${name}`,
           {
             method: 'POST',
             headers: { Authorization: `Bearer ${authToken}` },
             body: file,
           },
         );
-        return `https://storage.googleapis.com/${storageData.buketName}/${name}`;
+        return `https://storage.googleapis.com/${bucketName}/${name}`;
       } catch (error) {
         setErrorMessage('Somethig went wrong');
         return false;
       }
     },
-    [refreshGoogleAuthToken, auctionId, auctionOrganizer.id, setErrorMessage, storageData.buketName],
+    [auctionId, auctionOrganizer.id, setErrorMessage, authToken, bucketName, getContentStorageAuthData],
   );
 
   const onDrop = useCallback(
@@ -114,7 +115,7 @@ const UploadingDropzone: FC<Props> = ({
       acceptedFiles.forEach(async (file) => {
         let url;
 
-        if (process.env.REACT_APP_GOOGLE_STORAGE_DATA && file.type.startsWith('video/')) {
+        if (file.type.startsWith('video/')) {
           url = await googleCLoudUpload(file);
           if (!url) return;
         }

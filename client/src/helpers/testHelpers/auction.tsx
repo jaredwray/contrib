@@ -97,7 +97,7 @@ export const auction = {
   fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
   followers: [],
   delivery: {
-    parcel: { width: '12', length: '12', height: '12', weight: '2', units: 'imperial' },
+    parcel: { width: '12', length: '12', height: '12', weight: '2' },
   },
   isActive: false,
   isDraft: false,
@@ -142,7 +142,7 @@ export const auctionForAdminPage = {
       street: 'Jefferson Street',
       zipCode: '85027',
     },
-    parcel: { width: 12, length: 12, height: 12, weight: 2, units: 'imperial' },
+    parcel: { width: 12, length: 12, height: 12, weight: 2 },
   },
   winner: {
     address: {
