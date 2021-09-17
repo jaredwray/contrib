@@ -1423,37 +1423,6 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@firebase/component@0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@firebase/component/-/component-0.5.5.tgz#849ccf7cbf0398a43058f274ffcd43620ae9521f"
-  integrity sha512-L41SdS/4a164jx2iGfakJgaBUPPBI3DI+RrUlmh3oHSUljTeCwfj/Nhcv3S7e2lyXsGFJtAyepfPUx4IQ05crw==
-  dependencies:
-    "@firebase/util" "1.2.0"
-    tslib "^2.1.0"
-
-"@firebase/storage-types@0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@firebase/storage-types/-/storage-types-0.4.1.tgz#da6582ae217e3db485c90075dc71100ca5064cc6"
-  integrity sha512-IM4cRzAnQ6QZoaxVZ5MatBzqXVcp47hOlE28jd9xXw1M9V7gfjhmW0PALGFQx58tPVmuUwIKyoEbHZjV4qRJwQ==
-
-"@firebase/storage@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@firebase/storage/-/storage-0.6.2.tgz#0355c903a9aa5a5958c87e8cae37f5f1b0e1d58e"
-  integrity sha512-qbYx+KOxnD5andWAtVPgMHFa/62jdLCgPGdfIRQIEgBoYibk3KigRYVdnfKRLcCO3Vip63BRUvyeqfiUHNNu2g==
-  dependencies:
-    "@firebase/component" "0.5.5"
-    "@firebase/storage-types" "0.4.1"
-    "@firebase/util" "1.2.0"
-    node-fetch "2.6.1"
-    tslib "^2.1.0"
-
-"@firebase/util@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@firebase/util/-/util-1.2.0.tgz#4d4e419bf8c9bc1bc51308d1953dc2e4353c0770"
-  integrity sha512-8W9TTGImXr9cu+oyjBJ7yjoEd/IVAv0pBZA4c1uIuKrpGZi2ee38m+8xlZOBRmsAaOU/tR9DXz1WF/oeM6Fb7Q==
-  dependencies:
-    tslib "^2.1.0"
-
 "@graphql-typed-document-node/core@^3.0.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.0.tgz#0eee6373e11418bfe0b5638f654df7a4ca6a3950"
@@ -8899,11 +8868,6 @@ no-case@^3.0.4:
   dependencies:
     lower-case "^2.0.2"
     tslib "^2.0.3"
-
-node-fetch@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
-  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 node-forge@^0.10.0:
   version "0.10.0"
