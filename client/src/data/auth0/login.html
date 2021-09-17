@@ -594,12 +594,13 @@
       back.addEventListener('click', backToPhoneNumber)
 
       function showModal() {
+        const modalWindow = document.getElementById("modal-window");
         modalWindow.style.display = "flex";
         modalWindow.classList.add("show-modal");
-
       }
 
       function closeModal() {
+        const modalWindow = document.getElementById("modal-window");
         modalWindow.classList.remove("show-modal");
         if (!Array.from(document.getElementsByClassName('enter-phone-number')[0].classList).includes('d-none')) {
           initialState()
@@ -610,12 +611,15 @@
       }
 
       function initialState() {
-        document.getElementById('enter-phone-number-input').value = ''
+        document.getElementById('enter-phone-number-input').value = '';
+        const error = document.getElementById('modal-error-message');
         error.innerHTML = '';
         error.style.display = 'none';
       }
 
       function clickOutsideModalAndClose(event) {
+        const modalWindow = document.getElementById("modal-window");
+
         if (event.target == modalWindow) {
           closeModal()
         }
@@ -628,19 +632,21 @@
       }
 
       function modalErrorMessage(errorText) {
+        const error = document.getElementById('modal-error-message');
         error.innerHTML = errorText;
         error.style.display = 'block';
       }
 
       function sendCode(elem) {
-        const inputPhoneNumber = elem[1]
-        phoneNumber = "+1" + inputPhoneNumber.value;
+        const inputValue = elem[1].value;
+        phoneNumber = "+1" + inputValue;
         const button = elem[2]
         button.disabled = true
 
-        const isValid = phoneNumberValidate(inputPhoneNumber.value)
+        const isValid = phoneNumberValidate(inputValue);
         if (isValid) {
-          passwordlessStart(phoneNumber, button)
+          passwordlessStart(phoneNumber, button);
+          const error = document.getElementById('modal-error-message');
           error.innerHTML = '';
           error.style.display = 'none';
           return false
@@ -680,7 +686,7 @@
         webAuth.passwordlessStart({
           connection: 'sms',
           send: 'code',
-          phoneNumber
+          phoneNumber,
         }, (err, res) => {
           if (err) {
             modalErrorMessage(err.description);
@@ -801,5 +807,4 @@
 
   </script>
 </body>
-
 </html>
