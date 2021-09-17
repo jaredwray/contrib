@@ -1,6 +1,6 @@
-import { FC, ReactElement, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { FC, ReactElement, SetStateAction, useCallback } from 'react';
 
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
 import { v4 as getUuid } from 'uuid';
@@ -33,17 +33,7 @@ const UploadingDropzone: FC<Props> = ({
   setErrorMessage,
   setSelectedAttachment,
 }): ReactElement => {
-  const [storageAuthData, setStorageAuthData] = useState<{ authToken: string; bucketName: string }>({
-    authToken: '',
-    bucketName: '',
-  });
-
-  const [getContentStorageAuthData] = useLazyQuery(ContentStorageAuthDataQuery, {
-    fetchPolicy: 'network-only',
-    onCompleted({ getContentStorageAuthData }) {
-      setStorageAuthData(getContentStorageAuthData);
-    },
-  });
+  const { refetch: refetchAuthToken } = useQuery(ContentStorageAuthDataQuery);
 
   const [addAuctionMedia] = useMutation(AddAuctionMediaMutation, {
     onError(error) {
@@ -69,18 +59,15 @@ const UploadingDropzone: FC<Props> = ({
     },
   });
 
-  useEffect(() => {
-    getContentStorageAuthData();
-  }, [getContentStorageAuthData]);
-
   const { id: auctionId, auctionOrganizer } = auction;
   const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
   const bytes = Math.pow(1024, 3);
-  const { authToken, bucketName } = storageAuthData;
 
   const googleCLoudUpload = useCallback(
     async (file: File) => {
-      getContentStorageAuthData();
+      const { data } = await refetchAuthToken();
+      const { authToken, bucketName } = data.getContentStorageAuthData;
+
       const uuid = getUuid();
       const extension = file.name.split('.').pop();
       const name = `${auctionOrganizer.id}/auctions/${auctionId}/${uuid}/${uuid}.${extension}`;
@@ -99,7 +86,7 @@ const UploadingDropzone: FC<Props> = ({
         return false;
       }
     },
-    [auctionId, auctionOrganizer.id, setErrorMessage, authToken, bucketName, getContentStorageAuthData],
+    [auctionId, auctionOrganizer.id, setErrorMessage, refetchAuthToken],
   );
 
   const onDrop = useCallback(
