@@ -68,6 +68,27 @@ export class AuctionService {
     private readonly stripeService: StripeService,
   ) {}
 
+  //TODO: delete after auctions winner update.
+  public async updateAuctionsWinner() {
+    try {
+      const auctions = await this.AuctionModel.find({
+        status: { $in: [AuctionStatus.SOLD, AuctionStatus.SETTLED] },
+        winner: { $exists: false },
+      });
+      for (const auction of auctions) {
+        const [lastAuctionBid] = await this.BidModel.find({ auction: auction._id }).sort({ bid: -1 }).limit(1);
+
+        Object.assign(auction, {
+          winner: lastAuctionBid.user,
+        });
+
+        await auction.save();
+      }
+    } catch (error) {
+      AppLogger.warn(`Unable to update auction winner: ${error.message}`);
+    }
+  }
+
   public async getContentStorageAuthData(): Promise<{ authToken: string; bucketName: string }> {
     return await this.attachmentsService.contentStorageAuthTokenRequest();
   }

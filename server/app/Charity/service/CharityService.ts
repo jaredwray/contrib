@@ -164,7 +164,7 @@ export class CharityService {
     const charity = CharityService.makeCharity(charityModel);
 
     AppLogger.info(
-      `Charity's #${charity.id} stripe capabilities: card_payments: ${account.capabilities.card_paymentss}, transfers: ${account.capabilities.transfers}`,
+      `Charity's #${charity.id} stripe capabilities: card_payments: ${account.capabilities.card_payments}, transfers: ${account.capabilities.transfers}`,
     );
 
     const isAccountActive =
