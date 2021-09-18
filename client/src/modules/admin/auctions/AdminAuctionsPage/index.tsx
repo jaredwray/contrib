@@ -79,7 +79,7 @@ export default function AdminAuctionsPage() {
             <th>Price</th>
             <th>Fair Market Value</th>
             <th>Delivery parcel properties</th>
-            <th></th>
+            <th className={styles.actions}></th>
           </tr>
         </thead>
         <tbody className="font-weight-normal">
@@ -92,7 +92,7 @@ export default function AdminAuctionsPage() {
               <td>{Dinero(auction.currentPrice ?? auction.startPrice).toFormat('$0,0')}</td>
               <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
               <td>{auction.delivery.parcel && ParcelProps(auction)}</td>
-              <td>
+              <td className={styles.actions}>
                 <ActionsDropdown>
                   <Link className="dropdown-item text--body" to={`/admin/auctions/${auction.id}`}>
                     View details
@@ -109,19 +109,19 @@ export default function AdminAuctionsPage() {
                       mutation={DeleteAuctionMutation}
                     />
                   )}
+                  {(auction.isActive || auction.isStopped) && (
+                    <StopOrActiveButton
+                      auction={auction}
+                      className={clsx(styles.actionBtn, 'dropdown-item text--body')}
+                      mutation={auction.isStopped ? ActivateAuctionMutation : StopAuctionMutation}
+                    />
+                  )}
                   {auction.isActive && (
                     <FairMarketValueChangeButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
                       getAuctionsList={getAuctionsList}
                       mutation={UpdateAuctionMutation}
-                    />
-                  )}
-                  {(auction.isActive || auction.isStopped) && (
-                    <StopOrActiveButton
-                      auction={auction}
-                      className={clsx(styles.actionBtn, 'dropdown-item text--body')}
-                      mutation={auction.isStopped ? ActivateAuctionMutation : StopAuctionMutation}
                     />
                   )}
                   {(!auction.delivery.status || auction.delivery.status !== AuctionDeliveryStatus.ADDRESS_PROVIDED) && (
