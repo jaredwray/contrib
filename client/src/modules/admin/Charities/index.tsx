@@ -80,6 +80,7 @@ export default function CharitiesPage(): any {
             <th>Status</th>
             <th>Profile Status</th>
             <th>Stripe Acccount Status</th>
+            <th className={styles.actions}></th>
           </tr>
         </thead>
         <tbody className="font-weight-normal">
@@ -90,7 +91,7 @@ export default function CharitiesPage(): any {
               <td className={styles.otherColumns}>{item.status}</td>
               <td>{item.profileStatus}</td>
               <td>{item.stripeStatus}</td>
-              <td>
+              <td className={styles.actions}>
                 <ActionsDropdown>
                   <Link className="dropdown-item text--body" to={`/charity/${item.id}/edit`}>
                     Edit

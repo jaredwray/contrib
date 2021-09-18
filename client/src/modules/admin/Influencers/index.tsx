@@ -124,7 +124,7 @@ export default function InfluencersPage() {
             <th>Name</th>
             <th>Sport</th>
             <th>Status</th>
-            <th></th>
+            <th className={styles.actions}></th>
           </tr>
         </thead>
         <tbody className="font-weight-normal">
@@ -136,7 +136,7 @@ export default function InfluencersPage() {
               <td className={styles.otherColumns}>{item.name}</td>
               <td className={styles.otherColumns}>{item.sport}</td>
               <td className={styles.otherColumns}>{item.status}</td>
-              <td>
+              <td className={styles.actions}>
                 <ActionsDropdown>
                   <Link className="dropdown-item text--body" to={`/profiles/${item.id}/edit`}>
                     Edit

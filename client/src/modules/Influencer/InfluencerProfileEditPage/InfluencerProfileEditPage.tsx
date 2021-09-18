@@ -1,6 +1,7 @@
 import { FC, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
+import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
@@ -17,6 +18,7 @@ import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { BasicFormFields } from '../common/BasicFormFields';
 import { CharitiesFormFields } from '../common/CharitiesFormFields';
+import styles from './styles.module.scss';
 
 interface FormValues {
   name: string;
@@ -76,10 +78,10 @@ export const InfluencerProfileEditPage: FC = () => {
           <Row>
             <Col className="text-label label-with-separator">{account?.isAdmin ? 'Account' : 'My account'}</Col>
           </Row>
-          <h2 className="text-headline d-flex flex-row justify-content-between">
-            <span className="mr-1">{account?.isAdmin ? 'Profile' : 'My Profile'}</span>
-          </h2>
-          <hr className="d-none d-md-block" />
+          <Row>
+            <Col className="text-headline">{account?.isAdmin ? 'Profile' : 'My Profile'}</Col>
+            <hr className={clsx(styles.hr, 'd-none d-md-block')} />
+          </Row>
           <BasicFormFields influencer={influencerProfile} />
           <h2 className="text-headline d-flex flex-row justify-content-between">
             <span className="mr-1">{account?.isAdmin ? 'Charities' : 'My Charities'}</span>

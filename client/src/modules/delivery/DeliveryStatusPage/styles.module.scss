@@ -7,7 +7,10 @@
     color: $dark-sage-color;
   }
 }
-
+.hr {
+  flex: 0 0 100%;
+  margin-left: 15px;
+}
 .successBlock {
   width: 400px;
 }

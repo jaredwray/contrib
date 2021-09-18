@@ -69,13 +69,15 @@ export default function DeliveryStatusPage() {
           <Row>
             <Col className="text-label label-with-separator">Delivery</Col>
           </Row>
-          <h2 className="text-headline">Delivery status</h2>
-          <hr className="d-none d-md-block" />
+          <Row>
+            <Col className="text-headline">Delivery status</Col>
+            <hr className={clsx(styles.hr, 'd-none d-md-block')} />
+          </Row>
           <Row className="pt-3 pt-md-0">
             <Col md="6">
               <p>
                 Status of
-                <Link className={(styles.actionLink, styles.markedText)} to={`/auctions/${auctionId}`}>
+                <Link className={clsx(styles.actionLink, styles.markedText)} to={`/auctions/${auctionId}`}>
                   {auction?.title}
                 </Link>
                 auction
