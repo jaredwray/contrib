@@ -115,4 +115,15 @@ export default function appRouteHandlers(
 
     response.sendStatus(200);
   });
+
+  // One time tasks block start
+  app.post('/api/v1/update-auctions-winner', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
+      return;
+    }
+
+    const response = await auction.updateAuctionsWinner();
+    return res.json(response);
+  });
+  // One time tasks block end
 }
