@@ -1,5 +1,7 @@
 import { SetStateAction } from 'react';
 
+import IconSelected from 'src/assets/images/verified.svg';
+
 export const selectStyles = {
   color: '#f0f0ee',
   sageColor: '#5a7864',
@@ -55,7 +57,11 @@ export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void
         ...provided,
         color: selectStyles.sageColor,
         cursor: 'pointer',
-        padding: '15px 36px 15px 15px',
+        padding: '15px',
+        paddingLeft: '36px',
+        backgroundImage: state.isSelected ? `url(${IconSelected})` : '',
+        backgroundRepeat: `no-repeat;`,
+        backgroundPosition: `left 5px top 16px;`,
         backgroundColor: state.isSelected ? selectStyles.barelyGrayColor : selectStyles.whiteColor,
         '&:hover': {
           backgroundColor: '#e9ecef',
