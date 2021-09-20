@@ -73,7 +73,7 @@ export const AdminPage: FC<Props> = ({
         </Container>
         <Container fluid>
           <Row>
-            <Col className="w-100">{process.title === 'browser' ? !loading : true && children}</Col>
+            <Col className="w-100">{!loading && children}</Col>
           </Row>
         </Container>
       </section>
