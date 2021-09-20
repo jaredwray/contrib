@@ -86,19 +86,6 @@ export default function Header() {
                     </NavDropdown.Item>
                   )}
                   <div>
-                    {/*
-                      <div className="dropdown-menu-social-media pt-4 pb-2">
-                        <a className="twitter d-inline-block mr-4" href="/" rel="external">
-                          <i className="d-none" />
-                        </a>
-                        <a className="instagram d-inline-block mr-4" href="/" rel="external">
-                          <i className="d-none" />
-                        </a>
-                        <a className="facebook d-inline-block" href="/" rel="external">
-                          <i className="d-none" />
-                        </a>
-                      </div>
-                    */}
                     <div className="pt-4">
                       <div className="text-label text-all-cups dropdown-menu-copyright">
                         Copyright {new Date().getFullYear()} Contrib Inc.

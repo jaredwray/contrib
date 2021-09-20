@@ -20,7 +20,6 @@ const Form: FC<Props> = ({ constraints, children, initialValues = {}, onSubmit, 
         if (constraints) {
           result = validateJs(values, constraints);
         }
-
         return result;
       };
     }

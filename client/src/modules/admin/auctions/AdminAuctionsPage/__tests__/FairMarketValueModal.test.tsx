@@ -66,6 +66,20 @@ describe('Should render correctly "Modal"', () => {
       },
     },
   ];
+  const errorMocks = [
+    {
+      request: {
+        query: UpdateAuctionMutation,
+        variables: {},
+      },
+      newData: () => {
+        mockFn();
+        return {
+          data: {},
+        };
+      },
+    },
+  ];
 
   it('component is defined', () => {
     const wrapper = mount(
@@ -113,6 +127,24 @@ describe('Should render correctly "Modal"', () => {
       await new Promise((resolve) => setTimeout(resolve));
       expect(props.onClose).toHaveBeenCalledTimes(1);
       expect(props.getAuctionsList).toHaveBeenCalledTimes(1);
+    });
+  });
+  it('should submit the form and not call the mutation becouse of error', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <MockedProvider mocks={errorMocks}>
+            <Modal {...props} />
+          </MockedProvider>
+        </ToastProvider>,
+      );
+
+      wrapper
+        .find(Form)
+        .props()
+        .onSubmit({ fairMarketValue: { amount: 200, currency: 'USD', precision: 2 } });
+      expect(mockFn).toHaveBeenCalledTimes(0);
     });
   });
 });

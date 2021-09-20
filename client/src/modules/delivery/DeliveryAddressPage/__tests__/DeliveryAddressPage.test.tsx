@@ -96,6 +96,20 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: CreateOrUpdateUserAddressMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 
 const submitValues = {
   city: 'Phoenix',
@@ -239,5 +253,31 @@ describe('DeliveryAddressPage', () => {
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+  it('should submit form and not call the mutation', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache2} mocks={errorMocks}>
+                <DeliveryAddressPage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitValues);
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });

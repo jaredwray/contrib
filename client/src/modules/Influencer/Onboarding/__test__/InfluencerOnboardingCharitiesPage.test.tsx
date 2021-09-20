@@ -62,6 +62,20 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: UpdateMyFavoriteCharities,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 
 describe('InfluencerOnboardingBasicPage ', () => {
   it('component return null', async () => {
@@ -112,5 +126,32 @@ describe('InfluencerOnboardingBasicPage ', () => {
         });
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+  it('should submit form and call the mutation', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache} mocks={errorMocks}>
+              <InfluencerOnboardingCharitiesPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!
+        .find(Form)
+        .props()
+        .onSubmit({
+          favoriteCharities: [{ id: 'testId', name: 'test', profileStatus: 'COMPLETED', status: 'ACTIVE' }],
+        });
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });

@@ -7,7 +7,7 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/Layout';
 import Form from 'src/components/Form/Form';
-import StepByStepPageRow from 'src/components/StepByStepPageRow';
+import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
@@ -153,7 +153,7 @@ describe('EditAuctionDescriptionPage ', () => {
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
 
-    wrapper!.find(StepByStepPageRow).children().find('Button').at(0).simulate('click');
+    wrapper!.find(StepByStepPageLayout).prop('prevAction')!();
     expect(mockHistoryFn).toHaveBeenCalled();
   });
   it('component should return null', async () => {

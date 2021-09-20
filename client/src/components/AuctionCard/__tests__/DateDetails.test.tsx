@@ -72,13 +72,12 @@ describe('Should render correctly "DateDetails"', () => {
     expect(wrapper).toHaveLength(1);
     expect(wrapper.text()).toEqual('stopped');
   });
-  xit('component is defined and has text: "ends on 29.07.21 @ 08:05 AM"', () => {
+  it('component is defined when its done page', () => {
     const wrapper = mount(<DateDetails {...props} />);
     wrapper.setProps({
       ...props,
       ...{ isDonePage: true },
     });
     expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('ends on 29.07.21 @ 08:05 AM');
   });
 });

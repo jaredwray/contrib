@@ -7,7 +7,7 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/Layout';
 import Form from 'src/components/Form/Form';
-import StepByStepPageRow from 'src/components/StepByStepPageRow';
+import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
@@ -108,6 +108,20 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: UpdateAuctionMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 
 describe('DurationPage ', () => {
   beforeEach(() => {
@@ -158,7 +172,7 @@ describe('DurationPage ', () => {
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
 
-    wrapper!.find(StepByStepPageRow).children().find('Button').at(0).simulate('click');
+    wrapper!.find(StepByStepPageLayout).prop('prevAction')!();
     expect(mockHistoryFn).toHaveBeenCalled();
   });
   it('component should return null', async () => {
@@ -267,5 +281,29 @@ describe('DurationPage ', () => {
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockHistoryFn).toHaveBeenCalled();
+  });
+  it('should submit form and call the mutation and push', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache} mocks={errorMocks}>
+                <DurationPage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit({ duration: 3 });
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });
