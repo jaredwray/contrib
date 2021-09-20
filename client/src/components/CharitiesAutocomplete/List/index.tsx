@@ -15,8 +15,8 @@ const CharitiesList: FC<PropTypes> = ({ charities, onChange }) => {
   return (
     <ul className={clsx(`p-0 m-0`, styles.charitiesList)}>
       {charities.map((charity) => (
-        <li key={charity?.id} className={clsx(`text-label align-middle`, styles.charitiesItem)} title={charity?.name}>
-          <span className={styles.charityName}>{charity?.name}</span>
+        <li key={charity.id} className={clsx(`text-label align-middle`, styles.charitiesItem)} title={charity.name}>
+          <span className={styles.charityName}>{charity.name}</span>
           <button className={styles.button} onClick={() => onChange(charity, false)} />
         </li>
       ))}

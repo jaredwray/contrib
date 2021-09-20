@@ -31,7 +31,11 @@ test('customStyles', () => {
   expect(customStyles(() => {}, true).option({}, {})).toEqual({
     color: '#5a7864',
     cursor: 'pointer',
-    padding: '15px 36px 15px 15px',
+    padding: '15px',
+    paddingLeft: '36px',
+    backgroundImage: '',
+    backgroundRepeat: `no-repeat;`,
+    backgroundPosition: `left 5px top 16px;`,
     backgroundColor: '#ffffff',
     '&:hover': {
       backgroundColor: '#e9ecef',

@@ -5,10 +5,16 @@ import Select from 'react-select';
 import { customStyles, selectStyles } from './customStyles';
 import styles from './styles.module.scss';
 
+interface Option {
+  value: string;
+  label: string;
+  id: string;
+}
+
 interface Props {
-  options: { value: string; label: string; id: string }[];
-  selectedOption: { value: string; label: string; id: string } | null;
-  onChange: (value: { value: string; label: string; id: string } | null) => void;
+  options: Option[];
+  selectedOption: Option | null;
+  onChange: (value: Option | null) => void;
 }
 
 export const CharitySearchSelect: FC<Props> = ({ options, selectedOption, onChange }) => {
