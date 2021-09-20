@@ -69,6 +69,32 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: FollowAuctionMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+  {
+    request: {
+      query: UnfollowAuctionMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 describe('Should render correctly "AuctionCard"', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -178,5 +204,45 @@ describe('Should render correctly "AuctionCard"', () => {
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+  it('should not call FollowAuctionMutation mutation becouse of error', async () => {
+    withAuthenticatedUser();
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <Router>
+            <MockedProvider mocks={errorMocks}>
+              <AuctionCard {...props} />
+            </MockedProvider>
+          </Router>
+        </ToastProvider>,
+      );
+    });
+    await act(async () => {
+      wrapper!.find(HeartBtn).prop('followHandler')!();
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+  it('should not call UnfollowAuctionMutation mutation becouse of error', async () => {
+    withAuthenticatedUser();
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <ToastProvider>
+          <Router>
+            <MockedProvider mocks={errorMocks}>
+              <AuctionCard {...props} />
+            </MockedProvider>
+          </Router>
+        </ToastProvider>,
+      );
+    });
+    await act(async () => {
+      wrapper!.find(HeartBtn).prop('unfollowHandler')!();
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });

@@ -127,6 +127,32 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: UnfollowInfluencer,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+  {
+    request: {
+      query: FollowInfluencer,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 describe('InfluencerProfilePageContent ', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -223,5 +249,55 @@ describe('InfluencerProfilePageContent ', () => {
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+  it('should not call FollowInfluencer mutation becouse of error', async () => {
+    withAuthenticatedUser();
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache2} mocks={errorMocks}>
+              <InfluencerProfilePageContent {...props} />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      expect(wrapper!.find(AuctionCard)).toHaveLength(1);
+      wrapper!.find(WatchBtn).prop('followHandler')!();
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+  it('should not call UnfollowInfluencer mutation becouse of error', async () => {
+    withAuthenticatedUser();
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache2} mocks={errorMocks}>
+              <InfluencerProfilePageContent {...props} />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      expect(wrapper!.find(AuctionCard)).toHaveLength(1);
+      wrapper!.find(WatchBtn).prop('unfollowHandler')!();
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });

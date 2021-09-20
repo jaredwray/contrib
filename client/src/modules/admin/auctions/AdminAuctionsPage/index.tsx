@@ -75,10 +75,10 @@ export default function AdminAuctionsPage() {
             <th className={styles.tId}>ID</th>
             <th>Name</th>
             <th>Influencer</th>
-            <th>Status</th>
-            <th>Price</th>
-            <th>Fair Market Value</th>
-            <th>Delivery parcel properties</th>
+            <th className={styles.status}>Status</th>
+            <th className={styles.price}>Price</th>
+            <th className={styles.price}>Fair Market Value</th>
+            <th className={styles.parcel}>Delivery parcel properties</th>
             <th className={styles.actions}></th>
           </tr>
         </thead>

@@ -139,7 +139,11 @@ describe('Should render correctly "InviteModal"', () => {
         </ToastProvider>,
       );
 
-      wrapper.find(Form).props().onSubmit({});
+      wrapper.find(Form).props().onSubmit({
+        firstName: 'test',
+        lastName: 'test',
+        welcomeMessage: 'test',
+      });
 
       expect(mockFn).toHaveBeenCalledTimes(0);
     });

@@ -43,6 +43,21 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: CreateAuctionMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
+
 const submitValues = {
   title: 'test',
 };
@@ -71,5 +86,29 @@ describe('EditAuctionTitlePageEdit ', () => {
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockHistoryFn).toHaveBeenCalled();
+  });
+  it('should submit form and not call the mutation becouse of error', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider mocks={errorMocks}>
+                <TitlePageEdit />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitValues);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });

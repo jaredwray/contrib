@@ -154,6 +154,20 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: UpdateAuctionMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 
 describe('EditAuctionCharityPage ', () => {
   it('component return null', async () => {
@@ -368,7 +382,7 @@ describe('EditAuctionCharityPage ', () => {
 
     wrapper!.find(StepByStepPageLayout).prop('prevAction')!();
   });
-  it('component is defined and has Layout', async () => {
+  it('should submit and call the mutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -395,5 +409,33 @@ describe('EditAuctionCharityPage ', () => {
       wrapper!.find(Form).props().onSubmit({});
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+  it('should submit and not call the mutation becouse of eror', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache} mocks={errorMocks}>
+                <CharityPage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(CharitySearchSelect).props().onChange({ value: 'test', label: 'test', id: 'testId' });
+    });
+    wrapper!.update();
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit({});
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });

@@ -108,6 +108,20 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: UpdateAuctionMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 const submitValues = {
   startPrice: { amount: 100, currency: 'USD', precision: 2 },
 };
@@ -264,7 +278,7 @@ describe('EditAuctionStartPricePage ', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockHistoryFn).toHaveBeenCalled();
   });
-  it('should submit form and call the mutation and push', async () => {
+  it('should submit form and not call the mutation becouse of error', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -288,5 +302,29 @@ describe('EditAuctionStartPricePage ', () => {
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockHistoryFn).toHaveBeenCalled();
+  });
+  it('should submit form and call the mutation and push', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache} mocks={errorMocks}>
+                <StartPricePage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitValues);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });
