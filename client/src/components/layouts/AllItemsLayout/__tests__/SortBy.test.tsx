@@ -1,6 +1,9 @@
-import SortBy from '../SortBy';
+import { act } from 'react-dom/test-utils';
 import { ReactWrapper, mount } from 'enzyme';
+
 import Select from 'src/components/Select';
+
+import SortBy from '../SortBy';
 
 describe('Should render correctly "SortBy"', () => {
   const props: any = {
@@ -18,7 +21,9 @@ describe('Should render correctly "SortBy"', () => {
     expect(wrapper).toHaveLength(1);
   });
   it('should call changeFilters when changing', () => {
-    wrapper.find(Select).props().onChange('TIME_ASC');
-    expect(props.changeFilters).toBeCalledTimes(1);
+    act(() => {
+      wrapper.find(Select).props().onChange('NAME_ASC');
+      expect(props.changeFilters).toBeCalledTimes(1);
+    });
   });
 });

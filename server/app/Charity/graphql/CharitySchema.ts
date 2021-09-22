@@ -15,6 +15,14 @@ export const CharitySchema = gql`
     ACTIVE
     INACTIVE
   }
+
+  enum CharityOrderBy {
+    NAME_ASC
+    NAME_DESC
+    ACTIVATED_AT_ASC
+    ACTIVATED_AT_DESC
+  }
+
   type Charity {
     id: String!
     name: String!
@@ -41,6 +49,17 @@ export const CharitySchema = gql`
     profileDescription: String
     website: String
   }
+  input CharityFilters {
+    query: String
+  }
+
+  input CharityParams {
+    skip: Int
+    size: Int
+    filters: CharityFilters
+    orderBy: CharityOrderBy
+  }
+
   type CharitiesPage {
     items: [Charity]!
     totalItems: Int!
@@ -50,7 +69,20 @@ export const CharitySchema = gql`
   type SelectCharitiesList {
     items: [Charity]!
   }
+
+  input CharityFilters {
+    query: String
+  }
+
+  input CharityParams {
+    skip: Int
+    size: Int
+    filters: CharityFilters
+    orderBy: CharityOrderBy
+  }
+
   extend type Query {
+    charitiesList(params: CharityParams): CharitiesPage
     charity(id: String!): Charity!
     charitiesSearch(query: String!, status: [CharityStatus]): [Charity!]!
     charitiesSelectList: SelectCharitiesList!

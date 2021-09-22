@@ -1,0 +1,6 @@
+export enum InfluencerOrderBy {
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  ONBOARDED_AT_ASC = 'ONBOARDED_AT_ASC',
+  ONBOARDED_AT_DESC = 'ONBOARDED_AT_DESC',
+}

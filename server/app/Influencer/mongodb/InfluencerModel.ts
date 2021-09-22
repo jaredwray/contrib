@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
 import { IUserAccount, UserAccountCollectionName, IFollowObject } from '../../UserAccount/mongodb/UserAccountModel';
@@ -15,6 +15,7 @@ export interface IInfluencer extends Document {
   profileDescription: string | null;
   favoriteCharities: ICharityModel['_id'][];
   assistants: IAssistant['_id'][];
+  onboardedAt: Dayjs;
   followers: IFollowObject[];
 }
 
@@ -30,6 +31,10 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   profileDescription: { type: SchemaTypes.String },
   favoriteCharities: [{ type: SchemaTypes.ObjectId, ref: CharityCollectionName }],
   assistants: [{ type: SchemaTypes.ObjectId, ref: AssistantCollectionName }],
+  onboardedAt: {
+    type: SchemaTypes.Date,
+    get: (v) => dayjs(v),
+  },
   followers: [
     {
       user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },

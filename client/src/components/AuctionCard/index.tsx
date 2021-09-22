@@ -11,6 +11,7 @@ import { useToasts } from 'react-toast-notifications';
 import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { Modal } from 'src/components/AdminAuctionsPageModal';
 import { CloseButton } from 'src/components/CloseButton';
+import CoverImage from 'src/components/CoverImage';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
@@ -20,7 +21,6 @@ import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import HeartBtn from '../HeartButton';
 import SwipeableLink from '../SwipeableLink';
-import CoverImage from './CoverImage';
 import DateDetails from './DateDetails';
 import styles from './styles.module.scss';
 
@@ -131,6 +131,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
               isSettled && styles.settled,
               isSold && styles.settled,
             )}
+            formatSize={480}
             src={imageSrc}
           />
         </SwipeableLink>

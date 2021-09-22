@@ -7,6 +7,13 @@ export const InfluencerSchema = gql`
     ONBOARDED
   }
 
+  enum InfluencerOrderBy {
+    NAME_ASC
+    NAME_DESC
+    ONBOARDED_AT_ASC
+    ONBOARDED_AT_DESC
+  }
+
   type InfluencerProfile {
     id: String!
     name: String!
@@ -40,12 +47,6 @@ export const InfluencerSchema = gql`
     firstName: String
   }
 
-  extend type Query {
-    influencers(size: Int!, skip: Int!): InfluencersPage!
-    influencersSearch(query: String!): [InfluencerProfile!]
-    influencer(id: String!): InfluencerProfile
-  }
-
   input UpdateInfluencerProfileInput {
     name: String!
     sport: String!
@@ -56,6 +57,23 @@ export const InfluencerSchema = gql`
 
   input CreateInfluencerInput {
     name: String!
+  }
+
+  input InfluencerFilters {
+    query: String
+  }
+  input InfluencerParams {
+    skip: Int
+    size: Int
+    filters: InfluencerFilters
+    orderBy: InfluencerOrderBy
+  }
+  
+  extend type Query {
+    influencersList(params: InfluencerParams): InfluencersPage
+    influencers(size: Int!, skip: Int!): InfluencersPage!
+    influencersSearch(query: String!): [InfluencerProfile!]
+    influencer(id: String!): InfluencerProfile
   }
 
   extend type Mutation {

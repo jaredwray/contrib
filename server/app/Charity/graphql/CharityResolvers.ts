@@ -42,6 +42,7 @@ export const CharityResolvers = {
         skip,
       };
     },
+    charitiesList: async (_, { params }, { charity }) => charity.charitiesList(params),
   },
   Mutation: {
     unfollowCharity: requireAuthenticated(async (_, { charityId }, { charity, currentAccount }) =>

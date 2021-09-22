@@ -1,5 +1,24 @@
 import { gql } from '@apollo/client';
 
+export const InfluencersListQuery = gql`
+  query GetInfluencersListQueryList($skip: Int, $size: Int, $filters: InfluencerFilters, $orderBy: InfluencerOrderBy) {
+    influencersList(params: { size: $size, skip: $skip, filters: $filters, orderBy: $orderBy }) {
+      totalItems
+      size
+      skip
+      items {
+        id
+        name
+        avatarUrl
+        sport
+        followers {
+          user
+        }
+      }
+    }
+  }
+`;
+
 export const AllInfluencersQuery = gql`
   query GetInfluencers($size: Int!, $skip: Int!) {
     influencers(size: $size, skip: $skip) {

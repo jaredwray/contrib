@@ -16,6 +16,25 @@ export const AllCharitiesQuery = gql`
     }
   }
 `;
+
+export const CharitiesListQuery = gql`
+  query GetCharitiesList($skip: Int, $size: Int, $filters: CharityFilters, $orderBy: CharityOrderBy) {
+    charitiesList(params: { size: $size, skip: $skip, filters: $filters, orderBy: $orderBy }) {
+      totalItems
+      size
+      skip
+      items {
+        id
+        name
+        avatarUrl
+        followers {
+          user
+        }
+      }
+    }
+  }
+`;
+
 export const ActiveCharitiesList = gql`
   query GetActiveCharities {
     charitiesSelectList {
