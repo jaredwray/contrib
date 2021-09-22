@@ -49,7 +49,8 @@ export default function Header() {
                       />
                     </>
                   )}
-
+                  <MenuNavLink link="/influencers" title="Influencers" />
+                  <MenuNavLink link="/charities" title="Charities" />
                   {account?.isAdmin && (
                     <>
                       <MenuNavLink link="/admin/influencers" title="Manage Influencers" />
@@ -57,7 +58,6 @@ export default function Header() {
                       <MenuNavLink link="/admin/auctions" title="Manage Auctions" />
                     </>
                   )}
-
                   {account?.influencerProfile && (
                     <>
                       <MenuNavLink link="/profiles/me" title="My Account" />
@@ -65,18 +65,13 @@ export default function Header() {
                     </>
                   )}
                   {account?.charity && <MenuNavLink link="/charity/me" title="My Charity Profile" />}
-
                   {account?.assistant && (
                     <MenuNavLink link={`/profiles/${account.assistant.influencerId}`} title="Account" />
                   )}
-
                   {(account?.influencerProfile || account?.assistant) && (
                     <MenuNavLink link="/auctions/new" title="Create new Auction" />
                   )}
-                  <MenuNavLink link="/influencers" title="Influencers Page" />
-                  <MenuNavLink link="/charities" title="Charities Page" />
                   <NavDropdown.Divider />
-
                   {isAuthenticated ? (
                     <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={handleLogout}>
                       <span>Sign Out</span>
