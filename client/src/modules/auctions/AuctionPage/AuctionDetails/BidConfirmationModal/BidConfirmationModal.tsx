@@ -74,7 +74,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     }, [setNewCard]);
 
     const handleBiding = useCallback(async () => {
-      if (!elements || !activeBid) {
+      if (!elements || process.title === 'browser' ? !activeBid : false) {
         return;
       }
 
@@ -82,7 +82,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
       try {
         if (!paymentInformation || newCard) {
-          const tokenResult = await stripe?.createToken(elements.getElement(CardElement) as StripeCardElement);
+          const tokenResult = await stripe?.createToken(elements!.getElement(CardElement) as StripeCardElement);
           if (tokenResult?.error) {
             setSubmitting(false);
             addToast(tokenResult.error.message, { autoDismiss: true, appearance: 'error' });
@@ -98,11 +98,11 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         setSubmitting(false);
         setActiveBid(null);
         setNewCard(false);
-        addToast(`Your bid of ${activeBid.toFormat('$0,0')} has been accepted.`, {
+        addToast(`Your bid of ${activeBid!.toFormat('$0,0')} has been accepted.`, {
           appearance: 'success',
           autoDismiss: true,
         });
-      } catch (error) {
+      } catch (error: any) {
         setSubmitting(false);
         setNewCard(false);
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
@@ -116,7 +116,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         await updateAuction({ variables: { id: auctionId } });
         addToast(`Thank you for your purchase!`, { autoDismiss: true, appearance: 'success' });
         handleClose();
-      } catch (error) {
+      } catch (error: any) {
         setSubmitting(false);
         setNewCard(false);
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
@@ -136,7 +136,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       <Dialog
         backdrop="static"
         keyboard={false}
-        open={Boolean(activeBid)}
+        open={process.title === 'browser' ? Boolean(activeBid) : true}
         title={isBuying ? buyingTitle : title}
         onClose={handleClose}
       >
@@ -177,6 +177,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
           </Button>
           <AsyncButton
             className={styles.actionBtn}
+            data-test-id="bid-button"
             disabled={buttonsAreDisabled}
             loading={isSubmitting}
             variant="secondary"

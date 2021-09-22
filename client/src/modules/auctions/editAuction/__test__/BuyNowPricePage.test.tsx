@@ -111,6 +111,9 @@ const mocks = [
 const submitValues = {
   itemPrice: { amount: 100, currency: 'USD', precision: 2 },
 };
+const submitErrorValues = {
+  itemPrice: { amount: 10, currency: 'USD', precision: 2 },
+};
 describe('BuyNowPricePage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
@@ -212,6 +215,30 @@ describe('BuyNowPricePage ', () => {
       wrapper.update();
     });
     expect(mockHistoryFn).toBeCalled();
+  });
+  it('should submit form and not call the mutation becouse of item price less or equal to start price', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache} mocks={mocks}>
+                <BuyNowPricePage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitErrorValues);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should submit form and not call the mutation', async () => {
     let wrapper: ReactWrapper;

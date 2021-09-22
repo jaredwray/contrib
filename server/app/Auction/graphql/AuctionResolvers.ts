@@ -94,7 +94,7 @@ export const AuctionResolvers: AuctionResolversType = {
     auction: loadRole(async (_, { id, organizerId }, { auction, currentAccount, currentInfluencerId }) => {
       const foundAuction = await auction.getAuction(id, organizerId);
       const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencerId;
-      if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner && !currentAccount.isAdmin) {
+      if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner && !currentAccount?.isAdmin) {
         return null;
       }
       return foundAuction;

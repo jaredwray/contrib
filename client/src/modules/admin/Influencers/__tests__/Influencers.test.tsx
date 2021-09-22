@@ -1,19 +1,16 @@
+import { Button } from 'react-bootstrap';
 import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
 import { InMemoryCache } from '@apollo/client';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
-import { Table, Button, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+
+import SearchInput from 'src/components/SearchInput';
+import { AdminPage } from 'src/components/AdminPage';
+import { AllInfluencersQuery, InfluencersSearch, ResendInviteMessageMutation } from 'src/apollo/queries/influencers';
 
 import Influencers from '..';
-import ClickableTr from 'src/components/ClickableTr';
-import { InviteButton } from 'src/components/InviteButton';
-import { ActionsDropdown } from 'src/components/ActionsDropdown';
-import { AdminPage } from 'src/components/AdminPage';
-import SearchInput from 'src/components/SearchInput';
-import { AllInfluencersQuery, InfluencersSearch, ResendInviteMessageMutation } from 'src/apollo/queries/influencers';
 
 const cache = new InMemoryCache();
 
@@ -59,8 +56,23 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: ResendInviteMessageMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 
 describe('AdminAuctionPage ', () => {
+  afterEach(() => jest.clearAllMocks());
   it('component is defined and has input with close button on it', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
@@ -88,10 +100,8 @@ describe('AdminAuctionPage ', () => {
           </ToastProvider>
         </MemoryRouter>,
       );
-
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
-
       expect(wrapper!).toHaveLength(1);
 
       await wrapper
@@ -103,13 +113,13 @@ describe('AdminAuctionPage ', () => {
       wrapper.find(AdminPage).children().find(SearchInput).children().find('button').simulate('click');
     });
   });
-  it('component is defined and get data by query', async () => {
+  it('should call the mutation ResendInviteMessageMutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>
           <ToastProvider>
-            <MockedProvider cache={cache}>
+            <MockedProvider cache={cache} mocks={mocks}>
               <Influencers />
             </MockedProvider>
           </ToastProvider>
@@ -118,6 +128,38 @@ describe('AdminAuctionPage ', () => {
 
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
+
+      expect(wrapper.find(Button).last().text()).toEqual('...');
+
+      wrapper.find(Button).last().simulate('click');
+      expect(wrapper.find("[data-test-id='resend-button']")).toHaveLength(2);
+      expect(wrapper.find("[data-test-id='resend-button']").first().text()).toEqual('Resend Invite Message');
+
+      wrapper.find("[data-test-id='resend-button']").first().simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+  });
+  it('should not call the mutation ResendInviteMessageMutation becouse of error ', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache} mocks={errorMocks}>
+              <Influencers />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+
+      wrapper.find(Button).last().simulate('click');
+      expect(wrapper.find("[data-test-id='resend-button']").first().text()).toEqual('Resend Invite Message');
+
+      wrapper.find("[data-test-id='resend-button']").first().simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(0);
     });
   });
 });

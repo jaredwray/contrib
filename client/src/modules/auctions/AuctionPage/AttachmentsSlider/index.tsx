@@ -99,6 +99,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
           <div
             key={i}
             className={styles.attachmentImageWrapper}
+            data-test-id="attachment-id"
             onClick={(e: MouseEvent) => handleAttachmentClick(e, attachment)}
             onMouseDown={handleAttachmentMouseDown}
           >

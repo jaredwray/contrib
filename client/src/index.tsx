@@ -57,102 +57,112 @@ const onRedirectCallback = (appState: AppState) => {
   history.replace(appState?.returnTo || window.location.pathname);
 };
 
-ReactDOM.render(
-  <ToastProvider>
-    <Auth0Provider
-      audience={process.env.REACT_APP_API_AUDIENCE}
-      cacheLocation={'localstorage'}
-      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
-      domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
-      redirectUri={mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login')}
-      onRedirectCallback={onRedirectCallback}
-    >
-      <Router history={history}>
-        <ScrollToTop />
-        <ContribApolloProvider>
-          <UserAccountProvider>
-            <>
-              <InternalScripts />
-              <Switch>
-                <Route exact component={HomePage} path="/" />
-                <Route exact component={AfterLogin} path="/after-login" />
-                <Route exact component={Privacy} path="/privacy-policy" />
-                <Route exact component={Privacy} path="/privacy" />
-                <Route exact component={Terms} path="/terms" />
-                <Route exact component={PhoneNumberVerification} path="/phone-verification" />
-                <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
-                <Route exact component={InvitationPage} path="/invitation/:slug" />
+export const App = () => {
+  return (
+    <ToastProvider>
+      <Auth0Provider
+        audience={process.env.REACT_APP_API_AUDIENCE}
+        cacheLocation={'localstorage'}
+        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
+        domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
+        redirectUri={mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login')}
+        onRedirectCallback={onRedirectCallback}
+      >
+        <Router history={history}>
+          <ScrollToTop />
+          <ContribApolloProvider>
+            <UserAccountProvider>
+              <>
+                <InternalScripts />
+                <Switch>
+                  <Route exact component={HomePage} path="/" />
+                  <Route exact component={AfterLogin} path="/after-login" />
+                  <Route exact component={Privacy} path="/privacy-policy" />
+                  <Route exact component={Privacy} path="/privacy" />
+                  <Route exact component={Terms} path="/terms" />
+                  <Route exact component={PhoneNumberVerification} path="/phone-verification" />
+                  <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
+                  <Route exact component={InvitationPage} path="/invitation/:slug" />
 
-                <PrivateRoute component={InfluencerOnboardingBasicPage} path="/onboarding/basic" role="influencer" />
-                <PrivateRoute
-                  component={InfluencerOnboardingCharitiesPage}
-                  path="/onboarding/charities"
-                  role="influencer"
-                />
-                <PrivateRoute component={InfluencerOnboardingDonePage} path="/onboarding/done" role="influencer" />
+                  <PrivateRoute component={InfluencerOnboardingBasicPage} path="/onboarding/basic" role="influencer" />
+                  <PrivateRoute
+                    component={InfluencerOnboardingCharitiesPage}
+                    path="/onboarding/charities"
+                    role="influencer"
+                  />
+                  <PrivateRoute component={InfluencerOnboardingDonePage} path="/onboarding/done" role="influencer" />
 
-                <PrivateRoute component={Charities} path="/admin/charities" role="admin" />
-                <PrivateRoute component={Influencers} path="/admin/influencers" role="admin" />
-                <PrivateRoute component={AdminAuctionPage} path="/admin/auctions/:auctionId" role="admin" />
-                <PrivateRoute component={AdminAuctionsPage} path="/admin/auctions" role="admin" />
+                  <PrivateRoute component={Charities} path="/admin/charities" role="admin" />
+                  <PrivateRoute component={Influencers} path="/admin/influencers" role="admin" />
+                  <PrivateRoute component={AdminAuctionPage} path="/admin/auctions/:auctionId" role="admin" />
+                  <PrivateRoute component={AdminAuctionsPage} path="/admin/auctions" role="admin" />
 
-                <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/me/edit" role="influencer" />
-                <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/:influencerId/edit" role="admin" />
-                <PrivateRoute component={InfluencerProfilePage} path="/profiles/me" role="influencer" />
-                <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
+                  <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/me/edit" role="influencer" />
+                  <PrivateRoute
+                    component={InfluencerProfileEditPage}
+                    path="/profiles/:influencerId/edit"
+                    role="admin"
+                  />
+                  <PrivateRoute component={InfluencerProfilePage} path="/profiles/me" role="influencer" />
+                  <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
 
-                <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
-                <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
-                <PrivateRoute component={CharityProfilePage} path="/charity/me" role="charity" />
-                <Route exact component={CharityProfilePage} path="/charity/:charityId" />
+                  <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
+                  <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
+                  <PrivateRoute component={CharityProfilePage} path="/charity/me" role="charity" />
+                  <Route exact component={CharityProfilePage} path="/charity/:charityId" />
 
-                <PrivateRoute component={Assistants} path="/assistants/me" role="influencer" />
-                <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
+                  <PrivateRoute component={Assistants} path="/assistants/me" role="influencer" />
+                  <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
 
-                <Route exact component={Auctions} path="/auctions" />
-                <PrivateRoute component={EditAuctionPage} path="/auctions/:ownerId/new" role="admin" />
-                <PrivateRoute component={EditAuctionPage} path="/auctions/:auctionId/title" role="influencer" />
-                <PrivateRoute component={EditAuctionPage} path="/auctions/new" role="influencer" />
-                <PrivateRoute
-                  component={EditAuctionDescriptionPage}
-                  path="/auctions/:auctionId/description"
-                  role="influencer"
-                />
-                <PrivateRoute component={EditAuctionVideoPage} path="/auctions/:auctionId/video" role="influencer" />
-                <PrivateRoute component={EditAuctionPhotoPage} path="/auctions/:auctionId/photo" role="influencer" />
-                <PrivateRoute
-                  component={EditStartPricePage}
-                  path="/auctions/:auctionId/price/starting"
-                  role="influencer"
-                />
-                <PrivateRoute
-                  component={EditAuctionBuyNowPricePage}
-                  path="/auctions/:auctionId/price/buying"
-                  role="influencer"
-                />
-                <PrivateRoute
-                  component={EditAuctionDurationPage}
-                  path="/auctions/:auctionId/duration"
-                  role="influencer"
-                />
-                <PrivateRoute
-                  component={EditAuctionCharityPage}
-                  path="/auctions/:auctionId/charity"
-                  role="influencer"
-                />
-                <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery/address" />
-                <Route component={() => withStripe(DeliveryPaymentPage)} path="/auctions/:auctionId/delivery/payment" />
-                <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />
-                <Route exact component={AuctionPage} path="/auctions/:auctionId" />
-                <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
+                  <Route exact component={Auctions} path="/auctions" />
+                  <PrivateRoute component={EditAuctionPage} path="/auctions/:ownerId/new" role="admin" />
+                  <PrivateRoute component={EditAuctionPage} path="/auctions/:auctionId/title" role="influencer" />
+                  <PrivateRoute component={EditAuctionPage} path="/auctions/new" role="influencer" />
+                  <PrivateRoute
+                    component={EditAuctionDescriptionPage}
+                    path="/auctions/:auctionId/description"
+                    role="influencer"
+                  />
+                  <PrivateRoute component={EditAuctionVideoPage} path="/auctions/:auctionId/video" role="influencer" />
+                  <PrivateRoute component={EditAuctionPhotoPage} path="/auctions/:auctionId/photo" role="influencer" />
+                  <PrivateRoute
+                    component={EditStartPricePage}
+                    path="/auctions/:auctionId/price/starting"
+                    role="influencer"
+                  />
+                  <PrivateRoute
+                    component={EditAuctionBuyNowPricePage}
+                    path="/auctions/:auctionId/price/buying"
+                    role="influencer"
+                  />
+                  <PrivateRoute
+                    component={EditAuctionDurationPage}
+                    path="/auctions/:auctionId/duration"
+                    role="influencer"
+                  />
+                  <PrivateRoute
+                    component={EditAuctionCharityPage}
+                    path="/auctions/:auctionId/charity"
+                    role="influencer"
+                  />
+                  <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery/address" />
+                  <Route
+                    component={() => withStripe(DeliveryPaymentPage)}
+                    path="/auctions/:auctionId/delivery/payment"
+                  />
+                  <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />
+                  <Route exact component={AuctionPage} path="/auctions/:auctionId" />
+                  <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
 
-                <Route component={Page404} path="*" />
-              </Switch>
-            </>
-          </UserAccountProvider>
-        </ContribApolloProvider>
-      </Router>
-    </Auth0Provider>
-  </ToastProvider>,
-  document.getElementById('root'),
-);
+                  <Route component={Page404} path="*" />
+                </Switch>
+              </>
+            </UserAccountProvider>
+          </ContribApolloProvider>
+        </Router>
+      </Auth0Provider>
+    </ToastProvider>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
