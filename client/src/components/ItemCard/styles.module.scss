@@ -1,0 +1,110 @@
+@import 'src/variables.scss';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 305px;
+  max-width: 305px;
+  position: relative;
+}
+
+.name {
+  font-size: 11px !important;
+}
+
+.link {
+  color: $dark-gray-color;
+  white-space: nowrap;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  background-color: $white-color;
+  padding: 20px;
+}
+
+.image {
+  background-color: $barely-gray-color;
+}
+
+.itemTitle {
+  height: 80px;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  font-weight: 700 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.horizontalRoot {
+  max-width: 428px;
+  height: 214px;
+  width: 428px;
+  flex-direction: row;
+}
+
+.horizontalImage,
+.horizontalDescription {
+  height: 214px;
+  width: 214px;
+  flex-shrink: 0;
+}
+
+.horizontalDescription {
+  flex-grow: 1;
+  flex-basis: 50%;
+}
+
+@media (max-width: $medium-weight) {
+  .root {
+    max-width: 278px;
+  }
+
+  .description {
+    padding: 10px;
+  }
+
+  .horizontalRoot,
+  .horizontalOnMobileRoot {
+    width: 100%;
+    height: 165px;
+    max-width: 335px;
+    flex-direction: row;
+    align-items: center;
+    & a {
+      width: 100%;
+    }
+  }
+
+  .horizontalImage,
+  .horizontalDescription,
+  .horizontalOnMobileImage,
+  .horizontalOnMobileDescription {
+    font-size: 14px;
+    flex-shrink: 0;
+    height: 163px;
+    width: 100%;
+    min-width: 145px;
+  }
+  .horizontalOnMobileDescription {
+    padding: 5px 10px;
+    width: auto;
+  }
+}
+
+.wrapper {
+  position: relative;
+}
+
+.followBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+  background-color: $white-color;
+  border-radius: 50%;
+}

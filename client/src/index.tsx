@@ -16,7 +16,7 @@ import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
 import Charities from 'src/modules/admin/Charities';
 import Influencers from 'src/modules/admin/Influencers';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
-import Auctions from 'src/modules/auctions/AuctionsPage';
+import AllAuctionsPage from 'src/modules/auctions/AuctionsPage';
 import EditAuctionPhotoPage from 'src/modules/auctions/editAuction/AuctionPhotoPage';
 import EditAuctionVideoPage from 'src/modules/auctions/editAuction/AuctionVideoPage';
 import EditAuctionBuyNowPricePage from 'src/modules/auctions/editAuction/BuyNowPricePage';
@@ -26,6 +26,7 @@ import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
 import EditAuctionDurationPage from 'src/modules/auctions/editAuction/DurationPage';
 import EditStartPricePage from 'src/modules/auctions/editAuction/StartPricePage';
 import EditAuctionPage from 'src/modules/auctions/editAuction/TitlePage';
+import AllCharitiesPage from 'src/modules/charity/CharitiesPage';
 import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPage';
 import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
 import DeliveryAddressPage from 'src/modules/delivery/DeliveryAddressPage';
@@ -35,6 +36,7 @@ import DeliveryStatusPage from 'src/modules/delivery/DeliveryStatusPage';
 import Page404 from 'src/modules/errors/Page404';
 import HomePage from 'src/modules/Home';
 import Assistants from 'src/modules/Influencer/Assistants';
+import AllInfluencersPage from 'src/modules/Influencer/InfluerncersPage';
 import InternalScripts from 'src/modules/InternalScripts';
 import InvitationPage from 'src/modules/Invitation';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
@@ -97,6 +99,7 @@ export const App = () => {
                   <PrivateRoute component={AdminAuctionPage} path="/admin/auctions/:auctionId" role="admin" />
                   <PrivateRoute component={AdminAuctionsPage} path="/admin/auctions" role="admin" />
 
+                  <Route exact component={AllInfluencersPage} path="/influencers" />
                   <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/me/edit" role="influencer" />
                   <PrivateRoute
                     component={InfluencerProfileEditPage}
@@ -106,6 +109,7 @@ export const App = () => {
                   <PrivateRoute component={InfluencerProfilePage} path="/profiles/me" role="influencer" />
                   <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
 
+                  <Route exact component={AllCharitiesPage} path="/charities" />
                   <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
                   <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
                   <PrivateRoute component={CharityProfilePage} path="/charity/me" role="charity" />
@@ -114,7 +118,7 @@ export const App = () => {
                   <PrivateRoute component={Assistants} path="/assistants/me" role="influencer" />
                   <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
 
-                  <Route exact component={Auctions} path="/auctions" />
+                  <Route exact component={AllAuctionsPage} path="/auctions" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/:ownerId/new" role="admin" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/:auctionId/title" role="influencer" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/new" role="influencer" />

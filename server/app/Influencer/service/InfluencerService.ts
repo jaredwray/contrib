@@ -8,6 +8,7 @@ import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { CharityService } from '../../Charity';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { InfluencerStatus } from '../dto/InfluencerStatus';
+import { InfluencerOrderBy } from '../dto/InfluencerOrderBy';
 import { UpdateInfluencerProfileInput } from '../graphql/model/UpdateInfluencerProfileInput';
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
@@ -23,6 +24,51 @@ export class InfluencerService {
   private readonly UserAccountModel = UserAccountModel(this.connection);
 
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
+
+  private ORDER_SORTS = {
+    [InfluencerOrderBy.NAME_ASC]: { name: 'asc' },
+    [InfluencerOrderBy.NAME_DESC]: { name: 'desc' },
+    [InfluencerOrderBy.ONBOARDED_AT_ASC]: { onboardedAt: 'asc' },
+    [InfluencerOrderBy.ONBOARDED_AT_DESC]: { onboardedAt: 'desc' },
+  };
+
+  public getSearchOptions({ query }) {
+    return ([
+      ['status', { status: { $in: InfluencerStatus.ONBOARDED } }],
+      [query, { name: { $regex: (query || '').trim(), $options: 'i' } }],
+    ] as [string, { [key: string]: any }][]).reduce(
+      (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
+      {},
+    );
+  }
+
+  public getSortOptions(orderBy) {
+    return this.ORDER_SORTS[orderBy];
+  }
+
+  public async getInfluencers({ filters, orderBy, skip = 0, size }) {
+    const influencers = this.InfluencerModel.find(this.getSearchOptions(filters))
+      .skip(skip)
+      .limit(size)
+      .sort(this.getSortOptions(orderBy));
+    return await influencers.exec();
+  }
+
+  public async getInfluencersCount({ filters }) {
+    return this.InfluencerModel.find(this.getSearchOptions(filters)).countDocuments().exec();
+  }
+
+  public async influencersList(params) {
+    const items = await this.getInfluencers(params);
+    const totalItems = await this.getInfluencersCount(params);
+
+    return {
+      totalItems,
+      items: items.map((item) => InfluencerService.makeInfluencerProfile(item)),
+      size: items.length,
+      skip: params.skip || 0,
+    };
+  }
 
   async handleFollowLogicErrors(
     influencerId: string,
@@ -188,6 +234,7 @@ export class InfluencerService {
 
     const model = await this.InfluencerModel.findById(profile.id, null, { session }).exec();
     model.status = status;
+    model.onboardedAt = dayjs().second(0);
 
     if (userAccount) {
       if (model.userAccount) {
@@ -235,6 +282,7 @@ export class InfluencerService {
 
     influencer.userAccount = userAccountId;
     influencer.status = InfluencerStatus.ONBOARDED;
+    influencer.onboardedAt = dayjs().second(0);
     await influencer.save();
 
     return InfluencerService.makeInfluencerProfile(influencer);
@@ -405,6 +453,7 @@ export class InfluencerService {
       profileDescription: model.profileDescription,
       avatarUrl: model.avatarUrl,
       status: model.status,
+      onboardedAt: model.onboardedAt,
       userAccount: model.userAccount?.toString() ?? null,
       favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
       assistants: model.assistants?.map((m) => m.toString()) ?? [],

@@ -1,20 +1,14 @@
 import { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
-import clsx from 'clsx';
-import { Row, Col, Container } from 'react-bootstrap';
 
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
-import Layout from 'src/components/Layout';
+import AllItemsLayout from 'src/components/layouts/AllItemsLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import Filters from './Filters';
-import Pagination from './Pagination';
-import PaginationInfo from './PaginationInfo';
-import SortBy from './SortBy';
-import styles from './styles.module.scss';
 
 const PER_PAGE = 20;
 
@@ -95,47 +89,33 @@ const AuctionsPage: FC = () => {
 
   setPageTitle('Auctions page');
 
+  const componentFilters = (
+    <Filters
+      changeFilters={changeFilters}
+      charityChangeFilter={charityChangeFilter}
+      filters={filters}
+      initialBids={initialBids}
+    />
+  );
+  const sortByEnum = [
+    { value: 'CREATED_AT_DESC', label: 'Newest' },
+    { value: 'TIME_ASC', label: 'Ending soon' },
+    { value: 'PRICE_ASC', label: 'Price: Low to high' },
+    { value: 'PRICE_DESC', label: 'Price: High to low' },
+  ];
   return (
-    <Layout>
-      <Container fluid className="d-flex flex-column flex-grow-1">
-        <Row className="h-100 flex-grow-1">
-          <Col className={clsx(styles.filtersWrapper, 'pb-0 pb-sm-4')} lg="3" md="4" sm="12">
-            <Filters
-              changeFilters={changeFilters}
-              charityChangeFilter={charityChangeFilter}
-              filters={filters}
-              initialBids={initialBids}
-            />
-          </Col>
-          <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5 mt-1')} md="8">
-            <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
-              <SortBy changeFilters={changeFilters} />
-
-              <PaginationInfo
-                pageSize={auctions?.size || 0}
-                pageSkip={auctions?.skip || 0}
-                perPage={PER_PAGE}
-                totalItems={auctions?.totalItems || 0}
-              />
-            </div>
-
-            <div className={clsx(styles.auctions, 'd-grid align-items-center')}>
-              {(auctions?.items || []).map((auction: Auction) => (
-                <AuctionCard key={auction.id} horizontal auction={auction} />
-              ))}
-            </div>
-
-            <Pagination
-              changeFilters={changeFilters}
-              pageSize={auctions?.size || 0}
-              pageSkip={auctions?.skip || 0}
-              perPage={PER_PAGE}
-              totalItems={auctions?.totalItems || 0}
-            />
-          </Col>
-        </Row>
-      </Container>
-    </Layout>
+    <AllItemsLayout
+      changeFilters={changeFilters}
+      filters={componentFilters}
+      size={auctions?.size}
+      skip={auctions?.skip}
+      sortOptions={sortByEnum}
+      totalItems={auctions?.totalItems}
+    >
+      {(auctions?.items || []).map((auction: Auction) => (
+        <AuctionCard key={auction.id} horizontal auction={auction} />
+      ))}
+    </AllItemsLayout>
   );
 };
 

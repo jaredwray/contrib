@@ -73,8 +73,9 @@ export default function Header() {
                   {(account?.influencerProfile || account?.assistant) && (
                     <MenuNavLink link="/auctions/new" title="Create new Auction" />
                   )}
-
-                  {account && <NavDropdown.Divider />}
+                  <MenuNavLink link="/influencers" title="Influencers Page" />
+                  <MenuNavLink link="/charities" title="Charities Page" />
+                  <NavDropdown.Divider />
 
                   {isAuthenticated ? (
                     <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={handleLogout}>

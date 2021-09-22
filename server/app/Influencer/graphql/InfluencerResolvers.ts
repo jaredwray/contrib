@@ -24,6 +24,10 @@ interface InfluencerResolversType {
     >;
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
     influencersSearch: GraphqlResolver<InfluencerProfile[], { query: string }>;
+    influencersList: GraphqlResolver<
+      { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
+      { params: any }
+    >;
   };
   Mutation: {
     createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
@@ -80,6 +84,7 @@ export const InfluencerResolvers: InfluencerResolversType = {
         return influencer.findInfluencer(id);
       }
     }),
+    influencersList: async (_, { params }, { influencer }) => influencer.influencersList(params),
   },
   Mutation: {
     unfollowInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>

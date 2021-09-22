@@ -4,6 +4,7 @@ import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
+import { CharityOrderBy } from '../dto/CharityOrderBy';
 import { CharityInput } from '../graphql/model/CharityInput';
 import { CharityStatus } from '../dto/CharityStatus';
 import { CharityProfileStatus } from '../dto/CharityProfileStatus';
@@ -279,6 +280,7 @@ export class CharityService {
       charity.profileStatus === CharityProfileStatus.COMPLETED
     ) {
       charity.status = CharityStatus.ACTIVE;
+      charity.activatedAt = dayjs().second(0);
     }
   }
 
@@ -391,6 +393,51 @@ export class CharityService {
     return CharityService.makeCharity(charity);
   }
 
+  private ORDER_SORTS = {
+    [CharityOrderBy.NAME_ASC]: { name: 'asc' },
+    [CharityOrderBy.NAME_DESC]: { name: 'desc' },
+    [CharityOrderBy.ACTIVATED_AT_ASC]: { activatedAt: 'asc' },
+    [CharityOrderBy.ACTIVATED_AT_DESC]: { activatedAt: 'desc' },
+  };
+
+  public getSearchOptions({ query }) {
+    return ([
+      ['status', { status: { $in: CharityStatus.ACTIVE } }],
+      [query, { name: { $regex: (query || '').trim(), $options: 'i' } }],
+    ] as [string, { [key: string]: any }][]).reduce(
+      (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
+      {},
+    );
+  }
+
+  public getSortOptions(orderBy) {
+    return this.ORDER_SORTS[orderBy];
+  }
+
+  public async getCharities({ filters, orderBy, skip = 0, size }) {
+    const charities = this.CharityModel.find(this.getSearchOptions(filters))
+      .skip(skip)
+      .limit(size)
+      .sort(this.getSortOptions(orderBy));
+    return await charities.exec();
+  }
+
+  public async getCharitiesCount({ filters }) {
+    return this.CharityModel.find(this.getSearchOptions(filters)).countDocuments().exec();
+  }
+
+  public async charitiesList(params) {
+    const items = await this.getCharities(params);
+    const totalItems = await this.getCharitiesCount(params);
+
+    return {
+      totalItems,
+      items: items.map((item) => CharityService.makeCharity(item)),
+      size: items.length,
+      skip: params.skip || 0,
+    };
+  }
+
   async listCharities(skip: number, size: number, status: string[]): Promise<Charity[]> {
     const charities = await this.CharityModel.find(
       status
@@ -453,6 +500,7 @@ export class CharityService {
       stripeAccountId: model.stripeAccountId,
       avatarUrl: model.avatarUrl ?? `/content/img/users/person.png`,
       profileDescription: model.profileDescription,
+      activatedAt: model.activatedAt,
       website: model.website,
       websiteUrl: CharityService.websiteUrl(model.website),
       followers: model.followers.map((follower) => {

@@ -1,3 +1,5 @@
+import { Dayjs } from 'dayjs';
+
 import { CharityStatus } from './CharityStatus';
 import { CharityProfileStatus } from './CharityProfileStatus';
 import { CharityStripeStatus } from './CharityStripeStatus';
@@ -15,5 +17,6 @@ export interface Charity {
   profileDescription: string | null;
   website: string | null;
   websiteUrl: string | null;
+  activatedAt: Dayjs;
   followers: Follow[];
 }
