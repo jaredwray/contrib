@@ -429,9 +429,7 @@ export class AuctionService {
     try {
       const auction = await this.auctionRepository.getAuction(id, organizerId);
       return this.makeAuction(auction);
-    } catch (error) {
-      AppLogger.error(`Cannot find auction with id #${id}: ${error.message}`);
-    }
+    } catch {}
   }
 
   public async maybeActivateAuction(id: string, organizerId: string): Promise<Auction> {

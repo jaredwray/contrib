@@ -163,6 +163,7 @@ export default function InfluencersPage() {
                     ) : (
                       <Button
                         className={clsx(styles.inviteActionBtn, 'dropdown-item text--body w-100 ')}
+                        data-test-id="resend-button"
                         variant="link"
                         onClick={() => resendMessage(item)}
                       >
