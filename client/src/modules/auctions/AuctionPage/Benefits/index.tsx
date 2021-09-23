@@ -23,12 +23,14 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
             title={name}
             to={`/charity/${id}`}
           >
-            <Image
-              roundedCircle
-              className={clsx(styles.avatar, 'd-inline-block')}
-              src={ResizedImageUrl(avatarUrl, 120)}
-            />
-            <span className="pl-4">{name}</span>
+            <div className="d-flex align-items-center">
+              <Image
+                roundedCircle
+                className={clsx(styles.avatar, 'd-inline-block')}
+                src={ResizedImageUrl(avatarUrl, 120)}
+              />
+              <span className="pl-4">{name}</span>
+            </div>
           </Link>
           {isNotActive && <NotActiveStatus />}
         </div>

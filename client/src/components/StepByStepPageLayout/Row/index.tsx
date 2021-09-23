@@ -19,7 +19,7 @@ const Row: FC<Props> = ({ title, description, children, childrenWrapperCLassName
         <p className="text--body">{description}</p>
       </Col>
 
-      <Col className={clsx('pl-md-5', childrenWrapperCLassName)}>{children}</Col>
+      <Col className={clsx('p-0 pl-md-5', childrenWrapperCLassName)}>{children}</Col>
     </RbRow>
   );
 };

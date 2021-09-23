@@ -38,3 +38,13 @@
   padding-left: 5px;
   padding-right: 5px;
 }
+:global {
+  @media (max-width: $small-weight) {
+    .input-group {
+      flex-wrap: nowrap !important;
+      & > .form-control {
+        font-size: 16px;
+      }
+    }
+  }
+}

@@ -4,7 +4,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { GetCharity, UpdateCharityProfileMutation } from 'src/apollo/queries/charityProfile';
 import Form from 'src/components/Form/Form';
@@ -12,6 +11,7 @@ import Layout from 'src/components/Layout';
 import { SubmitButton } from 'src/components/SubmitButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Charity } from 'src/types/Charity';
 
 import { FormFields } from './FormFields';
@@ -24,7 +24,6 @@ interface FormValues {
 }
 
 export const CharityProfileEditPage: FC = () => {
-  const { addToast } = useToasts();
   const charityId = useParams<{ charityId?: string }>().charityId ?? 'me';
   const { account } = useContext(UserAccountContext);
   const { data: charityProfileData } = useQuery<{
@@ -32,17 +31,17 @@ export const CharityProfileEditPage: FC = () => {
   }>(GetCharity, { variables: { id: charityId } });
   const [updateCharityProfile] = useMutation(UpdateCharityProfileMutation);
   const history = useHistory();
+  const { showMessage, showError } = useShowNotification();
 
   const handleSubmit = async ({ name, website, profileDescription }: FormValues) => {
     try {
       await updateCharityProfile({
         variables: { name, website: website ?? '', profileDescription, charityId },
       });
-
-      addToast(`Your profile has been successfully updated.`, { appearance: 'success' });
+      showMessage('Your profile has been successfully updated.');
       history.goBack();
     } catch (error) {
-      addToast(error.message, { autoDismiss: true, appearance: 'error' });
+      showError(error.message);
     }
   };
 
@@ -76,7 +75,9 @@ export const CharityProfileEditPage: FC = () => {
           </Row>
           <FormFields charity={charityProfile} />
           <hr className="d-none d-md-block" />
-          <SubmitButton text="Save" />
+          <Col>
+            <SubmitButton text="Save" />
+          </Col>
         </Container>
       </Form>
     </Layout>

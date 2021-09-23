@@ -25,6 +25,8 @@ export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void
       border: '1px solid',
       borderColor: selectStyles.sageColor,
       borderRadius: '10px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
     }),
     menuPortal: (provided: any) => ({
       ...provided,
@@ -74,11 +76,17 @@ export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void
       marginRight: '10px',
     }),
 
-    placeholder: (provided: any) => ({
-      ...provided,
-      color: selectStyles.lightGrayColor,
-      paddingLeft: '5px',
-    }),
+    placeholder: (provided: any) => {
+      return {
+        ...provided,
+        color: selectStyles.lightGrayColor,
+        paddingLeft: '5px',
+        '@media(max-width: 992px)': {
+          ...provided['@media (max-width: 992px)'],
+          fontSize: '1rem',
+        },
+      };
+    },
     singleValue: (provided: any) => ({
       ...provided,
       color: selectStyles.sageColor,

@@ -19,12 +19,14 @@ const Author: FC<InfluencerProfile> = ({ id, name, avatarUrl }): ReactElement =>
           title={name}
           to={`/profiles/${id}`}
         >
-          <Image
-            roundedCircle
-            className={clsx(styles.avatar, 'd-inline-block')}
-            src={ResizedImageUrl(avatarUrl, 120)}
-          />
-          <span className="pl-4 ">{name}</span>
+          <div className="d-flex align-items-center">
+            <Image
+              roundedCircle
+              className={clsx(styles.avatar, 'd-inline-block')}
+              src={ResizedImageUrl(avatarUrl, 120)}
+            />
+            <span className="pl-4 ">{name}</span>
+          </div>
         </Link>
       </div>
     </Row>

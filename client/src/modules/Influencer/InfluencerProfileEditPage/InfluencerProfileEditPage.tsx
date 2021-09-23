@@ -4,7 +4,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { UpdateFavoriteCharities } from 'src/apollo/queries/charities';
 import { InfluencerProfileQuery, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
@@ -13,6 +12,7 @@ import Layout from 'src/components/Layout';
 import { SubmitButton } from 'src/components/SubmitButton';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -29,7 +29,6 @@ interface FormValues {
 }
 
 export const InfluencerProfileEditPage: FC = () => {
-  const { addToast } = useToasts();
   const influencerId = useParams<{ influencerId: string }>().influencerId ?? 'me';
   const { account } = useContext(UserAccountContext);
   const { data: influencerProfileData } = useQuery<{
@@ -38,6 +37,7 @@ export const InfluencerProfileEditPage: FC = () => {
   const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
   const [updateFavoriteCharities] = useMutation(UpdateFavoriteCharities);
   const history = useHistory();
+  const { showMessage, showError } = useShowNotification();
 
   const handleSubmit = async ({ name, sport, team, profileDescription, favoriteCharities }: FormValues) => {
     try {
@@ -48,10 +48,10 @@ export const InfluencerProfileEditPage: FC = () => {
       if (influencerProfile?.favoriteCharities?.join() !== favoriteCharities.join()) {
         await updateFavoriteCharities({ variables: { influencerId, charities: favoriteCharities.map((c) => c.id) } });
       }
-      addToast(`Your profile has been successfully updated.`, { appearance: 'success' });
+      showMessage('Your profile has been successfully updated');
       history.goBack();
     } catch (error) {
-      addToast(error.message, { autoDismiss: true, appearance: 'error' });
+      showError(error.message);
     }
   };
 
@@ -83,13 +83,16 @@ export const InfluencerProfileEditPage: FC = () => {
             <hr className={clsx(styles.hr, 'd-none d-md-block')} />
           </Row>
           <BasicFormFields influencer={influencerProfile} />
-          <h2 className="text-headline d-flex flex-row justify-content-between">
-            <span className="mr-1">{account?.isAdmin ? 'Charities' : 'My Charities'}</span>
-          </h2>
+          <Col>
+            <h2 className="text-headline d-flex flex-row justify-content-between">
+              <span className="mr-1">{account?.isAdmin ? 'Charities' : 'My Charities'}</span>
+            </h2>
+          </Col>
           <hr className="d-none d-md-block" />
           <CharitiesFormFields />
-
-          <SubmitButton text="Save" />
+          <Col>
+            <SubmitButton text="Save" />
+          </Col>
         </Container>
       </Form>
     </Layout>
