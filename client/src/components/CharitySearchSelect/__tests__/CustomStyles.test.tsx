@@ -17,6 +17,8 @@ test('customStyles', () => {
     border: '1px solid',
     borderColor: '#5a7864',
     borderRadius: '10px',
+    paddingTop: '0px',
+    paddingBottom: '0px',
   });
   expect(customStyles(() => {}, true).menuPortal({})).toEqual({
     borderColor: '#5a7864',
@@ -48,6 +50,9 @@ test('customStyles', () => {
   expect(customStyles(() => {}, true).placeholder({})).toEqual({
     color: '#caccc6',
     paddingLeft: '5px',
+    '@media(max-width: 992px)': {
+      fontSize: '1rem',
+    },
   });
   expect(customStyles(() => {}, true).singleValue({})).toEqual({
     color: '#5a7864',

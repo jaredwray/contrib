@@ -16,7 +16,7 @@ export const SubmitButton: FC<Props> = ({ text, children, className, disabled })
   const { submitting } = useFormState({ subscription: { submitting: true } });
 
   return (
-    <div className={clsx(styles.buttonWrapper, className || 'pt-3 pb-3float-right pb-sm-5')}>
+    <div className={clsx(styles.buttonWrapper, 'pt-3 pb-3 float-right pb-sm-5')}>
       <AsyncButton
         className={clsx('text-subhead', className, styles.button)}
         disabled={disabled}

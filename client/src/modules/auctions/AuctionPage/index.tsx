@@ -65,7 +65,7 @@ const AuctionPage = () => {
 
   return (
     <Layout>
-      <Container className="pt-0 pt-md-5 pb-0 pb-md-5">
+      <Container className="pt-0 pt-md-5 pb-4 pb-md-5">
         <Row>
           <Col md="1" />
           <Col md="6">
