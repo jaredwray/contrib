@@ -11,6 +11,7 @@ export const InfluencersListQuery = gql`
         name
         avatarUrl
         sport
+        totalRaisedAmount
         followers {
           user
         }
@@ -59,6 +60,7 @@ export const GetInfluencerQuery = gql`
         totalBids
         currentPrice
       }
+      totalRaisedAmount
       followers {
         user
         createdAt

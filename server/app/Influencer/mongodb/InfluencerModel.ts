@@ -15,6 +15,7 @@ export interface IInfluencer extends Document {
   profileDescription: string | null;
   favoriteCharities: ICharityModel['_id'][];
   assistants: IAssistant['_id'][];
+  totalRaisedAmount: number;
   onboardedAt: Dayjs;
   followers: IFollowObject[];
 }
@@ -31,6 +32,7 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   profileDescription: { type: SchemaTypes.String },
   favoriteCharities: [{ type: SchemaTypes.ObjectId, ref: CharityCollectionName }],
   assistants: [{ type: SchemaTypes.ObjectId, ref: AssistantCollectionName }],
+  totalRaisedAmount: { type: SchemaTypes.Number, default: 0 },
   onboardedAt: {
     type: SchemaTypes.Date,
     get: (v) => dayjs(v),

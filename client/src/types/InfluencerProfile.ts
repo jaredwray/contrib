@@ -1,3 +1,5 @@
+import { DineroObject } from 'dinero.js';
+
 import { Assistant } from './Assistant';
 import { Auction } from './Auction';
 import { Charity } from './Charity';
@@ -14,6 +16,7 @@ export interface InfluencerProfile {
   assistants: Assistant[];
   auctions?: Auction[];
   status?: InfluencerStatus;
+  totalRaisedAmount: DineroObject;
   followers?: Follow[];
 }
 

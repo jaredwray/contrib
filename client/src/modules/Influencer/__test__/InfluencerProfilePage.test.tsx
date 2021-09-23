@@ -6,7 +6,6 @@ import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 
 import { GetInfluencerQuery } from '../../../apollo/queries/influencers';
-import { GetTotalRaisedAmountQuery } from 'src/apollo/queries/auctions';
 import { InfluencerProfilePageContent } from 'src/modules/Influencer/InfluencerProfilePage/InfluencerProfilePageContent';
 
 import { InfluencerProfilePage } from '../InfluencerProfilePage/InfluencerProfilePage';
@@ -35,6 +34,7 @@ cache.writeQuery({
     influencer: {
       auctions: [],
       avatarUrl: 'test.webp',
+      totalRaisedAmount: 0,
       followers: [{ user: 'testId', createdAt: '2021-06-18T12:11:15.092Z' }],
       id: 'testId',
       name: 'test',
@@ -43,13 +43,6 @@ cache.writeQuery({
       status: 'ONBOARDED',
       team: 'test',
     },
-  },
-});
-
-cache.writeQuery({
-  query: GetTotalRaisedAmountQuery,
-  data: {
-    getTotalRaisedAmount: {},
   },
 });
 

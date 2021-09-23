@@ -252,7 +252,6 @@ export const AuctionSchema = gql`
     ): AuctionsPage!
     auctionPriceLimits(query: String, filters: AuctionSearchFilters, statusFilter: [String]): AuctionPriceLimits!
     auction(id: String!): Auction
-    getTotalRaisedAmount(charityId: String, influencerId: String): TotalRaisedAmount!
     getCustomerInformation(stripeCustomerId: String!): CustomerInformation
     getAuctionMetrics(auctionId: String!): Metrics!
     calculateShippingCost(auctionId: String!, deliveryMethod: String!): DeliveryRate

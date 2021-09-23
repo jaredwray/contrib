@@ -43,6 +43,7 @@ import { UrlShortenerService } from '../../Core';
 import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
+import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import Stripe from 'stripe';
 import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
@@ -51,6 +52,7 @@ export class AuctionService {
   private readonly AuctionMetricModel = AuctionMetricModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
+  private readonly InfluencerModel = InfluencerModel(this.connection);
   private readonly BidModel = BidModel(this.connection);
   private readonly AssetModel = AuctionAssetModel(this.connection);
   private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
@@ -67,6 +69,40 @@ export class AuctionService {
     private readonly bidService: BidService,
     private readonly stripeService: StripeService,
   ) {}
+
+  //TODO: delete after update charities totalRaisedAmount field
+
+  public async updateCharities() {
+    const charities = await this.CharityModel.find({});
+    for (const charity of charities) {
+      if (!charity.totalRaisedAmount) {
+        const totalRaisedAmount = await this.getTotalRaisedAmount(charity._id.toString());
+
+        Object.assign(charity, { totalRaisedAmount });
+
+        await charity.save();
+      }
+    }
+  }
+
+  //TODO ends
+
+  //TODO: delete after update influencers totalRaisedAmount field
+
+  public async updateInfluencers() {
+    const influencers = await this.InfluencerModel.find({});
+    for (const influencer of influencers) {
+      if (!influencer.totalRaisedAmount) {
+        const totalRaisedAmount = await this.getTotalRaisedAmount(null, influencer._id.toString());
+
+        Object.assign(influencer, { totalRaisedAmount });
+
+        await influencer.save();
+      }
+    }
+  }
+
+  //TODO ends
 
   //TODO: delete after auctions winner update.
   public async updateAuctionsWinner() {
@@ -87,6 +123,24 @@ export class AuctionService {
     } catch (error) {
       AppLogger.warn(`Unable to update auction winner: ${error.message}`);
     }
+  }
+
+  public async updateTotalRaisedAmount(charityId: string, influencerId: string, amount: number): Promise<void> {
+    const influencer = await this.InfluencerModel.findById(influencerId);
+
+    const { totalRaisedAmount: currentInfRaisedAmount } = influencer;
+
+    Object.assign(influencer, { totalRaisedAmount: currentInfRaisedAmount + amount });
+
+    await influencer.save();
+
+    const charity = await this.CharityModel.findById(charityId);
+
+    const { totalRaisedAmount: currentCharRaisedAmount } = charity;
+
+    Object.assign(charity, { totalRaisedAmount: currentCharRaisedAmount + amount });
+
+    await charity.save();
   }
 
   public async getContentStorageAuthData(): Promise<{ authToken: string; bucketName: string }> {
@@ -471,27 +525,23 @@ export class AuctionService {
     }
   }
 
-  public async getTotalRaisedAmount(
-    charityId?: string,
-    influencerId?: string,
-  ): Promise<{ totalRaisedAmount: Dinero.Dinero }> {
+  public async getTotalRaisedAmount(charityId?: string, influencerId?: string): Promise<number> {
     if (!charityId && !influencerId) {
-      throw new Error('Need to pass charityId or influencerId');
+      throw new AppError('Something went wrong. Please, try again later');
     }
 
-    const filters = { status: AuctionStatus.SETTLED };
+    const filters = { status: { $in: [AuctionStatus.SETTLED, AuctionStatus.SOLD] } };
     if (charityId) {
       filters['charity'] = charityId;
     }
 
     if (influencerId) {
-      filters['influencerId'] = influencerId;
+      filters['auctionOrganizer'] = influencerId;
     }
 
     const auctions = await this.AuctionModel.find(filters);
-    return {
-      totalRaisedAmount: AuctionService.makeTotalRaisedAmount(auctions),
-    };
+
+    return AuctionService.makeTotalRaisedAmount(auctions);
   }
 
   public async createOrUpdateAuctionMetrics(link: string, auctionId: string): Promise<void> {
@@ -919,9 +969,14 @@ export class AuctionService {
         } and user id ${lastAuctionBid.user._id.toString()}`,
       );
 
+      const { charity: charityId, auctionOrganizer: auctionOrganizerId } = auction;
+
+      await this.updateTotalRaisedAmount(charityId, auctionOrganizerId, lastAuctionBid.bid);
+
       auction.winner = lastAuctionBid.user._id.toString();
       auction.status = AuctionStatus.SETTLED;
-      await lastAuctionBid.save();
+
+      await await lastAuctionBid.save();
       await auction.save();
     } catch (error) {
       AppLogger.error(`Unable to charge user ${lastAuctionBid.user._id.toString()}, with error: ${error.message}`);
@@ -1005,21 +1060,11 @@ export class AuctionService {
     };
   }
 
-  public static makeTotalRaisedAmount(auctions: IAuctionModel[]): Dinero.Dinero {
+  public static makeTotalRaisedAmount(auctions: IAuctionModel[]): number {
     if (!auctions) {
-      return Dinero({ amount: 0, currency: AppConfig.app.defaultCurrency as Dinero.Currency });
+      return 0;
     }
-    return auctions
-      .map((a) =>
-        Dinero({
-          amount: a.currentPrice ?? 0,
-          currency: (a.priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        }),
-      )
-      .reduce(
-        (total, next) => total.add(next),
-        Dinero({ amount: 0, currency: AppConfig.app.defaultCurrency as Dinero.Currency }),
-      );
+    return auctions.map((auction) => auction.currentPrice ?? 0).reduce((total, next) => (total += next), 0);
   }
 
   private makeLongAuctionLink(id: string) {
@@ -1085,6 +1130,17 @@ export class AuctionService {
       await this.bidService.createBid(bidInput);
     } catch (error) {
       AppLogger.error(`Unable to charge auction #${auction.id}: ${error.message}`);
+      throw new AppError('Unable to charge');
+    }
+
+    try {
+      const { charity, auctionOrganizer } = auction;
+
+      await this.updateTotalRaisedAmount(charity._id.toString(), auctionOrganizer._id.toString(), auction.itemPrice);
+    } catch (error) {
+      AppLogger.error(
+        `Something went wrong when try to update totalRaisedAmount when buy auction #${auction.id} for charity and influencer : ${error.message}`,
+      );
       throw new AppError('Unable to charge');
     }
 

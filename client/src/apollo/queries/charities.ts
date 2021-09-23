@@ -27,6 +27,7 @@ export const CharitiesListQuery = gql`
         id
         name
         avatarUrl
+        totalRaisedAmount
         followers {
           user
         }

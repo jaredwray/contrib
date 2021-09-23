@@ -10,7 +10,11 @@
 }
 
 .name {
-  font-size: 11px !important;
+  white-space: normal;
+  line-height: 1.6em;
+  height: 4.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .link {

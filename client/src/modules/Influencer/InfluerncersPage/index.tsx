@@ -43,9 +43,11 @@ const InfluencersPage: FC = () => {
 
   const sortOptions = [
     { value: 'ONBOARDED_AT_ASC', label: 'Newest' },
-    { value: 'ONBOARDED_AT_DESC', label: 'Oldest' },
+    { value: 'ONBOARDED_AT_DESC', label: 'Latest' },
     { value: 'NAME_ASC', label: 'Name: A - Z' },
     { value: 'NAME_DESC', label: 'Name: Z - A' },
+    { value: 'TOTALRAISEDAMOUNT_ASC', label: 'Raised: Low to high' },
+    { value: 'TOTALRAISEDAMOUNT_DESC', label: 'Raised: High to low' },
   ];
   const filterComponent = <Filters changeFilters={changeFilters} />;
   return (

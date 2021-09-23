@@ -9,6 +9,7 @@ import { useToasts } from 'react-toast-notifications';
 import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
 import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
 import CoverImage from 'src/components/CoverImage';
+import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 
@@ -96,15 +97,9 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity }) => {
 
       <figcaption className={clsx(styles.description, horizontal && styles.horizontalDescription)}>
         <SwipeableLink className={styles.link} title={item.name} to={linkToAuction}>
-          <div className="d-flex align-items-center mb-1">
-            <span className={clsx(horizontal && styles.name, 'text-label text-all-cups text-truncate')}>
-              {item.name}
-            </span>
-          </div>
+          <p className={clsx(horizontal && styles.name, 'text-body')}>{item.name}</p>
         </SwipeableLink>
-        {!isCharity && (
-          <span className={clsx(styles.itemTitle, 'text-subhead mb-0 mb-md-1 text-left ')}>{item.sport}</span>
-        )}
+        <TotalRaisedAmount value={item.totalRaisedAmount} />
       </figcaption>
     </figure>
   );

@@ -26,10 +26,9 @@ import styles from './CharityProfilePageContent.module.scss';
 
 interface Props {
   charity: Charity;
-  totalRaisedAmount: Dinero.DineroObject;
 }
 
-export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmount }) => {
+export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth0();
@@ -127,7 +126,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity, totalRaisedAmoun
             <Col md="6">
               {!isActive && <NotActiveStatus />}
               <p className="text-headline break-word">{charity.name}</p>
-              <TotalRaisedAmount value={totalRaisedAmount} />
+              <TotalRaisedAmount value={charity.totalRaisedAmount} />
               {charity.website && (
                 <p className="text-label text-all-cups">
                   <a className={styles.link} href={charity.websiteUrl}>

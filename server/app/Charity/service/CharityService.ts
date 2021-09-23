@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
+import Dinero from 'dinero.js';
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
+
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
@@ -398,6 +400,8 @@ export class CharityService {
     [CharityOrderBy.NAME_DESC]: { name: 'desc' },
     [CharityOrderBy.ACTIVATED_AT_ASC]: { activatedAt: 'asc' },
     [CharityOrderBy.ACTIVATED_AT_DESC]: { activatedAt: 'desc' },
+    [CharityOrderBy.TOTALRAISEDAMOUNT_ASC]: { totalRaisedAmount: 'asc' },
+    [CharityOrderBy.TOTALRAISEDAMOUNT_DESC]: { totalRaisedAmount: 'desc' },
   };
 
   public getSearchOptions({ query }) {
@@ -500,9 +504,13 @@ export class CharityService {
       stripeAccountId: model.stripeAccountId,
       avatarUrl: model.avatarUrl ?? `/content/img/users/person.png`,
       profileDescription: model.profileDescription,
-      activatedAt: model.activatedAt,
       website: model.website,
       websiteUrl: CharityService.websiteUrl(model.website),
+      totalRaisedAmount: Dinero({
+        currency: AppConfig.app.defaultCurrency as Dinero.Currency,
+        amount: model.totalRaisedAmount,
+      }),
+      activatedAt: model.activatedAt,
       followers: model.followers.map((follower) => {
         return {
           user: follower.user,

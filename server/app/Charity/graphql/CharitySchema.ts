@@ -21,6 +21,8 @@ export const CharitySchema = gql`
     NAME_DESC
     ACTIVATED_AT_ASC
     ACTIVATED_AT_DESC
+    TOTALRAISEDAMOUNT_ASC
+    TOTALRAISEDAMOUNT_DESC
   }
 
   type Charity {
@@ -36,6 +38,7 @@ export const CharitySchema = gql`
     profileDescription: String
     websiteUrl: String
     website: String
+    totalRaisedAmount: Money
     followers: [Follow]
   }
   input CharityInputID {
