@@ -3,4 +3,7 @@ export interface AuctionParcel {
   length: string;
   height: string;
   weight: string;
+  //TODO: delete after update auctions
+  units?: string;
+  //TODO ends
 }

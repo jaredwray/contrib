@@ -70,6 +70,40 @@ export class AuctionService {
     private readonly stripeService: StripeService,
   ) {}
 
+  //TODO: delete after update auctions
+
+  public async updateAuctions() {
+    const auctions = await this.AuctionModel.find({});
+    for (const auction of auctions) {
+      try {
+        const { fullPageDescription, description } = auction;
+
+        auction.delivery.parcel.units = undefined;
+
+        const updateAuction = {
+          description: fullPageDescription || description,
+          fullPageDescription: undefined,
+          playedIn: undefined,
+          gameWorn: undefined,
+          autographed: undefined,
+          sport: undefined,
+          timeZone: undefined,
+          parcel: undefined,
+        };
+
+        Object.assign(auction, updateAuction);
+
+        await auction.save();
+      } catch (error) {
+        AppLogger.error(`Can not update auction #${auction._id.toString()}, error: ${error.message}`);
+      }
+    }
+
+    return { message: 'Updated' };
+  }
+
+  //TODO ends
+
   //TODO: delete after update charities totalRaisedAmount field
 
   public async updateCharities() {

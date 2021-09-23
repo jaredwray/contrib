@@ -19,6 +19,19 @@ export default function appRouteHandlers(
     }
   });
 
+  //TODO: deleta after update auctions
+
+  app.post('/api/v1/cleanup-auctions', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
+      return;
+    }
+
+    const response = await auction.updateAuctions();
+    return res.json(response);
+  });
+
+  //TODO ends
+
   //TODO: delete after update influencers and charities totalRaisedAmount
 
   app.post('/api/v1/update-totalRaisedAmount', async (req, res) => {
