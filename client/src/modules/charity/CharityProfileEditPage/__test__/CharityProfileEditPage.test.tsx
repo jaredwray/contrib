@@ -37,6 +37,7 @@ cache.writeQuery({
   data: {
     charity: {
       avatarUrl: 'test',
+      totalRaisedAmount: 0,
       followers: [{ createdAt: '2021-06-21T17:11:07.220Z', user: 'testId' }],
       id: 'testId',
       name: 'test',

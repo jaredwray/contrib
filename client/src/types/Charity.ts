@@ -1,3 +1,5 @@
+import { DineroObject } from 'dinero.js';
+
 import { Follow } from './Follow';
 
 export enum CharityStatus {
@@ -27,5 +29,6 @@ export interface Charity {
   website?: string;
   profileDescription?: string;
   stripeAccountLink: string;
+  totalRaisedAmount: DineroObject;
   followers?: Follow[];
 }

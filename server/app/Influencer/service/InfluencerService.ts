@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
+import Dinero from 'dinero.js';
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
+
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
 import { IAuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
@@ -30,6 +32,8 @@ export class InfluencerService {
     [InfluencerOrderBy.NAME_DESC]: { name: 'desc' },
     [InfluencerOrderBy.ONBOARDED_AT_ASC]: { onboardedAt: 'asc' },
     [InfluencerOrderBy.ONBOARDED_AT_DESC]: { onboardedAt: 'desc' },
+    [InfluencerOrderBy.TOTALRAISEDAMOUNT_ASC]: { totalRaisedAmount: 'asc' },
+    [InfluencerOrderBy.TOTALRAISEDAMOUNT_DESC]: { totalRaisedAmount: 'desc' },
   };
 
   public getSearchOptions({ query }) {
@@ -453,10 +457,14 @@ export class InfluencerService {
       profileDescription: model.profileDescription,
       avatarUrl: model.avatarUrl,
       status: model.status,
-      onboardedAt: model.onboardedAt,
       userAccount: model.userAccount?.toString() ?? null,
       favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
       assistants: model.assistants?.map((m) => m.toString()) ?? [],
+      totalRaisedAmount: Dinero({
+        currency: AppConfig.app.defaultCurrency as Dinero.Currency,
+        amount: model.totalRaisedAmount,
+      }),
+      onboardedAt: model.onboardedAt,
       followers: model.followers.map((follower) => {
         return {
           user: follower.user,

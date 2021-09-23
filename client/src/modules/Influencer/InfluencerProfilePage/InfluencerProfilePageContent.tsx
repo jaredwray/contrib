@@ -26,10 +26,9 @@ import styles from './InfluencerProfilePageContent.module.scss';
 
 interface Props {
   influencer: InfluencerProfile;
-  totalRaisedAmount: Dinero.DineroObject;
 }
 
-export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaisedAmount }) => {
+export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth0();
@@ -160,7 +159,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer, totalRaise
           <Row>
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>
-              <TotalRaisedAmount value={totalRaisedAmount} />
+              <TotalRaisedAmount value={influencer.totalRaisedAmount} />
               {/*<div className="d-flex">
                 <a
                   className={clsx(styles.socialIcon, 'mr-3')}

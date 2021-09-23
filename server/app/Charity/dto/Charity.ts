@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import Dinero from 'dinero.js';
 
 import { CharityStatus } from './CharityStatus';
 import { CharityProfileStatus } from './CharityProfileStatus';
@@ -17,6 +18,7 @@ export interface Charity {
   profileDescription: string | null;
   website: string | null;
   websiteUrl: string | null;
+  totalRaisedAmount: Dinero.Dinero;
   activatedAt: Dayjs;
   followers: Follow[];
 }

@@ -15,6 +15,7 @@ export interface ICharityModel extends Document {
   avatarUrl: string | null;
   profileDescription: string | null;
   website: string | null;
+  totalRaisedAmount: number;
   activatedAt: Dayjs;
   followers: IFollowObject[];
 }
@@ -31,6 +32,7 @@ const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   avatarUrl: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
   website: { type: SchemaTypes.String },
+  totalRaisedAmount: { type: SchemaTypes.Number, default: 0 },
   activatedAt: {
     type: SchemaTypes.Date,
     get: (v) => dayjs(v),

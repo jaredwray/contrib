@@ -39,10 +39,6 @@ interface AuctionResolversType {
       { filters?: AuctionSearchFilters; query?: string; statusFilter: string[] }
     >;
     auction: GraphqlResolver<Auction, { id: string; organizerId?: string }>;
-    getTotalRaisedAmount: GraphqlResolver<
-      { totalRaisedAmount: Dinero.Dinero },
-      { charityId: string; influencerId: string }
-    >;
     getCustomerInformation: GraphqlResolver<{ phone: string; email: string } | null, { stripeCustomerId: string }>;
     getAuctionMetrics: GraphqlResolver<AuctionMetrics, { auctionId: string }>;
     calculateShippingCost: GraphqlResolver<
@@ -99,8 +95,6 @@ export const AuctionResolvers: AuctionResolversType = {
       }
       return foundAuction;
     }),
-    getTotalRaisedAmount: async (_, { charityId, influencerId }, { auction }) =>
-      await auction.getTotalRaisedAmount(charityId, influencerId),
     getCustomerInformation: requireAdmin(
       async (_, { stripeCustomerId }, { auction }) => await auction.getCustomerInformation(stripeCustomerId),
     ),

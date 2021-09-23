@@ -12,6 +12,8 @@ export const InfluencerSchema = gql`
     NAME_DESC
     ONBOARDED_AT_ASC
     ONBOARDED_AT_DESC
+    TOTALRAISEDAMOUNT_ASC
+    TOTALRAISEDAMOUNT_DESC
   }
 
   type InfluencerProfile {
@@ -26,6 +28,7 @@ export const InfluencerSchema = gql`
     invitation: Invitation!
     favoriteCharities: [Charity!]!
     assistants: [Assistant!]!
+    totalRaisedAmount: Money
     followers: [Follow]
   }
 
@@ -68,7 +71,7 @@ export const InfluencerSchema = gql`
     filters: InfluencerFilters
     orderBy: InfluencerOrderBy
   }
-  
+
   extend type Query {
     influencersList(params: InfluencerParams): InfluencersPage
     influencers(size: Int!, skip: Int!): InfluencersPage!

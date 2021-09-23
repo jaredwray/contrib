@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import Dinero from 'dinero.js';
 
 import { InfluencerStatus } from './InfluencerStatus';
 import { Follow } from '../../FollowDto';
@@ -14,6 +15,7 @@ export interface InfluencerProfile {
   userAccount: string;
   favoriteCharities: string[];
   assistants: string[];
+  totalRaisedAmount: Dinero.Dinero;
   onboardedAt: Dayjs;
   followers: Follow[];
 }
