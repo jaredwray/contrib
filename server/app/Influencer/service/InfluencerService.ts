@@ -449,28 +449,25 @@ export class InfluencerService {
   }
 
   public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
+    const { _id, userAccount, favoriteCharities, assistants, followers, totalRaisedAmount, ...rest } =
+      'toObject' in model ? model.toObject() : model;
+
     return {
-      id: model._id.toString(),
-      name: model.name,
-      sport: model.sport,
-      team: model.team,
-      profileDescription: model.profileDescription,
-      avatarUrl: model.avatarUrl,
-      status: model.status,
-      userAccount: model.userAccount?.toString() ?? null,
-      favoriteCharities: model.favoriteCharities?.map((m) => m.toString()) ?? [],
-      assistants: model.assistants?.map((m) => m.toString()) ?? [],
+      id: _id.toString(),
+      userAccount: userAccount?.toString() ?? null,
+      favoriteCharities: favoriteCharities?.map((favoriteCharitie) => favoriteCharitie.toString()) ?? [],
+      assistants: assistants?.map((assistant) => assistant.toString()) ?? [],
       totalRaisedAmount: Dinero({
         currency: AppConfig.app.defaultCurrency as Dinero.Currency,
         amount: model.totalRaisedAmount,
       }),
-      onboardedAt: model.onboardedAt,
-      followers: model.followers.map((follower) => {
+      followers: followers.map((follower) => {
         return {
           user: follower.user,
           createdAt: follower.createdAt,
         };
       }),
+      ...rest,
     };
   }
 }

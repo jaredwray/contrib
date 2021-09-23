@@ -494,29 +494,27 @@ export class CharityService {
     if (!model) {
       return null;
     }
+
+    const { _id, userAccount, website, avatarUrl, followers, totalRaisedAmount, ...rest } =
+      'toObject' in model ? model.toObject() : model;
+
     return {
-      id: model._id.toString(),
-      name: model.name,
-      status: model.status,
-      profileStatus: model.profileStatus,
-      stripeStatus: model.stripeStatus,
-      userAccount: model.userAccount?.toString() ?? null,
-      stripeAccountId: model.stripeAccountId,
-      avatarUrl: model.avatarUrl ?? `/content/img/users/person.png`,
-      profileDescription: model.profileDescription,
-      website: model.website,
-      websiteUrl: CharityService.websiteUrl(model.website),
-      totalRaisedAmount: Dinero({
-        currency: AppConfig.app.defaultCurrency as Dinero.Currency,
-        amount: model.totalRaisedAmount,
-      }),
-      activatedAt: model.activatedAt,
-      followers: model.followers.map((follower) => {
+      id: _id.toString(),
+      userAccount: userAccount?.toString() ?? null,
+      avatarUrl: avatarUrl ?? `/content/img/users/person.png`,
+      website,
+      websiteUrl: CharityService.websiteUrl(website),
+      followers: followers.map((follower) => {
         return {
           user: follower.user,
           createdAt: follower.createdAt,
         };
       }),
+      totalRaisedAmount: Dinero({
+        currency: AppConfig.app.defaultCurrency as Dinero.Currency,
+        amount: model.totalRaisedAmount,
+      }),
+      ...rest,
     };
   }
 }

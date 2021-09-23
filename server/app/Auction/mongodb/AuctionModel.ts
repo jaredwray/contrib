@@ -30,6 +30,9 @@ export interface IAuctionModel extends Document {
   sentNotifications: [string];
   totalBids: number;
   winner?: IUserAccount['_id'];
+  //TODO: delete after update auctions
+  fullPageDescription?: string;
+  //TODO ends
 }
 
 export const AuctionCollectionName = 'auction';
@@ -74,6 +77,9 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
         length: { type: SchemaTypes.String, default: length },
         height: { type: SchemaTypes.String, default: height },
         weight: { type: SchemaTypes.String, default: weight },
+        //TODO: delete after update auctions
+        units: { type: SchemaTypes.String },
+        //TODO ends
       },
       address: {
         name: { type: SchemaTypes.String },
@@ -89,6 +95,21 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
       identificationNumber: { type: SchemaTypes.String },
       timeInTransit: { type: SchemaTypes.Date },
     },
+    //TODO: delete after update auctions
+    playedIn: { type: SchemaTypes.String },
+    autographed: { type: SchemaTypes.Boolean },
+    sport: { type: SchemaTypes.String },
+    gameWorn: { type: SchemaTypes.Boolean },
+    fullPageDescription: { type: SchemaTypes.String },
+    timeZone: { type: SchemaTypes.String },
+    parcel: {
+      width: { type: SchemaTypes.String, default: width },
+      length: { type: SchemaTypes.String, default: length },
+      height: { type: SchemaTypes.String, default: height },
+      weight: { type: SchemaTypes.String, default: weight },
+      units: { type: SchemaTypes.String },
+    },
+    //TODO ends
   },
   { optimisticConcurrency: true },
 );
