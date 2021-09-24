@@ -1,9 +1,7 @@
 @import 'src/variables.scss';
 
 table {
-  table-layout: fixed;
   border-collapse: separate;
-  border-spacing: 0 10px;
   overflow-x: auto;
   white-space: nowrap;
 

@@ -49,6 +49,9 @@
   height: 214px;
   width: 428px;
   flex-direction: row;
+  @media (max-width: $small-weight) {
+    margin-bottom: 10px;
+  }
 }
 
 .horizontalImage,

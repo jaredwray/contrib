@@ -8,6 +8,7 @@
   @media (max-width: $small-weight) {
     margin-bottom: 27px;
     max-width: unset;
+    padding: 0 15px !important;
   }
 }
 
@@ -25,6 +26,7 @@
 
   @media (max-width: $small-weight) {
     display: block;
+    padding-left: 5px;
   }
 }
 

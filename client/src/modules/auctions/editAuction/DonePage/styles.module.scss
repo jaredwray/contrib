@@ -40,6 +40,12 @@
     height: auto;
     order: 0;
   }
+
+  @media (max-width: 400px) {
+    display: block !important;
+    overflow: hidden;
+    padding: 20px;
+  }
 }
 
 .contentRightWrapper {
