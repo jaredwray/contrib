@@ -82,7 +82,7 @@ export default function AdminAuctionsPage() {
             <th className={styles.actions}></th>
           </tr>
         </thead>
-        <tbody className="font-weight-normal">
+        <tbody className="font-weight-normal table-bordered">
           {auctions.items.map((auction: Auction) => (
             <ClickableTr key={auction.id} linkTo={`/auctions/${auction.isDraft ? `${auction.id}/title` : auction.id}`}>
               <td className={styles.idColumn}>{auction.id}</td>

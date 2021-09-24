@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import clsx from 'clsx';
-import { Row, Col, Container } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import Layout from 'src/components/Layout';
 
@@ -23,32 +23,25 @@ interface Props {
 const AuctionsPage: FC<Props> = ({ filters, changeFilters, size, skip, sortOptions, totalItems, children }) => {
   return (
     <Layout>
-      <Container fluid className="d-flex flex-column flex-grow-1">
-        <Row className="h-100 flex-grow-1">
-          <Col className={clsx(styles.filtersWrapper, 'pb-0 pb-sm-4')} lg="3" md="4" sm="12">
-            {filters}
-          </Col>
-          <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5 mt-1')} md="8">
-            <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
-              <SortBy changeFilters={changeFilters} sortOptions={sortOptions} />
-              <PaginationInfo
-                pageSize={size || 0}
-                pageSkip={skip || 0}
-                perPage={PER_PAGE}
-                totalItems={totalItems || 0}
-              />
-            </div>
-            <div className={clsx(styles.auctions, 'd-grid align-items-center')}>{children}</div>
-            <Pagination
-              changeFilters={changeFilters}
-              pageSize={size || 0}
-              pageSkip={skip || 0}
-              perPage={PER_PAGE}
-              totalItems={totalItems || 0}
-            />
-          </Col>
-        </Row>
-      </Container>
+      <Row className="h-100 flex-grow-1">
+        <Col className={clsx(styles.filtersWrapper, 'pb-0 pb-sm-4')} lg="3" md="4" sm="12">
+          {filters}
+        </Col>
+        <Col className={clsx(styles.rightBlock, 'hv-100 w-100 pl-3 pl-lg-5 pr-3 pr-lg-5 mt-1')} md="8">
+          <div className={clsx(styles.topPanel, 'mb-5 mb-sm-0')}>
+            <SortBy changeFilters={changeFilters} sortOptions={sortOptions} />
+            <PaginationInfo pageSize={size || 0} pageSkip={skip || 0} perPage={PER_PAGE} totalItems={totalItems || 0} />
+          </div>
+          <div className={clsx(styles.auctions, 'd-grid align-items-center')}>{children}</div>
+          <Pagination
+            changeFilters={changeFilters}
+            pageSize={size || 0}
+            pageSkip={skip || 0}
+            perPage={PER_PAGE}
+            totalItems={totalItems || 0}
+          />
+        </Col>
+      </Row>
     </Layout>
   );
 };

@@ -140,8 +140,8 @@ export default function AdminAuctionPage() {
               </>
             </Col>
           </Row>
-          <Row className="pt-3">
-            <Col>
+          <Row>
+            <Col lg="5">
               <div className="text-headline">Delivery</div>
               <Delivery auction={auction} refreshAuctionData={getAuctionData} />
             </Col>

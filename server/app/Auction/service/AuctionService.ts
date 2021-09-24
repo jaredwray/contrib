@@ -159,22 +159,14 @@ export class AuctionService {
     }
   }
 
-  public async updateTotalRaisedAmount(charityId: string, influencerId: string, amount: number): Promise<void> {
-    const influencer = await this.InfluencerModel.findById(influencerId);
+  public async updateTotalRaisedAmount(auction: IAuctionModel, amount: number): Promise<void> {
+    const { charity, auctionOrganizer } = auction;
 
-    const { totalRaisedAmount: currentInfRaisedAmount } = influencer;
-
-    Object.assign(influencer, { totalRaisedAmount: currentInfRaisedAmount + amount });
-
-    await influencer.save();
-
-    const charity = await this.CharityModel.findById(charityId);
-
-    const { totalRaisedAmount: currentCharRaisedAmount } = charity;
-
-    Object.assign(charity, { totalRaisedAmount: currentCharRaisedAmount + amount });
+    charity.totalRaisedAmount += amount;
+    auctionOrganizer.totalRaisedAmount += amount;
 
     await charity.save();
+    await auctionOrganizer.save();
   }
 
   public async getContentStorageAuthData(): Promise<{ authToken: string; bucketName: string }> {
@@ -660,7 +652,7 @@ export class AuctionService {
         ...(title ? { title } : {}),
         ...(startDate ? { startsAt: startDate } : {}),
         ...(endDate ? { endsAt: endDate } : {}),
-        ...(duration ? { endsAt: dayjs(endDate).add(duration, 'days') } : {}),
+        ...(duration ? { endsAt: dayjs().add(duration, 'days') } : {}),
         ...(startPrice
           ? {
               startPrice: startPrice.getAmount(),
@@ -1003,9 +995,12 @@ export class AuctionService {
         } and user id ${lastAuctionBid.user._id.toString()}`,
       );
 
-      const { charity: charityId, auctionOrganizer: auctionOrganizerId } = auction;
+      const currentAuction = await auction
+        .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
+        .populate({ path: 'charity', model: this.CharityModel })
+        .execPopulate();
 
-      await this.updateTotalRaisedAmount(charityId, auctionOrganizerId, lastAuctionBid.bid);
+      await this.updateTotalRaisedAmount(currentAuction, lastAuctionBid.bid);
 
       auction.winner = lastAuctionBid.user._id.toString();
       auction.status = AuctionStatus.SETTLED;
@@ -1168,9 +1163,7 @@ export class AuctionService {
     }
 
     try {
-      const { charity, auctionOrganizer } = auction;
-
-      await this.updateTotalRaisedAmount(charity._id.toString(), auctionOrganizer._id.toString(), auction.itemPrice);
+      await this.updateTotalRaisedAmount(auction, auction.itemPrice);
     } catch (error) {
       AppLogger.error(
         `Something went wrong when try to update totalRaisedAmount when buy auction #${auction.id} for charity and influencer : ${error.message}`,

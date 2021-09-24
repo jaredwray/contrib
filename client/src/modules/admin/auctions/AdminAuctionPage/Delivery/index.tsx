@@ -2,6 +2,7 @@ import { FC, useCallback } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns-tz';
+import { Row, Table } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
 
 import { ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
@@ -46,81 +47,83 @@ export const Delivery: FC<Props> = ({ auction, refreshAuctionData }) => {
   }
 
   return (
-    <table className="d-inline table-bordered">
-      <tbody className="font-weight-normal pb-3">
-        <tr>
-          <td>Parcel properties</td>
-          <td>{ParcelProps(auction)}</td>
-        </tr>
-        {auction.delivery?.status && (
-          <>
-            <tr>
-              <td>Recepient</td>
-              <td>{deliveryAddress?.name}</td>
-            </tr>
-            <tr>
-              <td>State</td>
-              <td>{incomingState}</td>
-            </tr>
-            <tr>
-              <td>City</td>
-              <td>{deliveryAddress?.city}</td>
-            </tr>
-            <tr>
-              <td>Street</td>
-              <td>{deliveryAddress?.street}</td>
-            </tr>
-            <tr>
-              <td>Postal Code</td>
-              <td>{deliveryAddress?.zipCode}</td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td>
-                {auction.delivery?.status}
-                {auction.delivery?.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED && (
-                  <AsyncButton
-                    className="btn-sm w-100"
-                    disabled={shippingLoading}
-                    loading={shippingLoading}
-                    variant="dark"
-                    onClick={handleRegisterShipping}
-                  >
-                    Pay for delivery
-                  </AsyncButton>
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>Updated at</td>
-              <td>{updatedAt}</td>
-            </tr>
-            {auction.delivery.identificationNumber && (
+    <Row>
+      <Table className="d-inline">
+        <tbody className="font-weight-normal table-bordered pb-3 text-break">
+          <tr>
+            <td>Parcel properties</td>
+            <td>{ParcelProps(auction)}</td>
+          </tr>
+          {auction.delivery?.status && (
+            <>
               <tr>
-                <td>Identification Number</td>
-                <td>{auction.delivery.identificationNumber}</td>
+                <td>Recepient</td>
+                <td>{deliveryAddress?.name}</td>
               </tr>
-            )}
-            {auction.delivery.timeInTransit && (
               <tr>
-                <td>Estimated arrival date</td>
-                <td>{format(new Date(auction.delivery.timeInTransit), 'MM/dd/yyyy')}</td>
+                <td>State</td>
+                <td>{incomingState}</td>
               </tr>
-            )}
-            {auction.delivery?.shippingLabel && (
               <tr>
-                <td>UPS delivery shippingLabel</td>
+                <td>City</td>
+                <td>{deliveryAddress?.city}</td>
+              </tr>
+              <tr>
+                <td>Street</td>
+                <td>{deliveryAddress?.street}</td>
+              </tr>
+              <tr>
+                <td>Postal Code</td>
+                <td>{deliveryAddress?.zipCode}</td>
+              </tr>
+              <tr>
+                <td>Status</td>
                 <td>
-                  <a className={styles.link} href={auction.delivery.shippingLabel} rel="noreferrer" target="_blank">
-                    show
-                  </a>
+                  {auction.delivery?.status}
+                  {auction.delivery?.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED && (
+                    <AsyncButton
+                      className="btn-sm w-100"
+                      disabled={shippingLoading}
+                      loading={shippingLoading}
+                      variant="dark"
+                      onClick={handleRegisterShipping}
+                    >
+                      Pay for delivery
+                    </AsyncButton>
+                  )}
                 </td>
               </tr>
-            )}
-          </>
-        )}
-      </tbody>
-    </table>
+              <tr>
+                <td>Updated at</td>
+                <td>{updatedAt}</td>
+              </tr>
+              {auction.delivery.identificationNumber && (
+                <tr>
+                  <td>Identification Number</td>
+                  <td>{auction.delivery.identificationNumber}</td>
+                </tr>
+              )}
+              {auction.delivery.timeInTransit && (
+                <tr>
+                  <td>Estimated arrival date</td>
+                  <td>{format(new Date(auction.delivery.timeInTransit), 'MM/dd/yyyy')}</td>
+                </tr>
+              )}
+              {auction.delivery?.shippingLabel && (
+                <tr>
+                  <td>UPS delivery shippingLabel</td>
+                  <td>
+                    <a className={styles.link} href={auction.delivery.shippingLabel} rel="noreferrer" target="_blank">
+                      show
+                    </a>
+                  </td>
+                </tr>
+              )}
+            </>
+          )}
+        </tbody>
+      </Table>
+    </Row>
   );
 };
 
