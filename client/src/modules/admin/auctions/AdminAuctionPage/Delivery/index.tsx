@@ -48,7 +48,7 @@ export const Delivery: FC<Props> = ({ auction, refreshAuctionData }) => {
 
   return (
     <Row>
-      <Table className="d-inline">
+      <Table className="d-inline details-table">
         <tbody className="font-weight-normal table-bordered pb-3 text-break">
           <tr>
             <td>Parcel properties</td>

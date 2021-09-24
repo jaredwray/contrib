@@ -18,7 +18,7 @@ export const Details: FC<Props> = ({ auction, charity }) => {
 
   return (
     <Row>
-      <Table className="d-inline">
+      <Table className="d-inline details-table">
         <tbody className="font-weight-normal table-bordered pb-3 text-break">
           <tr>
             <td>Id</td>
