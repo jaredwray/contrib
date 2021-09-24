@@ -32,7 +32,7 @@ export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, showProcessB
           {showProcessBtn && <th></th>}
         </tr>
       </thead>
-      <tbody className="font-weight-normal table-bordered pt-3">
+      <tbody className="font-weight-normal pt-3">
         {bids.map((bid, i) => (
           <tr key={i}>
             <td className="align-middle">{bid.bid && `$${bid.bid?.amount / 100}`}</td>

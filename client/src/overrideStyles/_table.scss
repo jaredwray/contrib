@@ -2,13 +2,18 @@
 
 table {
   border-collapse: separate;
+  border-spacing: 0 10px;
   overflow-x: auto;
   white-space: nowrap;
+
+  &.details-table {
+    border-spacing: 0;
+  }
 
   th {
     height: 49px;
     padding: 7px;
-    border: none;
+    border: none !important;
   }
 
   tbody {
