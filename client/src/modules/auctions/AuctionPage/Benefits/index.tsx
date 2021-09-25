@@ -37,7 +37,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
       </Row>
       <BsRow className="pt-4">
         <BsCol>
-          <Link className={clsx(styles.link, 'text-label text-all-cups text-nowrap')} to={`/charity/${id}`}>
+          <Link className={clsx(styles.link, 'text-label text-all-cups')} to={`/charity/${id}`}>
             other auctions benefiting this charity &gt;&gt;
           </Link>
         </BsCol>
