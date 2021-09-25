@@ -1,7 +1,8 @@
 @import 'src/variables.scss';
 
 .col,
-[class^='col-'] {
+[class^='col-'],
+[class*=' col-'] {
   @media (max-width: $small-weight) {
     padding-left: 0 !important;
     padding-right: 0 !important;
