@@ -119,7 +119,7 @@ export default function AdminAuctionPage() {
         <Container fluid>
           <Row>
             <Col lg="5">
-              <div className="text-headline">Auction details</div>
+              <div className="text-headline mb-2">Auction details</div>
               <Details auction={auction} charity={charity} />
               {hasBids && auction.isFailed && (
                 <AsyncButton
@@ -135,14 +135,14 @@ export default function AdminAuctionPage() {
             </Col>
             <Col lg="7">
               <>
-                <Row className="text-headline mb-2">Auction metrics </Row>
+                <Row className="text-headline">Auction metrics </Row>
                 <ClicksAnalytics bitly={metrics} />
               </>
             </Col>
           </Row>
           <Row>
             <Col lg="5">
-              <div className="text-headline">Delivery</div>
+              <div className="text-headline mb-2">Delivery</div>
               <Delivery auction={auction} refreshAuctionData={getAuctionData} />
             </Col>
           </Row>
