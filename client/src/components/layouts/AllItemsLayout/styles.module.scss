@@ -1,5 +1,12 @@
 @import 'src/variables.scss';
 
+.row {
+  @media (max-width: $small-weight) {
+    [class*=' col-'] {
+      padding: 0 15px !important;
+    }
+  }
+}
 .filtersWrapper {
   max-width: 306px;
   margin-left: auto;
@@ -8,7 +15,6 @@
   @media (max-width: $small-weight) {
     margin-bottom: 27px;
     max-width: unset;
-    padding: 0 15px !important;
   }
 }
 

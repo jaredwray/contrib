@@ -23,7 +23,7 @@ interface Props {
 const AuctionsPage: FC<Props> = ({ filters, changeFilters, size, skip, sortOptions, totalItems, children }) => {
   return (
     <Layout>
-      <Row className="h-100 flex-grow-1">
+      <Row className={clsx(styles.row, 'h-100 flex-grow-1')}>
         <Col className={clsx(styles.filtersWrapper, 'pb-0 pb-sm-4')} lg="3" md="4" sm="12">
           {filters}
         </Col>
