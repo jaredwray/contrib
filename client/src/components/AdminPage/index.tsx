@@ -2,9 +2,11 @@ import { FC } from 'react';
 
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
+import { useHistory, useLocation } from 'react-router';
 
 import Layout from 'src/components/Layout';
 import SearchInput from 'src/components/SearchInput';
+import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -24,6 +26,7 @@ interface Props {
   controlBtns?: React.ReactNode;
   onChange?: (value: string) => void;
   onCancel?: () => void;
+  searchQuery?: string;
 }
 
 export const AdminPage: FC<Props> = ({
@@ -35,13 +38,22 @@ export const AdminPage: FC<Props> = ({
   children,
   onChange,
   onCancel,
+  searchQuery,
 }) => {
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const query = useUrlQueryParams().get('q');
+  const page = Number(useUrlQueryParams().get('p'));
+
+  const baseurl = `${pathname}?${query ? `q=${query}&` : ''}p=`;
+
   const showPrevPage = () => {
     setPageSkip(pageSkip - PER_PAGE);
+    history.push(`${baseurl}${page - 1}`);
   };
-
   const showNextPage = () => {
     setPageSkip(pageSkip + PER_PAGE);
+    history.push(`${baseurl}${page ? page + 1 : 2}`);
   };
   return (
     <Layout>
@@ -50,7 +62,7 @@ export const AdminPage: FC<Props> = ({
           <Row>
             <Col className={styles.searchInput} md={controlBtns ? '4' : '8'}>
               {onChange ? (
-                <SearchInput placeholder="Search" onCancel={onCancel} onChange={onChange!} />
+                <SearchInput placeholder="Search" searchQuery={searchQuery} onCancel={onCancel} onChange={onChange!} />
               ) : (
                 <input className="form-control" placeholder="Search"></input>
               )}

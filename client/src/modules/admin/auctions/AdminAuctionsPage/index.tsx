@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import {
   AuctionsListQuery,
@@ -20,6 +20,7 @@ import ClickableTr from 'src/components/ClickableTr';
 import { PER_PAGE } from 'src/components/Pagination';
 import { ParcelProps } from 'src/helpers/ParcelProps';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { DeleteAuctionButton } from './DeleteAuctionButton';
@@ -29,27 +30,41 @@ import { StopOrActiveButton } from './StopOrActiveButton';
 import styles from './styles.module.scss';
 
 export default function AdminAuctionsPage() {
-  const [pageSkip, setPageSkip] = useState(0);
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const history = useHistory();
+  const { pathname } = useLocation();
+
+  const page = Number(useUrlQueryParams().get('p'));
+  const query = useUrlQueryParams().get('q');
+  const [searchQuery, setSearchQuery] = useState<string>(query || '');
+
+  const initialSkip = !page || page === 1 ? 0 : (page - 1) * PER_PAGE;
+  const [pageSkip, setPageSkip] = useState(initialSkip);
 
   const [getAuctionsList, { loading, data, error }] = useLazyQuery(AuctionsListQuery, {
-    variables: { size: PER_PAGE, skip: pageSkip, query: searchQuery },
+    variables: { size: PER_PAGE, skip: initialSkip, query: searchQuery },
     fetchPolicy: 'cache-and-network',
   });
-
   useEffect(() => {
+    setSearchQuery(query || '');
     getAuctionsList();
-  }, [getAuctionsList]);
+  }, [getAuctionsList, query]);
 
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
-  }, [setSearchQuery]);
+    history.push(pathname);
+  }, [setSearchQuery, history, pathname]);
 
   const onInputSearchChange = useCallback(
     (value) => {
       setSearchQuery(value);
+      setPageSkip(0);
+      if (!value) {
+        history.push(`${pathname}`);
+        return;
+      }
+      history.push(`${pathname}?q=${value}`);
     },
-    [setSearchQuery],
+    [setSearchQuery, history, pathname],
   );
 
   if (error) {
@@ -65,6 +80,7 @@ export default function AdminAuctionsPage() {
       items={auctions}
       loading={loading}
       pageSkip={pageSkip}
+      searchQuery={query ?? ''}
       setPageSkip={setPageSkip}
       onCancel={clearAndCloseSearch}
       onChange={onInputSearchChange}
