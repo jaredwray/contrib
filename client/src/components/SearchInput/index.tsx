@@ -7,18 +7,23 @@ import styles from './styles.module.scss';
 
 interface Props {
   placeholder?: string;
-
   onChange(value: string): void;
-
   onCancel?(): void;
-
   onClick?(event: BaseSyntheticEvent): void;
-
+  searchQuery?: string;
   className?: string;
   disabled?: boolean;
 }
 
-const SearchInput: FC<Props> = ({ disabled = false, placeholder, onChange, onCancel, onClick, className }) => {
+const SearchInput: FC<Props> = ({
+  disabled = false,
+  placeholder,
+  onChange,
+  onCancel,
+  onClick,
+  className,
+  searchQuery,
+}) => {
   const [query, setQuery] = useState<string>('');
 
   const handleChange = useCallback(
@@ -41,7 +46,7 @@ const SearchInput: FC<Props> = ({ disabled = false, placeholder, onChange, onCan
       <Form.Control
         disabled={disabled}
         placeholder={placeholder}
-        value={query}
+        value={searchQuery || query}
         onChange={handleChange}
         onClick={onClick}
       />
