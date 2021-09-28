@@ -3,10 +3,10 @@ import { FC } from 'react';
 import clsx from 'clsx';
 import { Button } from 'react-bootstrap';
 
-import AsyncButton from 'src/components/AsyncButton';
-import Dialog from 'src/components/Dialog';
-import DialogActions from 'src/components/Dialog/DialogActions';
-import DialogContent from 'src/components/Dialog/DialogContent';
+import AsyncButton from 'src/components/buttons/AsyncButton';
+import Dialog from 'src/components/modals/Dialog';
+import DialogActions from 'src/components/modals/Dialog/DialogActions';
+import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import { AuctionBid } from 'src/types/Bid';
 
 import styles from './chargeModal.module.scss';

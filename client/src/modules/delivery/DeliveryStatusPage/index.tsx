@@ -8,7 +8,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';

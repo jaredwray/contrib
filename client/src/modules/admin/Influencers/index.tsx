@@ -12,11 +12,11 @@ import {
   InfluencersSearch,
   ResendInviteMessageMutation,
 } from 'src/apollo/queries/influencers';
-import { ActionsDropdown } from 'src/components/ActionsDropdown';
-import { AdminPage } from 'src/components/AdminPage';
+import { InviteButton } from 'src/components/buttons/InviteButton';
 import ClickableTr from 'src/components/ClickableTr';
-import { InviteButton } from 'src/components/InviteButton';
+import { AdminPage } from 'src/components/layouts/AdminPage';
 import { PER_PAGE } from 'src/components/Pagination';
+import { ActionsDropdown } from 'src/components/selects/ActionsDropdown';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
 

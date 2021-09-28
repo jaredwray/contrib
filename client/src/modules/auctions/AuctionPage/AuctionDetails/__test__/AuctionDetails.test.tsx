@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
-import WatchBtn from 'src/components/WatchBtn';
+import WatchBtn from 'src/components/buttons/WatchBtn';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
@@ -11,7 +11,7 @@ import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 
 import AuctionDetails from '..';
 
 jest.mock('@auth0/auth0-react');
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

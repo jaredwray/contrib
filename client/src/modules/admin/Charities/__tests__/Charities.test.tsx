@@ -7,8 +7,8 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import CharitiesPage from '..';
 import ClickableTr from 'src/components/ClickableTr';
-import SearchInput from 'src/components/SearchInput';
-import { AdminPage } from 'src/components/AdminPage';
+import SearchInput from 'src/components/inputs/SearchInput';
+import { AdminPage } from 'src/components/layouts/AdminPage';
 import { AllCharitiesQuery, CharitiesSearch } from 'src/apollo/queries/charities';
 
 

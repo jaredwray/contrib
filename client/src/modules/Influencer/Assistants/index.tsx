@@ -6,8 +6,8 @@ import { Col, Container, Row, Table } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { AssistantsQuery, InviteAssistantMutation } from 'src/apollo/queries/assistants';
-import { InviteButton } from 'src/components/InviteButton';
-import Layout from 'src/components/Layout';
+import { InviteButton } from 'src/components/buttons/InviteButton';
+import Layout from 'src/components/layouts/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';

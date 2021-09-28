@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 
 import styles from './InfluencerOnboardingDonePage.module.scss';

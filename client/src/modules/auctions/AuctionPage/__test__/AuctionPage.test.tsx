@@ -5,7 +5,7 @@ import { AuctionQuery, AuctionSubscription } from 'src/apollo/queries/auctions';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 

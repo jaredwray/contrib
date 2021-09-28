@@ -1,6 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 
 export default function Privacy() {

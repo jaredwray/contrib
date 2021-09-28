@@ -7,7 +7,7 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 
 import HomePage from '..';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
 cache.writeQuery({

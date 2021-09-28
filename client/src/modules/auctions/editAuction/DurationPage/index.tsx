@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 import SelectField from 'src/components/Form/SelectField';
-import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
+import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';

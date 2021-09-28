@@ -3,7 +3,7 @@ import { render } from 'enzyme';
 
 import Status from '../About/Status';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   value: true,

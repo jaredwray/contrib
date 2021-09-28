@@ -9,12 +9,12 @@ import { useToasts } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
-import Layout from 'src/components/Layout';
+import { ReadMore } from 'src/components/buttons/ReadMoreButton';
+import WatchBtn from 'src/components/buttons/WatchBtn';
+import Layout from 'src/components/layouts/Layout';
 import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
-import { ReadMore } from 'src/components/ReadMore';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import WatchBtn from 'src/components/WatchBtn';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';

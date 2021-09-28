@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Button, Container } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
-import AsyncButton from '../AsyncButton';
+import AsyncButton from '../buttons/AsyncButton';
 import styles from './styles.module.scss';
 
 interface Props {

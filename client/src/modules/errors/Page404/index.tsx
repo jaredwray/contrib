@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 
 const Page404: FC = () => {
   return (

@@ -1,6 +1,6 @@
 import Pagination from '../Pagination';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 import { mount } from 'enzyme';
 

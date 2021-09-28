@@ -6,9 +6,9 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetCharity, UpdateCharityProfileMutation } from 'src/apollo/queries/charityProfile';
+import { SubmitButton } from 'src/components/buttons/SubmitButton';
 import Form from 'src/components/Form/Form';
-import Layout from 'src/components/Layout';
-import { SubmitButton } from 'src/components/SubmitButton';
+import Layout from 'src/components/layouts/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';

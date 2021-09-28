@@ -1,7 +1,7 @@
 import { attachments } from 'src/helpers/testHelpers/attachments';
-import AttachmentModal from 'src/components/AttachmentModal';
+import AttachmentModal from 'src/components/modals/AttachmentModal';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 import { BrowserRouter as Router } from 'react-router-dom';
 

@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import { DocumentNode } from '@apollo/client';
 import { Button } from 'react-bootstrap';
 
-import { Modal } from 'src/components/AdminAuctionsPageModal';
+import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
 import { Auction } from 'src/types/Auction';
 
 interface Props {

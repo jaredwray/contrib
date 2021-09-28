@@ -6,8 +6,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
-import Layout from 'src/components/Layout';
-import WatchBtn from 'src/components/WatchBtn';
+import Layout from 'src/components/layouts/Layout';
+import WatchBtn from 'src/components/buttons/WatchBtn';
 import { AuctionStatus } from 'src/types/Auction';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { testAccount } from 'src/helpers/testHelpers/account';
@@ -17,7 +17,7 @@ import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfil
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 jest.mock('src/components/CoverImage', () => () => <></>);
 
 const props: any = {

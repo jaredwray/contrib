@@ -4,9 +4,9 @@ import { MockedProvider } from '@apollo/client/testing';
 
 import Filters from '../Filters';
 import { InMemoryCache } from '@apollo/client';
-import SearchInput from 'src/components/SearchInput';
+import SearchInput from 'src/components/inputs/SearchInput';
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
-import { CharitySearchSelect } from 'src/components/CharitySearchSelect';
+import { CharitySearchSelect } from 'src/components/selects/CharitySearchSelect';
 
 describe('Should render correctly "Filters"', () => {
   const props: any = {

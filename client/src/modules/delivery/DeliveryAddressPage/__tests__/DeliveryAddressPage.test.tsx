@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 import PhoneInput from 'react-phone-input-2';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/Form/Form';
 import InputField from 'src/components/Form/InputField';
 import { AuctionQuery } from 'src/apollo/queries/auctions';

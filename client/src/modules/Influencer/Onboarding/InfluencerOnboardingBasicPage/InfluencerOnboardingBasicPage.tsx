@@ -8,7 +8,7 @@ import { useToasts } from 'react-toast-notifications';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { UserAccount } from 'src/types/UserAccount';
 

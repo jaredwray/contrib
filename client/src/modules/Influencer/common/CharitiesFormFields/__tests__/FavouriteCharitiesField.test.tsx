@@ -3,10 +3,10 @@ import { mount, ReactWrapper } from 'enzyme';
 import Form from 'src/components/Form/Form';
 import { FavouriteCharitiesField } from '../FavouriteCharitiesField';
 import { MockedProvider } from '@apollo/client/testing';
-import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
+import CharitiesAutocomplete from 'src/components/selects/CharitiesAutocomplete';
 import { CharityStatus, CharityProfileStatus, CharityStripeStatus } from 'src/types/Charity';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 jest.mock('src/components/Form/hooks/useField', () => () => {
   return {
     name: 'favoriteCharities',

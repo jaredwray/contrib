@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils';
 import { MockedProvider } from '@apollo/client/testing';
 import { MemoryRouter } from 'react-router-dom';
 
-import HeartBtn from 'src/components/HeartButton';
+import HeartBtn from 'src/components/buttons/HeartButton';
 import ItemCard from 'src/components/ItemCard';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';

@@ -7,7 +7,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import { AuctionStatus } from 'src/types/Auction';
-import WatchBtn from 'src/components/WatchBtn';
+import WatchBtn from 'src/components/buttons/WatchBtn';
 import AuctionCard from 'src/components/AuctionCard';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';

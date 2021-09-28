@@ -8,7 +8,7 @@ import { useToasts } from 'react-toast-notifications';
 import { UpdateMyFavoriteCharities } from 'src/apollo/queries/charities';
 import { MyProfileQuery } from 'src/apollo/queries/profile';
 import Form from 'src/components/Form/Form';
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';

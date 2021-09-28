@@ -3,7 +3,7 @@ import { render } from 'enzyme';
 
 import PaginationInfo from '../PaginationInfo';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   totalItems: 1,

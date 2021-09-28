@@ -6,8 +6,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
 import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
-import { AdminPage } from 'src/components/AdminPage';
-import SearchInput from 'src/components/SearchInput';
+import { AdminPage } from 'src/components/layouts/AdminPage';
+import SearchInput from 'src/components/inputs/SearchInput';
 
 const cache = new InMemoryCache();
 

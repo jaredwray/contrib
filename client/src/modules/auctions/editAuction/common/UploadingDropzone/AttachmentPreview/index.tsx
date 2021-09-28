@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { DeleteAuctionMediaMutation } from 'src/apollo/queries/auctions';
 import VideoIcon from 'src/assets/icons/VideoIcon';
-import { CloseButton } from 'src/components/CloseButton';
+import { CloseButton } from 'src/components/buttons/CloseButton';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import AttachmentsStateInterface from '../common/AttachmentsStateInterface';

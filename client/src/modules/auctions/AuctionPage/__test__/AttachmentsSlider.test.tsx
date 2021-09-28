@@ -5,7 +5,7 @@ import AttachmentsSlider from '../AttachmentsSlider';
 import { ReactWrapper, mount } from 'enzyme';
 import Slider from 'react-slick';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   attachments,

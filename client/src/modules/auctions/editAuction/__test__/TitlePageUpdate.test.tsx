@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/Form/Form';
 import StepByStepPageRow from 'src/components/StepByStepPageRow';
 import { testAccount } from 'src/helpers/testHelpers/account';

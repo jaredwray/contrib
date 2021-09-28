@@ -11,7 +11,7 @@ import FacebookIcon from 'src/assets/images/Facebook';
 import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
 import AuctionCard from 'src/components/AuctionCard';
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction } from 'src/types/Auction';
 

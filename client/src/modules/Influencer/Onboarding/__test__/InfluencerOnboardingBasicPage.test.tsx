@@ -5,14 +5,14 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/Form/Form';
 import { UserAccountStatus } from 'src/types/UserAccount';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import { InfluencerOnboardingBasicPage } from '../InfluencerOnboardingBasicPage';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
 
