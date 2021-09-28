@@ -1,7 +1,7 @@
 import { FC, useCallback } from 'react';
 
-import CharitiesAutocomplete from 'src/components/CharitiesAutocomplete';
 import useField from 'src/components/Form/hooks/useField';
+import CharitiesAutocomplete from 'src/components/selects/CharitiesAutocomplete';
 import { Charity } from 'src/types/Charity';
 
 interface Props {

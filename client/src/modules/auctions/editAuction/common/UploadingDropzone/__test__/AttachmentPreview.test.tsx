@@ -5,10 +5,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { mount, ReactWrapper } from 'enzyme';
 import { DeleteAuctionMediaMutation } from 'src/apollo/queries/auctions';
 
-import { CloseButton } from 'src/components/CloseButton';
+import { CloseButton } from 'src/components/buttons/CloseButton';
 import AttachmentPreview from '../AttachmentPreview';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   auctionId: 'testId',

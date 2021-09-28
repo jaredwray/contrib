@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 
 import { Modal } from '../Modal';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   bid: { user: {} },

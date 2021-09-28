@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetInvitation } from 'src/apollo/queries/getInvitation';
-import { UserDialogLayout } from 'src/components/UserDialogLayout';
+import { UserDialogLayout } from 'src/components/layouts/UserDialogLayout';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 

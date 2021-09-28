@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { format } from 'date-fns-tz';
 import { Table } from 'react-bootstrap';
 
-import AsyncButton from 'src/components/AsyncButton';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 import { AuctionBid } from 'src/types/Bid';
 
 import styles from './styles.module.scss';

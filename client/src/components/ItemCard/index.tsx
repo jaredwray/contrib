@@ -13,7 +13,7 @@ import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 
-import HeartBtn from '../HeartButton';
+import HeartBtn from '../buttons/HeartButton';
 import SwipeableLink from '../SwipeableLink';
 import styles from './styles.module.scss';
 

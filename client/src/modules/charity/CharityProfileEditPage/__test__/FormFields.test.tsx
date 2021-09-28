@@ -7,7 +7,7 @@ import Form from 'src/components/Form/Form';
 import { FormFields } from '../FormFields';
 import {} from 'react-final-form';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   charity: {},

@@ -10,8 +10,8 @@ import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQue
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import InputField from 'src/components/Form/InputField';
 import SelectField from 'src/components/Form/SelectField';
-import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
-import StepRow from 'src/components/StepByStepPageLayout/Row';
+import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
+import StepRow from 'src/components/layouts/StepByStepPageLayout/Row';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';

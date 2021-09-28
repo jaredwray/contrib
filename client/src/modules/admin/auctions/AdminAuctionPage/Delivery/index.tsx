@@ -6,7 +6,7 @@ import { Row, Table } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
 
 import { ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
-import AsyncButton from 'src/components/AsyncButton';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 import { ParcelProps } from 'src/helpers/ParcelProps';
 import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';

@@ -6,11 +6,11 @@ import { isAfter } from 'date-fns';
 import { toDate, format } from 'date-fns-tz';
 import { Button } from 'react-bootstrap';
 
-import AsyncButton from 'src/components/AsyncButton';
-import Dialog from 'src/components/Dialog';
-import DialogActions from 'src/components/Dialog/DialogActions';
-import DialogContent from 'src/components/Dialog/DialogContent';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 import Form from 'src/components/Form/Form';
+import Dialog from 'src/components/modals/Dialog';
+import DialogActions from 'src/components/modals/Dialog/DialogActions';
+import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import { Auction } from 'src/types/Auction';
 
 import styles from './styles.module.scss';

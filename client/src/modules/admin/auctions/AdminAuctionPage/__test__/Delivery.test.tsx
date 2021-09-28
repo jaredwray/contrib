@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 
 import { auctionForAdminPage } from 'src/helpers/testHelpers/auction';
 import { ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
-import AsyncButton from 'src/components/AsyncButton';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 import { Delivery } from '../Delivery';
 import { act } from '@testing-library/react';
 

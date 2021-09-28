@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 
 import Checkbox from '..';
-import AsyncButton from 'src/components/AsyncButton';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 import Form from 'src/components/Form/Form';
 
 const mockedSumbit = jest.fn();

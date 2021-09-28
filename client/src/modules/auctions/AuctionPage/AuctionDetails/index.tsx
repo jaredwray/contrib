@@ -13,8 +13,8 @@ import { useHistory, useParams, Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
+import WatchBtn from 'src/components/buttons/WatchBtn';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
-import WatchBtn from 'src/components/WatchBtn';
 import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';

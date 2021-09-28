@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
@@ -25,7 +25,7 @@ jest.mock('react-router-dom', () => ({
   useRouteMatch: () => ({ url: '/auctions/testId/done' }),
 }));
 jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
 const cache2 = new InMemoryCache();

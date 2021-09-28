@@ -8,14 +8,14 @@ import { bitly } from 'src/helpers/testHelpers/bitly';
 import { bids } from 'src/helpers/testHelpers/bids';
 import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
 import { Modal } from 'src/modules/admin/auctions/AdminAuctionPage/Modal';
 import Bids from '../Bids';
 import DineroFactory from 'dinero.js';
 import { UserAccountStatus } from 'src/types/UserAccount';
-import AsyncButton from 'src/components/AsyncButton';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -25,7 +25,7 @@ jest.mock('react-router-dom', () => ({
   useRouteMatch: () => ({ url: '/admin/auctions/testId' }),
 }));
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 jest.mock('react-chartjs-2', () => ({
   Doughnut: () => null,

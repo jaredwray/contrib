@@ -9,8 +9,8 @@ import {
   FinishAuctionCreationMutation,
 } from 'src/apollo/queries/auctions';
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
-import { CharitySearchSelect } from 'src/components/CharitySearchSelect';
-import StepByStepPageLayout from 'src/components/StepByStepPageLayout';
+import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
+import { CharitySearchSelect } from 'src/components/selects/CharitySearchSelect';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';

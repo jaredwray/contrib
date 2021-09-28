@@ -7,9 +7,9 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { UpdateFavoriteCharities } from 'src/apollo/queries/charities';
 import { InfluencerProfileQuery, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
+import { SubmitButton } from 'src/components/buttons/SubmitButton';
 import Form from 'src/components/Form/Form';
-import Layout from 'src/components/Layout';
-import { SubmitButton } from 'src/components/SubmitButton';
+import Layout from 'src/components/layouts/Layout';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';

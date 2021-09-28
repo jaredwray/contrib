@@ -9,9 +9,9 @@ import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
-import { Modal } from 'src/components/AdminAuctionsPageModal';
-import { CloseButton } from 'src/components/CloseButton';
+import { CloseButton } from 'src/components/buttons/CloseButton';
 import CoverImage from 'src/components/CoverImage';
+import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
@@ -19,7 +19,7 @@ import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPr
 import { Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import HeartBtn from '../HeartButton';
+import HeartBtn from '../buttons/HeartButton';
 import SwipeableLink from '../SwipeableLink';
 import DateDetails from './DateDetails';
 import styles from './styles.module.scss';

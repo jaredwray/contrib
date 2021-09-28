@@ -60,8 +60,7 @@ jest.mock('@stripe/react-stripe-js', () => {
     },
   };
 });
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 jest.mock('@stripe/react-stripe-js', () => {
   const stripe = jest.requireActual('@stripe/react-stripe-js');

@@ -13,8 +13,8 @@ import {
   AuctionMetricsQuery,
 } from 'src/apollo/queries/auctions';
 import { AuctionBidsQuery, ChargeCurrentBidMutation } from 'src/apollo/queries/bids';
-import AsyncButton from 'src/components/AsyncButton';
-import Layout from 'src/components/Layout';
+import AsyncButton from 'src/components/buttons/AsyncButton';
+import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { AuctionBid } from 'src/types/Bid';
 

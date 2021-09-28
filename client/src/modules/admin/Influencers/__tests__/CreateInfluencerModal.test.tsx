@@ -8,7 +8,7 @@ import Form from 'src/components/Form/Form';
 import { CreateInfluencerModal } from 'src/modules/admin/Influencers/CreateInfluencer/CreateInfluencerModal';
 import { CreateInfluencerMutation } from 'src/apollo/queries/influencers';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 describe('Should render correctly "CreateInfluencerModal"', () => {
   const props: any = {

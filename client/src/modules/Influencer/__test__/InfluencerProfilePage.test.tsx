@@ -10,7 +10,7 @@ import { InfluencerProfilePageContent } from 'src/modules/Influencer/InfluencerP
 
 import { InfluencerProfilePage } from '../InfluencerProfilePage/InfluencerProfilePage';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const mockHistoryFn = jest.fn();
 jest.mock('react-router-dom', () => ({

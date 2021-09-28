@@ -5,7 +5,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
-import { Modal } from 'src/components/AdminAuctionsPageModal';
+import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
 describe('Should render correctly "DeleteAuctionButton"', () => {
   const props: any = {
     auction,

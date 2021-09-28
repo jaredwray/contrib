@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 import { GetInvitation } from 'src/apollo/queries/getInvitation';
 import { mockedUseAuth0, withNotAuthenticatedUser } from 'src/helpers/testHelpers/auth0';
 

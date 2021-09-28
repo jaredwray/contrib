@@ -4,11 +4,11 @@ import { DocumentNode, useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import Dinero, { DineroObject } from 'dinero.js';
 
-import AsyncButton from 'src/components/AsyncButton';
-import Dialog from 'src/components/Dialog';
-import DialogContent from 'src/components/Dialog/DialogContent';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 import Form from 'src/components/Form/Form';
 import MoneyField from 'src/components/Form/MoneyField';
+import Dialog from 'src/components/modals/Dialog';
+import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Auction } from 'src/types/Auction';
 

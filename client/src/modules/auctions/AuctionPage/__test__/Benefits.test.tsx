@@ -3,7 +3,7 @@ import { render } from 'enzyme';
 
 import Benefits from '../Benefits';
 
-jest.mock('src/components/TermsConfirmationDialog', () => () => <></>);
+jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const props: any = {
   id: '123',

@@ -12,7 +12,7 @@ import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 
 const mockHistoryFn = jest.fn();
 

@@ -3,7 +3,7 @@ import { FC } from 'react';
 import clsx from 'clsx';
 import { Row, Col } from 'react-bootstrap';
 
-import Layout from 'src/components/Layout';
+import Layout from 'src/components/layouts/Layout';
 
 import Pagination from './Pagination';
 import PaginationInfo from './PaginationInfo';

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import useField from 'src/components/Form/hooks/useField';
-import Select from 'src/components/Select';
+import Select from 'src/components/selects/Select';
 
 interface Props {
   name: string;
