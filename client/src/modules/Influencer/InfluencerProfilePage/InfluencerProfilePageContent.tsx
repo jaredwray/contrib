@@ -11,6 +11,7 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
 import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
+import { ReadMore } from 'src/components/ReadMore';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import WatchBtn from 'src/components/WatchBtn';
@@ -94,8 +95,6 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const [draftAuctions, setDraftAuctions] = useState<Auction[]>([]);
   const stoppedAuctions = profileAuctions.STOPPED;
 
-  const profileDescriptionParagraphs = (influencer.profileDescription ?? '').split('\n');
-
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
 
   const onDelete = useCallback((auction: Auction) => {
@@ -177,11 +176,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
             </Col>
             <Col md="6">
               <span className="label-with-separator text-label">Player profile</span>
-              {profileDescriptionParagraphs.map((paragraph, paragraphIndex) => (
-                <p key={paragraphIndex} className="text--body mb-4 mt-4 break-word">
-                  {paragraph}
-                </p>
-              ))}
+              <ReadMore text={influencer?.profileDescription} />
             </Col>
           </Row>
           <Row>
