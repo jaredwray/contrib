@@ -1,0 +1,11 @@
+@import 'src/variables.scss';
+.alt,
+.readMoreBtn,
+.noDescription {
+  font-weight: normal !important;
+}
+
+.readMoreBtn {
+  color: $light-gray-color;
+  cursor: pointer;
+}

@@ -11,6 +11,7 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/AuctionCard';
 import Layout from 'src/components/Layout';
 import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
+import { ReadMore } from 'src/components/ReadMore';
 import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
@@ -79,8 +80,6 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
 
   const auctions = data?.auctions?.items ?? [];
 
-  const profileDescriptionParagraphs = (charity?.profileDescription ?? 'no description').split('\n');
-
   const isMyProfile = account?.charity?.id === charity.id;
   const isActive = charity.status === CharityStatus.ACTIVE;
 
@@ -137,11 +136,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
             </Col>
             <Col md="6">
               <span className="label-with-separator text-label">Charity profile</span>
-              {profileDescriptionParagraphs.map((paragraph, paragraphIndex) => (
-                <p key={paragraphIndex} className="text--body mb-4 mt-4 break-word">
-                  {paragraph}
-                </p>
-              ))}
+              <ReadMore text={charity?.profileDescription} />
             </Col>
           </Row>
           <Row>

@@ -51,6 +51,7 @@
     "react-dropzone": "^11.3.4",
     "react-final-form": "^6.5.3",
     "react-helmet": "^6.1.0",
+    "react-lines-ellipsis": "^0.15.0",
     "react-number-format": "^4.5.1",
     "react-phone-input-2": "^2.14.0",
     "react-router-dom": "^5.2.0",
