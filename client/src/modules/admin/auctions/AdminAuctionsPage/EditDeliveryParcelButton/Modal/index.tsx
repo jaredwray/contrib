@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import { Button, Row, Col } from 'react-bootstrap';
 
 import AsyncButton from 'src/components/buttons/AsyncButton';
-import Form from 'src/components/Form/Form';
-import InputField from 'src/components/Form/InputField';
+import Form from 'src/components/forms/Form/Form';
+import InputField from 'src/components/forms/inputs/InputField';
 import Dialog from 'src/components/modals/Dialog';
 import DialogActions from 'src/components/modals/Dialog/DialogActions';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';

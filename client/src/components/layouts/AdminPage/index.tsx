@@ -4,13 +4,13 @@ import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router';
 
-import SearchInput from 'src/components/inputs/SearchInput';
+import SearchInput from 'src/components/forms/inputs/SearchInput';
 import Layout from 'src/components/layouts/Layout';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import Pagination, { PER_PAGE } from '../../Pagination';
+import Pagination, { PER_PAGE } from '../../customComponents/Pagination';
 import styles from './styles.module.scss';
 
 interface Items {

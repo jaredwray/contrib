@@ -6,12 +6,12 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/layouts/Layout';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
-import { CharitySearchSelect } from 'src/components/selects/CharitySearchSelect';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { CharitySearchSelect } from 'src/components/forms/selects/CharitySearchSelect';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 
 import CharityPage from '../CharityPage';

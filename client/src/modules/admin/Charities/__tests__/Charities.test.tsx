@@ -6,8 +6,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import CharitiesPage from '..';
-import ClickableTr from 'src/components/ClickableTr';
-import SearchInput from 'src/components/inputs/SearchInput';
+import ClickableTr from 'src/components/wrappers/ClickableTr';
+import SearchInput from 'src/components/forms/inputs/SearchInput';
 import { AdminPage } from 'src/components/layouts/AdminPage';
 import { CharitiesListQuery } from 'src/apollo/queries/charities';
 

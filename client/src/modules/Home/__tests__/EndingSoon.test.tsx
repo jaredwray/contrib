@@ -9,7 +9,7 @@ import EndingSoon from '../EndingSoon';
 import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
 import { AuctionStatus } from 'src/types/Auction';
-import Slider from 'src/components/Slider';
+import Slider from 'src/components/customComponents/Slider';
 
 jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
 const cache = new InMemoryCache();

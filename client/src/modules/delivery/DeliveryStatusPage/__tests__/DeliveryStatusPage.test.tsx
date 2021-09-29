@@ -10,7 +10,7 @@ import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import Layout from 'src/components/layouts/Layout';
 

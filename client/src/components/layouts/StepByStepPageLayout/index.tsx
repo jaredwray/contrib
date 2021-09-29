@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import { Container, ProgressBar } from 'react-bootstrap';
 
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import Layout from 'src/components/layouts/Layout';
-import StepByStepPageRow from 'src/components/StepByStepPageRow';
+import StepByStepPageRow from 'src/components/layouts/StepByStepPageLayout/StepByStepPageRow';
 
 import StepPageHeader from './StepPageHeader';
 import styles from './styles.module.scss';

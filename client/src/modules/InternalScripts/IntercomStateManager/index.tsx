@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { getUnixTime } from 'date-fns';
 import { toDate } from 'date-fns-tz';
 
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 const IntercomStateManager: FC = () => {
   const { user } = useAuth0();

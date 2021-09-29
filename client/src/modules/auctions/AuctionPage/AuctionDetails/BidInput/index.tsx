@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 
-import Form from 'src/components/Form/Form';
-import MoneyField from 'src/components/Form/MoneyField';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import Form from 'src/components/forms/Form/Form';
+import MoneyField from 'src/components/forms/inputs/MoneyField';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import styles from './styles.module.scss';
 

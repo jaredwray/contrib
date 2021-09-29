@@ -14,10 +14,10 @@ import {
   DeleteAuctionMutation,
   UpdateAuctionParcelMutation,
 } from 'src/apollo/queries/auctions';
-import ClickableTr from 'src/components/ClickableTr';
+import { PER_PAGE } from 'src/components/customComponents/Pagination';
+import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import { AdminPage } from 'src/components/layouts/AdminPage';
-import { PER_PAGE } from 'src/components/Pagination';
-import { ActionsDropdown } from 'src/components/selects/ActionsDropdown';
+import ClickableTr from 'src/components/wrappers/ClickableTr';
 import { ParcelProps } from 'src/helpers/ParcelProps';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';

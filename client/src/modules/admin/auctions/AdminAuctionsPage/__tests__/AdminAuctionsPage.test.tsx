@@ -7,7 +7,7 @@ import { InMemoryCache } from '@apollo/client';
 import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
 import { AdminPage } from 'src/components/layouts/AdminPage';
-import SearchInput from 'src/components/inputs/SearchInput';
+import SearchInput from 'src/components/forms/inputs/SearchInput';
 
 const cache = new InMemoryCache();
 
@@ -79,7 +79,31 @@ describe('AdminAuctionsPage ', () => {
     });
     expect(wrapper!).toHaveLength(1);
   });
-  it('component is defined and get data by query', async () => {
+  it('component is defined and has search input without cancel button on it ', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <MockedProvider cache={cache}>
+              <AdminAuctionsPage />
+            </MockedProvider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+
+      await wrapper!
+        .find(AdminPage)
+        .children()
+        .find('input')
+        .simulate('change', { target: { value: '' } });
+      expect(wrapper!.find(AdminPage).children().find(SearchInput).children().text()).toHaveLength(0);
+    });
+  });
+  it('component is defined, get data by query and has search input with cancel button on it', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

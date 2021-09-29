@@ -6,7 +6,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/layouts/Layout';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import { CharityProfileEditPage } from '../CharityProfileEditPage';
 import { GetCharity, UpdateCharityProfileMutation } from 'src/apollo/queries/charityProfile';
 

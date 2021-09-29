@@ -2,7 +2,7 @@ import { FC, useCallback, useMemo } from 'react';
 
 import { Form } from 'react-bootstrap';
 
-import Select from 'src/components/selects/Select';
+import Select from 'src/components/forms/selects/Select';
 import { AuctionStatus } from 'src/types/Auction';
 
 interface Props {

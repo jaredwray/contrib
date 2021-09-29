@@ -6,10 +6,10 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/layouts/Layout';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { testAccount } from 'src/helpers/testHelpers/account';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 
 import DescriptionPage from '../DescriptionPage';

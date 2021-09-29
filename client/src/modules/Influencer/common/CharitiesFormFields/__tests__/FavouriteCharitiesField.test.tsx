@@ -1,13 +1,13 @@
 import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import { FavouriteCharitiesField } from '../FavouriteCharitiesField';
 import { MockedProvider } from '@apollo/client/testing';
-import CharitiesAutocomplete from 'src/components/selects/CharitiesAutocomplete';
+import CharitiesAutocomplete from 'src/components/forms/selects/CharitiesAutocomplete';
 import { CharityStatus, CharityProfileStatus, CharityStripeStatus } from 'src/types/Charity';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
-jest.mock('src/components/Form/hooks/useField', () => () => {
+jest.mock('src/components/forms/Form/hooks/useField', () => () => {
   return {
     name: 'favoriteCharities',
     hasError: false,

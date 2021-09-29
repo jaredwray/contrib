@@ -3,8 +3,8 @@ import { FC, useState, useCallback, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
 
 import { InfluencersListQuery } from 'src/apollo/queries/influencers';
-import ItemCard from 'src/components/ItemCard';
 import AllItemsLayout from 'src/components/layouts/AllItemsLayout';
+import ItemCard from 'src/components/layouts/AllItemsLayout/ItemCard';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 

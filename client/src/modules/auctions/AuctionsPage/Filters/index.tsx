@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import { Form } from 'react-bootstrap';
 
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
-import SearchInput from 'src/components/inputs/SearchInput';
-import { CharitySearchSelect } from 'src/components/selects/CharitySearchSelect';
+import SearchInput from 'src/components/forms/inputs/SearchInput';
+import { CharitySearchSelect } from 'src/components/forms/selects/CharitySearchSelect';
 import { CharityStatus } from 'src/types/Charity';
 
 import PriceRange from './PriceRange';

@@ -6,7 +6,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/layouts/Layout';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import { UserAccountStatus } from 'src/types/UserAccount';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';

@@ -3,7 +3,7 @@ import { FC, useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { Form } from 'react-bootstrap';
 
-import Select from 'src/components/selects/Select';
+import Select from 'src/components/forms/selects/Select';
 
 import styles from './styles.module.scss';
 

@@ -4,7 +4,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import { CreateInfluencerModal } from 'src/modules/admin/Influencers/CreateInfluencer/CreateInfluencerModal';
 import { CreateInfluencerMutation } from 'src/apollo/queries/influencers';
 

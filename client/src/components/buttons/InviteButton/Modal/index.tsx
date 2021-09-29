@@ -7,8 +7,8 @@ import { Field } from 'react-final-form';
 import PhoneInput from 'react-phone-input-2';
 import { useToasts } from 'react-toast-notifications';
 
-import Form from 'src/components/Form/Form';
-import InputField from 'src/components/Form/InputField';
+import Form from 'src/components/forms/Form/Form';
+import InputField from 'src/components/forms/inputs/InputField';
 import Dialog from 'src/components/modals/Dialog';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
 

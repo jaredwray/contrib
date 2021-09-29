@@ -13,10 +13,10 @@ import {
   ResendInviteMessageMutation,
 } from 'src/apollo/queries/influencers';
 import { InviteButton } from 'src/components/buttons/InviteButton';
-import ClickableTr from 'src/components/ClickableTr';
+import { PER_PAGE } from 'src/components/customComponents/Pagination';
+import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import { AdminPage } from 'src/components/layouts/AdminPage';
-import { PER_PAGE } from 'src/components/Pagination';
-import { ActionsDropdown } from 'src/components/selects/ActionsDropdown';
+import ClickableTr from 'src/components/wrappers/ClickableTr';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
 
