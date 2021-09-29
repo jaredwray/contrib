@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { AllCharitiesQuery, InviteCharityMutation, CharitiesSearch } from 'src/apollo/queries/charities';
+import { CharitiesListQuery, InviteCharityMutation } from 'src/apollo/queries/charities';
 import { InviteButton } from 'src/components/buttons/InviteButton';
 import ClickableTr from 'src/components/ClickableTr';
 import { AdminPage } from 'src/components/layouts/AdminPage';
@@ -18,41 +18,31 @@ import styles from './styles.module.scss';
 
 export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
-  const [getCharitiesList, { loading, data, error }] = useLazyQuery(AllCharitiesQuery, {
-    variables: { size: PER_PAGE, skip: pageSkip },
-  });
 
-  const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
+  const [getCharitiesList, { loading, data, error }] = useLazyQuery(CharitiesListQuery);
+
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const [executeSearch] = useLazyQuery(CharitiesSearch, {
-    onCompleted({ charitiesSearch }) {
-      setCharitiesSearch(charitiesSearch);
-    },
-  });
   const onInputSearchChange = useCallback((value) => {
     setSearchQuery(value);
   }, []);
+
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
-    setCharitiesSearch([]);
   }, []);
 
   useEffect(() => {
-    executeSearch({ variables: { query: searchQuery } });
-  }, [executeSearch, searchQuery]);
-
-  useEffect(() => {
-    getCharitiesList();
-  }, [getCharitiesList]);
+    getCharitiesList({
+      variables: { size: PER_PAGE, skip: pageSkip, filters: { query: searchQuery }, orderBy: 'STATUS_ASC' },
+    });
+  }, [getCharitiesList, searchQuery, pageSkip]);
 
   if (error) {
     return null;
   }
 
-  const charities = searchQuery
-    ? { skip: 0, totalItems: charitiesSearch.length, items: charitiesSearch }
-    : data?.charities || { skip: 0, totalItems: 0, items: [] };
+  const charities = data?.charitiesList || { skip: 0, totalItems: 0, items: [] };
+
   const controlBtns = (
     <InviteButton
       className={clsx(styles.inviteBtn, 'text--body d-inline-block')}
@@ -60,6 +50,7 @@ export default function CharitiesPage(): any {
       updateEntitisList={getCharitiesList}
     />
   );
+
   setPageTitle('Charities page');
 
   return (

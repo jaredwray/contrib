@@ -30,14 +30,26 @@ describe('Should render correctly "Filters"', () => {
 
   cache.writeQuery({
     query: ActiveCharitiesList,
+    variables: { filters: { status: ['ACTIVE'] } },
     data: {
-      charitiesSelectList: {
+      charitiesList: {
         items: [
           {
-            id: 'testId',
+            id: 'testId1',
             name: 'test',
+            profileStatus: 'COMPLETED',
+            status: 'ACTIVE',
+            stripeStatus: 'ACTIVE',
+            avatarUrl: 'test url',
+            totalRaisedAmount: 0,
+            followers: {
+              user: '222',
+            },
           },
         ],
+        size: 20,
+        skip: 0,
+        totalItems: 1,
       },
     },
   });

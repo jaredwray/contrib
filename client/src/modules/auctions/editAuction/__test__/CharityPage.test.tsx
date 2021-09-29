@@ -53,8 +53,9 @@ const auction = {
 };
 const ActiveCharitiesListQuery = {
   query: ActiveCharitiesList,
+  variables: { filters: { status: ['ACTIVE'] } },
   data: {
-    charitiesSelectList: {
+    charitiesList: {
       items: [
         { id: 'testId', name: 'test' },
         { id: 'testId2', name: 'test2' },

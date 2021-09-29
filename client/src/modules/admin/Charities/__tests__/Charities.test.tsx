@@ -9,30 +9,33 @@ import CharitiesPage from '..';
 import ClickableTr from 'src/components/ClickableTr';
 import SearchInput from 'src/components/inputs/SearchInput';
 import { AdminPage } from 'src/components/layouts/AdminPage';
-import { AllCharitiesQuery, CharitiesSearch } from 'src/apollo/queries/charities';
-
+import { CharitiesListQuery } from 'src/apollo/queries/charities';
 
 const cache = new InMemoryCache();
 
 cache.writeQuery({
-  query: AllCharitiesQuery,
-  variables: { size: 20, skip: 0 },
+  query: CharitiesListQuery,
+  variables: { size: 20, skip: 0, filters: { query: '' }, orderBy: 'STATUS_ASC' },
   data: {
-    charities: {
-      items: [{ id: 'testId1', name: 'test', profileStatus: 'COMPLETED', status: 'ACTIVE', stripeStatus: 'ACTIVE' }],
+    charitiesList: {
+      items: [
+        {
+          id: 'testId1',
+          name: 'test',
+          profileStatus: 'COMPLETED',
+          status: 'ACTIVE',
+          stripeStatus: 'ACTIVE',
+          avatarUrl: 'test url',
+          totalRaisedAmount: 0,
+          followers: {
+            user: '222',
+          },
+        },
+      ],
       size: 20,
       skip: 0,
       totalItems: 1,
     },
-  },
-});
-cache.writeQuery({
-  query: CharitiesSearch,
-  variables: { query: 'test' },
-  data: {
-    charitiesSearch: [
-      { id: 'testId2', name: 'test', profileStatus: 'COMPLETED', status: 'ACTIVE', stripeStatus: 'ACTIVE' },
-    ],
   },
 });
 

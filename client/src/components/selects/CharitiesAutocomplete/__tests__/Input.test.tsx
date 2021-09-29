@@ -4,16 +4,36 @@ import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import SearchInput from 'src/components/inputs/SearchInput';
 import CharitiesSearchInput from 'src/components/selects/CharitiesAutocomplete/Input';
-import { CharitiesSearch } from 'src/apollo/queries/charities';
+import { CharitiesListQuery } from 'src/apollo/queries/charities';
 import { charity } from 'src/helpers/testHelpers/charity';
 import { act } from 'react-dom/test-utils';
 
 const cache = new InMemoryCache();
 
 cache.writeQuery({
-  query: CharitiesSearch,
-  variables: { query: 'test', status: ['ACTIVE'] },
-  data: { charitiesSearch: [charity] },
+  query: CharitiesListQuery,
+  variables: { filters: { query: '', status: ['ACTIVE'] } },
+  data: {
+    charitiesList: {
+      items: [
+        {
+          id: 'testId1',
+          name: 'test',
+          profileStatus: 'COMPLETED',
+          status: 'ACTIVE',
+          stripeStatus: 'ACTIVE',
+          avatarUrl: 'test url',
+          totalRaisedAmount: 0,
+          followers: {
+            user: '222',
+          },
+        },
+      ],
+      size: 20,
+      skip: 0,
+      totalItems: 1,
+    },
+  },
 });
 
 describe('Should render correctly "CharitiesSearchInput"', () => {
@@ -36,6 +56,9 @@ describe('Should render correctly "CharitiesSearchInput"', () => {
 
       wrapper.find(SearchInput).children().find('input').simulate('click');
       wrapper.find(SearchInput).props().onChange('test');
+
+      wrapper.update();
+
       expect(wrapper.find('li')).toHaveLength(2);
       wrapper.find('li').at(0).simulate('click');
 

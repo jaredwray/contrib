@@ -6,6 +6,7 @@ import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { CharityModel, ICharityModel } from '../mongodb/CharityModel';
 import { Charity } from '../dto/Charity';
+import { CharitySearchParams, CharityFilters } from '../dto/CharitySearchParams';
 import { CharityOrderBy } from '../dto/CharityOrderBy';
 import { CharityInput } from '../graphql/model/CharityInput';
 import { CharityStatus } from '../dto/CharityStatus';
@@ -205,30 +206,6 @@ export class CharityService {
     return objLink.url;
   }
 
-  async searchForCharity(query: string, status?: string[]): Promise<Charity[]> {
-    if (!query) {
-      return [];
-    }
-    const charities = await this.CharityModel.find(CharityService.charitiesSearchSelector(query, status));
-    return charities.map((charity) => CharityService.makeCharity(charity));
-  }
-
-  private static charitiesSearchSelector(query: string, status: string[]) {
-    const filter = {};
-
-    if (status) {
-      filter['status'] = { $in: status };
-    }
-
-    if (query.match(/^[0-9a-fA-F]{24}$/)) {
-      filter['_id'] = { $in: query };
-    } else {
-      filter['name'] = { $regex: query, $options: 'i' };
-    }
-
-    return filter;
-  }
-
   async createCharity({ name }: CharityCreationInput, session?: ClientSession): Promise<Charity> {
     const charityModel = await this.CharityModel.create(
       [
@@ -396,6 +373,7 @@ export class CharityService {
   }
 
   private ORDER_SORTS = {
+    [CharityOrderBy.STATUS_ASC]: { status: 'asc' },
     [CharityOrderBy.NAME_ASC]: { name: 'asc' },
     [CharityOrderBy.NAME_DESC]: { name: 'desc' },
     [CharityOrderBy.ACTIVATED_AT_ASC]: { activatedAt: 'asc' },
@@ -404,21 +382,21 @@ export class CharityService {
     [CharityOrderBy.TOTALRAISEDAMOUNT_DESC]: { totalRaisedAmount: 'desc' },
   };
 
-  public getSearchOptions({ query }) {
+  public getSearchOptions(filters: CharityFilters) {
     return ([
-      ['status', { status: { $in: CharityStatus.ACTIVE } }],
-      [query, { name: { $regex: (query || '').trim(), $options: 'i' } }],
+      [filters?.status, { status: { $in: filters?.status } }],
+      [filters?.query, { name: { $regex: (filters?.query || '').trim(), $options: 'i' } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {},
     );
   }
 
-  public getSortOptions(orderBy) {
+  public getSortOptions(orderBy: string): string {
     return this.ORDER_SORTS[orderBy];
   }
 
-  public async getCharities({ filters, orderBy, skip = 0, size }) {
+  public async getCharities({ filters, orderBy, skip = 0, size }: CharitySearchParams): Promise<ICharityModel[]> {
     const charities = this.CharityModel.find(this.getSearchOptions(filters))
       .skip(skip)
       .limit(size)
@@ -426,7 +404,7 @@ export class CharityService {
     return await charities.exec();
   }
 
-  public async getCharitiesCount({ filters }) {
+  public async getCharitiesCount({ filters }: { filters: CharityFilters }) {
     return this.CharityModel.find(this.getSearchOptions(filters)).countDocuments().exec();
   }
 
@@ -442,31 +420,6 @@ export class CharityService {
     };
   }
 
-  async listCharities(skip: number, size: number, status: string[]): Promise<Charity[]> {
-    const charities = await this.CharityModel.find(
-      status
-        ? {
-            status: {
-              $in: status,
-            },
-          }
-        : {},
-    )
-      .skip(skip)
-      .limit(size)
-      .sort({ id: 'asc' })
-      .exec();
-    return charities.map((charity) => CharityService.makeCharity(charity));
-  }
-  async activeCharitiesList(): Promise<Charity[]> {
-    const charities = await this.CharityModel.find({
-      status: {
-        $in: CharityStatus.ACTIVE,
-      },
-    }).exec();
-    return charities.map((charity) => CharityService.makeCharity(charity));
-  }
-
   async listCharitiesByUserAccountIds(userAccountIds: readonly string[]): Promise<Charity[]> {
     const models = await this.CharityModel.find({ userAccount: { $in: userAccountIds } });
     return models.map((charity) => CharityService.makeCharity(charity));
@@ -478,10 +431,6 @@ export class CharityService {
     }
     const charities = await this.CharityModel.find({ _id: { $in: charityIds } }).exec();
     return charities.map((charity) => CharityService.makeCharity(charity));
-  }
-
-  async countCharities(): Promise<number> {
-    return this.CharityModel.countDocuments().exec();
   }
 
   private static websiteUrl(website: string): string | null {

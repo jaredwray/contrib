@@ -7,6 +7,7 @@ import { Form } from 'react-bootstrap';
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
 import SearchInput from 'src/components/inputs/SearchInput';
 import { CharitySearchSelect } from 'src/components/selects/CharitySearchSelect';
+import { CharityStatus } from 'src/types/Charity';
 
 import PriceRange from './PriceRange';
 import StatusDropdown from './StatusDropdown';
@@ -20,7 +21,9 @@ interface Props {
 }
 
 const Filters: FC<Props> = ({ initialBids, filters, changeFilters, charityChangeFilter }) => {
-  const { data: charitiesListData } = useQuery(ActiveCharitiesList);
+  const { data: charitiesListData } = useQuery(ActiveCharitiesList, {
+    variables: { filters: { status: [CharityStatus.ACTIVE] } },
+  });
   const OptionAll = { label: 'All', value: 'All', id: '' };
   const [selectedOption, setselectedOption] = useState<{ value: string; label: string; id: string } | null>(OptionAll);
 
@@ -45,7 +48,7 @@ const Filters: FC<Props> = ({ initialBids, filters, changeFilters, charityChange
 
   const options = [
     OptionAll,
-    ...charitiesListData.charitiesSelectList.items.map((charity: { name: string; id: string }) => ({
+    ...charitiesListData.charitiesList.items.map((charity: { name: string; id: string }) => ({
       label: charity.name,
       value: charity.name,
       id: charity.id,

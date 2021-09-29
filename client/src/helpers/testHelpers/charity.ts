@@ -1,10 +1,14 @@
 export const charity = [
   {
-    id: 'testId',
+    id: 'testId1',
     name: 'test',
-    stripeAccountId: 'testId',
     profileStatus: 'COMPLETED',
     status: 'ACTIVE',
     stripeStatus: 'ACTIVE',
+    avatarUrl: 'test url',
+    totalRaisedAmount: 0,
+    followers: {
+      user: '222',
+    },
   },
 ];
