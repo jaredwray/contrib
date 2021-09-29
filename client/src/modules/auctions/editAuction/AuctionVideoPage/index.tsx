@@ -4,9 +4,9 @@ import { useQuery } from '@apollo/client';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetAuctionMediaQuery } from 'src/apollo/queries/auctions';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import AttachmentModal from 'src/components/modals/AttachmentModal';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { AuctionAttachment } from 'src/types/Auction';

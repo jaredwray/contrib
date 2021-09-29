@@ -5,7 +5,7 @@ import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap
 import { Link } from 'react-router-dom';
 
 import Logo from 'src/assets/images/logo-with-text.svg';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 
 import MenuNavLink from './MenuNavLink';

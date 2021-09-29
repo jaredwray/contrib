@@ -7,9 +7,9 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { GetCharity, UpdateCharityProfileMutation } from 'src/apollo/queries/charityProfile';
 import { SubmitButton } from 'src/components/buttons/SubmitButton';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Charity } from 'src/types/Charity';

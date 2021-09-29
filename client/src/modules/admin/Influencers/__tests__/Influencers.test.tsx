@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
-import SearchInput from 'src/components/inputs/SearchInput';
+import SearchInput from 'src/components/forms/inputs/SearchInput';
 import { AdminPage } from 'src/components/layouts/AdminPage';
 import { AllInfluencersQuery, InfluencersSearch, ResendInviteMessageMutation } from 'src/apollo/queries/influencers';
 

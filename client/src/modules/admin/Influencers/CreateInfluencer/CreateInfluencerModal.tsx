@@ -5,8 +5,8 @@ import { Alert, Button, Spinner } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
 import { CreateInfluencerMutation } from 'src/apollo/queries/influencers';
-import Form from 'src/components/Form/Form';
-import InputField from 'src/components/Form/InputField';
+import Form from 'src/components/forms/Form/Form';
+import InputField from 'src/components/forms/inputs/InputField';
 import Dialog from 'src/components/modals/Dialog';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
 

@@ -2,7 +2,7 @@ import Dinero from 'dinero.js';
 import { ReactWrapper, mount } from 'enzyme';
 
 import { BidInput } from '../BidInput';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 
 describe('Should render correctly "BidInput"', () => {
   const props: any = {

@@ -6,8 +6,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
-import AuctionCard from 'src/components/AuctionCard';
-import Slider from 'src/components/Slider';
+import AuctionCard from 'src/components/customComponents/AuctionCard';
+import Slider from 'src/components/customComponents/Slider';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';

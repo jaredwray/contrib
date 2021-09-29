@@ -8,9 +8,9 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
-import PrivateRoute from 'src/components/PrivateRoute';
-import { ScrollToTop } from 'src/components/ScrollToTop';
-import { UserAccountProvider } from 'src/components/UserAccountProvider';
+import { ScrollToTop } from 'src/components/helpers/ScrollToTop';
+import { UserAccountProvider } from 'src/components/helpers/UserAccountProvider';
+import PrivateRoute from 'src/components/routing/PrivateRoute';
 import AdminAuctionPage from 'src/modules/admin/auctions/AdminAuctionPage';
 import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
 import Charities from 'src/modules/admin/Charities';

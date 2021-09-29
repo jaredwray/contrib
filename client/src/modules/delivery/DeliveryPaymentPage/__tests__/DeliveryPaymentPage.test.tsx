@@ -2,20 +2,20 @@ import { act } from 'react-dom/test-utils';
 import { mount, ReactWrapper } from 'enzyme';
 import { InMemoryCache } from '@apollo/client';
 import { MemoryRouter } from 'react-router-dom';
-import { CardInput } from 'src/components/inputs/CardInput';
+import { CardInput } from 'src/components/forms/inputs/CardInput';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 import type { StripeCardElementChangeEvent } from '@stripe/stripe-js';
 
 import DeliveryPaymentPage from '..';
-import Form from 'src/components/Form/Form';
-import Select from 'src/components/selects/Select';
+import Form from 'src/components/forms/Form/Form';
+import Select from 'src/components/forms/selects/Select';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionQuery, ShippingRegistrationMutation, CalculateShippingCostQuery } from 'src/apollo/queries/auctions';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import Layout from 'src/components/layouts/Layout';
 import { withStripe } from '../WithStripe';

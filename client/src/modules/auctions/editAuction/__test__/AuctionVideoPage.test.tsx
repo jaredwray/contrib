@@ -7,8 +7,8 @@ import { ToastProvider } from 'react-toast-notifications';
 import { GetAuctionMediaQuery } from 'src/apollo/queries/auctions';
 
 import Layout from 'src/components/layouts/Layout';
-import Form from 'src/components/Form/Form';
-import StepByStepPageRow from 'src/components/StepByStepPageRow';
+import Form from 'src/components/forms/Form/Form';
+import StepByStepPageRow from 'src/components/layouts/StepByStepPageLayout/StepByStepPageRow';
 import AttachmentModal from 'src/components/modals/AttachmentModal';
 import UploadingDropzone from 'src/modules/auctions/editAuction/common/UploadingDropzone';
 import AuctionVideoPage from '../AuctionVideoPage';

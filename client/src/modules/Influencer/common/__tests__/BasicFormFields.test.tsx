@@ -1,6 +1,6 @@
 import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import { mount, ReactWrapper } from 'enzyme';
 import { BasicFormFields } from '../BasicFormFields';
 import { influencer } from 'src/helpers/testHelpers/influencer';

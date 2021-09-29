@@ -13,11 +13,11 @@ import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { MakeAuctionBidMutation } from 'src/apollo/queries/bids';
 import AsyncButton from 'src/components/buttons/AsyncButton';
-import { CardInput } from 'src/components/inputs/CardInput';
+import { CardInput } from 'src/components/forms/inputs/CardInput';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Dialog from 'src/components/modals/Dialog';
 import DialogActions from 'src/components/modals/Dialog/DialogActions';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 
 import styles from './BidConfirmationModal.module.scss';
 

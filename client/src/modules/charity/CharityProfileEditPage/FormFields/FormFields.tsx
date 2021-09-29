@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { Col, Row } from 'react-bootstrap';
 
 import { UpdateCharityProfileAvatarMutation } from 'src/apollo/queries/charityProfile';
-import { AvatarPicker } from 'src/components/AvatarPicker';
-import InputField from 'src/components/Form/InputField';
+import { AvatarPicker } from 'src/components/customComponents/AvatarPicker';
+import InputField from 'src/components/forms/inputs/InputField';
 import { Charity } from 'src/types/Charity';
 
 import styles from './FormFields.module.scss';

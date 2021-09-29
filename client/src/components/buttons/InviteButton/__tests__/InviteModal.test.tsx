@@ -8,7 +8,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { InviteInfluencerMutation } from 'src/apollo/queries/influencers';
 
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 
 describe('Should render correctly "InviteModal"', () => {
   const props: any = {

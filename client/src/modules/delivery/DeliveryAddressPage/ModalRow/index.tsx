@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Row } from 'react-bootstrap';
 
-import InputField from 'src/components/Form/InputField';
+import InputField from 'src/components/forms/inputs/InputField';
 
 interface Props {
   title: string;

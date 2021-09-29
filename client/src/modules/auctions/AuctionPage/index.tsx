@@ -6,8 +6,8 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery, AuctionSubscription } from 'src/apollo/queries/auctions';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { CharityStatus } from 'src/types/Charity';
 

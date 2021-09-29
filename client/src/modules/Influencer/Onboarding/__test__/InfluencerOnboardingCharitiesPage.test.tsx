@@ -9,7 +9,7 @@ import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 import { MemoryRouter } from 'react-router-dom';
 import Layout from 'src/components/layouts/Layout';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 

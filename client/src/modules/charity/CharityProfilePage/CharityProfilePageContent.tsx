@@ -8,14 +8,14 @@ import { Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
-import AuctionCard from 'src/components/AuctionCard';
 import { ReadMore } from 'src/components/buttons/ReadMoreButton';
 import WatchBtn from 'src/components/buttons/WatchBtn';
+import AuctionCard from 'src/components/customComponents/AuctionCard';
+import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
-import { ProfileSliderRow } from 'src/components/ProfileSliderRow';
 import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
-import { TotalRaisedAmount } from 'src/components/TotalRaisedAmount';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { ProfileSliderRow } from 'src/components/wrappers/ProfileSliderRow';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';

@@ -11,11 +11,11 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery, CalculateShippingCostQuery, ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
-import { CardInput } from 'src/components/inputs/CardInput';
+import { CardInput } from 'src/components/forms/inputs/CardInput';
+import Select from 'src/components/forms/selects/Select';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import StepRow from 'src/components/layouts/StepByStepPageLayout/Row';
-import Select from 'src/components/selects/Select';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';

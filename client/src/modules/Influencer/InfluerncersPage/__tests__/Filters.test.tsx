@@ -3,7 +3,7 @@ import { ReactWrapper, mount } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
 
 import Filters from '../Filters';
-import SearchInput from 'src/components/inputs/SearchInput';
+import SearchInput from 'src/components/forms/inputs/SearchInput';
 
 describe('Should render correctly "Filters"', () => {
   const props: any = {

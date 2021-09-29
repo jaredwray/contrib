@@ -7,7 +7,7 @@ import { toDate, format } from 'date-fns-tz';
 import { Button } from 'react-bootstrap';
 
 import AsyncButton from 'src/components/buttons/AsyncButton';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import Dialog from 'src/components/modals/Dialog';
 import DialogActions from 'src/components/modals/Dialog/DialogActions';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';

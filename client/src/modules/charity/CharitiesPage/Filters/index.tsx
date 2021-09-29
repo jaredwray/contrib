@@ -2,7 +2,7 @@ import { FC, useCallback } from 'react';
 
 import clsx from 'clsx';
 
-import SearchInput from 'src/components/inputs/SearchInput';
+import SearchInput from 'src/components/forms/inputs/SearchInput';
 
 import styles from './styles.module.scss';
 

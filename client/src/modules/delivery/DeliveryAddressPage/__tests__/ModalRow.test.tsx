@@ -1,7 +1,7 @@
 import { mount, shallow, ReactWrapper, ShallowWrapper } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 
 import { ModalRow } from 'src/modules/delivery/DeliveryAddressPage/ModalRow';
 

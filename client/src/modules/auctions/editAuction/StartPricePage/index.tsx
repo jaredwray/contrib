@@ -5,9 +5,9 @@ import Dinero from 'dinero.js';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
-import MoneyField from 'src/components/Form/MoneyField';
+import MoneyField from 'src/components/forms/inputs/MoneyField';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 

@@ -8,8 +8,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';

@@ -14,11 +14,11 @@ import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { CharityProfilePageContent } from '../CharityProfilePageContent';
 import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
-jest.mock('src/components/CoverImage', () => () => <></>);
+jest.mock('src/components/customComponents/CoverImage', () => () => <></>);
 
 const props: any = {
   charity: {

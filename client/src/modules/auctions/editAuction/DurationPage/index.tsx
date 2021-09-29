@@ -5,9 +5,9 @@ import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
-import SelectField from 'src/components/Form/SelectField';
+import SelectField from 'src/components/forms/inputs/SelectField';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 

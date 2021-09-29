@@ -7,8 +7,8 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import { AssistantsQuery, InviteAssistantMutation } from 'src/apollo/queries/assistants';
 import { InviteButton } from 'src/components/buttons/InviteButton';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 

@@ -7,14 +7,14 @@ import { ToastProvider } from 'react-toast-notifications';
 import PhoneInput from 'react-phone-input-2';
 
 import Layout from 'src/components/layouts/Layout';
-import Form from 'src/components/Form/Form';
-import InputField from 'src/components/Form/InputField';
+import Form from 'src/components/forms/Form/Form';
+import InputField from 'src/components/forms/inputs/InputField';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQuery';
 import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import DeliveryAddressPage from '..';
 

@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { AcceptAccountTermsMutation } from 'src/apollo/queries/terms';
-import Checkbox from 'src/components/Form/Checkbox';
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
+import Checkbox from 'src/components/forms/inputs/Checkbox';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Dialog from 'src/components/modals/Dialog';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
-import TermsText from 'src/components/TermsText';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import TermsText from 'src/components/modals/TermsConfirmationDialog/TermsText';
 
 import styles from './styles.module.scss';
 

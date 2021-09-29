@@ -8,7 +8,7 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import { AuctionStatus } from 'src/types/Auction';
 import WatchBtn from 'src/components/buttons/WatchBtn';
-import AuctionCard from 'src/components/AuctionCard';
+import AuctionCard from 'src/components/customComponents/AuctionCard';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';

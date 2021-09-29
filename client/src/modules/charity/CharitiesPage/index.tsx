@@ -3,8 +3,8 @@ import { FC, useState, useCallback, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
 
 import { CharitiesListQuery } from 'src/apollo/queries/charities';
-import ItemCard from 'src/components/ItemCard';
 import AllItemsLayout from 'src/components/layouts/AllItemsLayout';
+import ItemCard from 'src/components/layouts/AllItemsLayout/ItemCard';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 

@@ -1,7 +1,7 @@
 import { Container, Row, Col } from 'react-bootstrap';
 
 import Layout from 'src/components/layouts/Layout';
-import TermsText from 'src/components/TermsText';
+import TermsText from 'src/components/modals/TermsConfirmationDialog/TermsText';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 
 export default function Terms() {

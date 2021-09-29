@@ -4,9 +4,9 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
-import InputField from 'src/components/Form/InputField';
+import InputField from 'src/components/forms/inputs/InputField';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 

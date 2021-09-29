@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-import Slider from 'src/components/Slider';
+import Slider from 'src/components/customComponents/Slider';
 
 import styles from './styles.module.scss';
 import Testimonial from './Testimonial';

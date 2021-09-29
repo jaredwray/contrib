@@ -9,7 +9,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
-import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import { BidConfirmationModal } from '../BidConfirmationModal';
 

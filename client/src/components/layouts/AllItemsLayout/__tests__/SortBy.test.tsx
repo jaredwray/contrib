@@ -1,7 +1,7 @@
 import { act } from 'react-dom/test-utils';
 import { ReactWrapper, mount } from 'enzyme';
 
-import Select from 'src/components/selects/Select';
+import Select from 'src/components/forms/selects/Select';
 
 import SortBy from '../SortBy';
 

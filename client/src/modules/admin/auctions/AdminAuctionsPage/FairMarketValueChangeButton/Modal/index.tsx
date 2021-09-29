@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import Dinero, { DineroObject } from 'dinero.js';
 
 import AsyncButton from 'src/components/buttons/AsyncButton';
-import Form from 'src/components/Form/Form';
-import MoneyField from 'src/components/Form/MoneyField';
+import Form from 'src/components/forms/Form/Form';
+import MoneyField from 'src/components/forms/inputs/MoneyField';
 import Dialog from 'src/components/modals/Dialog';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import { useShowNotification } from 'src/helpers/useShowNotification';

@@ -3,7 +3,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
-import Form from 'src/components/Form/Form';
+import Form from 'src/components/forms/Form/Form';
 import { Modal } from '../EditDeliveryParcelButton/Modal';
 import { UpdateAuctionParcelMutation } from 'src/apollo/queries/auctions';
 
