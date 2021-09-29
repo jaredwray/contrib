@@ -6,10 +6,12 @@ export const CharitySchema = gql`
     ACTIVE
     INACTIVE
   }
+
   enum CharityProfileStatus {
     COMPLETED
     CREATED
   }
+
   enum CharityStripeStatus {
     PENDING_VERIFICATION
     ACTIVE
@@ -17,6 +19,7 @@ export const CharitySchema = gql`
   }
 
   enum CharityOrderBy {
+    STATUS_ASC
     NAME_ASC
     NAME_DESC
     ACTIVATED_AT_ASC
@@ -41,17 +44,21 @@ export const CharitySchema = gql`
     totalRaisedAmount: Money
     followers: [Follow]
   }
+
   input CharityInputID {
     id: String!
   }
+
   input CharityInput {
     name: String!
   }
+
   input CharityProfileInput {
     name: String
     profileDescription: String
     website: String
   }
+
   input CharityFilters {
     query: String
   }
@@ -69,12 +76,10 @@ export const CharitySchema = gql`
     size: Int!
     skip: Int!
   }
-  type SelectCharitiesList {
-    items: [Charity]!
-  }
 
   input CharityFilters {
     query: String
+    status: [CharityStatus]
   }
 
   input CharityParams {
@@ -87,10 +92,8 @@ export const CharitySchema = gql`
   extend type Query {
     charitiesList(params: CharityParams): CharitiesPage
     charity(id: String!): Charity!
-    charitiesSearch(query: String!, status: [CharityStatus]): [Charity!]!
-    charitiesSelectList: SelectCharitiesList!
-    charities(size: Int!, skip: Int!, status: [CharityStatus]): CharitiesPage!
   }
+
   extend type Mutation {
     inviteCharity(input: InviteInput!): InvitationId!
     updateCharity(id: String!, input: CharityInput!): Charity!
@@ -99,6 +102,7 @@ export const CharitySchema = gql`
     followCharity(charityId: String!): Follow
     unfollowCharity(charityId: String!): ResponceId
   }
+
   extend type UserAccount {
     charity: Charity
   }

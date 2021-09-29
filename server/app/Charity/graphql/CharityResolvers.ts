@@ -18,31 +18,7 @@ export const CharityResolvers = {
       const profileId = id === 'me' ? currentCharityId : id;
       return await charity.findCharity(profileId);
     }),
-    charitiesSearch: async (
-      parent: unknown,
-      { query, status }: { query: string; status?: CharityStatus[] },
-      { charity }: GraphqlContext,
-    ): Promise<Charity[] | null> => {
-      return await charity.searchForCharity(query.trim(), status);
-    },
-    charitiesSelectList: async (parent: unknown, _, { charity }: GraphqlContext): Promise<{ items: Charity[] }> => {
-      return {
-        items: await charity.activeCharitiesList(),
-      };
-    },
-    charities: async (
-      parent: unknown,
-      { size, skip, status }: { size: number; skip: number; status?: CharityStatus[] },
-      { charity }: GraphqlContext,
-    ): Promise<{ items: Charity[]; totalItems: number; size: number; skip: number }> => {
-      return {
-        items: await charity.listCharities(skip, size, status),
-        totalItems: await charity.countCharities(),
-        size,
-        skip,
-      };
-    },
-    charitiesList: async (_, { params }, { charity }) => charity.charitiesList(params),
+    charitiesList: async (_, { params }, { charity }) => await charity.charitiesList(params),
   },
   Mutation: {
     unfollowCharity: requireAuthenticated(async (_, { charityId }, { charity, currentAccount }) =>

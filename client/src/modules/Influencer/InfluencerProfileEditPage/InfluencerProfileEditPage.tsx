@@ -44,10 +44,9 @@ export const InfluencerProfileEditPage: FC = () => {
       await updateInfluencerProfile({
         variables: { name, sport, team: team ?? '', profileDescription, influencerId },
       });
-
-      if (influencerProfile?.favoriteCharities?.join() !== favoriteCharities.join()) {
-        await updateFavoriteCharities({ variables: { influencerId, charities: favoriteCharities.map((c) => c.id) } });
-      }
+      await updateFavoriteCharities({
+        variables: { influencerId, charities: favoriteCharities.map((charity) => charity.id) },
+      });
       showMessage('Your profile has been successfully updated');
       history.goBack();
     } catch (error) {

@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Button, Form } from 'react-bootstrap';
 
-import { CharitiesSearch } from 'src/apollo/queries/charities';
+import { CharitiesListQuery } from 'src/apollo/queries/charities';
 import SearchInput from 'src/components/inputs/SearchInput';
 import useOutsideClick from 'src/helpers/useOutsideClick';
 import { Charity, CharityStatus } from 'src/types/Charity';
@@ -23,9 +23,9 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
   const [charitiesSearch, setCharitiesSearch] = useState<Charity[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const [executeSearch] = useLazyQuery(CharitiesSearch, {
-    onCompleted({ charitiesSearch }) {
-      setCharitiesSearch(charitiesSearch);
+  const [executeSearch] = useLazyQuery(CharitiesListQuery, {
+    onCompleted({ charitiesList }) {
+      setCharitiesSearch(charitiesList.items);
     },
   });
   const searchContainer = useRef(null);
@@ -62,7 +62,9 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
   );
 
   useEffect(() => {
-    executeSearch({ variables: { query: searchQuery, status: [CharityStatus.ACTIVE] } });
+    if (searchQuery) {
+      executeSearch({ variables: { filters: { query: searchQuery, status: [CharityStatus.ACTIVE] } } });
+    }
   }, [executeSearch, searchQuery]);
 
   return (
@@ -76,19 +78,21 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
           onChange={onInputSearchChange}
           onClick={onClickSearch}
         />
-        <ul className={clsx('p-0 m-0', styles.searchResult)}>
-          {(charitiesSearch || []).map((charity: Charity, i) => (
-            <li
-              key={i}
-              className={clsx('text-label', styles.resultItem, isSelectedCharity(charity) && styles.selected)}
-              title={charity.name}
-              onClick={() => handleToggleCharity(charity)}
-            >
-              <span>{charity.name}</span>
-              <Button />
-            </li>
-          ))}
-        </ul>
+        {searchQuery && (
+          <ul className={clsx('p-0 m-0', styles.searchResult)}>
+            {(charitiesSearch || []).map((charity: Charity, i) => (
+              <li
+                key={i}
+                className={clsx('text-label', styles.resultItem, isSelectedCharity(charity) && styles.selected)}
+                title={charity.name}
+                onClick={() => handleToggleCharity(charity)}
+              >
+                <span>{charity.name}</span>
+                <Button />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </Form.Group>
   );

@@ -14,7 +14,7 @@ import { CharitySearchSelect } from 'src/components/selects/CharitySearchSelect'
 import { UserAccountContext } from 'src/components/UserAccountProvider/UserAccountContext';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
-import { Charity } from 'src/types/Charity';
+import { Charity, CharityStatus } from 'src/types/Charity';
 
 import Row from '../common/Row';
 
@@ -25,7 +25,9 @@ const CharityPage = () => {
   const [selectedOption, setselectedOption] = useState<any>(null);
   const history = useHistory();
 
-  const { data: charitiesListData } = useQuery(ActiveCharitiesList);
+  const { data: charitiesListData } = useQuery(ActiveCharitiesList, {
+    variables: { filters: { status: [CharityStatus.ACTIVE] } },
+  });
 
   const { data: auctionData, loading: loadingQuery } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
@@ -107,7 +109,7 @@ const CharityPage = () => {
   const favouriteCharities = auction.auctionOrganizer.favoriteCharities.map((charity: { id: string; name: string }) => {
     return { label: charity.name, value: charity.name, id: charity.id };
   });
-  const notFavouriteCharities = charitiesListData.charitiesSelectList.items
+  const notFavouriteCharities = charitiesListData.charitiesList.items
     .filter(
       (charity: Charity) =>
         !favouriteCharities
