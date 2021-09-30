@@ -159,20 +159,6 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>
               <TotalRaisedAmount value={influencer.totalRaisedAmount} />
-              {/*<div className="d-flex">
-                <a
-                  className={clsx(styles.socialIcon, 'mr-3')}
-                  href="/"
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  title="twitter"
-                >
-                  <TwitterIcon />
-                </a>
-                <a className={styles.socialIcon} href="/" rel="noreferrer noopener" target="_blank" title="instagram">
-                  <InstagramIcon />
-                </a>
-              </div>*/}
             </Col>
             <Col md="6">
               <span className="label-with-separator text-label">Player profile</span>

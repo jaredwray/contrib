@@ -6,7 +6,7 @@ import { CharitiesListQuery } from 'src/apollo/queries/charities';
 import AllItemsLayout from 'src/components/layouts/AllItemsLayout';
 import ItemCard from 'src/components/layouts/AllItemsLayout/ItemCard';
 import { setPageTitle } from 'src/helpers/setPageTitle';
-import { Charity } from 'src/types/Charity';
+import { Charity, CharityStatus } from 'src/types/Charity';
 
 import Filters from './Filters';
 
@@ -34,7 +34,7 @@ const CharitiesPage: FC = () => {
         size: PER_PAGE,
         skip: filters.skip,
         orderBy: filters.orderBy,
-        filters: { query: filters.query },
+        filters: { query: filters.query, status: [CharityStatus.ACTIVE] },
       },
     });
   }, [executeAuctionsSearch, filters]);

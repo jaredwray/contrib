@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Col, Container, Image, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
@@ -34,6 +34,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth0();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
+  const history = useHistory();
 
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
@@ -84,6 +85,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const isActive = charity.status === CharityStatus.ACTIVE;
 
   if (!isActive && !isMyProfile && !account?.isAdmin) {
+    history.replace('/');
     return null;
   }
 
