@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "graphql-upload": "^11.0.0"
+    "graphql-upload": "^11.0.0",
+    "rest-facade": "^1.16.1"
   }
 }
