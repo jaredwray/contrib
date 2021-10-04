@@ -3,5 +3,190 @@
 ## Running locally
 
 1. Install dependencies: `$ yarn`
-2. Copy `.env` file from 1password
+2. Copy `.env` file from 1password or create `.env` file similar to `.env_example` and fill in the required variables.
 3. Run server in dev setup: `$ yarn start`
+
+# Required data specified in the .env file:
+
+## For UPS service:
+
+We using UPS service for deliver auction winnings. Description of fields of the required data:
+
+### UPS_DELIVERY_CONTRIB_DATA
+
+required sender data, further in more detail about some of these data fields:
+
+#### example
+
+```
+UPS_DELIVERY_CONTRIB_DATA='{"address":"524 9th Ave", "city":"Kirkland", "state":"WA", "zipCode":"98033", "shipperNumber":"3W090X"}'
+```
+
+##### shipperNumber
+
+Shipper’s six digit alphanumeric account number. Must be associated with the UserId specified in the AccessRequest. The account must be a valid UPS account number that is active.
+
+### UPS_CONTRIB_CARD_DATA
+
+details of the card from which payment for delivery will be made, further in more detail about some of these data fields:
+
+#### example
+
+```
+UPS_CONTRIB_CARD_DATA='{"type":"06", "number":"4242424242424242", "expirationDate":"022022", "securityCode":"777"}'
+```
+
+#### types
+
+Card type value. You need to choose the right option for your card from the list below:
+
+01 = American Express\
+03 = Discover\
+04 = MasterCard\
+05 = Optima\
+06 = VISA\
+07 = Bravo\
+08 = Diners Club\
+13 = Dankort\
+14 = Hipercard\
+15 = JCB\
+17 = Postepay\
+18 = UnionPay/ExpressPay\
+19 = Visa Electron\
+20 = VPAY\
+21 = Carte Bleue
+
+#### expirationDate
+
+Format is MMYYYY where MM is the 2 digit month and YYYY is the 4 digit year. Valid month values are 01-12 and valid year
+values are Present Year – (Present Year + 10 years).
+
+## UPS_DELIVERY_REQUEST_HEADER
+
+data required to form a request to UPS, further in more detail about some of these data fields:
+
+#### example
+
+```
+UPS_DELIVERY_REQUEST_HEADER='{"AccessLicenseNumber": "number", "Password": "password", "Username": "username"}'
+```
+
+#### AccessLicenseNumber
+
+Authorization: Access Key obtained through on-boarding process. Contact your UPS representative for additional information.
+
+#### Password
+
+The customers MyUPS password.
+
+#### Username
+
+The customers MyUPS username.
+
+## For AUTH service:
+
+We using AUTH to authenticate users on our platform. Required data examples:
+
+#### examples
+
+```
+AUTH0_ISSUER_URL=https://contrib.us.auth0.com/
+AUTH0_AUDIENCE=http://localhost:3000/
+AUTH0_MANAGEMENT_DOMAIN=contrib.us.auth0.com
+AUTH0_MANAGEMENT_CLIENT_ID=authClientId
+AUTH0_MANAGEMENT_CLIENT_SECRET=authClientSecret
+```
+
+## For Cloud Storage:
+
+We using Cloud Storage for storing entity assets. Required data examples:
+
+#### examples
+
+```
+CONTENT_STORAGE_NAME=content-dev.contrib.org
+CONTENT_STORAGE_AUTH='{"clientId": "clientId","clientSecret": "clientSecret","refreshToken": "refreshToken"}'
+CONTENT_STORAGE_KEY='{"type": "serviceType","project_id": "someId","private_key_id": "privatKeyID","private_key": "privateKey","client_email": "someEmail","client_id": "clientId","auth_uri": "authUri","token_uri": "tokenUri","auth_provider_x509_cert_url": "authProviderX509CertUrl","client_x509_cert_url": "clientX509CertUrl"}'
+```
+
+## For TWILIO
+
+We using TWILIO to obtain secret codes used for authorization. Required data examples:
+
+#### examples
+
+```
+TWILIO_ACCOUNT_SID=accountSid
+TWILIO_AUTH_TOKEN=authToken
+TWILIO_VERIFICATION_SERVICE_SID=verificationServiceSid
+TWILIO_SENDER_NUMBER=+17432294736
+```
+
+## For CloudFlare
+
+We using CloudFlare for live streaming. Required data examples:
+
+#### examples
+
+```
+CLOUDFLARE_STREAMING_KEY=streamingKey
+CLOUDFLARE_USER_ID=userId
+```
+
+## For BITLY
+
+We using BITLY for URL shortening. Required data examples:
+
+#### examples
+
+```
+BITLY_DOMAIN=go.contrib.org
+BITLY_ACCESS_TOKEN=bitlyToken
+```
+
+## For STRIPE
+
+We using STRIPE for monetary transactions. Required data examples:
+
+#### examples
+
+```
+STRIPE_SECRET_KEY=stripeSecretKey
+STRIPE_WEBHOOK_SECRET_KEY="stripeWebhookSecretKey
+STRIPE_CONTRIB_SHARE_PERCENTAGE=numberValue
+```
+
+## For Cloud Tasks
+
+We useing Cloud Tasks to manage the execution, dispatch, and delivery of a large number of distributed tasks.
+
+#### examples
+
+```
+GOOGLE_CLOUD_PROJECT=contrib-dev
+GOOGLE_CLOUD_LOCATION=us-central1
+GOOGLE_CLOUD_TASK_QUEUE=bids-notification
+GOOGLE_CLOUD_TASK_API_TOKEN=12345678987654321
+```
+
+## For MONGODB
+
+We useing MONGODB for data storage.
+
+#### examples
+
+```
+MONGODB_URI=mongodbUri
+```
+
+## For Platform in general
+
+#### examples
+
+```
+PORT=3001
+APP_URL=http://127.0.0.1:3000/
+FACEBOOK_APP_ID=123
+MAX_SIZE_VIDEO_GB=1
+NOTIFICATION_TASK_TARGET_URL=api/v1/notification
+```

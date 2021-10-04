@@ -71,14 +71,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ## Auth0
 
-1. create `.env` file with follow variables:
-
-```
-REACT_APP_AUTH0_DOMAIN=AUTH0_DOMAIN
-REACT_APP_AUTH0_CLIENT_ID=AUTH0_CLIENT_ID
-```
-
-AUTH0_DOMAIN should not contain the protocol. An example: `contrib.us.auth0.com`
+1. create `.env` file similar to `.env_example` and fill in the required variables.
 
 2. change Universal Login page (https://manage.auth0.com/dashboard/us/contrib/login_page) using code from client/src/data/auth0/login.html file
 
@@ -105,3 +98,57 @@ Example: `const VERSION = '1.1';`
 Add new version in TermsService (server/app/TermsService.ts) in VERSION const.
 
 Example: `const VERSION = '1.1';`
+
+# Required data specified in the .env file:
+
+## For AUTH service:
+
+We using AUTH to authenticate users on our platform. Required data examples:
+
+#### examples
+
+```
+REACT_APP_AUTH0_DOMAIN="contrib.us.auth0.com"
+REACT_APP_AUTH0_CLIENT_ID="clientId"
+```
+
+## For STRIPE
+
+We using STRIPE for monetary transactions. Required data examples:
+
+#### examples
+
+```
+REACT_APP_STRIPE_PUBLISHABLE_KEY="stripePublishableKey"
+```
+
+## For Intercom
+
+We using Intercom to connect with our customers. Required data examples:
+
+#### examples
+
+```
+REACT_APP_INTERCOM_APP_ID="intercomAppId"
+```
+
+## For Firebase
+
+We using Firebase for assets storage. Required data examples:
+
+#### examples
+
+```
+REACT_APP_FIREBASE_CONFIG='{"apiKey": "apiKey", "authDomain": "contrib-dev.firebaseapp.com", "projectId": "contrib-dev", "storageBucket": "content-dev.contrib.org", "messagingSenderId": "messagingSenderId", "appId": "appId"}'
+```
+
+## For Platform in general
+
+#### examples
+
+```
+REACT_APP_PLATFORM_URL="http://localhost:3000"
+REACT_APP_API_URL="http://localhost:3001/graphql"
+REACT_APP_API_AUDIENCE="http://localhost:3001/"
+REACT_APP_MAX_SIZE_VIDEO_GB="1"
+```
