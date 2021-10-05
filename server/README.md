@@ -26,41 +26,6 @@ UPS_DELIVERY_CONTRIB_DATA='{"address":"524 9th Ave", "city":"Kirkland", "state":
 
 Shipper’s six digit alphanumeric account number. Must be associated with the UserId specified in the AccessRequest. The account must be a valid UPS account number that is active.
 
-### UPS_CONTRIB_CARD_DATA
-
-details of the card from which payment for delivery will be made, further in more detail about some of these data fields:
-
-#### example
-
-```
-UPS_CONTRIB_CARD_DATA='{"type":"06", "number":"4242424242424242", "expirationDate":"022022", "securityCode":"777"}'
-```
-
-#### types
-
-Card type value. You need to choose the right option for your card from the list below:
-
-01 = American Express\
-03 = Discover\
-04 = MasterCard\
-05 = Optima\
-06 = VISA\
-07 = Bravo\
-08 = Diners Club\
-13 = Dankort\
-14 = Hipercard\
-15 = JCB\
-17 = Postepay\
-18 = UnionPay/ExpressPay\
-19 = Visa Electron\
-20 = VPAY\
-21 = Carte Bleue
-
-#### expirationDate
-
-Format is MMYYYY where MM is the 2 digit month and YYYY is the 4 digit year. Valid month values are 01-12 and valid year
-values are Present Year – (Present Year + 10 years).
-
 ## UPS_DELIVERY_REQUEST_HEADER
 
 data required to form a request to UPS, further in more detail about some of these data fields:
