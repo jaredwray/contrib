@@ -2,10 +2,10 @@ import { FC, useCallback, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
-import { UpdateMyFavoriteCharities } from 'src/apollo/queries/charities';
+import { UpdateFavoriteCharities } from 'src/apollo/queries/charities';
 import { MyProfileQuery } from 'src/apollo/queries/profile';
 import Form from 'src/components/forms/Form/Form';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
@@ -23,23 +23,24 @@ interface FormValues {
 }
 
 export const InfluencerOnboardingCharitiesPage: FC = () => {
+  const influencerId = useParams<{ influencerId: string }>().influencerId ?? 'me';
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const history = useHistory();
   const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyProfileQuery);
 
-  const [updateMyFavoriteCharities] = useMutation(UpdateMyFavoriteCharities);
+  const [updateMyFavoriteCharities] = useMutation(UpdateFavoriteCharities);
 
   const handleSubmit = useCallback(
     async ({ favoriteCharities }: FormValues) => {
       try {
-        await updateMyFavoriteCharities({ variables: { charities: favoriteCharities.map((c) => c.id) } });
+        await updateMyFavoriteCharities({ variables: { influencerId, charities: favoriteCharities.map((c) => c.id) } });
         history.push('/onboarding/done');
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
     },
-    [updateMyFavoriteCharities, addToast, history],
+    [updateMyFavoriteCharities, addToast, influencerId, history],
   );
 
   const influencerProfile = myAccountData?.myAccount?.influencerProfile;

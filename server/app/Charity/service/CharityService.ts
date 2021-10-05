@@ -385,7 +385,7 @@ export class CharityService {
     [CharityOrderBy.TOTALRAISEDAMOUNT_DESC]: { totalRaisedAmount: 'desc' },
   };
 
-  public getSearchOptions(filters: CharityFilters) {
+  public getSearchOptions(filters: CharityFilters): object {
     return ([
       [filters?.status, { status: { $in: filters?.status } }],
       [filters?.query, { name: { $regex: (filters?.query || '').trim(), $options: 'i' } }],
@@ -407,11 +407,11 @@ export class CharityService {
     return await charities.exec();
   }
 
-  public async getCharitiesCount({ filters }: { filters: CharityFilters }) {
+  public async getCharitiesCount({ filters }: { filters?: CharityFilters }) {
     return this.CharityModel.find(this.getSearchOptions(filters)).countDocuments().exec();
   }
 
-  public async charitiesList(params) {
+  public async charitiesList(params: CharitySearchParams) {
     const items = await this.getCharities(params);
     const totalItems = await this.getCharitiesCount(params);
 

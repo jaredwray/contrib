@@ -8,6 +8,7 @@ export const InfluencerSchema = gql`
   }
 
   enum InfluencerOrderBy {
+    STATUS_ASC
     NAME_ASC
     NAME_DESC
     ONBOARDED_AT_ASC
@@ -64,6 +65,7 @@ export const InfluencerSchema = gql`
 
   input InfluencerFilters {
     query: String
+    status: [InfluencerStatus]
   }
   input InfluencerParams {
     skip: Int
@@ -74,8 +76,6 @@ export const InfluencerSchema = gql`
 
   extend type Query {
     influencersList(params: InfluencerParams): InfluencersPage
-    influencers(size: Int!, skip: Int!): InfluencersPage!
-    influencersSearch(query: String!): [InfluencerProfile!]
     influencer(id: String!): InfluencerProfile
   }
 
@@ -86,9 +86,6 @@ export const InfluencerSchema = gql`
     updateInfluencerProfile(influencerId: String!, input: UpdateInfluencerProfileInput!): InfluencerProfile!
     updateInfluencerProfileAvatar(influencerId: String!, image: Upload!): InfluencerProfile!
     updateInfluencerProfileFavoriteCharities(influencerId: String!, charities: [String!]!): InfluencerProfile!
-    updateMyInfluencerProfile(input: UpdateInfluencerProfileInput!): InfluencerProfile!
-    updateMyInfluencerProfileAvatar(image: Upload!): InfluencerProfile!
-    updateMyInfluencerProfileFavoriteCharities(charities: [String!]!): InfluencerProfile!
     followInfluencer(influencerId: String!): Follow
     unfollowInfluencer(influencerId: String!): ResponceId
   }

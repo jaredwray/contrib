@@ -1,7 +1,7 @@
 import { MyProfileQuery } from 'src/apollo/queries/profile';
 
 import { InfluencerOnboardingCharitiesPage } from '../InfluencerOnboardingCharitiesPage';
-import { UpdateMyFavoriteCharities } from 'src/apollo/queries/charities';
+import { UpdateFavoriteCharities } from 'src/apollo/queries/charities';
 import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
@@ -19,6 +19,9 @@ const mockHistoryPush = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
+  useParams: () => ({
+    influencerId: 'testId',
+  }),
   useHistory: () => ({
     push: mockHistoryPush,
   }),
@@ -46,14 +49,14 @@ const mockFn = jest.fn();
 const mocks = [
   {
     request: {
-      query: UpdateMyFavoriteCharities,
-      variables: { charities: ['testId'] },
+      query: UpdateFavoriteCharities,
+      variables: { influencerId: 'testId', charities: ['testId'] },
     },
     newData: () => {
       mockFn();
       return {
         data: {
-          updateMyInfluencerProfileFavoriteCharities: {
+          updateInfluencerProfileFavoriteCharities: {
             id: 'testId',
             name: 'test',
           },
@@ -65,7 +68,7 @@ const mocks = [
 const errorMocks = [
   {
     request: {
-      query: UpdateMyFavoriteCharities,
+      query: UpdateFavoriteCharities,
       variables: {},
     },
     newData: () => {

@@ -1,21 +1,5 @@
 import { gql } from '@apollo/client';
 
-export const UpdateMyInfluencerProfileMutation = gql`
-  mutation UpdateInfluencerProfile($name: String!, $sport: String!, $team: String, $profileDescription: String!) {
-    updateMyInfluencerProfile(
-      input: { name: $name, sport: $sport, team: $team, profileDescription: $profileDescription }
-    ) {
-      id
-      name
-      sport
-      team
-      profileDescription
-      avatarUrl
-      status
-    }
-  }
-`;
-
 export const MyProfileQuery = gql`
   query GetMyAccount {
     myAccount {
