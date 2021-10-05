@@ -22,10 +22,6 @@ export class UPSDeliveryService {
     return AppConfig.delivery.UPSContribDeliveryData;
   }
 
-  public static get ContribCardData() {
-    return AppConfig.delivery.UPSContribCardData;
-  }
-
   public static get deliveryRateUrl(): string {
     return AppConfig.delivery.UPSTestEnviroment
       ? 'https://wwwcie.ups.com/ship/v1/rating/Rate?additionalinfo=timeintransit'
@@ -151,14 +147,6 @@ export class UPSDeliveryService {
     address: UserAccountAddress,
     deliveryMethod: string,
   ): object {
-    const paymentCard = UPSDeliveryService.ContribCardData;
-    const {
-      type: CardType,
-      number: CardNumber,
-      expirationDate: CardExpirationDate,
-      securityCode: CardSecurityCode,
-    } = paymentCard;
-
     const { width: ParcelWidth, length: ParcelLength, height: ParcelHeight, weight: ParcelWeight } = parcel;
 
     const {
@@ -215,12 +203,7 @@ export class UPSDeliveryService {
             ShipmentCharge: {
               Type: '01', // Valid values: 01 = Transportation 02 = Duties and Taxes 03 = Broker of Choice  A shipment charge type of 01 = Transportation is required.
               BillShipper: {
-                CreditCard: {
-                  Type: CardType,
-                  Number: CardNumber,
-                  ExpirationDate: CardExpirationDate,
-                  SecurityCode: CardSecurityCode,
-                },
+                AccountNumber: ContribShipperNumber,
               },
             },
           },
