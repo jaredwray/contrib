@@ -2,11 +2,11 @@ import { FC } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
-import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';
+import { UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/forms/Form/Form';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -24,17 +24,18 @@ interface FormValues {
 }
 
 export const InfluencerOnboardingBasicPage: FC = () => {
+  const influencerId = useParams<{ influencerId: string }>().influencerId ?? 'me';
   const history = useHistory();
   const { addToast } = useToasts();
   const { data: myAccountData } = useQuery<{
     myAccount: UserAccount;
   }>(MyAccountQuery);
-  const [updateInfluencerProfile] = useMutation(UpdateMyInfluencerProfileMutation);
+  const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
 
   const handleSubmit = async ({ name, sport, team, profileDescription }: FormValues) => {
     try {
       await updateInfluencerProfile({
-        variables: { name, sport, team, profileDescription },
+        variables: { name, sport, team, profileDescription, influencerId },
       });
       history.push('/onboarding/charities');
     } catch (error) {

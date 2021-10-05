@@ -232,7 +232,7 @@ export class InvitationService {
 
       const { slug, phoneNumber, firstName } = inviteObject;
       const link = await this.sendInviteMessage(slug, firstName, phoneNumber);
-      
+
       return {
         link,
         phoneNumber,
@@ -291,7 +291,7 @@ export class InvitationService {
             throw new AppError(`${phoneNumber} is already using the system for the Assistant`, ErrorCode.BAD_REQUEST);
           }
 
-          const influencer = await this.influencerService.findInfluencer(influencerId);
+          const influencer = await this.influencerService.findInfluencer({ _id: influencerId });
 
           if (!influencer) {
             throw new AppError(`Invalid influencerId #${influencerId}`, ErrorCode.BAD_REQUEST);
@@ -364,7 +364,7 @@ export class InvitationService {
     session: ClientSession,
   ): Promise<InfluencerProfile | null> {
     if (influencerId) {
-      const profile = await this.influencerService.findInfluencer(influencerId, session);
+      const profile = await this.influencerService.findInfluencer({ _id: influencerId }, session);
 
       if (!profile) {
         throw new AppError('requested influencer profile does not exist');

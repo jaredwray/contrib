@@ -43,15 +43,6 @@ export const InviteCharityMutation = gql`
   }
 `;
 
-export const UpdateMyFavoriteCharities = gql`
-  mutation updateMyFavoriteCharities($charities: [String!]!) {
-    updateMyInfluencerProfileFavoriteCharities(charities: $charities) {
-      id
-      name
-    }
-  }
-`;
-
 export const UpdateFavoriteCharities = gql`
   mutation updateFavoriteCharities($influencerId: String!, $charities: [String!]!) {
     updateInfluencerProfileFavoriteCharities(influencerId: $influencerId, charities: $charities) {

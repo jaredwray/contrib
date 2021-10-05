@@ -18,12 +18,7 @@ import { requireAuthenticated } from '../../../graphql/middleware/requireAuthent
 
 interface InfluencerResolversType {
   Query: {
-    influencers: GraphqlResolver<
-      { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
-      { size: number; skip: number }
-    >;
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
-    influencersSearch: GraphqlResolver<InfluencerProfile[], { query: string }>;
     influencersList: GraphqlResolver<
       { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
       { params: any }
@@ -45,9 +40,6 @@ interface InfluencerResolversType {
       InfluencerProfile,
       { influencerId: string; charities: [string] }
     >;
-    updateMyInfluencerProfile: GraphqlResolver<InfluencerProfile, { input: UpdateInfluencerProfileInput }>;
-    updateMyInfluencerProfileAvatar: GraphqlResolver<InfluencerProfile, { image: File }>;
-    updateMyInfluencerProfileFavoriteCharities: GraphqlResolver<InfluencerProfile, { charities: [string] }>;
     followInfluencer: GraphqlResolver<{ user: string; createdAt: Dayjs }, { influencerId: string }>;
     unfollowInfluencer: GraphqlResolver<{ id: string }, { influencerId: string }>;
   };
@@ -64,24 +56,15 @@ interface InfluencerResolversType {
 
 export const InfluencerResolvers: InfluencerResolversType = {
   Query: {
-    influencers: requireAdmin(async (_, { size, skip }, { influencer }) => ({
-      items: await influencer.listInfluencers(skip, size),
-      totalItems: await influencer.countInfluencers(),
-      size,
-      skip,
-    })),
-    influencersSearch: requireAdmin(async (_, { query }, { influencer }) => {
-      return await influencer.searchForInfluencer(query.trim());
-    }),
     influencer: loadRole(async (_, { id }, { currentAccount, influencer, currentAssistant }) => {
       if (id === 'me' && currentAccount) {
         if (currentAssistant) {
-          return influencer.findInfluencer(currentAssistant.influencerId);
+          return influencer.findInfluencer({ _id: currentAssistant.influencerId });
         } else {
-          return influencer.findInfluencerByUserAccount(currentAccount.mongodbId);
+          return influencer.findInfluencer({ userAccount: currentAccount.mongodbId });
         }
       } else {
-        return influencer.findInfluencer(id);
+        return influencer.findInfluencer({ _id: id });
       }
     }),
     influencersList: async (_, { params }, { influencer }) => influencer.influencersList(params),
@@ -129,19 +112,6 @@ export const InfluencerResolvers: InfluencerResolversType = {
         return influencer.updateInfluencerProfileFavoriteCharitiesById(profileId, charities);
       },
     ),
-    /* TODO it should be removed after new API integration */
-    /* TODO block start */
-    updateMyInfluencerProfile: requireInfluencer(async (_, { input }, { influencer, currentAccount }) =>
-      influencer.updateInfluencerProfileByUserId(currentAccount.mongodbId, input),
-    ),
-    updateMyInfluencerProfileAvatar: requireInfluencer(async (_, { image }, { influencer, currentAccount }) =>
-      influencer.updateInfluencerProfileAvatarByUserId(currentAccount.mongodbId, image),
-    ),
-    updateMyInfluencerProfileFavoriteCharities: requireInfluencer(
-      async (_, { charities }, { influencer, currentAccount }) =>
-        influencer.updateInfluencerProfileFavoriteCharitiesByUserId(currentAccount.mongodbId, charities),
-    ),
-    /* TODO block end */
   },
   InfluencerProfile: {
     userAccount: requireAdmin(

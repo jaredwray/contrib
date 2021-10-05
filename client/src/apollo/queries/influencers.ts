@@ -11,26 +11,11 @@ export const InfluencersListQuery = gql`
         name
         avatarUrl
         sport
+        status
         totalRaisedAmount
         followers {
           user
         }
-      }
-    }
-  }
-`;
-
-export const AllInfluencersQuery = gql`
-  query GetInfluencers($size: Int!, $skip: Int!) {
-    influencers(size: $size, skip: $skip) {
-      totalItems
-      size
-      skip
-      items {
-        id
-        name
-        sport
-        status
       }
     }
   }
@@ -68,16 +53,7 @@ export const GetInfluencerQuery = gql`
     }
   }
 `;
-export const InfluencersSearch = gql`
-  query influencersSearch($query: String!) {
-    influencersSearch(query: $query) {
-      id
-      name
-      sport
-      status
-    }
-  }
-`;
+
 export const InviteInfluencerMutation = gql`
   mutation InviteInfluencer(
     $firstName: String!

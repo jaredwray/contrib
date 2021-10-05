@@ -4,8 +4,8 @@ import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
-import { IAuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
+import { InfluencerSearchParams, InfluencerFilters } from '../dto/InfluencerSearchParams';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { CharityService } from '../../Charity';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
@@ -28,6 +28,7 @@ export class InfluencerService {
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
   private ORDER_SORTS = {
+    [InfluencerOrderBy.STATUS_ASC]: { status: 'asc' },
     [InfluencerOrderBy.NAME_ASC]: { name: 'asc' },
     [InfluencerOrderBy.NAME_DESC]: { name: 'desc' },
     [InfluencerOrderBy.ONBOARDED_AT_ASC]: { onboardedAt: 'asc' },
@@ -36,21 +37,21 @@ export class InfluencerService {
     [InfluencerOrderBy.TOTALRAISEDAMOUNT_DESC]: { totalRaisedAmount: 'desc' },
   };
 
-  public getSearchOptions({ query }) {
+  public getSearchOptions(filters: InfluencerFilters): object {
     return ([
-      ['status', { status: { $in: InfluencerStatus.ONBOARDED } }],
-      [query, { name: { $regex: (query || '').trim(), $options: 'i' } }],
+      [filters?.status, { status: { $in: filters?.status } }],
+      [filters?.query, { name: { $regex: (filters?.query || '').trim(), $options: 'i' } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {},
     );
   }
 
-  public getSortOptions(orderBy) {
+  public getSortOptions(orderBy: string): string {
     return this.ORDER_SORTS[orderBy];
   }
 
-  public async getInfluencers({ filters, orderBy, skip = 0, size }) {
+  public async getInfluencers({ filters, orderBy, skip = 0, size }: InfluencerSearchParams) {
     const influencers = this.InfluencerModel.find(this.getSearchOptions(filters))
       .skip(skip)
       .limit(size)
@@ -58,11 +59,11 @@ export class InfluencerService {
     return await influencers.exec();
   }
 
-  public async getInfluencersCount({ filters }) {
+  public async getInfluencersCount({ filters }: { filters?: InfluencerFilters }) {
     return this.InfluencerModel.find(this.getSearchOptions(filters)).countDocuments().exec();
   }
 
-  public async influencersList(params) {
+  public async influencersList(params: InfluencerSearchParams) {
     const items = await this.getInfluencers(params);
     const totalItems = await this.getInfluencersCount(params);
 
@@ -198,32 +199,20 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(influencer[0]);
   }
 
-  async findInfluencer(id: string, session?: ClientSession): Promise<InfluencerProfile | null> {
+  async findInfluencer(
+    searchObject: { _id?: string; userAccount?: string },
+    session?: ClientSession,
+  ): Promise<InfluencerProfile | null> {
     try {
-      const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
+      const influencer = await this.InfluencerModel.findOne(searchObject, null, { session }).exec();
       return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
     } catch (error) {
-      AppLogger.error(`Cannot find Influencer with id #${id}: ${error.message}`);
+      AppLogger.error(
+        `Cannot find Influencer ${
+          searchObject?._id ? `with id #${searchObject?._id}` : `with userAccount #${searchObject?.userAccount}`
+        }: ${error.message}`,
+      );
     }
-  }
-
-  async findInfluencerByUserAccount(userAccount: string): Promise<InfluencerProfile | null> {
-    try {
-      const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
-      return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
-    } catch (error) {
-      AppLogger.error(`Cannot find Influencer with id #${userAccount}: ${error.message}`);
-    }
-  }
-  async searchForInfluencer(query: string): Promise<InfluencerProfile[] | null> {
-    if (!query) {
-      return [];
-    }
-    const influencers = await this.InfluencerModel.find(InfluencerService.influencerSearchSelector(query));
-    return influencers.map((influencer) => InfluencerService.makeInfluencerProfile(influencer));
-  }
-  private static influencerSearchSelector(query: string) {
-    return { name: { $regex: query, $options: 'i' } };
   }
 
   async updateInfluencerStatus(
@@ -251,19 +240,9 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(model);
   }
 
-  async listInfluencers(skip: number, size: number): Promise<InfluencerProfile[]> {
-    const models = await this.InfluencerModel.find().skip(skip).limit(size).sort({ id: 'asc' }).exec();
-
-    return models.map((m) => InfluencerService.makeInfluencerProfile(m));
-  }
-
   async listInfluencersByUserAccountIds(userAccountIds: readonly string[]): Promise<InfluencerProfile[]> {
     const models = await this.InfluencerModel.find({ userAccount: { $in: userAccountIds } });
     return models.map((influencer) => InfluencerService.makeInfluencerProfile(influencer));
-  }
-
-  async countInfluencers(): Promise<number> {
-    return this.InfluencerModel.countDocuments().exec();
   }
 
   async assignUserToInfluencer(
@@ -361,88 +340,6 @@ export class InfluencerService {
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }
-
-  /* TODO should be removed after new API integration */
-
-  /* TODO block start */
-
-  async updateInfluencerProfileByUserId(
-    userAccount: string,
-    input: UpdateInfluencerProfileInput,
-  ): Promise<InfluencerProfile> {
-    const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
-    if (!influencer) {
-      throw new Error(`influencer record not found for user account ${userAccount}`);
-    }
-
-    Object.assign(influencer, objectTrimmer(input));
-
-    await influencer.save();
-
-    return InfluencerService.makeInfluencerProfile(influencer);
-  }
-
-  async updateInfluencerProfileAvatarByUserId(userAccount: string, image: any): Promise<InfluencerProfile> {
-    const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
-    if (!influencer) {
-      throw new Error(`influencer record not found for user account ${userAccount}`);
-    }
-
-    const { filename: originalFilename, createReadStream } = await image;
-    const ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg', 'webp'];
-    const extension = originalFilename.split('.').pop();
-
-    if (!ALLOWED_EXTENSIONS.includes(extension.toLowerCase())) {
-      AppLogger.error('File has unsupported extension: ', originalFilename);
-      return;
-    }
-
-    const filename = `${influencer._id}/avatar/avatar.webp`;
-    const filePath = `pending/${filename}`;
-    const bucketName = AppConfig.googleCloud.bucketName;
-    const storage = new Storage({ credentials: JSON.parse(AppConfig.googleCloud.keyDump) });
-
-    await createReadStream().pipe(
-      storage
-        .bucket(bucketName)
-        .file(filePath)
-        .createWriteStream({ metadata: { cacheControl: 'no-store' } })
-        .on('finish', () => {
-          const bucketFullPath = `https://storage.googleapis.com/${bucketName}`;
-
-          storage
-            .bucket(bucketName)
-            .file(filePath)
-            .makePublic()
-            .then(() => {
-              influencer.avatarUrl = `${bucketFullPath}/${filename}`;
-              influencer.save();
-            })
-            .catch((e: any) => AppLogger.error(`exec error : ${e}`));
-        }),
-    );
-
-    return InfluencerService.makeInfluencerProfile(influencer);
-  }
-
-  async updateInfluencerProfileFavoriteCharitiesByUserId(
-    userAccount: string,
-    charities: [string],
-  ): Promise<InfluencerProfile> {
-    const influencer = await this.InfluencerModel.findOne({ userAccount }).exec();
-    if (!influencer) {
-      throw new Error(`influencer record not found for user account ${userAccount}`);
-    }
-
-    const favoriteCharities = await this.charityService.listCharitiesByIds(charities);
-    influencer.favoriteCharities = favoriteCharities.map((m) => m.id);
-
-    await influencer.save();
-
-    return InfluencerService.makeInfluencerProfile(influencer);
-  }
-
-  /* TODO block end */
 
   async assignAssistantsToInfluencer(influencerId: string, assistantId: string): Promise<void> {
     await this.InfluencerModel.updateOne({ _id: influencerId }, { $addToSet: { assistants: assistantId } });

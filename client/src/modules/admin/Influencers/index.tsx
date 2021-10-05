@@ -7,9 +7,8 @@ import { Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import {
-  AllInfluencersQuery,
+  InfluencersListQuery,
   InviteInfluencerMutation,
-  InfluencersSearch,
   ResendInviteMessageMutation,
 } from 'src/apollo/queries/influencers';
 import { InviteButton } from 'src/components/buttons/InviteButton';
@@ -27,38 +26,26 @@ export default function InfluencersPage() {
   const { addToast } = useToasts();
   const [pageSkip, setPageSkip] = useState(0);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [influencersSearch, setInfluencersSearch] = useState<InfluencerProfile[]>([]);
 
-  const [getInfluencersList, { loading, data, error }] = useLazyQuery(AllInfluencersQuery, {
-    variables: { size: PER_PAGE, skip: pageSkip },
+  const [getInfluencersList, { loading, data, error }] = useLazyQuery(InfluencersListQuery, {
     fetchPolicy: 'cache-and-network',
   });
-  const [executeSearch] = useLazyQuery(InfluencersSearch, {
-    onCompleted({ influencersSearch }) {
-      setInfluencersSearch(influencersSearch);
-    },
-    fetchPolicy: 'cache-and-network',
-  });
+
   const [resendInviteMessage, { loading: resendInviteLoading }] = useMutation(ResendInviteMessageMutation);
 
   useEffect(() => {
-    getInfluencersList();
-  }, [getInfluencersList]);
+    getInfluencersList({
+      variables: { size: PER_PAGE, skip: pageSkip, filters: { query: searchQuery }, orderBy: 'STATUS_ASC' },
+    });
+  }, [getInfluencersList, searchQuery, pageSkip]);
 
-  useEffect(() => {
-    executeSearch({ variables: { query: searchQuery } });
-  }, [executeSearch, searchQuery]);
+  const onInputSearchChange = useCallback((value) => {
+    setSearchQuery(value);
+  }, []);
 
-  const onInputSearchChange = useCallback(
-    (value) => {
-      setSearchQuery(value);
-    },
-    [setSearchQuery],
-  );
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
-    setInfluencersSearch([]);
-  }, [setSearchQuery, setInfluencersSearch]);
+  }, []);
 
   const toastContent = useCallback(
     (link: string, firstName: string, phoneNumber: string) => (
@@ -92,9 +79,7 @@ export default function InfluencersPage() {
     return null;
   }
 
-  const influencers = searchQuery
-    ? { skip: 0, totalItems: influencersSearch.length, items: influencersSearch }
-    : data?.influencers || { skip: 0, totalItems: 0, items: [] };
+  const influencers = data?.influencersList || { skip: 0, totalItems: 0, items: [] };
 
   setPageTitle('Admin nfluencers auction page');
   const controlBtns = (

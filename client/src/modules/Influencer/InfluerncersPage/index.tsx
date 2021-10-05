@@ -6,7 +6,7 @@ import { InfluencersListQuery } from 'src/apollo/queries/influencers';
 import AllItemsLayout from 'src/components/layouts/AllItemsLayout';
 import ItemCard from 'src/components/layouts/AllItemsLayout/ItemCard';
 import { setPageTitle } from 'src/helpers/setPageTitle';
-import { InfluencerProfile } from 'src/types/InfluencerProfile';
+import { InfluencerProfile, InfluencerStatus } from 'src/types/InfluencerProfile';
 
 import Filters from './Filters';
 
@@ -34,7 +34,7 @@ const InfluencersPage: FC = () => {
         size: PER_PAGE,
         skip: filters.skip,
         orderBy: filters.orderBy,
-        filters: { query: filters.query },
+        filters: { query: filters.query, status: [InfluencerStatus.ONBOARDED] },
       },
     });
   }, [executeAuctionsSearch, filters]);

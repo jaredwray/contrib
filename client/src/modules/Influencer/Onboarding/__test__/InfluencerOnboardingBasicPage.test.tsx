@@ -9,7 +9,7 @@ import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/forms/Form/Form';
 import { UserAccountStatus } from 'src/types/UserAccount';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
-import { UpdateMyInfluencerProfileMutation } from 'src/apollo/queries/profile';
+import { UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import { InfluencerOnboardingBasicPage } from '../InfluencerOnboardingBasicPage';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
@@ -20,6 +20,9 @@ const mockHistoryPush = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
+  useParams: () => ({
+    influencerId: 'testId',
+  }),
   useHistory: () => ({
     push: mockHistoryPush,
   }),
@@ -65,14 +68,14 @@ const mockFn = jest.fn();
 const mocks = [
   {
     request: {
-      query: UpdateMyInfluencerProfileMutation,
-      variables: { name: 'test', sport: 'test', team: 'test', profileDescription: 'test' },
+      query: UpdateInfluencerProfileMutation,
+      variables: { name: 'test', sport: 'test', team: 'test', profileDescription: 'test', influencerId: 'testId' },
     },
     newData: () => {
       mockFn();
       return {
         data: {
-          updateMyInfluencerProfile: {
+          updateInfluencerProfile: {
             id: 'testId',
             name: 'test',
             sport: 'test',
@@ -89,7 +92,7 @@ const mocks = [
 const errorMocks = [
   {
     request: {
-      query: UpdateMyInfluencerProfileMutation,
+      query: UpdateInfluencerProfileMutation,
       variables: {},
     },
     newData: () => {

@@ -6,9 +6,9 @@ export function loadInfluencer<Result, Args, Parent>(
 ): GraphqlHandler<Result, Args, Parent> {
   return loadAccount(async (parent, args, context, info) => {
     if (context.currentAccount?.mongodbId && context.currentInfluencer === undefined) {
-      context.currentInfluencer = await context.influencer.findInfluencerByUserAccount(
-        context.currentAccount.mongodbId,
-      );
+      context.currentInfluencer = await context.influencer.findInfluencer({
+        userAccount: context.currentAccount.mongodbId,
+      });
     }
     return handler(parent, args, context, info);
   });

@@ -8,29 +8,34 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import SearchInput from 'src/components/forms/inputs/SearchInput';
 import { AdminPage } from 'src/components/layouts/AdminPage';
-import { AllInfluencersQuery, InfluencersSearch, ResendInviteMessageMutation } from 'src/apollo/queries/influencers';
+import { InfluencersListQuery, ResendInviteMessageMutation } from 'src/apollo/queries/influencers';
 
 import Influencers from '..';
 
 const cache = new InMemoryCache();
 
 cache.writeQuery({
-  query: AllInfluencersQuery,
-  variables: { size: 20, skip: 0 },
+  query: InfluencersListQuery,
+  variables: { size: 20, skip: 0, filters: { query: '' }, orderBy: 'STATUS_ASC' },
   data: {
-    influencers: {
-      items: [{ id: 'testId', name: 'test', sport: 'test', status: 'INVITATION_PENDING' }],
+    influencersList: {
+      items: [
+        {
+          id: 'testId',
+          name: 'test',
+          avatarUrl: 'test',
+          sport: 'test',
+          status: 'INVITATION_PENDING',
+          totalRaisedAmount: 0,
+          followers: {
+            user: 'test',
+          },
+        },
+      ],
       size: 20,
       skip: 0,
       totalItems: 1,
     },
-  },
-});
-cache.writeQuery({
-  query: InfluencersSearch,
-  variables: { query: 'test' },
-  data: {
-    influencersSearch: [{ id: 'testId', name: 'test', sport: 'test', status: 'INVITATION_PENDING' }],
   },
 });
 
