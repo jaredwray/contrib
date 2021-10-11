@@ -66,7 +66,8 @@ export const AuctionSchema = gql`
     stoppedAt: DateTime
     auctionOrganizer: InfluencerProfile
     totalBids: Int
-    link: String
+    bitlyLink: String
+    shortLink: Link
     fairMarketValue: Money
     followers: [Follow]
     delivery: AuctionDelivery
@@ -241,6 +242,11 @@ export const AuctionSchema = gql`
     auctionWinnerId: String
   }
 
+  input MetricsInput {
+    referrer: String
+    country: String
+  }
+
   extend type Query {
     auctions(
       size: Int
@@ -259,6 +265,7 @@ export const AuctionSchema = gql`
   }
 
   extend type Mutation {
+    updateOrCreateMetrics(shortLinkId: String, input: MetricsInput): ResponceId
     createAuction(input: AuctionInput!): Auction!
     updateAuction(id: String, input: AuctionInput): Auction!
     finishAuctionCreation(id: String!): Auction!

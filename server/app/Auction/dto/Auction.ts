@@ -2,6 +2,7 @@ import Dinero from 'dinero.js';
 import { Dayjs } from 'dayjs';
 import { AuctionAssets } from './AuctionAssets';
 import { Charity } from '../../Charity/dto/Charity';
+import { ShortLink } from '../../ShortLink/dto/ShortLink';
 import { AuctionStatus } from './AuctionStatus';
 import { AuctionWinner } from './AuctionWinner';
 import { AuctionDelivery } from './AuctionDelivery';
@@ -23,7 +24,8 @@ export interface Auction {
   currentPrice: Dinero.Dinero;
   startPrice: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
-  link: string;
+  bitlylink?: string;
+  shortLink?: ShortLink;
   fairMarketValue: Dinero.Dinero;
   followers?: Follow[];
   winner?: AuctionWinner;

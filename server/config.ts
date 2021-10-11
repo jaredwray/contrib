@@ -73,10 +73,6 @@ export const AppConfig = {
     user: requireEnvVar('CLOUDFLARE_USER_ID'),
     maxSizeGB: process.env['MAX_SIZE_VIDEO_GB'],
   },
-  bitly: {
-    accessToken: requireEnvVar('BITLY_ACCESS_TOKEN'),
-    domain: requireEnvVar('BITLY_DOMAIN'),
-  },
   stripe: {
     stripeFee: {
       fixedFee: 0.3,

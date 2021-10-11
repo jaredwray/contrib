@@ -15,6 +15,7 @@ import AdminAuctionPage from 'src/modules/admin/auctions/AdminAuctionPage';
 import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
 import Charities from 'src/modules/admin/Charities';
 import Influencers from 'src/modules/admin/Influencers';
+import AuctionMetricsUpdatePage from 'src/modules/auctions/AuctionMetricsUpdatePage';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import AllAuctionsPage from 'src/modules/auctions/AuctionsPage';
 import EditAuctionPhotoPage from 'src/modules/auctions/editAuction/AuctionPhotoPage';
@@ -158,6 +159,7 @@ export const App = () => {
                   <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                   <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
 
+                  <Route component={AuctionMetricsUpdatePage} path="/go/:slug" />
                   <Route component={Page404} path="*" />
                 </Switch>
               </>

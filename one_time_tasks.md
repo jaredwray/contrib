@@ -21,3 +21,9 @@ curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User
 ```
 curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST https://contrib.org/api/v1/cleanup-auctions
 ```
+
+#### update auctions and invitations links
+
+```
+curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST https://contrib.org/api/v1/update-links
+```

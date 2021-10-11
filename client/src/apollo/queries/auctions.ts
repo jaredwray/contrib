@@ -50,9 +50,12 @@ export const AuctionForAdminPageQuery = gql`
       startDate
       endDate
       startPrice
+      bitlyLink
+      shortLink {
+        slug
+      }
       currentPrice
       fairMarketValue
-      link
       auctionOrganizer {
         id
         name
@@ -119,6 +122,10 @@ export const AuctionQuery = gql`
       stoppedAt
       startPrice
       title
+      bitlyLink
+      shortLink {
+        slug
+      }
       description
       status
       itemPrice
@@ -130,7 +137,6 @@ export const AuctionQuery = gql`
       isStopped
       startPrice
       totalBids
-      link
       fairMarketValue
       currentPrice
       auctionOrganizer {
@@ -278,6 +284,14 @@ export const CalculateShippingCostQuery = gql`
   }
 `;
 
+export const UpdateOrCreateAuctionMetricsMutation = gql`
+  mutation UpdateOrCreateMetrics($shortLinkId: String, $referrer: String, $country: String) {
+    updateOrCreateMetrics(shortLinkId: $shortLinkId, input: { referrer: $referrer, country: $country }) {
+      id
+    }
+  }
+`;
+
 export const ShippingRegistrationMutation = gql`
   mutation ShippingRegistration(
     $auctionId: String!
@@ -343,7 +357,6 @@ export const GetAuctionDetailsQuery = gql`
       endDate
       itemPrice
       title
-      link
       description
       status
       isActive
@@ -397,7 +410,6 @@ export const UpdateAuctionMutation = gql`
       id
       description
       title
-      link
       startDate
       endDate
       startPrice

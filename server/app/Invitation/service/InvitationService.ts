@@ -18,10 +18,10 @@ import { AppError, ErrorCode } from '../../../errors';
 import { Assistant } from '../../Assistant/dto/Assistant';
 import { AssistantService } from '../../Assistant';
 import { UserAccountService } from '../../UserAccount';
+import { ShortLinkService, ShortLinkModel } from '../../ShortLink';
 import { Events } from '../../Events';
 import { AppLogger } from '../../../logger';
 import { EventHub } from '../../EventHub';
-import { UrlShortenerService } from '../../Core';
 import { InfluencerStatus } from '../../Influencer/dto/InfluencerStatus';
 import { Charity } from '../../Charity/dto/Charity';
 import { CharityService } from '../../Charity';
@@ -34,6 +34,7 @@ export class InvitationService {
   private readonly CharityModel = CharityModel(this.connection);
   private readonly InfluencerModel = InfluencerModel(this.connection);
   private readonly AssistantModel = AssistantModel(this.connection);
+  private readonly ShortLinkModel = ShortLinkModel(this.connection);
 
   constructor(
     private readonly connection: Connection,
@@ -43,12 +44,40 @@ export class InvitationService {
     private readonly influencerService: InfluencerService,
     private readonly twilioNotificationService: TwilioNotificationService,
     private readonly eventHub: EventHub,
-    private readonly urlShortenerService: UrlShortenerService,
+    private readonly shortLinkService: ShortLinkService,
   ) {
     eventHub.subscribe(Events.USER_ACCOUNT_CREATED, async (userAccount) => {
       await this.maybeFinalizeInvitation(userAccount);
     });
   }
+
+  //TODO: delete after update auctions and invitations links
+  public async updateInvitationLinks() {
+    const invitations = await this.InvitationModel.find({});
+    for (const invitation of invitations) {
+      try {
+        if (invitation.shortLink) {
+          return;
+        }
+
+        const shortLinkId = await this.shortLinkService.createShortLink(
+          `invitation/${invitation._id.toString()}`,
+          'invitation',
+        );
+
+        const updateInvitation = {
+          shortLink: shortLinkId,
+        };
+
+        Object.assign(invitation, updateInvitation);
+
+        await invitation.save();
+      } catch (error) {
+        AppLogger.error(`Can not update invitation #${invitation._id.toString()}, error: ${error.message}`);
+      }
+    }
+  }
+  //TODO ends
 
   async findInvitationBySlug(slug: string): Promise<Invitation | null> {
     const model = await this.InvitationModel.findOne({ slug }).exec();
@@ -87,7 +116,7 @@ export class InvitationService {
         });
 
         if (findedInvitation) {
-          await this.sendInviteMessage(findedInvitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(findedInvitation._id.toString(), firstName, phoneNumber, session);
           returnObject = { invitationId: findedInvitation._id.toString() };
           return;
         }
@@ -120,7 +149,7 @@ export class InvitationService {
             session,
           });
 
-          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
 
           await this.eventHub.broadcast(Events.CHARITY_ONBOARDED, { charity, session });
           returnObject = { invitationId: invitation.id };
@@ -133,7 +162,7 @@ export class InvitationService {
             session,
           });
 
-          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
           returnObject = { invitationId: invitation.id };
         }
       });
@@ -146,7 +175,6 @@ export class InvitationService {
   async inviteInfluencer(input: InviteInput): Promise<{ invitationId: string }> {
     const session = await this.connection.startSession();
     let returnObject = null;
-
     try {
       const { firstName, lastName, phoneNumber, welcomeMessage } = objectTrimmer(input);
 
@@ -168,7 +196,7 @@ export class InvitationService {
         });
 
         if (findedInvitation) {
-          await this.sendInviteMessage(findedInvitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(findedInvitation._id.toString(), firstName, phoneNumber, session);
           returnObject = { invitationId: findedInvitation._id.toString() };
           return;
         }
@@ -201,13 +229,12 @@ export class InvitationService {
             session,
           );
 
-          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
 
           await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
           returnObject = { invitationId: invitation.id };
         } else {
           const invitation = await this.createInvitation(influencerProfile, inviteInput, session);
-
           await this.influencerService.updateInfluencerStatus(
             influencerProfile,
             InfluencerStatus.INVITATION_PENDING,
@@ -215,7 +242,7 @@ export class InvitationService {
             session,
           );
 
-          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
           returnObject = { invitationId: invitation.id };
         }
       });
@@ -227,22 +254,30 @@ export class InvitationService {
   }
 
   async resendInviteMessage(influencerId: string) {
+    const session = await this.connection.startSession();
+    let returnObject;
     try {
-      const inviteObject = await this.InvitationModel.findOne({ parentEntityId: influencerId });
+      await session.withTransaction(async () => {
+        const inviteObject = await this.InvitationModel.findOne({ parentEntityId: influencerId });
 
-      const { slug, phoneNumber, firstName } = inviteObject;
-      const link = await this.sendInviteMessage(slug, firstName, phoneNumber);
+        const { phoneNumber, firstName } = inviteObject;
+        const link = await this.sendInviteMessage(inviteObject._id.toString(), firstName, phoneNumber, session);
 
-      return {
-        link,
-        phoneNumber,
-        firstName,
-      };
+        returnObject = {
+          link,
+          phoneNumber,
+          firstName,
+        };
+      });
+
+      return returnObject;
     } catch (error) {
       AppLogger.error(
         `Something went wrong, when resend invite message for influencer #${influencerId}, error: ${error.message}`,
       );
       throw new AppError('Something went wrong. Please, try again later');
+    } finally {
+      session.endSession();
     }
   }
 
@@ -271,7 +306,7 @@ export class InvitationService {
         });
 
         if (findedInvitation) {
-          await this.sendInviteMessage(findedInvitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(findedInvitation._id.toString(), firstName, phoneNumber, session);
           returnObject = { invitationId: findedInvitation._id.toString() };
           return;
         }
@@ -317,7 +352,7 @@ export class InvitationService {
 
           await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
 
-          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
 
           await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, assistant });
           returnObject = { invitationId: invitation.id };
@@ -334,7 +369,7 @@ export class InvitationService {
           const invitation = await this.createInvitation(assistant, inviteInput, session);
           await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
 
-          await this.sendInviteMessage(invitation.slug, firstName, phoneNumber);
+          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
           returnObject = { invitationId: invitation.id };
         }
       });
@@ -345,11 +380,23 @@ export class InvitationService {
     }
   }
 
-  private async sendInviteMessage(slug: string, name: string, phoneNumber: string): Promise<string> {
+  private async sendInviteMessage(
+    invitationId: string,
+    name: string,
+    phoneNumber: string,
+    session: ClientSession,
+  ): Promise<string> {
     try {
-      const link = await this.makeInvitationLink(slug);
+      const invitation = await this.InvitationModel.findById(invitationId, null, { session });
+      const populatedInvitation = await invitation
+        .populate({ path: 'shortLink', model: this.ShortLinkModel })
+        .execPopulate();
+
+      const link = await this.shortLinkService.makeShortLink(populatedInvitation.shortLink.slug);
       const message = `Hello, ${name}! You have been invited to join Contrib at ${link}. Sign in with your phone number to begin.`;
+
       await this.twilioNotificationService.sendMessage(phoneNumber, message);
+
       return link;
     } catch (error) {
       AppLogger.error(`Can not send verification message to phone number: ${phoneNumber}. Error: ${error.message}`);
@@ -444,10 +491,6 @@ export class InvitationService {
     return await invitation.save();
   }
 
-  private async makeInvitationLink(slug: string): Promise<string> {
-    return this.urlShortenerService.shortenUrl(`${AppConfig.app.url}/invitation/${slug}`);
-  }
-
   private async createInvitation(
     parent: InfluencerProfile | Assistant | Charity,
     { phoneNumber, firstName, lastName, welcomeMessage, accepted, parentEntityType }: InviteInput,
@@ -455,7 +498,7 @@ export class InvitationService {
   ): Promise<Invitation> {
     const now = new Date();
     const slug = uuidv4();
-    const invitation = await InvitationModel(this.connection).create(
+    const [invitation] = await this.InvitationModel.create(
       [
         {
           slug,
@@ -472,7 +515,22 @@ export class InvitationService {
       ],
       { session },
     );
-    return InvitationService.makeInvitation(invitation[0]);
+
+    const shortLinkId = await this.shortLinkService.createShortLink(
+      `invitation/${invitation.slug}`,
+      'invitation',
+      session,
+    );
+
+    if (shortLinkId) {
+      Object.assign(invitation, {
+        shortLink: shortLinkId,
+      });
+
+      await invitation.save({ session });
+    }
+
+    return InvitationService.makeInvitation(invitation);
   }
 
   private static makeInvitation(model: IInvitation): Invitation | null {

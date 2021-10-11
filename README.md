@@ -138,8 +138,6 @@ Run this via terminal on the correct projects
 gcloud scheduler jobs create http contrib-auction-settle --schedule="*/5 * * * *" --uri="https://contrib.org/api/v1/auctions-settle" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"OUR_SECRET_KEY\" }" --time-zone="America/Los_Angeles"
 
 gcloud scheduler jobs create http contrib-notify-auction-end --schedule="* * * * *" --uri="https://contrib.org/api/v1/auctions-ends-notify" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"OUR_SECRET_KEY\" }" --time-zone="America/Los_Angeles"
-
-gcloud scheduler jobs create http auctions-metrics --schedule="0 * * * *" --uri="https://contrib.org/api/v1/auctions-metrics" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"OUR_SECRET_KEY\" }" --time-zone="America/Los_Angeles"
 ```
 
 `contrib-dev` GCloud Project
@@ -148,9 +146,6 @@ gcloud scheduler jobs create http auctions-metrics --schedule="0 * * * *" --uri=
 gcloud scheduler jobs create http contrib-auction-settle --schedule="*/5 * * * *" --uri="https://dev.contrib.org/api/v1/auctions-settle" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"OUR_SECRET_KEY\" }" --time-zone="America/Los_Angeles"
 
 gcloud scheduler jobs create http contrib-notify-auction-end --schedule="* * * * *" --uri="https://dev.contrib.org/api/v1/auctions-ends-notify" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"OUR_SECRET_KEY\" }" --time-zone="America/Los_Angeles"
-
-gcloud scheduler jobs create http auctions-metrics --schedule="0 * * * *" --uri="https://dev.contrib.org/api/v1/auctions-metrics" --http-method="post" --headers="Content-Type=application/json,User-Agent=Google-Cloud-Scheduler" --message-body="{ \"key\": \"OUR_SECRET_KEY\" }" --time-zone="America/Los_Angeles"
-
 ```
 
 ##### using Cloud Scheduler.
@@ -161,4 +156,3 @@ Go to Google Cloud Scheduler: https://console.cloud.google.com/cloudscheduler?pr
 |---|---|---|---|---|---|---|---|---|
 | contrib-auction-settle     | end auctions (change status to SETTLED)  | * * * * * | America/Los_Angeles | HTTP        | https://contrib.org/api/v1/auctions-settle      | POST        | Content-Type: application/json | { "key": "OUR_SECRET_KEY" } |
 | contrib-notify-auction-end | send notifications                       | * * * * * | America/Los_Angeles | HTTP        | https://contrib.org/api/v1/auctions-ends-notify | POST        | Content-Type: application/json | { "key": "OUR_SECRET_KEY" } |
-| metrics_from_bitly         | import metrics from bitly                | 0 * * * * | America/Los_Angeles | HTTP        | https://contrib.org/api/v1/auctions-metrics     | POST        | Content-Type: application/json | { "key": "OUR_SECRET_KEY" } |

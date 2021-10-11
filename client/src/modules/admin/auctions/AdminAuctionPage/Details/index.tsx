@@ -4,6 +4,7 @@ import { format } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Row, Table } from 'react-bootstrap';
 
+import { getShortLink } from 'src/helpers/getShortLink';
 import { Auction } from 'src/types/Auction';
 import { Charity } from 'src/types/Charity';
 
@@ -24,9 +25,15 @@ export const Details: FC<Props> = ({ auction, charity }) => {
             <td>Id</td>
             <td>{auction.id}</td>
           </tr>
+          {auction?.bitlyLink && (
+            <tr>
+              <td>Bitly Link</td>
+              <td>{auction.bitlyLink}</td>
+            </tr>
+          )}
           <tr>
-            <td>Link</td>
-            <td>{auction.link}</td>
+            <td>Short Link</td>
+            <td>{getShortLink(auction.shortLink.slug)}</td>
           </tr>
           <tr>
             <td>Status</td>

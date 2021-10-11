@@ -12,6 +12,7 @@ import InstagramIcon from 'src/assets/images/Instagram';
 import TwitterIcon from 'src/assets/images/Twitter';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
 import Layout from 'src/components/layouts/Layout';
+import { getShortLink } from 'src/helpers/getShortLink';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction } from 'src/types/Auction';
 
@@ -45,7 +46,11 @@ const AuctionDonePage = () => {
     return null;
   }
 
-  const encodedAuctionLink = encodeURIComponent(auction.link);
+  const encodedAuctionLink = auction?.bitlyLink
+    ? encodeURIComponent(auction.bitlyLink)
+    : getShortLink(auction.shortLink.slug);
+
+  const auctionLink = auction?.bitlyLink || getShortLink(auction.shortLink.slug);
 
   setPageTitle(`Auction ${auction.title}`);
 
@@ -89,9 +94,9 @@ const AuctionDonePage = () => {
               <Form.Group>
                 <Form.Label className="d-block">Auction link</Form.Label>
                 <InputGroup>
-                  <Form.Control disabled type="text" value={auction.link} />
+                  <Form.Control disabled type="text" value={auctionLink} />
                   <InputGroup.Append>
-                    <CopyToClipboard text={auction.link} onCopy={() => setLinkCopied(true)}>
+                    <CopyToClipboard text={auctionLink} onCopy={() => setLinkCopied(true)}>
                       <Button type="button">{(linkCopied && 'Copied') || 'Copy'}</Button>
                     </CopyToClipboard>
                   </InputGroup.Append>

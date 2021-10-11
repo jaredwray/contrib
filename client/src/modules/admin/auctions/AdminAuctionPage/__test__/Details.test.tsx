@@ -9,6 +9,9 @@ describe('Should render correctly "Details"', () => {
   };
 
   let wrapper: ShallowWrapper;
+  beforeAll(() => {
+    process.env = { ...process.env, REACT_APP_PLATFORM_URL: 'https://dev.contrib.org' };
+  });
   beforeEach(() => {
     wrapper = shallow(<Details {...props} />);
   });

@@ -14,6 +14,7 @@ import { InfluencerResolvers, InfluencerSchema } from '../app/Influencer';
 import { CharityResolvers, CharitySchema } from '../app/Charity';
 import { AuctionResolvers, AuctionSchema } from '../app/Auction';
 import { BidResolvers, BidSchema } from '../app/Bid';
+import { ShortLinkResolvers, ShortLinkSchema } from '../app/ShortLink';
 import { DateTimeResolver, DateTimeTypeDefs } from './scalars/dateTime';
 import { MoneyResolver, MoneyTypeDefs } from './scalars/money';
 
@@ -51,6 +52,7 @@ const schema = makeExecutableSchema({
     AuctionSchema,
     PaymentSchema,
     BidSchema,
+    ShortLinkSchema,
   ],
   resolvers: [
     DateTimeResolver,
@@ -62,6 +64,7 @@ const schema = makeExecutableSchema({
     CharityResolvers,
     AuctionResolvers,
     BidResolvers,
+    ShortLinkResolvers,
     PaymentResolvers,
     {
       Upload: GraphQLUpload,

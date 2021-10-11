@@ -1,9 +1,11 @@
 import { ClientSession, Connection, FilterQuery, Query, Types } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
+import { ShortLinkService, ShortLinkModel } from '../../ShortLink';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppError, ErrorCode } from '../../../errors';
@@ -12,6 +14,7 @@ import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { IAuctionFilters, IAuctionRepository, ICreateAuction, IUpdateAuction } from './IAuctionRepoository';
 import { AppLogger } from '../../../logger';
+import { AppConfig } from '../../../config';
 import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
 type ISearchFilter = { [key in AuctionOrderBy]: { [key: string]: string } };
@@ -22,6 +25,8 @@ type ISearchOptions = {
 export class AuctionRepository implements IAuctionRepository {
   constructor(private readonly connection: Connection) {}
 
+  private readonly shortLinkService = new ShortLinkService(this.connection);
+  private readonly ShortLinkModel = ShortLinkModel(this.connection);
   private readonly AuctionModel = AuctionModel(this.connection);
   private readonly CharityModel = CharityModel(this.connection);
   private readonly InfluencerModel = InfluencerModel(this.connection);
@@ -44,6 +49,7 @@ export class AuctionRepository implements IAuctionRepository {
       { path: 'charity', model: this.CharityModel },
       { path: 'charity', populate: { path: 'followers.user', model: this.UserAccountModel } },
       { path: 'winner', model: this.UserAccountModel },
+      { path: 'shortLink', model: this.ShortLinkModel },
     ];
   }
 
@@ -202,6 +208,16 @@ export class AuctionRepository implements IAuctionRepository {
       },
     ]);
 
+    const shortLinkId = await this.shortLinkService.createShortLink(`auctions/${auction._id.toString()}`, 'auction');
+
+    if (shortLinkId) {
+      Object.assign(auction, {
+        shortLink: shortLinkId,
+      });
+
+      await auction.save();
+    }
+
     return this.populateAuctionModel(auction).execPopulate();
   }
 
@@ -221,6 +237,7 @@ export class AuctionRepository implements IAuctionRepository {
       return auction
         .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
         .populate({ path: 'auctionOrganizer', populate: { path: 'userAccount', model: this.UserAccountModel } })
+        .populate({ path: 'shortLink', model: this.ShortLinkModel })
         .execPopulate();
     } catch (error) {
       throw new AppError(
@@ -265,12 +282,6 @@ export class AuctionRepository implements IAuctionRepository {
     Object.assign(auction, input);
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
-  }
-
-  async updateAuctionLink(id: string, link: string): Promise<IAuctionModel> {
-    const auction = await this.getAuction(id);
-    auction.link = link;
-    return auction.save();
   }
 
   async getAuction(id: string, organizerId?: string): Promise<IAuctionModel> {
