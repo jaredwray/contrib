@@ -3,20 +3,18 @@ import { FC, useState, useCallback, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
 
 import { CharitiesListQuery } from 'src/apollo/queries/charities';
-import AllItemsLayout from 'src/components/layouts/AllItemsLayout';
+import { AllItemsLayout, PER_PAGE } from 'src/components/layouts/AllItemsLayout';
 import ItemCard from 'src/components/layouts/AllItemsLayout/ItemCard';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
 import Filters from './Filters';
 
-const PER_PAGE = 20;
-
 const CharitiesPage: FC = () => {
   const [filters, setFilters] = useState({
     query: '',
     orderBy: 'ACTIVATED_AT_ASC',
-    skip: 0,
+    pageSkip: 0,
   });
 
   const [executeAuctionsSearch, { data }] = useLazyQuery(CharitiesListQuery);
@@ -24,7 +22,7 @@ const CharitiesPage: FC = () => {
   const charitiesData = data?.charitiesList;
   const changeFilters = useCallback((key: string, value: any) => {
     setFilters((prevState: any) => {
-      return { ...prevState, skip: 0, [key]: value };
+      return { ...prevState, pageSkip: 0, [key]: value };
     });
   }, []);
 
@@ -32,7 +30,7 @@ const CharitiesPage: FC = () => {
     executeAuctionsSearch({
       variables: {
         size: PER_PAGE,
-        skip: filters.skip,
+        skip: filters.pageSkip,
         orderBy: filters.orderBy,
         filters: { query: filters.query, status: [CharityStatus.ACTIVE] },
       },

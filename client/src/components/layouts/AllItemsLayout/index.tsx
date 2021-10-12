@@ -10,7 +10,7 @@ import PaginationInfo from './PaginationInfo';
 import SortBy from './SortBy';
 import styles from './styles.module.scss';
 
-const PER_PAGE = 20;
+export const PER_PAGE = 20;
 
 interface Props {
   filters: React.ReactNode;
@@ -20,7 +20,16 @@ interface Props {
   totalItems: number;
   sortOptions: { value: string; label: string }[];
 }
-const AuctionsPage: FC<Props> = ({ filters, changeFilters, size, skip, sortOptions, totalItems, children }) => {
+
+export const AllItemsLayout: FC<Props> = ({
+  filters,
+  changeFilters,
+  size,
+  skip,
+  sortOptions,
+  totalItems,
+  children,
+}) => {
   return (
     <Layout>
       <Row className={clsx(styles.row, 'h-100 flex-grow-1')}>
@@ -45,5 +54,3 @@ const AuctionsPage: FC<Props> = ({ filters, changeFilters, size, skip, sortOptio
     </Layout>
   );
 };
-
-export default AuctionsPage;
