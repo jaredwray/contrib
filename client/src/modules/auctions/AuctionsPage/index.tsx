@@ -4,13 +4,11 @@ import { useLazyQuery } from '@apollo/client';
 
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
-import AllItemsLayout from 'src/components/layouts/AllItemsLayout';
+import { AllItemsLayout, PER_PAGE } from 'src/components/layouts/AllItemsLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import Filters from './Filters';
-
-const PER_PAGE = 20;
 
 const AuctionsPage: FC = () => {
   const [getPriceLimits, { data: auctionPriceLimitsData }] = useLazyQuery(AuctionPriceLimitsQuery);

@@ -39,7 +39,7 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
     );
 
   const goToPage = (number: number) => {
-    changeFilters('skip', (number - 1) * perPage);
+    changeFilters('pageSkip', (number - 1) * perPage);
   };
 
   if (totalPages < 2) {
