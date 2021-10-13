@@ -1,11 +1,10 @@
 import { FC, ReactElement, SetStateAction, useCallback } from 'react';
 
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
-// import { v4 as getUuid } from 'uuid';
 
-import { AddAuctionMediaMutation } from 'src/apollo/queries/auctions';
+import { AddAuctionMediaMutation, ContentStorageAuthDataQuery } from 'src/apollo/queries/auctions';
 import AddPhotoIcon from 'src/assets/images/PhotoIcon';
 import { Auction, AuctionAttachment } from 'src/types/Auction';
 
@@ -33,8 +32,7 @@ const UploadingDropzone: FC<Props> = ({
   setErrorMessage,
   setSelectedAttachment,
 }): ReactElement => {
-  // const { refetch: refetchAuthToken } = useQuery(ContentStorageAuthDataQuery);
-
+  const { data: storageAuthData } = useQuery(ContentStorageAuthDataQuery);
   const [addAuctionMedia] = useMutation(AddAuctionMediaMutation, {
     onError(error) {
       setErrorMessage(error.networkError ? `Something went wrong. Please, try later` : error.message);
@@ -63,31 +61,31 @@ const UploadingDropzone: FC<Props> = ({
   const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
   const bytes = Math.pow(1024, 3);
 
-  // const googleCLoudUpload = useCallback(
-  //   async (file: File) => {
-  //     const { data } = await refetchAuthToken();
-  //     const { authToken, bucketName } = data.getContentStorageAuthData;
-  //
-  //     const uuid = getUuid();
-  //     const extension = file.name.split('.').pop();
-  //     const name = `${auctionOrganizer.id}/auctions/${auctionId}/${uuid}/${uuid}.${extension}`;
-  //     try {
-  //       await fetch(
-  //         `https://storage.googleapis.com/upload/storage/v1/b/${bucketName}/o?uploadType=media&name=${name}`,
-  //         {
-  //           method: 'POST',
-  //           headers: { Authorization: `Bearer ${authToken}` },
-  //           body: file,
-  //         },
-  //       );
-  //       return `https://storage.googleapis.com/${bucketName}/${name}`;
-  //     } catch (error) {
-  //       setErrorMessage('Somethig went wrong');
-  //       return false;
-  //     }
-  //   },
-  //   [auctionId, auctionOrganizer.id, setErrorMessage, refetchAuthToken],
-  // );
+  const cloudflareUpload = useCallback(
+    async (file: File) => {
+      const { authToken, accountId } = storageAuthData.getContentStorageAuthData;
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      try {
+        let uid;
+        await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/stream`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => (uid = data.result.uid));
+        return uid;
+      } catch (error) {
+        setErrorMessage('Somethig went wrong');
+        return false;
+      }
+    },
+    [setErrorMessage, storageAuthData],
+  );
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: any) => {
@@ -100,15 +98,14 @@ const UploadingDropzone: FC<Props> = ({
       });
 
       acceptedFiles.forEach(async (file) => {
-        let url;
-        //
-        // if (file.type.startsWith('video/')) {
-        //   url = await googleCLoudUpload(file);
-        //   if (!url) return;
-        // }
+        let uid;
+
+        if (file.type.startsWith('video/')) {
+          uid = await cloudflareUpload(file);
+        }
 
         addAuctionMedia({
-          variables: { id: auctionId, file: url ? null : file, url, filename: file.name },
+          variables: { id: auctionId, file: uid ? null : file, uid, filename: file.name },
         });
       });
 
@@ -132,7 +129,7 @@ const UploadingDropzone: FC<Props> = ({
         });
       });
     },
-    [addAuctionMedia, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
+    [addAuctionMedia, cloudflareUpload, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
