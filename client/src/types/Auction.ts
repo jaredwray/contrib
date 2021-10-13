@@ -4,6 +4,7 @@ import { Address } from './Address';
 import { Follow } from './Follow';
 import { InfluencerProfile } from './InfluencerProfile';
 import { Parcel } from './Parcel';
+import { ShortLink } from './ShortLink';
 import { Winner } from './Winner';
 
 export enum AuctionStatus {
@@ -50,7 +51,6 @@ export interface Auction {
   description: string;
   status: AuctionStatus;
   attachments: [AuctionAttachment];
-  link: string;
   totalBids: number;
   startDate: string;
   endDate: string;
@@ -59,6 +59,8 @@ export interface Auction {
   itemPrice?: DineroObject;
   currentPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;
+  bitlyLink?: string;
+  shortLink: ShortLink;
   fairMarketValue: DineroObject;
   followers?: Follow[];
   winner?: Winner;

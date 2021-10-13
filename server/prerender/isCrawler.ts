@@ -22,7 +22,6 @@ const CrawlerUserAgents = [
   'WhatsApp',
   'flipboard',
   'tumblr',
-  'bitlybot',
   'SkypeUriPreview',
   'nuzzel',
   'Discordbot',

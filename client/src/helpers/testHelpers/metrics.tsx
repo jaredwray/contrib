@@ -1,4 +1,4 @@
-export const bitly = {
+export const metrics = {
   clicks: [
     { date: '2021-06-29T09:00:00+0000', clicks: '0' },
     { date: '2021-06-29T08:00:00+0000', clicks: '0' },

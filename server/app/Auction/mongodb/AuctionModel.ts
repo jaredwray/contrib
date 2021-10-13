@@ -4,6 +4,7 @@ import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { UserAccountCollectionName, IFollowObject, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { AppConfig } from '../../../config';
 import { CharityCollectionName, ICharityModel } from '../../Charity/mongodb/CharityModel';
+import { ShortLinkCollectionName, IShortLinkModel } from '../../ShortLink/mongodb/ShortLinkModel';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionDelivery } from '../dto/AuctionDelivery';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
@@ -25,7 +26,11 @@ export interface IAuctionModel extends Document {
   endsAt: dayjs.Dayjs;
   stoppedAt: dayjs.Dayjs;
   startPrice: number;
+  //TODO: delete after update auctions and invitations links
   link: string;
+  //TODO ends
+  bitlyLink: string;
+  shortLink: IShortLinkModel['_id'];
   fairMarketValue: number;
   sentNotifications: [string];
   totalBids: number;
@@ -65,7 +70,11 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     },
     endsAt: { type: SchemaTypes.Date, default: dayjs().second(0).add(3, 'days').toISOString(), get: (v) => dayjs(v) },
     stoppedAt: { type: SchemaTypes.Date },
+    //TODO: delete after update auctions and invitations links
     link: { type: SchemaTypes.String },
+    //TODO ends
+    bitlyLink: { type: SchemaTypes.String },
+    shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
     fairMarketValue: { type: SchemaTypes.Number },
     totalBids: { type: SchemaTypes.Number, default: 0 },
     winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },

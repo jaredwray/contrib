@@ -1,13 +1,13 @@
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
-import { IAuctionModel } from './AuctionModel';
-import { BitlyClick } from '../dto/AuctionMetrics';
+import { IAuctionModel, AuctionCollectionName } from './AuctionModel';
+
 export interface IAuctionMetricModel extends Document {
   auction: IAuctionModel['_id'];
-  clicks: [BitlyClick];
+  clicks: object[];
   referrers: object[];
   countries: object[];
-  lastUpdateAt: string;
 }
+
 export const AuctionMetricCollectionName = 'auction_metrics';
 
 const AuctionMetricSchema: Schema<IAuctionMetricModel> = new Schema<IAuctionMetricModel>({
@@ -15,7 +15,6 @@ const AuctionMetricSchema: Schema<IAuctionMetricModel> = new Schema<IAuctionMetr
   clicks: { type: SchemaTypes.Array },
   referrers: { type: SchemaTypes.Array },
   countries: { type: SchemaTypes.Array },
-  lastUpdateAt: { type: SchemaTypes.String },
 });
 
 export const AuctionMetricModel = (connection: Connection): Model<IAuctionMetricModel> =>

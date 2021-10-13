@@ -43,7 +43,6 @@ export interface IAuctionRepository {
   createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel>;
   activateAuction(id: string, organizerId: string): Promise<IAuctionModel>;
   updateAuction(id: string, organizerId: string, input: IUpdateAuction, isAdmin: boolean): Promise<IAuctionModel>;
-  updateAuctionLink(id: string, link: string): Promise<IAuctionModel>;
   getAuctionPriceLimits({ query, statusFilter, filters }: IAuctionFilters): Promise<{ min: number; max: number }>;
   countAuctions({ query, filters }: { query?: string; filters?: AuctionSearchFilters }): Promise<number>;
   getAuctions({ query, size, skip, orderBy, filters }: IAuctionFilters): Promise<IAuctionModel[]>;

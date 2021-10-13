@@ -1,5 +1,6 @@
 import { Connection, Document, Model, ObjectId, Schema, SchemaTypes } from 'mongoose';
 import { InvitationParentEntityType } from './InvitationParentEntityType';
+import { ShortLinkCollectionName, IShortLinkModel } from '../../ShortLink/mongodb/ShortLinkModel';
 
 export interface IInvitation extends Document {
   firstName: string;
@@ -12,6 +13,7 @@ export interface IInvitation extends Document {
   parentEntityId: ObjectId;
   createdAt: Date;
   updatedAt: Date;
+  shortLink: IShortLinkModel['_id'];
 }
 
 export const InvitationCollectionName = 'invitation';
@@ -27,6 +29,7 @@ const InvitationSchema: Schema<IInvitation> = new Schema<IInvitation>({
   parentEntityId: { type: SchemaTypes.ObjectId, required: true },
   createdAt: { type: SchemaTypes.Date, required: true },
   updatedAt: { type: SchemaTypes.Date, required: true },
+  shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
 });
 
 InvitationSchema.index({ parentEntityType: 1, parentEntityId: 1 }, { unique: true });

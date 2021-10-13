@@ -11,10 +11,10 @@ import { Click, Country, Referrer } from 'src/types/Metric';
 import styles from './styles.module.scss';
 
 interface Props {
-  bitly: any;
+  metrics: any;
 }
 
-export const ClicksAnalytics: FC<Props> = ({ bitly }) => {
+export const ClicksAnalytics: FC<Props> = ({ metrics }) => {
   const [perDay, setPerDay] = useState(true);
   const ChartValues = (labels: [string], values: [string]) => {
     return {
@@ -40,25 +40,40 @@ export const ClicksAnalytics: FC<Props> = ({ bitly }) => {
     return format(new Date(date.split('+')[0]), 'MM.dd');
   };
 
+  if (!metrics.clicks) {
+    return (
+      <p className="text-all-cups">
+        total clicks: <b>0</b>
+      </p>
+    );
+  }
+
+  const {
+    clicks: incomingClicks,
+    countries: incomingCountries,
+    referrers: incomingReferrers,
+    clicksByDay: incomingClicksByDay,
+  } = metrics;
+
   const clicks = {
-    labels: bitly.clicks.map((data: Click) => dateFormatterToTime(data.date)).reverse(),
-    values: bitly.clicks.map((data: Click) => data.clicks).reverse(),
-    dates: bitly.clicks.map((data: Click) => dateFormatter(data.date)).reverse(),
+    labels: incomingClicks.map((data: Click) => dateFormatterToTime(data.date)).reverse(),
+    values: incomingClicks.map((data: Click) => data.clicks).reverse(),
+    dates: incomingClicks.map((data: Click) => dateFormatter(data.date)).reverse(),
   };
 
   const countries = {
-    labels: bitly.countries.map((data: Country) => data.value),
-    values: bitly.countries.map((data: Country) => Number(data.clicks)),
+    labels: incomingCountries.map((data: Country) => data.value),
+    values: incomingCountries.map((data: Country) => Number(data.clicks)),
   };
 
   const referrers = {
-    labels: bitly.referrers.map((data: Referrer) => data.value),
-    values: bitly.referrers.map((data: Referrer) => Number(data.clicks)),
+    labels: incomingReferrers.map((data: Referrer) => data.value),
+    values: incomingReferrers.map((data: Referrer) => Number(data.clicks)),
   };
 
   const clicksByDay = {
-    labels: bitly.clicksByDay.map((data: Click) => dateFormatter(data.date)).reverse(),
-    values: bitly.clicksByDay.map((data: Click) => data.clicks).reverse(),
+    labels: incomingClicksByDay.map((data: Click) => dateFormatter(data.date)).reverse(),
+    values: incomingClicksByDay.map((data: Click) => data.clicks).reverse(),
   };
 
   let totalClicks = 0;
@@ -78,7 +93,7 @@ export const ClicksAnalytics: FC<Props> = ({ bitly }) => {
   return (
     <>
       <Row>
-        <ButtonGroup toggle className={clsx(styles.select, 'mt-2 mb-3')}>
+        <ButtonGroup toggle className={clsx(styles.select, 'mb-3')}>
           {type.map((radio, idx) => (
             <ToggleButton
               key={idx}

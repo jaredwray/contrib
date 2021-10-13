@@ -135,8 +135,8 @@ export default function AdminAuctionPage() {
             </Col>
             <Col lg="7">
               <>
-                <Row className="text-headline">Auction metrics </Row>
-                <ClicksAnalytics bitly={metrics} />
+                <Row className="text-headline mb-2">Auction metrics </Row>
+                <ClicksAnalytics metrics={metrics} />
               </>
             </Col>
           </Row>

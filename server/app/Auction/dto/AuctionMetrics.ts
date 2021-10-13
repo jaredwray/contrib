@@ -5,7 +5,7 @@ export interface AuctionMetrics {
   referrers: object[];
 }
 
-export interface BitlyClick {
+export interface Click {
   clicks: number;
   date: string;
 }
@@ -18,7 +18,7 @@ export interface Referrer {
   clicks: number;
 }
 export interface Metrics {
-  clicks: BitlyClick[];
+  clicks: Click[];
   referrers: Referrer[];
   countries: Country[];
 }

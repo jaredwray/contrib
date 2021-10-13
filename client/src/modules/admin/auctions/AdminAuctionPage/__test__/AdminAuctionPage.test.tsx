@@ -4,7 +4,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { AuctionForAdminPageQuery, CustomerInformationQuery, AuctionMetricsQuery } from 'src/apollo/queries/auctions';
 import { AuctionBidsQuery } from 'src/apollo/queries/bids';
 import { auctionForAdminPage } from 'src/helpers/testHelpers/auction';
-import { bitly } from 'src/helpers/testHelpers/bitly';
+import { metrics } from 'src/helpers/testHelpers/metrics';
 import { bids } from 'src/helpers/testHelpers/bids';
 import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
@@ -49,7 +49,7 @@ cache.writeQuery({
     auctionId: 'testId',
   },
   data: {
-    getAuctionMetrics: bitly,
+    getAuctionMetrics: metrics,
   },
 });
 cache.writeQuery({
@@ -86,6 +86,9 @@ const arg = {
   },
 };
 describe('AdminAuctionPage ', () => {
+  beforeAll(() => {
+    process.env = { ...process.env, REACT_APP_PLATFORM_URL: 'https://dev.contrib.org' };
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });

@@ -40,7 +40,7 @@ interface AuctionResolversType {
     >;
     auction: GraphqlResolver<Auction, { id: string; organizerId?: string }>;
     getCustomerInformation: GraphqlResolver<{ phone: string; email: string } | null, { stripeCustomerId: string }>;
-    getAuctionMetrics: GraphqlResolver<AuctionMetrics, { auctionId: string }>;
+    getAuctionMetrics: GraphqlResolver<AuctionMetrics | {}, { auctionId: string }>;
     calculateShippingCost: GraphqlResolver<
       { deliveryPrice: Dinero.Dinero; timeInTransit: Dayjs },
       { auctionId: string; deliveryMethod: string }
@@ -48,6 +48,10 @@ interface AuctionResolversType {
     getContentStorageAuthData: GraphqlResolver<{ authToken: string; bucketName: string }, void>;
   };
   Mutation: {
+    updateOrCreateMetrics: GraphqlResolver<
+      { id: string },
+      { shortLinkId: string; input: { country: string; referrer: string } }
+    >;
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
     updateAuction: GraphqlResolver<Auction, { id: string; input: AuctionInput }>;
     deleteAuction: GraphqlResolver<{ id: string }, { id: string }>;
@@ -110,6 +114,8 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
   },
   Mutation: {
+    updateOrCreateMetrics: (_, { shortLinkId, input }, { auction }) =>
+      auction.updateOrCreateMetrics(shortLinkId, input),
     unfollowAuction: requireAuthenticated(
       async (_, { auctionId }, { auction, currentAccount }) =>
         await auction.unfollowAuction(auctionId, currentAccount.mongodbId),

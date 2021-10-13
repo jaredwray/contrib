@@ -1,6 +1,8 @@
 import { Connection, Types, ClientSession } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
 import Dinero, { Currency } from 'dinero.js';
+import Stripe from 'stripe';
+import { v4 as uuidv4 } from 'uuid';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionMetricModel, IAuctionMetricModel } from '../mongodb/AuctionMetricModel';
@@ -15,7 +17,7 @@ import { Auction } from '../dto/Auction';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionParcel } from '../dto/AuctionParcel';
 import { Bid } from '../../Bid/dto/Bid';
-import { AuctionMetrics, BitlyClick } from '../dto/AuctionMetrics';
+import { AuctionMetrics } from '../dto/AuctionMetrics';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 
 import { BidService } from '../../Bid/service/BidService';
@@ -32,20 +34,19 @@ import { CharityService } from '../../Charity';
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
 import { makeClicksByDay } from '../../../helpers/makeClicksByDay';
-import { fullBitlyClicks } from '../../../helpers/fullBitlyClicks';
 import { concatMetrics } from '../../../helpers/concatMetrics';
+import { objectTrimmer } from '../../../helpers/objectTrimmer';
+import { fullClicks } from '../../../helpers/fullClicks';
 
 import { AuctionRepository } from '../repository/AuctionRepository';
 import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
 import { PaymentService, StripeService } from '../../Payment';
+import { ShortLinkService } from '../../ShortLink';
 import { AppConfig } from '../../../config';
-import { UrlShortenerService } from '../../Core';
 import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
-import Stripe from 'stripe';
-import { objectTrimmer } from '../../../helpers/objectTrimmer';
 
 export class AuctionService {
   private readonly AuctionModel = AuctionModel(this.connection);
@@ -55,20 +56,53 @@ export class AuctionService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
   private readonly BidModel = BidModel(this.connection);
   private readonly AssetModel = AuctionAssetModel(this.connection);
-  private readonly attachmentsService = new AuctionAttachmentsService(this.connection, this.cloudStorage);
   private readonly auctionRepository: IAuctionRepository = new AuctionRepository(this.connection);
-  private readonly UPSService = new UPSDeliveryService();
 
   constructor(
     private readonly connection: Connection,
     private readonly paymentService: PaymentService,
     private readonly cloudStorage: GCloudStorage,
-    private readonly urlShortenerService: UrlShortenerService,
     private readonly cloudTaskService: CloudTaskService,
     private readonly handlebarsService: HandlebarsService,
     private readonly bidService: BidService,
     private readonly stripeService: StripeService,
+    private readonly shortLinkService: ShortLinkService,
+    private readonly attachmentsService: AuctionAttachmentsService,
+    private readonly UPSService: UPSDeliveryService,
   ) {}
+
+  //TODO: delete after update auctions and invitations links
+  public async updateAuctionLinks() {
+    const auctions = await this.AuctionModel.find({});
+    for (const auction of auctions) {
+      try {
+        if (auction.shortLink) {
+          return;
+        }
+
+        const { link } = auction;
+        const shortLinkId = await this.shortLinkService.createShortLink(
+          `auctions/${auction._id.toString()}`,
+          'auction',
+        );
+
+        const updateAuction = {
+          bitlyLink: link,
+          shortLink: shortLinkId,
+          link: undefined,
+        };
+
+        Object.assign(auction, updateAuction);
+
+        await auction.save();
+      } catch (error) {
+        AppLogger.error(`Can not update auction #${auction._id.toString()}, error: ${error.message}`);
+      }
+    }
+
+    return { message: 'Updated' };
+  }
+  //TODO ends
 
   //TODO: delete after update auctions
 
@@ -98,8 +132,6 @@ export class AuctionService {
         AppLogger.error(`Can not update auction #${auction._id.toString()}, error: ${error.message}`);
       }
     }
-
-    return { message: 'Updated' };
   }
 
   //TODO ends
@@ -373,32 +405,6 @@ export class AuctionService {
     }
   }
 
-  public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | null> {
-    let metrics = await this.AuctionMetricModel.findOne({ auction: auctionId });
-    const auction = await this.AuctionModel.findById(auctionId);
-
-    if (metrics) {
-      const { clicks, countries, referrers } = metrics;
-      const clicksByDay = makeClicksByDay(clicks);
-      return {
-        clicks: fullBitlyClicks(clicks, auction.startsAt, 'hour'),
-        clicksByDay: fullBitlyClicks(clicksByDay, auction.startsAt, 'day'),
-        countries,
-        referrers,
-      };
-    }
-
-    metrics = await this.urlShortenerService.getAllMetrics(auction.link);
-    const { clicks, countries, referrers } = metrics;
-    const clicksByDay = makeClicksByDay(clicks);
-    return {
-      clicks: fullBitlyClicks(clicks, auction.startsAt, 'hour'),
-      clicksByDay: fullBitlyClicks(clicksByDay, auction.startsAt, 'day'),
-      countries,
-      referrers,
-    };
-  }
-
   private async sendAuctionIsActivatedMessage(auction: IAuctionModel) {
     const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
     await this.sendNotificationForAuctionCharity(currentAuction);
@@ -416,7 +422,7 @@ export class AuctionService {
 
       await this.sendAuctionNotification(charityUserAccount.phoneNumber, MessageTemplate.AUCTION_IS_CREATED_MESSAGE, {
         auctionTitle: auction.title,
-        auctionLink: auction.link,
+        auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
       });
     } catch (error) {
       AppLogger.error(`Failed to send notification, error: ${error.message}`);
@@ -431,7 +437,7 @@ export class AuctionService {
           follower.user.phoneNumber,
           MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_CHARITY_FOLLOWERS,
           {
-            auctionLink: auction.link,
+            auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
             charityName: auction.charity.name,
           },
         );
@@ -450,7 +456,7 @@ export class AuctionService {
           follower.user.phoneNumber,
           MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_INFLUENCER_FOLLOWERS,
           {
-            auctionLink: auction.link,
+            auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
             influencerName: auction.auctionOrganizer.name,
           },
         );
@@ -462,10 +468,6 @@ export class AuctionService {
 
   public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
     let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
-    auction = await this.auctionRepository.updateAuctionLink(
-      auction._id,
-      await this.makeShortAuctionLink(auction._id.toString()),
-    );
     return this.makeAuction(auction);
   }
 
@@ -506,10 +508,74 @@ export class AuctionService {
   }
 
   public async getAuction(id: string, organizerId?: string): Promise<Auction> {
+    await this.updateAuctionLinks();
     try {
       const auction = await this.auctionRepository.getAuction(id, organizerId);
       return this.makeAuction(auction);
     } catch {}
+  }
+
+  public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | {}> {
+    let metrics = await this.AuctionMetricModel.findOne({ auction: auctionId });
+    const auction = await this.AuctionModel.findById(auctionId);
+
+    if (metrics) {
+      const { clicks, countries, referrers } = metrics;
+      const clicksByDay = makeClicksByDay(clicks);
+      return {
+        clicks: fullClicks(clicks, auction.startsAt, 'hour'),
+        clicksByDay: fullClicks(clicksByDay, auction.startsAt, 'day'),
+        countries,
+        referrers,
+      };
+    }
+    return {};
+  }
+
+  public async updateOrCreateMetrics(
+    shortLinkId: string,
+    { referrer, country }: { referrer: string; country: string },
+  ): Promise<{ id: string }> {
+    try {
+      const auctionModel = await this.AuctionModel.findOne({ shortLink: shortLinkId });
+      if (!auctionModel) {
+        return null;
+      }
+
+      const auctionId = auctionModel._id.toString();
+
+      const metricModel = await this.AuctionMetricModel.findOne({ auction: auctionId });
+
+      const date = `${dayjs().toISOString().split(':')[0]}:00:00.000Z`;
+
+      if (metricModel) {
+        const { clicks, referrers, countries } = metricModel;
+
+        Object.assign(metricModel, {
+          clicks: concatMetrics(clicks, date),
+          referrers: concatMetrics(referrers, referrer),
+          countries: concatMetrics(countries, country),
+        });
+
+        await metricModel.save();
+
+        return { id: auctionId };
+      }
+      await this.AuctionMetricModel.create([
+        {
+          auction: auctionId,
+          clicks: [{ date, clicks: 1 }],
+          referrers: [{ value: referrer, clicks: 1 }],
+          countries: [{ value: country, clicks: 1 }],
+        },
+      ]);
+
+      return { id: auctionId };
+    } catch (error) {
+      AppLogger.error(
+        `Something went wrong when try to update or create auction metrics for auction with shortLink #${shortLinkId}: ${error.message}`,
+      );
+    }
   }
 
   public async maybeActivateAuction(id: string, organizerId: string): Promise<Auction> {
@@ -568,68 +634,6 @@ export class AuctionService {
     const auctions = await this.AuctionModel.find(filters);
 
     return AuctionService.makeTotalRaisedAmount(auctions);
-  }
-
-  public async createOrUpdateAuctionMetrics(link: string, auctionId: string): Promise<void> {
-    const session = await this.connection.startSession();
-    const transactionOptions = {
-      readPreference: 'primary',
-      readConcern: { level: 'local' },
-      writeConcern: { w: 'majority' },
-    };
-    session.startTransaction(transactionOptions);
-
-    try {
-      const metricsModel = await this.AuctionMetricModel.findOne({ auction: auctionId }, null, { session });
-      await this.getMetrics(metricsModel, session, auctionId, link);
-      await session.commitTransaction();
-    } catch (error) {
-      AppLogger.error(
-        `Something went wrong during AuctionMertics update for auction #${auctionId}. Error: ${error.message}`,
-      );
-      await session.abortTransaction();
-    }
-  }
-
-  public async getMetrics(
-    metricsModel: IAuctionMetricModel,
-    session: ClientSession,
-    auctionId: string,
-    link: string,
-  ): Promise<any> {
-    if (metricsModel) {
-      const units = dayjs().diff(dayjs(metricsModel.lastUpdateAt), 'm');
-      if (units === 0) {
-        return;
-      }
-
-      const { clicks, referrers, countries } = await this.urlShortenerService.getMetricsFromLastUpdate(link, units);
-
-      Object.assign(metricsModel, {
-        clicks: Array.from(
-          new Set([...metricsModel.clicks, ...clicks].map((value: BitlyClick) => JSON.stringify(value))),
-        ).map((value: string) => JSON.parse(value)),
-        referrers: concatMetrics(metricsModel.referrers, referrers),
-        countries: concatMetrics(metricsModel.countries, countries),
-        lastUpdateAt: dayjs().toISOString(),
-      });
-
-      await metricsModel.save({ session });
-    } else {
-      const { clicks, referrers, countries } = await this.urlShortenerService.getAllMetrics(link);
-      await this.AuctionMetricModel.create(
-        [
-          {
-            auction: auctionId,
-            clicks,
-            referrers,
-            countries,
-            lastUpdateAt: dayjs().toISOString(),
-          },
-        ],
-        { session },
-      );
-    }
   }
 
   public async updateAuction(id: string, userId: string, input: AuctionInput, isAdmin: boolean): Promise<Auction> {
@@ -756,7 +760,7 @@ export class AuctionService {
           }
           await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
             auctionTitle: auction.title,
-            auctionLink: auction.link,
+            auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
           });
         } catch (error) {
           AppLogger.error(`Failed to send notification for auction #${id}, error: ${error.message}`);
@@ -770,28 +774,6 @@ export class AuctionService {
     } finally {
       session.endSession();
     }
-  }
-
-  public async scheduleAuctionMetrics(): Promise<{ message: string }> {
-    const auctions = await this.AuctionModel.find({
-      status: {
-        $in: [
-          AuctionStatus.ACTIVE,
-          AuctionStatus.FAILED,
-          AuctionStatus.SETTLED,
-          AuctionStatus.SOLD,
-          AuctionStatus.STOPPED,
-        ],
-      },
-    });
-    for (const auction of auctions) {
-      try {
-        await this.createOrUpdateAuctionMetrics(auction.link, auction._id.toString());
-      } catch (error) {
-        AppLogger.error(`Something went wrong during Auction Metrics update. Error: ${error.message}`);
-      }
-    }
-    return { message: 'Scheduled' };
   }
 
   public async scheduleAuctionJobSettle(): Promise<{ message: string }> {
@@ -886,7 +868,6 @@ export class AuctionService {
     const currentAuction = await this.auctionRepository.getAuctionOrganizerUserAccountFromAuction(auction);
 
     const phoneNumber = currentAuction.auctionOrganizer.userAccount.phoneNumber;
-    const shortUrl = await this.makeShortAuctionLink(currentAuction._id.toString());
 
     await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_AUCTIONORGANIZER, {
       auctionTitle: currentAuction.title,
@@ -894,7 +875,7 @@ export class AuctionService {
         amount: currentAuction.currentPrice,
         currency: currentAuction.priceCurrency as Currency,
       }).toFormat('$0,0'),
-      shortUrl,
+      shortUrl: this.shortLinkService.makeShortLink(currentAuction.shortLink.slug),
     });
   }
 
@@ -917,7 +898,7 @@ export class AuctionService {
           timeLeftText,
           influencerName: currentAuction.auctionOrganizer.name,
           aunctionName: currentAuction.title,
-          auctionLink: currentAuction.link,
+          auctionLink: this.shortLinkService.makeShortLink(currentAuction.shortLink.slug),
         });
       } catch (error) {
         AppLogger.warn(
@@ -980,7 +961,7 @@ export class AuctionService {
       await lastAuctionBid.populate({ path: 'user', model: this.UserAccountModel }).execPopulate();
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
 
-      const messageData = this.getMessageTemplateAndVariables(
+      const messageData = await this.getMessageTemplateAndVariables(
         AppConfig.delivery.UPSSMSWithDeliveryLink,
         auction,
         'WON',
@@ -1096,16 +1077,6 @@ export class AuctionService {
     return auctions.map((auction) => auction.currentPrice ?? 0).reduce((total, next) => (total += next), 0);
   }
 
-  private makeLongAuctionLink(id: string) {
-    const url = new URL(AppConfig.app.url);
-    url.pathname = `/auctions/${id}`;
-    return url.toString();
-  }
-
-  private async makeShortAuctionLink(id: string) {
-    return this.urlShortenerService.shortenUrl(this.makeLongAuctionLink(id));
-  }
-
   private makeAssets(assets: IAuctionAssetModel[]): AuctionAssets[] {
     return assets
       .map((asset) => AuctionService.makeAuctionAttachment(asset))
@@ -1185,7 +1156,7 @@ export class AuctionService {
       throw new AppError('Something went wrong. Please, try again later', ErrorCode.BAD_REQUEST);
     }
     try {
-      const messageData = this.getMessageTemplateAndVariables(
+      const messageData = await this.getMessageTemplateAndVariables(
         AppConfig.delivery.UPSSMSWithDeliveryLink,
         auction,
         'BOUGHT',
@@ -1293,10 +1264,11 @@ export class AuctionService {
     }
   }
 
-  public getMessageTemplateAndVariables(enviroment, auction, type) {
+  public async getMessageTemplateAndVariables(enviroment: boolean, auction: IAuctionModel, type: string) {
+    const populatedAuction = await this.auctionRepository.getPopulatedAuction(auction);
     const messageVariables: { auctionTitle: string; auctionLink: string; auctionDeliveryLink?: string } = {
       auctionTitle: auction.title,
-      auctionLink: auction.link,
+      auctionLink: this.shortLinkService.makeShortLink(populatedAuction.shortLink.slug),
     };
 
     if (enviroment) {
@@ -1336,9 +1308,9 @@ export class AuctionService {
       auctionOrganizer,
       priceCurrency,
       fairMarketValue,
-      link: rawLink,
       followers,
       winner,
+      shortLink,
       ...rest
     } = model.toObject();
 
@@ -1365,9 +1337,6 @@ export class AuctionService {
         ErrorCode.BAD_REQUEST,
       );
     }
-    // temporal: some older auctions won't have a pre-populated link in dev environment
-    // one day we'll clear our dev database, and this line can removed then
-    const link = rawLink || this.makeLongAuctionLink(_id.toString());
 
     return {
       id: _id.toString(),
@@ -1404,7 +1373,12 @@ export class AuctionService {
         };
       }),
       winner: winner ? this.makeAuctionWinner(winner) : null,
-      link,
+      shortLink: {
+        id: shortLink._id.toString(),
+        link: shortLink.link,
+        slug: shortLink.slug,
+        entity: shortLink?.entity || null,
+      },
       status,
       isActive: status === AuctionStatus.ACTIVE,
       isDraft: status === AuctionStatus.DRAFT,

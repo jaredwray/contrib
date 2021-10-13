@@ -98,17 +98,6 @@ CLOUDFLARE_STREAMING_KEY=streamingKey
 CLOUDFLARE_USER_ID=userId
 ```
 
-## For BITLY
-
-We using BITLY for URL shortening. Required data examples:
-
-#### examples
-
-```
-BITLY_DOMAIN=go.contrib.org
-BITLY_ACCESS_TOKEN=bitlyToken
-```
-
 ## For STRIPE
 
 We using STRIPE for monetary transactions. Required data examples:

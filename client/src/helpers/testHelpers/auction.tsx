@@ -1,5 +1,4 @@
 import { bids } from './bids';
-import { bitly } from './bitly';
 
 export const AuctionQueryAuction = {
   attachments: [{ cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test' }],
@@ -43,7 +42,10 @@ export const AuctionQueryAuction = {
   isSold: false,
   isStopped: true,
   itemPrice: { amount: 10000, currency: 'USD', precision: 2 },
-  link: 'test',
+  bitlyLink: 'testBitlyLink',
+  shortLink: {
+    slug: 'testSlug',
+  },
   startDate: '2021-06-21T08:05:21.000Z',
   startPrice: { amount: 33300, currency: 'USD', precision: 2 },
   status: 'ACTIVE',
@@ -83,6 +85,10 @@ export const auction = {
     websiteUrl: 'test',
     followers: [],
   },
+  bitlyLink: 'testBitlyLink',
+  shortLink: {
+    slug: 'testSlug',
+  },
   startDate: '2021-05-31T14:22:48.000+00:00',
   endDate: '2021-05-31T14:22:48.000+00:00',
   stoppedAt: '2021-05-31T14:22:48.000+00:00',
@@ -93,7 +99,6 @@ export const auction = {
   currentPrice: { amount: 100, currency: 'USD', precision: 2 },
   startPrice: { amount: 100, currency: 'USD', precision: 2 },
   itemPrice: { amount: 1000, currency: 'USD', precision: 2 },
-  link: 'test',
   fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
   followers: [],
   delivery: {
@@ -109,8 +114,7 @@ export const auction = {
 
 export const auctionForAdminPage = {
   auctionOrganizer: { id: '6089456271a69b3254201019', name: 'sf.admin/influencer' },
-  bids: bids,
-  bitly: bitly,
+  bids,
   charity: {
     id: '60c1f579ff49a51d6f2ee61b',
     name: 'My Active Charity Name',
@@ -123,7 +127,10 @@ export const auctionForAdminPage = {
   isActive: false,
   isFailed: true,
   isSold: false,
-  link: 'https://go.contrib.org/3qbU9JG',
+  bitlyLink: 'https://go.contrib.org/3qbU9JG',
+  shortLink: {
+    slug: 'testSlug',
+  },
   startDate: '2021-06-23T08:00:18.000Z',
   startPrice: { amount: 100, currency: 'USD', precision: 2 },
   status: 'FAILED',
