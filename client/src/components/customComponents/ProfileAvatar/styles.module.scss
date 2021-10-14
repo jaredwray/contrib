@@ -1,0 +1,17 @@
+@import 'src/variables.scss';
+
+.avatar {
+  width: 194px;
+  height: 194px;
+  margin: 0 auto;
+  border-radius: 50%;
+  transform: translateY(33px);
+}
+
+@media (max-width: $small-weight) {
+  .avatar {
+    width: 120px;
+    height: 120px;
+    transform: translateY(20px);
+  }
+}

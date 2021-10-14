@@ -3,7 +3,7 @@ import { FC, useContext, useCallback, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
@@ -11,6 +11,7 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { ReadMore } from 'src/components/buttons/ReadMoreButton';
 import WatchBtn from 'src/components/buttons/WatchBtn';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
+import { ProfileAvatar } from 'src/components/customComponents/ProfileAvatar';
 import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
@@ -120,7 +121,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
           </Container>
         )}
         <div className={styles.header}>
-          <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
+          <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
         </div>
         <Container className={styles.content}>
           <Row>
