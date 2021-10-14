@@ -508,7 +508,6 @@ export class AuctionService {
   }
 
   public async getAuction(id: string, organizerId?: string): Promise<Auction> {
-    await this.updateAuctionLinks();
     try {
       const auction = await this.auctionRepository.getAuction(id, organizerId);
       return this.makeAuction(auction);
