@@ -8,5 +8,5 @@ export default function useAuctionPreviewAttachment(attachments: AuctionAttachme
     }
     return previewAttachment.url;
   }
-  return '';
+  return '/content/img/default-auction-preview.webp';
 }
