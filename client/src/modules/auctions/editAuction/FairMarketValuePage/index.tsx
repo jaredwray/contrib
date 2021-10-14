@@ -70,7 +70,7 @@ const FairMarketValuePage = () => {
     return null;
   }
   const textBlock =
-    'Enter the Fair Market Value of the Product. Only Amounts To Charity in excess of the FMV may constitute a tax-deductible charitable contribution under U.S. tax law.';
+    'The fair market value is the price something would sell for on the open market. A good example of this is a jersey signed or not would have a fair market value of $99 dollars which is what it is online.';
 
   setPageTitle(`Edit Auction ${auction.title} | Fair Market Value`);
 

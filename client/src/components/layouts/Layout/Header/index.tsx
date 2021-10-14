@@ -49,6 +49,7 @@ export default function Header() {
                       />
                     </>
                   )}
+                  <MenuNavLink link="/auctions" title="Auctions" />
                   <MenuNavLink link="/influencers" title="Influencers" />
                   <MenuNavLink link="/charities" title="Charities" />
                   {account?.isAdmin && (
