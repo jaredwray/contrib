@@ -25,6 +25,7 @@ import EditAuctionCharityPage from 'src/modules/auctions/editAuction/CharityPage
 import EditAuctionDescriptionPage from 'src/modules/auctions/editAuction/DescriptionPage';
 import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
 import EditAuctionDurationPage from 'src/modules/auctions/editAuction/DurationPage';
+import EditFairMarketValuePage from 'src/modules/auctions/editAuction/FairMarketValuePage';
 import EditStartPricePage from 'src/modules/auctions/editAuction/StartPricePage';
 import EditAuctionPage from 'src/modules/auctions/editAuction/TitlePage';
 import AllCharitiesPage from 'src/modules/charity/CharitiesPage';
@@ -138,6 +139,11 @@ export const App = () => {
                   <PrivateRoute
                     component={EditAuctionBuyNowPricePage}
                     path="/auctions/:auctionId/price/buying"
+                    role="influencer"
+                  />
+                  <PrivateRoute
+                    component={EditFairMarketValuePage}
+                    path="/auctions/:auctionId/price/fmv"
                     role="influencer"
                   />
                   <PrivateRoute

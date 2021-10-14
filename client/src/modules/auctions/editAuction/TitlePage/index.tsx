@@ -91,7 +91,7 @@ const EditAuctionPage = () => {
       initialValues={{ title: auction?.title || null, description: auction?.description || null }}
       isActive={isActive}
       loading={updating || loading}
-      progress={11.11}
+      progress={10}
       step="1"
       title={isActive ? 'Edit Auction Info' : 'Auction Title'}
       onSubmit={handleSubmit}

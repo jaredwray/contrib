@@ -13,7 +13,7 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 
 import Row from '../common/Row';
 
-const StartPricePage = () => {
+const FairMarketValuePage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const { showMessage, showError, showWarning } = useShowNotification();
@@ -24,7 +24,7 @@ const StartPricePage = () => {
     variables: { id: auctionId },
   });
   const auction = auctionData?.auction;
-  const { isActive, startPrice } = auction || {};
+  const { isActive, fairMarketValue } = auction || {};
 
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
     onCompleted() {
@@ -32,18 +32,18 @@ const StartPricePage = () => {
         history.goBack();
         return;
       }
-      history.push(`/auctions/${auctionId}/price/buying`);
+      history.push(`/auctions/${auctionId}/duration`);
     },
   });
   const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}/photo`);
+    history.push(`/auctions/${auctionId}/price/buying`);
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(
     async (values) => {
-      setSubmitValue(values.startPrice);
-      if (values.startPrice.amount === 0) {
-        showWarning('Starting Price cannot be zero');
+      setSubmitValue(values.fairMarketValue);
+      if (values.fairMarketValue.amount === 0) {
+        showWarning('Fair Market Value cannot be zero');
         return;
       }
       try {
@@ -70,25 +70,25 @@ const StartPricePage = () => {
     return null;
   }
   const textBlock =
-    'The starting price for the item which determines the minimum amount that can be bid. The item will not sell if no bids at or above this price are received.';
+    'Enter the Fair Market Value of the Product. Only Amounts To Charity in excess of the FMV may constitute a tax-deductible charitable contribution under U.S. tax law.';
 
-  setPageTitle(`Edit Auction ${auction.title} | Starting Price`);
+  setPageTitle(`Edit Auction ${auction.title} | Fair Market Value`);
 
   return (
     <StepByStepPageLayout
       header="Auction an item"
-      initialValues={{ startPrice: Dinero(submitValue ?? startPrice).toObject() }}
+      initialValues={{ fairMarketValue: Dinero(submitValue ?? fairMarketValue).toObject() }}
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      progress={50}
-      step="5"
-      title={isActive ? 'Edit Starting Price' : 'Starting Price'}
+      progress={70}
+      step="7"
+      title={isActive ? 'Edit Fair Market Value' : 'Fair Market Value'}
       onSubmit={handleSubmit}
     >
-      <Row description={textBlock}>{!loadingQuery && <MoneyField name="startPrice" />}</Row>
+      <Row description={textBlock}>{!loadingQuery && <MoneyField name="fairMarketValue" />}</Row>
     </StepByStepPageLayout>
   );
 };
 
-export default StartPricePage;
+export default FairMarketValuePage;

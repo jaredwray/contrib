@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useContext, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
@@ -6,7 +6,6 @@ import { Button } from 'react-bootstrap';
 
 import Form from 'src/components/forms/Form/Form';
 import MoneyField from 'src/components/forms/inputs/MoneyField';
-import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import styles from './styles.module.scss';
 
@@ -20,7 +19,6 @@ const MaxBidValue = 999999;
 export const BidInput: FC<Props> = ({ minBid, onSubmit, fairMarketValue }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialFormValues = useMemo(() => ({ bid: minBid.toObject() }), [minBid.getAmount()]);
-  const { account } = useContext(UserAccountContext);
   const [disabled, setDisabled] = useState(false);
   const hasFairMarketValue = fairMarketValue && fairMarketValue.getAmount() > 0;
   const handleSubmit = useCallback(
@@ -48,7 +46,7 @@ export const BidInput: FC<Props> = ({ minBid, onSubmit, fairMarketValue }) => {
           title="Enter your max bid amount"
         />
       )}
-      {account?.isAdmin && hasFairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
+      {hasFairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
       {!isMaxBidCharged && (
         <>
           <Button className="w-100" disabled={disabled} title="Place your bid" type="submit" variant="dark">

@@ -40,7 +40,7 @@ const DurationPage = () => {
     return durationOptions.find(({ value }) => parseInt(value, 10) === duration);
   }, [auction]);
   const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}/price/buying`);
+    history.push(`/auctions/${auctionId}/price/fmv`);
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(
@@ -79,8 +79,8 @@ const DurationPage = () => {
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      progress={77.77}
-      step="7"
+      progress={80}
+      step="8"
       title={isActive ? 'Edit Duration' : 'Duration'}
       onSubmit={handleSubmit}
     >

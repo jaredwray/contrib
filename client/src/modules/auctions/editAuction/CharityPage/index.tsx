@@ -53,9 +53,9 @@ const CharityPage = () => {
     history.push(`/auctions/${auctionId}/duration`);
   }, [auctionId, history]);
 
-  const { description, itemPrice, startPrice, attachments } = auction || {};
+  const { description, itemPrice, startPrice, attachments, fairMarketValue } = auction || {};
   const videoAttachments = attachments?.filter((attachment: any) => attachment?.type === 'VIDEO');
-  const isFullObject = Boolean(description && itemPrice && videoAttachments.length);
+  const isFullObject = Boolean(description && itemPrice && fairMarketValue && videoAttachments.length);
 
   const submitValidationRedirect = useCallback(() => {
     if (!description) {
@@ -73,8 +73,13 @@ const CharityPage = () => {
       showError('You should fill in starting price field');
       return;
     }
+    if (!fairMarketValue) {
+      history.push(`/auctions/${auctionId}/price/fmv`);
+      showError('You should fill in fair market value field');
+      return;
+    }
     return;
-  }, [videoAttachments?.length, auctionId, description, history, startPrice, itemPrice, showError]);
+  }, [videoAttachments?.length, auctionId, description, history, startPrice, itemPrice, fairMarketValue, showError]);
   const handleSubmit = useCallback(async () => {
     if (!selectedOption) {
       showError('You should select charity');
@@ -136,8 +141,8 @@ const CharityPage = () => {
       isActive={isActive}
       loading={updating || updatingStatus}
       prevAction={handlePrevAction}
-      progress={88.88}
-      step="8"
+      progress={90}
+      step="9"
       title={isActive ? 'Edit Charity' : 'Charity'}
       onSubmit={handleSubmit}
     >
