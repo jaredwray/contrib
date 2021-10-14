@@ -86,7 +86,7 @@ const AuctionVideoPage = () => {
       initialValues={{ photos: [], videos: [] }}
       loading={!!attachments?.loading.length}
       prevAction={handlePrevAction}
-      progress={33.33}
+      progress={30}
       step="3"
       title="Videos"
       onSubmit={handleSubmit}

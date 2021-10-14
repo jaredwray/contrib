@@ -363,6 +363,7 @@ export const GetAuctionDetailsQuery = gql`
       isActive
       startPrice
       startDate
+      fairMarketValue
       charity {
         id
         name

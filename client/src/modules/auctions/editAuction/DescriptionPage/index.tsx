@@ -74,7 +74,7 @@ const EditAuctionDescriptionPage = () => {
       isActive={isActive}
       loading={updating || loadingQuery}
       prevAction={handlePrevAction}
-      progress={22.22}
+      progress={20}
       step="2"
       title={isActive ? 'Edit Description' : 'Description'}
       onSubmit={handleSubmit}

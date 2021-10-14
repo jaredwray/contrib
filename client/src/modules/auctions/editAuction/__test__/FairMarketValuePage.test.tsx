@@ -7,12 +7,12 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/forms/Form/Form';
-import StepByStepPageRow from 'src/components/layouts/StepByStepPageLayout/StepByStepPageRow';
+import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 
-import TitlePageEdit from '../TitlePage';
+import FairMarketValuePage from '../FairMarketValuePage';
 
 const mockHistoryFn = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -41,7 +41,7 @@ const auction = {
   status: 'ACTIVE',
   isActive: true,
   startPrice: { amount: 10, currency: 'USD', precision: 2 },
-  fairMarketValue: { amount: 10, currency: 'USD', precision: 2 },
+  fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
   startDate: '2021-07-01T22:28:00.261Z',
   charity: { id: 'testId', name: 'test' },
   auctionOrganizer: { id: 'testId', favoriteCharities: [] },
@@ -83,7 +83,7 @@ const mocks = [
   {
     request: {
       query: UpdateAuctionMutation,
-      variables: { id: 'testId', description: 'test', title: 'test' },
+      variables: { id: 'testId', fairMarketValue: { amount: 100, currency: 'USD', precision: 2 } },
     },
     newData: () => {
       mockFn();
@@ -109,11 +109,24 @@ const mocks = [
     },
   },
 ];
+const errorMocks = [
+  {
+    request: {
+      query: UpdateAuctionMutation,
+      variables: {},
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {},
+      };
+    },
+  },
+];
 const submitValues = {
-  description: 'test',
-  title: 'test',
+  fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
 };
-describe('EditAuctionTitlePageEdit ', () => {
+describe('EditFairMarketValuePage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
@@ -121,7 +134,7 @@ describe('EditAuctionTitlePageEdit ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider>
-              <TitlePageEdit />
+              <FairMarketValuePage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -141,7 +154,7 @@ describe('EditAuctionTitlePageEdit ', () => {
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
               <MockedProvider cache={cache}>
-                <TitlePageEdit />
+                <FairMarketValuePage />
               </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
@@ -155,8 +168,7 @@ describe('EditAuctionTitlePageEdit ', () => {
     expect(wrapper!).toHaveLength(1);
     expect(wrapper!.find(Layout)).toHaveLength(1);
 
-    wrapper!.find(StepByStepPageRow).children().find('Button').at(0).simulate('click');
-    expect(mockHistoryFn).toHaveBeenCalled();
+    wrapper!.find(StepByStepPageLayout).prop('prevAction')!();
   });
   it('component should return null', async () => {
     let wrapper: ReactWrapper;
@@ -165,7 +177,7 @@ describe('EditAuctionTitlePageEdit ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={undefinedlDataCache}>
-              <TitlePageEdit />
+              <FairMarketValuePage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -184,7 +196,7 @@ describe('EditAuctionTitlePageEdit ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={nullDataCache}>
-              <TitlePageEdit />
+              <FairMarketValuePage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -196,14 +208,14 @@ describe('EditAuctionTitlePageEdit ', () => {
     });
     expect(mockHistoryFn).toBeCalled();
   });
-  it('component should redirect if isActive true and user is not admin', async () => {
+  it('component should redirect if isActive true', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache}>
-              <TitlePageEdit />
+              <FairMarketValuePage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -223,7 +235,7 @@ describe('EditAuctionTitlePageEdit ', () => {
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
               <MockedProvider cache={cache} mocks={mocks}>
-                <TitlePageEdit />
+                <FairMarketValuePage />
               </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
@@ -235,7 +247,10 @@ describe('EditAuctionTitlePageEdit ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!.find(Form).props().onSubmit({});
+      wrapper!
+        .find(Form)
+        .props()
+        .onSubmit({ fairMarketValue: { amount: 0, currency: 'USD', precision: 2 } });
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
@@ -247,7 +262,32 @@ describe('EditAuctionTitlePageEdit ', () => {
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
               <MockedProvider cache={cache2} mocks={mocks}>
-                <TitlePageEdit />
+                <FairMarketValuePage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitValues);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockHistoryFn).toHaveBeenCalled();
+  });
+  it('should submit form and not call the mutation becouse of error', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cache} mocks={mocks}>
+                <FairMarketValuePage />
               </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
@@ -271,8 +311,8 @@ describe('EditAuctionTitlePageEdit ', () => {
         <MemoryRouter>
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache} mocks={mocks}>
-                <TitlePageEdit />
+              <MockedProvider cache={cache} mocks={errorMocks}>
+                <FairMarketValuePage />
               </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
@@ -286,7 +326,6 @@ describe('EditAuctionTitlePageEdit ', () => {
     await act(async () => {
       wrapper!.find(Form).props().onSubmit(submitValues);
     });
-    expect(mockFn).toHaveBeenCalledTimes(1);
-    expect(mockHistoryFn).toHaveBeenCalled();
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });

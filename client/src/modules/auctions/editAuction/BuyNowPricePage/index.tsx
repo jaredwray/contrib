@@ -33,7 +33,7 @@ const BuyNowPricePage = () => {
         history.goBack();
         return;
       }
-      history.push(`/auctions/${auctionId}/duration`);
+      history.push(`/auctions/${auctionId}/price/fmv`);
     },
   });
   const handlePrevAction = useCallback(() => {
@@ -89,7 +89,7 @@ const BuyNowPricePage = () => {
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      progress={66.66}
+      progress={60}
       step="6"
       title={isActive ? 'Edit Buy it Now Price' : 'Buy it Now'}
       onSubmit={handleSubmit}
