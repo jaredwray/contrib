@@ -31,5 +31,5 @@ test('it should return "thumbnail+?width"', () => {
   expect(useAuctionPreviewAttachment(videoAttachment)).toBe('thumbnail?width=800');
 });
 test('it should return " "', () => {
-  expect(useAuctionPreviewAttachment(EmptAttachments)).toBe('');
+  expect(useAuctionPreviewAttachment(EmptAttachments)).toBe('/content/img/default-auction-preview.webp');
 });
