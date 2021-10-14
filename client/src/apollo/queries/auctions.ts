@@ -437,6 +437,7 @@ export const AddAuctionMediaMutation = gql`
       thumbnail
       uid
       originalFileName
+      url
     }
   }
 `;
