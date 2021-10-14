@@ -3,7 +3,7 @@ import { FC, useContext, useCallback, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
@@ -11,6 +11,7 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { ReadMore } from 'src/components/buttons/ReadMoreButton';
 import WatchBtn from 'src/components/buttons/WatchBtn';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
+import { ProfileAvatar } from 'src/components/customComponents/ProfileAvatar';
 import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
@@ -22,7 +23,6 @@ import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { FollowInfluencer, UnfollowInfluencer } from '../../../apollo/queries/influencers';
-import AdminDropdown from './AdminDropdown';
 import styles from './InfluencerProfilePageContent.module.scss';
 
 interface Props {
@@ -125,33 +125,11 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
                   Edit
                 </Link>
               )}
-              {account?.isAdmin && (
-                <AdminDropdown>
-                  <Link
-                    className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
-                    to={`/assistants/${influencer.id}`}
-                  >
-                    Assistants
-                  </Link>
-                  <Link
-                    className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
-                    to={`/auctions/${influencer.id}/new`}
-                  >
-                    Create Auction
-                  </Link>
-                  <Link
-                    className={clsx(styles.dropdownItem, 'dropdown-item text-label float-right')}
-                    to={`/profiles/${influencer.id}/edit`}
-                  >
-                    Edit
-                  </Link>
-                </AdminDropdown>
-              )}
             </Col>
           </Row>
         </Container>
         <div className={styles.header}>
-          <Image roundedCircle className={styles.avatar} src={ResizedImageUrl(influencer.avatarUrl, 194)} />
+          <ProfileAvatar src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
 
         <Container className={styles.content}>
