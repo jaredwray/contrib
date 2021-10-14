@@ -13,7 +13,7 @@ export const AuctionAssetCollectionName = 'auction_asset';
 
 const AuctionAssetSchema: Schema<IAuctionAssetModel> = new Schema<IAuctionAssetModel>({
   type: { type: SchemaTypes.String, default: AssetType.IMAGE, required: true },
-  url: { type: SchemaTypes.String, required: true },
+  url: { type: SchemaTypes.String },
   cloudflareUrl: { type: SchemaTypes.String },
   uid: { type: SchemaTypes.String },
   thumbnail: { type: SchemaTypes.String },

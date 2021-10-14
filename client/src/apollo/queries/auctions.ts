@@ -4,7 +4,7 @@ export const ContentStorageAuthDataQuery = gql`
   query ContentStorageAuthDataQuery {
     getContentStorageAuthData {
       authToken
-      bucketName
+      accountId
     }
   }
 `;
@@ -265,6 +265,7 @@ export const GetAuctionMediaQuery = gql`
         id
       }
       attachments {
+        id
         uid
         url
         type
@@ -427,9 +428,9 @@ export const UpdateAuctionMutation = gql`
 `;
 
 export const AddAuctionMediaMutation = gql`
-  mutation AddAuctionMedia($id: String!, $file: Upload, $url: String, $filename: String) {
-    addAuctionAttachment(id: $id, attachment: $file, url: $url, filename: $filename) {
-      url
+  mutation AddAuctionMedia($id: String!, $file: Upload, $uid: String, $filename: String) {
+    addAuctionAttachment(id: $id, attachment: $file, uid: $uid, filename: $filename) {
+      id
       type
       cloudflareUrl
       thumbnail
@@ -440,8 +441,9 @@ export const AddAuctionMediaMutation = gql`
 `;
 
 export const DeleteAuctionMediaMutation = gql`
-  mutation DeleteAuctionMedia($id: String!, $url: String!) {
-    deleteAuctionAttachment(id: $id, attachmentUrl: $url) {
+  mutation DeleteAuctionMedia($auctionId: String!, $attachmentId: String!) {
+    deleteAuctionAttachment(auctionId: $auctionId, attachmentId: $attachmentId) {
+      id
       url
       type
       cloudflareUrl

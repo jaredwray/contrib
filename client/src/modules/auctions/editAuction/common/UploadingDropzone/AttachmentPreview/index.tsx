@@ -38,13 +38,13 @@ const AttachementPreview: FC<Props> = ({
       setAttachments((prevState: AttachmentsStateInterface) => {
         return {
           ...prevState,
-          uploaded: prevState.uploaded.filter((uploaded: AuctionAttachment) => uploaded.url !== attachment.url),
+          uploaded: prevState.uploaded.filter((uploaded: AuctionAttachment) => uploaded.id !== attachment.id),
           loading: prevState.loading,
         };
       });
 
       removeAuctionMedia({
-        variables: { id: auctionId, url: attachment.url },
+        variables: { auctionId, attachmentId: attachment.id },
       });
     },
     [auctionId, removeAuctionMedia, setAttachments],

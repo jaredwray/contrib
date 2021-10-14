@@ -13,50 +13,45 @@ export class AuctionAttachmentsService {
 
   constructor(private readonly connection: Connection, private readonly cloudStorage: GCloudStorage) {}
 
-  public async contentStorageAuthTokenRequest(): Promise<{ authToken: string; bucketName: string }> {
-    const {
-      clientId: client_id,
-      clientSecret: client_secret,
-      refreshToken: refresh_token,
-    } = AppConfig.googleCloud.contentStorageAuth;
-
-    const { data } = await axios.post('https://accounts.google.com/o/oauth2/token', {
-      client_id,
-      client_secret,
-      refresh_token,
-      grant_type: 'refresh_token',
-    });
-
-    return {
-      authToken: data.access_token,
-      bucketName: AppConfig.googleCloud.bucketName,
-    };
-  }
-
   public async uploadFileAttachment(
     auctionId: string,
     organizerId: string,
     attachment: Promise<IFile> | null,
-    uploadUrl: string,
+    uid: string | null,
   ): Promise<IAuctionAssetModel> {
-    const uuid = getUuid();
-    const attachmentPath = `${organizerId}/auctions/${auctionId}/${uuid}/${uuid}`;
-
     try {
-      const { fileType, url, uid } = uploadUrl
-        ? await this.cloudStorage.cloudFlareVideoUpload({
-            fileName: attachmentPath,
-            url: uploadUrl,
-          })
-        : await this.cloudStorage.uploadFile(attachment, { fileName: attachmentPath });
-      const assetUid = Boolean(uid) ? { uid } : {};
-      const asset = new this.AuctionAsset({ url, type: fileType, ...assetUid });
+      const assetOptions = await this.auctionAssetOptions(auctionId, organizerId, attachment, uid);
+      const asset = new this.AuctionAsset(assetOptions);
       await asset.save();
       return asset;
     } catch (error) {
       AppLogger.error(`Something went wrong during upload attachment for auction #${auctionId}: ${error.message}`);
       throw new AppError(`Something went wrong. Please, try later`, ErrorCode.INTERNAL_ERROR);
     }
+  }
+
+  private async auctionAssetOptions(
+    auctionId: string,
+    organizerId: string,
+    attachment: Promise<IFile> | null,
+    uid: string,
+  ): Promise<{ url: string | undefined; type: string; uid: string | undefined }> {
+    if (uid) {
+      return { url: undefined, type: 'VIDEO', uid };
+    } else {
+      return await this.uploadAttachment(auctionId, organizerId, attachment);
+    }
+  }
+
+  private async uploadAttachment(
+    auctionId: string,
+    organizerId: string,
+    attachment: Promise<IFile> | null,
+  ): Promise<{ url: string; type: string; uid: undefined }> {
+    const uuid = getUuid();
+    const attachmentPath = `${organizerId}/auctions/${auctionId}/${uuid}/${uuid}`;
+    const { fileType, url } = await this.cloudStorage.uploadFile(attachment, { fileName: attachmentPath });
+    return { url, type: fileType, uid: undefined };
   }
 
   public async removeFileAttachment(attachmentUrl: string): Promise<void> {

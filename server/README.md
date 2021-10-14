@@ -70,7 +70,6 @@ We using Cloud Storage for storing entity assets. Required data examples:
 
 ```
 CONTENT_STORAGE_NAME=content-dev.contrib.org
-CONTENT_STORAGE_AUTH='{"clientId": "clientId","clientSecret": "clientSecret","refreshToken": "refreshToken"}'
 CONTENT_STORAGE_KEY='{"type": "serviceType","project_id": "someId","private_key_id": "privatKeyID","private_key": "privateKey","client_email": "someEmail","client_id": "clientId","auth_uri": "authUri","token_uri": "tokenUri","auth_provider_x509_cert_url": "authProviderX509CertUrl","client_x509_cert_url": "clientX509CertUrl"}'
 ```
 

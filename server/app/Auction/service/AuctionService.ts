@@ -201,8 +201,8 @@ export class AuctionService {
     await auctionOrganizer.save();
   }
 
-  public async getContentStorageAuthData(): Promise<{ authToken: string; bucketName: string }> {
-    return await this.attachmentsService.contentStorageAuthTokenRequest();
+  public getContentStorageAuthData(): { authToken: string; accountId: string } {
+    return { authToken: AppConfig.cloudflare.token, accountId: AppConfig.cloudflare.user };
   }
 
   public async calculateShippingCost(
@@ -590,7 +590,7 @@ export class AuctionService {
     id: string,
     organizerId: string | null,
     attachment: Promise<IFile>,
-    url: string | null,
+    uid: string | null,
     filename: string | null,
   ): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, organizerId);
@@ -603,7 +603,7 @@ export class AuctionService {
         id,
         auction.auctionOrganizer._id.toString(),
         attachment,
-        url,
+        uid,
       );
 
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });
@@ -1201,24 +1201,26 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  private async deleteAttachmentFromCloud(url: string, uid: string | undefined): Promise<void> {
+  private async deleteAttachmentFromCloud(url: string | undefined, uid: string | undefined): Promise<void> {
     if (uid) {
       const cloudflareStreaming = new CloudflareStreaming();
       await cloudflareStreaming.deleteFromCloudFlare(uid);
     }
-    await this.attachmentsService.removeFileAttachment(url);
+    if (url) {
+      await this.attachmentsService.removeFileAttachment(url);
+    }
   }
 
   public async deleteAuctionAttachment(
     auctionId: string,
     organizerId: string,
-    attachmentUrl: string,
+    attachmentId: string,
   ): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(auctionId, organizerId);
     if (!auction) {
       throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
     }
-    const attachment = await this.attachmentsService.AuctionAsset.findOne({ url: attachmentUrl });
+    const attachment = await this.attachmentsService.AuctionAsset.findById(attachmentId);
     if (!attachment) {
       throw new AppError('Attachment not found', ErrorCode.NOT_FOUND);
     }

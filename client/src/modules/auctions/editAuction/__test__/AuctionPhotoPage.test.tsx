@@ -42,7 +42,14 @@ const auction = {
     id: 'testId',
   },
   attachments: [
-    { cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'https://storage.googleapis.com/' },
+    {
+      id: 'testID',
+      cloudflareUrl: null,
+      thumbnail: null,
+      type: 'IMAGE',
+      uid: null,
+      url: 'https://storage.googleapis.com/',
+    },
   ],
 };
 cache.writeQuery({

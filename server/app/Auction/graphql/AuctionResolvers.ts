@@ -45,7 +45,7 @@ interface AuctionResolversType {
       { deliveryPrice: Dinero.Dinero; timeInTransit: Dayjs },
       { auctionId: string; deliveryMethod: string }
     >;
-    getContentStorageAuthData: GraphqlResolver<{ authToken: string; bucketName: string }, void>;
+    getContentStorageAuthData: GraphqlResolver<{ authToken: string; accountId: string }, void>;
   };
   Mutation: {
     updateOrCreateMetrics: GraphqlResolver<
@@ -57,9 +57,9 @@ interface AuctionResolversType {
     deleteAuction: GraphqlResolver<{ id: string }, { id: string }>;
     addAuctionAttachment: GraphqlResolver<
       AuctionAssets,
-      { id: string; attachment: any; url: string; filename: string }
+      { id: string; attachment: any; uid: string; filename: string }
     >;
-    deleteAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; attachmentUrl: string }>;
+    deleteAuctionAttachment: GraphqlResolver<AuctionAssets, { auctionId: string; attachmentId: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
     buyAuction: GraphqlResolver<Auction, { id: string }>;
@@ -175,18 +175,18 @@ export const AuctionResolvers: AuctionResolversType = {
       return auctionUpdates;
     }),
     addAuctionAttachment: requireRole(
-      async (_, { id, attachment, url, filename }, { auction, currentAccount, currentInfluencerId }) =>
+      async (_, { id, attachment, uid, filename }, { auction, currentAccount, currentInfluencerId }) =>
         auction.addAuctionAttachment(
           id,
           currentAccount.isAdmin ? null : currentInfluencerId,
           attachment,
-          url,
+          uid,
           filename,
         ),
     ),
     deleteAuctionAttachment: requireRole(
-      async (_, { id, attachmentUrl }, { auction, currentAccount, currentInfluencerId }) =>
-        auction.deleteAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, attachmentUrl),
+      async (_, { auctionId, attachmentId }, { auction, currentAccount, currentInfluencerId }) =>
+        auction.deleteAuctionAttachment(auctionId, currentAccount.isAdmin ? null : currentInfluencerId, attachmentId),
     ),
     createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auction, currentAccount }) => {
       await auction.addAuctionBid(id, { bid, user: currentAccount });

@@ -53,7 +53,6 @@ export const AppConfig = {
   googleCloud: {
     bucketName: requireEnvVar('CONTENT_STORAGE_NAME'),
     keyDump: requireEnvVar('CONTENT_STORAGE_KEY'),
-    contentStorageAuth: JSON.parse(process.env['CONTENT_STORAGE_AUTH'] || '{}'),
     schedulerSecretKey: requireEnvVar('AUCTION_SCHEDULER_SECRET'),
     task: {
       googleProjectId: requireEnvVar('GOOGLE_CLOUD_PROJECT'),

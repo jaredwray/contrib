@@ -13,6 +13,7 @@ jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 const props: any = {
   auctionId: 'testId',
   attachment: {
+    id: 'testAttachmentId',
     cloudflareUrl: null,
     originalFileName: 'test.jpg',
     thumbnail: null,
@@ -30,13 +31,14 @@ const mocks = [
   {
     request: {
       query: DeleteAuctionMediaMutation,
-      variables: { id: 'testId', url: 'test' },
+      variables: { auctionId: 'testId', attachmentId: 'testAttachmentId' },
     },
     newData: () => {
       mockFn();
       return {
         data: {
           deleteAuctionAttachment: {
+            id: 'testId',
             url: 'test',
             type: 'IMAGE',
             cloudflareUrl: null,

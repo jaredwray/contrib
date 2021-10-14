@@ -29,7 +29,7 @@ export const AuctionSchema = gql`
   type AuctionAttachment {
     id: String!
     type: String!
-    url: String!
+    url: String
     uid: String
     cloudflareUrl: String
     thumbnail: String
@@ -185,7 +185,7 @@ export const AuctionSchema = gql`
 
   type ContentStorageAuthData {
     authToken: String
-    bucketName: String
+    accountId: String
   }
 
   input AuctionSearchFilters {
@@ -273,8 +273,8 @@ export const AuctionSchema = gql`
     stopAuction(id: String): Auction
     activateAuction(id: String): Auction
     createAuctionBid(id: String!, bid: Money!): Auction!
-    addAuctionAttachment(id: String!, attachment: Upload, url: String, filename: String): AuctionAttachment!
-    deleteAuctionAttachment(id: String!, attachmentUrl: String!): AuctionAttachment!
+    addAuctionAttachment(id: String!, attachment: Upload, uid: String, filename: String): AuctionAttachment!
+    deleteAuctionAttachment(auctionId: String!, attachmentId: String!): AuctionAttachment!
     deleteAuction(id: String!): ResponceId!
     chargeAuction(id: String!): ResponceId!
     chargeCurrendBid(input: CurrentAuctionBid!): ResponceId!
