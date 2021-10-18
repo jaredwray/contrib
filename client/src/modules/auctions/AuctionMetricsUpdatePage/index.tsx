@@ -31,8 +31,9 @@ const AuctionMetricsUpdatePage: FC = () => {
   const getUserData = useCallback(async () => {
     const responce = await fetch('https://ipapi.co/json/');
     const { country } = await responce.json();
+    const userAgentData = window.navigator.userAgent;
 
-    return { country, referrer: document.referrer || 'direct' };
+    return { country, referrer: document.referrer || 'direct', userAgentData };
   }, []);
 
   const goTo = useCallback(
@@ -42,7 +43,7 @@ const AuctionMetricsUpdatePage: FC = () => {
       const currentHost = document.location.host;
 
       if (incomingHost === currentHost) {
-        history.push(url.pathname);
+        history.replace(url.pathname);
         return;
       }
 
@@ -55,8 +56,8 @@ const AuctionMetricsUpdatePage: FC = () => {
     (data) => {
       try {
         if (data.entity === 'auction') {
-          getUserData().then(({ country, referrer }) => {
-            updateMetrics({ variables: { shortLinkId: data.id, country, referrer } });
+          getUserData().then((userData) => {
+            updateMetrics({ variables: { shortLinkId: data.id, ...userData } });
           });
         }
         goTo(data.link);

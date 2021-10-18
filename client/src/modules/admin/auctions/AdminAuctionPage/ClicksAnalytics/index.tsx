@@ -5,8 +5,9 @@ import { format } from 'date-fns-tz';
 import { Row, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
 
+import { getMetricForGraphics } from 'src/helpers/getMetricForGraphics';
 import { ChartDoughnut } from 'src/modules/admin/auctions/AdminAuctionPage/ClicksAnalytics/Doughnut';
-import { Click, Country, Referrer } from 'src/types/Metric';
+import { Click } from 'src/types/Metric';
 
 import styles from './styles.module.scss';
 
@@ -53,28 +54,34 @@ export const ClicksAnalytics: FC<Props> = ({ metrics }) => {
     countries: incomingCountries,
     referrers: incomingReferrers,
     clicksByDay: incomingClicksByDay,
+    browsers: incomingBrowsers,
+    oss: incomingOss,
   } = metrics;
+
+  //TODO delete after update auction metrics
+  const hasNewMetrics = metrics?.browsers;
+  //TODO ends
 
   const clicks = {
     labels: incomingClicks.map((data: Click) => dateFormatterToTime(data.date)).reverse(),
     values: incomingClicks.map((data: Click) => data.clicks).reverse(),
     dates: incomingClicks.map((data: Click) => dateFormatter(data.date)).reverse(),
   };
-
-  const countries = {
-    labels: incomingCountries.map((data: Country) => data.value),
-    values: incomingCountries.map((data: Country) => Number(data.clicks)),
-  };
-
-  const referrers = {
-    labels: incomingReferrers.map((data: Referrer) => data.value),
-    values: incomingReferrers.map((data: Referrer) => Number(data.clicks)),
-  };
-
   const clicksByDay = {
     labels: incomingClicksByDay.map((data: Click) => dateFormatter(data.date)).reverse(),
     values: incomingClicksByDay.map((data: Click) => data.clicks).reverse(),
   };
+  const countries = getMetricForGraphics(incomingCountries);
+  const referrers = getMetricForGraphics(incomingReferrers);
+
+  //TODO refactor after update auction metrics
+  let browsers;
+  let oss;
+  if (hasNewMetrics) {
+    browsers = getMetricForGraphics(incomingBrowsers);
+    oss = getMetricForGraphics(incomingOss);
+  }
+  //TODO ends
 
   let totalClicks = 0;
   if (referrers.values.length) {
@@ -198,6 +205,16 @@ export const ClicksAnalytics: FC<Props> = ({ metrics }) => {
             <ChartDoughnut labels={referrers.labels} name="referrers" values={referrers.values} />
             <ChartDoughnut labels={countries.labels} name="countries" values={countries.values} />
           </Row>
+          {
+            //TODO refacor after update auction metrics
+            hasNewMetrics && (
+              <Row className="pt-4 pb-3">
+                <ChartDoughnut labels={browsers?.labels} name="browsers" values={browsers?.values} />
+                <ChartDoughnut labels={oss?.labels} name="operating systems" values={oss?.values} />
+              </Row>
+            )
+            //TODO ends
+          }
         </>
       )}
     </>

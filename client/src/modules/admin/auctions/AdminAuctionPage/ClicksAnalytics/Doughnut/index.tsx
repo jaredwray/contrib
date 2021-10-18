@@ -7,14 +7,19 @@ import styles from '../styles.module.scss';
 import { countries } from './countries';
 
 interface Props {
-  labels: string[];
-  values: number[];
+  labels: string[] | undefined;
+  values: number[] | undefined;
   name: string;
 }
 const DOUGHNUT_LABELS_LIMIT = 3;
 
 export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
   const isCountries = name === 'countries';
+
+  if (!labels || !values) {
+    return null;
+  }
+
   const ChartValues = (labels: string[], values: number[]) => {
     return {
       labels: labels,

@@ -2,7 +2,6 @@ import { Connection, Types, ClientSession } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
 import Dinero, { Currency } from 'dinero.js';
 import Stripe from 'stripe';
-import { v4 as uuidv4 } from 'uuid';
 
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionMetricModel, IAuctionMetricModel } from '../mongodb/AuctionMetricModel';
@@ -34,9 +33,13 @@ import { CharityService } from '../../Charity';
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
 import { makeClicksByDay } from '../../../helpers/makeClicksByDay';
-import { concatMetrics } from '../../../helpers/concatMetrics';
+import { getMetricByEntity } from '../../../helpers/getMetricByEntity';
 import { objectTrimmer } from '../../../helpers/objectTrimmer';
 import { fullClicks } from '../../../helpers/fullClicks';
+import { getParsedMetric } from '../../../helpers/getParsedMetric';
+//TODO delete after update auction metrics
+import { fullClicksToDelete } from '../../../helpers/fullClicksToDelete';
+//TODO ends
 
 import { AuctionRepository } from '../repository/AuctionRepository';
 import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
@@ -395,25 +398,41 @@ export class AuctionService {
   }
 
   public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | {}> {
-    let metrics = await this.AuctionMetricModel.findOne({ auction: auctionId });
-    const auction = await this.AuctionModel.findById(auctionId);
+    const metricsModel = await this.AuctionMetricModel.findOne({ auction: auctionId });
+    const auctionModel = await this.AuctionModel.findById(auctionId);
 
-    if (metrics) {
-      const { clicks, countries, referrers } = metrics;
+    if (metricsModel?.metrics?.length) {
+      const currentMetrics = metricsModel.toObject().metrics.map((metric) => getParsedMetric(metric));
+
+      return {
+        clicks: fullClicks(currentMetrics, auctionModel.startsAt, 'hour'),
+        clicksByDay: fullClicks(currentMetrics, auctionModel.startsAt, 'day'),
+        countries: getMetricByEntity(currentMetrics, 'country'),
+        referrers: getMetricByEntity(currentMetrics, 'referrer'),
+        browsers: getMetricByEntity(currentMetrics, 'browser'),
+        oss: getMetricByEntity(currentMetrics, 'os'),
+      };
+    }
+
+    //TODO delete after update auction metrics
+    if (metricsModel?.clicks?.length) {
+      const { clicks, countries, referrers } = metricsModel;
       const clicksByDay = makeClicksByDay(clicks);
       return {
-        clicks: fullClicks(clicks, auction.startsAt, 'hour'),
-        clicksByDay: fullClicks(clicksByDay, auction.startsAt, 'day'),
+        clicks: fullClicksToDelete(clicks, auctionModel.startsAt, 'hour'),
+        clicksByDay: fullClicksToDelete(clicksByDay, auctionModel.startsAt, 'day'),
         countries,
         referrers,
       };
     }
+    //TODO ends
+
     return {};
   }
 
   public async updateOrCreateMetrics(
     shortLinkId: string,
-    { referrer, country }: { referrer: string; country: string },
+    { referrer, country, userAgentData }: { referrer: string; country: string; userAgentData: string },
   ): Promise<{ id: string }> {
     try {
       const auctionModel = await this.AuctionModel.findOne({ shortLink: shortLinkId });
@@ -425,15 +444,14 @@ export class AuctionService {
 
       const metricModel = await this.AuctionMetricModel.findOne({ auction: auctionId });
 
-      const date = `${dayjs().toISOString().split(':')[0]}:00:00.000Z`;
+      const date = dayjs().toISOString();
 
+      const incomingMetric = { date, referrer, country, userAgentData };
       if (metricModel) {
-        const { clicks, referrers, countries } = metricModel;
+        const { metrics } = metricModel;
 
         Object.assign(metricModel, {
-          clicks: concatMetrics(clicks, date),
-          referrers: concatMetrics(referrers, referrer),
-          countries: concatMetrics(countries, country),
+          metrics: [...metrics, incomingMetric],
         });
 
         await metricModel.save();
@@ -443,9 +461,7 @@ export class AuctionService {
       await this.AuctionMetricModel.create([
         {
           auction: auctionId,
-          clicks: [{ date, clicks: 1 }],
-          referrers: [{ value: referrer, clicks: 1 }],
-          countries: [{ value: country, clicks: 1 }],
+          metrics: [incomingMetric],
         },
       ]);
 

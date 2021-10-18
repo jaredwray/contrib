@@ -38,4 +38,6 @@ export const metrics = {
     { value: 'https://m.vk.com/', clicks: '1' },
     { value: 'https://away.vk.com/', clicks: '1' },
   ],
+  browsers: [{ value: 'Chrome', clicks: '4' }],
+  oss: [{ value: 'Windows', clicks: '4' }],
 };

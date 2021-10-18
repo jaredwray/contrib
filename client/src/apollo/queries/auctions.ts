@@ -28,6 +28,14 @@ export const AuctionMetricsQuery = gql`
         value
         clicks
       }
+      browsers {
+        value
+        clicks
+      }
+      oss {
+        value
+        clicks
+      }
     }
   }
 `;
@@ -286,8 +294,11 @@ export const CalculateShippingCostQuery = gql`
 `;
 
 export const UpdateOrCreateAuctionMetricsMutation = gql`
-  mutation UpdateOrCreateMetrics($shortLinkId: String, $referrer: String, $country: String) {
-    updateOrCreateMetrics(shortLinkId: $shortLinkId, input: { referrer: $referrer, country: $country }) {
+  mutation UpdateOrCreateMetrics($shortLinkId: String, $referrer: String, $country: String, $userAgentData: String) {
+    updateOrCreateMetrics(
+      shortLinkId: $shortLinkId
+      input: { referrer: $referrer, country: $country, userAgentData: $userAgentData }
+    ) {
       id
     }
   }

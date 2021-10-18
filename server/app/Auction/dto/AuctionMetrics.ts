@@ -3,6 +3,8 @@ export interface AuctionMetrics {
   clicksByDay: object[];
   countries: object[];
   referrers: object[];
+  browsers: object[];
+  oss: object[];
 }
 
 export interface Click {
