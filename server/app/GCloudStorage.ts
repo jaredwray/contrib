@@ -48,20 +48,6 @@ export class GCloudStorage {
     return FileType.UNKNOWN;
   }
 
-  //TODO: delete after attachments update.
-  async updateAttachment(asset: IAuctionAssetModel, bucketName: string = AppConfig.googleCloud.bucketName) {
-    try {
-      const fileName = GCloudStorage.getFileNameFromUrl(asset.url);
-      const extension = fileName.split('.')[1];
-
-      if (GCloudStorage.imageSupportedFormats.test(extension)) {
-        await this.storage.bucket(bucketName).file(fileName).copy(`pending/${fileName}`);
-      }
-    } catch (error) {
-      AppLogger.warn(`Unable to update file ${asset.url}: ${error.message}`);
-    }
-  }
-
   async streamToBuffer(stream: Stream): Promise<Buffer> {
     try {
       return new Promise((resolve, reject) => {

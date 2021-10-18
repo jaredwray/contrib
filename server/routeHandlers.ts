@@ -9,7 +9,7 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
-  { auction, charity, stripeService, twilioNotification, invitation }: IAppServices,
+  { auction, charity, stripeService, twilioNotification }: IAppServices,
 ): void {
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
@@ -18,49 +18,6 @@ export default function appRouteHandlers(
       express.json()(req, res, next);
     }
   });
-
-  //TODO: delete after update auctions and invitations links
-
-  app.post('/api/v1/update-links', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-    try {
-      await auction.updateAuctionLinks();
-      await invitation.updateInvitationLinks();
-
-      return res.json({ message: 'Updated' });
-    } catch {
-      return res.json({ message: 'Failed' });
-    }
-  });
-
-  //TODO ends
-
-  //TODO: delete after update auctions
-
-  app.post('/api/v1/cleanup-auctions', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-
-    const response = await auction.updateAuctions();
-    return res.json(response);
-  });
-
-  //TODO ends
-
-  //TODO: delete after update influencers and charities totalRaisedAmount
-
-  app.post('/api/v1/update-totalRaisedAmount', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-    await auction.updateCharities();
-    await auction.updateInfluencers();
-  });
-
-  //TODO ends
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {
@@ -149,15 +106,4 @@ export default function appRouteHandlers(
 
     response.sendStatus(200);
   });
-
-  // One time tasks block start
-  app.post('/api/v1/update-auctions-winner', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-
-    const response = await auction.updateAuctionsWinner();
-    return res.json(response);
-  });
-  // One time tasks block end
 }
