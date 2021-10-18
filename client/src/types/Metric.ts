@@ -3,11 +3,12 @@ export interface Click {
   clicks: string;
 }
 
-export interface Country {
+export interface MetricEntity {
   value: string;
   clicks: string;
 }
-export interface Referrer {
-  value: string;
-  clicks: string;
+
+export interface MetricForDoughnut {
+  labels: string[];
+  values: number[];
 }

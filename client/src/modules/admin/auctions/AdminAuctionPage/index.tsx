@@ -132,18 +132,14 @@ export default function AdminAuctionPage() {
                   Charge auction
                 </AsyncButton>
               )}
+              <div className="text-headline mb-2">Delivery</div>
+              <Delivery auction={auction} refreshAuctionData={getAuctionData} />
             </Col>
             <Col lg="7">
               <>
                 <Row className="text-headline mb-2">Auction metrics </Row>
                 <ClicksAnalytics metrics={metrics} />
               </>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg="5">
-              <div className="text-headline mb-2">Delivery</div>
-              <Delivery auction={auction} refreshAuctionData={getAuctionData} />
             </Col>
           </Row>
           {hasBids && (

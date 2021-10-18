@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 
-export const fullClicks = (shortClicks, startDate: Dayjs, flag: string) => {
+export const fullClicksToDelete = (shortClicks, startDate: Dayjs, flag: string) => {
   const startIntervalHours = dayjs(startDate).utc().minute(0).second(0).millisecond(0);
   const startIntervalDays = dayjs(startDate).utc().hour(0).minute(0).second(0).millisecond(0);
   const endDate = dayjs().utc().hour(23).minute(59).second(0).millisecond(0);
@@ -12,17 +12,12 @@ export const fullClicks = (shortClicks, startDate: Dayjs, flag: string) => {
     const date = dayjs(isByHour ? startIntervalHours : startIntervalDays)
       .add(i, isByHour ? 'hour' : 'day')
       .toISOString();
-      
-    const data = shortClicks.filter((valueFromShortArray) => {
-      const currentDate = isByHour
-        ? dayjs(valueFromShortArray.date).utc().minute(0).second(0).millisecond(0)
-        : dayjs(valueFromShortArray.date).utc().hour(0).minute(0).second(0).millisecond(0);
-      return dayjs(currentDate).isSame(dayjs(date));
-    });
+
+    const data = shortClicks.find((valueFromShortArray) => dayjs(valueFromShortArray.date).isSame(dayjs(date)));
 
     return {
-      date,
-      clicks: data?.length,
+      clicks: data?.clicks || 0,
+      date: date,
     };
   }).reverse();
 };

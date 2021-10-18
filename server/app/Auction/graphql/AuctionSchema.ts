@@ -119,21 +119,22 @@ export const AuctionSchema = gql`
   type Metrics {
     clicks: [Clicks]
     clicksByDay: [Clicks]
-    referrers: [Referrers]
-    countries: [Countries]
+    referrers: [MetricEntity]
+    countries: [MetricEntity]
+    browsers: [MetricEntity]
+    oss: [MetricEntity]
   }
+
   type Clicks {
     date: String
     clicks: String
   }
-  type Referrers {
+
+  type MetricEntity {
     value: String
     clicks: String
   }
-  type Countries {
-    value: String
-    clicks: String
-  }
+
   type AuctionAdminOrganizer {
     id: String!
     name: String!
@@ -245,6 +246,7 @@ export const AuctionSchema = gql`
   input MetricsInput {
     referrer: String
     country: String
+    userAgentData: String
   }
 
   extend type Query {

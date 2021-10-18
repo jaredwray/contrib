@@ -50,7 +50,7 @@ interface AuctionResolversType {
   Mutation: {
     updateOrCreateMetrics: GraphqlResolver<
       { id: string },
-      { shortLinkId: string; input: { country: string; referrer: string } }
+      { shortLinkId: string; input: { country: string; referrer: string; userAgentData: string } }
     >;
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
     updateAuction: GraphqlResolver<Auction, { id: string; input: AuctionInput }>;
