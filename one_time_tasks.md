@@ -3,27 +3,3 @@
 This is a list of requests, which we need to call after deployment to migrate new data of process existing.
 
 NOTE: `OUR_SECRET_KEY` is located inside 1Password under `AUCTION_SCHEDULER_SECRET` variable
-
-#### update auction winner attributes
-
-```
-curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST https://contrib.org/api/v1/update-auctions-winner
-```
-
-#### update totalRaisedAmount values in Influencers and Charities
-
-```
-curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST http://localhost:3000/api/v1/update-totalRaisedAmount
-```
-
-#### cleanup auctions attributes
-
-```
-curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST https://contrib.org/api/v1/cleanup-auctions
-```
-
-#### update auctions and invitations links
-
-```
-curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -H "User-Agent: Google-Cloud-Scheduler" -X POST https://contrib.org/api/v1/update-links
-```

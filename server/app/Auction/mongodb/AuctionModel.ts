@@ -26,18 +26,12 @@ export interface IAuctionModel extends Document {
   endsAt: dayjs.Dayjs;
   stoppedAt: dayjs.Dayjs;
   startPrice: number;
-  //TODO: delete after update auctions and invitations links
-  link: string;
-  //TODO ends
   bitlyLink: string;
   shortLink: IShortLinkModel['_id'];
   fairMarketValue: number;
   sentNotifications: [string];
   totalBids: number;
   winner?: IUserAccount['_id'];
-  //TODO: delete after update auctions
-  fullPageDescription?: string;
-  //TODO ends
 }
 
 export const AuctionCollectionName = 'auction';
@@ -70,9 +64,6 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     },
     endsAt: { type: SchemaTypes.Date, default: dayjs().second(0).add(3, 'days').toISOString(), get: (v) => dayjs(v) },
     stoppedAt: { type: SchemaTypes.Date },
-    //TODO: delete after update auctions and invitations links
-    link: { type: SchemaTypes.String },
-    //TODO ends
     bitlyLink: { type: SchemaTypes.String },
     shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
     fairMarketValue: { type: SchemaTypes.Number },
@@ -86,9 +77,6 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
         length: { type: SchemaTypes.String, default: length },
         height: { type: SchemaTypes.String, default: height },
         weight: { type: SchemaTypes.String, default: weight },
-        //TODO: delete after update auctions
-        units: { type: SchemaTypes.String },
-        //TODO ends
       },
       address: {
         name: { type: SchemaTypes.String },
@@ -104,21 +92,6 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
       identificationNumber: { type: SchemaTypes.String },
       timeInTransit: { type: SchemaTypes.Date },
     },
-    //TODO: delete after update auctions
-    playedIn: { type: SchemaTypes.String },
-    autographed: { type: SchemaTypes.Boolean },
-    sport: { type: SchemaTypes.String },
-    gameWorn: { type: SchemaTypes.Boolean },
-    fullPageDescription: { type: SchemaTypes.String },
-    timeZone: { type: SchemaTypes.String },
-    parcel: {
-      width: { type: SchemaTypes.String, default: width },
-      length: { type: SchemaTypes.String, default: length },
-      height: { type: SchemaTypes.String, default: height },
-      weight: { type: SchemaTypes.String, default: weight },
-      units: { type: SchemaTypes.String },
-    },
-    //TODO ends
   },
   { optimisticConcurrency: true },
 );

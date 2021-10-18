@@ -51,34 +51,6 @@ export class InvitationService {
     });
   }
 
-  //TODO: delete after update auctions and invitations links
-  public async updateInvitationLinks() {
-    const invitations = await this.InvitationModel.find({});
-    for (const invitation of invitations) {
-      try {
-        if (invitation.shortLink) {
-          return;
-        }
-
-        const shortLinkId = await this.shortLinkService.createShortLink(
-          `invitation/${invitation._id.toString()}`,
-          'invitation',
-        );
-
-        const updateInvitation = {
-          shortLink: shortLinkId,
-        };
-
-        Object.assign(invitation, updateInvitation);
-
-        await invitation.save();
-      } catch (error) {
-        AppLogger.error(`Can not update invitation #${invitation._id.toString()}, error: ${error.message}`);
-      }
-    }
-  }
-  //TODO ends
-
   async findInvitationBySlug(slug: string): Promise<Invitation | null> {
     const model = await this.InvitationModel.findOne({ slug }).exec();
     return InvitationService.makeInvitation(model);
