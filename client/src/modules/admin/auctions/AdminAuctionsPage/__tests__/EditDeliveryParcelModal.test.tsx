@@ -122,10 +122,7 @@ describe('Should render correctly "Modal"', () => {
         </ToastProvider>,
       );
 
-      wrapper
-        .find(Form)
-        .props()
-        .onSubmit({ auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1});
+      wrapper.find(Form).props().onSubmit({ auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1 });
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -145,11 +142,7 @@ describe('Should render correctly "Modal"', () => {
         </ToastProvider>,
       );
 
-      wrapper
-        .find(Form)
-        .props()
-        .onSubmit({ auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1, units: 'imperial' });
-
+      wrapper.find(Form).props().onSubmit({ auctionId: 'testId', width: 1, height: 1, length: 1, weight: 1 });
       expect(mockFn).toHaveBeenCalledTimes(0);
     });
   });
