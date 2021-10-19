@@ -74,6 +74,73 @@ export class AuctionService {
     private readonly UPSService: UPSDeliveryService,
   ) {}
 
+  //TODO: delete after update auction metrics
+  public async updateAuctionMetrics() {
+    const metrics = await this.AuctionMetricModel.find({ clicks: { $exists: true } });
+
+    for (const metric of metrics) {
+      try {
+        if (metric.metrics.length && !metric.clicks.length) {
+          continue;
+        }
+
+        const setUndefined = {
+          clicks: undefined,
+          referrers: undefined,
+          countries: undefined,
+          lastUpdateAt: undefined,
+        };
+
+        if (!metric.clicks.length) {
+          Object.assign(metric, {
+            metrics: [],
+            ...setUndefined,
+          });
+
+          await metric.save();
+
+          continue;
+        }
+
+        let countries = [];
+        let referrers = [];
+        let incomingMetrics = [];
+
+        metric.countries.forEach((country: { value: string; clicks: number }) => {
+          const arr = Array.from({ length: country.clicks }, () => country.value);
+          countries = [...countries, ...arr];
+        });
+
+        metric.referrers.forEach((referrer: { value: string; clicks: number }) => {
+          const arr = Array.from({ length: referrer.clicks }, () => referrer.value);
+          referrers = [...referrers, ...arr];
+        });
+
+        metric.clicks.forEach((click: { date: Date; clicks: number }) => {
+          const arr = Array.from({ length: click.clicks }, () => {
+            return {
+              date: click.date,
+              referrer: referrers.pop() || 'Unknown',
+              country: countries.pop() || 'Unknown',
+              userAgentData: 'Unknown',
+            };
+          });
+          incomingMetrics = [...incomingMetrics, ...arr];
+        });
+
+        Object.assign(metric, {
+          metrics: [...metric.metrics, ...incomingMetrics],
+          ...setUndefined,
+        });
+
+        await metric.save();
+      } catch (error) {
+        AppLogger.error(`Can not update auction metrics #${metric._id.toString()}, error: ${error.message}`);
+      }
+    }
+  }
+  //TODO ends
+
   public async updateTotalRaisedAmount(auction: IAuctionModel, amount: number): Promise<void> {
     const { charity, auctionOrganizer } = auction;
 

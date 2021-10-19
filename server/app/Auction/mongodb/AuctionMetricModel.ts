@@ -19,6 +19,7 @@ const AuctionMetricSchema: Schema<IAuctionMetricModel> = new Schema<IAuctionMetr
   clicks: { type: SchemaTypes.Array },
   referrers: { type: SchemaTypes.Array },
   countries: { type: SchemaTypes.Array },
+  lastUpdateAt: { type: SchemaTypes.Date },
   //TODO ends
   metrics: [
     {

@@ -11,6 +11,22 @@ export default function appRouteHandlers(
   app: express.Express,
   { auction, charity, stripeService, twilioNotification }: IAppServices,
 ): void {
+  app.use(express.json());
+  //TODO: delete after update auction metrics
+  app.post('/api/v1/update-auction-metrics', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
+      return;
+    }
+
+    try {
+      await auction.updateAuctionMetrics();
+      return res.send('Updated');
+    } catch {
+      return res.send('Failed');
+    }
+  });
+  //TODO ends
+
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
@@ -41,15 +57,15 @@ export default function appRouteHandlers(
     const parsedBody = JSON.parse(req.body);
 
     if (!parsedBody) {
-      res.sendStatus(400).json({ message: 'BAD REQUEST' });
+      res.status(400).send('BAD REQUEST');
     }
 
     if (parsedBody.api_token !== AppConfig.googleCloud.task.googleTaskApiToken) {
-      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      res.status(401).send('UNAUTHORIZED');
     }
 
     await twilioNotification.sendMessage(parsedBody.phoneNumber, parsedBody.message);
-    res.sendStatus(200);
+    res.status(200);
   });
 
   app.get('/api/v1/account_onboarding', async (req: express.Request, res: express.Response) => {
@@ -79,7 +95,14 @@ export default function appRouteHandlers(
     const sig = request.headers['stripe-signature'];
 
     if (!sig) {
-      response.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      response.status(401).send('UNAUTHORIZED');
+      AppLogger.error(
+        `Unauthorized request received!\nPath: ${request.route.path};\nHeaders: ${JSON.stringify(
+          request.headers,
+          null,
+          2,
+        )}`,
+      );
       return;
     }
 
@@ -88,7 +111,7 @@ export default function appRouteHandlers(
       event = stripeService.constructEvent(request.body, sig as string);
     } catch (err) {
       AppLogger.error(`Cannot handle the Stripe event, ${event.type}: ${err.message}`);
-      response.sendStatus(400).json({ message: err.message });
+      response.status(400).json({ message: err.message });
       return;
     }
     AppLogger.info(
@@ -99,11 +122,11 @@ export default function appRouteHandlers(
         await charity.updateCharityByStripeAccount(event.data.object);
       } catch (err) {
         AppLogger.warn(`Cannot update charity by stripe account with id#${event.data.object.id}: ${err.message}`);
-        response.sendStatus(400).json({ message: err.message });
+        response.status(400).send(err.message);
         return;
       }
     }
 
-    response.sendStatus(200);
+    response.status(200);
   });
 }
