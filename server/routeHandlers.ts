@@ -114,9 +114,6 @@ export default function appRouteHandlers(
       response.status(400).json({ message: err.message });
       return;
     }
-    AppLogger.info(
-      `Received new stripe event for charity. Stripe account id: ${event.data.object.id}. Event type: ${event.type},`,
-    );
     if (event.type === 'account.updated') {
       try {
         await charity.updateCharityByStripeAccount(event.data.object);
