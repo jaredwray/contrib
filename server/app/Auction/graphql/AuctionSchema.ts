@@ -147,7 +147,7 @@ export const AuctionSchema = gql`
   }
 
   type ResponceId {
-    id: String!
+    id: String
   }
 
   type AuctionsPage {
