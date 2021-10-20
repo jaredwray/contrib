@@ -500,43 +500,55 @@ export class AuctionService {
   public async updateOrCreateMetrics(
     shortLinkId: string,
     { referrer, country, userAgentData }: { referrer: string; country: string; userAgentData: string },
-  ): Promise<{ id: string }> {
+  ): Promise<{ id: string } | null> {
+    const session = await this.connection.startSession();
+
+    let returnObject;
     try {
-      const auctionModel = await this.AuctionModel.findOne({ shortLink: shortLinkId });
-      if (!auctionModel) {
-        return null;
-      }
+      await session.withTransaction(async () => {
+        const auctionModel = await this.AuctionModel.findOne({ shortLink: shortLinkId }, null, { session });
+        if (!auctionModel) {
+          returnObject = null;
+          return;
+        }
 
-      const auctionId = auctionModel._id.toString();
+        const incomingMetric = { date: dayjs().toISOString(), referrer, country, userAgentData };
+        const auctionId = auctionModel._id.toString();
 
-      const metricModel = await this.AuctionMetricModel.findOne({ auction: auctionId });
+        const metricModel = await this.AuctionMetricModel.findOne({ auction: auctionId }, null, { session });
 
-      const date = dayjs().toISOString();
+        if (metricModel) {
+          const { metrics } = metricModel;
 
-      const incomingMetric = { date, referrer, country, userAgentData };
-      if (metricModel) {
-        const { metrics } = metricModel;
+          Object.assign(metricModel, {
+            metrics: [...metrics, incomingMetric],
+          });
 
-        Object.assign(metricModel, {
-          metrics: [...metrics, incomingMetric],
-        });
+          await metricModel.save({ session });
 
-        await metricModel.save();
+          returnObject = { id: auctionId };
+          return;
+        }
 
-        return { id: auctionId };
-      }
-      await this.AuctionMetricModel.create([
-        {
-          auction: auctionId,
-          metrics: [incomingMetric],
-        },
-      ]);
+        await this.AuctionMetricModel.create(
+          [
+            {
+              auction: auctionId,
+              metrics: [incomingMetric],
+            },
+          ],
+          { session },
+        );
 
-      return { id: auctionId };
+        returnObject = { id: auctionId };
+      });
+      return returnObject;
     } catch (error) {
       AppLogger.error(
         `Something went wrong when try to update or create auction metrics for auction with shortLink #${shortLinkId}: ${error.message}`,
       );
+    } finally {
+      session.endSession();
     }
   }
 
