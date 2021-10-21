@@ -274,8 +274,7 @@ export class AuctionRepository implements IAuctionRepository {
 
     if (
       [AuctionStatus.SETTLED, AuctionStatus.FAILED, AuctionStatus.SOLD].includes(auction.status) ||
-      (auction.status === AuctionStatus.ACTIVE && !isAdmin) ||
-      (input.fairMarketValue !== undefined && !isAdmin)
+      (auction.status === AuctionStatus.ACTIVE && !isAdmin)
     ) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
