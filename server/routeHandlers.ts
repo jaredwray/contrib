@@ -12,21 +12,6 @@ export default function appRouteHandlers(
   { auction, charity, stripeService, twilioNotification }: IAppServices,
 ): void {
   app.use(express.json());
-  //TODO: delete after update auction metrics
-  app.post('/api/v1/update-auction-metrics', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-
-    try {
-      await auction.updateAuctionMetrics();
-      return res.send('Updated');
-    } catch {
-      return res.send('Failed');
-    }
-  });
-  //TODO ends
-
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
