@@ -732,9 +732,10 @@ export class AuctionService {
           if (!userAccount) {
             throw new AppError(`Cannot find user with #${lastBid.user}`);
           }
+          const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
           await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
-            auctionTitle: auction.title,
-            auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
+            auctionTitle: currentAuction.title,
+            auctionLink: this.shortLinkService.makeShortLink(currentAuction.shortLink.slug),
           });
         } catch (error) {
           AppLogger.error(`Failed to send notification for auction #${id}, error: ${error.message}`);

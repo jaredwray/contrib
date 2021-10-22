@@ -175,6 +175,8 @@ export class CharityService {
         await this.updateCharityStatus({ charity, stripeStatus, session });
         AppLogger.info(`Charity #${charity.id} was updated by stripe account to ${stripeStatus}`);
       });
+    } catch (error) {
+      throw error;
     } finally {
       session.endSession();
     }
