@@ -1,9 +1,10 @@
 import dayjs from 'dayjs';
 import Dinero from 'dinero.js';
 import { Storage } from '@google-cloud/storage';
-import { ClientSession, Connection, ObjectId } from 'mongoose';
+import { ClientSession, Connection, ObjectId, Types } from 'mongoose';
 
 import { IInfluencer, InfluencerModel } from '../mongodb/InfluencerModel';
+import { AuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 import { InfluencerSearchParams, InfluencerFilters } from '../dto/InfluencerSearchParams';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
@@ -24,17 +25,16 @@ interface TransientInfluencerInput {
 export class InfluencerService {
   private readonly InfluencerModel = InfluencerModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
+  private readonly AuctionModel = AuctionModel(this.connection);
 
   constructor(private readonly connection: Connection, private readonly charityService: CharityService) {}
 
   private ORDER_SORTS = {
+    [InfluencerOrderBy.DEFAULT]: { totalRaisedAmount: 'desc' },
     [InfluencerOrderBy.STATUS_ASC]: { status: 'asc' },
     [InfluencerOrderBy.NAME_ASC]: { name: 'asc' },
     [InfluencerOrderBy.NAME_DESC]: { name: 'desc' },
     [InfluencerOrderBy.ONBOARDED_AT_ASC]: { onboardedAt: 'asc' },
-    [InfluencerOrderBy.ONBOARDED_AT_DESC]: { onboardedAt: 'desc' },
-    [InfluencerOrderBy.TOTALRAISEDAMOUNT_ASC]: { totalRaisedAmount: 'asc' },
-    [InfluencerOrderBy.TOTALRAISEDAMOUNT_DESC]: { totalRaisedAmount: 'desc' },
   };
 
   public getSearchOptions(filters: InfluencerFilters): object {
@@ -52,10 +52,35 @@ export class InfluencerService {
   }
 
   public async getInfluencers({ filters, orderBy, skip = 0, size }: InfluencerSearchParams) {
+    if (orderBy === 'DEFAULT') {
+      const defaultFilters = { status: 'ONBOARDED', name: { $regex: (filters?.query || '').trim(), $options: 'i' } };
+      const sortOption = this.getSortOptions(orderBy);
+      const activeAuctions = await this.AuctionModel.find({ status: 'ACTIVE' });
+
+      if (activeAuctions.length) {
+        const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer.toString());
+        const uniqOrganizersWithActiveAuctions = Array.from(new Set(auctionOrganisers)).map((id) => Types.ObjectId(id));
+
+        const activeInfluencers = await this.InfluencerModel.find({
+          _id: { $in: uniqOrganizersWithActiveAuctions },
+          ...defaultFilters,
+        }).sort(sortOption);
+        const otherInfluencers = await this.InfluencerModel.find({
+          _id: { $nin: uniqOrganizersWithActiveAuctions },
+          ...defaultFilters,
+        }).sort(sortOption);
+
+        return [...activeInfluencers, ...otherInfluencers].slice(skip, skip + size);
+      }
+
+      return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
+    }
+
     const influencers = this.InfluencerModel.find(this.getSearchOptions(filters))
       .skip(skip)
       .limit(size)
       .sort(this.getSortOptions(orderBy));
+
     return await influencers.exec();
   }
 

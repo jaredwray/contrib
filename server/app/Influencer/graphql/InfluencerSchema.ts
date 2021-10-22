@@ -8,13 +8,11 @@ export const InfluencerSchema = gql`
   }
 
   enum InfluencerOrderBy {
+    DEFAULT
     STATUS_ASC
     NAME_ASC
     NAME_DESC
     ONBOARDED_AT_ASC
-    ONBOARDED_AT_DESC
-    TOTALRAISEDAMOUNT_ASC
-    TOTALRAISEDAMOUNT_DESC
   }
 
   type InfluencerProfile {
