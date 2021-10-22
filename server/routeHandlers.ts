@@ -42,15 +42,15 @@ export default function appRouteHandlers(
     const parsedBody = JSON.parse(req.body);
 
     if (!parsedBody) {
-      res.status(400).send('BAD REQUEST');
+      res.sendStatus(400).json({ message: 'BAD REQUEST' });
     }
 
     if (parsedBody.api_token !== AppConfig.googleCloud.task.googleTaskApiToken) {
-      res.status(401).send('UNAUTHORIZED');
+      res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
     }
 
     await twilioNotification.sendMessage(parsedBody.phoneNumber, parsedBody.message);
-    res.status(200);
+    res.sendStatus(200);
   });
 
   app.get('/api/v1/account_onboarding', async (req: express.Request, res: express.Response) => {
@@ -80,7 +80,7 @@ export default function appRouteHandlers(
     const sig = request.headers['stripe-signature'];
 
     if (!sig) {
-      response.status(401).send('UNAUTHORIZED');
+      response.sendStatus(401).json({ message: 'UNAUTHORIZED' });
       AppLogger.error(
         `Unauthorized request received!\nPath: ${request.route.path};\nHeaders: ${JSON.stringify(
           request.headers,
@@ -96,7 +96,7 @@ export default function appRouteHandlers(
       event = stripeService.constructEvent(request.body, sig as string);
     } catch (err) {
       AppLogger.error(`Cannot handle the Stripe event, ${event.type}: ${err.message}`);
-      response.status(400).json({ message: err.message });
+      response.sendStatus(400).json({ message: err.message });
       return;
     }
     AppLogger.info(`Received new stripe event for charity. ${JSON.stringify(event, null, 2)}`);
@@ -105,11 +105,11 @@ export default function appRouteHandlers(
         await charity.updateCharityByStripeAccount(event.data.object);
       } catch (err) {
         AppLogger.warn(`Cannot update charity by stripe account with id#${event.data.object.id}: ${err.message}`);
-        response.status(400).send(err.message);
+        response.sendStatus(400).json({ message: err.message });
         return;
       }
     }
 
-    response.status(200);
+    response.sendStatus(200);
   });
 }
