@@ -13,11 +13,11 @@ import Filters from './Filters';
 const InfluencersPage: FC = () => {
   const [filters, setFilters] = useState({
     query: '',
-    orderBy: 'ONBOARDED_AT_ASC',
+    orderBy: 'DEFAULT',
     pageSkip: 0,
   });
 
-  const [executeAuctionsSearch, { data }] = useLazyQuery(InfluencersListQuery);
+  const [executeInfluencersSearch, { data }] = useLazyQuery(InfluencersListQuery);
 
   const influencersData = data?.influencersList;
   const changeFilters = useCallback((key: string, value: any) => {
@@ -27,7 +27,7 @@ const InfluencersPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    executeAuctionsSearch({
+    executeInfluencersSearch({
       variables: {
         size: PER_PAGE,
         skip: filters.pageSkip,
@@ -35,17 +35,15 @@ const InfluencersPage: FC = () => {
         filters: { query: filters.query, status: [InfluencerStatus.ONBOARDED] },
       },
     });
-  }, [executeAuctionsSearch, filters]);
+  }, [executeInfluencersSearch, filters]);
 
   setPageTitle('Influencers page');
 
   const sortOptions = [
+    { value: 'DEFAULT', label: 'Default' },
     { value: 'ONBOARDED_AT_ASC', label: 'Newest' },
-    { value: 'ONBOARDED_AT_DESC', label: 'Latest' },
     { value: 'NAME_ASC', label: 'Name: A - Z' },
     { value: 'NAME_DESC', label: 'Name: Z - A' },
-    { value: 'TOTALRAISEDAMOUNT_ASC', label: 'Raised: Low to high' },
-    { value: 'TOTALRAISEDAMOUNT_DESC', label: 'Raised: High to low' },
   ];
   const filterComponent = <Filters changeFilters={changeFilters} />;
   return (

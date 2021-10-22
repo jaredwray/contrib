@@ -13,7 +13,7 @@ interface Props {
 }
 
 const SortBy: FC<Props> = ({ changeFilters, sortOptions }) => {
-  const [initialValue, setSortValue] = useState('');
+  const [sortValue, setSortValue] = useState('');
   const selectSortBy = useCallback(
     (orderBy: string) => {
       setSortValue(orderBy);
@@ -22,7 +22,7 @@ const SortBy: FC<Props> = ({ changeFilters, sortOptions }) => {
     [changeFilters],
   );
   const selectedOption = () => {
-    const selected = sortOptions?.find((option: { label: string; value: string }) => option.value === initialValue);
+    const selected = sortOptions?.find((option: { label: string; value: string }) => option.value === sortValue);
     return selected || (sortOptions && sortOptions[0]);
   };
   return (
