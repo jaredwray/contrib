@@ -805,7 +805,7 @@ export class AuctionService {
         await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_USERS, {
           timeLeftText,
           influencerName: currentAuction.auctionOrganizer.name,
-          aunctionName: currentAuction.title,
+          auctionName: currentAuction.title,
           auctionLink: this.shortLinkService.makeShortLink(currentAuction.shortLink.slug),
         });
       } catch (error) {
