@@ -37,9 +37,6 @@ import { getMetricByEntity } from '../../../helpers/getMetricByEntity';
 import { objectTrimmer } from '../../../helpers/objectTrimmer';
 import { fullClicks } from '../../../helpers/fullClicks';
 import { getParsedMetric } from '../../../helpers/getParsedMetric';
-//TODO delete after update auction metrics
-import { fullClicksToDelete } from '../../../helpers/fullClicksToDelete';
-//TODO ends
 
 import { AuctionRepository } from '../repository/AuctionRepository';
 import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoository';
@@ -413,19 +410,6 @@ export class AuctionService {
         oss: getMetricByEntity(currentMetrics, 'os'),
       };
     }
-
-    //TODO delete after update auction metrics
-    if (metricsModel?.clicks?.length) {
-      const { clicks, countries, referrers } = metricsModel;
-      const clicksByDay = makeClicksByDay(clicks);
-      return {
-        clicks: fullClicksToDelete(clicks, auctionModel.startsAt, 'hour'),
-        clicksByDay: fullClicksToDelete(clicksByDay, auctionModel.startsAt, 'day'),
-        countries,
-        referrers,
-      };
-    }
-    //TODO ends
 
     return {};
   }

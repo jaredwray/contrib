@@ -102,7 +102,7 @@ export const AuctionResolvers: AuctionResolversType = {
     getCustomerInformation: requireAdmin(
       async (_, { stripeCustomerId }, { auction }) => await auction.getCustomerInformation(stripeCustomerId),
     ),
-    getAuctionMetrics: requireAdmin(
+    getAuctionMetrics: requireAuthenticated(
       async (_, { auctionId }, { auction }) => await auction.getAuctionMetrics(auctionId),
     ),
     calculateShippingCost: requireAuthenticated(

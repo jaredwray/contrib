@@ -14,12 +14,13 @@ import {
 } from 'src/apollo/queries/auctions';
 import { AuctionBidsQuery, ChargeCurrentBidMutation } from 'src/apollo/queries/bids';
 import AsyncButton from 'src/components/buttons/AsyncButton';
+import ClicksAnalytics from 'src/components/customComponents/ClicksAnalytics';
+import Loading from 'src/components/customComponents/Loading';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { AuctionBid } from 'src/types/Bid';
 
 import Bids from './Bids';
-import ClicksAnalytics from './ClicksAnalytics';
 import Delivery from './Delivery';
 import Details from './Details';
 import { Modal } from './Modal';
@@ -38,7 +39,7 @@ export default function AdminAuctionPage() {
   const { auctionId } = useParams<{ auctionId: string }>();
 
   const { data: auctionBids } = useQuery(AuctionBidsQuery, { variables: { auctionId } });
-  const { data: auctionMetricsData } = useQuery(AuctionMetricsQuery, {
+  const { data: auctionMetricsData, loading: metricsLoading } = useQuery(AuctionMetricsQuery, {
     variables: { auctionId },
   });
   const [getAuctionData, { data: auctionData }] = useLazyQuery(AuctionForAdminPageQuery, {
@@ -57,6 +58,7 @@ export default function AdminAuctionPage() {
   const charity = auction?.charity;
   const bids = auctionBids?.bids;
   const customerInformation = customer?.getCustomerInformation;
+
   const handleChargeBid = useCallback(
     async (item) => {
       try {
@@ -92,7 +94,7 @@ export default function AdminAuctionPage() {
     }
   }, [auctionId, addToast, chargeAuction, getAuctionData]);
 
-  if (!auction || !metrics || !bids) {
+  if (!auction || !bids) {
     return null;
   }
   const hasBids = bids.length > 0;
@@ -138,23 +140,21 @@ export default function AdminAuctionPage() {
             <Col lg="7">
               <>
                 <Row className="text-headline mb-2">Auction metrics </Row>
-                <ClicksAnalytics metrics={metrics} />
+                {metricsLoading ? <Loading /> : <ClicksAnalytics metrics={metrics} />}
               </>
             </Col>
           </Row>
-          {hasBids && (
-            <Row className="pt-3">
-              <Col>
-                <div className="text-headline">Bids</div>
-                <Bids
-                  bids={bids}
-                  loading={customerLoading}
-                  showProcessBtn={auction.isFailed}
-                  onBidClickHandler={onBidClickHandler}
-                />
-              </Col>
-            </Row>
-          )}
+          <Row className="pt-3">
+            <Col>
+              <div className="text-headline">Bids</div>
+              <Bids
+                bids={bids}
+                loading={customerLoading}
+                showProcessBtn={auction.isFailed}
+                onBidClickHandler={onBidClickHandler}
+              />
+            </Col>
+          </Row>
         </Container>
       </section>
       <Modal

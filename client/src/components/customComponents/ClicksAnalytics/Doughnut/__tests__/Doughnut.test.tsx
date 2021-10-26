@@ -1,4 +1,4 @@
-import { ChartDoughnut } from 'src/modules/admin/auctions/AdminAuctionPage/ClicksAnalytics/Doughnut';
+import { ChartDoughnut } from '../index';
 
 import { mount, ReactWrapper } from 'enzyme';
 

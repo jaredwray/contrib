@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import clsx from 'clsx';
 import { Col } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
 
@@ -10,10 +11,11 @@ interface Props {
   labels: string[] | undefined;
   values: number[] | undefined;
   name: string;
+  isAuctionPage?: boolean;
 }
 const DOUGHNUT_LABELS_LIMIT = 3;
 
-export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
+export const ChartDoughnut: FC<Props> = ({ labels, values, name, isAuctionPage }) => {
   const isCountries = name === 'countries';
 
   if (!labels || !values) {
@@ -42,7 +44,7 @@ export const ChartDoughnut: FC<Props> = ({ labels, values, name }) => {
   const clickNum = values.reduce((acc: number, val: number) => acc + val, 0);
   type country = { label: string; value: string };
   return (
-    <Col>
+    <Col className={clsx('mb-4', isAuctionPage && styles.alignCenter)}>
       <p className="text-all-cups">{name}</p>
       <ul className={styles.doughnutLabelsReferrers}>
         {labels.map((label: string, i: number) => {
