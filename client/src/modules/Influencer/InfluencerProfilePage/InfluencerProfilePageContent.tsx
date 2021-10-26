@@ -160,7 +160,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
       </section>
 
       {Boolean(auctions?.length) && (
-        <section className={styles.sliders}>
+        <section className={clsx(styles.sliders, 'pt-4 pt-md-5')}>
           <Container>
             {Boolean(liveAuctions.length) && (
               <ProfileSliderRow items={liveAuctionsLayout}>{influencer.name}'s live auctions</ProfileSliderRow>

@@ -158,7 +158,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
         </Container>
       </section>
       {hasAuctions && (
-        <section className={styles.sliders}>
+        <section className={clsx(styles.sliders, 'pt-4 pt-md-5')}>
           <Container>
             {hasLiveAuctions && (
               <ProfileSliderRow items={liveAuctionCards}>Live auctions benefiting {charity.name}</ProfileSliderRow>
