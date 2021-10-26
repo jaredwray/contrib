@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-sort-props */
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { AuctionQuery, AuctionSubscription } from 'src/apollo/queries/auctions';
+import { AuctionQuery, AuctionSubscription, AuctionMetricsQuery } from 'src/apollo/queries/auctions';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -16,16 +16,25 @@ import AttachmentsSlider from './AttachmentsSlider';
 import AuctionDetails from './AuctionDetails';
 import Author from './Author';
 import Benefits from './Benefits';
+import Metrics from './Metrics';
 import SimilarAuctions from './SimilarAuctions';
 
 const AuctionPage = () => {
   const auctionId = useParams<{ auctionId: string }>().auctionId ?? 'me';
   const history = useHistory();
   const { account } = useContext(UserAccountContext);
+  const [metrics, setMetrics] = useState(null);
 
   const { subscribeToMore, data: auctionData, error } = useQuery(AuctionQuery, {
     variables: { id: auctionId },
     fetchPolicy: 'cache-and-network',
+  });
+
+  const [requestMetrics] = useLazyQuery(AuctionMetricsQuery, {
+    variables: { auctionId },
+    onCompleted: ({ getAuctionMetrics }) => {
+      setMetrics(getAuctionMetrics);
+    },
   });
 
   useEffect(() => {
@@ -38,8 +47,8 @@ const AuctionPage = () => {
       },
     });
   }, [subscribeToMore]);
+
   const auction = auctionData?.auction;
-  const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
 
   if (auction === null) {
     history.replace('/404');
@@ -60,7 +69,14 @@ const AuctionPage = () => {
   if (!account?.isAdmin && !isMyProfile && (auction?.isDraft || auction?.isStopped)) {
     history.push(`/`);
   }
+
+  const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
+  const accountEntityId = account?.charity?.id || account?.influencerProfile?.id || account?.assistant?.influencerId;
+  const withMetrcis =
+    accountEntityId === auction?.auctionOrganizer?.id || accountEntityId === auction?.charity?.id || account?.isAdmin;
+
   const attachments = [...auction?.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
+
   setPageTitle(`${auction.title} auction`);
 
   return (
@@ -90,6 +106,14 @@ const AuctionPage = () => {
           </Col>
           <Col md="7" />
         </Row>
+        {withMetrcis && (
+          <Row>
+            <Col md="1" />
+            <Col>
+              <Metrics metrics={metrics} requestMetrics={requestMetrics} />
+            </Col>
+          </Row>
+        )}
       </Container>
       <SimilarAuctions selectedAuction={auctionId} />
     </Layout>

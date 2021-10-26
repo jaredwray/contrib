@@ -17,11 +17,11 @@ interface Props {
 
 export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, showProcessBtn }) => {
   if (bids.length === 0) {
-    return <div className="pb-3">no bids for this auction</div>;
+    return <div>no bids for this auction</div>;
   }
 
   return (
-    <Table className={'d-block d-sl-table'}>
+    <Table className="d-block d-sl-table">
       <thead>
         <tr>
           <th>Bid</th>

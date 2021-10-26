@@ -2,7 +2,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 
 import { auction } from 'src/helpers/testHelpers/auction';
 import { metrics } from 'src/helpers/testHelpers/metrics';
-import { ClicksAnalytics } from '../ClicksAnalytics';
+import { ClicksAnalytics } from '../index';
 
 describe('Should render correctly "ClicksAnalytics"', () => {
   const props: any = { metrics, auction };
