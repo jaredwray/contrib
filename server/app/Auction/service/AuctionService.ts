@@ -759,7 +759,7 @@ export class AuctionService {
   private async notifyAuctionOrganizer(auction: IAuctionModel): Promise<void> {
     const currentAuction = await this.auctionRepository.getAuctionOrganizerUserAccountFromAuction(auction);
 
-    const phoneNumber = currentAuction.auctionOrganizer.userAccount.phoneNumber;
+    const phoneNumber = currentAuction.auctionOrganizer?.userAccount?.phoneNumber;
 
     if (!phoneNumber) return null;
 
