@@ -4,8 +4,8 @@ import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { MemoryRouter } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
-import PhoneInput from 'react-phone-input-2';
 
+import PhoneInput from 'src/components/forms/inputs/PhoneInput';
 import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/forms/Form/Form';
 import InputField from 'src/components/forms/inputs/InputField';

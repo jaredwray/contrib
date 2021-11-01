@@ -1,18 +1,16 @@
 import { FC, useCallback, useState, useEffect } from 'react';
 
 import { DocumentNode, useMutation } from '@apollo/client';
-import clsx from 'clsx';
 import { Alert, Button, Form as RbForm, Spinner } from 'react-bootstrap';
 import { Field } from 'react-final-form';
-import PhoneInput from 'react-phone-input-2';
 import { useToasts } from 'react-toast-notifications';
 
 import Form from 'src/components/forms/Form/Form';
 import InputField from 'src/components/forms/inputs/InputField';
+import PhoneInput from 'src/components/forms/inputs/PhoneInput';
 import Dialog from 'src/components/modals/Dialog';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
-
-import styles from './styles.module.scss';
+import { ALLOWED_COUNTRY_NAME } from 'src/types/Country';
 
 interface Props {
   open: boolean;
@@ -29,7 +27,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
   const [phoneInputValue, setPhoneInputValue] = useState('');
   const [phoneInputIsValid, setPhoneInputIsValid] = useState(false);
   const [invitationError, setInvitationError] = useState('');
-  const allowedCountryName = 'United States';
+  const allowedCountryName = ALLOWED_COUNTRY_NAME;
 
   useEffect(() => {
     if (!phoneInputValue) {
@@ -97,31 +95,14 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
           <RbForm.Group>
             <RbForm.Label>Phone Number</RbForm.Label>
             <Field name="phoneNumber">
-              {({ input }) => {
-                return (
-                  <PhoneInput
-                    copyNumbersOnly={false}
-                    country="us"
-                    inputClass={phoneInputIsValid ? '' : 'is-invalid'}
-                    inputProps={{ required: true, name: 'phoneNumber', country: 'us' }}
-                    isValid={(_, country: any): any => {
-                      if (country.name !== allowedCountryName) {
-                        return (
-                          <span className={clsx('pt-1 mb-1 text-label error-message', styles.errorMessage)}>
-                            You can provide USA phone numbers only
-                          </span>
-                        );
-                      }
-                      return '';
-                    }}
-                    placeholder=""
-                    specialLabel=""
-                    {...input}
-                    value={phoneInputValue}
-                    onChange={handleChange}
-                  />
-                );
-              }}
+              {({ input }) => (
+                <PhoneInput
+                  otherProps={{ ...input }}
+                  value={phoneInputValue}
+                  valueIsValid={phoneInputIsValid}
+                  onChange={handleChange}
+                />
+              )}
             </Field>
           </RbForm.Group>
 

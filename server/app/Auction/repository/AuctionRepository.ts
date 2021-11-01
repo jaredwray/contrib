@@ -57,13 +57,15 @@ export class AuctionRepository implements IAuctionRepository {
   private static searchSortOptionsByName(
     name: string = AuctionOrderBy.CREATED_AT_DESC,
     statusFilter: string[],
+    filters: AuctionSearchFilters,
   ): { [key: string]: string } {
     if (
       statusFilter == [AuctionStatus.SOLD, AuctionStatus.SETTLED] ||
       name == AuctionOrderBy.PRICE_ASC ||
-      name == AuctionOrderBy.PRICE_DESC
+      name == AuctionOrderBy.PRICE_DESC ||
+      (filters?.winner && AuctionOrderBy.TIME_DESC)
     ) {
-      return Object.assign(AuctionRepository.SEARCH_FILTERS[name]);
+      return AuctionRepository.SEARCH_FILTERS[name];
     }
     return Object.assign({ status: 'asc' }, AuctionRepository.SEARCH_FILTERS[name]);
   }
@@ -95,6 +97,8 @@ export class AuctionRepository implements IAuctionRepository {
       [filters?.charity?.length, { charity: { $in: filters?.charity?.map((id: string) => Types.ObjectId(id)) } }],
       [filters?.status, { status: { $in: filters?.status } }],
       [filters?.selectedAuction, { _id: { $ne: filters?.selectedAuction } }],
+      [filters?.winner, { winner: filters?.winner }],
+      [filters?.ids?.length, { _id: { $in: filters?.ids?.map((id: string) => Types.ObjectId(id)) } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {},
@@ -316,7 +320,7 @@ export class AuctionRepository implements IAuctionRepository {
     )
       .skip(skip)
       .limit(size)
-      .sort(AuctionRepository.searchSortOptionsByName(orderBy, statusFilter));
+      .sort(AuctionRepository.searchSortOptionsByName(orderBy, statusFilter, filters));
     return await auctions.exec();
   }
 

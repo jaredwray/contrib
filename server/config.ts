@@ -18,6 +18,7 @@ export const AppConfig = {
     port: Number(process.env.PORT ?? 3000),
     url: requireEnvVar('APP_URL').replace(/\/$/, ''),
     defaultCurrency: 'USD',
+    contactEmail: 'help@contrib.org',
   },
   environment: {
     isProduction: process.env.NODE_ENV === 'live',

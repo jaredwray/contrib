@@ -1,0 +1,37 @@
+@import 'src/variables.scss';
+
+.wraper {
+  display: flex;
+  align-items: center;
+
+  @media (max-width: $large-weight) {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.button {
+  display: inline-block;
+  margin-left: 2rem;
+  max-width: 200px;
+
+  @media (max-width: $large-weight) {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+  }
+}
+
+.input {
+  display: inline-block;
+  min-width: 190px;
+  max-width: 250px;
+  text-align: center;
+
+  @media (max-width: $large-weight) {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 1rem;
+  }
+}

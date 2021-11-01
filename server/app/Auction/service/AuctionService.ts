@@ -13,6 +13,7 @@ import { UPSDeliveryService } from '../../UPSService';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionDeliveryStatus } from '../dto/AuctionDeliveryStatus';
 import { Auction } from '../dto/Auction';
+import { AuctionsForProfilePage } from '../dto/AuctionsForProfilePage';
 import { AuctionAssets } from '../dto/AuctionAssets';
 import { AuctionParcel } from '../dto/AuctionParcel';
 import { Bid } from '../../Bid/dto/Bid';
@@ -70,6 +71,45 @@ export class AuctionService {
     private readonly attachmentsService: AuctionAttachmentsService,
     private readonly UPSService: UPSDeliveryService,
   ) {}
+
+  public async getAuctionsForProfilePage(userId: string): Promise<AuctionsForProfilePage | null> {
+    try {
+      const allBids = await this.BidModel.find({ user: userId });
+
+      const auctionIds = allBids.map((bid) => bid.auction.toString());
+      const uniqAuctionIds = Array.from(new Set(auctionIds));
+
+      if (!uniqAuctionIds.length) {
+        return {
+          live: [],
+          won: [],
+        };
+      }
+
+      const auctionModels = await this.auctionRepository.getAuctions({ filters: { ids: uniqAuctionIds } });
+      const auctions = auctionModels.map((auctionModel) => this.makeAuction(auctionModel));
+
+      return auctions.reduce(
+        (acc: AuctionsForProfilePage, cur: Auction) => {
+          if (cur.isActive) {
+            acc.live = [...acc.live, cur];
+            return acc;
+          }
+          if (cur?.winner?.mongodbId === userId) {
+            acc.won = [...acc.won, cur];
+            return acc;
+          }
+          return acc;
+        },
+        { live: [], won: [] },
+      );
+    } catch (error) {
+      AppLogger.error(
+        `Something went wrong when try to get auctions for profile page for user #${userId}, error: ${error.message}`,
+      );
+      throw new AppError('Something went wrong, please try later');
+    }
+  }
 
   public async updateTotalRaisedAmount(auction: IAuctionModel, amount: number): Promise<void> {
     const { charity, auctionOrganizer } = auction;
@@ -913,10 +953,13 @@ export class AuctionService {
   ): Promise<void> {
     try {
       const message = await this.handlebarsService.renderTemplate(template, context);
-      await this.cloudTaskService.createTask(this.generateGoogleTaskTarget(), {
-        message,
-        phoneNumber,
-      });
+      await this.cloudTaskService.createTask(
+        this.cloudTaskService.generateGoogleTaskTarget('notificationTaskTargetURL'),
+        {
+          message,
+          phoneNumber,
+        },
+      );
     } catch (error) {
       AppLogger.warn(`Can not send the notification to ${phoneNumber}: ${error.message}`);
     }
@@ -936,15 +979,6 @@ export class AuctionService {
     await this.sendAuctionIsActivatedMessage(auction);
 
     return;
-  }
-
-  private generateGoogleTaskTarget(): string {
-    const appURL = new URL(AppConfig.app.url);
-
-    if (!AppConfig.environment.serveClient) {
-      appURL.port = AppConfig.app.port.toString();
-    }
-    return `${appURL.toString()}${AppConfig.googleCloud.task.notificationTaskTargetURL}`;
   }
 
   private static makeAuctionAttachment(model: IAuctionAssetModel, filename?: string): AuctionAssets | null {

@@ -1,0 +1,13 @@
+@import 'src/variables.scss';
+
+.btn {
+  height: 50px;
+  align-self: end;
+}
+
+.input {
+  width: auto;
+  @media (max-width: $small-weight) {
+    width: 100%;
+  }
+}

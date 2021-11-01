@@ -47,6 +47,7 @@ export default function Header() {
                         className="dropdown-menu-user-picture float-right d-inline-block"
                         src={user?.picture}
                       />
+                      <MenuNavLink link="/profile" title="My Profile" />
                     </>
                   )}
                   <MenuNavLink link="/auctions" title="Auctions" />

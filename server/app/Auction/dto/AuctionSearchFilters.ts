@@ -7,4 +7,6 @@ export interface AuctionSearchFilters {
   status?: string[];
   charity?: string[];
   selectedAuction?: string;
+  winner?: string;
+  ids?: string[];
 }

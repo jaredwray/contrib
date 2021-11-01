@@ -3,6 +3,7 @@ import { Dayjs } from 'dayjs';
 import { PubSub } from 'graphql-subscriptions';
 
 import { Auction } from '../dto/Auction';
+import { AuctionsForProfilePage } from '../dto/AuctionsForProfilePage';
 import { AuctionSubscriptions } from '../dto/AuctionSubscriptions';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
@@ -34,6 +35,7 @@ interface AuctionResolversType {
         statusFilter: string[];
       }
     >;
+    getAuctionsForProfilePage: GraphqlResolver<AuctionsForProfilePage | null>;
     auctionPriceLimits: GraphqlResolver<
       { min: Dinero.Dinero; max: Dinero.Dinero },
       { filters?: AuctionSearchFilters; query?: string; statusFilter: string[] }
@@ -89,6 +91,9 @@ export const AuctionResolvers: AuctionResolversType = {
   Query: {
     auctions: async (_, { size, skip, query, filters, orderBy, statusFilter }, { auction }) =>
       auction.listAuctions({ query, filters, orderBy, size, skip, statusFilter }),
+    getAuctionsForProfilePage: requireAuthenticated(async (_, __, { auction, currentAccount }) =>
+      auction.getAuctionsForProfilePage(currentAccount.mongodbId),
+    ),
     auctionPriceLimits: (_, { filters, query, statusFilter }, { auction }) =>
       auction.getAuctionPriceLimits({ filters, query, statusFilter }),
     auction: loadRole(async (_, { id, organizerId }, { auction, currentAccount, currentInfluencerId }) => {
