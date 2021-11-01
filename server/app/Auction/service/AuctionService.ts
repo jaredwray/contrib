@@ -685,8 +685,8 @@ export class AuctionService {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
 
     for await (const auction of auctions) {
-      await this.sendLastNotificationForUsers(auction);
       await this.sendFirstNotificationForUsers(auction);
+      await this.sendLastNotificationForUsers(auction);
       await this.sendNotificationForAuctionOrganizer(auction);
     }
     return { message: 'Scheduled' };
