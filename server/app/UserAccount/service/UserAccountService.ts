@@ -212,7 +212,7 @@ export class UserAccountService {
     }
 
     try {
-      await this.AccountModel.findByIdAndUpdate(userId, { newPhoneNumber });
+      await this.AccountModel.findByIdAndUpdate(userId, { phoneNumber: newPhoneNumber });
 
       return { phoneNumber: newPhoneNumber };
     } catch (error) {
