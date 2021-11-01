@@ -45,6 +45,7 @@ import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
 import Privacy from 'src/modules/Privacy';
 import Terms from 'src/modules/Terms';
+import UserProfilePage from 'src/modules/userProfile';
 
 import 'src/index.scss';
 import { mergeUrlPath } from './helpers/mergeUrlPath';
@@ -87,6 +88,8 @@ export const App = () => {
                   <Route exact component={PhoneNumberVerification} path="/phone-verification" />
                   <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
                   <Route exact component={InvitationPage} path="/invitation/:slug" />
+
+                  <PrivateRoute component={UserProfilePage} path="/profile" role="user" />
 
                   <PrivateRoute component={InfluencerOnboardingBasicPage} path="/onboarding/basic" role="influencer" />
                   <PrivateRoute

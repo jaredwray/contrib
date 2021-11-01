@@ -19,6 +19,7 @@ export enum MessageTemplate {
   AUCTION_IS_CREATED_MESSAGE = 'auctionIsCreated.hbs',
   AUCTION_IS_CREATED_MESSAGE_FOR_CHARITY_FOLLOWERS = 'auctionIsCreatedForCharityFollowers.hbs',
   AUCTION_IS_CREATED_MESSAGE_FOR_INFLUENCER_FOLLOWERS = 'auctionIsCreatedForInfluencerFollowers.hbs',
+  PHONE_NUMBER_CHANGED = 'phoneNumberChanged.hbs',
 }
 
 export class HandlebarsService implements IHandlebarsService {

@@ -19,7 +19,10 @@ import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
 import { Auth0Service } from '../../../authz';
 import { UPSDeliveryService } from '../../UPSService';
+import { CloudTaskService } from '../../CloudTaskService';
+import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 
+import { AppConfig } from '../../../config';
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
 
@@ -37,6 +40,8 @@ export class UserAccountService {
     private readonly twilioVerificationService: TwilioVerificationService,
     private readonly eventHub: EventHub,
     private readonly auth0Service: Auth0Service,
+    private readonly handlebarsService: HandlebarsService,
+    private readonly cloudTaskService: CloudTaskService,
   ) {}
 
   public async createOrUpdateUserAddress(
@@ -54,7 +59,7 @@ export class UserAccountService {
       AppLogger.error(`Current user #${userId} is not a winner for auction #${auctionId}`);
       throw new AppError('Something went wrong. Please, try again later');
     }
-    
+
     const user = await this.AccountModel.findById(userId);
 
     if (!user) {
@@ -141,8 +146,25 @@ export class UserAccountService {
     }));
   }
 
+  async verifyChangePhoneNumber(phoneNumber: string): Promise<{ phoneNumber: string } | null> {
+    if (await this.AccountModel.exists({ phoneNumber })) {
+      throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
+    }
+
+    try {
+      await this.twilioVerificationService.createVerification(phoneNumber);
+    } catch (error) {
+      if (error.message.startsWith('Invalid parameter `To`')) {
+        throw new AppError(`${error.message.replace('Invalid parameter `To`', 'Invalid phone number')}`);
+      }
+      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}. Error: ${error.message}`);
+      throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
+    }
+    return { phoneNumber };
+  }
+
   async createAccountWithPhoneNumber(authzId: string, phoneNumber: string): Promise<UserAccount> {
-    if (await this.AccountModel.findOne({ phoneNumber }).exec()) {
+    if (await this.AccountModel.exists({ phoneNumber })) {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
 
@@ -165,7 +187,7 @@ export class UserAccountService {
         );
       }
       AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}. Error: ${error.message}`);
-      throw new AppError(`Something went wrong. please try later.`, ErrorCode.BAD_REQUEST);
+      throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
     }
     return {
       id: authzId,
@@ -173,6 +195,48 @@ export class UserAccountService {
       status: UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED,
       createdAt: dayjs().toISOString(),
     };
+  }
+
+  async confirmChangePhoneNumber(input: {
+    userId: string;
+    newPhoneNumber: string;
+    oldPhoneNumber: string;
+    otp: string;
+  }): Promise<{ phoneNumber: string } | null> {
+    const { userId, newPhoneNumber, oldPhoneNumber, otp } = input;
+
+    const result = await this.twilioVerificationService.confirmVerification(newPhoneNumber, otp);
+
+    if (!result) {
+      throw new AppError('Incorrect verification code', ErrorCode.BAD_REQUEST);
+    }
+
+    try {
+      await this.AccountModel.findByIdAndUpdate(userId, { newPhoneNumber });
+
+      return { phoneNumber: newPhoneNumber };
+    } catch (error) {
+      AppLogger.error(`Cannot update phoneNumber for user #${userId}. Error: ${error.message}`);
+      throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
+    }
+
+    try {
+      const message = await this.handlebarsService.renderTemplate(MessageTemplate.PHONE_NUMBER_CHANGED, {
+        oldPhoneNumber,
+        newPhoneNumber,
+        contactEmail: AppConfig.app.contactEmail,
+      });
+
+      await this.cloudTaskService.createTask(
+        this.cloudTaskService.generateGoogleTaskTarget('notificationTaskTargetURL'),
+        {
+          message,
+          oldPhoneNumber,
+        },
+      );
+    } catch (error) {
+      AppLogger.error(`Cannot send notification for user #${userId}. Error: ${error.message}`);
+    }
   }
 
   async confirmAccountWithPhoneNumber(authzId: string, phoneNumber: string, otp?: string): Promise<UserAccount> {
@@ -183,7 +247,7 @@ export class UserAccountService {
       }
     }
 
-    if (await this.AccountModel.findOne({ authzId }).exec()) {
+    if (await this.AccountModel.exists({ authzId })) {
       throw new AppError('Account already exists', ErrorCode.BAD_REQUEST);
     }
     const findedAccount = await this.AccountModel.findOne({ phoneNumber }).exec();

@@ -18,7 +18,8 @@ const PrivateRoute: FC<Props> = ({ component, path, role }): ReactElement => {
       return (
         account?.isAdmin ||
         (role === 'influencer' && (account?.influencerProfile || account?.assistant)) ||
-        (role === 'charity' && account?.charity)
+        (role === 'charity' && account?.charity) ||
+        (role === 'user' && account?.mongodbId)
       );
     },
     [account],

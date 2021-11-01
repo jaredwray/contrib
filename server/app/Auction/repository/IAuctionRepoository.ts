@@ -4,7 +4,6 @@ import { IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
-import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
 
 export type IAuctionFilters = {
   size?: number;
@@ -13,7 +12,7 @@ export type IAuctionFilters = {
   filters?: AuctionSearchFilters;
   orderBy?: AuctionOrderBy;
   auctionOrganizer?: string;
-  statusFilter: string[];
+  statusFilter?: string[];
 };
 
 export interface ICreateAuction {

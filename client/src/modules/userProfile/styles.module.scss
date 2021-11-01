@@ -1,0 +1,17 @@
+@import 'src/variables.scss';
+
+.auctionsSection,
+.phoneNumberSection {
+  flex: 1;
+  & h1,
+  h3 {
+    font-weight: 700;
+  }
+}
+.auctionsSection {
+  background-color: $barely-gray-color;
+}
+
+.title {
+  color: $sage-color;
+}

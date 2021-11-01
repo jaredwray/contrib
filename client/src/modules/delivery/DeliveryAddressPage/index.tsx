@@ -3,12 +3,12 @@ import { useCallback, useContext, useState, KeyboardEvent } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { Row } from 'react-bootstrap';
-import PhoneInput from 'react-phone-input-2';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQuery';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import InputField from 'src/components/forms/inputs/InputField';
+import PhoneInput from 'src/components/forms/inputs/PhoneInput';
 import SelectField from 'src/components/forms/inputs/SelectField';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
@@ -185,11 +185,6 @@ export default function DeliveryAddressPage() {
         </Row>
 
         <PhoneInput
-          copyNumbersOnly={false}
-          country="us"
-          inputProps={{ required: true, name: 'phoneNumber', country: 'us' }}
-          placeholder=""
-          specialLabel=""
           value={auction.delivery.address.phoneNumber || auction.winner.phoneNumber}
           onChange={handleChange}
         />

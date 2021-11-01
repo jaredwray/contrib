@@ -5,12 +5,13 @@ import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
-import PhoneInput from 'react-phone-input-2';
 
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { EnterPhoneNumberMutation, EnterInvitationCodeMutation } from 'src/apollo/queries/phoneNumberVerification';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
+import PhoneInput from 'src/components/forms/inputs/PhoneInput';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { ALLOWED_COUNTRY_NAME } from 'src/types/Country';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
@@ -27,7 +28,7 @@ export default function PhoneNumberVerification() {
   const [phoneInputisValid, setPhoneInputIsValid] = useState(false);
   const [error, setError] = useState();
   const invitationToken = useReactiveVar(invitationTokenVar);
-  const countryName = 'United States';
+  const countryName = ALLOWED_COUNTRY_NAME;
   useEffect(() => {
     if (!phoneInputValue) {
       setPhoneInputValue('1');
@@ -93,26 +94,11 @@ export default function PhoneNumberVerification() {
               <div className={clsx('pt-1 mb-1 text-label error-message', styles.errorMessage)}>{error}</div>
 
               <Field name="phoneNumber">
-                {(props) => (
+                {({ input }) => (
                   <PhoneInput
+                    className="mb-3 w-auto d-inline-block pr-3"
                     disabled={formSubmitting}
-                    isValid={(_, country: any): any => {
-                      if (country.name !== countryName) {
-                        return (
-                          <span className={clsx('pt-1 mb-1 text-label error-message', styles.errorMessage)}>
-                            You can provide USA phone numbers only
-                          </span>
-                        );
-                      }
-                      return '';
-                    }}
-                    {...props.input}
-                    containerClass="mb-3 w-auto d-inline-block pr-3"
-                    copyNumbersOnly={false}
-                    country="us"
-                    inputProps={{ required: true }}
-                    placeholder=""
-                    specialLabel=""
+                    otherProps={{ input }}
                     value={phoneInputValue}
                     onChange={handleChange}
                   />

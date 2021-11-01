@@ -86,10 +86,16 @@ export const UserAccountSchema = gql`
     getAccountById(id: String!): UserAccountForBid!
   }
 
+  type PhoneNumber {
+    phoneNumber: String
+  }
+
   extend type Mutation {
     acceptAccountTerms(version: String!): UserAccount!
     createAccountWithPhoneNumber(phoneNumber: String): UserAccount!
+    verifyChangePhoneNumber(phoneNumber: String): PhoneNumber
     confirmAccountWithPhoneNumber(phoneNumber: String!, otp: String!): UserAccount!
+    confirmChangePhoneNumber(phoneNumber: String, otp: String): PhoneNumber
     createOrUpdateUserAddress(auctionId: String!, userId: String, input: UserAccountAddressInput!): UserAccountAddress!
   }
 `;

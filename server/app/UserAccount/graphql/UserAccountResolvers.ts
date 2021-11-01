@@ -16,9 +16,22 @@ export const UserAccountResolvers = {
       (parent, { phoneNumber, otp }: { otp: string; phoneNumber: string }, { user, userAccount }) =>
         userAccount.confirmAccountWithPhoneNumber(user.id, phoneNumber, otp),
     ),
+    confirmChangePhoneNumber: requireAuthenticated(
+      (parent, { phoneNumber, otp }: { otp: string; phoneNumber: string }, { currentAccount, userAccount }) =>
+        userAccount.confirmChangePhoneNumber({
+          userId: currentAccount.mongodbId,
+          newPhoneNumber: phoneNumber,
+          oldPhoneNumber: currentAccount.phoneNumber,
+          otp,
+        }),
+    ),
     createAccountWithPhoneNumber: requireAuthenticated(
       (parent: unknown, { phoneNumber }: { phoneNumber: string }, { user, userAccount }) =>
         userAccount.createAccountWithPhoneNumber(user.id, phoneNumber),
+    ),
+    verifyChangePhoneNumber: requireAuthenticated(
+      (parent: unknown, { phoneNumber }: { phoneNumber: string }, { userAccount }) =>
+        userAccount.verifyChangePhoneNumber(phoneNumber),
     ),
     createOrUpdateUserAddress: requireAuthenticated(
       async (_, { auctionId, input }, { currentAccount, userAccount }) =>

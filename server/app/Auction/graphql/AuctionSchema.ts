@@ -189,6 +189,11 @@ export const AuctionSchema = gql`
     accountId: String
   }
 
+  type AuctionsForProfilePage {
+    live: [Auction]
+    won: [Auction]
+  }
+
   input AuctionSearchFilters {
     minPrice: Int
     maxPrice: Int
@@ -258,6 +263,7 @@ export const AuctionSchema = gql`
       orderBy: String
       statusFilter: [String]
     ): AuctionsPage!
+    getAuctionsForProfilePage: AuctionsForProfilePage
     auctionPriceLimits(query: String, filters: AuctionSearchFilters, statusFilter: [String]): AuctionPriceLimits!
     auction(id: String!): Auction
     getCustomerInformation(stripeCustomerId: String!): CustomerInformation

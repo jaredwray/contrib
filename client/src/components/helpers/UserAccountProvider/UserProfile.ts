@@ -14,4 +14,5 @@ export interface UserProfile {
   createdAt: Date;
   notAcceptedTerms: string | null;
   address: UserAccountAddress;
+  phoneNumber: string;
 }

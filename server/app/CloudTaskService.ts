@@ -8,6 +8,15 @@ export class CloudTaskService {
     credentials: JSON.parse(AppConfig.googleCloud.keyDump),
   });
 
+  public generateGoogleTaskTarget(type: string): string {
+    const appURL = new URL(AppConfig.app.url);
+
+    if (!AppConfig.environment.serveClient) {
+      appURL.port = AppConfig.app.port.toString();
+    }
+    return `${appURL.toString()}${AppConfig.googleCloud.task[type]}`;
+  }
+
   public async createTask(returnURL: string, payload: { [key: string]: any }): Promise<void> {
     if (AppConfig.app.url === 'http://127.0.0.1:3000') {
       return;
