@@ -55,7 +55,7 @@ const AuctionMetricsUpdatePage: FC = () => {
   const redirect = useCallback(
     (data) => {
       try {
-        if (data.entity === 'auction') {
+        if (data.link.includes('auctions')) {
           getUserData().then((userData) => {
             updateMetrics({ variables: { shortLinkId: data.id, ...userData } });
           });

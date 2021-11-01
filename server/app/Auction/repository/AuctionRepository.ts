@@ -50,6 +50,7 @@ export class AuctionRepository implements IAuctionRepository {
       { path: 'charity', populate: { path: 'followers.user', model: this.UserAccountModel } },
       { path: 'winner', model: this.UserAccountModel },
       { path: 'shortLink', model: this.ShortLinkModel },
+      { path: 'delivery.shortLink', model: this.ShortLinkModel },
     ];
   }
 
@@ -208,7 +209,7 @@ export class AuctionRepository implements IAuctionRepository {
       },
     ]);
 
-    const shortLinkId = await this.shortLinkService.createShortLink(`auctions/${auction._id.toString()}`, 'auction');
+    const shortLinkId = await this.shortLinkService.createShortLink(`auctions/${auction._id.toString()}`);
 
     if (shortLinkId) {
       Object.assign(auction, {

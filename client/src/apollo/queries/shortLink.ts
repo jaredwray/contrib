@@ -5,7 +5,6 @@ export const GetLinkQuery = gql`
     getLink(slug: $slug) {
       id
       link
-      entity
     }
   }
 `;

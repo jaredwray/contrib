@@ -761,6 +761,8 @@ export class AuctionService {
 
     const phoneNumber = currentAuction.auctionOrganizer.userAccount.phoneNumber;
 
+    if (!phoneNumber) return null;
+
     await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_AUCTIONORGANIZER, {
       auctionTitle: currentAuction.title,
       auctionPrice: Dinero({
@@ -1159,6 +1161,14 @@ export class AuctionService {
   }
 
   public async getMessageTemplateAndVariables(enviroment: boolean, auction: IAuctionModel, type: string) {
+    const deliveryShortLinkId = await this.shortLinkService.createShortLink(
+      `auctions/${auction._id.toString()}/delivery/address`,
+    );
+
+    auction.delivery.shortLink = deliveryShortLinkId;
+
+    await auction.save();
+
     const populatedAuction = await this.auctionRepository.getPopulatedAuction(auction);
     const messageVariables: { auctionTitle: string; auctionLink: string; auctionDeliveryLink?: string } = {
       auctionTitle: auction.title,
@@ -1166,9 +1176,9 @@ export class AuctionService {
     };
 
     if (enviroment) {
-      messageVariables.auctionDeliveryLink = `${
-        process.env.APP_URL
-      }auctions/${auction._id.toString()}/delivery/address`;
+      messageVariables.auctionDeliveryLink = this.shortLinkService.makeShortLink(
+        populatedAuction.delivery.shortLink.slug,
+      );
     }
 
     return {
@@ -1271,7 +1281,6 @@ export class AuctionService {
         id: shortLink._id.toString(),
         link: shortLink.link,
         slug: shortLink.slug,
-        entity: shortLink?.entity || null,
       },
       status,
       isActive: status === AuctionStatus.ACTIVE,
