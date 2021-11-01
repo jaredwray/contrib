@@ -9,7 +9,7 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
-  { auction, charity, stripeService, twilioNotification }: IAppServices,
+  { auction, charity, stripeService, twilioNotification, shortLinkService }: IAppServices,
 ): void {
   app.use(express.json());
   app.use((req, res, next) => {
@@ -19,6 +19,21 @@ export default function appRouteHandlers(
       express.json()(req, res, next);
     }
   });
+
+  //TODO: delete after update short_links
+  app.post('/api/v1/update-short-links', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) {
+      return;
+    }
+
+    try {
+      await shortLinkService.updateShortLinks();
+      return res.send('Updated');
+    } catch {
+      return res.send('Failed');
+    }
+  });
+  //TODO ends
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) {

@@ -488,11 +488,7 @@ export class InvitationService {
       { session },
     );
 
-    const shortLinkId = await this.shortLinkService.createShortLink(
-      `invitation/${invitation.slug}`,
-      'invitation',
-      session,
-    );
+    const shortLinkId = await this.shortLinkService.createShortLink(`invitation/${invitation.slug}`, session);
 
     if (shortLinkId) {
       Object.assign(invitation, {

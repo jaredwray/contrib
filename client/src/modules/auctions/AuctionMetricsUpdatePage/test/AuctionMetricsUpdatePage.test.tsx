@@ -32,7 +32,6 @@ cache.writeQuery({
   data: {
     id: 'testId',
     link: 'testLink',
-    entity: 'testEntity',
   },
 });
 

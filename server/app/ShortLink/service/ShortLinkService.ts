@@ -5,6 +5,7 @@ import { ShortLink } from '../dto/ShortLink';
 import { ShortLinkModel } from '../mongodb/ShortLinkModel';
 
 import { AppConfig } from '../../../config';
+import { AppLogger } from '../../../logger';
 
 export class ShortLinkService {
   private readonly shortLinkModel = ShortLinkModel(this.connection);
@@ -32,7 +33,23 @@ export class ShortLinkService {
     return url.toString();
   }
 
-  public async createShortLink(adress: string, entity: string, session?: ClientSession): Promise<string> {
+  //TODO delete after update short_links
+  public async updateShortLinks() {
+    try {
+      const shortLinkModels = await this.shortLinkModel.find({ entity: { $exists: true } });
+
+      for (const model of shortLinkModels) {
+        model.entity = undefined;
+
+        await model.save();
+      }
+    } catch (error) {
+      AppLogger.error(`Something went wrong when try to update short links. Error: ${error.message}`);
+    }
+  }
+  //TODO ends
+
+  public async createShortLink(adress: string, session?: ClientSession): Promise<string> {
     const link = this.makeLink(adress);
     const slug = await this.getUniqSlug(uuidv4().split('-')[0]);
 
@@ -41,7 +58,6 @@ export class ShortLinkService {
         {
           slug,
           link,
-          entity,
         },
       ],
       { session },
@@ -57,13 +73,12 @@ export class ShortLinkService {
       return null;
     }
 
-    const { _id, link, entity, slug: createdSlug } = shortLinkModel;
+    const { _id, link, slug: createdSlug } = shortLinkModel;
 
     return {
       id: _id.toString(),
       link,
       slug: createdSlug,
-      entity,
     };
   }
 }

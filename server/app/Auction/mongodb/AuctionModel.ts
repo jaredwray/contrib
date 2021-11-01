@@ -70,6 +70,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     totalBids: { type: SchemaTypes.Number, default: 0 },
     winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
     delivery: {
+      shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
       deliveryMethod: { type: SchemaTypes.String },
       shippingLabel: { type: SchemaTypes.String },
       parcel: {
