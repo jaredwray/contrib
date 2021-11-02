@@ -88,6 +88,7 @@ export const AuctionForAdminPageQuery = gql`
           city
           zipCode
           street
+          phoneNumber
         }
         timeInTransit
         identificationNumber
@@ -103,6 +104,7 @@ export const AuctionForAdminPageQuery = gql`
           city
           zipCode
           street
+          phoneNumber
         }
       }
       isFailed
@@ -180,6 +182,7 @@ export const AuctionQuery = gql`
           city
           zipCode
           street
+          phoneNumber
         }
       }
       delivery {

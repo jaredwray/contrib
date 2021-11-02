@@ -63,6 +63,7 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
     zipCode: { type: SchemaTypes.String },
     country: { type: SchemaTypes.String, default: 'USA' },
     street: { type: SchemaTypes.String },
+    phoneNumber: { type: SchemaTypes.String },
   },
 });
 

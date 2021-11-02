@@ -50,6 +50,7 @@ const USPhoneInput: FC<Props> = ({
       }}
       placeholder=""
       specialLabel=""
+      value={value}
       onChange={onChange}
       {...otherProps}
     />
