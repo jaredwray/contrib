@@ -268,6 +268,10 @@ export class UPSDeliveryService {
     }
   }
 
+  public trackingUrl(number: string): string {
+    return `https://www.ups.com/track?trackingNumber=${number}`;
+  }
+
   public async shippingRegistration(
     parcel: AuctionParcel,
     address: UserAccountAddress,

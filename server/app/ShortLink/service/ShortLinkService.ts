@@ -2,7 +2,7 @@ import { ClientSession, Connection } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ShortLink } from '../dto/ShortLink';
-import { ShortLinkModel } from '../mongodb/ShortLinkModel';
+import { ShortLinkModel, IShortLinkModel } from '../mongodb/ShortLinkModel';
 
 import { AppConfig } from '../../../config';
 import { AppLogger } from '../../../logger';
@@ -21,15 +21,16 @@ export class ShortLinkService {
     return await this.getUniqSlug(newSlug);
   }
 
-  private makeLink(adress: string): string {
+  public makeLink({ adress, slug }: { adress?: string; slug?: string }): string {
     const url = new URL(AppConfig.app.url);
-    url.pathname = `/${adress}`;
-    return url.toString();
-  }
 
-  public makeShortLink(slug: string): string {
-    const url = new URL(AppConfig.app.url);
-    url.pathname = `/go/${slug}`;
+    if (adress) {
+      url.pathname = `/${adress}`;
+    }
+
+    if (slug) {
+      url.pathname = `/go/${slug}`;
+    }
     return url.toString();
   }
 
@@ -49,11 +50,11 @@ export class ShortLinkService {
   }
   //TODO ends
 
-  public async createShortLink(adress: string, session?: ClientSession): Promise<string> {
-    const link = this.makeLink(adress);
+  public async createShortLink(adress: string, session?: ClientSession): Promise<ShortLink> {
+    const link = this.makeLink({ adress });
     const slug = await this.getUniqSlug(uuidv4().split('-')[0]);
 
-    const [shortLink] = await this.shortLinkModel.create(
+    const [model] = await this.shortLinkModel.create(
       [
         {
           slug,
@@ -63,22 +64,24 @@ export class ShortLinkService {
       { session },
     );
 
-    return shortLink._id.toString();
+    return this.makeShortLink(model);
   }
 
   public async getLink(slug: string): Promise<ShortLink | null> {
-    const shortLinkModel = await this.shortLinkModel.findOne({ slug });
+    const model = await this.shortLinkModel.findOne({ slug });
 
-    if (!shortLinkModel) {
+    if (!model) {
       return null;
     }
 
-    const { _id, link, slug: createdSlug } = shortLinkModel;
+    return this.makeShortLink(model);
+  }
 
+  public makeShortLink(model: IShortLinkModel): ShortLink | null {
     return {
-      id: _id.toString(),
-      link,
-      slug: createdSlug,
+      id: model._id.toString(),
+      link: model.link,
+      slug: model.slug,
     };
   }
 }
