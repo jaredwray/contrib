@@ -225,7 +225,7 @@ export class AuctionService {
         MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_WINNER,
         {
           auctionTitle: auction.title,
-          trackingLink: `https://www.ups.com/track?trackingNumber=${identificationNumber}`,
+          trackingLink: `https://www.ups.com/track?trackingNumber=${identificationNumber}&requester=ST/trackdetails`,
           identificationNumber,
         },
       );
