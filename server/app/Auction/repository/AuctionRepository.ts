@@ -213,7 +213,7 @@ export class AuctionRepository implements IAuctionRepository {
       },
     ]);
 
-    const shortLink = await this.shortLinkService.createShortLink(`auctions/${auction._id.toString()}`);
+    const shortLink = await this.shortLinkService.createShortLink({ address: `auctions/${auction._id.toString()}` });
     Object.assign(auction, { shortLink: shortLink.id });
     await auction.save();
 
