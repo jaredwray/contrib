@@ -364,7 +364,7 @@ export class InvitationService {
         .populate({ path: 'shortLink', model: this.ShortLinkModel })
         .execPopulate();
 
-      const link = await this.shortLinkService.makeShortLink(populatedInvitation.shortLink.slug);
+      const link = await this.shortLinkService.makeLink({ slug: populatedInvitation.shortLink.slug });
       const message = `Hello, ${name}! You have been invited to join Contrib at ${link}. Sign in with your phone number to begin.`;
 
       await this.twilioNotificationService.sendMessage(phoneNumber, message);
@@ -488,15 +488,9 @@ export class InvitationService {
       { session },
     );
 
-    const shortLinkId = await this.shortLinkService.createShortLink(`invitation/${invitation.slug}`, session);
-
-    if (shortLinkId) {
-      Object.assign(invitation, {
-        shortLink: shortLinkId,
-      });
-
-      await invitation.save({ session });
-    }
+    const shortLink = await this.shortLinkService.createShortLink(`invitation/${invitation.slug}`, session);
+    Object.assign(invitation, { shortLink: shortLink.id });
+    await invitation.save({ session });
 
     return InvitationService.makeInvitation(invitation);
   }

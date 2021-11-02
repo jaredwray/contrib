@@ -217,15 +217,18 @@ export class AuctionService {
         identificationNumber,
         shippingLabel: barcode,
       });
-
       await auction.save();
+
+      const trackingShortLink = await this.shortLinkService.createShortLink(
+        this.UPSService.trackingUrl(identificationNumber),
+      );
 
       await this.sendAuctionNotification(
         auction.winner.phoneNumber,
         MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_WINNER,
         {
           auctionTitle: auction.title,
-          trackingLink: `https://www.ups.com/track?trackingNumber=${identificationNumber}`,
+          trackingLink: trackingShortLink.link,
           identificationNumber,
         },
       );
@@ -342,7 +345,7 @@ export class AuctionService {
 
       await this.sendAuctionNotification(charityUserAccount.phoneNumber, MessageTemplate.AUCTION_IS_CREATED_MESSAGE, {
         auctionTitle: auction.title,
-        auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
+        auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
       });
     } catch (error) {
       AppLogger.error(`Failed to send notification, error: ${error.message}`);
@@ -357,7 +360,7 @@ export class AuctionService {
           follower.user.phoneNumber,
           MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_CHARITY_FOLLOWERS,
           {
-            auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
+            auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
             charityName: auction.charity.name,
           },
         );
@@ -376,7 +379,7 @@ export class AuctionService {
           follower.user.phoneNumber,
           MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_INFLUENCER_FOLLOWERS,
           {
-            auctionLink: this.shortLinkService.makeShortLink(auction.shortLink.slug),
+            auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
             influencerName: auction.auctionOrganizer.name,
           },
         );
@@ -692,7 +695,7 @@ export class AuctionService {
           const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
           await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
             auctionTitle: currentAuction.title,
-            auctionLink: this.shortLinkService.makeShortLink(currentAuction.shortLink.slug),
+            auctionLink: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
           });
         } catch (error) {
           AppLogger.error(`Failed to send notification for auction #${id}, error: ${error.message}`);
@@ -809,7 +812,7 @@ export class AuctionService {
         amount: currentAuction.currentPrice,
         currency: currentAuction.priceCurrency as Currency,
       }).toFormat('$0,0'),
-      shortUrl: this.shortLinkService.makeShortLink(currentAuction.shortLink.slug),
+      shortUrl: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
     });
   }
 
@@ -832,7 +835,7 @@ export class AuctionService {
           timeLeftText,
           influencerName: currentAuction.auctionOrganizer.name,
           auctionName: currentAuction.title,
-          auctionLink: this.shortLinkService.makeShortLink(currentAuction.shortLink.slug),
+          auctionLink: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
         });
       } catch (error) {
         AppLogger.warn(
@@ -1195,24 +1198,21 @@ export class AuctionService {
   }
 
   public async getMessageTemplateAndVariables(enviroment: boolean, auction: IAuctionModel, type: string) {
-    const deliveryShortLinkId = await this.shortLinkService.createShortLink(
+    const deliveryShortLink = await this.shortLinkService.createShortLink(
       `auctions/${auction._id.toString()}/delivery/address`,
     );
 
-    auction.delivery.shortLink = deliveryShortLinkId;
-
+    auction.delivery.shortLink = deliveryShortLink.id;
     await auction.save();
 
     const populatedAuction = await this.auctionRepository.getPopulatedAuction(auction);
     const messageVariables: { auctionTitle: string; auctionLink: string; auctionDeliveryLink?: string } = {
       auctionTitle: auction.title,
-      auctionLink: this.shortLinkService.makeShortLink(populatedAuction.shortLink.slug),
+      auctionLink: this.shortLinkService.makeLink({ slug: populatedAuction.shortLink.slug }),
     };
 
     if (enviroment) {
-      messageVariables.auctionDeliveryLink = this.shortLinkService.makeShortLink(
-        populatedAuction.delivery.shortLink.slug,
-      );
+      messageVariables.auctionDeliveryLink = deliveryShortLink.link;
     }
 
     return {
