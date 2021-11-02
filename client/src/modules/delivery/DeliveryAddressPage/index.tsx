@@ -185,7 +185,9 @@ export default function DeliveryAddressPage() {
         </Row>
 
         <PhoneInput
-          value={auction.delivery.address.phoneNumber || auction.winner.phoneNumber}
+          value={
+            auction.delivery.address.phoneNumber || auction.winner.address.phoneNumber || auction.winner.phoneNumber
+          }
           onChange={handleChange}
         />
       </StepRow>

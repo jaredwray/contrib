@@ -4,4 +4,5 @@ export interface Address {
   city: string;
   zipCode: number;
   street: string;
+  phoneNumber: string;
 }
