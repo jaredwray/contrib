@@ -488,7 +488,10 @@ export class InvitationService {
       { session },
     );
 
-    const shortLink = await this.shortLinkService.createShortLink(`invitation/${invitation.slug}`, session);
+    const shortLink = await this.shortLinkService.createShortLink(
+      { address: `invitation/${invitation.slug}` },
+      session,
+    );
     Object.assign(invitation, { shortLink: shortLink.id });
     await invitation.save({ session });
 

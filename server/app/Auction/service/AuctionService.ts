@@ -219,16 +219,16 @@ export class AuctionService {
       });
       await auction.save();
 
-      const trackingShortLink = await this.shortLinkService.createShortLink(
-        this.UPSService.trackingUrl(identificationNumber),
-      );
+      const trackingShortLink = await this.shortLinkService.createShortLink({
+        path: this.UPSService.trackingUrl(identificationNumber),
+      });
 
       await this.sendAuctionNotification(
         auction.winner.phoneNumber,
         MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_WINNER,
         {
           auctionTitle: auction.title,
-          trackingLink: trackingShortLink.link,
+          trackingLink: this.shortLinkService.makeLink({ slug: trackingShortLink.slug }),
           identificationNumber,
         },
       );
@@ -1198,9 +1198,9 @@ export class AuctionService {
   }
 
   public async getMessageTemplateAndVariables(enviroment: boolean, auction: IAuctionModel, type: string) {
-    const deliveryShortLink = await this.shortLinkService.createShortLink(
-      `auctions/${auction._id.toString()}/delivery/address`,
-    );
+    const deliveryShortLink = await this.shortLinkService.createShortLink({
+      address: `auctions/${auction._id.toString()}/delivery/address`,
+    });
 
     auction.delivery.shortLink = deliveryShortLink.id;
     await auction.save();

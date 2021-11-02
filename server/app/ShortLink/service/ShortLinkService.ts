@@ -21,11 +21,15 @@ export class ShortLinkService {
     return await this.getUniqSlug(newSlug);
   }
 
-  public makeLink({ adress, slug }: { adress?: string; slug?: string }): string {
+  public makeLink({ address, slug, path }: { address?: string; slug?: string; path?: string }): string {
     const url = new URL(AppConfig.app.url);
 
-    if (adress) {
-      url.pathname = `/${adress}`;
+    if (path) {
+      url.pathname = path;
+    }
+
+    if (address) {
+      url.pathname = `/${address}`;
     }
 
     if (slug) {
@@ -50,8 +54,11 @@ export class ShortLinkService {
   }
   //TODO ends
 
-  public async createShortLink(adress: string, session?: ClientSession): Promise<ShortLink> {
-    const link = this.makeLink({ adress });
+  public async createShortLink(
+    { address, path }: { address?: string; path?: string },
+    session?: ClientSession,
+  ): Promise<ShortLink> {
+    const link = this.makeLink({ address, path });
     const slug = await this.getUniqSlug(uuidv4().split('-')[0]);
 
     const [model] = await this.shortLinkModel.create(
