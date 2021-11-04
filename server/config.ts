@@ -92,9 +92,9 @@ export const AppConfig = {
     maxBidSize: 99999900,
   },
   delivery: {
+    UPSSimpleRateType: 'M', // Delivery type, Valid Values: XS = 1-100 in3 S = 101-250 in3 M = 251-650 in3 L = 651-1,050 in3 XL = 1,051-1,728 in3
     UPSContribDeliveryData: JSON.parse(requireEnvVar('UPS_DELIVERY_CONTRIB_DATA')),
     UPSRequestHeader: JSON.parse(requireEnvVar('UPS_DELIVERY_REQUEST_HEADER')),
-    UPSAuctionDefaultParcelParameters: JSON.parse(requireEnvVar('UPS_AUCTION_DEFAULT_PARCEL_PARAMETERS')),
     UPSTestEnviroment: (process.env['UPS_TEST_ENVIROMENT'] || 'true') === 'true',
     UPSSMSWithDeliveryLink: (process.env['UPS_SMS_WITH_DELIVERY_LINK'] || 'false') === 'true',
   },

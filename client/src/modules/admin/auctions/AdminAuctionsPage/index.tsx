@@ -12,19 +12,16 @@ import {
   StopAuctionMutation,
   ActivateAuctionMutation,
   DeleteAuctionMutation,
-  UpdateAuctionParcelMutation,
 } from 'src/apollo/queries/auctions';
 import { PER_PAGE } from 'src/components/customComponents/Pagination';
 import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import { AdminPage } from 'src/components/layouts/AdminPage';
 import ClickableTr from 'src/components/wrappers/ClickableTr';
-import { ParcelProps } from 'src/helpers/ParcelProps';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
-import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
+import { Auction } from 'src/types/Auction';
 
 import { DeleteAuctionButton } from './DeleteAuctionButton';
-import { EditDeliveryParcelButton } from './EditDeliveryParcelButton';
 import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import { StopOrActiveButton } from './StopOrActiveButton';
 import styles from './styles.module.scss';
@@ -94,7 +91,6 @@ export default function AdminAuctionsPage() {
             <th className={styles.status}>Status</th>
             <th className={styles.price}>Price</th>
             <th className={styles.price}>Fair Market Value</th>
-            <th className={styles.parcel}>Delivery parcel properties</th>
             <th className={styles.actions}></th>
           </tr>
         </thead>
@@ -107,7 +103,6 @@ export default function AdminAuctionsPage() {
               <td>{auction.status}</td>
               <td>{Dinero(auction.currentPrice ?? auction.startPrice).toFormat('$0,0')}</td>
               <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
-              <td>{auction.delivery.parcel && ParcelProps(auction)}</td>
               <td className={styles.actions}>
                 <ActionsDropdown>
                   <Link className="dropdown-item text--body" to={`/admin/auctions/${auction.id}`}>
@@ -138,14 +133,6 @@ export default function AdminAuctionsPage() {
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
                       getAuctionsList={getAuctionsList}
                       mutation={UpdateAuctionMutation}
-                    />
-                  )}
-                  {(!auction.delivery.status || auction.delivery.status !== AuctionDeliveryStatus.ADDRESS_PROVIDED) && (
-                    <EditDeliveryParcelButton
-                      auction={auction}
-                      className={clsx(styles.actionBtn, 'dropdown-item text--body')}
-                      getAuctionsList={getAuctionsList}
-                      mutation={UpdateAuctionParcelMutation}
                     />
                   )}
                 </ActionsDropdown>

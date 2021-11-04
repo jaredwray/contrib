@@ -67,7 +67,7 @@ export class UserAccountService {
       throw new AppError('Something went wrong. Please, try again later');
     }
     try {
-      await this.UPSService.getDeliveryPrice(auction.delivery.parcel, input, '03');
+      await this.UPSService.getDeliveryPrice(input, '03');
 
       Object.assign(auction.delivery, {
         address: { ...input },

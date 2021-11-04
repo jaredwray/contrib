@@ -146,7 +146,7 @@ export default function AdminAuctionPage() {
           </Row>
           <Row className="pt-3">
             <Col>
-              <div className="text-headline">Bids</div>
+              <div className="text-headline mb-2">Bids</div>
               <Bids
                 bids={bids}
                 loading={customerLoading}

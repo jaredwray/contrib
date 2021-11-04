@@ -50,7 +50,6 @@ export class AuctionRepository implements IAuctionRepository {
       { path: 'charity', populate: { path: 'followers.user', model: this.UserAccountModel } },
       { path: 'winner', model: this.UserAccountModel },
       { path: 'shortLink', model: this.ShortLinkModel },
-      { path: 'delivery.shortLink', model: this.ShortLinkModel },
     ];
   }
 
