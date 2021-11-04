@@ -139,9 +139,9 @@ export class AuctionService {
       AppLogger.error(`User #${userId} is not a winner for auction #${auctionId} when calculate shipping cost`);
       throw new AppError('You are not a winner for this auction');
     }
-    const { parcel, address } = auction.delivery;
+    const { address } = auction.delivery;
     try {
-      return await this.UPSService.getDeliveryPrice(parcel, address, deliveryMethod);
+      return await this.UPSService.getDeliveryPrice(address, deliveryMethod);
     } catch (error) {
       AppLogger.error(
         `Something went wrong when calculated shipping cost for auction #${auctionId}, ${error.message} `,
@@ -197,10 +197,9 @@ export class AuctionService {
     auction: IAuctionModel,
     deliveryMethod: string | undefined,
   ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string }> {
-    const { parcel, address } = auction.delivery;
+    const { address } = auction.delivery;
     try {
       const { deliveryPrice, identificationNumber, shippingLabel } = await this.UPSService.shippingRegistration(
-        parcel,
         address,
         deliveryMethod || auction.delivery.deliveryMethod,
       );
@@ -1198,13 +1197,6 @@ export class AuctionService {
   }
 
   public async getMessageTemplateAndVariables(enviroment: boolean, auction: IAuctionModel, type: string) {
-    const deliveryShortLink = await this.shortLinkService.createShortLink({
-      address: `auctions/${auction._id.toString()}/delivery/address`,
-    });
-
-    auction.delivery.shortLink = deliveryShortLink.id;
-    await auction.save();
-
     const populatedAuction = await this.auctionRepository.getPopulatedAuction(auction);
     const messageVariables: { auctionTitle: string; auctionLink: string; auctionDeliveryLink?: string } = {
       auctionTitle: auction.title,
@@ -1212,7 +1204,11 @@ export class AuctionService {
     };
 
     if (enviroment) {
-      messageVariables.auctionDeliveryLink = deliveryShortLink.link;
+      const deliveryShortLink = await this.shortLinkService.createShortLink({
+        address: `auctions/${auction._id.toString()}/delivery/address`,
+      });
+
+      messageVariables.auctionDeliveryLink = this.shortLinkService.makeLink({ slug: deliveryShortLink.slug });
     }
 
     return {

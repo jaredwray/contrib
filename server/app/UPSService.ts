@@ -3,7 +3,6 @@ import axios from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { UserAccountAddress } from 'app/UserAccount/dto/UserAccountAddress';
-import { AuctionParcel } from './Auction/dto/AuctionParcel';
 
 import { AppConfig } from '../config';
 import { AppLogger } from '../logger';
@@ -49,13 +48,7 @@ export class UPSDeliveryService {
     }
   }
 
-  private static deliveryPriceBodyRequest(
-    parcel: AuctionParcel,
-    address: UserAccountAddress,
-    deliveryMethod: string,
-  ): object {
-    const { width: ParcelWidth, length: ParcelLength, height: ParcelHeight, weight: ParcelWeight } = parcel;
-
+  private static deliveryPriceBodyRequest(address: UserAccountAddress, deliveryMethod: string): object {
     const {
       name: RecipientName,
       state: RecipientState,
@@ -119,22 +112,11 @@ export class UPSDeliveryService {
             Code: deliveryMethod, // Delivery Services: UPS Ground (03) UPS 3 Day Select (12)  UPS 2nd Day Air (02) (13)
           },
           Package: {
+            SimpleRate: {
+              Code: AppConfig.delivery.UPSSimpleRateType, // Delivery type, Valid Values: XS = 1-100 in3 S = 101-250 in3 M = 251-650 in3 L = 651-1,050 in3 XL = 1,051-1,728 in3
+            },
             PackagingType: {
               Code: '02', //  Packaging type:  01 = UPS Letter 02 = Customer Supplied Package  03 = Tube 04 = PAK  21 = UPS Express Box  24 = UPS 25KG Box  25 = UPS 10KG Box ...
-            },
-            Dimensions: {
-              UnitOfMeasurement: {
-                Code: 'IN',
-              },
-              Length: ParcelLength,
-              Width: ParcelWidth,
-              Height: ParcelHeight,
-            },
-            PackageWeight: {
-              UnitOfMeasurement: {
-                Code: 'LBS',
-              },
-              Weight: ParcelWeight,
             },
           },
         },
@@ -142,13 +124,7 @@ export class UPSDeliveryService {
     };
   }
 
-  private static shippingBodyRequest(
-    parcel: AuctionParcel,
-    address: UserAccountAddress,
-    deliveryMethod: string,
-  ): object {
-    const { width: ParcelWidth, length: ParcelLength, height: ParcelHeight, weight: ParcelWeight } = parcel;
-
+  private static shippingBodyRequest(address: UserAccountAddress, deliveryMethod: string): object {
     const {
       name: RecipientName,
       state: RecipientState,
@@ -211,22 +187,11 @@ export class UPSDeliveryService {
             Code: deliveryMethod, // Delivery Services: UPS Ground (03) UPS 3 Day Select (12)  UPS 2nd Day Air (02) (13)
           },
           Package: {
+            SimpleRate: {
+              Code: AppConfig.delivery.UPSSimpleRateType, // Delivery type, Valid Values: XS = 1-100 in3 S = 101-250 in3 M = 251-650 in3 L = 651-1,050 in3 XL = 1,051-1,728 in3
+            },
             Packaging: {
               Code: '02', //  Packaging type:  01 = UPS Letter 02 = Customer Supplied Package  03 = Tube 04 = PAK  21 = UPS Express Box  24 = UPS 25KG Box  25 = UPS 10KG Box ...
-            },
-            Dimensions: {
-              UnitOfMeasurement: {
-                Code: 'IN',
-              },
-              Length: ParcelLength,
-              Width: ParcelWidth,
-              Height: ParcelHeight,
-            },
-            PackageWeight: {
-              UnitOfMeasurement: {
-                Code: 'LBS',
-              },
-              Weight: ParcelWeight,
             },
           },
         },
@@ -237,16 +202,14 @@ export class UPSDeliveryService {
   public calculateDeliveryPriceValueWithStripeFee(deliveryPrice: number): number {
     const { fixedFee, percentFee } = AppConfig.stripe.stripeFee;
     return Math.round(Number((((deliveryPrice + fixedFee) / (1 - percentFee)) * 100).toFixed(2)));
-    // add to the shipping cost stripeFee. Formula for calculation is here: https://support.stripe.com/questions/passing-the-stripe-fee-on-to-customers
   }
 
   public async getDeliveryPrice(
-    parcel: AuctionParcel,
     address: UserAccountAddress,
     deliveryMethod: string,
   ): Promise<{ deliveryPrice: Dinero.Dinero; timeInTransit: Dayjs }> {
     try {
-      const request = UPSDeliveryService.deliveryPriceBodyRequest(parcel, address, deliveryMethod);
+      const request = UPSDeliveryService.deliveryPriceBodyRequest(address, deliveryMethod);
 
       const responce = await this.http.post(UPSDeliveryService.deliveryRateUrl, request, {
         headers: UPSDeliveryService.requestHeader,
@@ -273,12 +236,11 @@ export class UPSDeliveryService {
   }
 
   public async shippingRegistration(
-    parcel: AuctionParcel,
     address: UserAccountAddress,
     deliveryMethod: string,
   ): Promise<{ deliveryPrice: Dinero.Dinero; identificationNumber: string; shippingLabel: string }> {
     try {
-      const request = UPSDeliveryService.shippingBodyRequest(parcel, address, deliveryMethod);
+      const request = UPSDeliveryService.shippingBodyRequest(address, deliveryMethod);
 
       const responce = await this.http.post(UPSDeliveryService.shippingUrl, request, {
         headers: UPSDeliveryService.requestHeader,

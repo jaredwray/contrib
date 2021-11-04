@@ -20,13 +20,13 @@ const Auctions: FC = () => {
     <>
       <Сarousel
         auctions={liveAuctions}
-        emptyText="There are no live auctions with your bids."
+        emptyText="No live auctions with your bids."
         loading={loading}
         title="Live Auctions with my bids"
       />
       <Сarousel
         auctions={wonAuctions}
-        emptyText="There are no auctions where you won."
+        emptyText="No auctions where you won."
         loading={loading}
         title="Auctions where i won"
       />

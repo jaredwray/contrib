@@ -17,7 +17,7 @@ interface Props {
 
 export const Bids: FC<Props> = ({ bids, onBidClickHandler, loading, showProcessBtn }) => {
   if (bids.length === 0) {
-    return <div>no bids for this auction</div>;
+    return <p>no bids for this auction</p>;
   }
 
   return (

@@ -36,8 +36,6 @@ export interface IAuctionModel extends Document {
 
 export const AuctionCollectionName = 'auction';
 
-const { width, length, height, weight } = AppConfig.delivery.UPSAuctionDefaultParcelParameters;
-
 const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
   {
     title: { type: SchemaTypes.String, required: true },
@@ -70,14 +68,13 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     totalBids: { type: SchemaTypes.Number, default: 0 },
     winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
     delivery: {
-      shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
       deliveryMethod: { type: SchemaTypes.String },
       shippingLabel: { type: SchemaTypes.String },
       parcel: {
-        width: { type: SchemaTypes.String, default: width },
-        length: { type: SchemaTypes.String, default: length },
-        height: { type: SchemaTypes.String, default: height },
-        weight: { type: SchemaTypes.String, default: weight },
+        width: { type: SchemaTypes.String },
+        length: { type: SchemaTypes.String },
+        height: { type: SchemaTypes.String },
+        weight: { type: SchemaTypes.String },
       },
       address: {
         name: { type: SchemaTypes.String },
