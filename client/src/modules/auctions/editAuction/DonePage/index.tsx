@@ -1,22 +1,16 @@
-import React, { useCallback, useState } from 'react';
-
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { Button, InputGroup, Form, Modal, ProgressBar } from 'react-bootstrap';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { ProgressBar } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
-import FacebookIcon from 'src/assets/images/Facebook';
-import InstagramIcon from 'src/assets/images/Instagram';
-import TwitterIcon from 'src/assets/images/Twitter';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
+import CopiedText from 'src/components/forms/inputs/CopiedText';
 import Layout from 'src/components/layouts/Layout';
 import { getShortLink } from 'src/helpers/getShortLink';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction } from 'src/types/Auction';
 
-import ShareButton from './ShareButton';
 import styles from './styles.module.scss';
 
 const AuctionDonePage = () => {
@@ -27,13 +21,6 @@ const AuctionDonePage = () => {
   });
   const auction = auctionData?.auction;
 
-  const [showInstagramInstructions, setShowInstagramInstructions] = useState(false);
-
-  const toggleShowInstagramInstructions = useCallback(() => {
-    setShowInstagramInstructions((showing) => !showing);
-  }, [setShowInstagramInstructions]);
-
-  const [linkCopied, setLinkCopied] = useState(false);
   if (auction === null) {
     history.replace('/404');
     return null;
@@ -45,10 +32,6 @@ const AuctionDonePage = () => {
   if (auction === undefined) {
     return null;
   }
-
-  const encodedAuctionLink = auction?.bitlyLink
-    ? encodeURIComponent(auction.bitlyLink)
-    : getShortLink(auction.shortLink.slug);
 
   const auctionLink = auction?.bitlyLink || getShortLink(auction.shortLink.slug);
 
@@ -63,51 +46,15 @@ const AuctionDonePage = () => {
             <p className="text-super">Done</p>
             <p className="text-headline">Auction created.</p>
             <p className="text--body">
-              Thank you! Your listing is now viewable and will start at the specified time. Now, let everyone know about
-              the auction.
+              Awesome! Let everyone know about this auction by using the link below and sharing it on your social
+              networks.
             </p>
-            <div className="pt-3 pt-md-5">
-              <ShareButton
-                href={`https://www.facebook.com/sharer.php?s=100&p[url]=${encodedAuctionLink}`}
-                icon={<FacebookIcon />}
-                service="Facebook"
-              />
-              <ShareButton
-                href={`https://twitter.com/intent/tweet?url=${encodedAuctionLink}`}
-                icon={<TwitterIcon />}
-                service="Twitter"
-              />
-              <ShareButton icon={<InstagramIcon />} service="Instagram" onClick={toggleShowInstagramInstructions} />
+            <div className="pt-3 pt-md-5 pb-3 pb-md-5 ">
+              <CopiedText text={auctionLink} />
             </div>
           </div>
         </div>
-
         <div className={clsx(styles.content, styles.contentRight)}>{<AuctionCard isDonePage auction={auction} />}</div>
-      </div>
-      <div className="modalWrapper">
-        <Modal centered show={showInstagramInstructions} onHide={toggleShowInstagramInstructions}>
-          <Modal.Header>
-            <Modal.Title>Use following content to create an Instagram post</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="modalWrapper">
-            <Form>
-              <Form.Group>
-                <Form.Label className="d-block">Auction link</Form.Label>
-                <InputGroup>
-                  <Form.Control disabled type="text" value={auctionLink} />
-                  <InputGroup.Append>
-                    <CopyToClipboard text={auctionLink} onCopy={() => setLinkCopied(true)}>
-                      <Button type="button">{(linkCopied && 'Copied') || 'Copy'}</Button>
-                    </CopyToClipboard>
-                  </InputGroup.Append>
-                </InputGroup>
-              </Form.Group>
-              <Button block type="button" variant="secondary" onClick={toggleShowInstagramInstructions}>
-                Close
-              </Button>
-            </Form>
-          </Modal.Body>
-        </Modal>
       </div>
     </Layout>
   );
