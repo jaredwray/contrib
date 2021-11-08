@@ -1,0 +1,14 @@
+@import 'src/variables.scss';
+
+.copyInput {
+  flex: 0 1 auto !important;
+  max-width: calc(100% - 80px);
+}
+.copyBtn {
+  color: $white-color !important;
+  background-color: $sage-color !important;
+  &:hover {
+    background-color: $dark-sage-color !important;
+    color: $white-color !important;
+  }
+}

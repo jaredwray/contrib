@@ -1,13 +1,13 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { Button, Row, InputGroup, Form as BForm, Col, Container } from 'react-bootstrap';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Row, Col, Container } from 'react-bootstrap';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
+import CopiedText from 'src/components/forms/inputs/CopiedText';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -18,7 +18,6 @@ import { AuctionDeliveryStatus } from 'src/types/Auction';
 import styles from './styles.module.scss';
 
 export default function DeliveryStatusPage() {
-  const [linkCopied, setLinkCopied] = useState(false);
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
 
@@ -105,26 +104,7 @@ export default function DeliveryStatusPage() {
                     </a>
                     using follow tracking ID:
                   </p>
-                  <BForm.Group>
-                    <InputGroup>
-                      <BForm.Control
-                        disabled
-                        className={clsx(styles.copyInput, 'w-auto')}
-                        type="text"
-                        value={auction.delivery.identificationNumber}
-                      />
-                      <InputGroup.Append>
-                        <CopyToClipboard
-                          text={auction.delivery.identificationNumber}
-                          onCopy={() => setLinkCopied(true)}
-                        >
-                          <Button className={styles.copyBtn} type="button">
-                            {(linkCopied && 'Copied') || 'Copy'}
-                          </Button>
-                        </CopyToClipboard>
-                      </InputGroup.Append>
-                    </InputGroup>
-                  </BForm.Group>
+                  <CopiedText text={auction.delivery.identificationNumber} />
                 </>
               )}
             </Col>
