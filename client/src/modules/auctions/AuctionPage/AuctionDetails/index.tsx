@@ -267,7 +267,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       )}
       <ShareBtn link={auction.shortLink.shortLink} />
       {withLinkToDelivery && (
-        <Link className="d-inline-block mt-5" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
+        <Link className="d-inline-block mt-4" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
           {isPaid ? 'Delivery status' : 'Pay for delivery'}
         </Link>
       )}
