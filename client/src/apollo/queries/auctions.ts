@@ -135,6 +135,7 @@ export const AuctionQuery = gql`
       bitlyLink
       shortLink {
         slug
+        shortLink
       }
       description
       status

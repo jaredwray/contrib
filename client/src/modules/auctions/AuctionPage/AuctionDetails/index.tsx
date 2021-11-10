@@ -9,7 +9,7 @@ import { format as dateFormat, differenceInSeconds } from 'date-fns';
 import { format, toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
@@ -23,6 +23,7 @@ import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal';
 import { BidInput } from './BidInput';
+import ShareBtn from './ShareBtn';
 import styles from './styles.module.scss';
 
 const BIDS_STEP_CENTS = 1000;
@@ -42,7 +43,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const { isAuthenticated } = useAuth0();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
-  const { auctionId } = useParams<{ auctionId: string }>();
+  const auctionId = auction.id;
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
@@ -262,6 +263,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
         loading={followLoading || unfollowLoading}
         unfollowHandler={handleUnfollowAuction}
       />
+      <ShareBtn link={auction.shortLink.shortLink} />
       {withLinkToDelivery && (
         <Link className="d-inline-block mt-5" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
           {isPaid ? 'Delivery status' : 'Pay for delivery'}

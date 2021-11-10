@@ -5,6 +5,7 @@ export const ShortLinkSchema = gql`
     id: String!
     link: String!
     slug: String!
+    shortLink: String!
   }
 
   extend type Query {
