@@ -8,15 +8,21 @@ import styles from './styles.module.scss';
 
 interface Props {
   text: string;
+  deliveryPage?: boolean;
 }
 
-const CopiedText: FC<Props> = ({ text }: Props) => {
+const CopiedText: FC<Props> = ({ text, deliveryPage }: Props) => {
   const [copied, setCopied] = useState(false);
 
   return (
     <Form>
       <InputGroup>
-        <Form.Control disabled className={clsx(styles.copyInput, 'w-auto')} type="text" value={text} />
+        <Form.Control
+          disabled
+          className={clsx(styles.copyInput, deliveryPage && styles.copyInputOnDeliveryPage)}
+          type="text"
+          value={text}
+        />
         <InputGroup.Append>
           <CopyToClipboard text={text} onCopy={() => setCopied(true)}>
             <Button className={styles.copyBtn} type="button">

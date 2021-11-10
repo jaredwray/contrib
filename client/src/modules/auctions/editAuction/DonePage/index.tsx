@@ -49,7 +49,7 @@ const AuctionDonePage = () => {
               Awesome! Let everyone know about this auction by using the link below and sharing it on your social
               networks.
             </p>
-            <div className="pt-3 pt-md-5 pb-3 pb-md-5 ">
+            <div className="pt-3 pt-md-5 pb-3 pb-md-5 w-100">
               <CopiedText text={auctionLink} />
             </div>
           </div>

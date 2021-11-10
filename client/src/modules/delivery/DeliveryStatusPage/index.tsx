@@ -104,7 +104,7 @@ export default function DeliveryStatusPage() {
                     </a>
                     using follow tracking ID:
                   </p>
-                  <CopiedText text={auction.delivery.identificationNumber} />
+                  <CopiedText deliveryPage={true} text={auction.delivery.identificationNumber} />
                 </>
               )}
             </Col>

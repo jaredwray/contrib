@@ -4,6 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
 import WatchBtn from 'src/components/buttons/WatchBtn';
+import ShareBtn from 'src/modules/auctions/AuctionPage/AuctionDetails/ShareBtn';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
@@ -110,104 +111,179 @@ describe('AuctionDetails', () => {
     )),
       expect(wrapper).toHaveLength(1);
   });
-  it('should redirect and not call followAuction mutation', async () => {
-    withNotAuthenticatedUser();
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <Router>
-          <ToastProvider>
-            <MockedProvider mocks={mocks}>
-              <AuctionDetails {...props} />
-            </MockedProvider>
-          </ToastProvider>
-        </Router>,
-      );
+
+  describe('when auction is not active', () => {
+    it('should not display WatchBtn', async () => {
+      withNotAuthenticatedUser();
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <Router>
+            <ToastProvider>
+              <MockedProvider mocks={mocks}>
+                <AuctionDetails {...props} />
+              </MockedProvider>
+            </ToastProvider>
+          </Router>,
+        );
+      });
+      expect(wrapper.find(WatchBtn)).toHaveLength(0);
     });
-    await act(async () => {
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+    it('should display ShareBtn', async () => {
+      withNotAuthenticatedUser();
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <Router>
+            <ToastProvider>
+              <MockedProvider mocks={mocks}>
+                <AuctionDetails {...props} />
+              </MockedProvider>
+            </ToastProvider>
+          </Router>,
+        );
+      });
+      expect(wrapper.find(ShareBtn)).toHaveLength(1);
     });
-    await new Promise((resolve) => setTimeout(resolve));
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
   });
-  it('should call followAuction mutation', async () => {
-    withAuthenticatedUser();
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <Router>
-          <ToastProvider>
-            <MockedProvider mocks={mocks}>
-              <AuctionDetails {...props} />
-            </MockedProvider>
-          </ToastProvider>
-        </Router>,
-      );
+  describe('when auction is active', () => {
+    beforeEach(() => {
+      AuctionQueryAuction['isActive'] = true;
+      AuctionQueryAuction['isStopped'] = false;
     });
-    await act(async () => {
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+    it('should display ShareBtn', async () => {
+      withNotAuthenticatedUser();
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <Router>
+            <ToastProvider>
+              <MockedProvider mocks={mocks}>
+                <AuctionDetails {...props} />
+              </MockedProvider>
+            </ToastProvider>
+          </Router>,
+        );
+      });
+      expect(wrapper.find(ShareBtn)).toHaveLength(1);
     });
-    await new Promise((resolve) => setTimeout(resolve));
-    expect(mockFn).toHaveBeenCalledTimes(1);
-  });
-  it('should call UnfollowAuction mutation', async () => {
-    withAuthenticatedUser();
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <Router>
-          <ToastProvider>
-            <MockedProvider mocks={mocks}>
-              <AuctionDetails {...props} />
-            </MockedProvider>
-          </ToastProvider>
-        </Router>,
-      );
+    describe('watch button', () => {
+      it('should display WatchBtn', async () => {
+        withNotAuthenticatedUser();
+        let wrapper: ReactWrapper;
+        await act(async () => {
+          wrapper = mount(
+            <Router>
+              <ToastProvider>
+                <MockedProvider mocks={mocks}>
+                  <AuctionDetails {...props} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>,
+          );
+        });
+        expect(wrapper.find(WatchBtn)).toHaveLength(1);
+      });
+      it('should redirect and not call followAuction mutation', async () => {
+        withNotAuthenticatedUser();
+        let wrapper: ReactWrapper;
+        await act(async () => {
+          wrapper = mount(
+            <Router>
+              <ToastProvider>
+                <MockedProvider mocks={mocks}>
+                  <AuctionDetails {...props} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>,
+          );
+        });
+        await act(async () => {
+          wrapper!.find(WatchBtn).prop('followHandler')!();
+        });
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+      });
+      it('should call followAuction mutation', async () => {
+        withAuthenticatedUser();
+        let wrapper: ReactWrapper;
+        await act(async () => {
+          wrapper = mount(
+            <Router>
+              <ToastProvider>
+                <MockedProvider mocks={mocks}>
+                  <AuctionDetails {...props} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>,
+          );
+        });
+        await act(async () => {
+          wrapper!.find(WatchBtn).prop('followHandler')!();
+        });
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(mockFn).toHaveBeenCalledTimes(1);
+      });
+      it('should call UnfollowAuction mutation', async () => {
+        withAuthenticatedUser();
+        let wrapper: ReactWrapper;
+        await act(async () => {
+          wrapper = mount(
+            <Router>
+              <ToastProvider>
+                <MockedProvider mocks={mocks}>
+                  <AuctionDetails {...props} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>,
+          );
+        });
+        await act(async () => {
+          wrapper!.find(WatchBtn).prop('unfollowHandler')!();
+        });
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(mockFn).toHaveBeenCalledTimes(1);
+      });
+      it('should not call followAuction mutation becouse of error', async () => {
+        withAuthenticatedUser();
+        let wrapper: ReactWrapper;
+        await act(async () => {
+          wrapper = mount(
+            <Router>
+              <ToastProvider>
+                <MockedProvider mocks={errorMocks}>
+                  <AuctionDetails {...props} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>,
+          );
+        });
+        await act(async () => {
+          wrapper!.find(WatchBtn).prop('followHandler')!();
+        });
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(mockFn).toHaveBeenCalledTimes(0);
+      });
+      it('should not call UnfollowAuction mutation becouse of error', async () => {
+        withAuthenticatedUser();
+        let wrapper: ReactWrapper;
+        await act(async () => {
+          wrapper = mount(
+            <Router>
+              <ToastProvider>
+                <MockedProvider mocks={errorMocks}>
+                  <AuctionDetails {...props} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>,
+          );
+        });
+        await act(async () => {
+          wrapper!.find(WatchBtn).prop('unfollowHandler')!();
+        });
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(mockFn).toHaveBeenCalledTimes(0);
+      });
     });
-    await act(async () => {
-      wrapper!.find(WatchBtn).prop('unfollowHandler')!();
-    });
-    await new Promise((resolve) => setTimeout(resolve));
-    expect(mockFn).toHaveBeenCalledTimes(1);
-  });
-  it('should not call followAuction mutation becouse of error', async () => {
-    withAuthenticatedUser();
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <Router>
-          <ToastProvider>
-            <MockedProvider mocks={errorMocks}>
-              <AuctionDetails {...props} />
-            </MockedProvider>
-          </ToastProvider>
-        </Router>,
-      );
-    });
-    await act(async () => {
-      wrapper!.find(WatchBtn).prop('followHandler')!();
-    });
-    await new Promise((resolve) => setTimeout(resolve));
-    expect(mockFn).toHaveBeenCalledTimes(0);
-  });
-  it('should not call UnfollowAuction mutation becouse of error', async () => {
-    withAuthenticatedUser();
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <Router>
-          <ToastProvider>
-            <MockedProvider mocks={errorMocks}>
-              <AuctionDetails {...props} />
-            </MockedProvider>
-          </ToastProvider>
-        </Router>,
-      );
-    });
-    await act(async () => {
-      wrapper!.find(WatchBtn).prop('unfollowHandler')!();
-    });
-    await new Promise((resolve) => setTimeout(resolve));
-    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });
