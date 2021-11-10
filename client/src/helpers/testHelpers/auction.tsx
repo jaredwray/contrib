@@ -45,6 +45,7 @@ export const AuctionQueryAuction = {
   bitlyLink: 'testBitlyLink',
   shortLink: {
     slug: 'testSlug',
+    shortLink: 'shortLink',
   },
   startDate: '2021-06-21T08:05:21.000Z',
   startPrice: { amount: 33300, currency: 'USD', precision: 2 },

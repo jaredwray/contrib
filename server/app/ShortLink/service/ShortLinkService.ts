@@ -73,18 +73,17 @@ export class ShortLinkService {
   public async getLink(slug: string): Promise<ShortLink | null> {
     const model = await this.shortLinkModel.findOne({ slug });
 
-    if (!model) {
-      return null;
-    }
+    if (!model) return null;
 
     return this.makeShortLink(model);
   }
 
-  public makeShortLink(model: IShortLinkModel): ShortLink | null {
+  public makeShortLink(model: IShortLinkModel): ShortLink {
     return {
       id: model._id.toString(),
       link: model.link,
       slug: model.slug,
+      shortLink: this.makeLink({ slug: model.slug }),
     };
   }
 }

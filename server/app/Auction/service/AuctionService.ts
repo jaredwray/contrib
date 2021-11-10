@@ -1307,11 +1307,7 @@ export class AuctionService {
         };
       }),
       winner: winner ? this.makeAuctionWinner(winner) : null,
-      shortLink: {
-        id: shortLink._id.toString(),
-        link: shortLink.link,
-        slug: shortLink.slug,
-      },
+      shortLink: this.shortLinkService.makeShortLink(shortLink),
       status,
       isActive: status === AuctionStatus.ACTIVE,
       isDraft: status === AuctionStatus.DRAFT,
