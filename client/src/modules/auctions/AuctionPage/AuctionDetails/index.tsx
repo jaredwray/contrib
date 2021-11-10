@@ -255,14 +255,16 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           {buyingPrice}
         </Button>
       )}
-      <WatchBtn
-        entityType="auction"
-        followHandler={handleFollowAuction}
-        followed={followed}
-        followersNumber={followersNumber}
-        loading={followLoading || unfollowLoading}
-        unfollowHandler={handleUnfollowAuction}
-      />
+      {isActive && (
+        <WatchBtn
+          entityType="auction"
+          followHandler={handleFollowAuction}
+          followed={followed}
+          followersNumber={followersNumber}
+          loading={followLoading || unfollowLoading}
+          unfollowHandler={handleUnfollowAuction}
+        />
+      )}
       <ShareBtn link={auction.shortLink.shortLink} />
       {withLinkToDelivery && (
         <Link className="d-inline-block mt-5" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>

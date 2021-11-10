@@ -1,8 +1,12 @@
 @import 'src/variables.scss';
 
 .copyInput {
-  flex: 0 1 auto !important;
   max-width: calc(100% - 80px);
+  flex: 1 auto !important;
+}
+.copyInputOnDeliveryPage {
+  flex: 0 1 auto !important;
+  width: auto !important;
 }
 .copyBtn {
   color: $white-color !important;
