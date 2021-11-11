@@ -353,9 +353,14 @@ export class CharityService {
       }
       model.userAccount = userAccount.mongodbId;
     }
-
-    this.maybeActivateCharity(model);
-    await model.save({ session });
+    try {
+      this.maybeActivateCharity(model);
+      AppLogger.info(`Update charity #${charity.id}: ${JSON.stringify(model, null, 2)}`);
+      await model.save({ session });
+    } catch (error) {
+      AppLogger.info(`Cannot update charity #${charity.id}: ${error.message}`);
+      throw error;
+    }
     return CharityService.makeCharity(model);
   }
 
