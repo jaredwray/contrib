@@ -164,15 +164,16 @@ export class CharityService {
 
   async updateCharityByStripeAccount(account: any): Promise<void> {
     const session = await this.connection.startSession();
+
     try {
       await session.withTransaction(async () => {
         const charityModel = await this.CharityModel.findOne({ stripeAccountId: account.id }, null, session).exec();
+        const charity = CharityService.makeCharity(charityModel);
         const isAccountActive =
           account.capabilities.card_payments === 'active' && account.capabilities.transfers === 'active';
         const stripeStatus = isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE;
 
-        charityModel.stripeStatus = stripeStatus;
-        await charityModel.save({ session });
+        await this.updateCharityStatus({ charity, stripeStatus, session });
         AppLogger.info(`Charity #${charityModel._id} was updated by stripe account to ${stripeStatus}`);
       });
     } catch (error) {
@@ -231,23 +232,34 @@ export class CharityService {
     }
   }
 
-  async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity> {
-    const charity = await this.CharityModel.findOne({ _id: id }).exec();
+  async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity | void> {
+    const session = await this.connection.startSession();
 
-    if (!charity) {
-      throw new Error(`charity record #${id} not found`);
+    try {
+      const charity = await this.CharityModel.findById(id, null, { session }).exec();
+
+      await session.withTransaction(async () => {
+        if (!charity) {
+          throw new Error(`charity record #${id} not found`);
+        }
+
+        if (charity.profileStatus === CharityProfileStatus.CREATED) {
+          charity.profileStatus = CharityProfileStatus.COMPLETED;
+        }
+
+        Object.assign(charity, { ...objectTrimmer(input), website: webSiteFormatter(input.website).trim() });
+
+        this.maybeActivateCharity(charity);
+
+        await charity.save({ session });
+      });
+
+      session.endSession();
+      return CharityService.makeCharity(charity);
+    } catch (error) {
+      session.endSession();
+      throw error;
     }
-
-    if (charity.profileStatus === CharityProfileStatus.CREATED) {
-      charity.profileStatus = CharityProfileStatus.COMPLETED;
-    }
-
-    Object.assign(charity, { ...objectTrimmer(input), website: webSiteFormatter(input.website).trim() });
-
-    this.maybeActivateCharity(charity);
-
-    await charity.save();
-    return CharityService.makeCharity(charity);
   }
 
   private maybeActivateCharity(charity: ICharityModel): void {
