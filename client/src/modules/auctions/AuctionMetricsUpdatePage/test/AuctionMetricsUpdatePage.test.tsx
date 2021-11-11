@@ -30,8 +30,10 @@ cache.writeQuery({
   query: GetLinkQuery,
   variables: { slug: 'testSlug' },
   data: {
-    id: 'testId',
-    link: 'testLink',
+    getLink: {
+      id: 'testId',
+      link: 'auctionstestLink',
+    },
   },
 });
 
@@ -39,7 +41,12 @@ const mocks = [
   {
     request: {
       query: UpdateOrCreateAuctionMetricsMutation,
-      variables: { shortLinkId: 'testShortLinkId', country: 'test country', referrer: 'test referrer' },
+      variables: {
+        shortLinkId: 'testShortLinkId',
+        country: 'test country',
+        referrer: 'test referrer',
+        userAgentData: 'test userAgent',
+      },
     },
     newData: () => {
       mockFn();

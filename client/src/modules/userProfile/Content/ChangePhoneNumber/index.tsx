@@ -7,7 +7,7 @@ import styles from './styles.module.scss';
 
 interface Props {
   currentPhoneNumber: string | undefined;
-  setShowDialog: (arg: boolean) => void;
+  setShowDialog: () => void;
 }
 
 const ChangePhoneNumber: FC<Props> = ({ currentPhoneNumber, setShowDialog }) => {
@@ -23,12 +23,7 @@ const ChangePhoneNumber: FC<Props> = ({ currentPhoneNumber, setShowDialog }) => 
         <Col className="pr-0 pl-0 pl-md-3" md="6">
           <div className={styles.wraper}>
             <input disabled className={clsx(styles.input, 'form-control')} value={`+${currentPhoneNumber}`} />
-            <Button
-              className={clsx(styles.button, 'btn btn-primary')}
-              onClick={() => {
-                setShowDialog(true);
-              }}
-            >
+            <Button className={clsx(styles.button, 'btn btn-primary')} onClick={setShowDialog}>
               Change Number
             </Button>
           </div>

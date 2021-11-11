@@ -10,13 +10,11 @@ import { VerifyChangePhoneNumberMutation, ConfirmChangePhoneNumberMutation } fro
 interface Props {
   newPhoneNumber: string;
   onClose: () => void;
-  setNewPhoneNumber: (arg: string) => void;
   setPhoneNumber: (arg: string) => void;
-  setVerified: () => void;
 }
 
-const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setNewPhoneNumber, setVerified, setPhoneNumber }) => {
-  const OtpResendDuration = Duration.fromObject({ seconds: 5 });
+const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setPhoneNumber }) => {
+  const OtpResendDuration = Duration.fromObject({ seconds: process.title === 'browser' ? 5 : 0 });
 
   const [error, setError] = useState('');
   const [canResendOtp, setCanResendOtp] = useState(false);
@@ -52,7 +50,6 @@ const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setNewPhoneNumbe
       if (!otp) {
         return;
       }
-
       if (newPhoneNumber) {
         confirmPhoneNumber({
           variables: {

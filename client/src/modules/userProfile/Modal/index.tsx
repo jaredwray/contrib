@@ -30,14 +30,8 @@ const Modal: FC<Props> = ({ currentPhoneNumber, showDialog, setCloseDialog, setP
         {verified ? (
           <ConfirmationStep
             newPhoneNumber={newPhoneNumber}
-            setNewPhoneNumber={(value) => {
-              setNewPhoneNumber(value);
-            }}
             setPhoneNumber={(value: string) => {
               setPhoneNumber(value);
-            }}
-            setVerified={() => {
-              setVerified(false);
             }}
             onClose={handleOnClose}
           />
