@@ -74,20 +74,27 @@ export default function appRouteHandlers(
       return;
     }
 
-    const currentCharity = await charity.findCharity(userId);
-    const redirectToUrl = `${AppConfig.app.url}/charity/me/edit`;
+    const session = await this.connection.startSession();
 
-    if (currentCharity?.status !== CharityStatus.PENDING_ONBOARDING) {
-      res.redirect(redirectToUrl);
-      return;
+    try {
+      await session.withTransaction(async () => {
+        const currentCharity = await charity.findCharity(userId, session);
+
+        if (currentCharity?.status === CharityStatus.PENDING_ONBOARDING) {
+          await charity.updateCharityStatus({
+            charity: currentCharity,
+            stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
+            session,
+          });
+        }
+
+        res.redirect(`${AppConfig.app.url}/charity/me/edit`);
+      });
+    } catch (error) {
+      throw error;
+    } finally {
+      await session.endSession();
     }
-
-    await charity.updateCharityStatus({
-      charity: currentCharity,
-      stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
-    });
-
-    res.redirect(redirectToUrl);
   });
 
   app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {
