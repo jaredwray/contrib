@@ -76,22 +76,28 @@ export default function appRouteHandlers(
     }
     AppLogger.warn(`session`);
     const session = await this.connection.startSession();
-    await session.withTransaction(async () => {
-      const currentCharity = await charity.findCharity(userId, session);
-      AppLogger.warn(`currentCharity: ${JSON.stringify(currentCharity, null, 2)}`);
+    try {
+      await session.withTransaction(async () => {
+        const currentCharity = await charity.findCharity(userId, session);
+        AppLogger.warn(`currentCharity: ${JSON.stringify(currentCharity, null, 2)}`);
 
-      if (currentCharity?.status === CharityStatus.PENDING_ONBOARDING) {
-        AppLogger.warn(`updateCharityStatus called`);
-        await charity.updateCharityStatus({
-          charity: currentCharity,
-          stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
-          session,
-        });
-      }
-    });
-    await session.endSession();
-    AppLogger.warn(`redirect to: ${AppConfig.app.url}/charity/me/edit`);
-    res.redirect(`${AppConfig.app.url}/charity/me/edit`);
+        if (currentCharity?.status === CharityStatus.PENDING_ONBOARDING) {
+          AppLogger.warn(`updateCharityStatus called`);
+          await charity.updateCharityStatus({
+            charity: currentCharity,
+            stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
+            session,
+          });
+        }
+      });
+      AppLogger.warn(`redirect to: ${AppConfig.app.url}/charity/me/edit`);
+      res.redirect(`${AppConfig.app.url}/charity/me/edit`);
+    } catch (error) {
+      AppLogger.error(`Something went wrong in /api/v1/account_onboarding: ${error.message}`);
+      res.redirect(AppConfig.app.url);
+    } finally {
+      await session.endSession();
+    }
   });
 
   app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {
