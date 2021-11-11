@@ -114,7 +114,7 @@ export class CharityService {
       AppLogger.error(`Cannot follow Charity with id #${charityId}: ${error.message}`);
       throw new AppError('Something went wrong. Please, try later');
     } finally {
-      session.endSession();
+      await session.endSession();
     }
   }
 
@@ -146,7 +146,7 @@ export class CharityService {
       AppLogger.error(`Cannot unfollow Charity with id #${charityId}: ${error.message}`);
       throw new AppError('Something went wrong. Please, try later');
     } finally {
-      session.endSession();
+      await session.endSession();
     }
   }
 
@@ -179,7 +179,7 @@ export class CharityService {
     } catch (error) {
       throw error;
     } finally {
-      session.endSession();
+      await session.endSession();
     }
   }
 
@@ -253,11 +253,11 @@ export class CharityService {
         await charity.save({ session });
       });
 
-      session.endSession();
+      await session.endSession();
       AppLogger.error(`updateCharityProfileById: ${JSON.stringify(charity, null, 2)}`);
       return CharityService.makeCharity(charity);
     } catch (error) {
-      session.endSession();
+      await session.endSession();
       throw error;
     }
   }
