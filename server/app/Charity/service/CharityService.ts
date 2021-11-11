@@ -167,13 +167,13 @@ export class CharityService {
     try {
       await session.withTransaction(async () => {
         const charityModel = await this.CharityModel.findOne({ stripeAccountId: account.id }, null, session).exec();
-        const charity = CharityService.makeCharity(charityModel);
         const isAccountActive =
           account.capabilities.card_payments === 'active' && account.capabilities.transfers === 'active';
         const stripeStatus = isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE;
 
-        await this.updateCharityStatus({ charity, stripeStatus, session });
-        AppLogger.info(`Charity #${charity.id} was updated by stripe account to ${stripeStatus}`);
+        charityModel.stripeStatus = stripeStatus;
+        await charityModel.save({ session });
+        AppLogger.info(`Charity #${charityModel._id} was updated by stripe account to ${stripeStatus}`);
       });
     } catch (error) {
       throw error;
@@ -355,7 +355,6 @@ export class CharityService {
     }
     try {
       this.maybeActivateCharity(model);
-      AppLogger.info(`Update charity #${charity.id}: ${JSON.stringify(model, null, 2)}`);
       await model.save({ session });
     } catch (error) {
       AppLogger.info(`Cannot update charity #${charity.id}: ${error.message}`);
