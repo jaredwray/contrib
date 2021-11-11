@@ -67,7 +67,7 @@ export const App = () => {
     <ToastProvider>
       <Auth0Provider
         audience={process.env.REACT_APP_API_AUDIENCE}
-        cacheLocation={'localstorage'}
+        cacheLocation="localstorage"
         clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
         domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
         redirectUri={mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login')}

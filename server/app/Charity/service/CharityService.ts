@@ -162,6 +162,30 @@ export class CharityService {
     return CharityService.makeCharity(model);
   }
 
+  public async setDefaultCharityStripeStatus(charityId: string): Promise<void> {
+    const session = await this.connection.startSession();
+
+    try {
+      await session.withTransaction(async () => {
+        const currentCharity = await this.findCharity(charityId, session);
+
+        if (!currentCharity) {
+          return;
+        }
+
+        if (currentCharity.status === CharityStatus.PENDING_ONBOARDING && !currentCharity.stripeStatus) {
+          await this.updateCharityStatus({
+            charity: currentCharity,
+            stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
+            session,
+          });
+        }
+      });
+    } finally {
+      await session.endSession();
+    }
+  }
+
   async updateCharityByStripeAccount(account: any): Promise<void> {
     const session = await this.connection.startSession();
 
@@ -254,7 +278,6 @@ export class CharityService {
       });
 
       await session.endSession();
-      AppLogger.info(`updateCharityProfileById: ${JSON.stringify(charity, null, 2)}`);
       return CharityService.makeCharity(charity);
     } catch (error) {
       await session.endSession();
@@ -263,7 +286,6 @@ export class CharityService {
   }
 
   private maybeActivateCharity(charity: ICharityModel): void {
-    AppLogger.info(`maybeActivateCharity: ${JSON.stringify(charity, null, 2)}`);
     if (
       charity.stripeStatus === CharityStripeStatus.ACTIVE &&
       charity.profileStatus === CharityProfileStatus.COMPLETED
@@ -343,9 +365,7 @@ export class CharityService {
     session?: ClientSession;
   }): Promise<Charity> {
     const model = await this.CharityModel.findById(charity.id, null, { session }).exec();
-    AppLogger.info(
-      `updateCharityStatus: #${charity.id}; status: ${status}, stripeStatus: ${stripeStatus}, profileStatus: ${profileStatus}`,
-    );
+
     if (!status && !profileStatus && !stripeStatus) {
       throw new Error('at least one status must be updated');
     }
