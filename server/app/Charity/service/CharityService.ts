@@ -234,7 +234,6 @@ export class CharityService {
 
   async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity | void> {
     const session = await this.connection.startSession();
-
     try {
       const charity = await this.CharityModel.findById(id, null, { session }).exec();
 
@@ -255,6 +254,7 @@ export class CharityService {
       });
 
       session.endSession();
+      AppLogger.error(`updateCharityProfileById: ${JSON.stringify(charity, null, 2)}`);
       return CharityService.makeCharity(charity);
     } catch (error) {
       session.endSession();
@@ -263,6 +263,7 @@ export class CharityService {
   }
 
   private maybeActivateCharity(charity: ICharityModel): void {
+    AppLogger.error(`maybeActivateCharity: ${JSON.stringify(charity, null, 2)}`);
     if (
       charity.stripeStatus === CharityStripeStatus.ACTIVE &&
       charity.profileStatus === CharityProfileStatus.COMPLETED
