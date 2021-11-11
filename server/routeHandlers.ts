@@ -11,7 +11,6 @@ export default function appRouteHandlers(
   app: express.Express,
   { auction, charity, stripeService, twilioNotification, shortLinkService }: IAppServices,
 ): void {
-  app.use(express.json());
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
