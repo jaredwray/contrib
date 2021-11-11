@@ -69,32 +69,27 @@ export default function appRouteHandlers(
 
   app.get('/api/v1/account_onboarding', async (req: express.Request, res: express.Response) => {
     const { user_id: userId } = req.query;
+
     if (!userId || typeof userId !== 'string') {
       res.redirect(AppConfig.app.url);
       return;
     }
 
     const session = await this.connection.startSession();
+    await session.withTransaction(async () => {
+      const currentCharity = await charity.findCharity(userId, session);
 
-    try {
-      await session.withTransaction(async () => {
-        const currentCharity = await charity.findCharity(userId, session);
+      if (currentCharity?.status === CharityStatus.PENDING_ONBOARDING) {
+        await charity.updateCharityStatus({
+          charity: currentCharity,
+          stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
+          session,
+        });
+      }
 
-        if (currentCharity?.status === CharityStatus.PENDING_ONBOARDING) {
-          await charity.updateCharityStatus({
-            charity: currentCharity,
-            stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
-            session,
-          });
-        }
-
-        res.redirect(`${AppConfig.app.url}/charity/me/edit`);
-      });
-    } catch (error) {
-      throw error;
-    } finally {
-      await session.endSession();
-    }
+      res.redirect(`${AppConfig.app.url}/charity/me/edit`);
+    });
+    await session.endSession();
   });
 
   app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {
