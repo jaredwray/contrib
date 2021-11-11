@@ -86,10 +86,10 @@ export default function appRouteHandlers(
           session,
         });
       }
-
-      res.redirect(`${AppConfig.app.url}/charity/me/edit`);
     });
     await session.endSession();
+
+    res.redirect(`${AppConfig.app.url}/charity/me/edit`);
   });
 
   app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {
