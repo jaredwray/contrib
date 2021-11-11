@@ -13,8 +13,9 @@ describe('Should render correctly "ChangePhoneNumber"', () => {
     setShowDialog: mockedSetShowDialog,
   };
 
-  it('component is defined', async () => {
-    let wrapper: ReactWrapper;
+  let wrapper: ReactWrapper;
+
+  beforeEach(async () => {
     await act(async () => {
       wrapper = mount(
         <MockedProvider>
@@ -22,20 +23,17 @@ describe('Should render correctly "ChangePhoneNumber"', () => {
         </MockedProvider>,
       );
     });
+  });
+
+  it('component is defined', async () => {
     expect(wrapper!).toHaveLength(1);
   });
 
-  it('should call setShowDialog', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MockedProvider>
-          <ChangePhoneNumber {...props} />
-        </MockedProvider>,
-      );
-    });
+  describe('after click on "Change Number" button', () => {
+    it('should call setShowDialog', async () => {
+      wrapper!.find(Button).simulate('click');
 
-    wrapper!.find(Button).simulate('click');
-    expect(mockedSetShowDialog).toBeCalledTimes(1);
+      expect(mockedSetShowDialog).toBeCalledTimes(1);
+    });
   });
 });
