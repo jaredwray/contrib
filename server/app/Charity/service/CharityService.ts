@@ -254,7 +254,7 @@ export class CharityService {
       });
 
       await session.endSession();
-      AppLogger.error(`updateCharityProfileById: ${JSON.stringify(charity, null, 2)}`);
+      AppLogger.info(`updateCharityProfileById: ${JSON.stringify(charity, null, 2)}`);
       return CharityService.makeCharity(charity);
     } catch (error) {
       await session.endSession();
@@ -263,7 +263,7 @@ export class CharityService {
   }
 
   private maybeActivateCharity(charity: ICharityModel): void {
-    AppLogger.error(`maybeActivateCharity: ${JSON.stringify(charity, null, 2)}`);
+    AppLogger.info(`maybeActivateCharity: ${JSON.stringify(charity, null, 2)}`);
     if (
       charity.stripeStatus === CharityStripeStatus.ACTIVE &&
       charity.profileStatus === CharityProfileStatus.COMPLETED
@@ -343,7 +343,9 @@ export class CharityService {
     session?: ClientSession;
   }): Promise<Charity> {
     const model = await this.CharityModel.findById(charity.id, null, { session }).exec();
-
+    AppLogger.info(
+      `updateCharityStatus: #${charity.id}; status: ${status}, stripeStatus: ${stripeStatus}, profileStatus: ${profileStatus}`,
+    );
     if (!status && !profileStatus && !stripeStatus) {
       throw new Error('at least one status must be updated');
     }
