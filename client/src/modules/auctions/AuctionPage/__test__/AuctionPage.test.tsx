@@ -1,7 +1,7 @@
 import AuctionPage from '../';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
-import { AuctionQuery, AuctionSubscription } from 'src/apollo/queries/auctions';
+import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { MemoryRouter } from 'react-router-dom';
 import { InMemoryCache } from '@apollo/client';
@@ -22,120 +22,133 @@ jest.mock('react-router-dom', () => ({
   }),
   useRouteMatch: () => ({ url: '/auctions/testId' }),
 }));
-const auction = {
-  currentPrice: { amount: 112200, currency: 'USD', precision: 2 },
-  endDate: '2021-08-29T08:05:21.000Z',
-  followers: [{ createdAt: '2021-06-28T12:52:49.463Z', user: '60d9ac0f650c813a783906b0' }],
-  isActive: false,
-  isDraft: false,
-  isFailed: false,
-  isSettled: false,
-  isSold: false,
-  isStopped: true,
-  status: 'ACTIVE',
-  stoppedAt: null,
-  totalBids: 1,
-  winner: 'test',
-};
 
 const cache = new InMemoryCache();
-const cache2 = new InMemoryCache();
-const cache3 = new InMemoryCache();
-const nullDataCache = new InMemoryCache();
 
-cache.writeQuery({
-  query: AuctionSubscription,
-  variables: { id: 'testId' },
-  data: {
-    auction,
-  },
-});
-nullDataCache.writeQuery({
-  query: AuctionQuery,
-  variables: { id: 'testId' },
-  data: {
-    auction: null,
-  },
-});
+describe('AuctionPage', () => {
+  describe('when invalid id provided', () => {
+    cache.writeQuery({
+      query: AuctionQuery,
+      variables: { id: 'testId' },
+      data: {
+        auction: null,
+      },
+    });
 
-cache2.writeQuery({
-  query: AuctionQuery,
-  variables: { id: 'testId' },
-  data: {
-    auction: AuctionQueryAuction,
-  },
-});
-cache3.writeQuery({
-  query: AuctionQuery,
-  variables: { id: 'testId' },
-  data: {
-    auction: { ...AuctionQueryAuction, isDraft: true, isStopped: false },
-  },
-});
+    it('redirects to 404 page', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider cache={cache}>
+                <AuctionPage />
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+        await new Promise((resolve) => setTimeout(resolve));
+        wrapper.update();
+      });
+      expect(mockHistoryFn).toBeCalled();
+    });
+  });
 
-describe('AuctionPage ', () => {
-  it('component should redirect to 404 page', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <MockedProvider cache={nullDataCache}>
+  describe('with valid data', () => {
+    cache.writeQuery({
+      query: AuctionQuery,
+      variables: { id: 'testId' },
+      data: {
+        auction: { ...AuctionQueryAuction, isActive: true, isDraft: false, isStopped: false },
+      },
+    });
+
+    it('renders the component', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider cache={cache}>
+                <AuctionPage />
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+      });
+      expect(wrapper!.find(Layout)).toHaveLength(1);
+    });
+  });
+
+  describe('with an error or when an auction is not loaded yet', () => {
+    it('returns null', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <MockedProvider>
               <AuctionPage />
             </MockedProvider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
+          </MemoryRouter>,
+        );
+      });
+      expect(wrapper!.find(Layout)).toHaveLength(0);
     });
-    expect(mockHistoryFn).toBeCalled();
   });
-  it('component return null', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <MockedProvider>
-            <AuctionPage />
-          </MockedProvider>
-        </MemoryRouter>,
-      );
+
+  describe('when the auction is stopped', () => {
+    cache.writeQuery({
+      query: AuctionQuery,
+      variables: { id: 'testId' },
+      data: {
+        auction: AuctionQueryAuction,
+      },
     });
-    expect(wrapper!.find(Layout)).toHaveLength(0);
+
+    it('redirects to the Home page', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider cache={cache}>
+                <AuctionPage />
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+        await new Promise((resolve) => setTimeout(resolve));
+        wrapper.update();
+      });
+      expect(mockHistoryFn).toHaveBeenCalled();
+    });
   });
-  it('should redirect to Home page becouse auction is stopped', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <MockedProvider cache={cache2}>
-              <AuctionPage />
-            </MockedProvider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
+
+  describe('when the auction is draft', () => {
+    cache.writeQuery({
+      query: AuctionQuery,
+      variables: { id: 'testId' },
+      data: {
+        auction: { ...AuctionQueryAuction, isDraft: true, isStopped: false },
+      },
     });
-    expect(mockHistoryFn).toHaveBeenCalled();
-  });
-  it('should redirect to Home page becouse auction is draft', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <MockedProvider cache={cache3}>
-              <AuctionPage />
-            </MockedProvider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
+
+    it('redirects to the Home page', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider cache={cache}>
+                <AuctionPage />
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+        await new Promise((resolve) => setTimeout(resolve));
+        wrapper.update();
+      });
+      expect(mockHistoryFn).toHaveBeenCalled();
     });
-    expect(mockHistoryFn).toHaveBeenCalled();
   });
 });

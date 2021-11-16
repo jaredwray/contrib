@@ -20,10 +20,12 @@ const AuctionMetricsUpdatePage: FC = () => {
   const [updateMetrics] = useMutation(UpdateOrCreateAuctionMetricsMutation, {
     onCompleted: ({ updateOrCreateMetrics }) => {
       const auctionId = updateOrCreateMetrics?.id;
+
       if (!auctionId) {
         history.replace(`/404`);
         return;
       }
+
       goTo(data.getLink.link);
     },
   });
@@ -55,11 +57,12 @@ const AuctionMetricsUpdatePage: FC = () => {
   const redirect = useCallback(
     (data) => {
       try {
-        if (data.link.includes('auctions')) {
+        if (data.link.match(/\/auctions\/[0-9a-z]*/g)) {
           getUserData().then((userData) => {
             updateMetrics({ variables: { shortLinkId: data.id, ...userData } });
           });
         }
+
         goTo(data.link);
       } catch {
         history.replace(`/404`);
