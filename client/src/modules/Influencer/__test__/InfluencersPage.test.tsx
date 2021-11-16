@@ -48,7 +48,7 @@ describe('InfluerncersPage', () => {
 
   describe('after function call "changeFilters"', () => {
     it('component state "filters" has changed ', async () => {
-      act(() => {
+      await act(async () => {
         wrapper!.children().find(AllItemsLayout).props().changeFilters('testKey', 'testValue');
       });
 

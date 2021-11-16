@@ -198,7 +198,6 @@ export class CharityService {
         const stripeStatus = isAccountActive ? CharityStripeStatus.ACTIVE : CharityStripeStatus.INACTIVE;
 
         await this.updateCharityStatus({ charity, stripeStatus, session });
-        AppLogger.info(`Charity #${charityModel._id} was updated by stripe account to ${stripeStatus}`);
       });
     } catch (error) {
       throw error;
