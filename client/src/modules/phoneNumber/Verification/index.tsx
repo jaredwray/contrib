@@ -83,7 +83,13 @@ export default function PhoneNumberVerification() {
   return (
     <Layout>
       <section>
-        <a className="back-link pt-5 text-label text-all-cups" href="" title="Back" onClick={handleBack}>
+        <a
+          className="back-link pt-5 text-label text-all-cups"
+          data-test-id="back_btn"
+          href=""
+          title="Back"
+          onClick={handleBack}
+        >
           <span className="back-link-arrows">&#171;&#32;&#32;</span>back
         </a>
         <div className="text-headline pt-3">Please, enter your phone number</div>
