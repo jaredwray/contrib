@@ -1,7 +1,7 @@
 import { mount, ReactWrapper } from 'enzyme';
-import { MockedProvider } from '@apollo/client/testing';
 import { SyntheticEvent } from 'react';
 
+import { MockedProvider } from '@apollo/client/testing';
 import { MemoryRouter } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
