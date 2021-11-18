@@ -18,12 +18,12 @@ const NewRelicInitializer: FC = () => {
       return;
     }
 
-    const platformUrl = new URL(process.env.REACT_APP_PLATFORM_URL || '');
+    if (!process.env.REACT_APP_PLATFORM_URL) return;
+
+    const platformUrl = new URL(process.env.REACT_APP_PLATFORM_URL);
     const agentId = AGENT_IDS[platformUrl.hostname];
 
-    if (!agentId) {
-      return;
-    }
+    if (!agentId) return;
 
     const w = window as any;
 
