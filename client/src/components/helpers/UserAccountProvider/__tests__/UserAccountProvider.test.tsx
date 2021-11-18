@@ -4,7 +4,7 @@ import { UserAccountProvider } from 'src/components/helpers/UserAccountProvider/
 const props = {
   children: <></>,
 };
-describe('Should render correctly "UserAccountProvider"', () => {
+describe('UserAccountProvider', () => {
   let wrapper: ReactWrapper;
   beforeEach(() => {
     wrapper = mount(

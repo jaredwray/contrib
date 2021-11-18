@@ -40,7 +40,7 @@ const WatchBtn: FC<Props> = ({
         unfollowHandler={unfollowHandler}
       />
       <div className="d-table-cell pl-4 align-middle">
-        <div className={clsx(styles.text, 'text-subhead')} onClick={onTextClick}>
+        <div className={clsx(styles.text, 'text-subhead test-watchThisText')} onClick={onTextClick}>
           Watch this {entityType}
         </div>
         <div className="text-label text-all-cups">
