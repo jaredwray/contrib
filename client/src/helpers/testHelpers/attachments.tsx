@@ -3,7 +3,7 @@ export const attachments = [
     id: 'test',
     uid: 'test',
     url: 'test',
-    type: 'test',
+    type: 'IMAGE',
     cloudflareUrl: 'test',
     thumbnail: 'test',
   },
