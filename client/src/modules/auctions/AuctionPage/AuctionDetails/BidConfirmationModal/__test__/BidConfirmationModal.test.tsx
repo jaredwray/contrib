@@ -5,10 +5,13 @@ import { MemoryRouter } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
+import type { StripeCardElementChangeEvent } from '@stripe/stripe-js';
 
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
+import { MakeAuctionBidMutation } from 'src/apollo/queries/bids';
+import { CardInput } from 'src/components/forms/inputs/CardInput';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import { BidConfirmationModal } from '../BidConfirmationModal';
@@ -22,6 +25,7 @@ const mockElement = () => ({
 
 const mockElements = () => {
   const elements: any = {};
+
   return {
     create: jest.fn((type) => {
       elements[type] = mockElement();
@@ -32,10 +36,12 @@ const mockElements = () => {
     }),
   };
 };
+
 const mockStripe = () => ({
   elements: jest.fn(() => mockElements()),
   // createToken: jest.fn(() => ({ token: { id: 'testToken' } })),
-  createToken: jest.fn(),
+  // createToken: jest.fn(),
+  createToken: () => ({ token: '222' }),
   createSource: jest.fn(),
   createPaymentMethod: jest.fn(),
   confirmCardPayment: jest.fn(),
@@ -61,7 +67,6 @@ jest.mock('@stripe/react-stripe-js', () => {
   };
 });
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
-
 jest.mock('@stripe/react-stripe-js', () => {
   const stripe = jest.requireActual('@stripe/react-stripe-js');
 
@@ -78,16 +83,20 @@ jest.mock('@stripe/react-stripe-js', () => {
     },
   };
 });
+
 const props: any = {
   auctionId: 'testId',
   isBuying: true,
   setIsBuying: jest.fn(),
 };
+
 const props2: any = {
   ...props,
   isBuying: false,
 };
+
 const mockFn = jest.fn();
+
 const mocks = [
   {
     request: {
@@ -128,7 +137,31 @@ const mocks = [
       };
     },
   },
+  {
+    request: {
+      query: MakeAuctionBidMutation,
+      variables: { token: 'testToken' },
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {
+          enterPaymentInformation: {
+            id: 'testId',
+            paymentInformation: {
+              cardBrand: 'Visa',
+              cardExpirationMonth: 5,
+              cardExpirationYear: 2026,
+              cardNumberLast4: '4242',
+              id: 'testId',
+            },
+          },
+        },
+      };
+    },
+  },
 ];
+
 const errorMocks = [
   {
     request: {
@@ -162,8 +195,10 @@ describe('BidConfirmationModal', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   const e: any = Event;
-  test('renders without crashing', async () => {
+
+  it('renders without crashing', async () => {
     let wrapper: ReactWrapper;
 
     await act(async () => {
@@ -179,74 +214,116 @@ describe('BidConfirmationModal', () => {
         </MemoryRouter>,
       );
     });
+
     expect(wrapper!).toHaveLength(1);
   });
-  test('should call the BuyAuctionMutation', async () => {
-    let wrapper: ReactWrapper;
 
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <MockedProvider mocks={mocks}>
-              <Elements stripe={stripePromise}>
-                <BidConfirmationModal {...props} />
-              </Elements>
-            </MockedProvider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    expect(wrapper!).toHaveLength(1);
-    expect(wrapper!.find("[data-test-id='bid-button']").first().text()).toEqual('Buy it now');
-    await act(async () => {
-      wrapper!.find("[data-test-id='bid-button']").first().prop('onClick')!(e);
-    });
-    expect(mockFn).toHaveBeenCalledTimes(1);
-  });
-  test('should not call BuyAuctionMutation becouse of error', async () => {
-    let wrapper: ReactWrapper;
+  describe('Click on Buy now button', () => {
+    it('should call the BuyAuctionMutation', async () => {
+      let wrapper: ReactWrapper;
 
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <MockedProvider mocks={errorMocks}>
-              <Elements stripe={stripePromise}>
-                <BidConfirmationModal {...props} />
-              </Elements>
-            </MockedProvider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider mocks={mocks}>
+                <Elements stripe={stripePromise}>
+                  <BidConfirmationModal {...props} />
+                </Elements>
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+      });
+
+      expect(wrapper!).toHaveLength(1);
+      expect(wrapper!.find("[data-test-id='bid-button']").first().text()).toEqual('Buy it now');
+
+      await act(async () => {
+        wrapper!.find("[data-test-id='bid-button']").first().prop('onClick')!(e);
+      });
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
-    await act(async () => {
-      wrapper!.find("[data-test-id='bid-button']").first().prop('onClick')!(e);
+
+    it('should not call BuyAuctionMutation', async () => {
+      let wrapper: ReactWrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider mocks={errorMocks}>
+                <Elements stripe={stripePromise}>
+                  <BidConfirmationModal {...props} />
+                </Elements>
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+      });
+
+      await act(async () => {
+        wrapper!.find("[data-test-id='bid-button']").first().prop('onClick')!(e);
+      });
+
+      expect(mockFn).toHaveBeenCalledTimes(0);
     });
-    expect(mockFn).toHaveBeenCalledTimes(0);
   });
-  test('', async () => {
-    let wrapper: ReactWrapper;
-    const account = { account: { ...testAccount.account, paymentInformation: null } };
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <UserAccountContext.Provider value={account}>
+
+  describe('Click on Confirm Bidding', () => {
+    it('should call ConfirmBiddingMutation', async () => {
+      let wrapper: ReactWrapper;
+
+      const account = { account: { ...testAccount.account, paymentInformation: null } };
+
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <UserAccountContext.Provider value={account}>
+                <MockedProvider mocks={mocks}>
+                  <Elements stripe={stripePromise}>
+                    <BidConfirmationModal {...props2} />
+                  </Elements>
+                </MockedProvider>
+              </UserAccountContext.Provider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+      });
+
+      expect(wrapper!.find("[data-test-id='bid-button']").first().text()).toEqual('Confirm bidding');
+
+      await new Promise((resolve) => setTimeout(resolve));
+
+      await act(async () => {
+        wrapper!.find("[data-test-id='bid-button']").first().prop('onClick')!(e);
+      });
+    });
+  });
+
+  describe('Call CardInput props,', () => {
+    it('Should call CardInput methods', async () => {
+      let wrapper: ReactWrapper;
+
+      act(() => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
               <MockedProvider mocks={mocks}>
                 <Elements stripe={stripePromise}>
                   <BidConfirmationModal {...props2} />
                 </Elements>
               </MockedProvider>
-            </UserAccountContext.Provider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    expect(wrapper!.find("[data-test-id='bid-button']").first().text()).toEqual('Confirm bidding');
-    await new Promise((resolve) => setTimeout(resolve));
-    await act(async () => {
-      wrapper!.find("[data-test-id='bid-button']").first().prop('onClick')!(e);
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+
+        const CardInputProps = wrapper.find(CardInput).props();
+        CardInputProps.handleAddCard();
+        CardInputProps.onCancel();
+      });
     });
   });
 });
