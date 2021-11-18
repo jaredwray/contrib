@@ -15,7 +15,7 @@ let assignMock = jest.fn();
 delete window.location;
 window.location = { assign: assignMock };
 
-describe('Should render correctly "TermsConfirmationDialog"', () => {
+describe('TermsConfirmationDialog', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
