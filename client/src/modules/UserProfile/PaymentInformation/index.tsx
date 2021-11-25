@@ -3,7 +3,6 @@ import { FC, useCallback, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import type { StripeCardElement, StripeCardElementChangeEvent } from '@stripe/stripe-js';
-import clsx from 'clsx';
 import { isPast } from 'date-fns';
 import { Row, Col } from 'react-bootstrap';
 
@@ -11,8 +10,6 @@ import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { CardInput } from 'src/components/forms/inputs/CardInput';
 import { UserProfile } from 'src/components/helpers/UserAccountProvider/UserProfile';
 import { useShowNotification } from 'src/helpers/useShowNotification';
-
-import styles from './styles.module.scss';
 
 interface Props {
   account: UserProfile | null;
@@ -81,25 +78,22 @@ const PaymentInformation: FC<Props> = ({ account }) => {
     <>
       <h2 className="text-headline mb-3">Payment Information</h2>
       <hr className="d-none d-md-block" />
-      <Row className="mb-4">
+      <Row className="mb-0 mb-md-4">
         <Col className="pl-0 pr-0 pr-md-3" md="6">
-          <h3 className="text-subhead">My credit card</h3>
-          <p className="text--body mb-2">You can change your credit card</p>
+          <div className="text--body font-weight-bold">My credit card</div>
         </Col>
-        <Col className="pr-0 pl-0 pl-md-3" md="6">
-          <div className={clsx(styles.cardInputWrapper, 'text--body')}>
-            <CardInput
-              expired={expired}
-              handleAddCard={handleAddCard}
-              isSubmitting={isSubmitting}
-              newCard={newCard}
-              paymentInformation={paymentInformation}
-              showSaveBtn={cardComplete}
-              onCancel={handleNewCardCancelBtnClick}
-              onChange={handleCardInputChange}
-              onSave={handleNewCardSaveBtnClick}
-            />
-          </div>
+        <Col className="pr-0 pl-0 pl-md-2 pr-md-2 mt-2 mt-md-0" md="6">
+          <CardInput
+            expired={expired}
+            handleAddCard={handleAddCard}
+            isSubmitting={isSubmitting}
+            newCard={newCard}
+            paymentInformation={paymentInformation}
+            showSaveBtn={cardComplete}
+            onCancel={handleNewCardCancelBtnClick}
+            onChange={handleCardInputChange}
+            onSave={handleNewCardSaveBtnClick}
+          />
         </Col>
       </Row>
     </>

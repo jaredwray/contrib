@@ -33,7 +33,7 @@ const CardInfo: FC<Props> = ({ expired, className, isSubmitting, paymentInfo, on
       </div>
 
       <Button
-        className={clsx(styles.addCardBtn, 'text--body flex-column')}
+        className={clsx(styles.addCardBtn, 'flex-column')}
         disabled={isSubmitting}
         size="sm"
         variant="link"
