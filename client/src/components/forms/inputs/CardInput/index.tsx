@@ -6,6 +6,7 @@ import { PaymentInformation } from 'src/components/helpers/UserAccountProvider/P
 
 import CardInfo from './CardInfo';
 import StripeInput from './StripeInput';
+import styles from './styles.module.scss';
 
 interface Props {
   cardInfoStyles?: string;
@@ -36,7 +37,7 @@ export const CardInput: FC<Props> = ({
   onSave,
 }) => {
   return (
-    <>
+    <div className={styles.info}>
       {(expired || paymentInformation) && !newCard && (
         <CardInfo
           className={cardInfoStyles}
@@ -58,6 +59,6 @@ export const CardInput: FC<Props> = ({
           onSave={onSave}
         />
       )}
-    </>
+    </div>
   );
 };

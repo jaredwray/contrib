@@ -13,8 +13,9 @@
 
 .button {
   display: inline-block;
-  margin-left: 2rem;
   max-width: 200px;
+  margin-left: auto;
+  order: 2;
 
   @media (max-width: $large-weight) {
     width: 100%;

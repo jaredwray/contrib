@@ -22,10 +22,9 @@ const ProfileInformation: FC<Props> = ({ account }) => {
       <hr className="d-none d-md-block" />
       <Row className="mb-4">
         <Col className="pl-0 pr-0 pr-md-3" md="6">
-          <h3 className="text-subhead">Phone Number</h3>
-          <p className="text--body mb-2">You can change your phone number</p>
+          <div className="text--body font-weight-bold">Phone Number</div>
         </Col>
-        <Col className="pr-0 pl-0 pl-md-3" md="6">
+        <Col className="pr-0 pl-0 pl-md-2 pr-md-2" md="6">
           <div className={styles.wraper}>
             <input disabled className={clsx(styles.input, 'form-control')} value={`+${phoneNumber}`} />
             <Button className={clsx(styles.button, 'btn btn-primary')} onClick={() => setShowDialog(true)}>

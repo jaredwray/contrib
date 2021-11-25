@@ -28,12 +28,4 @@ describe('ProfileInformation', () => {
   it('component is defined', async () => {
     expect(wrapper!).toHaveLength(1);
   });
-
-  describe('after click on "Change Number" button', () => {
-    xit('should call setShowDialog', async () => {
-      wrapper!.find(Button).simulate('click');
-
-      expect(mockedSetShowDialog).toBeCalledTimes(1);
-    });
-  });
 });
