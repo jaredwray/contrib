@@ -147,7 +147,11 @@ describe('DeliveryPaymentPage', () => {
       wrapper = mount(
         <ToastProvider>
           <UserAccountContext.Provider value={testAccount}>
-            <MockedProvider>{WithStripe(DeliveryPaymentPage)}</MockedProvider>
+            <MockedProvider>
+              <WithStripe>
+                <DeliveryPaymentPage />
+              </WithStripe>
+            </MockedProvider>
           </UserAccountContext.Provider>
         </ToastProvider>,
       );
@@ -162,7 +166,11 @@ describe('DeliveryPaymentPage', () => {
         <MemoryRouter>
           <ToastProvider>
             <UserAccountContext.Provider value={{ account: null }}>
-              <MockedProvider cache={cache}>{WithStripe(DeliveryPaymentPage)}</MockedProvider>
+              <MockedProvider cache={cache}>
+                <WithStripe>
+                  <DeliveryPaymentPage />
+                </WithStripe>
+              </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
         </MemoryRouter>,
@@ -180,7 +188,11 @@ describe('DeliveryPaymentPage', () => {
         <MemoryRouter>
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache}>{WithStripe(DeliveryPaymentPage)}</MockedProvider>
+              <MockedProvider cache={cache}>
+                <WithStripe>
+                  <DeliveryPaymentPage />
+                </WithStripe>
+              </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
         </MemoryRouter>,
@@ -196,7 +208,11 @@ describe('DeliveryPaymentPage', () => {
         <MemoryRouter>
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache2}>{WithStripe(DeliveryPaymentPage)}</MockedProvider>
+              <MockedProvider cache={cache2}>
+                <WithStripe>
+                  <DeliveryPaymentPage />
+                </WithStripe>
+              </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
         </MemoryRouter>,
@@ -212,7 +228,11 @@ describe('DeliveryPaymentPage', () => {
         <MemoryRouter>
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache3}>{WithStripe(DeliveryPaymentPage)}</MockedProvider>
+              <MockedProvider cache={cache3}>
+                <WithStripe>
+                  <DeliveryPaymentPage />
+                </WithStripe>
+              </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
         </MemoryRouter>,
@@ -228,7 +248,11 @@ describe('DeliveryPaymentPage', () => {
         <MemoryRouter>
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache4}>{WithStripe(DeliveryPaymentPage)}</MockedProvider>
+              <MockedProvider cache={cache4}>
+                <WithStripe>
+                  <DeliveryPaymentPage />
+                </WithStripe>
+              </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
         </MemoryRouter>,
@@ -257,7 +281,9 @@ describe('DeliveryPaymentPage', () => {
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
               <MockedProvider cache={cache4} mocks={mocks}>
-                {withStripe(DeliveryPaymentPage)}
+                <WithStripe>
+                  <DeliveryPaymentPage />
+                </WithStripe>
               </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
