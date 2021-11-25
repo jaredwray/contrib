@@ -10,19 +10,25 @@ import styles from './styles.module.scss';
 interface Props {
   inputClassName?: string;
   cancelButtonClassName?: string;
+  saveButtonClassName?: string;
   disabled: boolean;
   showCancelBtn: boolean;
+  showSaveBtn?: boolean;
   onChange?(event: StripeCardElementChangeEvent): void;
   onCancel: () => void;
+  onSave?: (() => void) | undefined;
 }
 
 const StripeInput: FC<Props> = ({
   disabled,
   onChange,
   onCancel,
+  onSave,
   showCancelBtn,
+  showSaveBtn,
   inputClassName,
   cancelButtonClassName,
+  saveButtonClassName,
 }) => {
   const [node, setNode] = useState<StripeCardElement | null>(null);
   const [focused, setFocused] = useState(false);
@@ -65,6 +71,17 @@ const StripeInput: FC<Props> = ({
         onFocus={() => setFocused(true)}
         onReady={setNode}
       />
+      {showSaveBtn && (
+        <Button
+          className={clsx(saveButtonClassName || styles.newCardSaveBtn, 'pr-0')}
+          disabled={disabled}
+          size="sm"
+          variant="link"
+          onClick={onSave}
+        >
+          Save
+        </Button>
+      )}
       {showCancelBtn && (
         <Button
           className={clsx(cancelButtonClassName || styles.newCardCancelBtn, 'pr-0')}

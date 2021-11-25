@@ -1,9 +1,15 @@
+import { ReactNode } from 'react';
+
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
-export const withStripe = (Component: any) => {
+interface Props {
+  children: ReactNode;
+}
+
+const WithStripe = ({ children }: Props) => {
   const stripeOptions = {
     fonts: [
       {
@@ -13,7 +19,9 @@ export const withStripe = (Component: any) => {
   };
   return (
     <Elements options={stripeOptions} stripe={stripePromise}>
-      <Component />
+      {children}
     </Elements>
   );
 };
+
+export default WithStripe;

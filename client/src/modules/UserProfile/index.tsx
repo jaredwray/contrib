@@ -1,21 +1,19 @@
-import { FC, useState, useContext } from 'react';
+import { FC, useContext } from 'react';
 
 import clsx from 'clsx';
 import { Container, Row } from 'react-bootstrap';
 
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
+import WithStripe from 'src/components/wrappers/WithStripe';
 
-import Auctions from './Content/Auctions';
-import ChangePhoneNumber from './Content/ChangePhoneNumber';
-import Modal from './Modal';
+import Auctions from './Auctions';
+import PaymentInformation from './PaymentInformation';
+import ProfileInformation from './ProfileInformation';
 import styles from './styles.module.scss';
 
 const UserProfilePage: FC = () => {
   const { account } = useContext(UserAccountContext);
-
-  const [phoneNumber, setPhoneNumber] = useState(account?.phoneNumber?.replace('+', ''));
-  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <Layout>
@@ -24,24 +22,14 @@ const UserProfilePage: FC = () => {
           <Row>
             <h1 className="text-label label-with-separator">Profile</h1>
           </Row>
-          <ChangePhoneNumber
-            currentPhoneNumber={phoneNumber}
-            setShowDialog={() => {
-              setShowDialog(true);
-            }}
-          />
+          <ProfileInformation account={account} />
+          <WithStripe>
+            <PaymentInformation account={account} />
+          </WithStripe>
         </Container>
       </section>
       <section className={clsx(styles.auctionsSection, 'text-label p-2 pt-4 pb-4')}>
         <Container>
-          <Modal
-            currentPhoneNumber={phoneNumber}
-            setCloseDialog={() => setShowDialog(false)}
-            setPhoneNumber={(value: string) => {
-              setPhoneNumber(value);
-            }}
-            showDialog={showDialog}
-          />
           <Auctions />
         </Container>
       </section>

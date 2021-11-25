@@ -14,6 +14,7 @@
   border-color: $sage-color;
 }
 
+.newCardSaveBtn,
 .newCardCancelBtn {
   position: absolute !important;
   right: 0;
@@ -22,4 +23,12 @@
   @media (max-width: $small-weight) {
     top: 30px;
   }
+}
+
+.newCardCancelBtn {
+  right: 0;
+}
+
+.newCardSaveBtn {
+  right: 70px;
 }
