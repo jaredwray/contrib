@@ -13,11 +13,13 @@ interface Props {
   stripeInputStyles?: string;
   expired: boolean;
   newCard: boolean;
+  showSaveBtn?: boolean | undefined;
   isSubmitting: boolean;
   paymentInformation: PaymentInformation | null | undefined;
   handleAddCard: () => void;
   onChange?(event: StripeCardElementChangeEvent): void;
   onCancel: () => void;
+  onSave?: (() => void) | undefined;
 }
 export const CardInput: FC<Props> = ({
   expired,
@@ -27,9 +29,11 @@ export const CardInput: FC<Props> = ({
   stripeInputStyles,
   isSubmitting,
   newCard,
+  showSaveBtn,
   handleAddCard,
   onChange,
   onCancel,
+  onSave,
 }) => {
   return (
     <>
@@ -48,8 +52,10 @@ export const CardInput: FC<Props> = ({
           disabled={isSubmitting}
           inputClassName={stripeInputStyles}
           showCancelBtn={Boolean(paymentInformation)}
+          showSaveBtn={showSaveBtn}
           onCancel={onCancel}
           onChange={onChange}
+          onSave={onSave}
         />
       )}
     </>

@@ -7,8 +7,8 @@ import { ToastProvider } from 'react-toast-notifications';
 import { act } from 'react-dom/test-utils';
 
 import Dialog from 'src/components/modals/Dialog';
-import VerificationStep from 'src/modules/userProfile/Modal/Verification';
-import ConfirmationStep from 'src/modules/userProfile/Modal/Confirmation';
+import VerificationStep from '../Verification';
+import ConfirmationStep from '../Confirmation';
 
 import Modal from '..';
 

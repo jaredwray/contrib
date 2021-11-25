@@ -37,5 +37,9 @@ export const UserAccountResolvers = {
       async (_, { auctionId, input }, { currentAccount, userAccount }) =>
         await userAccount.createOrUpdateUserAddress(auctionId, currentAccount.mongodbId, input),
     ),
+    updateCreditCard: requireAuthenticated(
+      async (_, { stripeCustomerId }, { currentAccount, userAccount }) =>
+        await userAccount.updateAccountStripeCustomerId(currentAccount, stripeCustomerId),
+    ),
   },
 };

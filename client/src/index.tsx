@@ -11,6 +11,7 @@ import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
 import { ScrollToTop } from 'src/components/helpers/ScrollToTop';
 import { UserAccountProvider } from 'src/components/helpers/UserAccountProvider';
 import PrivateRoute from 'src/components/routing/PrivateRoute';
+import WithStripe from 'src/components/wrappers/WithStripe';
 import AdminAuctionPage from 'src/modules/admin/auctions/AdminAuctionPage';
 import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
 import Charities from 'src/modules/admin/Charities';
@@ -33,7 +34,6 @@ import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPa
 import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
 import DeliveryAddressPage from 'src/modules/delivery/DeliveryAddressPage';
 import DeliveryPaymentPage from 'src/modules/delivery/DeliveryPaymentPage';
-import { withStripe } from 'src/modules/delivery/DeliveryPaymentPage/WithStripe';
 import DeliveryStatusPage from 'src/modules/delivery/DeliveryStatusPage';
 import Page404 from 'src/modules/errors/Page404';
 import HomePage from 'src/modules/Home';
@@ -45,7 +45,7 @@ import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
 import Privacy from 'src/modules/Privacy';
 import Terms from 'src/modules/Terms';
-import UserProfilePage from 'src/modules/userProfile';
+import UserProfilePage from 'src/modules/UserProfile';
 
 import 'src/index.scss';
 import { mergeUrlPath } from './helpers/mergeUrlPath';
@@ -161,7 +161,11 @@ export const App = () => {
                   />
                   <Route component={DeliveryAddressPage} path="/auctions/:auctionId/delivery/address" />
                   <Route
-                    component={() => withStripe(DeliveryPaymentPage)}
+                    component={() => (
+                      <WithStripe>
+                        <DeliveryPaymentPage />
+                      </WithStripe>
+                    )}
                     path="/auctions/:auctionId/delivery/payment"
                   />
                   <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />

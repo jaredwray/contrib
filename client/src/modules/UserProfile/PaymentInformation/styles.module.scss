@@ -1,0 +1,119 @@
+@import 'src/variables.scss';
+
+.wraper {
+  display: flex;
+  align-items: center;
+
+  @media (max-width: $large-weight) {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.button {
+  display: inline-block;
+  margin-left: 2rem;
+  max-width: 200px;
+
+  @media (max-width: $large-weight) {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+  }
+}
+
+.cardInputWrapper {
+  margin: 0 auto;
+
+  @media (max-width: $small-weight) {
+    max-width: 100%;
+  }
+}
+
+.markedText {
+  color: $sage-color;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.select {
+  background-color: $white-color;
+  border-radius: 10px;
+}
+
+.label {
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.actionBtn,
+.actionLink,
+.actionLinkDisabled {
+  height: 50px !important;
+  width: 200px;
+  @media (max-width: $small-weight) {
+    width: 100%;
+  }
+}
+
+.deliveryInfo {
+  min-height: 75px;
+  white-space: nowrap;
+  & span {
+    text-align: center;
+  }
+}
+.actionLink,
+.actionLinkDisabled {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $light-gray-color;
+  border-radius: 10px;
+  letter-spacing: 0.1em;
+  transition: 150ms ease-in-out;
+  &:hover {
+    background-color: $gray-color;
+    color: $white-color;
+  }
+}
+.actionLinkWrapper {
+  cursor: no-drop;
+}
+.actionLinkDisabled {
+  cursor: no-drop;
+  pointer-events: none;
+}
+.submitBtn {
+  @media (max-width: $small-weight) {
+    width: 100% !important;
+  }
+}
+.deliveryCardInfo {
+  color: $sage-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+}
+.deliveryStripeInput {
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid $light-sage-color;
+  will-change: opacity, transform;
+  border-radius: 8px;
+  cursor: text;
+  height: 50px;
+  padding: 15px;
+}
+.deliveryCardCancelButton {
+  position: absolute !important;
+  right: 0;
+  top: 50px;
+
+  @media (max-width: $small-weight) {
+    top: 50px;
+  }
+}

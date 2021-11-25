@@ -2,8 +2,6 @@ import { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useContext, 
 
 import { useMutation } from '@apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import clsx from 'clsx';
 import { format as dateFormat, differenceInSeconds } from 'date-fns';
 import { format, toDate } from 'date-fns-tz';
@@ -15,6 +13,7 @@ import { useToasts } from 'react-toast-notifications';
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import WatchBtn from 'src/components/buttons/WatchBtn';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import WithStripe from 'src/components/wrappers/WithStripe';
 import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
@@ -32,8 +31,6 @@ const FINAL_BID = 999999;
 interface Props {
   auction: Auction;
 }
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ?? '');
 
 const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   const [isBuying, setIsBuying] = useState(false);
@@ -129,14 +126,6 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   if (itemPrice) {
     isShowBuyButton = itemPrice?.amount > minBid.getAmount();
   }
-
-  const stripeOptions = {
-    fonts: [
-      {
-        cssSrc: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap',
-      },
-    ],
-  };
 
   const commonBidHandler = useCallback(
     (amount: Dinero.Dinero, isBuying?: boolean) => {
@@ -234,14 +223,14 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           {soldTime}
         </div>
       )}
-      <Elements options={stripeOptions} stripe={stripePromise}>
+      <WithStripe>
         <BidConfirmationModal
           ref={confirmationRef}
           auctionId={auctionId}
           isBuying={isBuying}
           setIsBuying={setIsBuying}
         />
-      </Elements>
+      </WithStripe>
       {canBid && <BidInput fairMarketValue={Dinero(fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
       {canEdit && (
         <Link className="w-100 btn btn-primary" to={`/auctions/${auction.auctionOrganizer.id}/${auctionId}/title`}>
