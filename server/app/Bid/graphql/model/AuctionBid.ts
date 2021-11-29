@@ -7,6 +7,5 @@ export interface AuctionBid {
     createdAt: Date;
   };
   bid: Dinero.Dinero;
-  paymentSource: string;
   createdAt: Date;
 }

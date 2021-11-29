@@ -7,7 +7,6 @@ import clsx from 'clsx';
 import { isPast } from 'date-fns';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
-import { useToasts } from 'react-toast-notifications';
 
 import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
@@ -18,6 +17,7 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 import Dialog from 'src/components/modals/Dialog';
 import DialogActions from 'src/components/modals/Dialog/DialogActions';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 
 import styles from './BidConfirmationModal.module.scss';
 
@@ -33,10 +33,10 @@ interface Props {
 
 export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
   ({ auctionId, isBuying, setIsBuying }, ref) => {
-    const [updateAuction] = useMutation(BuyAuctionMutation);
+    const [buyAuction] = useMutation(BuyAuctionMutation);
     const stripe = useStripe();
     const elements = useElements();
-    const { addToast } = useToasts();
+    const { showMessage, showError } = useShowNotification();
 
     const [cardComplete, setCardComplete] = useState(false);
     const [isSubmitting, setSubmitting] = useState(false);
@@ -85,7 +85,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
           const tokenResult = await stripe?.createToken(elements!.getElement(CardElement) as StripeCardElement);
           if (tokenResult?.error) {
             setSubmitting(false);
-            addToast(tokenResult.error.message, { autoDismiss: true, appearance: 'error' });
+            showError(tokenResult.error.message);
             return;
           }
           const token = tokenResult?.token ?? { id: '' };
@@ -98,30 +98,38 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         setSubmitting(false);
         setActiveBid(null);
         setNewCard(false);
-        addToast(`Your bid of ${activeBid!.toFormat('$0,0')} has been accepted.`, {
-          appearance: 'success',
-          autoDismiss: true,
-        });
+        showMessage(`Your bid of ${activeBid!.toFormat('$0,0')} was accepted.`);
       } catch (error: any) {
         setSubmitting(false);
         setNewCard(false);
-        addToast(error.message, { autoDismiss: true, appearance: 'error' });
+        showError(error.message);
       }
-    }, [elements, activeBid, paymentInformation, newCard, makeBid, auctionId, addToast, stripe, registerPaymentMethod]);
+    }, [
+      elements,
+      activeBid,
+      paymentInformation,
+      newCard,
+      makeBid,
+      auctionId,
+      showMessage,
+      showError,
+      stripe,
+      registerPaymentMethod,
+    ]);
 
     const handleBuying = useCallback(async () => {
       setSubmitting(true);
 
       try {
-        await updateAuction({ variables: { id: auctionId } });
-        addToast(`Thank you for your purchase!`, { autoDismiss: true, appearance: 'success' });
+        await buyAuction({ variables: { id: auctionId } });
+        showMessage(`Thank you for your purchase!`);
         handleClose();
       } catch (error: any) {
         setSubmitting(false);
         setNewCard(false);
-        addToast(error.message, { autoDismiss: true, appearance: 'error' });
+        showError(error.message);
       }
-    }, [auctionId, updateAuction, addToast, handleClose]);
+    }, [auctionId, buyAuction, showError, showMessage, handleClose]);
 
     useImperativeHandle(ref, () => ({
       placeBid: (amount: Dinero.Dinero) => {

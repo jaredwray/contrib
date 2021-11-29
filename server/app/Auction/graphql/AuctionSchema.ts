@@ -220,7 +220,6 @@ export const AuctionSchema = gql`
     charityId: String
     charityStripeAccountId: String!
     auctionTitle: String
-    paymentSource: String
     bid: Money
     user: AuctionInputUser
   }

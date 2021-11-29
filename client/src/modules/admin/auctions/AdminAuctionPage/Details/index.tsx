@@ -25,6 +25,10 @@ export const Details: FC<Props> = ({ auction, charity }) => {
             <td>Id</td>
             <td>{auction.id}</td>
           </tr>
+          <tr>
+            <td>Title</td>
+            <td>{auction.title}</td>
+          </tr>
           {auction?.bitlyLink && (
             <tr>
               <td>Bitly Link</td>

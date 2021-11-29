@@ -66,7 +66,7 @@ const PaymentInformation: FC<Props> = ({ account }) => {
 
       setSubmitting(false);
       setNewCard(false);
-      showMessage(`Your card has been updated.`);
+      showMessage(`Your card was updated.`);
     } catch (error: any) {
       setSubmitting(false);
       setNewCard(false);

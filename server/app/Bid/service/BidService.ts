@@ -21,7 +21,7 @@ export class BidService {
       return null;
     }
     try {
-      const { user, auction, bid, bidCurrency, paymentSource, chargeId } = input;
+      const { user, auction, bid, bidCurrency, chargeId } = input;
 
       const [createdBid] = await this.BidModel.create(
         [
@@ -29,7 +29,6 @@ export class BidService {
             auction,
             user,
             createdAt: dayjs(),
-            paymentSource,
             bid,
             bidCurrency: (bidCurrency ?? AppConfig.app.defaultCurrency) as Currency,
             chargeId: chargeId,
@@ -58,10 +57,9 @@ export class BidService {
     if (!model) {
       return null;
     }
-    const { paymentSource, user, bid, bidCurrency, createdAt, chargeId } = model;
+    const { user, bid, bidCurrency, createdAt, chargeId } = model;
 
     return {
-      paymentSource,
       user,
       bid: Dinero({ amount: bid, currency: bidCurrency }),
       createdAt,

@@ -3,7 +3,6 @@ import { UserAccount } from '../../../UserAccount/dto/UserAccount';
 
 export type ChargeCurrentBidInput = {
   bid: Dinero;
-  paymentSource: string;
   charityId: string;
   auctionTitle: string;
   user: UserAccount;
