@@ -673,7 +673,6 @@ export class AuctionService {
         auction: auction._id,
         bid: bid.getAmount(),
         bidCurrency: (bid.getCurrency() ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        paymentSource: card.id,
         chargeId: null,
       };
 
@@ -861,10 +860,17 @@ export class AuctionService {
   }
 
   public async chargeCurrendBid(input): Promise<string> {
-    const { user, bid, charityId, charityStripeAccountId, auctionTitle, paymentSource } = input;
+    const { user, bid, charityId, charityStripeAccountId, auctionTitle } = input;
+    const { id: cardId } = await this.paymentService.getAccountPaymentInformation(user);
+
+    if (!cardId) {
+      AppLogger.error(`Can not find payment information for user #${user._id.toString()} in chargeCurrendBid method`);
+      throw new AppError('Something went wrong. Please try again later');
+    }
+
     return await this.paymentService.chargeUser(
       user,
-      paymentSource,
+      cardId,
       bid,
       `Contrib auction: ${auctionTitle}`,
       charityStripeAccountId,
@@ -938,9 +944,17 @@ export class AuctionService {
       throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
     }
 
+    const user = lastAuctionBid.user;
+    const { id: cardId } = await this.paymentService.getAccountPaymentInformation(user);
+
+    if (!cardId) {
+      AppLogger.error(`Can not find payment information for user #${user._id.toString()} in chargeUser method`);
+      throw new AppError('Something went wrong. Please try again later');
+    }
+
     return await this.paymentService.chargeUser(
       lastAuctionBid.user,
-      lastAuctionBid.paymentSource,
+      cardId,
       this.makeBidDineroValue(lastAuctionBid.bid, lastAuctionBid.bidCurrency),
       `Contrib auction: ${auction.title}`,
       charityAccount.stripeAccountId,
@@ -1053,7 +1067,6 @@ export class AuctionService {
         auction: auction._id,
         bid: auction.itemPrice,
         bidCurrency: (auction.priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        paymentSource: card.id,
         chargeId,
       };
 

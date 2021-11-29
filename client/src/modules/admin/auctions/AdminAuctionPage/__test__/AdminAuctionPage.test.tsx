@@ -72,7 +72,6 @@ const arg = {
   id: 'testId',
   bid: { amount: 2000, currency: DineroFactory.defaultCurrency, precision: 2 },
   createdAt: new Date('2021-07-20T21:47:12.849Z'),
-  paymentSource: 'test',
   charityId: '',
   user: {
     createdAt: new Date('2021-07-20T21:47:12.849Z'),

@@ -24,7 +24,6 @@ export const BidResolvers: BidResolversType = {
             createdAt: bid.user.createdAt,
           },
           bid: Dinero({ amount: bid.bid, currency: bid.bidCurrency }),
-          paymentSource: bid.paymentSource,
           createdAt: bid.createdAt.toISOString(),
         };
       });

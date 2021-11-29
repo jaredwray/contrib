@@ -11,7 +11,6 @@ export const AuctionBidsQuery = gql`
         createdAt
       }
       bid
-      paymentSource
       createdAt
     }
   }
@@ -23,7 +22,6 @@ export const ChargeCurrentBidMutation = gql`
     $charityStripeAccountId: String!
     $auctionTitle: String!
     $bid: Money!
-    $paymentSource: String!
     $user: AuctionInputUser!
   ) {
     chargeCurrendBid(
@@ -32,7 +30,6 @@ export const ChargeCurrentBidMutation = gql`
         charityStripeAccountId: $charityStripeAccountId
         auctionTitle: $auctionTitle
         bid: $bid
-        paymentSource: $paymentSource
         user: $user
       }
     ) {

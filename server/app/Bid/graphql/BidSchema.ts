@@ -4,7 +4,6 @@ export const BidSchema = gql`
   type AuctionBid {
     bid: Money!
     user: UserAccount!
-    paymentSource: String!
     createdAt: String!
   }
 

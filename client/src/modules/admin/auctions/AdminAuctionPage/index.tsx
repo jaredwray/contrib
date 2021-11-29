@@ -66,7 +66,6 @@ export default function AdminAuctionPage() {
         const user = { id, mongodbId, phoneNumber, status, stripeCustomerId, createdAt };
         await chargeBid({
           variables: {
-            paymentSource: item.paymentSource,
             charityId: charity?.id,
             charityStripeAccountId: charity?.stripeAccountId,
             bid: item.bid,

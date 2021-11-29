@@ -8,7 +8,6 @@ export interface IBidModel extends Document {
   auction: IAuctionModel['_id'];
   user: IUserAccount['_id'];
   createdAt: dayjs.Dayjs;
-  paymentSource: string;
   bid: number;
   bidCurrency: Dinero.Currency;
   chargeId: string;
@@ -21,7 +20,6 @@ const BidSchema: Schema<IBidModel> = new Schema<IBidModel>({
   user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   bid: { type: SchemaTypes.Number, required: true },
   bidCurrency: { type: SchemaTypes.String, default: AppConfig.app.defaultCurrency },
-  paymentSource: { type: SchemaTypes.String, required: true },
   createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   chargeId: { type: SchemaTypes.String },
 });
