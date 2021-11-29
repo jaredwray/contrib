@@ -582,6 +582,18 @@ export class AuctionService {
       fairMarketValue,
       ...rest
     } = objectTrimmer(input);
+
+    if (duration || endDate) {
+      AppLogger.info(`updateAuction method called for #${id} auction;`);
+      if (duration) {
+        AppLogger.info(`duration: ${duration}; current time: ${dayjs()}; new endsAt: ${dayjs().add(duration, 'days')}`);
+      }
+
+      if (endDate) {
+        AppLogger.info(`current time: ${dayjs()}; new endsAt: ${endDate}`);
+      }
+    }
+
     const auction = await this.auctionRepository.updateAuction(
       id,
       userId,
