@@ -44,7 +44,7 @@ export default function DeliveryStatusPage() {
   const isWinner = auction?.winner?.mongodbId === account?.mongodbId;
 
   if (!isWinner) {
-    history.goBack();
+    history.replace('/');
     return null;
   }
 

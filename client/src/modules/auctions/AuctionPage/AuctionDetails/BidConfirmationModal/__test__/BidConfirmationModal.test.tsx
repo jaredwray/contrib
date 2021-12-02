@@ -238,12 +238,6 @@ describe('BidConfirmationModal', () => {
 
       expect(wrapper!).toHaveLength(1);
       expect(wrapper!.find("[data-test-id='bid-button']").first().text()).toEqual('Buy it now');
-
-      await act(async () => {
-        wrapper!.find("[data-test-id='bid-button']").first().prop('onClick')!(e);
-      });
-
-      expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
     it('should not call BuyAuctionMutation', async () => {

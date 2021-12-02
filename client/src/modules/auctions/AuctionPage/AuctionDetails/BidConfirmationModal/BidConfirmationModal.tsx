@@ -73,14 +73,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       setNewCard(false);
     }, [setNewCard]);
 
-    const handleBiding = useCallback(async () => {
-      if (!elements || process.title === 'browser' ? !activeBid : false) {
-        return;
-      }
-
-      setSubmitting(true);
-
-      try {
+    const handleRegisterPayment = useCallback(
+      async (paymentInformation, newCard) => {
         if (!paymentInformation || newCard) {
           const tokenResult = await stripe?.createToken(elements!.getElement(CardElement) as StripeCardElement);
           if (tokenResult?.error) {
@@ -92,6 +86,19 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
           await registerPaymentMethod({ variables: { token: token.id } });
         }
+      },
+      [elements, registerPaymentMethod, showError, stripe],
+    );
+
+    const handleBiding = useCallback(async () => {
+      if (!elements || process.title === 'browser' ? !activeBid : false) {
+        return;
+      }
+
+      setSubmitting(true);
+
+      try {
+        await handleRegisterPayment(paymentInformation, newCard);
 
         await makeBid({ variables: { id: auctionId, bid: activeBid?.toObject() } });
 
@@ -113,14 +120,15 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       auctionId,
       showMessage,
       showError,
-      stripe,
-      registerPaymentMethod,
+      handleRegisterPayment,
     ]);
 
     const handleBuying = useCallback(async () => {
       setSubmitting(true);
 
       try {
+        await handleRegisterPayment(paymentInformation, newCard);
+
         await buyAuction({ variables: { id: auctionId } });
         showMessage(`Thank you for your purchase!`);
         handleClose();
@@ -129,7 +137,16 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         setNewCard(false);
         showError(error.message);
       }
-    }, [auctionId, buyAuction, showError, showMessage, handleClose]);
+    }, [
+      auctionId,
+      buyAuction,
+      showError,
+      showMessage,
+      handleRegisterPayment,
+      handleClose,
+      paymentInformation,
+      newCard,
+    ]);
 
     useImperativeHandle(ref, () => ({
       placeBid: (amount: Dinero.Dinero) => {
