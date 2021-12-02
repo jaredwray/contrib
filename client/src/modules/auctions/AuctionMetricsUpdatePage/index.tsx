@@ -57,7 +57,7 @@ const AuctionMetricsUpdatePage: FC = () => {
   const redirect = useCallback(
     (data) => {
       try {
-        if (data.link.match(/\/auctions\/[0-9a-z]*/g)) {
+        if (data.link.match(/\/auctions\/[0-9a-z]*$/g)) {
           getUserData().then((userData) => {
             updateMetrics({ variables: { shortLinkId: data.id, ...userData } });
           });

@@ -244,7 +244,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
           {buyingPrice}
         </Button>
       )}
-      {isActive && (
+      {isActive && !ended && (
         <WatchBtn
           entityType="auction"
           followHandler={handleFollowAuction}

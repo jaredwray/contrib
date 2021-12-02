@@ -169,7 +169,7 @@ export default function DeliveryPricePage() {
   }
 
   if (!isWinner) {
-    history.push(`/`);
+    history.replace(`/`);
     return null;
   }
 

@@ -35,7 +35,7 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
     push: mockHistoryFn,
-    goBack: mockHistoryFn,
+    replace: mockHistoryFn,
   }),
   useParams: () => ({
     auctionId: 'testId',

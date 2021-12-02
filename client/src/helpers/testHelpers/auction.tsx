@@ -1,5 +1,8 @@
 import { bids } from './bids';
 
+const date = new Date();
+const endDate = date.setDate(date.getDate() + 2);
+
 export const AuctionQueryAuction = {
   attachments: [{ cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test' }],
   auctionOrganizer: {
@@ -30,7 +33,7 @@ export const AuctionQueryAuction = {
     },
   },
   currentPrice: { amount: 112200, currency: 'USD', precision: 2 },
-  endDate: '2021-08-29T08:05:21.000Z',
+  endDate,
   fairMarketValue: null,
   followers: [{ createdAt: '2021-06-28T12:52:49.463Z', user: '60d9ac0f650c813a783906b0' }],
   description: 'test',
