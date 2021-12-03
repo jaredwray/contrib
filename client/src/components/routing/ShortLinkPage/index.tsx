@@ -1,3 +1,4 @@
+/* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 import { FC, useCallback } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
@@ -6,29 +7,18 @@ import { useHistory, useParams } from 'react-router-dom';
 import { UpdateOrCreateAuctionMetricsMutation } from 'src/apollo/queries/auctions';
 import { GetLinkQuery } from 'src/apollo/queries/shortLink';
 
-const AuctionMetricsUpdatePage: FC = () => {
+const ShortLinkPage: FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const history = useHistory();
 
-  const { data } = useQuery(GetLinkQuery, {
+  useQuery(GetLinkQuery, {
     variables: { slug },
     onCompleted: ({ getLink }) => {
       redirect(getLink);
     },
   });
 
-  const [updateMetrics] = useMutation(UpdateOrCreateAuctionMetricsMutation, {
-    onCompleted: ({ updateOrCreateMetrics }) => {
-      const auctionId = updateOrCreateMetrics?.id;
-
-      if (!auctionId) {
-        history.replace(`/404`);
-        return;
-      }
-
-      goTo(data.getLink.link);
-    },
-  });
+  const [updateMetrics] = useMutation(UpdateOrCreateAuctionMetricsMutation);
 
   const getUserData = useCallback(async () => {
     const responce = await fetch('https://ipapi.co/json/');
@@ -55,18 +45,20 @@ const AuctionMetricsUpdatePage: FC = () => {
   );
 
   const redirect = useCallback(
-    (data) => {
-      try {
-        if (data.link.match(/\/auctions\/[0-9a-z]*$/g)) {
-          getUserData().then((userData) => {
-            updateMetrics({ variables: { shortLinkId: data.id, ...userData } });
-          });
-        }
-
-        goTo(data.link);
-      } catch {
+    async (data) => {
+      if (!data?.link) {
         history.replace(`/404`);
+        return;
       }
+
+      if (data.link.match(/\/auctions\/[0-9a-z]*$/g)) {
+        try {
+          const userData = await getUserData();
+          await updateMetrics({ variables: { shortLinkId: data.id, ...userData } });
+        } catch {}
+      }
+
+      goTo(data.link);
     },
     [getUserData, updateMetrics, goTo, history],
   );
@@ -74,4 +66,4 @@ const AuctionMetricsUpdatePage: FC = () => {
   return null;
 };
 
-export default AuctionMetricsUpdatePage;
+export default ShortLinkPage;
