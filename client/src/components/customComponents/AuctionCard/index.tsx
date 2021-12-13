@@ -1,7 +1,6 @@
 import { FC, useCallback, useMemo, useState, useContext } from 'react';
 
 import { useMutation } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
@@ -14,6 +13,7 @@ import CoverImage from 'src/components/customComponents/CoverImage';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction } from 'src/types/Auction';
@@ -35,7 +35,7 @@ type Props = {
 const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage, onDelete }) => {
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth();
   const hisory = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 

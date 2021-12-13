@@ -34,13 +34,23 @@ export const AppConfig = {
   mongodb: {
     uri: requireEnvVar('MONGODB_URI'),
   },
-  auth0: {
-    issuerUrl: requireEnvVar('AUTH0_ISSUER_URL'),
-    audience: requireEnvVar('AUTH0_AUDIENCE'),
-    management: {
-      domain: requireEnvVar('AUTH0_MANAGEMENT_DOMAIN'),
-      clientId: requireEnvVar('AUTH0_MANAGEMENT_CLIENT_ID'),
-      clientSecret: requireEnvVar('AUTH0_MANAGEMENT_CLIENT_SECRET'),
+  auth: {
+    apiUrl: requireEnvVar('AUTH_API_URL').replace(/\/$/, ''),
+    google: {
+      clientId: requireEnvVar('GOOGLE_CLIENT_ID'),
+      clientSecret: requireEnvVar('GOOGLE_CLIENT_SECRET'),
+    },
+    facebook: {
+      clientId: requireEnvVar('FACEBOOK_APP_ID'),
+      clientSecret: requireEnvVar('FACEBOOK_APP_SECRET'),
+    },
+    twitter: {
+      consumerKey: requireEnvVar('TWITTER_CONSUMER_KEY'),
+      consumerSecret: requireEnvVar('TWITTER_CONSUMER_SECRET'),
+    },
+    cookies: {
+      cookiesSecret: requireEnvVar('COOKIE_KEY_SECRET'),
+      cookiesLiveTime: requireEnvVar('COOKIE_LIFE_TIME_MINS') ?? 1440, // 24 hours in minutes
     },
   },
   twilio: {

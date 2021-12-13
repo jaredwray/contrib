@@ -1,26 +1,26 @@
 import { useEffect, useMemo } from 'react';
 
 import { useLazyQuery } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
+import { useAuth } from 'src/helpers/useAuth';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import { UserAccountContext } from './UserAccountContext';
 
 interface PropTypes {
-  children: any;
+  children: React.ReactNode;
 }
 
 export function UserAccountProvider({ children }: PropTypes) {
   const history = useHistory();
   const location = useLocation();
-  const { user, isLoading: userIsLoading } = useAuth0();
-  const userId = user?.sub;
+  const { user } = useAuth();
+  const userId = user?.id;
 
   const [getMyAccount, { data: myAccountData, error: myAccountError }] = useLazyQuery(MyAccountQuery);
 
@@ -58,7 +58,8 @@ export function UserAccountProvider({ children }: PropTypes) {
   }, [targetPathname, currentPathname, history]);
 
   const invitationToken = queryParams.get('invite');
-  const returnUrl = queryParams.get('returnUrl');
+  const returnUrl = queryParams.get('returnURL');
+
   useEffect(() => {
     if (invitationToken) {
       invitationTokenVar(invitationToken);
@@ -68,7 +69,7 @@ export function UserAccountProvider({ children }: PropTypes) {
     }
   }, [invitationToken, returnUrl]);
 
-  if (userIsLoading || (userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) {
+  if ((userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) {
     return null;
   }
 

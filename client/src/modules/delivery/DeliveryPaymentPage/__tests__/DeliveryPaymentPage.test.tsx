@@ -14,11 +14,11 @@ import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionQuery, ShippingRegistrationMutation, CalculateShippingCostQuery } from 'src/apollo/queries/auctions';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
-import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import Layout from 'src/components/layouts/Layout';
 import WithStripe from 'src/components/wrappers/WithStripe';
+import * as auth from 'src/helpers/useAuth';
 
 const mockHistoryFn = jest.fn();
 
@@ -30,7 +30,6 @@ jest.mock('@stripe/react-stripe-js', () => {
   };
 });
 
-jest.mock('@auth0/auth0-react');
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
@@ -134,13 +133,15 @@ const mocks = [
 ];
 describe('DeliveryPaymentPage', () => {
   beforeEach(() => {
-    withAuthenticatedUser();
+    const spy = jest.spyOn(auth, 'useAuth');
+    spy.mockReturnValue({
+      isAuthenticated: true,
+    });
   });
   afterEach(() => {
     jest.clearAllMocks();
   });
   it('component returns null', async () => {
-    withAuthenticatedUser();
     let wrapper: ReactWrapper;
 
     await act(async () => {
@@ -177,11 +178,10 @@ describe('DeliveryPaymentPage', () => {
       );
       await new Promise((resolve) => setTimeout(resolve));
     });
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(wrapper!.find(Layout)).toHaveLength(0);
   });
 
   it('component should redirect without winner', async () => {
-    withAuthenticatedUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

@@ -1,0 +1,32 @@
+@import 'src/variables.scss';
+
+.backLink {
+  color: $dark-gray-color;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.arrows {
+  font-size: 18px;
+  line-height: 20px;
+  @media (max-width: $small-weight) {
+    font-size: 16px;
+    line-height: 16px;
+  }
+}
+.rightBlock {
+  background: url('/assets/images/right-block-bg.webp');
+  background-color: $sage-color;
+  background-size: cover;
+  position: relative;
+  height: 50vw !important;
+}
+.signature {
+  left: 50px;
+  bottom: 20px;
+  text-transform: uppercase;
+  color: $white-color;
+  position: absolute;
+  font-weight: 500 !important;
+}

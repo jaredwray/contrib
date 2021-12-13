@@ -1,7 +1,6 @@
 import { FC, useContext, useCallback, useState } from 'react';
 
 import { useQuery, useMutation } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -18,6 +17,7 @@ import Layout from 'src/components/layouts/Layout';
 import { ProfileSliderRow } from 'src/components/wrappers/ProfileSliderRow';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
@@ -32,7 +32,7 @@ interface Props {
 export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [followed, setFollowed] = useState(() =>

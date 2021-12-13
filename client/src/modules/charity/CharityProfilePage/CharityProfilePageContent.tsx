@@ -1,7 +1,6 @@
 import { FC, useContext, useCallback, useState } from 'react';
 
 import { useQuery, useMutation } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
@@ -19,6 +18,7 @@ import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import { ProfileSliderRow } from 'src/components/wrappers/ProfileSliderRow';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { Charity, CharityStatus } from 'src/types/Charity';
@@ -33,7 +33,7 @@ interface Props {
 export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
   const history = useHistory();
 

@@ -2,7 +2,6 @@ import { mount, ReactWrapper } from 'enzyme';
 
 import * as ApolloClient from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { Auth0Provider } from '@auth0/auth0-react';
 import { act } from 'react-dom/test-utils';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
@@ -11,6 +10,7 @@ import PhoneInput from 'src/components/forms/inputs/PhoneInput';
 import { EnterPhoneNumberMutation, EnterInvitationCodeMutation } from 'src/apollo/queries/phoneNumberVerification';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UserAccountStatus } from 'src/types/UserAccount';
+import * as auth from 'src/helpers/useAuth';
 
 import PhoneNumberVerification from '../Verification';
 import Layout from '../Layout';
@@ -87,26 +87,19 @@ const mocks = [
   },
 ];
 
-jest.mock('@auth0/auth0-react', () => ({
-  Auth0Provider: (props: any) => props.children,
-  withAuthenticationRequired: (component: any, _: any) => component,
-  useAuth0: () => {
-    return {
-      isLoading: false,
-      user: { sub: 'foobar' },
-      isAuthenticated: true,
-      loginWithRedirect: jest.fn(),
-      logout: mockLogout,
-    };
-  },
-}));
-
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom') as object),
   useHistory: () => ({
     replace: mockHistoryReplace,
   }),
 }));
+
+beforeEach(() => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    logout: () => mockLogout(),
+  });
+});
 
 describe('PhoneNumberVerification page ', () => {
   it('component is defined and has Layout', async () => {
@@ -130,19 +123,9 @@ describe('PhoneNumberVerification page ', () => {
 
       await act(async () => {
         wrapper = mount(
-          <Auth0Provider
-            audience={'test'}
-            cacheLocation="localstorage"
-            clientId={'test'}
-            domain={'test'}
-            redirectUri={'test'}
-            onRedirectCallback={jest.fn()}
-          >
-            <MockedProvider cache={cache}>
-              <PhoneNumberVerification />
-            </MockedProvider>
-            ,
-          </Auth0Provider>,
+          <MockedProvider cache={cache}>
+            <PhoneNumberVerification />
+          </MockedProvider>,
         );
         await new Promise((resolve) => setTimeout(resolve));
         wrapper.update();

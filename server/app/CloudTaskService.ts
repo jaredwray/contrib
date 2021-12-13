@@ -18,7 +18,7 @@ export class CloudTaskService {
   }
 
   public async createTask(returnURL: string, payload: { [key: string]: any }): Promise<void> {
-    if (AppConfig.app.url === 'http://127.0.0.1:3000') {
+    if (AppConfig.app.url === 'http://localhost:3000') {
       return;
     }
 

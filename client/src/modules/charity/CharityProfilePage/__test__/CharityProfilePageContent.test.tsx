@@ -15,7 +15,7 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { CharityProfilePageContent } from '../CharityProfilePageContent';
 import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
-import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
+import * as auth from 'src/helpers/useAuth';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 jest.mock('src/components/customComponents/CoverImage', () => () => <></>);
@@ -40,7 +40,6 @@ const newProps: any = {
     status: 'INACTIVE',
   },
 };
-jest.mock('@auth0/auth0-react');
 
 const cache = new InMemoryCache();
 
@@ -129,6 +128,21 @@ const errorMocks = [
     },
   },
 ];
+
+const withAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: true,
+  });
+};
+
+const withNotAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: false,
+  });
+};
+
 describe('Should render correctly "CharityProfilePageContent"', () => {
   beforeAll(() => {
     process.env = { ...process.env, REACT_APP_API_URL: 'https://dev.contrib.org/graphql' };
@@ -138,7 +152,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
   });
 
   it('component return null', () => {
-    withAuthenticatedUser();
+    withAuthUser();
     const wrapper = mount(
       <MemoryRouter>
         <ToastProvider>
@@ -151,7 +165,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
     expect(wrapper.find(Layout)).toHaveLength(0);
   });
   it('component is defined', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -172,7 +186,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
     expect(wrapper!.find(Layout)).toHaveLength(1);
   });
   it('should redirect and not call FollowCharity mutation', async () => {
-    withNotAuthenticatedUser();
+    withNotAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -189,10 +203,10 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
       wrapper!.find(WatchBtn).prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should call FollowCharity mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -212,7 +226,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should call UnfollowCharity mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -232,7 +246,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should not call FollowCharity mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -252,7 +266,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should not call UnfollowCharity mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

@@ -4,7 +4,7 @@ import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
 export const UserAccountResolvers = {
   Query: {
     myAccount: requireAuthenticated(async (parent, args, { user, userAccount }) =>
-      userAccount.getAccountByAuthzId(user.id),
+      userAccount.getAccountByAuthzId(user.id, user),
     ),
     getAccountById: requireAdmin(async (_, { id }, { userAccount }) => await userAccount.getAccountById(id)),
   },

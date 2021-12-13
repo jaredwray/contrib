@@ -1,7 +1,6 @@
 import { FC, useCallback, useState, useContext } from 'react';
 
 import { useMutation } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
@@ -11,6 +10,7 @@ import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influen
 import CoverImage from 'src/components/customComponents/CoverImage';
 import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 
 import HeartBtn from '../../../buttons/HeartButton';
@@ -26,7 +26,7 @@ type Props = {
 const ItemCard: FC<Props> = ({ item, horizontal, isCharity }) => {
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth();
   const hisory = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 

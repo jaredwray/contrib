@@ -23,8 +23,8 @@ export const PaymentResolvers: PaymentResolversType = {
     }),
   },
   Mutation: {
-    enterPaymentInformation: requireAuthenticated((_, { input }, { payment, currentAccount }) =>
-      payment.updateAccountPaymentInformation(currentAccount, input.stripeSourceToken),
+    enterPaymentInformation: requireAuthenticated((_, { input }, { payment, currentAccount, user }) =>
+      payment.updateAccountPaymentInformation(currentAccount, input.stripeSourceToken, user),
     ),
   },
 };

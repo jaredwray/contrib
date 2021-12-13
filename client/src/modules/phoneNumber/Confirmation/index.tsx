@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Duration, DateTime } from 'luxon';
 import { Form as BsForm, Button } from 'react-bootstrap';
@@ -19,6 +18,7 @@ import {
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import { returnUrlVar } from 'src/apollo/vars/returnUrlVar';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useAuth } from 'src/helpers/useAuth';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
 import Layout from '../Layout';
@@ -27,7 +27,7 @@ import styles from './styles.module.scss';
 const OtpResendDuration = Duration.fromObject({ seconds: 5 });
 
 export default function PhoneNumberConfirmation() {
-  const { logout } = useAuth0();
+  const { logout } = useAuth();
   const history = useHistory();
   const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
     fetchPolicy: 'cache-only',
@@ -55,7 +55,7 @@ export default function PhoneNumberConfirmation() {
   const handleBack = useCallback(
     (e) => {
       e.preventDefault();
-      logout();
+      logout!();
     },
     [logout],
   );

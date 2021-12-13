@@ -69,14 +69,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
-## Auth0
-
-1. create `.env` file similar to `.env_example` and fill in the required variables.
-
-2. change Universal Login page (https://manage.auth0.com/dashboard/us/contrib/login_page) using code from client/src/data/auth0/login.html file
-
-3. change Password Reset page (https://manage.auth0.com/dashboard/us/contrib/password_reset) using code from client/src/data/auth0/password_reset.html file
-
 ## Privacy And Terms logic
 
 Account model has field with last accepted terms version (accpetedTers) and date when the user accepted it (acceptedTermsAt). The user will see terms confirmation dialog until he accepts last terms.
@@ -101,16 +93,6 @@ Example: `const VERSION = '1.1';`
 
 # Required data specified in the .env file:
 
-## For AUTH service:
-
-We using AUTH to authenticate users on our platform. Required data examples:
-
-#### examples
-
-```
-REACT_APP_AUTH0_DOMAIN="contrib.us.auth0.com"
-REACT_APP_AUTH0_CLIENT_ID="clientId"
-```
 
 ## For STRIPE
 

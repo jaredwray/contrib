@@ -1,4 +1,3 @@
-import { Auth0Service } from '../authz';
 import { AssistantService } from './Assistant';
 import { UserAccountService } from './UserAccount';
 import { InfluencerService } from './Influencer';
@@ -14,7 +13,6 @@ import { IHandlebarsService } from './Message/service/HandlebarsService';
 
 export interface IAppServices {
   assistant: AssistantService;
-  auth0: Auth0Service;
   userAccount: UserAccountService;
   bidService: BidService;
   influencer: InfluencerService;

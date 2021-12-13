@@ -11,12 +11,11 @@ import WatchBtn from 'src/components/buttons/WatchBtn';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
-import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
 import { InfluencerProfilePageContent } from '../InfluencerProfilePage/InfluencerProfilePageContent';
+import * as auth from 'src/helpers/useAuth';
 
 jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
-jest.mock('@auth0/auth0-react');
 
 const cache = new InMemoryCache();
 const cache2 = new InMemoryCache();
@@ -153,12 +152,27 @@ const errorMocks = [
     },
   },
 ];
+
+const withAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: true,
+  });
+};
+
+const withNotAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: false,
+  });
+};
+
 describe('InfluencerProfilePageContent ', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
   it('component is defined', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -177,7 +191,7 @@ describe('InfluencerProfilePageContent ', () => {
     });
   });
   it('should redirect and not call FollowInfluencer mutation', async () => {
-    withNotAuthenticatedUser();
+    withNotAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -198,10 +212,10 @@ describe('InfluencerProfilePageContent ', () => {
       expect(wrapper!.find(AuctionCard)).toHaveLength(1);
       wrapper!.find(WatchBtn).prop('followHandler')!();
     });
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should call FollowInfluencer mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -226,7 +240,7 @@ describe('InfluencerProfilePageContent ', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should call UnfollowInfluencer mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -251,7 +265,7 @@ describe('InfluencerProfilePageContent ', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should not call FollowInfluencer mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -276,7 +290,7 @@ describe('InfluencerProfilePageContent ', () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should not call UnfollowInfluencer mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

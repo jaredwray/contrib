@@ -1,29 +1,23 @@
-import React, { useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 
-import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Logo from 'src/assets/images/logo-with-text.svg';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
-import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
+import { useAuth } from 'src/helpers/useAuth';
 
 import MenuNavLink from './MenuNavLink';
 import './styles.scss';
 
 export default function Header() {
-  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const { account } = useContext(UserAccountContext);
+  const { user, isAuthenticated, logout } = useAuth();
 
-  const afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
   const w = window as any;
 
-  const handleLogin = useCallback(() => loginWithRedirect({ redirectUri: afterLoginUri }), [
-    loginWithRedirect,
-    afterLoginUri,
-  ]);
   const handleLogout = useCallback(() => {
-    logout({ returnTo: w.location.origin });
+    logout!(w.location.origin);
     w.Intercom('shutdown');
   }, [logout, w]);
 
@@ -79,9 +73,7 @@ export default function Header() {
                       <span>Sign Out</span>
                     </NavDropdown.Item>
                   ) : (
-                    <NavDropdown.Item data-test-id="dropdown-menu-login-button" onClick={handleLogin}>
-                      <span>Log In</span>
-                    </NavDropdown.Item>
+                    <MenuNavLink data-test-id="dropdown-menu-login-button" link="/log-in" title="Log In" />
                   )}
                   <div>
                     <div className="pt-4">

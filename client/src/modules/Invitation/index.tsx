@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useQuery } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -10,12 +9,13 @@ import { GetInvitation } from 'src/apollo/queries/getInvitation';
 import { UserDialogLayout } from 'src/components/layouts/UserDialogLayout';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 
 import './styles.scss';
 
 export default function InvitationPage() {
-  const { loginWithRedirect } = useAuth0();
   const { slug } = useParams<{ slug: string }>();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const { loading, data, error } = useQuery(GetInvitation, {
     variables: { slug: slug },
@@ -26,13 +26,8 @@ export default function InvitationPage() {
   const invitation = data?.invitation;
 
   const handleSignUp = useCallback(() => {
-    loginWithRedirect({
-      page_type: invitation.accepted ? 'log_in' : 'sign_up',
-      redirectUri: mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, `/after-login?invite=${slug}`),
-    }).catch((error) => {
-      console.error('login with redirect error: ', error);
-    });
-  }, [loginWithRedirect, slug, invitation]);
+    RedirectWithReturnAfterLogin(mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, `/after-login?invite=${slug}`));
+  }, [RedirectWithReturnAfterLogin, slug]);
 
   useEffect(() => {
     if (!loading && !invitation) {

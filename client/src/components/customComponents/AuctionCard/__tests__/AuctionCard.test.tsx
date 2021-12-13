@@ -11,7 +11,7 @@ import { auction } from 'src/helpers/testHelpers/auction';
 import { ToastProvider } from 'react-toast-notifications';
 import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
-import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
+import * as auth from 'src/helpers/useAuth';
 
 const props: any = {
   auction,
@@ -26,7 +26,6 @@ const newProps: any = {
     isFailed: false,
   },
 };
-jest.mock('@auth0/auth0-react');
 
 const mockFn = jest.fn();
 
@@ -95,6 +94,21 @@ const errorMocks = [
     },
   },
 ];
+
+const withAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: true,
+  });
+};
+
+const withNotAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: false,
+  });
+};
+
 describe('Should render correctly "AuctionCard"', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -102,7 +116,7 @@ describe('Should render correctly "AuctionCard"', () => {
   jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
 
   it('component return null', () => {
-    withAuthenticatedUser();
+    withAuthUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -116,7 +130,7 @@ describe('Should render correctly "AuctionCard"', () => {
     wrapper.unmount();
   });
   it('component is defined', () => {
-    withAuthenticatedUser();
+    withAuthUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -131,7 +145,7 @@ describe('Should render correctly "AuctionCard"', () => {
     wrapper.unmount();
   });
   it('component is defined and has CloseButton,which should open modal when clicking', () => {
-    withAuthenticatedUser();
+    withAuthUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -146,7 +160,7 @@ describe('Should render correctly "AuctionCard"', () => {
     wrapper.children().find(Modal).children().find('Button').first().simulate('click');
   });
   it('should redirect and not call FollowAuctionMutation mutation', async () => {
-    withNotAuthenticatedUser();
+    withNotAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -163,10 +177,10 @@ describe('Should render correctly "AuctionCard"', () => {
       wrapper!.find(HeartBtn).prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should call FollowAuctionMutation mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -186,7 +200,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should call UnfollowAuctionMutation mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -206,7 +220,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should not call FollowAuctionMutation mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -226,7 +240,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should not call UnfollowAuctionMutation mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

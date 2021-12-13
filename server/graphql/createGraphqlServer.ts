@@ -80,6 +80,9 @@ export function createGraphqlServer(appServices: IAppServices, httpServer: Serve
     context: (ctx) => createGraphqlContext(ctx, appServices),
     playground: {
       endpoint: '/graphql',
+      settings: {
+        'request.credentials': 'include',
+      },
     },
     introspection: true,
     formatError: (error) => {

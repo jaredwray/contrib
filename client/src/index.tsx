@@ -1,13 +1,12 @@
 import 'intersection-observer';
-import React from 'react';
 
-import { AppState, Auth0Provider } from '@auth0/auth0-react';
 import { createBrowserHistory } from 'history';
 import ReactDOM from 'react-dom';
 import { Route, Router, Switch } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 
 import { ContribApolloProvider } from 'src/apollo/ContribApolloProvider';
+import { AuthProvider } from 'src/components/helpers/AuthProvider/AuthProvider';
 import { ScrollToTop } from 'src/components/helpers/ScrollToTop';
 import { UserAccountProvider } from 'src/components/helpers/UserAccountProvider';
 import PrivateRoute from 'src/components/routing/PrivateRoute';
@@ -41,6 +40,7 @@ import Assistants from 'src/modules/Influencer/Assistants';
 import AllInfluencersPage from 'src/modules/Influencer/InfluerncersPage';
 import InternalScripts from 'src/modules/InternalScripts';
 import InvitationPage from 'src/modules/Invitation';
+import LogInPage from 'src/modules/LogInPage';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
 import Privacy from 'src/modules/Privacy';
@@ -58,21 +58,10 @@ import { InfluencerOnboardingDonePage } from './modules/Influencer/Onboarding/In
 
 export const history = createBrowserHistory();
 
-const onRedirectCallback = (appState: AppState) => {
-  history.replace(appState?.returnTo || window.location.pathname);
-};
-
 export const App = () => {
   return (
     <ToastProvider>
-      <Auth0Provider
-        audience={process.env.REACT_APP_API_AUDIENCE}
-        cacheLocation="localstorage"
-        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
-        domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
-        redirectUri={mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login')}
-        onRedirectCallback={onRedirectCallback}
-      >
+      <AuthProvider apiUrl={mergeUrlPath(process.env.REACT_APP_API_AUDIENCE, '/api/v1/auth/')}>
         <Router history={history}>
           <ScrollToTop />
           <ContribApolloProvider>
@@ -171,15 +160,15 @@ export const App = () => {
                   <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />
                   <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                   <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
-
                   <Route component={ShortLinkPage} path="/go/:slug" />
+                  <Route component={LogInPage} path="/log-in" />
                   <Route component={Page404} path="*" />
                 </Switch>
               </>
             </UserAccountProvider>
           </ContribApolloProvider>
         </Router>
-      </Auth0Provider>
+      </AuthProvider>
     </ToastProvider>
   );
 };

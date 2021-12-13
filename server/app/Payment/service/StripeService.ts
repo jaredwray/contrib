@@ -47,7 +47,7 @@ export class StripeService {
       name,
       email,
       metadata: {
-        auth0: account.id,
+        auth: account.id,
         contrib: account.mongodbId,
       },
     });
