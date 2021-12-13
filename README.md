@@ -32,7 +32,7 @@ Yarn is used as a package manager. Therefore, npm commands are not used.
 - Jest
 - MongoDB
 - React + React/DOM
-- Auth0
+- PassportJs
 - Google Cloud
 - NewRelic
 - DotEnv (Config Management)

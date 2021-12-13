@@ -1,9 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import passport from 'passport';
 import { IAppServices } from './app/AppServices';
 import { AppConfig } from './config';
-import { CharityStatus } from './app/Charity/dto/CharityStatus';
-import { CharityStripeStatus } from './app/Charity/dto/CharityStripeStatus';
 import { isAuthorizedRequest } from './helpers/isAuthorizedRequest';
 import { AppLogger } from './logger';
 
@@ -77,6 +76,82 @@ export default function appRouteHandlers(
 
     await charity.setDefaultCharityStripeStatus(userId);
     res.redirect(`${AppConfig.app.url}/charity/me/edit`);
+  });
+
+  app.get('/api/v1/auth/google', (req, res, next) => {
+    req.session.redirectURL = req.query.redirectURL;
+
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+    })(req, res, next);
+  });
+
+  app.get(
+    '/api/v1/auth/google/callback',
+    passport.authenticate('google', {
+      failureMessage: 'Cannot login to Google, please try again later',
+      failureRedirect: `${AppConfig.app.url}/404`,
+    }),
+    (req, res) => {
+      const redirectURL = req.session.redirectURL;
+      delete req.session.redirectURL;
+      res.redirect(redirectURL || `${AppConfig.app.url}/after-login`);
+    },
+  );
+
+  app.get('/api/v1/auth/facebook', (req, res, next) => {
+    req.session.redirectURL = req.query.redirectURL;
+
+    passport.authenticate('facebook', {
+      scope: ['profile', 'email'],
+    })(req, res, next);
+  });
+
+  app.get(
+    '/api/v1/auth/facebook/callback',
+    passport.authenticate('facebook', {
+      failureMessage: 'Cannot login to Facebook, please try again later',
+      failureRedirect: `${AppConfig.app.url}/404`,
+    }),
+    (req, res) => {
+      const redirectURL = req.session.redirectURL;
+      delete req.session.redirectURL;
+      res.redirect(redirectURL || `${AppConfig.app.url}/after-login`);
+    },
+  );
+
+  app.get('/api/v1/auth/twitter', (req, res, next) => {
+    req.session.redirectURL = req.query.redirectURL;
+
+    passport.authenticate('twitter', {
+      scope: ['profile', 'email'],
+    })(req, res, next);
+  });
+
+  app.get(
+    '/api/v1/auth/twitter/callback',
+    passport.authenticate('twitter', {
+      failureMessage: 'Cannot login to Twitter, please try again later ',
+      failureRedirect: `${AppConfig.app.url}/404`,
+    }),
+    (req, res) => {
+      const redirectURL = req.session.redirectURL;
+      delete req.session.redirectURL;
+      res.redirect(redirectURL || `${AppConfig.app.url}/after-login`);
+    },
+  );
+
+  app.get('/api/v1/auth/user', (req, res) => {
+    res.json({
+      user: req.user,
+      isAuthenticated: req.isAuthenticated(),
+    });
+  });
+
+  app.get('/api/v1/auth/logout', (req, res) => {
+    const redirectURL = req?.query?.redirectURL?.toString();
+    req.logOut();
+    res.redirect(redirectURL || AppConfig.app.url);
   });
 
   app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {

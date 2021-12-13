@@ -1,6 +1,5 @@
 import { mount, ReactWrapper } from 'enzyme';
 
-import { Auth0Provider } from '@auth0/auth0-react';
 import { MockedProvider } from '@apollo/client/testing';
 import * as ApolloClient from '@apollo/client';
 import { act } from 'react-dom/test-utils';
@@ -16,6 +15,7 @@ import {
 } from 'src/apollo/queries/phoneNumberMutations';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { UserAccountStatus } from 'src/types/UserAccount';
+import * as auth from 'src/helpers/useAuth';
 
 import PhoneNumberConfirmation from '../Confirmation';
 import Layout from '../Layout';
@@ -23,20 +23,6 @@ import Layout from '../Layout';
 const mockHistoryPush = jest.fn();
 const mockLogout = jest.fn();
 const mockFn = jest.fn();
-
-jest.mock('@auth0/auth0-react', () => ({
-  Auth0Provider: (props: any) => props.children,
-  withAuthenticationRequired: (component: any, _: any) => component,
-  useAuth0: () => {
-    return {
-      isLoading: false,
-      user: { sub: 'foobar' },
-      isAuthenticated: true,
-      loginWithRedirect: jest.fn(),
-      logout: mockLogout,
-    };
-  },
-}));
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -162,6 +148,13 @@ const mocks = [
 ];
 
 describe('PhoneNumberConfirmation page ', () => {
+  beforeEach(() => {
+    const spy = jest.spyOn(auth, 'useAuth');
+    spy.mockReturnValue({
+      logout: () => mockLogout(),
+    });
+  });
+
   it('component return null', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
@@ -195,19 +188,9 @@ describe('PhoneNumberConfirmation page ', () => {
 
       await act(async () => {
         wrapper = mount(
-          <Auth0Provider
-            audience={'test'}
-            cacheLocation="localstorage"
-            clientId={'test'}
-            domain={'test'}
-            redirectUri={'test'}
-            onRedirectCallback={jest.fn()}
-          >
-            <MockedProvider cache={cache}>
-              <PhoneNumberConfirmation />
-            </MockedProvider>
-            ,
-          </Auth0Provider>,
+          <MockedProvider cache={cache}>
+            <PhoneNumberConfirmation />
+          </MockedProvider>,
         );
         await new Promise((resolve) => setTimeout(resolve));
         wrapper.update();

@@ -1,17 +1,10 @@
-import { useAuth0 } from '@auth0/auth0-react';
-
-import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
-import { useShowNotification } from 'src/helpers/useShowNotification';
+import { useHistory } from 'react-router-dom';
 
 export const useRedirectWithReturnAfterLogin = () => {
-  const { loginWithRedirect } = useAuth0();
-  const { showError } = useShowNotification();
+  const history = useHistory();
 
   return (redirectPath: string) => {
-    const redirectUri = mergeUrlPath(
-      process.env.REACT_APP_PLATFORM_URL,
-      `/after-login?returnUrl=${encodeURIComponent(redirectPath)}`,
-    );
-    loginWithRedirect({ redirectUri }).catch((error) => showError(error.message));
+    const redirectURL = `/log-in?returnURL=${redirectPath}`;
+    history.replace(redirectURL);
   };
 };

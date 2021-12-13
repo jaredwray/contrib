@@ -1,6 +1,9 @@
 import { graphqlUploadExpress } from 'graphql-upload';
 import express from 'express';
 import path from 'path';
+import passport from 'passport';
+import cors from 'cors';
+import cookieSession from 'cookie-session';
 import { createServer } from 'http';
 
 import { createGraphqlServer } from './graphql';
@@ -8,6 +11,7 @@ import { AppLogger } from './logger';
 import { initMongodbConnection } from './mongodb';
 import { IAppServices } from './app/AppServices';
 import createAppServices from './app/createAppServices';
+import { createPassportStrategies } from './auth/passportjs';
 import appRouteHandlers from './routeHandlers';
 import { AppConfig } from './config';
 import { installPrerenderHandlers } from './prerender';
@@ -23,7 +27,28 @@ app.set('view engine', 'pug');
 
 (async function () {
   const connection = await initMongodbConnection();
+
   const appServices: IAppServices = createAppServices(connection);
+
+  const corsOptions = {
+    origin: [AppConfig.app.url],
+    credentials: true,
+  };
+
+  app.use(cors(corsOptions));
+
+  app.use(
+    cookieSession({
+      name: 'auth cookies',
+      maxAge: Number(AppConfig.auth.cookies.cookiesLiveTime) * 60 * 1000, //24 hours in milliseconds
+      keys: [AppConfig.auth.cookies.cookiesSecret],
+    }),
+  );
+
+  createPassportStrategies();
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   appRouteHandlers(app, appServices);
 
@@ -40,6 +65,7 @@ app.set('view engine', 'pug');
   }
 
   app.use(express.json({ limit: '500mb' }));
+
   app.use(
     express.urlencoded({
       limit: '500mb',
@@ -57,7 +83,7 @@ app.set('view engine', 'pug');
     }),
   );
 
-  createGraphqlServer(appServices, httpServer).applyMiddleware({ app });
+  createGraphqlServer(appServices, httpServer).applyMiddleware({ app, cors: corsOptions });
 
   httpServer.listen(AppConfig.app.port, async () => {
     AppLogger.info(`server is listening on ${AppConfig.app.port}`);

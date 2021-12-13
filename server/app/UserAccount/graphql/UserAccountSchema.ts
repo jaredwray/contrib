@@ -44,7 +44,7 @@ export const UserAccountSchema = gql`
 
   type UserAccount {
     """
-    ID is the user_id received from Auth0.
+    ID is the user_id received from PassportJs.
     """
     id: String!
     mongodbId: String

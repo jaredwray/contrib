@@ -5,6 +5,7 @@ import { UserAccount } from '../dto/UserAccount';
 import { UserAccountAddress } from '../dto/UserAccountAddress';
 import { UserAccountForBid } from '../dto/UserAccountForBid';
 import { AuctionDeliveryStatus } from '../../Auction/dto/AuctionDeliveryStatus';
+import { AuthUser } from '../../../auth/dto/AuthUser';
 import { IUserAccount, UserAccountModel } from '../mongodb/UserAccountModel';
 import { IInvitation, InvitationModel } from '../../Invitation/mongodb/InvitationModel';
 import { ICharityModel, CharityModel } from '../../Charity/mongodb/CharityModel';
@@ -17,7 +18,6 @@ import { TwilioVerificationService } from '../../../twilio-client';
 import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
-import { Auth0Service } from '../../../authz';
 import { UPSDeliveryService } from '../../UPSService';
 import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
@@ -39,7 +39,6 @@ export class UserAccountService {
     private readonly connection: Connection,
     private readonly twilioVerificationService: TwilioVerificationService,
     private readonly eventHub: EventHub,
-    private readonly auth0Service: Auth0Service,
     private readonly handlebarsService: HandlebarsService,
     private readonly cloudTaskService: CloudTaskService,
   ) {}
@@ -90,7 +89,7 @@ export class UserAccountService {
     }
   }
 
-  async getAccountByAuthzId(authzId: string): Promise<UserAccount> {
+  async getAccountByAuthzId(authzId: string, user?: AuthUser): Promise<UserAccount> {
     const account = await this.AccountModel.findOne({ authzId }).exec();
 
     if (account != null) {
@@ -103,7 +102,6 @@ export class UserAccountService {
       return UserAccountService.makeUserAccount(account, accountEntityTypes);
     }
     if (authzId.includes('sms')) {
-      const user = await this.auth0Service.getUser(authzId);
       return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
     }
     return {

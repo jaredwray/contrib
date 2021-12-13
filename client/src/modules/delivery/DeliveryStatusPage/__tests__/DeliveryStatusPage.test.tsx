@@ -9,14 +9,13 @@ import DeliveryStatusPage from '..';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
-import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import * as auth from 'src/helpers/useAuth';
 
 import Layout from 'src/components/layouts/Layout';
 
 const mockHistoryFn = jest.fn();
 
-jest.mock('@auth0/auth0-react');
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
@@ -65,7 +64,10 @@ cache3.writeQuery({
 
 describe('DeliveryPaymentPage', () => {
   beforeEach(() => {
-    withAuthenticatedUser();
+    const spy = jest.spyOn(auth, 'useAuth');
+    spy.mockReturnValue({
+      isAuthenticated: true,
+    });
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -105,7 +107,7 @@ describe('DeliveryPaymentPage', () => {
       );
       await new Promise((resolve) => setTimeout(resolve));
     });
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(wrapper!.find(Layout)).toHaveLength(0);
   });
   it('component should redirect when auctions status is ADDRESS_PROVIDED', async () => {
     let wrapper: ReactWrapper;

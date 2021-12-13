@@ -10,9 +10,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
 import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
-import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
-
-jest.mock('@auth0/auth0-react');
+import * as auth from 'src/helpers/useAuth';
 
 const item = {
   avatarUrl: 'test',
@@ -31,6 +29,7 @@ const props2: any = {
 };
 const emptyProps: any = {};
 const mockFn = jest.fn();
+const mockFollowCharity = jest.fn();
 
 const mocks = [
   {
@@ -78,7 +77,7 @@ const mocks = [
       },
     },
     newData: () => {
-      mockFn();
+      mockFollowCharity();
       return {
         data: {
           followCharity: {
@@ -159,6 +158,20 @@ const errorMocks = [
   },
 ];
 
+const withAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: true,
+  });
+};
+
+const withNotAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: false,
+  });
+};
+
 describe('Should render correctly "AuctionCard"', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -166,7 +179,7 @@ describe('Should render correctly "AuctionCard"', () => {
   jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
 
   it('component return null', () => {
-    withAuthenticatedUser();
+    withAuthUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -180,7 +193,7 @@ describe('Should render correctly "AuctionCard"', () => {
     wrapper.unmount();
   });
   it('component is defined', () => {
-    withAuthenticatedUser();
+    withAuthUser();
     const wrapper = mount(
       <MockedProvider>
         <ToastProvider>
@@ -195,7 +208,7 @@ describe('Should render correctly "AuctionCard"', () => {
     wrapper.unmount();
   });
   it('should redirect and not call FollowInfluencer mutation', async () => {
-    withNotAuthenticatedUser();
+    withNotAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -212,10 +225,10 @@ describe('Should render correctly "AuctionCard"', () => {
       wrapper!.find(HeartBtn).prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should call FollowInfluencer mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -239,7 +252,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should call UnfollowInfluencer mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -263,7 +276,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should not call FollowInfluencer mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -287,7 +300,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should not call UnfollowInfluencer mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -311,7 +324,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should redirect and not call FollowCharity mutation', async () => {
-    withNotAuthenticatedUser();
+    withNotAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -328,10 +341,10 @@ describe('Should render correctly "AuctionCard"', () => {
       wrapper!.find(HeartBtn).prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(mockFollowCharity).toHaveBeenCalledTimes(0);
   });
   it('should call FollowCharity mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -348,10 +361,10 @@ describe('Should render correctly "AuctionCard"', () => {
       wrapper!.find(HeartBtn).prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
-    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFollowCharity).toHaveBeenCalledTimes(1);
   });
   it('should call UnfollowCharity mutation', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -371,7 +384,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should not call FollowCharity mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -391,7 +404,7 @@ describe('Should render correctly "AuctionCard"', () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
   it('should not call UnfollowCharity mutation becouse of error', async () => {
-    withAuthenticatedUser();
+    withAuthUser();
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

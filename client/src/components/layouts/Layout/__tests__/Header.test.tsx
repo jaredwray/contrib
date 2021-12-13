@@ -1,13 +1,17 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 
-import {
-  withAuthenticatedUser,
-  withNotAuthenticatedUser,
-  mockedUseAuth0,
-  verifiedUser,
-} from 'src/helpers/testHelpers/auth0';
-
 import Header from '../Header';
+import * as auth from 'src/helpers/useAuth';
+
+const verifiedUser = {
+  email: 'johndoe@me.com',
+  email_verified: true,
+  name: 'Julian Strait',
+  picture: 'link-to-a-picture',
+  id: 'google-oauth2|12345678901234',
+};
+
+const mockLogout = jest.fn();
 
 describe('Header', () => {
   describe('menu', () => {
@@ -17,7 +21,12 @@ describe('Header', () => {
 
     describe('for logged in user', () => {
       beforeEach(() => {
-        withAuthenticatedUser();
+        const spy = jest.spyOn(auth, 'useAuth');
+        spy.mockReturnValue({
+          isAuthenticated: true,
+          logout: () => mockLogout(),
+          user: verifiedUser,
+        });
 
         wrapper = shallow(<Header />);
         menuButton = wrapper.find('#headerNavDropdown');
@@ -40,13 +49,18 @@ describe('Header', () => {
         expect(logoutButton.text()).toEqual('Sign Out');
 
         logoutButton.simulate('click');
-        expect(mockedUseAuth0().logout).toHaveBeenCalledTimes(1);
+        expect(mockLogout).toHaveBeenCalledTimes(1);
       });
     });
 
     describe('for not logged in user', () => {
       beforeEach(() => {
-        withNotAuthenticatedUser();
+        const spy = jest.spyOn(auth, 'useAuth');
+        spy.mockReturnValue({
+          isAuthenticated: false,
+          logout: () => mockLogout(),
+          user: null,
+        });
 
         wrapper = shallow(<Header />);
         menuButton = wrapper.find('#headerNavDropdown');
@@ -66,10 +80,9 @@ describe('Header', () => {
         const loginButton = wrapper.find("[data-test-id='dropdown-menu-login-button']");
 
         expect(loginButton).toHaveLength(1);
-        expect(loginButton.text()).toEqual('Log In');
+        expect(loginButton.props().title).toEqual('Log In');
 
         loginButton.simulate('click');
-        expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalledTimes(1);
       });
     });
   });

@@ -13,8 +13,8 @@ import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { CreateOrUpdateUserAddressMutation } from 'src/apollo/queries/accountQuery';
-import { withAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import * as auth from 'src/helpers/useAuth';
 
 import DeliveryAddressPage from '..';
 
@@ -118,9 +118,13 @@ const submitValues = {
   street: 'test',
   zipCode: '85027',
 };
+
 describe('DeliveryAddressPage', () => {
   beforeEach(() => {
-    withAuthenticatedUser();
+    const spy = jest.spyOn(auth, 'useAuth');
+    spy.mockReturnValue({
+      isAuthenticated: true,
+    });
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -158,7 +162,7 @@ describe('DeliveryAddressPage', () => {
       );
       await new Promise((resolve) => setTimeout(resolve));
     });
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+    expect(wrapper!.find(Layout)).toHaveLength(0);
   });
   it('component should redirect becouse of status PAID', async () => {
     let wrapper: ReactWrapper;

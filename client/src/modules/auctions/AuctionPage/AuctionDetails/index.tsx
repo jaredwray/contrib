@@ -1,7 +1,6 @@
 import { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useContext, useState } from 'react';
 
 import { useMutation } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { format as dateFormat, differenceInSeconds } from 'date-fns';
 import { format, toDate } from 'date-fns-tz';
@@ -16,6 +15,7 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 import WithStripe from 'src/components/wrappers/WithStripe';
 import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
+import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
@@ -33,17 +33,19 @@ interface Props {
 }
 
 const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
-  const [isBuying, setIsBuying] = useState(false);
-  const [minutesWithoutReload, SetMinutesinterval] = useState(0);
   const { account } = useContext(UserAccountContext);
+  const { isAuthenticated } = useAuth();
   const { addToast } = useToasts();
-  const { isAuthenticated } = useAuth0();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
-  const auctionId = auction.id;
+
+  const [isBuying, setIsBuying] = useState(false);
+  const [minutesWithoutReload, SetMinutesinterval] = useState(0);
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
+
+  const auctionId = auction.id;
 
   const {
     followers,
@@ -67,10 +69,12 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   const ended = toDate(endDate) <= new Date();
   const canBid = isActive && !ended && currentPrice.amount !== FINAL_BID * 100;
+
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
   const isWinner = auction.winner?.mongodbId === account?.mongodbId;
+
   const withLinkToDelivery =
     (isSold || isSettled) && isWinner && (process.env.REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE ?? 'true') === 'true';
 
@@ -115,8 +119,8 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       Dinero(startPrice),
     [currentPrice, startPrice, isFinalBid],
   );
+
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
-  const isBuyingParam = useUrlQueryParams().get('isBuying');
   const confirmationRef = useRef<BidConfirmationRef>(null);
 
   const buyingPrice = Dinero(itemPrice)?.toFormat('$0,0');
@@ -129,14 +133,18 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   const commonBidHandler = useCallback(
     (amount: Dinero.Dinero, isBuying?: boolean) => {
-      const placeBid = JSON.stringify(amount.toJSON());
+      const configuration: { amount: number; currency: Dinero.Currency; isBuying?: boolean } = { ...amount.toJSON() };
+
+      if (isBuying) configuration.isBuying = true;
+
+      const placeBid = JSON.stringify(configuration);
 
       if (isAuthenticated) {
         confirmationRef.current?.placeBid(amount);
         return;
       }
 
-      RedirectWithReturnAfterLogin(`/auctions/${auctionId}?placeBid=${placeBid}${isBuying ? '&isBuying=true' : ''}`);
+      RedirectWithReturnAfterLogin(`/auctions/${auctionId}?placeBid=${placeBid}`);
     },
     [isAuthenticated, auctionId, RedirectWithReturnAfterLogin],
   );
@@ -150,18 +158,24 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     if (!placeBidQueryParam) {
       return;
     }
-    if (isBuyingParam) {
+
+    const configuration = JSON.parse(placeBidQueryParam);
+
+    if (configuration?.isBuying) {
       setIsBuying(true);
     }
 
-    const amount = Dinero(JSON.parse(placeBidQueryParam));
-    if (amount.greaterThanOrEqual(minBid)) {
-      handleBid(amount).catch(() => {
+    const { amount, currency } = configuration;
+
+    const value = Dinero({ amount, currency });
+
+    if (value.greaterThanOrEqual(minBid)) {
+      handleBid(value).catch(() => {
         // any error should be handled by handleBid
       });
     }
     history.replace(`/auctions/${auctionId}`);
-  }, [placeBidQueryParam, auctionId, minBid, handleBid, history, isBuyingParam]);
+  }, [placeBidQueryParam, auctionId, minBid, handleBid, history]);
 
   const handleFollowAuction = useCallback(async () => {
     if (isAuthenticated) {

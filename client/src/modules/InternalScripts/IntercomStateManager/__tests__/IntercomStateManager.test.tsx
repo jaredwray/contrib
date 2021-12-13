@@ -1,21 +1,30 @@
 import { mount, ReactWrapper } from 'enzyme';
 import { mocked } from 'ts-jest/utils';
-import { useAuth0 } from '@auth0/auth0-react';
 
 import IntercomStateManager from '../index';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { testAccount } from 'src/helpers/testHelpers/account';
+import * as auth from 'src/helpers/useAuth';
 
 describe('IntercomStateManager', () => {
-  jest.mock('@auth0/auth0-react');
-  const mockedUseAuth0 = mocked(useAuth0, true);
-
   let wrapper: ReactWrapper;
   const OLD_ENV = process.env;
 
   global.Intercom = jest.fn();
 
+  const verifiedUser = {
+    email: 'johndoe@me.com',
+    email_verified: true,
+    name: 'Julian Strait',
+    picture: 'link-to-a-picture',
+    id: 'google-oauth2|12345678901234',
+  };
+
   beforeEach(() => {
+    const spy = jest.spyOn(auth, 'useAuth');
+    spy.mockReturnValue({
+      user: verifiedUser,
+    });
     process.env = { ...OLD_ENV };
   });
 

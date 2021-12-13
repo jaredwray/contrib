@@ -4,14 +4,10 @@ import { StripeService } from './StripeService';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { PaymentInformation } from '../dto/PaymentInformation';
 import { UserAccountService } from '../../UserAccount';
-import { Auth0Service } from '../../../authz';
+import { AuthUser } from '../../../auth/dto/AuthUser';
 
 export class PaymentService {
-  constructor(
-    private readonly userAccountService: UserAccountService,
-    private readonly stripeService: StripeService,
-    private readonly auth0Service: Auth0Service,
-  ) {}
+  constructor(private readonly userAccountService: UserAccountService, private readonly stripeService: StripeService) {}
 
   public async getAccountPaymentInformation(account: UserAccount): Promise<PaymentInformation> {
     if (!account.stripeCustomerId) {
@@ -26,11 +22,12 @@ export class PaymentService {
   public async updateAccountPaymentInformation(
     sourceAccount: UserAccount,
     stripeSourceToken: string,
+    user: AuthUser,
   ): Promise<UserAccount> {
     let account = sourceAccount;
 
     if (!account.stripeCustomerId) {
-      const { name, email } = await this.auth0Service.getUser(account.id);
+      const { name, email } = user;
       const customer = await this.stripeService.createCustomerForAccount(account, name, email);
       account = await this.userAccountService.updateAccountStripeCustomerId(account, customer.id);
     }

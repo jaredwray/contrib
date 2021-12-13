@@ -7,15 +7,17 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from 'src/components/layouts/Layout';
 import { GetInvitation } from 'src/apollo/queries/getInvitation';
-import { mockedUseAuth0, withNotAuthenticatedUser } from 'src/helpers/testHelpers/auth0';
+import * as auth from 'src/helpers/useAuth';
 
 import InvitationPage from '..';
 
 const mockHistoryPush = jest.fn();
+const mockHistoryReplace = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
+    replace: mockHistoryReplace,
     push: mockHistoryPush,
   }),
 }));
@@ -33,9 +35,17 @@ cache.writeQuery({
 });
 
 describe('InvitationPage', () => {
-  it('component returns null', async () => {
-    withNotAuthenticatedUser();
+  beforeEach(() => {
+    const spy = jest.spyOn(auth, 'useAuth');
+    spy.mockReturnValue({
+      isAuthenticated: false,
+    });
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
+  it('component returns null', async () => {
     let wrapper: ReactWrapper;
 
     await act(async () => {
@@ -53,8 +63,6 @@ describe('InvitationPage', () => {
   });
 
   it('renders sign up button', async () => {
-    withNotAuthenticatedUser();
-
     let wrapper: ReactWrapper;
 
     await act(async () => {
@@ -73,12 +81,10 @@ describe('InvitationPage', () => {
     expect(signUpButton).toHaveLength(1);
 
     signUpButton.simulate('click');
-    expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalledTimes(1);
+    expect(mockHistoryReplace).toHaveBeenCalledTimes(1);
   });
 
   it("influencer's first name and welcomeMessage", async () => {
-    withNotAuthenticatedUser();
-
     let wrapper: ReactWrapper;
 
     await act(async () => {

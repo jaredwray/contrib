@@ -1,0 +1,48 @@
+@import 'src/variables.scss';
+
+.authBtn {
+  border: none !important;
+  &:hover,
+  &:active {
+    .text,
+    .icon {
+      border-color: $sage-color !important;
+    }
+    .text {
+      background: $sage-color !important;
+      color: $white-color !important;
+    }
+  }
+}
+.icon,
+.text {
+  height: 50px !important;
+  border-radius: 10px 0 0 10px !important;
+  display: inline-block !important;
+}
+.icon {
+  width: 50px !important;
+  background-color: $sage-color !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+.text {
+  border-radius: 0 10px 10px 0 !important;
+  width: calc(100% - 50px);
+}
+
+.facebookBtn {
+  background-image: url('/assets/images/facebook.webp');
+}
+
+.twitterBtn {
+  background-image: url('/assets/images/twitter.webp');
+}
+
+.googleBtn {
+  background-image: url('/assets/images/google.webp');
+}
+
+.smsBtn {
+  background-image: url('/assets/images/sms.webp');
+}

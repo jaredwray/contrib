@@ -55,11 +55,15 @@ We using AUTH to authenticate users on our platform. Required data examples:
 #### examples
 
 ```
-AUTH0_ISSUER_URL=https://contrib.us.auth0.com/
-AUTH0_AUDIENCE=http://localhost:3000/
-AUTH0_MANAGEMENT_DOMAIN=contrib.us.auth0.com
-AUTH0_MANAGEMENT_CLIENT_ID=authClientId
-AUTH0_MANAGEMENT_CLIENT_SECRET=authClientSecret
+AUTH_API_URL=http://localhost:3001/
+GOOGLE_CLIENT_ID=googleClientId
+GOOGLE_CLIENT_SECRET=googleClientSecret
+FACEBOOK_APP_ID=facebookAppId
+FACEBOOK_APP_SECRET=facebookAppSecret
+TWITTER_CONSUMER_KEY=twitterConsumerKey
+TWITTER_CONSUMER_SECRET=twitterConsumerSecret
+COOKIE_KEY_SECRET=secretKey
+COOKIE_LIFE_TIVE=86400000
 ```
 
 ## For Cloud Storage:
@@ -138,7 +142,7 @@ MONGODB_URI=mongodbUri
 
 ```
 PORT=3001
-APP_URL=http://127.0.0.1:3000/
+APP_URL=http://localhost:3000/
 FACEBOOK_APP_ID=123
 MAX_SIZE_VIDEO_GB=1
 NOTIFICATION_TASK_TARGET_URL=api/v1/notification

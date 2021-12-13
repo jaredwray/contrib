@@ -7,11 +7,10 @@ import WatchBtn from 'src/components/buttons/WatchBtn';
 import ShareBtn from 'src/modules/auctions/AuctionPage/AuctionDetails/ShareBtn';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
-import { withAuthenticatedUser, withNotAuthenticatedUser, mockedUseAuth0 } from 'src/helpers/testHelpers/auth0';
+import * as auth from 'src/helpers/useAuth';
 
 import AuctionDetails from '..';
 
-jest.mock('@auth0/auth0-react');
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 jest.mock('react-router-dom', () => ({
@@ -93,12 +92,18 @@ const errorMocks = [
   },
 ];
 
+const withAuthUser = () => {
+  const spy = jest.spyOn(auth, 'useAuth');
+  spy.mockReturnValue({
+    isAuthenticated: true,
+  });
+};
+
 describe('AuctionDetails', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
   it('renders without crashing', () => {
-    withAuthenticatedUser();
     let wrapper: ReactWrapper;
     (wrapper = mount(
       <Router>
@@ -114,7 +119,6 @@ describe('AuctionDetails', () => {
 
   describe('when auction is not active', () => {
     it('should not display WatchBtn', async () => {
-      withNotAuthenticatedUser();
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
@@ -130,7 +134,6 @@ describe('AuctionDetails', () => {
       expect(wrapper.find(WatchBtn)).toHaveLength(0);
     });
     it('should display ShareBtn', async () => {
-      withNotAuthenticatedUser();
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
@@ -152,7 +155,6 @@ describe('AuctionDetails', () => {
       AuctionQueryAuction['isStopped'] = false;
     });
     it('should display ShareBtn', async () => {
-      withNotAuthenticatedUser();
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
@@ -169,7 +171,6 @@ describe('AuctionDetails', () => {
     });
     describe('watch button', () => {
       it('should display WatchBtn', async () => {
-        withNotAuthenticatedUser();
         let wrapper: ReactWrapper;
         await act(async () => {
           wrapper = mount(
@@ -185,7 +186,6 @@ describe('AuctionDetails', () => {
         expect(wrapper.find(WatchBtn)).toHaveLength(1);
       });
       it('should redirect and not call followAuction mutation', async () => {
-        withNotAuthenticatedUser();
         let wrapper: ReactWrapper;
         await act(async () => {
           wrapper = mount(
@@ -202,10 +202,10 @@ describe('AuctionDetails', () => {
           wrapper!.find(WatchBtn).prop('followHandler')!();
         });
         await new Promise((resolve) => setTimeout(resolve));
-        expect(mockedUseAuth0().loginWithRedirect).toHaveBeenCalled();
+        expect(mockFn).toHaveBeenCalledTimes(0);
       });
       it('should call followAuction mutation', async () => {
-        withAuthenticatedUser();
+        withAuthUser();
         let wrapper: ReactWrapper;
         await act(async () => {
           wrapper = mount(
@@ -225,7 +225,7 @@ describe('AuctionDetails', () => {
         expect(mockFn).toHaveBeenCalledTimes(1);
       });
       it('should call UnfollowAuction mutation', async () => {
-        withAuthenticatedUser();
+        withAuthUser();
         let wrapper: ReactWrapper;
         await act(async () => {
           wrapper = mount(
@@ -245,7 +245,7 @@ describe('AuctionDetails', () => {
         expect(mockFn).toHaveBeenCalledTimes(1);
       });
       it('should not call followAuction mutation becouse of error', async () => {
-        withAuthenticatedUser();
+        withAuthUser();
         let wrapper: ReactWrapper;
         await act(async () => {
           wrapper = mount(
@@ -265,7 +265,7 @@ describe('AuctionDetails', () => {
         expect(mockFn).toHaveBeenCalledTimes(0);
       });
       it('should not call UnfollowAuction mutation becouse of error', async () => {
-        withAuthenticatedUser();
+        withAuthUser();
         let wrapper: ReactWrapper;
         await act(async () => {
           wrapper = mount(

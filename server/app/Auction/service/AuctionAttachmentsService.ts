@@ -1,12 +1,10 @@
 import { Connection } from 'mongoose';
 import { v4 as getUuid } from 'uuid';
-import axios from 'axios';
 
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
-import { AppConfig } from '../../../config';
 
 export class AuctionAttachmentsService {
   public readonly AuctionAsset = AuctionAssetModel(this.connection);

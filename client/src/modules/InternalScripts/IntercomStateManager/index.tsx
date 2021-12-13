@@ -1,13 +1,13 @@
 import { FC, useContext, useEffect } from 'react';
 
-import { useAuth0 } from '@auth0/auth0-react';
 import { getUnixTime } from 'date-fns';
 import { toDate } from 'date-fns-tz';
 
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import { useAuth } from 'src/helpers/useAuth';
 
 const IntercomStateManager: FC = () => {
-  const { user } = useAuth0();
+  const { user } = useAuth();
   const { account } = useContext(UserAccountContext);
 
   useEffect(() => {

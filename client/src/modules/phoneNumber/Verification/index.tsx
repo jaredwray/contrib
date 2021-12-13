@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { useAuth0 } from '@auth0/auth0-react';
 import clsx from 'clsx';
 import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
@@ -11,6 +10,7 @@ import { EnterPhoneNumberMutation, EnterInvitationCodeMutation } from 'src/apoll
 import { invitationTokenVar } from 'src/apollo/vars/invitationTokenVar';
 import PhoneInput from 'src/components/forms/inputs/PhoneInput';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { useAuth } from 'src/helpers/useAuth';
 import { ALLOWED_COUNTRY_NAME } from 'src/types/Country';
 import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 
@@ -18,7 +18,7 @@ import Layout from '../Layout';
 import styles from './styles.module.scss';
 
 export default function PhoneNumberVerification() {
-  const { logout } = useAuth0();
+  const { logout } = useAuth();
   const { data: myAccountsData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
     fetchPolicy: 'cache-only',
   });
@@ -47,7 +47,7 @@ export default function PhoneNumberVerification() {
   const handleBack = useCallback(
     (e) => {
       e.preventDefault();
-      logout();
+      logout!();
     },
     [logout],
   );
