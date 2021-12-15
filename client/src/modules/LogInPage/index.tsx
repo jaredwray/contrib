@@ -6,13 +6,14 @@ import Logo from 'src/assets/images/logo-with-text.svg';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 
 import AuthBtn from './AuthBtn';
+import { SmsAuthBtn } from './SmsAuthBtn';
 import styles from './styles.module.scss';
 
 export default function LogInPage() {
   const history = useHistory();
   const queryParams = useUrlQueryParams();
 
-  const returnQuery = queryParams.get('returnURL') || queryParams.get('invite') || '';
+  const returnURL = queryParams.get('returnURL') || queryParams.get('invite') || '';
 
   return (
     <Container fluid className="h-100 p-0">
@@ -28,10 +29,10 @@ export default function LogInPage() {
             </div>
             <h1 className="text-headline font-weight-bold">Log in</h1>
             <div className={cslx(styles.authBtns, 'pt-4')}>
-              <AuthBtn provider="facebook" returnQuery={returnQuery} />
-              <AuthBtn provider="twitter" returnQuery={returnQuery} />
-              <AuthBtn provider="google" returnQuery={returnQuery} />
-              <AuthBtn provider="sms" returnQuery={returnQuery} text="SMS code" />
+              <AuthBtn provider="facebook" returnURL={returnURL} />
+              <AuthBtn provider="twitter" returnURL={returnURL} />
+              <AuthBtn provider="google" returnURL={returnURL} />
+              <SmsAuthBtn returnURL={returnURL} />
             </div>
           </Container>
         </Col>

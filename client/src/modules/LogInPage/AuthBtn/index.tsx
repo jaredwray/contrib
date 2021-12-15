@@ -18,23 +18,27 @@ const ICON_STYLES_MAP: { [name: string]: string } = {
 interface Props {
   provider: string;
   text?: string;
-  returnQuery: string;
+  returnURL?: string;
+  smsOnClick?: () => void;
 }
 
-const AuthBtn: FC<Props> = ({ provider, text, returnQuery }) => {
+const AuthBtn: FC<Props> = ({ provider, text, returnURL, smsOnClick }) => {
   const { loginWithRedirect } = useAuth();
 
   const btnText = text || provider[0].toUpperCase() + provider.slice(1);
 
   let afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
 
-  if (returnQuery) afterLoginUri += `?returnURL=${returnQuery}`;
+  if (returnURL) afterLoginUri += `?returnURL=${returnURL}`;
 
-  const handleLogin = useCallback(() => {
-    if (provider === 'sms') return;
+  const handleLogin = useCallback(async () => {
+    if (provider === 'sms') {
+      smsOnClick && smsOnClick();
+      return;
+    }
 
     loginWithRedirect!({ redirectURL: afterLoginUri, provider });
-  }, [loginWithRedirect, afterLoginUri, provider]);
+  }, [loginWithRedirect, afterLoginUri, provider, smsOnClick]);
 
   return (
     <div className={cslx(styles.authBtn, 'pt-2')} data-test-id="log_in" onClick={handleLogin}>

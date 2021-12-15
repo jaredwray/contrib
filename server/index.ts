@@ -45,10 +45,10 @@ app.set('view engine', 'pug');
     }),
   );
 
-  createPassportStrategies();
-
   app.use(passport.initialize());
   app.use(passport.session());
+
+  createPassportStrategies(appServices.twilioVerification);
 
   appRouteHandlers(app, appServices);
 

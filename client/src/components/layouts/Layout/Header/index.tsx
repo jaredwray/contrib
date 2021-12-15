@@ -39,7 +39,7 @@ export default function Header() {
                       <Image
                         roundedCircle
                         className="dropdown-menu-user-picture float-right d-inline-block"
-                        src={user?.picture}
+                        src={user?.picture || '/content/img/users/person.png'}
                       />
                       <MenuNavLink link="/profile" title="My Profile" />
                     </>

@@ -48,6 +48,7 @@
     "mongoose": "^5.12.2",
     "newrelic": "^7.4.0",
     "passport": "^0.5.0",
+    "passport-custom": "^1.1.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-twitter": "^1.0.4",

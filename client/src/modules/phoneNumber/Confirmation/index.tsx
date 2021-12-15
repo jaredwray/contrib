@@ -26,6 +26,8 @@ import styles from './styles.module.scss';
 
 const OtpResendDuration = Duration.fromObject({ seconds: 5 });
 
+const DELAY_VALUE_MS = 1000;
+
 export default function PhoneNumberConfirmation() {
   const { logout } = useAuth();
   const history = useHistory();
@@ -115,13 +117,13 @@ export default function PhoneNumberConfirmation() {
     const refreshCanResendOtp = () => {
       const durationSinceOtpSent = otpSentAt.diffNow().negate();
       const nextCanResendOtp = durationSinceOtpSent > OtpResendDuration;
-      if (process.title === 'browser' ? nextCanResendOtp !== canResendOtp : true) {
+      if (process.title !== 'browser' || nextCanResendOtp !== canResendOtp) {
         setCanResendOtp(nextCanResendOtp);
       }
     };
 
     refreshCanResendOtp();
-    const interval = setInterval(refreshCanResendOtp, 1000);
+    const interval = setInterval(refreshCanResendOtp, DELAY_VALUE_MS);
 
     return () => clearInterval(interval);
   }, [otpSentAt, canResendOtp]);
