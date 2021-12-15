@@ -40,10 +40,13 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
     const otp = e.target.value;
 
     setOtpValue(otp);
-    setOtpIsValid(false);
 
-    if (otp.length === 6) {
-      setOtpIsValid(true);
+    if (otp.length === 6 && !otpIsValid) {
+      return setOtpIsValid(true);
+    }
+
+    if (otpIsValid) {
+      setOtpIsValid(false);
     }
   };
 
