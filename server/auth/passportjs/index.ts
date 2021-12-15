@@ -17,6 +17,7 @@ export const createPassportStrategies = (twilioService: TwilioVerificationServic
     options: {
       clientID: AppConfig.auth.facebook.clientId,
       clientSecret: AppConfig.auth.facebook.clientSecret,
+      profileFields: ['id', 'first_name', 'last_name', 'photos', 'email'],
     },
     strategy: FacebookAuthStategy,
   };
