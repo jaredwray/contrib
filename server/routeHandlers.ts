@@ -119,7 +119,7 @@ export default function appRouteHandlers(
   app.get('/api/v1/auth/facebook', (req, res, next) => {
     req.session.redirectURL = req.query.redirectURL;
 
-    passport.authenticate('facebook', { scope: ['user_about_me', 'email'] })(req, res, next);
+    passport.authenticate('facebook', { scope: ['email'] })(req, res, next);
   });
 
   app.get(
