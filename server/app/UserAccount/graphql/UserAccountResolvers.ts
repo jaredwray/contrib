@@ -25,6 +25,7 @@ export const UserAccountResolvers = {
           otp,
         }),
     ),
+    sendOtp: async (_, { phoneNumber }, { userAccount }) => await userAccount.sendOtp(phoneNumber),
     createAccountWithPhoneNumber: requireAuthenticated(
       (parent: unknown, { phoneNumber }: { phoneNumber: string }, { user, userAccount }) =>
         userAccount.createAccountWithPhoneNumber(user.id, phoneNumber),

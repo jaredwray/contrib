@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useCallback, useEffect } from 'react';
 
 import { useQuery } from '@apollo/client';

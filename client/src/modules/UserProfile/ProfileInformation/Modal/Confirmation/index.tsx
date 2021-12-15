@@ -13,6 +13,8 @@ interface Props {
   setPhoneNumber: (arg: string) => void;
 }
 
+const DELAY_VALUE_MS = 1000;
+
 const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setPhoneNumber }) => {
   const OtpResendDuration = Duration.fromObject({ seconds: process.title === 'browser' ? 5 : 0 });
 
@@ -40,7 +42,7 @@ const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setPhoneNumber }
 
     refreshCanResendOtp();
 
-    const interval = setInterval(refreshCanResendOtp, 1000);
+    const interval = setInterval(refreshCanResendOtp, DELAY_VALUE_MS);
 
     return () => clearInterval(interval);
   }, [otpSentAt, canResendOtp, OtpResendDuration]);

@@ -43,13 +43,14 @@ export class BidService {
   }
 
   public async getPopulatedBids(auctionId: string): Promise<IBidModel[] | []> {
-    const bids = await this.BidModel.find({ auction: auctionId }).sort({ bid: 'desc' });
+    const bids = await this.BidModel.find({ auction: auctionId })
+      .sort({ bid: 'desc' })
+      .populate({ path: 'user', model: this.UserAccountModel });
+
     if (!bids) {
       return [];
     }
-    for (const bid of bids) {
-      await bid.populate({ path: 'user', model: this.UserAccountModel }).execPopulate();
-    }
+
     return bids;
   }
 

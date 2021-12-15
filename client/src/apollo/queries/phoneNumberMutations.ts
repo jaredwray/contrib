@@ -26,6 +26,14 @@ export const ConfirmPhoneNumberWithInvitationMutation = gql`
   }
 `;
 
+export const SendOtp = gql`
+  mutation SendOtp($phoneNumber: String!) {
+    sendOtp(phoneNumber: $phoneNumber) {
+      phoneNumber
+    }
+  }
+`;
+
 export const ResendOtpMutation = gql`
   mutation ResendOtp($phoneNumber: String!) {
     createAccountWithPhoneNumber(phoneNumber: $phoneNumber) {

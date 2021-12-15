@@ -237,6 +237,21 @@ export class UserAccountService {
     }
   }
 
+  async sendOtp(phoneNumber: string) {
+    try {
+      await this.twilioVerificationService.createVerification(phoneNumber);
+      return {
+        phoneNumber,
+      };
+    } catch (error) {
+      if (error.message.startsWith('Invalid parameter `To`')) {
+        throw new AppError(`${error.message.replace('Invalid parameter `To`', 'Invalid phone number')}`);
+      }
+      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}. Error: ${error.message}`);
+      throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
+    }
+  }
+
   async confirmAccountWithPhoneNumber(authzId: string, phoneNumber: string, otp?: string): Promise<UserAccount> {
     if (otp) {
       const result = await this.twilioVerificationService.confirmVerification(phoneNumber, otp);

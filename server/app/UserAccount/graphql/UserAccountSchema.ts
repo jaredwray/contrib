@@ -92,6 +92,7 @@ export const UserAccountSchema = gql`
 
   extend type Mutation {
     acceptAccountTerms(version: String!): UserAccount!
+    sendOtp(phoneNumber: String): PhoneNumber
     createAccountWithPhoneNumber(phoneNumber: String): UserAccount!
     verifyChangePhoneNumber(phoneNumber: String): PhoneNumber
     confirmAccountWithPhoneNumber(phoneNumber: String!, otp: String!): UserAccount!

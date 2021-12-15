@@ -78,6 +78,26 @@ export default function appRouteHandlers(
     res.redirect(`${AppConfig.app.url}/charity/me/edit`);
   });
 
+  app.post(
+    '/api/v1/auth/sms',
+    (req, res, next) => {
+      passport.authenticate('sms', (err, user) => {
+        if (err) {
+          return res.status(400).send({ error: { message: err.message } });
+        }
+
+        req.logIn(user, (err) => {
+          if (err) {
+            return res.status(400).send({ error: { message: err.message } });
+          }
+          return res.status(200).send({
+            message: 'Authorized',
+          });
+        });
+      })(req, res, next);
+    },
+  );
+
   app.get('/api/v1/auth/google', (req, res, next) => {
     req.session.redirectURL = req.query.redirectURL;
 
@@ -102,9 +122,7 @@ export default function appRouteHandlers(
   app.get('/api/v1/auth/facebook', (req, res, next) => {
     req.session.redirectURL = req.query.redirectURL;
 
-    passport.authenticate('facebook', {
-      scope: ['profile', 'email'],
-    })(req, res, next);
+    passport.authenticate('facebook')(req, res, next);
   });
 
   app.get(
@@ -123,9 +141,7 @@ export default function appRouteHandlers(
   app.get('/api/v1/auth/twitter', (req, res, next) => {
     req.session.redirectURL = req.query.redirectURL;
 
-    passport.authenticate('twitter', {
-      scope: ['profile', 'email'],
-    })(req, res, next);
+    passport.authenticate('twitter')(req, res, next);
   });
 
   app.get(
