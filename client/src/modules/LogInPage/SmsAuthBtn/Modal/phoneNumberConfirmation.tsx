@@ -6,7 +6,7 @@ import { Duration, DateTime } from 'luxon';
 import { Form as BsForm, Button } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 
-import { SendOtp } from 'src/apollo/queries/phoneNumberMutations';
+import { SendOtpMutation } from 'src/apollo/queries/phoneNumberMutations';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 
@@ -30,7 +30,7 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
 
   const { showError } = useShowNotification();
 
-  const [sendOtp, { loading: loadingOtp }] = useMutation(SendOtp);
+  const [sendOtp, { loading: loadingOtp }] = useMutation(SendOtpMutation);
 
   let afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
 
@@ -137,6 +137,7 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
             {(process.title === 'browser' ? canResendOtp : true) && (
               <Button
                 className="ml-2 d-inline-block text-label"
+                data-test-id="resend_otp"
                 disabled={isLoading}
                 variant="link"
                 onClick={handleResendCode}

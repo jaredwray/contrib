@@ -26,7 +26,7 @@ export const ConfirmPhoneNumberWithInvitationMutation = gql`
   }
 `;
 
-export const SendOtp = gql`
+export const SendOtpMutation = gql`
   mutation SendOtp($phoneNumber: String!) {
     sendOtp(phoneNumber: $phoneNumber) {
       phoneNumber
