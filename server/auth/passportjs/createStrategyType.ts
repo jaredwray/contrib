@@ -7,6 +7,7 @@ type PassportStategyOptions = {
   clientSecret?: string;
   consumerKey?: string;
   consumerSecret?: string;
+  profileFields?: string[];
 };
 
 type PassportStategyData = {
@@ -25,16 +26,16 @@ export function createStrategyType({ type, strategy, options }: PassportStategyD
         callbackURL: CALLBACK_URL,
       },
       (_, __, profile, done) => {
-        if (profile) {
-          const user = {
-            id: `google-oauth2|${profile?.id}`,
-            name: `${profile?.name?.givenName} ${profile?.name?.familyName}` || '',
-            picture: profile?.photos[0]?.value || '',
-            email: profile?.emails[0]?.value || '',
-            phone_number: '',
-          };
-          done(null, user);
-        }
+        if (!profile) return done({ message: 'Something whent wrong' }, null);
+
+        const user = {
+          id: `${type === 'google' ? 'google-oauth2' : type}|${profile.id}`,
+          name: `${profile.name?.givenName} ${profile.name?.familyName}` || '',
+          picture: profile.photos?.length ? profile.photos[0]?.value : '',
+          email: profile.emails?.length ? profile.emails[0]?.value : '',
+          phone_number: '',
+        };
+        done(null, user);
       },
     ),
   );
