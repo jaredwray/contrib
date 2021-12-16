@@ -12,12 +12,10 @@ import * as auth from 'src/helpers/useAuth';
 import InvitationPage from '..';
 
 const mockHistoryPush = jest.fn();
-const mockHistoryReplace = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
-    replace: mockHistoryReplace,
     push: mockHistoryPush,
   }),
 }));
@@ -81,7 +79,7 @@ describe('InvitationPage', () => {
     expect(signUpButton).toHaveLength(1);
 
     signUpButton.simulate('click');
-    expect(mockHistoryReplace).toHaveBeenCalledTimes(1);
+    expect(mockHistoryPush).toHaveBeenCalled();
   });
 
   it("influencer's first name and welcomeMessage", async () => {

@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client';
 import { Button, Form as BsForm } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
 
-import { SendOtp } from 'src/apollo/queries/phoneNumberMutations';
+import { SendOtpMutation } from 'src/apollo/queries/phoneNumberMutations';
 import PhoneInput from 'src/components/forms/inputs/PhoneInput';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { ALLOWED_COUNTRY_NAME } from 'src/types/Country';
@@ -20,7 +20,7 @@ export const PhoneNumberVerification: FC<Props> = ({ phoneNumber, setIsConfirmed
 
   const { showMessage, showError } = useShowNotification();
 
-  const [sendOtp, { loading }] = useMutation(SendOtp);
+  const [sendOtp, { loading }] = useMutation(SendOtpMutation);
 
   const allowedCountryName = ALLOWED_COUNTRY_NAME;
 
