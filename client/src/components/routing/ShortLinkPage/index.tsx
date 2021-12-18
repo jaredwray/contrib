@@ -13,6 +13,7 @@ const ShortLinkPage: FC = () => {
 
   useQuery(GetLinkQuery, {
     variables: { slug },
+    /* istanbul ignore next */
     onCompleted: ({ getLink }) => {
       redirect(getLink);
     },

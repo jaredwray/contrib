@@ -24,6 +24,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [executeSearch] = useLazyQuery(CharitiesListQuery, {
+    /* istanbul ignore next */
     onCompleted({ charitiesList }) {
       setCharitiesSearch(charitiesList.items);
     },

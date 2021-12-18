@@ -35,11 +35,13 @@ const CharityPage = () => {
   const auction = auctionData?.auction;
   const { isActive } = auction || {};
   const [finishAuctionCreation, { loading: updatingStatus }] = useMutation(FinishAuctionCreationMutation, {
+    /* istanbul ignore next */
     onCompleted() {
       history.push(`/auctions/${auctionId}/done`);
     },
   });
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
+    /* istanbul ignore next */
     async onCompleted() {
       try {
         await finishAuctionCreation({ variables: { id: auctionId } });

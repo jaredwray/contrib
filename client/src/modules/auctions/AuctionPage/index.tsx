@@ -32,6 +32,7 @@ const AuctionPage = () => {
 
   const [requestMetrics] = useLazyQuery(AuctionMetricsQuery, {
     variables: { auctionId },
+    /* istanbul ignore next */
     onCompleted: ({ getAuctionMetrics }) => {
       setMetrics(getAuctionMetrics);
     },

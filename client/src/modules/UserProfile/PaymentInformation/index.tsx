@@ -24,6 +24,7 @@ const PaymentInformation: FC<Props> = ({ account }) => {
   const elements = useElements();
 
   const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
+    /* istanbul ignore next */
     onCompleted() {
       setNewCard(false);
       setCardComplete(false);

@@ -34,6 +34,7 @@ const UploadingDropzone: FC<Props> = ({
 }): ReactElement => {
   const { data: storageAuthData } = useQuery(ContentStorageAuthDataQuery);
   const [addAuctionMedia] = useMutation(AddAuctionMediaMutation, {
+    /* istanbul ignore next */
     onError(error) {
       setErrorMessage(error.networkError ? `Something went wrong. Please, try later` : error.message);
       setAttachments((prevState: AttachmentsStateInterface) => {
@@ -44,6 +45,7 @@ const UploadingDropzone: FC<Props> = ({
         };
       });
     },
+    /* istanbul ignore next */
     onCompleted(data: any) {
       const attachment = data.addAuctionAttachment;
 

@@ -24,6 +24,7 @@ const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setPhoneNumber }
 
   const [verifyPhoneNumber, { loading: verifyLoading }] = useMutation(VerifyChangePhoneNumberMutation);
   const [confirmPhoneNumber, { loading: confirmLoading }] = useMutation(ConfirmChangePhoneNumberMutation, {
+    /* istanbul ignore next */
     onCompleted: () => {
       setPhoneNumber(newPhoneNumber);
       onClose();

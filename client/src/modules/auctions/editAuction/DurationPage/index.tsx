@@ -27,6 +27,7 @@ const DurationPage = () => {
   const { isActive } = auction || {};
 
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
+    /* istanbul ignore next */
     onCompleted() {
       if (isActive) {
         history.goBack();

@@ -32,6 +32,7 @@ const EditAuctionPage = () => {
   const { isActive } = auction || {};
 
   const [createAuction, { loading }] = useMutation(CreateAuctionMutation, {
+    /* istanbul ignore next */
     onCompleted({ createAuction }) {
       if (createAuction.id) {
         const newUrl = `/auctions/${createAuction.id}/description`;
@@ -40,6 +41,7 @@ const EditAuctionPage = () => {
     },
   });
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
+    /* istanbul ignore next */
     onCompleted() {
       if (isActive) {
         history.goBack();
