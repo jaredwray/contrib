@@ -27,6 +27,7 @@ const StartPricePage = () => {
   const { isActive, startPrice } = auction || {};
 
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
+    /* istanbul ignore next */
     onCompleted() {
       if (isActive) {
         history.goBack();

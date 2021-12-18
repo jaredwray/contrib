@@ -53,6 +53,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
         ],
       },
     },
+    /* istanbul ignore next */
     onCompleted({ auctions }) {
       setDraftAuctions(profileAuctionsHash(auctions.items).DRAFT);
     },

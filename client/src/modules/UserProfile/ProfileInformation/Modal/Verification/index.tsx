@@ -24,6 +24,7 @@ const VerificationStep: FC<Props> = ({ currentPhoneNumber, newPhoneNumber, setNe
   const [error, setError] = useState('');
 
   const [verifyPhoneNumber, { loading: verifyLoading }] = useMutation(VerifyChangePhoneNumberMutation, {
+    /* istanbul ignore next */
     onCompleted: () => setVerified(),
   });
 
