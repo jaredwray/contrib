@@ -13,6 +13,7 @@ export const AuctionQueryAuction = {
   charity: {
     avatarUrl: 'test',
     id: 'test',
+    semanticId: 'test',
     name: 'My Active Charity Name',
     status: 'ACTIVE',
     websiteUrl: 'test',
@@ -79,6 +80,7 @@ export const auction = {
   charity: {
     id: 'test',
     name: 'test',
+    semanticId: 'test',
     status: 'test',
     profileStatus: 'test',
     stripeStatus: 'test',
@@ -123,6 +125,7 @@ export const auctionForAdminPage = {
   charity: {
     id: '60c1f579ff49a51d6f2ee61b',
     name: 'My Active Charity Name',
+    semanticId: null,
     stripeAccountId: 'acct_1J0nltPSFS13RiaC',
   },
   currentPrice: { amount: 10000000199, currency: 'USD', precision: 2 },

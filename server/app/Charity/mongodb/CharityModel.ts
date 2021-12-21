@@ -6,6 +6,7 @@ import { CharityStripeStatus } from '../dto/CharityStripeStatus';
 import { IUserAccount, UserAccountCollectionName, IFollowObject } from '../../UserAccount/mongodb/UserAccountModel';
 
 export interface ICharityModel extends Document {
+  semanticIds: string[];
   name: string;
   status: CharityStatus;
   profileStatus: CharityProfileStatus;
@@ -23,6 +24,7 @@ export interface ICharityModel extends Document {
 export const CharityCollectionName = 'charity';
 
 const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
+  semanticIds: [{ type: SchemaTypes.String, required: true }],
   name: { type: SchemaTypes.String, required: true },
   status: { type: SchemaTypes.String, required: true },
   profileStatus: { type: SchemaTypes.String, required: true },

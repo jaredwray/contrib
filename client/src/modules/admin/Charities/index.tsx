@@ -18,15 +18,12 @@ import styles from './styles.module.scss';
 
 export default function CharitiesPage(): any {
   const [pageSkip, setPageSkip] = useState(0);
-
   const [getCharitiesList, { loading, data, error }] = useLazyQuery(CharitiesListQuery);
-
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const onInputSearchChange = useCallback((value) => {
     setSearchQuery(value);
   }, []);
-
   const clearAndCloseSearch = useCallback(() => {
     setSearchQuery('');
   }, []);
@@ -37,12 +34,9 @@ export default function CharitiesPage(): any {
     });
   }, [getCharitiesList, searchQuery, pageSkip]);
 
-  if (error) {
-    return null;
-  }
+  if (error) return null;
 
   const charities = data?.charitiesList || { skip: 0, totalItems: 0, items: [] };
-
   const controlBtns = (
     <InviteButton
       className={clsx(styles.inviteBtn, 'text--body d-inline-block')}
@@ -76,7 +70,7 @@ export default function CharitiesPage(): any {
         </thead>
         <tbody className="font-weight-normal">
           {charities.items.map((item: Charity) => (
-            <ClickableTr key={item.id} linkTo={`/charity/${item.id}`}>
+            <ClickableTr key={item.id} linkTo={`/charity/${item.semanticId || item.id}`}>
               <td className={styles.idColumn}>{item.id}</td>
               <td className={styles.otherColumns}>{item.name}</td>
               <td className={styles.otherColumns}>{item.status}</td>

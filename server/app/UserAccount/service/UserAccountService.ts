@@ -90,7 +90,14 @@ export class UserAccountService {
   }
 
   async getAccountByAuthzId(authzId: string, user?: AuthUser): Promise<UserAccount> {
-    const account = await this.AccountModel.findOne({ authzId }).exec();
+    let account = await this.AccountModel.findOne({ authzId }).exec();
+    // TODO: remove after old authzIds with sms update
+    if (!account && authzId.startsWith('sms|')) {
+      account = await this.AccountModel.findOne({ phoneNumber: user.phone_number }).exec();
+      if (!account) {
+        return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
+      }
+    }
 
     if (account != null) {
       const filter = { userAccount: account._id };
@@ -99,11 +106,10 @@ export class UserAccountService {
         charity: await this.CharityModel.exists(filter),
         influencer: await this.InfluencerModel.exists(filter),
       };
+
       return UserAccountService.makeUserAccount(account, accountEntityTypes);
     }
-    if (authzId.includes('sms')) {
-      return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
-    }
+
     return {
       id: authzId,
       phoneNumber: null,
@@ -263,10 +269,12 @@ export class UserAccountService {
     if (await this.AccountModel.exists({ authzId })) {
       throw new AppError('Account already exists', ErrorCode.BAD_REQUEST);
     }
+
     const findedAccount = await this.AccountModel.findOne({ phoneNumber }).exec();
-    if (findedAccount && authzId.includes('sms')) {
+    if (findedAccount && authzId.startsWith('sms|')) {
       return UserAccountService.makeUserAccount(findedAccount);
     }
+
     if (findedAccount) {
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
     }
@@ -309,7 +317,7 @@ export class UserAccountService {
   }
 
   private static makeUserAccount(model: IUserAccount, accountEntityTypes?): UserAccount {
-    const account: UserAccount = {
+    return {
       id: model.authzId,
       phoneNumber: model.phoneNumber,
       status: UserAccountStatus.COMPLETED,
@@ -318,12 +326,7 @@ export class UserAccountService {
       createdAt: model.createdAt.toISOString(),
       notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms, accountEntityTypes),
       address: model.address,
+      isAdmin: model.isAdmin,
     };
-
-    if (model.isAdmin) {
-      account.isAdmin = true;
-    }
-
-    return account;
   }
 }

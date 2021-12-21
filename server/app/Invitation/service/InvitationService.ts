@@ -94,7 +94,7 @@ export class InvitationService {
         }
 
         const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
-        const charity = await this.charityService.createCharity({ name: 'My Charity Name' }, session);
+        const charity = await this.charityService.createCharity(session);
 
         const inviteInput = {
           phoneNumber,

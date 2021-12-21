@@ -9,6 +9,7 @@ import { Follow } from '../../FollowDto';
 export interface Charity {
   id: string;
   name: string;
+  semanticId: string | null;
   status: CharityStatus;
   profileStatus: CharityProfileStatus;
   stripeStatus: CharityStripeStatus;

@@ -4,8 +4,8 @@ This is a list of requests, which we need to call after deployment to migrate ne
 
 NOTE: `OUR_SECRET_KEY` is located inside 1Password under `AUCTION_SCHEDULER_SECRET` variable
 
-#### update short links
+#### generate semanticIds for charities
 
 ```
-curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -X POST https://contrib.org/api/v1/update-short-links
+curl -d '{"key": "OUR_SECRET_KEY"}' -H "Content-Type: application/json" -X POST https://contrib.org/api/v1/generate-semantic-ids
 ```

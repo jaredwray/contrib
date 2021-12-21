@@ -58,7 +58,10 @@ export const CharityResolvers = {
   UserAccount: {
     charity: loadAccount(
       async (userAccount: UserAccount, _, { user, currentAccount, loaders }): Promise<Charity | null> => {
-        const hasAccess = currentAccount?.isAdmin || user?.id === userAccount.id;
+        // TODO: remove after old authzIds with sms update
+        const hasAccessByPhoneNumber =
+          userAccount.id.startsWith('sms|') && user?.phone_number === userAccount.phoneNumber;
+        const hasAccess = currentAccount?.isAdmin || user?.id === userAccount.id || hasAccessByPhoneNumber;
         if (!userAccount.mongodbId || !hasAccess) {
           return null;
         }

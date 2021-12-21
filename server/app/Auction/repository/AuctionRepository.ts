@@ -121,10 +121,7 @@ export class AuctionRepository implements IAuctionRepository {
       throw new AppError('Something went wrong. Please, try later');
     }
 
-    return {
-      account,
-      auction,
-    };
+    return { account, auction };
   }
 
   public async followAuction(auctionId: string, accountId: string): Promise<{ user: string; createdAt: Dayjs } | null> {

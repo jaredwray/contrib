@@ -8,7 +8,7 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
-  { auction, charity, stripeService, twilioNotification, shortLinkService }: IAppServices,
+  { auction, charity, stripeService, twilioNotification }: IAppServices,
 ): void {
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
@@ -18,34 +18,23 @@ export default function appRouteHandlers(
     }
   });
 
-  //TODO: delete after update short_links
-  app.post('/api/v1/update-short-links', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
-
-    try {
-      await shortLinkService.updateShortLinks();
-      return res.send('Updated');
-    } catch {
-      return res.send('Failed');
-    }
+  //TODO: delete after generatation of semanticIds
+  app.post('/api/v1/generate-semantic-ids', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) return;
+    const result = await charity.generateSemanticIds();
+    return res.send(result ? 'Done' : 'Failed');
   });
   //TODO ends
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
+    if (!isAuthorizedRequest(req, res)) return;
 
     const response = await auction.scheduleAuctionJobSettle();
     return res.json(response);
   });
 
   app.post('/api/v1/auctions-ends-notify', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) {
-      return;
-    }
+    if (!isAuthorizedRequest(req, res)) return;
 
     const response = await auction.scheduleAuctionEndsNotification();
     return res.json(response);
@@ -56,10 +45,12 @@ export default function appRouteHandlers(
 
     if (!parsedBody) {
       res.sendStatus(400).json({ message: 'BAD REQUEST' });
+      return;
     }
 
     if (parsedBody.api_token !== AppConfig.googleCloud.task.googleTaskApiToken) {
       res.sendStatus(401).json({ message: 'UNAUTHORIZED' });
+      return;
     }
 
     await twilioNotification.sendMessage(parsedBody.phoneNumber, parsedBody.message);
@@ -80,17 +71,12 @@ export default function appRouteHandlers(
 
   app.post('/api/v1/auth/sms', (req, res, next) => {
     passport.authenticate('sms', (err, user) => {
-      if (err) {
-        return res.status(400).send({ error: { message: err.message } });
-      }
+      if (err) return res.status(400).send({ error: { message: err.message } });
 
       req.logIn(user, (err) => {
-        if (err) {
-          return res.status(400).send({ error: { message: err.message } });
-        }
-        return res.status(200).send({
-          message: 'Authorized',
-        });
+        if (err) return res.status(400).send({ error: { message: err.message } });
+
+        return res.status(200).send({ message: 'Authorized' });
       });
     })(req, res, next);
   });
