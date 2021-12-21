@@ -30,6 +30,7 @@ export const CharitySchema = gql`
 
   type Charity {
     id: String!
+    semanticId: String
     name: String!
     status: CharityStatus!
     profileStatus: CharityProfileStatus!
@@ -91,7 +92,7 @@ export const CharitySchema = gql`
 
   extend type Query {
     charitiesList(params: CharityParams): CharitiesPage
-    charity(id: String!): Charity!
+    charity(id: String!): Charity
   }
 
   extend type Mutation {

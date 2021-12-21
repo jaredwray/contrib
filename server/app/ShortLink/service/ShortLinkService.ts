@@ -34,22 +34,6 @@ export class ShortLinkService {
     return url.toString();
   }
 
-  //TODO delete after update short_links
-  public async updateShortLinks() {
-    try {
-      const shortLinkModels = await this.shortLinkModel.find({ entity: { $exists: true } });
-
-      for (const model of shortLinkModels) {
-        model.entity = undefined;
-
-        await model.save();
-      }
-    } catch (error) {
-      AppLogger.error(`Something went wrong when try to update short links. Error: ${error.message}`);
-    }
-  }
-  //TODO ends
-
   public async createShortLink(
     { address, path }: { address?: string; path?: string },
     session?: ClientSession,

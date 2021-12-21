@@ -4,6 +4,7 @@ export const GetCharity = gql`
   query GetCharity($id: String!) {
     charity(id: $id) {
       id
+      semanticId
       name
       status
       avatarUrl

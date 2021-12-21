@@ -41,6 +41,7 @@ cache.writeQuery({
       followers: [{ createdAt: '2021-06-21T17:11:07.220Z', user: 'testId' }],
       id: 'testId',
       name: 'test',
+      semanticId: null,
       profileDescription: 'test',
       status: 'ACTIVE',
       website: 'test',

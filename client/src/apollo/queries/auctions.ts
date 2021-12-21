@@ -71,6 +71,7 @@ export const AuctionForAdminPageQuery = gql`
       charity {
         id
         name
+        semanticId
         stripeAccountId
       }
       delivery {
@@ -165,6 +166,7 @@ export const AuctionQuery = gql`
       charity {
         id
         name
+        semanticId
         avatarUrl
         websiteUrl
         status

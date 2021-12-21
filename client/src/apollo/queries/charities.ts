@@ -9,6 +9,7 @@ export const CharitiesListQuery = gql`
       items {
         id
         name
+        semanticId
         avatarUrl
         status
         profileStatus

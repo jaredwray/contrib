@@ -75,7 +75,6 @@ export class AuctionService {
   public async getAuctionsForProfilePage(userId: string): Promise<AuctionsForProfilePage | null> {
     try {
       const allBids = await this.BidModel.find({ user: userId });
-
       const auctionIds = allBids.map((bid) => bid.auction.toString());
       const uniqAuctionIds = Array.from(new Set(auctionIds));
 
@@ -292,9 +291,7 @@ export class AuctionService {
       return await this.sendRequestForShippingRegistration(auction, deliveryMethod);
     } catch (error) {
       AppLogger.error(error.message);
-      if (!deliveryMethod) {
-        throw new AppError(error.message);
-      }
+      if (!deliveryMethod) throw new AppError(error.message);
     }
   }
 
@@ -308,9 +305,8 @@ export class AuctionService {
 
   public async updateAuctionParcel(auctionId: string, input: AuctionParcel): Promise<AuctionParcel> {
     const auction = await this.AuctionModel.findById(auctionId);
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
-    }
+    if (!auction) throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
+
     try {
       const { width, length, height, weight } = input;
 
@@ -396,10 +392,10 @@ export class AuctionService {
   public async getCustomerInformation(stripeCustomerId: string): Promise<{ email: string; phone: string } | null> {
     try {
       const customer = (await this.stripeService.getCustomerInformation(stripeCustomerId)) as Stripe.Customer;
-      const { email, phone } = customer;
+
       return {
-        email,
-        phone,
+        email: customer.email,
+        phone: customer.phone,
       };
     } catch (error) {
       AppLogger.error(`Can't find current customer. ${error.message}`);
@@ -438,22 +434,19 @@ export class AuctionService {
 
   public async getAuctionMetrics(auctionId: string): Promise<AuctionMetrics | {}> {
     const metricsModel = await this.AuctionMetricModel.findOne({ auction: auctionId });
+    if (!metricsModel?.metrics?.length) return {};
+
     const auctionModel = await this.AuctionModel.findById(auctionId);
+    const currentMetrics = metricsModel.toObject().metrics.map((metric) => getParsedMetric(metric));
 
-    if (metricsModel?.metrics?.length) {
-      const currentMetrics = metricsModel.toObject().metrics.map((metric) => getParsedMetric(metric));
-
-      return {
-        clicks: fullClicks(currentMetrics, auctionModel.startsAt, 'hour'),
-        clicksByDay: fullClicks(currentMetrics, auctionModel.startsAt, 'day'),
-        countries: getMetricByEntity(currentMetrics, 'country'),
-        referrers: getMetricByEntity(currentMetrics, 'referrer'),
-        browsers: getMetricByEntity(currentMetrics, 'browser'),
-        oss: getMetricByEntity(currentMetrics, 'os'),
-      };
-    }
-
-    return {};
+    return {
+      clicks: fullClicks(currentMetrics, auctionModel.startsAt, 'hour'),
+      clicksByDay: fullClicks(currentMetrics, auctionModel.startsAt, 'day'),
+      countries: getMetricByEntity(currentMetrics, 'country'),
+      referrers: getMetricByEntity(currentMetrics, 'referrer'),
+      browsers: getMetricByEntity(currentMetrics, 'browser'),
+      oss: getMetricByEntity(currentMetrics, 'os'),
+    };
   }
 
   public async updateOrCreateMetrics(
@@ -583,17 +576,6 @@ export class AuctionService {
       ...rest
     } = objectTrimmer(input);
 
-    if (duration || endDate) {
-      AppLogger.info(`updateAuction method called for #${id} auction;`);
-      if (duration) {
-        AppLogger.info(`duration: ${duration}; current time: ${dayjs()}; new endsAt: ${dayjs().add(duration, 'days')}`);
-      }
-
-      if (endDate) {
-        AppLogger.info(`current time: ${dayjs()}; new endsAt: ${endDate}`);
-      }
-    }
-
     const auction = await this.auctionRepository.updateAuction(
       id,
       userId,
@@ -637,15 +619,11 @@ export class AuctionService {
     session.startTransaction();
 
     const card = await this.paymentService.getAccountPaymentInformation(user);
-    if (!card) {
-      throw new AppError('Payment method is not provided');
-    }
+    if (!card) throw new AppError('Payment method is not provided');
 
     const auction = await this.AuctionModel.findById(id, null, { session }).exec();
 
-    if (!auction.charity) {
-      throw new AppError('There is no charity attached to given auction');
-    }
+    if (!auction.charity) throw new AppError('There is no charity attached to given auction');
 
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
@@ -711,6 +689,7 @@ export class AuctionService {
           AppLogger.error(`Failed to send notification for auction #${id}, error: ${error.message}`);
         }
       }
+
       return createdBid;
     } catch (error) {
       await session.abortTransaction();
@@ -811,7 +790,6 @@ export class AuctionService {
 
   private async notifyAuctionOrganizer(auction: IAuctionModel): Promise<void> {
     const currentAuction = await this.auctionRepository.getAuctionOrganizerUserAccountFromAuction(auction);
-
     const phoneNumber = currentAuction.auctionOrganizer?.userAccount?.phoneNumber;
 
     if (!phoneNumber) return null;
@@ -827,9 +805,7 @@ export class AuctionService {
   }
 
   private async notifyUsers(auction: IAuctionModel, timeLeftText: string): Promise<void> {
-    if (!auction) {
-      throw new Error(`There is no auction for sending notification`);
-    }
+    if (!auction) throw new Error(`There is no auction for sending notification`);
 
     const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
     const followerIds = currentAuction.followers.map((follower) => follower.user);
@@ -891,17 +867,9 @@ export class AuctionService {
   }
 
   public async settleAuctionAndCharge(auction: IAuctionModel): Promise<void> {
-    if (!auction) {
-      throw new AppError('Auction not found');
-    }
-
-    if (!auction.charity) {
-      throw new AppError('There is no charity attached to given auction');
-    }
-
-    if (auction.status !== AuctionStatus.ACTIVE) {
-      throw new AppError('Auction status is not ACTIVE');
-    }
+    if (!auction) throw new AppError('Auction not found');
+    if (!auction.charity) throw new AppError('There is no charity attached to given auction');
+    if (auction.status !== AuctionStatus.ACTIVE) throw new AppError('Auction status is not ACTIVE');
 
     const [lastAuctionBid] = await this.BidModel.find({ auction: auction._id }).sort({ bid: -1 }).limit(1);
 
@@ -952,9 +920,7 @@ export class AuctionService {
 
   async chargeUser(lastAuctionBid: IBidModel, auction: IAuctionModel): Promise<string> {
     const charityAccount = await this.CharityModel.findOne({ _id: auction.charity }).exec();
-    if (!charityAccount) {
-      throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
-    }
+    if (!charityAccount) throw new Error(`Can not find charity account with id ${auction.charity.toString()}`);
 
     const user = lastAuctionBid.user;
     const { id: cardId } = await this.paymentService.getAccountPaymentInformation(user);
@@ -998,11 +964,9 @@ export class AuctionService {
   }
 
   public async activateAuction(auction: IAuctionModel): Promise<void> {
-    if (!auction) {
-      throw new AppError('Auction not found');
-    }
-    auction.status = AuctionStatus.ACTIVE;
+    if (!auction) throw new AppError('Auction not found');
 
+    auction.status = AuctionStatus.ACTIVE;
     await auction.save();
     await this.sendAuctionIsActivatedMessage(auction);
 
@@ -1010,9 +974,8 @@ export class AuctionService {
   }
 
   private static makeAuctionAttachment(model: IAuctionAssetModel, filename?: string): AuctionAssets | null {
-    if (!model) {
-      return null;
-    }
+    if (!model) return null;
+
     const { url, type, uid } = model;
 
     return {
@@ -1027,9 +990,8 @@ export class AuctionService {
   }
 
   public static makeTotalRaisedAmount(auctions: IAuctionModel[]): number {
-    if (!auctions) {
-      return 0;
-    }
+    if (!auctions) return 0;
+
     return auctions.map((auction) => auction.currentPrice ?? 0).reduce((total, next) => (total += next), 0);
   }
 
@@ -1044,25 +1006,14 @@ export class AuctionService {
   public async buyAuction(id: string, user: UserAccount): Promise<Auction> {
     const auction = await this.auctionRepository.getAuction(id);
 
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
-    }
-
-    if (!auction.charity) {
-      throw new AppError('There is no charity attached to given auction');
-    }
-
-    if (auction.status !== AuctionStatus.ACTIVE) {
-      throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
-    }
-    if (auction.currentPrice > auction.itemPrice) {
+    if (!auction) throw new AppError('Auction not found', ErrorCode.BAD_REQUEST);
+    if (!auction.charity) throw new AppError('There is no charity attached to given auction');
+    if (auction.status !== AuctionStatus.ACTIVE) throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
+    if (auction.currentPrice > auction.itemPrice)
       throw new AppError('Auction has larger current price', ErrorCode.BAD_REQUEST);
-    }
 
     const card = await this.paymentService.getAccountPaymentInformation(user);
-    if (!card) {
-      throw new AppError('Payment method is not provided');
-    }
+    if (!card) throw new AppError('Payment method is not provided');
 
     try {
       const chargeId = await this.paymentService.chargeUser(
@@ -1172,13 +1123,11 @@ export class AuctionService {
     attachmentId: string,
   ): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(auctionId, organizerId);
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
+    if (!auction) throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
+
     const attachment = await this.attachmentsService.AuctionAsset.findById(attachmentId);
-    if (!attachment) {
-      throw new AppError('Attachment not found', ErrorCode.NOT_FOUND);
-    }
+    if (!attachment) throw new AppError('Attachment not found', ErrorCode.NOT_FOUND);
+
     try {
       await this.deleteAttachmentFromCloud(attachment.url, attachment.uid);
 
@@ -1204,13 +1153,8 @@ export class AuctionService {
 
   public async deleteAuction(auctionId: string) {
     const auction = await this.AuctionModel.findById(auctionId);
-    if (!auction) {
-      throw new AppError('Can not find auction', ErrorCode.NOT_FOUND);
-    }
-
-    if (auction.status !== AuctionStatus.DRAFT) {
-      throw new AppError('Auction is not DRAFT', ErrorCode.BAD_REQUEST);
-    }
+    if (!auction) throw new AppError('Can not find auction', ErrorCode.NOT_FOUND);
+    if (auction.status !== AuctionStatus.DRAFT) throw new AppError('Auction is not DRAFT', ErrorCode.BAD_REQUEST);
 
     try {
       auction.assets.forEach(async (assetId) => await this.deleteAuctionAttachmentById(assetId));

@@ -11,8 +11,9 @@ import { Charity, CharityStatus } from 'src/types/Charity';
 import Row from '../common/Row';
 import styles from './styles.module.scss';
 
-const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
+const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id, semanticId }) => {
   const isNotActive = status !== CharityStatus.ACTIVE;
+  const charityPagePath = `/charity/${semanticId || id}`;
 
   return (
     <>
@@ -20,7 +21,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
         <Link
           className={clsx(styles.link, 'text-subhead text-all-cups text-sm break-word d-inline-block')}
           title={name}
-          to={`/charity/${id}`}
+          to={charityPagePath}
         >
           <div className="d-flex align-items-center">
             <Image
@@ -35,7 +36,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id }) => {
       </Row>
       <BsRow className="pt-4">
         <BsCol>
-          <Link className={clsx(styles.link, 'text-label text-all-cups')} to={`/charity/${id}`}>
+          <Link className={clsx(styles.link, 'text-label text-all-cups')} to={charityPagePath}>
             other auctions benefiting this charity &gt;&gt;
           </Link>
         </BsCol>

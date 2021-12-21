@@ -20,6 +20,7 @@ export enum CharityStripeStatus {
 
 export interface Charity {
   id: string;
+  semanticId: string;
   name: string;
   status: CharityStatus;
   profileStatus: CharityProfileStatus;

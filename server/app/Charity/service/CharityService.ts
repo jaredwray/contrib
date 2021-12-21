@@ -22,6 +22,7 @@ import { AppLogger } from '../../../logger';
 import { AppError } from '../../../errors';
 import { webSiteFormatter } from '../../../helpers/webSiteFormatter';
 import { objectTrimmer } from '../../../helpers/objectTrimmer';
+import { slugify } from '../../../helpers/slugify';
 
 interface CharityCreationInput {
   name: string;
@@ -30,6 +31,8 @@ interface CharityCreationInput {
 export class CharityService {
   private readonly CharityModel = CharityModel(this.connection);
   private readonly UserAccountModel = UserAccountModel(this.connection);
+
+  DEFAULT_NAME = 'My Charity Name';
 
   constructor(
     private readonly connection: Connection,
@@ -58,51 +61,33 @@ export class CharityService {
     }
 
     const account = await this.UserAccountModel.findById(accountId, null, { session }).exec();
+
     if (!account) {
       AppLogger.error(`Account record #${accountId} not found`);
       throw new AppError('Something went wrong. Please, try later');
     }
 
-    return {
-      charity,
-      account,
-    };
+    return { charity, account };
   }
 
   async followCharity(charityId: string, accountId: string) {
     const session = await this.connection.startSession();
-
     let returnObject = null;
+
     try {
       await session.withTransaction(async () => {
         const { charity, account } = await this.handleFollowLogicErrors(charityId, accountId, session);
-
         const currentAccountId = account._id.toString();
         const followed = charity.followers.some((follower) => follower.user.toString() === currentAccountId);
 
-        if (followed) {
-          throw new AppError('You have already followed to this charity');
-        }
+        if (followed) throw new AppError('You have already followed to this charity');
 
-        const createdFollower = {
-          user: currentAccountId,
-          createdAt: dayjs(),
-        };
-
+        const createdFollower = { user: currentAccountId, createdAt: dayjs() };
         const charityProfileId = charity._id.toString();
+        const createdFollowing = { charityProfile: charityProfileId, createdAt: dayjs() };
 
-        const createdFollowing = {
-          charityProfile: charityProfileId,
-          createdAt: dayjs(),
-        };
-
-        Object.assign(charity, {
-          followers: [...charity.followers, createdFollower],
-        });
-
-        Object.assign(account, {
-          followingCharitis: [...account.followingCharitis, createdFollowing],
-        });
+        Object.assign(charity, { followers: [...charity.followers, createdFollower] });
+        Object.assign(account, { followingCharitis: [...account.followingCharitis, createdFollowing] });
 
         await charity.save({ session });
         await account.save({ session });
@@ -120,12 +105,11 @@ export class CharityService {
 
   async unfollowCharity(charityId: string, accountId: string) {
     const session = await this.connection.startSession();
-
     let returnObject = null;
+
     try {
       await session.withTransaction(async () => {
         const { charity, account } = await this.handleFollowLogicErrors(charityId, accountId, session);
-
         const charityProfileId = charity._id.toString();
 
         account.followingCharitis = account.followingCharitis.filter(
@@ -141,6 +125,7 @@ export class CharityService {
 
         returnObject = { id: Date.now().toString() };
       });
+
       return returnObject;
     } catch (error) {
       AppLogger.error(`Cannot unfollow Charity with id #${charityId}: ${error.message}`);
@@ -169,17 +154,14 @@ export class CharityService {
       await session.withTransaction(async () => {
         const currentCharity = await this.findCharity(charityId, session);
 
-        if (!currentCharity) {
-          return;
-        }
+        if (!currentCharity || currentCharity.stripeStatus) return;
+        if (currentCharity.status !== CharityStatus.PENDING_ONBOARDING) return;
 
-        if (currentCharity.status === CharityStatus.PENDING_ONBOARDING && !currentCharity.stripeStatus) {
-          await this.updateCharityStatus({
-            charity: currentCharity,
-            stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
-            session,
-          });
-        }
+        await this.updateCharityStatus({
+          charity: currentCharity,
+          stripeStatus: CharityStripeStatus.PENDING_VERIFICATION,
+          session,
+        });
       });
     } finally {
       await session.endSession();
@@ -207,13 +189,9 @@ export class CharityService {
   }
 
   async maybeUpdateStripeLink(charity: Charity): Promise<Charity> {
-    if (charity.status === CharityStatus.PENDING_INVITE) {
-      throw new Error('charity can not exist');
-    }
+    if (charity.status === CharityStatus.PENDING_INVITE) throw new Error('Charity can not exist');
+    if (charity.status !== CharityStatus.PENDING_ONBOARDING) return charity;
 
-    if (charity.status !== CharityStatus.PENDING_ONBOARDING) {
-      return charity;
-    }
     const stripeAccountLink = await this.getLinkForStripeAccount(charity);
     const charityUpd = {
       ...charity,
@@ -227,11 +205,11 @@ export class CharityService {
     return objLink.url;
   }
 
-  async createCharity({ name }: CharityCreationInput, session?: ClientSession): Promise<Charity> {
+  async createCharity(session: ClientSession): Promise<Charity> {
     const charityModel = await this.CharityModel.create(
       [
         {
-          name,
+          name: this.DEFAULT_NAME,
           status: CharityStatus.PENDING_INVITE,
           profileStatus: CharityProfileStatus.CREATED,
         },
@@ -248,12 +226,46 @@ export class CharityService {
 
   async findCharity(id: string, session?: ClientSession): Promise<Charity | null> {
     try {
-      const charity = await this.CharityModel.findById(id, null, { session }).exec();
+      const charity =
+        (await this.CharityModel.findOne({ semanticIds: { $in: [id] } }, null, session).exec()) ||
+        (await this.CharityModel.findOne({ _id: id }, null, { session }).exec());
+
       return (charity && CharityService.makeCharity(charity)) ?? null;
     } catch (error) {
       AppLogger.error(`Cannot find charity with id #${id}: ${error.message}`);
     }
   }
+
+  private async checkSemanticId(semanticId: string, currentCharityId: string): Promise<void> {
+    const charity = await this.CharityModel.findOne({
+      semanticIds: { $in: [semanticId] },
+      _id: { $ne: currentCharityId },
+    }).exec();
+
+    if (charity) throw new Error(`This name is already in use, please, try another.`);
+  }
+
+  //TODO delete after generatation of semanticIds
+  public async generateSemanticIds() {
+    try {
+      const charities = await this.CharityModel.find({
+        semanticIds: { $exists: false },
+        profileStatus: CharityProfileStatus.COMPLETED,
+        name: { $ne: this.DEFAULT_NAME },
+      });
+
+      for (const charity of charities) {
+        charity.semanticIds = [slugify(charity.name)];
+
+        await charity.save();
+      }
+      return true;
+    } catch (error) {
+      AppLogger.error(`Something went wrong when try to generate semanticIds: ${error.message}`);
+      return false;
+    }
+  }
+  //TODO ends
 
   async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity | void> {
     const session = await this.connection.startSession();
@@ -261,18 +273,29 @@ export class CharityService {
       const charity = await this.CharityModel.findById(id, null, { session }).exec();
 
       await session.withTransaction(async () => {
-        if (!charity) {
-          throw new Error(`charity record #${id} not found`);
-        }
+        if (!charity) throw new Error(`charity record #${id} not found`);
 
         if (charity.profileStatus === CharityProfileStatus.CREATED) {
           charity.profileStatus = CharityProfileStatus.COMPLETED;
         }
 
-        Object.assign(charity, { ...objectTrimmer(input), website: webSiteFormatter(input.website).trim() });
+        const newAttributes = objectTrimmer(input);
+
+        if (charity.name != newAttributes.name && charity.name != this.DEFAULT_NAME) {
+          const newSemanticId = slugify(newAttributes.name);
+
+          await this.checkSemanticId(newSemanticId, id);
+
+          charity.semanticIds = charity.semanticIds.filter((f) => f != newSemanticId);
+          charity.semanticIds.push(newSemanticId);
+        }
+
+        Object.assign(charity, {
+          ...newAttributes,
+          website: webSiteFormatter(input.website).trim(),
+        });
 
         this.maybeActivateCharity(charity);
-
         await charity.save({ session });
       });
 
@@ -296,16 +319,17 @@ export class CharityService {
 
   async updateCharityProfileAvatarById(id: string, image: any): Promise<Charity> {
     const charity = await this.CharityModel.findOne({ _id: id }).exec();
-    if (!charity) {
-      throw new Error(`charity record #${id} not found`);
-    }
+    if (!charity) throw new Error(`charity record #${id} not found`);
+
     const { filename: originalFilename, createReadStream } = await image;
     const ALLOWED_EXTENSIONS = /png|jpeg|jpg|webp/i;
     const extension = originalFilename.split('.').pop();
+
     if (!ALLOWED_EXTENSIONS.test(extension)) {
       AppLogger.error('File has unsupported extension: ', originalFilename);
       return;
     }
+
     const filename = `${charity._id}/avatar/avatar.webp`;
     const filePath = `pending/${filename}`;
     const bucketName = AppConfig.googleCloud.bucketName;
@@ -333,18 +357,15 @@ export class CharityService {
 
   async assignUserToCharity(id: ObjectId, userAccountId: string, session: ClientSession): Promise<Charity> {
     const charity = await this.CharityModel.findById(id, null, { session }).exec();
-    if (!charity) {
-      throw new Error(`cannot assign user to charity: charity ${id} is not found`);
-    }
-
-    if (charity.status !== CharityStatus.PENDING_INVITE) {
+    if (!charity) throw new Error(`cannot assign user to charity: charity ${id} is not found`);
+    if (charity.status !== CharityStatus.PENDING_INVITE)
       throw new Error(`cannot assign user to charity: charity ${id} status is ${charity.status} `);
-    }
-    if (charity.userAccount) {
+    if (charity.userAccount)
       throw new Error(`cannot assign user to charity: charity ${id} already has a user account assigned`);
-    }
+
     charity.userAccount = userAccountId;
     await charity.save();
+
     return CharityService.makeCharity(charity);
   }
 
@@ -365,28 +386,23 @@ export class CharityService {
   }): Promise<Charity> {
     const model = await this.CharityModel.findById(charity.id, null, { session }).exec();
 
-    if (!status && !profileStatus && !stripeStatus) {
-      throw new Error('at least one status must be updated');
-    }
+    if (!status && !profileStatus && !stripeStatus) throw new Error('at least one status must be updated');
 
     if (status) {
       model.status = status;
     }
-
     if (stripeStatus) {
       model.stripeStatus = stripeStatus;
     }
-
     if (profileStatus) {
       model.profileStatus = profileStatus;
     }
-
     if (userAccount) {
-      if (model.userAccount) {
-        throw new Error('attempting to override user account for a charity');
-      }
+      if (model.userAccount) throw new Error('Attempting to override user account for a charity');
+
       model.userAccount = userAccount.mongodbId;
     }
+
     try {
       this.maybeActivateCharity(model);
       await model.save({ session });
@@ -399,9 +415,8 @@ export class CharityService {
 
   async updateCharity(id: string, input: CharityInput): Promise<Charity | null> {
     const charity = await this.CharityModel.findById(id).exec();
-    if (!charity) {
-      throw new Error(`charity record not found`);
-    }
+    if (!charity) throw new Error(`Charity record not found`);
+
     Object.assign(charity, objectTrimmer(input));
     await charity.save();
     return CharityService.makeCharity(charity);
@@ -461,9 +476,8 @@ export class CharityService {
   }
 
   async listCharitiesByIds(charityIds: readonly string[]): Promise<Charity[]> {
-    if (charityIds.length === 0) {
-      return [];
-    }
+    if (charityIds.length === 0) return [];
+
     const charities = await this.CharityModel.find({ _id: { $in: charityIds } }).exec();
     return charities.map((charity) => CharityService.makeCharity(charity));
   }
@@ -475,15 +489,14 @@ export class CharityService {
   }
 
   public static makeCharity(model: ICharityModel): Charity | null {
-    if (!model) {
-      return null;
-    }
+    if (!model) return null;
 
-    const { _id, userAccount, website, avatarUrl, followers, totalRaisedAmount, ...rest } =
+    const { _id, userAccount, website, avatarUrl, followers, totalRaisedAmount, semanticIds, ...rest } =
       'toObject' in model ? model.toObject() : model;
 
     return {
       id: _id.toString(),
+      semanticId: semanticIds?.pop() ?? null,
       userAccount: userAccount?.toString() ?? null,
       avatarUrl: avatarUrl ?? `/content/img/users/person.png`,
       website,

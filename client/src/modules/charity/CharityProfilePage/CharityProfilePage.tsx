@@ -12,18 +12,16 @@ import { CharityProfilePageContent } from './CharityProfilePageContent';
 export const CharityProfilePage: FC = () => {
   const history = useHistory();
   const charityId = useParams<{ charityId: string }>().charityId ?? 'me';
-  const { data } = useQuery<{ charity: Charity }>(GetCharity, {
+  const { data, error } = useQuery<{ charity: Charity }>(GetCharity, {
     variables: { id: charityId },
   });
-
   const charity = data?.charity;
+
   if (charity === null) {
     history.replace('/404');
     return null;
   }
-  if (charity === undefined) {
-    return null;
-  }
+  if (error || charity === undefined) return null;
 
   setPageTitle(charityId === 'me' ? 'My charity' : `Charity ${charity.name}`);
 

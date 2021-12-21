@@ -22,6 +22,7 @@ cache.writeQuery({
         {
           id: 'testId1',
           name: 'test',
+          semanticId: null,
           profileStatus: 'COMPLETED',
           status: 'ACTIVE',
           stripeStatus: 'ACTIVE',
