@@ -56,7 +56,7 @@ const InfluencersPage: FC = () => {
       totalItems={influencersData?.totalItems}
     >
       {(influencersData?.items || []).map((infuencer: InfluencerProfile) => (
-        <ItemCard key={infuencer.id} horizontal item={infuencer} />
+        <ItemCard key={infuencer.id} horizontal item={infuencer} path={`/profiles/${infuencer.id}`} />
       ))}
     </AllItemsLayout>
   );
