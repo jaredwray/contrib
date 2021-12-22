@@ -123,7 +123,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
         <div className={styles.header}>
           <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
         </div>
-        <Container className={styles.content}>
+        <Container className={clsx(styles.content, 'mb-3')}>
           <Row>
             <Col md="6">
               {!isActive && <NotActiveStatus />}
@@ -136,14 +136,23 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
                   </a>
                 </p>
               )}
+              <div className="d-sm-block d-none">
+                <WatchBtn
+                  disabled={isMyProfile || !isActive}
+                  entityType="charity"
+                  followHandler={handleFollowCharity}
+                  followed={followed}
+                  followersNumber={followersNumber}
+                  loading={followLoading || unfollowLoading}
+                  unfollowHandler={handleUnfollowCharity}
+                />
+              </div>
             </Col>
             <Col md="6">
               <span className="label-with-separator text-label">Charity profile</span>
               <ReadMore text={charity?.profileDescription} />
             </Col>
-          </Row>
-          <Row>
-            <Col>
+            <Col className="d-block d-md-none">
               <WatchBtn
                 disabled={isMyProfile || !isActive}
                 entityType="charity"

@@ -133,19 +133,28 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           <ProfileAvatar src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
 
-        <Container className={styles.content}>
+        <Container className={clsx(styles.content, 'mb-3')}>
           <Row>
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>
               <TotalRaisedAmount value={influencer.totalRaisedAmount} />
+              <div className="d-sm-block d-none">
+                <WatchBtn
+                  disabled={isMyProfile}
+                  entityType="influencer"
+                  followHandler={handleFollowInfluencer}
+                  followed={followed}
+                  followersNumber={followersNumber}
+                  loading={followLoading || unfollowLoading}
+                  unfollowHandler={handleUnfollowInfluencer}
+                />
+              </div>
             </Col>
             <Col md="6">
               <span className="label-with-separator text-label">Player profile</span>
               <ReadMore text={influencer?.profileDescription} />
             </Col>
-          </Row>
-          <Row>
-            <Col>
+            <Col className="d-block d-md-none">
               <WatchBtn
                 disabled={isMyProfile}
                 entityType="influencer"

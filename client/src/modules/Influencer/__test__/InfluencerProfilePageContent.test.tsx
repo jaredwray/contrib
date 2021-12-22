@@ -210,7 +210,7 @@ describe('InfluencerProfilePageContent ', () => {
     });
     await act(async () => {
       expect(wrapper!.find(AuctionCard)).toHaveLength(1);
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+      wrapper!.find(WatchBtn).last().prop('followHandler')!();
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
@@ -234,7 +234,7 @@ describe('InfluencerProfilePageContent ', () => {
     });
     await act(async () => {
       expect(wrapper!.find(AuctionCard)).toHaveLength(1);
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+      wrapper!.find(WatchBtn).last().prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
@@ -259,7 +259,7 @@ describe('InfluencerProfilePageContent ', () => {
     });
     await act(async () => {
       expect(wrapper!.find(AuctionCard)).toHaveLength(1);
-      wrapper!.find(WatchBtn).prop('unfollowHandler')!();
+      wrapper!.find(WatchBtn).last().prop('unfollowHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
@@ -284,7 +284,7 @@ describe('InfluencerProfilePageContent ', () => {
     });
     await act(async () => {
       expect(wrapper!.find(AuctionCard)).toHaveLength(1);
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+      wrapper!.find(WatchBtn).last().prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(0);
@@ -309,7 +309,7 @@ describe('InfluencerProfilePageContent ', () => {
     });
     await act(async () => {
       expect(wrapper!.find(AuctionCard)).toHaveLength(1);
-      wrapper!.find(WatchBtn).prop('unfollowHandler')!();
+      wrapper!.find(WatchBtn).last().prop('unfollowHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(0);

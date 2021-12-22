@@ -200,7 +200,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
       );
     });
     await act(async () => {
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+      wrapper!.find(WatchBtn).last().prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(0);
@@ -220,7 +220,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
       );
     });
     await act(async () => {
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+      wrapper!.find(WatchBtn).last().prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
@@ -240,7 +240,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
       );
     });
     await act(async () => {
-      wrapper!.find(WatchBtn).prop('unfollowHandler')!();
+      wrapper!.find(WatchBtn).last().prop('unfollowHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(1);
@@ -260,7 +260,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
       );
     });
     await act(async () => {
-      wrapper!.find(WatchBtn).prop('followHandler')!();
+      wrapper!.find(WatchBtn).last().prop('followHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(0);
@@ -280,7 +280,7 @@ describe('Should render correctly "CharityProfilePageContent"', () => {
       );
     });
     await act(async () => {
-      wrapper!.find(WatchBtn).prop('unfollowHandler')!();
+      wrapper!.find(WatchBtn).last().prop('unfollowHandler')!();
     });
     await new Promise((resolve) => setTimeout(resolve));
     expect(mockFn).toHaveBeenCalledTimes(0);

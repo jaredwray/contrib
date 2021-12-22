@@ -58,7 +58,13 @@ const CharitiesPage: FC = () => {
       totalItems={charitiesData?.totalItems}
     >
       {(charitiesData?.items || []).map((charity: Charity) => (
-        <ItemCard key={charity.id} horizontal isCharity={true} item={charity} />
+        <ItemCard
+          key={charity.id}
+          horizontal
+          isCharity={true}
+          item={charity}
+          path={`/charity/${charity.semanticId || charity.id}`}
+        />
       ))}
     </AllItemsLayout>
   );

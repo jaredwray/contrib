@@ -21,9 +21,10 @@ type Props = {
   item: any;
   isCharity?: boolean;
   horizontal?: boolean;
+  path: string;
 };
 
-const ItemCard: FC<Props> = ({ item, horizontal, isCharity }) => {
+const ItemCard: FC<Props> = ({ item, horizontal, isCharity, path }) => {
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
   const { isAuthenticated } = useAuth();
@@ -68,10 +69,7 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity }) => {
     }
   }, [item?.id, isCharity, addToast, unfollow]);
 
-  if (!item) {
-    return null;
-  }
-  const linkToAuction = `/${isCharity ? 'charity' : 'profiles'}/${item?.id}`;
+  if (!item) return null;
 
   return (
     <figure className={clsx(styles.root, horizontal && styles.horizontalRoot, styles.horizontalOnMobileRoot)}>
@@ -85,7 +83,7 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity }) => {
           unfollowHandler={handleUnfollow}
         />
 
-        <SwipeableLink to={linkToAuction}>
+        <SwipeableLink to={path}>
           <CoverImage
             alt="Auction image"
             className={clsx(styles.image, horizontal && styles.horizontalImage)}
@@ -96,7 +94,7 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity }) => {
       </div>
 
       <figcaption className={clsx(styles.description, horizontal && styles.horizontalDescription)}>
-        <SwipeableLink className={styles.link} title={item.name} to={linkToAuction}>
+        <SwipeableLink className={styles.link} title={item.name} to={path}>
           <p className={clsx(horizontal && styles.name, 'text-body')}>{item.name}</p>
         </SwipeableLink>
         <TotalRaisedAmount value={item.totalRaisedAmount} />
