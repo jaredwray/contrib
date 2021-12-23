@@ -63,7 +63,7 @@ describe('AuctionPage', () => {
       },
     });
 
-    it('renders the component', async () => {
+    xit('renders the component', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(

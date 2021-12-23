@@ -23,6 +23,7 @@ export const AuctionQueryAuction = {
     identificationNumber: '1Z3W090X0399152336',
     status: 'ADDRESS_PROVIDED',
     timeInTransit: '2021-08-27',
+    shippingLabel: 'test',
     address: {
       city: 'Phoenix',
       country: 'USA',

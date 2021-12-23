@@ -30,21 +30,19 @@ const FINAL_BID = 999999;
 
 interface Props {
   auction: Auction;
+  isDeliveryPage?: boolean;
 }
 
-const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
+const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement => {
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth();
   const { addToast } = useToasts();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
-
   const [isBuying, setIsBuying] = useState(false);
   const [minutesWithoutReload, SetMinutesinterval] = useState(0);
-
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
-
   const auctionId = auction.id;
 
   const {
@@ -66,20 +64,19 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
   const [followersNumber, setFollowersNumber] = useState(followers?.length || 0);
-
   const ended = toDate(endDate) <= new Date();
-  const canBid = isActive && !ended && currentPrice.amount !== FINAL_BID * 100;
-
+  const canBid = isActive && !ended && currentPrice.amount !== FINAL_BID * 100 && !isDeliveryPage;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
-  const isWinner = auction.winner?.mongodbId === account?.mongodbId;
 
+  const withDeliveryInfoLink = (isMyAuction || account?.isAdmin) && (isSold || isSettled);
+  const isWinner = auction.winner?.mongodbId === account?.mongodbId;
   const withLinkToDelivery =
     (isSold || isSettled) && isWinner && (process.env.REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE ?? 'true') === 'true';
-
   let callAfterMs = 60000;
   const secondsLeft = differenceInSeconds(toDate(endDate), new Date());
+
   if (secondsLeft <= 120) {
     callAfterMs = 1000;
   }
@@ -106,9 +103,11 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   const durationTillEnd = toHumanReadableDuration(endDate);
   const endDateFormatted = dateFormat(new Date(endDate), 'MMM dd yyyy');
-
   const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
   const isFinalBid = currentPrice.amount / 100 > FINAL_BID - 10;
+  const isPaid =
+    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAID ||
+    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED;
 
   const minBid = useMemo(
     () =>
@@ -122,9 +121,7 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
 
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
   const confirmationRef = useRef<BidConfirmationRef>(null);
-
   const buyingPrice = Dinero(itemPrice)?.toFormat('$0,0');
-
   let isShowBuyButton;
 
   if (itemPrice) {
@@ -155,18 +152,13 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
   }, [itemPrice, commonBidHandler]);
 
   useEffect(() => {
-    if (!placeBidQueryParam) {
-      return;
-    }
+    if (!placeBidQueryParam) return;
 
     const configuration = JSON.parse(placeBidQueryParam);
 
-    if (configuration?.isBuying) {
-      setIsBuying(true);
-    }
+    if (configuration?.isBuying) setIsBuying(true);
 
     const { amount, currency } = configuration;
-
     const value = Dinero({ amount, currency });
 
     if (value.greaterThanOrEqual(minBid)) {
@@ -204,9 +196,6 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
     }
   }, [auctionId, addToast, unfollowAuction, followersNumber]);
 
-  const isPaid =
-    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAID ||
-    auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED;
   return (
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
@@ -270,8 +259,13 @@ const AuctionDetails: FC<Props> = ({ auction }): ReactElement => {
       )}
       <ShareBtn link={auction.shortLink.shortLink} />
       {withLinkToDelivery && (
-        <Link className="d-inline-block mt-4" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
+        <Link className="d-block mt-4" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
           {isPaid ? 'Delivery status' : 'Pay for delivery'}
+        </Link>
+      )}
+      {!isDeliveryPage && withDeliveryInfoLink && (
+        <Link className="d-block mt-4" to={`/auctions/${auctionId}/delivery`}>
+          Delivery info page
         </Link>
       )}
     </>

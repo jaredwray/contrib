@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-sort-props */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, FC } from 'react';
 
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -16,10 +16,15 @@ import AttachmentsSlider from './AttachmentsSlider';
 import AuctionDetails from './AuctionDetails';
 import Author from './Author';
 import Benefits from './Benefits';
+import DeliveryInfo from './DeliveryInfo';
 import Metrics from './Metrics';
 import SimilarAuctions from './SimilarAuctions';
 
-const AuctionPage = () => {
+interface Props {
+  isDeliveryPage?: boolean;
+}
+
+const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
   const auctionId = useParams<{ auctionId: string }>().auctionId ?? 'me';
   const history = useHistory();
   const { account } = useContext(UserAccountContext);
@@ -58,18 +63,24 @@ const AuctionPage = () => {
 
   if (auction?.isDraft) {
     history.push(`/`);
-  }
-
-  if (error || auction === undefined) {
     return null;
   }
-  const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
-    auction.auctionOrganizer.id,
+
+  const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
+    auction?.auctionOrganizer?.id,
   );
 
-  if (!account?.isAdmin && !isMyProfile && (auction?.isDraft || auction?.isStopped)) {
-    history.push(`/`);
+  if (!account?.isAdmin && !isMyAuction && isDeliveryPage && (!auction?.isSettled || !auction?.isStopped)) {
+    history.goBack();
+    return null;
   }
+
+  if (!account?.isAdmin && !isMyAuction && (auction?.isDraft || auction?.isStopped)) {
+    history.push(`/`);
+    return null;
+  }
+
+  if (error || auction === undefined) return null;
 
   const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
   const accountEntityId = account?.charity?.id || account?.influencerProfile?.id || account?.assistant?.influencerId;
@@ -90,7 +101,7 @@ const AuctionPage = () => {
           </Col>
           <Col md="1" />
           <Col md="4">
-            <AuctionDetails auction={auction} />
+            <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
           </Col>
           <Col md="1" />
         </Row>
@@ -107,11 +118,19 @@ const AuctionPage = () => {
           </Col>
           <Col md="7" />
         </Row>
-        {withMetrcis && (
+        {withMetrcis && !isDeliveryPage && (
           <Row>
             <Col md="1" />
             <Col>
               <Metrics metrics={metrics} requestMetrics={requestMetrics} />
+            </Col>
+          </Row>
+        )}
+        {isDeliveryPage && (
+          <Row>
+            <Col md="1" />
+            <Col>
+              <DeliveryInfo auction={auction} isDeliveryPage={isDeliveryPage} />
             </Col>
           </Row>
         )}

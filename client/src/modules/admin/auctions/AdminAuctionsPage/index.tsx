@@ -105,6 +105,11 @@ export default function AdminAuctionsPage() {
               <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
               <td className={styles.actions}>
                 <ActionsDropdown>
+                  {(auction.isSettled || auction.isSold) && (
+                    <Link className="dropdown-item text--body" to={`/auctions/${auction.id}/delivery-info`}>
+                      Delivery info page
+                    </Link>
+                  )}
                   <Link className="dropdown-item text--body" to={`/admin/auctions/${auction.id}`}>
                     View details
                   </Link>

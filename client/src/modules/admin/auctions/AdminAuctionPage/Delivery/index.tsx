@@ -14,10 +14,11 @@ import styles from './styles.module.scss';
 
 interface Props {
   auction: Auction;
-  refreshAuctionData: () => void;
+  isDeliveryPage?: boolean;
+  refreshAuctionData?: () => void;
 }
 
-export const Delivery: FC<Props> = ({ auction, refreshAuctionData }) => {
+export const Delivery: FC<Props> = ({ auction, isDeliveryPage, refreshAuctionData }) => {
   const { addToast } = useToasts();
 
   const [registerShipping, { loading: shippingLoading }] = useMutation(ShippingRegistrationMutation);
@@ -30,7 +31,7 @@ export const Delivery: FC<Props> = ({ auction, refreshAuctionData }) => {
           auctionWinnerId: auction?.winner?.mongodbId,
         },
       });
-      refreshAuctionData();
+      refreshAuctionData!();
       addToast('Charged', { autoDismiss: true, appearance: 'success' });
     } catch (error) {
       addToast(error.message, { autoDismiss: true, appearance: 'error' });
@@ -73,27 +74,32 @@ export const Delivery: FC<Props> = ({ auction, refreshAuctionData }) => {
             <td>Postal Code</td>
             <td>{deliveryAddress?.zipCode}</td>
           </tr>
-          <tr>
-            <td>Status</td>
-            <td>
-              {auction.delivery?.status}
-              {auction.delivery?.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED && (
-                <AsyncButton
-                  className="btn-sm w-100"
-                  disabled={shippingLoading}
-                  loading={shippingLoading}
-                  variant="dark"
-                  onClick={handleRegisterShipping}
-                >
-                  Pay for delivery
-                </AsyncButton>
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td>Updated at</td>
-            <td>{updatedAt}</td>
-          </tr>
+          {!isDeliveryPage && (
+            <>
+              <tr>
+                <td>Status</td>
+                <td>
+                  {auction.delivery?.status}
+                  {auction.delivery?.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED && (
+                    <AsyncButton
+                      className="btn-sm w-100"
+                      disabled={shippingLoading}
+                      loading={shippingLoading}
+                      variant="dark"
+                      onClick={handleRegisterShipping}
+                    >
+                      Pay for delivery
+                    </AsyncButton>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>Updated at</td>
+                <td>{updatedAt}</td>
+              </tr>
+            </>
+          )}
+
           {auction.delivery.identificationNumber && (
             <tr>
               <td>Identification Number</td>
@@ -111,7 +117,9 @@ export const Delivery: FC<Props> = ({ auction, refreshAuctionData }) => {
               <td>UPS delivery shippingLabel</td>
               <td>
                 <a className={styles.link} href={auction.delivery.shippingLabel} rel="noreferrer" target="_blank">
-                  show
+                  <div className={styles.wrapper}>
+                    <img alt="shipping label" height="50" src={auction.delivery.shippingLabel} width="80" />
+                  </div>
                 </a>
               </td>
             </tr>
