@@ -1,7 +1,10 @@
 @import 'src/variables.scss';
 
-.payBtn {
+.wrapper {
+  display: flex;
+  justify-content: space-between;
 }
+
 .registerShippingTd {
   padding: 0;
 }

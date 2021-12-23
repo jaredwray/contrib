@@ -148,6 +148,7 @@ export class AuctionService {
       throw new AppError(error.message);
     }
   }
+
   public async chargeUserForShippingRegistration(
     auction: IAuctionModel,
     deliveryMethod: string,
@@ -182,6 +183,7 @@ export class AuctionService {
         timeInTransit,
       });
       await auction.save();
+      await this.notifyOrganizerAboutDelivery(auction);
     } catch (error) {
       AppLogger.error(
         `Something went wrong when charge user #${winnerId.toString()} in stipe in shippingRegistration method, error: ${
@@ -190,6 +192,21 @@ export class AuctionService {
       );
       throw new AppError('Something went wrong. Please try again later');
     }
+  }
+
+  private async notifyOrganizerAboutDelivery(auction: IAuctionModel): Promise<void> {
+    const deliveryInfoShortLink = await this.shortLinkService.createShortLink({
+      address: `auctions/${auction._id.toString()}/delivery`,
+    });
+
+    await this.sendAuctionNotification(
+      auction.winner.phoneNumber,
+      MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_ORGANIZER,
+      {
+        auctionTitle: auction.title,
+        link: this.shortLinkService.makeLink({ slug: deliveryInfoShortLink.slug }),
+      },
+    );
   }
 
   public async sendRequestForShippingRegistration(

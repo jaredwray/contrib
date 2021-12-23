@@ -192,6 +192,7 @@ export const AuctionQuery = gql`
         identificationNumber
         timeInTransit
         status
+        shippingLabel
         address {
           name
           country

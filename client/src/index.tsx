@@ -16,6 +16,7 @@ import AdminAuctionPage from 'src/modules/admin/auctions/AdminAuctionPage';
 import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
 import Charities from 'src/modules/admin/Charities';
 import Influencers from 'src/modules/admin/Influencers';
+import AuctionDeliveryInfoPage from 'src/modules/auctions/AuctionDeliveryInfoPage';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import AllAuctionsPage from 'src/modules/auctions/AuctionsPage';
 import EditAuctionPhotoPage from 'src/modules/auctions/editAuction/AuctionPhotoPage';
@@ -158,6 +159,11 @@ export const App = () => {
                     path="/auctions/:auctionId/delivery/payment"
                   />
                   <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />
+                  <PrivateRoute
+                    component={AuctionDeliveryInfoPage}
+                    path="/auctions/:auctionId/delivery"
+                    role="influencer"
+                  />
                   <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                   <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
                   <Route component={ShortLinkPage} path="/go/:slug" />
