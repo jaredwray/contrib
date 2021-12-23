@@ -196,7 +196,7 @@ export class AuctionService {
 
   private async notifyOrganizerAboutDelivery(auction: IAuctionModel): Promise<void> {
     const deliveryInfoShortLink = await this.shortLinkService.createShortLink({
-      address: `auctions/${auction._id.toString()}/delivery`,
+      address: `auctions/${auction._id.toString()}/delivery/info`,
     });
 
     await this.sendAuctionNotification(

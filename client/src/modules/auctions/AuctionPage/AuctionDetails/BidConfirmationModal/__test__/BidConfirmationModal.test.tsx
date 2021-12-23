@@ -7,6 +7,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 import type { StripeCardElementChangeEvent } from '@stripe/stripe-js';
 
+import Dialog from 'src/components/modals/Dialog';
+import AsyncButton from 'src/components/buttons/AsyncButton';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
@@ -316,8 +318,62 @@ describe('BidConfirmationModal', () => {
 
         const CardInputProps = wrapper.find(CardInput).props();
         CardInputProps.handleAddCard();
+        CardInputProps.onChange(e);
         CardInputProps.onCancel();
       });
+    });
+  });
+
+  describe('Call Dialog close method,', () => {
+    it('Should close Dialog', async () => {
+      let wrapper: ReactWrapper;
+
+      act(() => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider mocks={mocks}>
+                <Elements stripe={stripePromise}>
+                  <BidConfirmationModal {...props2} />
+                </Elements>
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+
+        wrapper.find(Dialog).props().onClose(e);
+
+        wrapper.update();
+
+        expect(wrapper!.find(Dialog)).toEqual({});
+      });
+    });
+  });
+
+  describe('Call handleBidding method,', () => {
+    xit('Should handle bid', async () => {
+      let wrapper: ReactWrapper;
+
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter>
+            <ToastProvider>
+              <MockedProvider mocks={mocks}>
+                <Elements stripe={stripePromise}>
+                  <BidConfirmationModal {...props} />
+                </Elements>
+              </MockedProvider>
+            </ToastProvider>
+          </MemoryRouter>,
+        );
+      });
+
+      await act(async () => {
+        wrapper.find(AsyncButton).prop('onClick')!(e);
+        await new Promise((resolve) => setTimeout(resolve));
+      });
+
+      expect(mockFn).toHaveBeenCalled();
     });
   });
 });

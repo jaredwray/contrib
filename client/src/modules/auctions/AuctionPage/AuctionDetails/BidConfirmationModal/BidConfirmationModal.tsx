@@ -125,7 +125,6 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
     const handleBuying = useCallback(async () => {
       setSubmitting(true);
-
       try {
         await handleRegisterPayment(paymentInformation, newCard);
 
