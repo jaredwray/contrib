@@ -36,7 +36,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
   const { isAuthenticated } = useAuth();
-  const hisory = useHistory();
+  const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
@@ -77,8 +77,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
       return;
     }
 
-    RedirectWithReturnAfterLogin(hisory.location.pathname);
-  }, [auction?.id, addToast, followAuction, isAuthenticated, hisory.location.pathname, RedirectWithReturnAfterLogin]);
+    RedirectWithReturnAfterLogin(history.location.pathname);
+  }, [auction?.id, addToast, followAuction, isAuthenticated, history.location.pathname, RedirectWithReturnAfterLogin]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {

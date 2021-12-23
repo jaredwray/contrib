@@ -20,9 +20,8 @@ export function toHumanReadableDuration(date: string): string | null {
   const daysLeft = Math.floor(hours / 24);
   const minutesLeft = minutes - Math.floor(minutes / 60) * 60;
   const left = [daysLeft ? `${daysLeft}d` : '', hoursLeft ? `${hoursLeft}h` : '', minutesLeft ? `${minutesLeft}m` : ''];
-  if (inPast) {
-    left.push('ago');
-  }
+
+  if (inPast) left.push('ago');
 
   return left.filter(Boolean).join(' ');
 }
@@ -31,5 +30,6 @@ export function toFullHumanReadableDatetime(prop: Date): string | null {
   const date = toDate(prop);
   const day = format(date, 'd.MM.yy');
   const time = format(date, 'hh:mm a');
+
   return `${day} @ ${time}`;
 }

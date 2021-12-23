@@ -3,6 +3,8 @@ import { ComponentType, FC, ReactElement, useCallback, useContext } from 'react'
 import { Redirect, Route } from 'react-router-dom';
 
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import { useAuth } from 'src/helpers/useAuth';
+import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 
 interface Props {
   component: ComponentType;
@@ -10,8 +12,10 @@ interface Props {
   role: string;
 }
 
-const PrivateRoute: FC<Props> = ({ component, path, role }): ReactElement => {
+const PrivateRoute: FC<Props> = ({ component, path, role }): ReactElement | null => {
   const { account } = useContext(UserAccountContext);
+  const { isAuthenticated } = useAuth();
+  const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const isAllowed = useCallback(
     (role: string) => {
@@ -25,11 +29,11 @@ const PrivateRoute: FC<Props> = ({ component, path, role }): ReactElement => {
     [account],
   );
 
-  if (!isAllowed(role)) {
-    return <Redirect to="/" />;
-  }
+  if (isAllowed(role)) return <Route exact component={component} path={path} />;
+  if (isAuthenticated) return <Redirect to="/" />;
 
-  return <Route exact component={component} path={path} />;
+  RedirectWithReturnAfterLogin(window.location.pathname);
+  return null;
 };
 
 export default PrivateRoute;
