@@ -4,7 +4,6 @@ export const useRedirectWithReturnAfterLogin = () => {
   const history = useHistory();
 
   return (redirectPath: string) => {
-    const redirectURL = `/log-in?returnURL=${redirectPath}`;
-    history.push(redirectURL);
+    history.push(`/log-in?returnURL=${redirectPath}`);
   };
 };

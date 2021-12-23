@@ -90,7 +90,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
 
   const attachments = [...auction?.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
 
-  setPageTitle(`${auction.title} auction`);
+  setPageTitle(`${auction.title} auction${isDeliveryPage ? '| Delivery information' : ''}`);
 
   return (
     <Layout>

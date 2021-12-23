@@ -28,7 +28,7 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity, path }) => {
   const { account } = useContext(UserAccountContext);
   const { addToast } = useToasts();
   const { isAuthenticated } = useAuth();
-  const hisory = useHistory();
+  const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
   const [follow, { loading: followLoading }] = useMutation(isCharity ? FollowCharity : FollowInfluencer);
@@ -56,8 +56,8 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity, path }) => {
       return;
     }
 
-    RedirectWithReturnAfterLogin(hisory.location.pathname);
-  }, [item?.id, addToast, follow, isAuthenticated, hisory.location.pathname, isCharity, RedirectWithReturnAfterLogin]);
+    RedirectWithReturnAfterLogin(history.location.pathname);
+  }, [item?.id, addToast, follow, isAuthenticated, history.location.pathname, isCharity, RedirectWithReturnAfterLogin]);
 
   const handleUnfollow = useCallback(async () => {
     try {

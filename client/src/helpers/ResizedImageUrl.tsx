@@ -1,7 +1,5 @@
 export default function ResizedImageUrl(url: string, size: number) {
-  if (!url.startsWith('https://storage.googleapis.com/')) {
-    return url;
-  }
+  if (!url.startsWith('https://storage.googleapis.com/')) return url;
 
   const match = url.match(/(\S+)\.(\w{3,4})/);
 
