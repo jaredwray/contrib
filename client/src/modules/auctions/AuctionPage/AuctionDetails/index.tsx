@@ -264,7 +264,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
         </Link>
       )}
       {!isDeliveryPage && withDeliveryInfoLink && (
-        <Link className="d-block mt-4" to={`/auctions/${auctionId}/delivery`}>
+        <Link className="d-block mt-4" to={`/auctions/${auctionId}/delivery/info`}>
           Delivery info page
         </Link>
       )}

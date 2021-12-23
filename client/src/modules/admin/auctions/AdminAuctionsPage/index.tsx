@@ -106,7 +106,7 @@ export default function AdminAuctionsPage() {
               <td className={styles.actions}>
                 <ActionsDropdown>
                   {(auction.isSettled || auction.isSold) && (
-                    <Link className="dropdown-item text--body" to={`/auctions/${auction.id}/delivery-info`}>
+                    <Link className="dropdown-item text--body" to={`/auctions/${auction.id}/delivery/info`}>
                       Delivery info page
                     </Link>
                   )}

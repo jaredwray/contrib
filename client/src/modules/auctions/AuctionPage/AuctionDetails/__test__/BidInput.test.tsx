@@ -4,7 +4,7 @@ import { ReactWrapper, mount } from 'enzyme';
 import { BidInput } from '../BidInput';
 import Form from 'src/components/forms/Form/Form';
 
-describe('Should render correctly "BidInput"', () => {
+describe('BidInput', () => {
   const props: any = {
     minBid: Dinero({ amount: 1, currency: 'USD' }),
     onSubmit: jest.fn(),

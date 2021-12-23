@@ -31,18 +31,6 @@ describe('UserProfile', () => {
     expect(wrapper!).toHaveLength(1);
   });
 
-  describe('after function call "setShowDialog"', () => {
-    xit('component Modal has opened ', async () => {
-      act(() => {
-        wrapper!.children().find(ProfileInformation).props().setShowDialog();
-      });
-
-      wrapper.update();
-
-      expect(wrapper!.children().find(Dialog)).toBeDefined();
-    });
-  });
-
   describe('after function call "setCloseDialog"', () => {
     it('component Modal has closed ', async () => {
       act(() => {
@@ -52,18 +40,6 @@ describe('UserProfile', () => {
       wrapper.update();
 
       expect(wrapper!.children().find(Dialog).getDOMNode()).toEqual(null);
-    });
-  });
-
-  describe('after function call "setPhoneNumber"', () => {
-    xit('component state "phoneNumber" has changed ', async () => {
-      act(() => {
-        wrapper!.children().find(Modal).props().setPhoneNumber('222');
-      });
-
-      wrapper.update();
-
-      expect(wrapper!.children().find(ProfileInformation).props().currentPhoneNumber).toEqual('222');
     });
   });
 });

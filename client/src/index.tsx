@@ -161,7 +161,7 @@ export const App = () => {
                   <Route component={DeliveryStatusPage} path="/auctions/:auctionId/delivery/status" />
                   <PrivateRoute
                     component={AuctionDeliveryInfoPage}
-                    path="/auctions/:auctionId/delivery"
+                    path="/auctions/:auctionId/delivery/info"
                     role="influencer"
                   />
                   <Route exact component={AuctionPage} path="/auctions/:auctionId" />

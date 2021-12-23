@@ -1,5 +1,6 @@
-import { render } from '@testing-library/react';
+import { mount, ReactWrapper } from 'enzyme';
 import { ToastProvider } from 'react-toast-notifications';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import ShareBtn from '..';
 
@@ -8,9 +9,11 @@ const props: any = {
 };
 
 test('renders without crashing', () => {
-  render(
+  let wrapper: ReactWrapper = mount(
     <ToastProvider>
       <ShareBtn {...props} />
     </ToastProvider>,
   );
+
+  wrapper.find(CopyToClipboard).props().onCopy('hello world', true);
 });

@@ -46,6 +46,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
   useEffect(() => {
     subscribeToMore({
       document: AuctionSubscription,
+      /* istanbul ignore next */
       updateQuery: (prev, incoming) => {
         if (!incoming.subscriptionData.data) return prev;
         const { auction } = incoming.subscriptionData.data;
