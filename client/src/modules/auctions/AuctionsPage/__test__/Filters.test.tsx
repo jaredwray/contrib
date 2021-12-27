@@ -37,6 +37,7 @@ describe('Should render correctly "Filters"', () => {
           {
             id: 'testId1',
             name: 'test',
+            semanticId: 'test',
             profileStatus: 'COMPLETED',
             status: 'ACTIVE',
             stripeStatus: 'ACTIVE',
