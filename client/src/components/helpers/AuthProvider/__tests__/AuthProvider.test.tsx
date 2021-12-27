@@ -19,7 +19,17 @@ describe('AuthProvider', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it('component is defined', () => {
+  xit('component is defined', () => {
     expect(wrapper).toHaveLength(1);
+  });
+
+  it('test', async () => {
+    // const a: any = {
+    //   json: jest.fn().mockResolvedValue({}),
+    // };
+    // jest.spyOn(global, 'fetch').mockResolvedValue(a);
+
+    await new Promise((resolve) => setTimeout(resolve));
+    wrapper.update();
   });
 });

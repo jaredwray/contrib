@@ -71,12 +71,12 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     auction?.auctionOrganizer?.id,
   );
 
-  if (!account?.isAdmin && !isMyAuction && isDeliveryPage && (!auction?.isSettled || !auction?.isStopped)) {
+  if ((!account?.isAdmin || !isMyAuction) && isDeliveryPage && (!auction?.isSettled || !auction?.isSold)) {
     history.goBack();
     return null;
   }
 
-  if (!account?.isAdmin && !isMyAuction && (auction?.isDraft || auction?.isStopped)) {
+  if ((!account?.isAdmin || !isMyAuction) && (auction?.isDraft || auction?.isStopped)) {
     history.push(`/`);
     return null;
   }

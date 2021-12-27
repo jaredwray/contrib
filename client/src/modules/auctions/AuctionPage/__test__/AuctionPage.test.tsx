@@ -8,6 +8,8 @@ import { InMemoryCache } from '@apollo/client';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import Layout from 'src/components/layouts/Layout';
+import { testAccount } from 'src/helpers/testHelpers/account';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import AuctionPage from '../';
 
@@ -159,45 +161,19 @@ describe('AuctionPage', () => {
   });
 
   describe('when the auction is draft and account owner is admin', () => {
-    xit('redirects to previos page', async () => {
-      // const contextValues: any = {
-      //   account: {
-      //     assistant: null,
-      //     charity: null,
-      //     createdAt: '2021-04-13T08:09:54.943Z',
-      //     id: 'test',
-      //     influencerProfile: {
-      //       id: 'testId',
-      //       profileDescription: 'test',
-      //       name: 'test',
-      //       sport: 'test',
-      //     },
-      //     isAdmin: false,
-      //     mongodbId: 'testId',
-      //     notAcceptedTerms: null,
-      //     paymentInformation: {
-      //       id: 'testId',
-      //       cardNumberLast4: '4242',
-      //       cardBrand: 'Visa',
-      //       cardExpirationMonth: 4,
-      //     },
-      //     phoneNumber: '+000000000000',
-      //     status: 'COMPLETED',
-      //   },
-      // };
-
-      // jest.spyOn(React, 'useContext').mockImplementation(() => contextValues);
-
+    it('redirects to previos page', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
-          <MemoryRouter>
-            <ToastProvider>
-              <MockedProvider cache={draftAuctionCache}>
-                <AuctionPage />
-              </MockedProvider>
-            </ToastProvider>
-          </MemoryRouter>,
+          <UserAccountContext.Provider value={testAccount}>
+            <MemoryRouter>
+              <ToastProvider>
+                <MockedProvider cache={activeAuctionCache}>
+                  <AuctionPage isDeliveryPage={true} />
+                </MockedProvider>
+              </ToastProvider>
+            </MemoryRouter>
+          </UserAccountContext.Provider>,
         );
         await new Promise((resolve) => setTimeout(resolve));
         wrapper.update();
