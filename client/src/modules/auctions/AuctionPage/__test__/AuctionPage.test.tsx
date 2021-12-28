@@ -1,11 +1,12 @@
 import { mount, ReactWrapper } from 'enzyme';
-import { MemoryRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
 import { InMemoryCache } from '@apollo/client';
+import { createMemoryHistory } from 'history';
 
-import { AuctionQuery } from 'src/apollo/queries/auctions';
+import { AuctionQuery, AuctionSubscription } from 'src/apollo/queries/auctions';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
 import Layout from 'src/components/layouts/Layout';
 import { testAccount } from 'src/helpers/testHelpers/account';
@@ -13,25 +14,22 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 
 import AuctionPage from '../';
 
-const mockHistoryFn = jest.fn();
+const history = createMemoryHistory();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useParams: () => ({
-    auctionId: 'testId',
-  }),
-  useHistory: () => ({
-    push: mockHistoryFn,
-    replace: mockHistoryFn,
-    goBack: mockHistoryFn,
-  }),
+  useParams: () => ({ auctionId: 'testId' }),
   useRouteMatch: () => ({ url: '/auctions/testId' }),
 }));
 
+const owner = {
+  ...testAccount,
+  influencerProfile: AuctionQueryAuction.auctionOrganizer,
+};
 const draftAuctionCache = new InMemoryCache();
-const nullAuctionCache = new InMemoryCache();
 const activeAuctionCache = new InMemoryCache();
 const stoppedAuctionCache = new InMemoryCache();
+const soldAuctionCache = new InMemoryCache();
 
 stoppedAuctionCache.writeQuery({
   query: AuctionQuery,
@@ -40,23 +38,20 @@ stoppedAuctionCache.writeQuery({
     auction: AuctionQueryAuction,
   },
 });
-
-nullAuctionCache.writeQuery({
+soldAuctionCache.writeQuery({
   query: AuctionQuery,
   variables: { id: 'testId' },
   data: {
-    auction: null,
+    auction: { ...AuctionQueryAuction, isSold: true, isStopped: false },
   },
 });
-
 activeAuctionCache.writeQuery({
   query: AuctionQuery,
   variables: { id: 'testId' },
   data: {
-    auction: { ...AuctionQueryAuction, isActive: true, isDraft: false, isStopped: false },
+    auction: { ...AuctionQueryAuction, isActive: true, isStopped: false },
   },
 });
-
 draftAuctionCache.writeQuery({
   query: AuctionQuery,
   variables: { id: 'testId' },
@@ -67,118 +62,207 @@ draftAuctionCache.writeQuery({
 
 describe('AuctionPage', () => {
   describe('when invalid id provided', () => {
+    const nullAuctionCache = new InMemoryCache();
+    nullAuctionCache.writeQuery({
+      query: AuctionQuery,
+      variables: { id: 'testId' },
+      data: {
+        auction: null,
+      },
+    });
+
     it('redirects to 404 page', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
-          <MemoryRouter>
+          <Router history={history}>
             <ToastProvider>
               <MockedProvider cache={nullAuctionCache}>
                 <AuctionPage />
               </MockedProvider>
             </ToastProvider>
-          </MemoryRouter>,
+          </Router>,
         );
-        await new Promise((resolve) => setTimeout(resolve));
-        wrapper.update();
       });
-      expect(mockHistoryFn).toBeCalled();
+      expect(history.location.pathname).toBe(`/404`);
     });
   });
 
-  describe('with valid data', () => {
-    it('renders the component', async () => {
+  describe('for an admin', () => {
+    it('renders the component for valid auction', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
-          <MemoryRouter>
-            <ToastProvider>
-              <MockedProvider cache={activeAuctionCache}>
-                <AuctionPage />
-              </MockedProvider>
-            </ToastProvider>
-          </MemoryRouter>,
+          <UserAccountContext.Provider value={testAccount}>
+            <Router history={history}>
+              <ToastProvider>
+                <MockedProvider cache={activeAuctionCache}>
+                  <AuctionPage />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>
+          </UserAccountContext.Provider>,
+        );
+      });
+      expect(wrapper!.find(Layout)).toHaveLength(1);
+    });
+
+    it('renders the component when the auction is stopped', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <UserAccountContext.Provider value={testAccount}>
+            <Router history={history}>
+              <ToastProvider>
+                <MockedProvider cache={stoppedAuctionCache}>
+                  <AuctionPage />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>
+          </UserAccountContext.Provider>,
+        );
+      });
+      expect(wrapper!.find(Layout)).toHaveLength(1);
+    });
+
+    it('renders the component when the auction is sold and it is delivery page', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <UserAccountContext.Provider value={testAccount}>
+            <Router history={history}>
+              <ToastProvider>
+                <MockedProvider cache={soldAuctionCache}>
+                  <AuctionPage isDeliveryPage={true} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>
+          </UserAccountContext.Provider>,
         );
       });
       expect(wrapper!.find(Layout)).toHaveLength(1);
     });
   });
 
-  describe('with an error or when an auction is not loaded yet', () => {
-    it('returns null', async () => {
+  describe('for an owner', () => {
+    it('renders the component for valid auction', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
-          <MemoryRouter>
-            <MockedProvider>
-              <AuctionPage />
-            </MockedProvider>
-          </MemoryRouter>,
+          <UserAccountContext.Provider value={owner}>
+            <Router history={history}>
+              <ToastProvider>
+                <MockedProvider cache={activeAuctionCache}>
+                  <AuctionPage />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>
+          </UserAccountContext.Provider>,
         );
       });
-      expect(wrapper!.find(Layout)).toHaveLength(0);
+      expect(wrapper!.find(Layout)).toHaveLength(1);
+    });
+
+    it('renders the component when the auction is stopped', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <UserAccountContext.Provider value={owner}>
+            <Router history={history}>
+              <ToastProvider>
+                <MockedProvider cache={stoppedAuctionCache}>
+                  <AuctionPage />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>
+          </UserAccountContext.Provider>,
+        );
+      });
+      expect(wrapper!.find(Layout)).toHaveLength(1);
+    });
+
+    it('renders the component when the auction is sold and it is delivery page', async () => {
+      let wrapper: ReactWrapper;
+      await act(async () => {
+        wrapper = mount(
+          <UserAccountContext.Provider value={owner}>
+            <Router history={history}>
+              <ToastProvider>
+                <MockedProvider cache={soldAuctionCache}>
+                  <AuctionPage isDeliveryPage={true} />
+                </MockedProvider>
+              </ToastProvider>
+            </Router>
+          </UserAccountContext.Provider>,
+        );
+      });
+      expect(wrapper!.find(Layout)).toHaveLength(1);
     });
   });
 
-  describe('when the auction is stopped', () => {
-    it('redirects to the Home page', async () => {
+  describe('when an account is not logged in', () => {
+    it('redirects to the Home page when the auction is stopped', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
-          <MemoryRouter>
+          <Router history={history}>
             <ToastProvider>
               <MockedProvider cache={stoppedAuctionCache}>
                 <AuctionPage />
               </MockedProvider>
             </ToastProvider>
-          </MemoryRouter>,
+          </Router>,
         );
-        await new Promise((resolve) => setTimeout(resolve));
-        wrapper.update();
       });
-      expect(mockHistoryFn).toHaveBeenCalled();
+      expect(history.location.pathname).toBe(`/`);
     });
-  });
 
-  describe('when the auction is draft', () => {
-    it('redirects to the Home page', async () => {
-      let wrapper: ReactWrapper;
-      await act(async () => {
-        wrapper = mount(
-          <MemoryRouter>
-            <ToastProvider>
-              <MockedProvider cache={draftAuctionCache}>
-                <AuctionPage />
-              </MockedProvider>
-            </ToastProvider>
-          </MemoryRouter>,
-        );
-        await new Promise((resolve) => setTimeout(resolve));
-        wrapper.update();
-      });
-      expect(mockHistoryFn).toHaveBeenCalled();
-    });
-  });
-
-  describe('when the auction is draft and account owner is admin', () => {
-    it('redirects to previos page', async () => {
+    it('renders the component for valid auction', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
           <UserAccountContext.Provider value={testAccount}>
-            <MemoryRouter>
+            <Router history={history}>
               <ToastProvider>
                 <MockedProvider cache={activeAuctionCache}>
-                  <AuctionPage isDeliveryPage={true} />
+                  <AuctionPage />
                 </MockedProvider>
               </ToastProvider>
-            </MemoryRouter>
+            </Router>
           </UserAccountContext.Provider>,
         );
-        await new Promise((resolve) => setTimeout(resolve));
-        wrapper.update();
       });
-      expect(mockHistoryFn).toHaveBeenCalled();
+      expect(wrapper!.find(Layout)).toHaveLength(1);
     });
+  });
+
+  it('returns null when an auction is not loaded yet', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <Router history={history}>
+          <MockedProvider>
+            <AuctionPage />
+          </MockedProvider>
+        </Router>,
+      );
+    });
+    expect(wrapper!.find(Layout)).toHaveLength(0);
+  });
+
+  it('redirects to the Home page when the auction is draft', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <Router history={history}>
+          <ToastProvider>
+            <MockedProvider cache={draftAuctionCache}>
+              <AuctionPage />
+            </MockedProvider>
+          </ToastProvider>
+        </Router>,
+      );
+    });
+    expect(history.location.pathname).toBe(`/`);
   });
 });

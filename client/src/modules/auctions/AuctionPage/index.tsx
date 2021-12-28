@@ -9,7 +9,6 @@ import { AuctionQuery, AuctionSubscription, AuctionMetricsQuery } from 'src/apol
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
-import { CharityStatus } from 'src/types/Charity';
 
 import About from './About';
 import AttachmentsSlider from './AttachmentsSlider';
@@ -37,8 +36,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
 
   const [requestMetrics] = useLazyQuery(AuctionMetricsQuery, {
     variables: { auctionId },
-    /* istanbul ignore next */
-    onCompleted: ({ getAuctionMetrics }) => {
+    onCompleted: ({ getAuctionMetrics }) => /* istanbul ignore next */ {
       setMetrics(getAuctionMetrics);
     },
   });
@@ -46,8 +44,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
   useEffect(() => {
     subscribeToMore({
       document: AuctionSubscription,
-      /* istanbul ignore next */
-      updateQuery: (prev, incoming) => {
+      updateQuery: (prev, incoming) => /* istanbul ignore next */ {
         if (!incoming.subscriptionData.data) return prev;
         const { auction } = incoming.subscriptionData.data;
         return { auction: { ...prev.auction, ...auction } };
@@ -56,39 +53,31 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
   }, [subscribeToMore]);
 
   const auction = auctionData?.auction;
+  const accoutIsOwner = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
+    auction?.auctionOrganizer?.id,
+  );
+  const accoutIsOwnerOrAdmin = account?.isAdmin || accoutIsOwner;
 
+  if (error || auction === undefined) return null;
   if (auction === null) {
     history.replace('/404');
     return null;
   }
 
-  if (auction?.isDraft) {
+  if (
+    auction.isDraft ||
+    (auction.isStopped && !accoutIsOwnerOrAdmin) ||
+    (isDeliveryPage && !accoutIsOwnerOrAdmin && auction && !(auction.isSettled || auction.isSold))
+  ) {
     history.push(`/`);
     return null;
   }
 
-  const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
-    auction?.auctionOrganizer?.id,
-  );
-
-  if ((!account?.isAdmin || !isMyAuction) && isDeliveryPage && (!auction?.isSettled || !auction?.isSold)) {
-    history.goBack();
-    return null;
-  }
-
-  if ((!account?.isAdmin || !isMyAuction) && (auction?.isDraft || auction?.isStopped)) {
-    history.push(`/`);
-    return null;
-  }
-
-  if (error || auction === undefined) return null;
-
-  const isActiveCharity = auction?.charity?.status === CharityStatus.ACTIVE;
   const accountEntityId = account?.charity?.id || account?.influencerProfile?.id || account?.assistant?.influencerId;
   const withMetrcis =
-    accountEntityId === auction?.auctionOrganizer?.id || accountEntityId === auction?.charity?.id || account?.isAdmin;
-
-  const attachments = [...auction?.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
+    accountEntityId === auction.auctionOrganizer?.id || accountEntityId === auction.charity?.id || account?.isAdmin;
+  /* istanbul ignore next */
+  const attachments = [...auction.attachments].sort((a, b) => (a.type > b.type ? -1 : 1));
 
   setPageTitle(`${auction.title} auction${isDeliveryPage ? '| Delivery information' : ''}`);
 
@@ -111,11 +100,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
           <Col md="6">
             <Author {...auction.auctionOrganizer} />
             <About {...auction} />
-            {(auction?.charity && account?.isAdmin) || isActiveCharity ? (
-              <Benefits {...auction.charity} />
-            ) : (
-              <p className="pb-2 d-md-none" />
-            )}
+            <Benefits {...auction.charity} />
           </Col>
           <Col md="7" />
         </Row>

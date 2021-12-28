@@ -4,7 +4,10 @@ const date = new Date();
 const endDate = date.setDate(date.getDate() + 2);
 
 export const AuctionQueryAuction = {
-  attachments: [{ cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test' }],
+  attachments: [
+    { cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test' },
+    { cloudflareUrl: 'cloudflare/url', thumbnail: null, type: 'VIDEO', uid: 'uid', url: null },
+  ],
   auctionOrganizer: {
     id: 'test',
     name: 'test',
