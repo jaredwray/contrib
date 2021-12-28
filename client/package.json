@@ -112,5 +112,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.ts?(x)",
+      "!src/index.tsx",
+      "!src/apollo/**/*.ts?(x)",
+      "!src/types/*.ts?(x)"
+    ]
   }
 }

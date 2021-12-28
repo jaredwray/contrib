@@ -3,9 +3,11 @@ import { App } from './index';
 
 jest.mock('react-dom', () => ({ render: jest.fn() }));
 
-test('renders with App and root div', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  global.document.getElementById = (elementId): any => elementId === 'root' && div;
-  expect(ReactDOM.render).toHaveBeenCalledWith(<App />, div);
+describe('App', () => {
+  it('renders without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(<App />, div);
+    global.document.getElementById = (elementId): any => elementId === 'root' && div;
+    expect(ReactDOM.render).toHaveBeenCalledWith(<App />, div);
+  });
 });
