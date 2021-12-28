@@ -118,7 +118,7 @@
       "**/*.ts?(x)",
       "!src/index.tsx",
       "!src/apollo/**/*.ts?(x)",
-      "!src/types/*.ts?(x)"
+      "!src/types/**/*.ts?(x)"
     ]
   }
 }
