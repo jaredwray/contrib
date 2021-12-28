@@ -10,7 +10,6 @@ import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import styles from './AvatarPicker.module.scss';
 
 const MAX_AVATAR_SIZE_MB = 2;
-
 const ACCEPTED_FILE_TYPES = ['png', 'jpeg', 'jpg', 'webp'];
 const ACCEPTED_FILE_TYPES_STRING = ACCEPTED_FILE_TYPES.map((t) => `.${t}`).join(',');
 
@@ -18,6 +17,26 @@ interface Props {
   item: any;
   updateMutation: any;
   itemId: string;
+}
+
+function getFileToUpload(event: ChangeEvent<HTMLInputElement>, handleError: (message: string) => void): File | null {
+  if (!event.target.files?.length) return null;
+
+  const image = event.target.files[0];
+  const fileSizeInMegaBytes = image.size / (1024 * 1024);
+
+  if (fileSizeInMegaBytes > MAX_AVATAR_SIZE_MB) {
+    handleError(`File is too big! Maximum allowed size is ${MAX_AVATAR_SIZE_MB}MB`);
+    return null;
+  }
+
+  const ext = image.name.split('.').pop() ?? '';
+  if (!ACCEPTED_FILE_TYPES.includes(ext)) {
+    handleError(`Only following image types are supported: ${ACCEPTED_FILE_TYPES.join(', ')}`);
+    return null;
+  }
+
+  return image;
 }
 
 export const AvatarPicker: FC<Props> = ({ item, updateMutation, itemId }) => {
@@ -32,15 +51,13 @@ export const AvatarPicker: FC<Props> = ({ item, updateMutation, itemId }) => {
     },
     [addToast],
   );
+
   const handleFileUpload = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const image = getFileToUpload(event, handleError);
-      if (!image) {
-        return;
-      }
+      if (!image) return;
 
       setUploadPreviewUrl(URL.createObjectURL(image));
-
       updateInfluencerProfileAvatar({
         variables: { [itemId]: item.id, image },
       }).catch((error) => {
@@ -51,14 +68,10 @@ export const AvatarPicker: FC<Props> = ({ item, updateMutation, itemId }) => {
   );
 
   const handleSelectFileToUpload = useCallback(() => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    if (fileInputRef.current) fileInputRef.current.click();
   }, [fileInputRef]);
 
-  if (!item) {
-    return null;
-  }
+  if (!item) return null;
 
   return (
     <>
@@ -87,25 +100,3 @@ export const AvatarPicker: FC<Props> = ({ item, updateMutation, itemId }) => {
     </>
   );
 };
-
-function getFileToUpload(event: ChangeEvent<HTMLInputElement>, handleError: (message: string) => void): File | null {
-  if (!event.target.files?.length) {
-    return null;
-  }
-
-  const image = event.target.files[0];
-  const fileSizeInMegaBytes = image.size / (1024 * 1024);
-
-  if (fileSizeInMegaBytes > MAX_AVATAR_SIZE_MB) {
-    handleError(`File is too big! Maximum allowed size is ${MAX_AVATAR_SIZE_MB}MB`);
-    return null;
-  }
-
-  const ext = image.name.split('.').pop() ?? '';
-  if (!ACCEPTED_FILE_TYPES.includes(ext)) {
-    handleError(`Only following image types are supported: ${ACCEPTED_FILE_TYPES.join(', ')}`);
-    return null;
-  }
-
-  return image;
-}

@@ -8,11 +8,11 @@ import AsyncButton from 'src/components/buttons/AsyncButton';
 import styles from './SubmitButton.module.scss';
 
 interface Props {
-  text?: string;
+  text: string;
   className?: string;
   disabled?: boolean;
 }
-export const SubmitButton: FC<Props> = ({ text, children, className, disabled }) => {
+export const SubmitButton: FC<Props> = ({ text, className, disabled }) => {
   const { submitting } = useFormState({ subscription: { submitting: true } });
 
   return (
@@ -23,7 +23,7 @@ export const SubmitButton: FC<Props> = ({ text, children, className, disabled })
         loading={submitting}
         type="submit"
       >
-        {text || children}
+        {text}
       </AsyncButton>
     </div>
   );

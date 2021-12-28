@@ -1,5 +1,6 @@
 export const metrics = {
   clicks: [
+    { date: '2021-06-30T09:00:00+0000', clicks: '0' },
     { date: '2021-06-29T09:00:00+0000', clicks: '0' },
     { date: '2021-06-29T08:00:00+0000', clicks: '0' },
     { date: '2021-06-29T07:00:00+0000', clicks: '0' },
@@ -27,6 +28,7 @@ export const metrics = {
     { date: '2021-06-28T09:00:00+0000', clicks: '0' },
   ],
   clicksByDay: [
+    { date: '2021-06-30T00:00:00+0000', clicks: '0' },
     { date: '2021-06-29T00:00:00+0000', clicks: '0' },
     { date: '2021-06-28T00:00:00+0000', clicks: '0' },
     { date: '2021-06-27T00:00:00+0000', clicks: '0' },
@@ -40,4 +42,22 @@ export const metrics = {
   ],
   browsers: [{ value: 'Chrome', clicks: '4' }],
   oss: [{ value: 'Windows', clicks: '4' }],
+};
+
+export const shortMetrics = {
+  clicks: [{ date: '2021-06-29T09:00:00+0000', clicks: '1' }],
+  clicksByDay: [{ date: '2021-06-29T00:00:00+0000', clicks: '1' }],
+  countries: [{ __typename: 'Countries', value: 'BY', clicks: '1' }],
+  referrers: [],
+  browsers: [{ value: 'Chrome', clicks: '1' }],
+  oss: [{ value: 'Windows', clicks: '1' }],
+};
+
+export const blankMetrics = {
+  clicks: null,
+  clicksByDay: null,
+  countries: null,
+  referrers: null,
+  browsers: null,
+  oss: null,
 };
