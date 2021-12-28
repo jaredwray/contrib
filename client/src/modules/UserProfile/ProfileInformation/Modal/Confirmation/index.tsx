@@ -30,19 +30,17 @@ const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setPhoneNumber }
       onClose();
     },
   });
+  const loading = verifyLoading || confirmLoading;
 
   useEffect(() => {
     const refreshCanResendOtp = () => {
       const durationSinceOtpSent = otpSentAt.diffNow().negate();
       const nextCanResendOtp = durationSinceOtpSent > OtpResendDuration;
 
-      if (nextCanResendOtp !== canResendOtp) {
-        setCanResendOtp(nextCanResendOtp);
-      }
+      if (nextCanResendOtp !== canResendOtp) setCanResendOtp(nextCanResendOtp);
     };
 
     refreshCanResendOtp();
-
     const interval = setInterval(refreshCanResendOtp, DELAY_VALUE_MS);
 
     return () => clearInterval(interval);
@@ -68,13 +66,9 @@ const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setPhoneNumber }
   const handleResendCode = useCallback(() => {
     setError('');
     verifyPhoneNumber({ variables: { phoneNumber: `+${newPhoneNumber}` } })
-      .then(() => {
-        setOtpSentAt(DateTime.local());
-      })
+      .then(() => setOtpSentAt(DateTime.local()))
       .catch((error) => setError(error.message));
   }, [verifyPhoneNumber, setOtpSentAt, newPhoneNumber]);
-
-  const loading = verifyLoading || confirmLoading;
 
   return (
     <Form className="pt-3" onSubmit={handleSubmitConfirmation}>

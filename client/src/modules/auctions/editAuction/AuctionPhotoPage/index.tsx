@@ -91,7 +91,7 @@ const AuctionPhotoPage = () => {
       onSubmit={handleSubmit}
     >
       <AttachmentModal attachment={selectedAttachment} closeModal={closeModal} />
-      <Row childrenWrapperCLassName={styles.dropzoneWrapper} description={description}>
+      <Row childrenWrapperClassName={styles.dropzoneWrapper} description={description}>
         <UploadingDropzone
           accepted=".png, .jpeg, .jpg, .webp"
           attachments={attachments}

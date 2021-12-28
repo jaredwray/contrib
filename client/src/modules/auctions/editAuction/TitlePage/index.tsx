@@ -23,26 +23,19 @@ const EditAuctionPage = () => {
   const [getAuctionsDetails, { data: auctionData, error: loadingQuery }] = useLazyQuery(GetAuctionDetailsQuery);
 
   useEffect(() => {
-    if (auctionId) {
-      getAuctionsDetails({ variables: { id: auctionId } });
-    }
+    if (auctionId) getAuctionsDetails({ variables: { id: auctionId } });
   }, [auctionId, getAuctionsDetails]);
 
   const auction = auctionData?.auction;
   const { isActive } = auction || {};
 
   const [createAuction, { loading }] = useMutation(CreateAuctionMutation, {
-    /* istanbul ignore next */
-    onCompleted({ createAuction }) {
-      if (createAuction.id) {
-        const newUrl = `/auctions/${createAuction.id}/description`;
-        history.push(newUrl);
-      }
+    onCompleted({ createAuction }) /* istanbul ignore next */ {
+      if (createAuction.id) history.push(`/auctions/${createAuction.id}/description`);
     },
   });
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
-    /* istanbul ignore next */
-    onCompleted() {
+    onCompleted() /* istanbul ignore next */ {
       if (isActive) {
         history.goBack();
         return;
@@ -51,40 +44,48 @@ const EditAuctionPage = () => {
     },
   });
 
+  const tryToUpdateAuction = useCallback(
+    async (values) => {
+      try {
+        await updateAuction({ variables: { id: auctionId, ...values } });
+      } catch (error: any) {
+        showError(error.message);
+      }
+
+      if (isActive) showMessage('Updated');
+    },
+    [updateAuction, showError, showMessage, auctionId, isActive],
+  );
+
   const handleSubmit = useCallback(
     async (values) => {
       if (auctionId) {
-        try {
-          await updateAuction({ variables: { id: auctionId, ...values } });
-          if (isActive) {
-            showMessage('Updated');
-          }
-        } catch (error: any) {
-          showError(error.message);
-        }
+        tryToUpdateAuction(values);
         return;
       }
+      const variables = ownerId ? { ...values, organizerId: ownerId } : values;
+
       try {
-        const variables = ownerId ? { ...values, organizerId: ownerId } : values;
         await createAuction({ variables });
       } catch (error: any) {
         showError(error.message);
       }
     },
-    [auctionId, updateAuction, showMessage, showError, isActive, ownerId, createAuction],
+    [auctionId, showError, ownerId, createAuction, tryToUpdateAuction],
   );
+
   if (auctionId) {
     if (!account?.isAdmin && isActive) {
       history.push(`/`);
+      return null;
     }
     if (auction === null) {
       history.replace('/404');
       return null;
     }
-    if (auction === undefined) {
-      return null;
-    }
+    if (auction === undefined) return null;
   }
+
   setPageTitle(auction?.title ? `Edit Auction ${auction?.title} | Auction Title` : 'New Auction | Auction Title');
 
   return (
