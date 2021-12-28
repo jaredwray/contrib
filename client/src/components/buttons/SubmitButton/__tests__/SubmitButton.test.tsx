@@ -1,15 +1,27 @@
 import { render } from '@testing-library/react';
 
-import { SubmitButton } from '..';
-import AsyncButton from 'src/components/buttons/AsyncButton';
 import Form from 'src/components/forms/Form/Form';
+import { SubmitButton } from '..';
 
 const mockedSumbit = jest.fn();
 
-test('renders without crashing', () => {
-  render(
-    <Form onSubmit={mockedSumbit}>
-      <AsyncButton loading={true} />
-    </Form>,
-  );
+describe('SubmitButton', () => {
+  describe('with default params', () => {
+    it('renders component', () => {
+      render(
+        <Form onSubmit={mockedSumbit}>
+          <SubmitButton text="text" />
+        </Form>,
+      );
+    });
+  });
+  describe('with all params', () => {
+    it('renders component', () => {
+      render(
+        <Form onSubmit={mockedSumbit}>
+          <SubmitButton text="text" className="pb-0" disabled={true} />
+        </Form>,
+      );
+    });
+  });
 });

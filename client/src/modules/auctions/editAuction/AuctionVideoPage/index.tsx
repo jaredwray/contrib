@@ -92,7 +92,7 @@ const AuctionVideoPage = () => {
       onSubmit={handleSubmit}
     >
       <AttachmentModal attachment={selectedAttachment} closeModal={closeModal} />
-      <Row childrenWrapperCLassName={styles.dropzoneWrapper} description={description}>
+      <Row childrenWrapperClassName={styles.dropzoneWrapper} description={description}>
         <UploadingDropzone
           accepted=".mp4, .webm, .opgg, .mov"
           attachments={attachments}

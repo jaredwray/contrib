@@ -8,10 +8,10 @@ import styles from './styles.module.scss';
 interface Props {
   title?: string;
   description: React.ReactNode;
-  childrenWrapperCLassName?: string;
+  childrenWrapperClassName?: string;
 }
 
-const Row: FC<Props> = ({ title, description, children, childrenWrapperCLassName }) => {
+const Row: FC<Props> = ({ title, description, children, childrenWrapperClassName }) => {
   return (
     <RbRow className={clsx('flex-column flex-md-row', styles.divider)}>
       <Col className="p-0">
@@ -19,7 +19,7 @@ const Row: FC<Props> = ({ title, description, children, childrenWrapperCLassName
         <p className="text--body">{description}</p>
       </Col>
 
-      <Col className={clsx('pl-md-5', childrenWrapperCLassName)}>{children}</Col>
+      <Col className={clsx('pl-md-5', childrenWrapperClassName)}>{children}</Col>
     </RbRow>
   );
 };
