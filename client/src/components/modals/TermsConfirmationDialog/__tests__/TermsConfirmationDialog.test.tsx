@@ -94,7 +94,7 @@ describe('TermsConfirmationDialog', () => {
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
-  xit('should submit form and call the mutation', async () => {
+  it('should submit form and call the mutation', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(

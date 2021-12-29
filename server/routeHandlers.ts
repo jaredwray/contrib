@@ -18,14 +18,6 @@ export default function appRouteHandlers(
     }
   });
 
-  //TODO: delete after generatation of semanticIds
-  app.post('/api/v1/generate-semantic-ids', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) return;
-    const result = await charity.generateSemanticIds();
-    return res.send(result ? 'Done' : 'Failed');
-  });
-  //TODO ends
-
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) return;
 
