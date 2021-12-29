@@ -245,28 +245,6 @@ export class CharityService {
     if (charity) throw new Error(`This name is already in use, please, try another.`);
   }
 
-  //TODO delete after generatation of semanticIds
-  public async generateSemanticIds() {
-    try {
-      const charities = await this.CharityModel.find({
-        semanticIds: { $exists: false },
-        profileStatus: CharityProfileStatus.COMPLETED,
-        name: { $ne: this.DEFAULT_NAME },
-      });
-
-      for (const charity of charities) {
-        charity.semanticIds = [slugify(charity.name)];
-
-        await charity.save();
-      }
-      return true;
-    } catch (error) {
-      AppLogger.error(`Something went wrong when try to generate semanticIds: ${error.message}`);
-      return false;
-    }
-  }
-  //TODO ends
-
   async updateCharityProfileById(id: string, input: UpdateCharityProfileInput): Promise<Charity | void> {
     const session = await this.connection.startSession();
     try {
