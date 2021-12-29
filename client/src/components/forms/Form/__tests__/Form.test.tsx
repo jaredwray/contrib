@@ -3,7 +3,7 @@ import Form from 'src/components/forms/Form/Form';
 import { Form as FinalForm } from 'react-final-form';
 import { act } from 'react-dom/test-utils';
 
-describe('Should render correctly "Form"', () => {
+describe('Form', () => {
   const props: any = {
     onSubmit: jest.fn(),
     constrains: 1,

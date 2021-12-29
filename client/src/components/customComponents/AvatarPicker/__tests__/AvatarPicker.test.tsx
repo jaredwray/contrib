@@ -4,7 +4,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
 import { AvatarPicker } from 'src/components/customComponents/AvatarPicker';
 
-describe('Should render correctly "AvatarPicker"', () => {
+describe('AvatarPicker', () => {
   const props: any = {
     item: {
       avatarUrl: 'test',
@@ -27,6 +27,7 @@ describe('Should render correctly "AvatarPicker"', () => {
   };
 
   let wrapper: any;
+
   beforeEach(() => {
     wrapper = mount(
       <ToastProvider>
@@ -36,9 +37,7 @@ describe('Should render correctly "AvatarPicker"', () => {
       </ToastProvider>,
     );
   });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+
   it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
   });

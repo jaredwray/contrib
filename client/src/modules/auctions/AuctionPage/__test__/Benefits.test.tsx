@@ -1,21 +1,38 @@
+import { act } from '@testing-library/react';
+import { mount } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'enzyme';
 
 import Benefits from '../Benefits';
 
-jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
-
-const props: any = {
+const defaultProps: any = {
   id: '123',
   name: 'test',
-  avatarUrl: '/test/url',
   status: 'status',
 };
 
-test('renders without crashing', () => {
-  render(
-    <Router>
-      <Benefits {...props} />
-    </Router>,
-  );
+describe('Benefits', () => {
+  describe('with default arguments', () => {
+    it('renders without crashing', () => {
+      const wrapper = mount(
+        <Router>
+          <Benefits {...defaultProps} />
+        </Router>,
+      );
+      expect(wrapper).toHaveLength(1);
+    });
+  });
+  describe('with all arguments', () => {
+    it('renders without crashing', () => {
+      const props = {
+        ...defaultProps,
+        avatarUrl: '/test/url',
+      };
+      const wrapper = mount(
+        <Router>
+          <Benefits {...props} />
+        </Router>,
+      );
+      expect(wrapper).toHaveLength(1);
+    });
+  });
 });

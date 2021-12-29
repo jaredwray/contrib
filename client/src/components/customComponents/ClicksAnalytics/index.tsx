@@ -77,13 +77,15 @@ export const ClicksAnalytics: FC<Props> = ({ metrics, isAuctionPage }) => {
   const dayCutter = (days: string[]) => {
     if (days.length <= 4) {
       return days.flatMap(() => ['12AM', '6AM', '12PM', '6PM']);
+    } else {
+      return days.flatMap(() => ['12AM', '12PM']);
     }
-    return days.flatMap(() => ['12AM', '12PM']);
   };
   const type = [
     { value: 1, label: 'per day' },
     { value: 0, label: 'per hour' },
   ];
+
   return (
     <>
       <Row>
@@ -107,84 +109,86 @@ export const ClicksAnalytics: FC<Props> = ({ metrics, isAuctionPage }) => {
         total clicks: <b>{totalClicks}</b>
       </p>
       <Row className="mb-4">
-        {perDay ? (
-          <Bar
-            data={ChartValues(clicksByDay.labels, clicksByDay.values)}
-            height={200}
-            options={{
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: (context: any) => {
-                      return `${context.dataset.label}: ${context.parsed.y}`;
+        {
+          /* istanbul ignore next */ perDay ? (
+            <Bar
+              data={ChartValues(clicksByDay.labels, clicksByDay.values)}
+              height={200}
+              options={{
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: (context: any) => {
+                        return `${context.dataset.label}: ${context.parsed.y}`;
+                      },
                     },
                   },
-                },
-                legend: {
-                  display: false,
-                },
-              },
-              responsive: true,
-            }}
-            type="bar"
-            width={600}
-          />
-        ) : (
-          <Bar
-            data={ChartValues(clicks.labels, clicks.values)}
-            height={200}
-            options={{
-              scales: {
-                y: {
-                  display: false,
-                },
-                x: {
-                  display: false,
-                  ticks: {
+                  legend: {
                     display: false,
                   },
                 },
-                AM_PM: {
-                  tooltips: {
-                    mode: 'index',
-                    intersect: false,
+                responsive: true,
+              }}
+              type="bar"
+              width={600}
+            />
+          ) : (
+            <Bar
+              data={ChartValues(clicks.labels, clicks.values)}
+              height={200}
+              options={{
+                scales: {
+                  y: {
+                    display: false,
                   },
-                  display: clicksByDay.labels.length <= 8,
-                  position: 'bottom',
-                  labels: dayCutter(clicksByDay.labels),
+                  x: {
+                    display: false,
+                    ticks: {
+                      display: false,
+                    },
+                  },
+                  AM_PM: {
+                    tooltips: {
+                      mode: 'index',
+                      intersect: false,
+                    },
+                    display: clicksByDay.labels.length <= 8,
+                    position: 'bottom',
+                    labels: dayCutter(clicksByDay.labels),
 
-                  ticks: {
-                    beginAtZero: true,
+                    ticks: {
+                      beginAtZero: true,
 
-                    display: true,
-                    font: {
-                      size: 8,
+                      display: true,
+                      font: {
+                        size: 8,
+                      },
+                    },
+                  },
+                  Days: {
+                    position: 'bottom',
+                    labels: clicksByDay.labels,
+                  },
+                },
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    callbacks: {
+                      title: (context: any) => {
+                        return `${context[0].label} ${clicks.dates[context[0].dataIndex]}`;
+                      },
                     },
                   },
                 },
-                Days: {
-                  position: 'bottom',
-                  labels: clicksByDay.labels,
-                },
-              },
-              plugins: {
-                legend: {
-                  display: false,
-                },
-                tooltip: {
-                  callbacks: {
-                    title: (context: any) => {
-                      return `${context[0].label} ${clicks.dates[context[0].dataIndex]}`;
-                    },
-                  },
-                },
-              },
-              responsive: true,
-            }}
-            type="bar"
-            width={600}
-          />
-        )}
+                responsive: true,
+              }}
+              type="bar"
+              width={600}
+            />
+          )
+        }
       </Row>
       <Row>
         <ChartDoughnut
