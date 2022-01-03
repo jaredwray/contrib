@@ -215,10 +215,9 @@ export class AuctionRepository implements IAuctionRepository {
 
     AppLogger.info(`createAuction method called for #${auction._id.toString()} auction;`);
     AppLogger.info(
-      `current time dayjs value: ${dayjs()}; current time new Date value: ${new Date()}; ends date: ${dayjs().add(
-        3,
-        'days',
-      )}`,
+      `dayjs(): ${dayjs()}; new Date(): ${new Date()}; ends date: ${dayjs().add(3, 'days')}; startsAt after update: ${
+        auction.startsAt
+      }`,
     );
 
     return this.populateAuctionModel(auction).execPopulate();
@@ -262,16 +261,16 @@ export class AuctionRepository implements IAuctionRepository {
     auction.startsAt = dayjs().second(0);
     auction.endsAt = auction.startsAt.add(Math.abs(duration), 'days');
     auction.status = AuctionStatus.ACTIVE;
+    const updatedAuction = await auction.save();
 
     AppLogger.info(`activateAuction method called for #${id} auction;`);
     AppLogger.info(
-      `duration: ${duration}; current time dayjs value: ${dayjs()}; current time new Date value: ${new Date()}; new endsAt: ${dayjs().add(
+      `duration: ${duration}; dayjs: ${dayjs()}; new Date(): ${new Date()}; new endsAt: ${dayjs().add(
         Math.abs(duration),
         'days',
-      )}`,
+      )}; endsAt after update: ${auction.endsAt}`,
     );
 
-    const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
   }
 
