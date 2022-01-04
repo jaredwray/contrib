@@ -18,13 +18,21 @@ const CharitiesPage: FC = () => {
   });
 
   const [executeAuctionsSearch, { data }] = useLazyQuery(CharitiesListQuery);
-
   const charitiesData = data?.charitiesList;
   const changeFilters = useCallback((key: string, value: any) => {
     setFilters((prevState: any) => {
       return { ...prevState, pageSkip: 0, [key]: value };
     });
   }, []);
+  const sortOptions = [
+    { value: 'ACTIVATED_AT_ASC', label: 'Newest' },
+    { value: 'ACTIVATED_AT_DESC', label: 'Latest' },
+    { value: 'NAME_ASC', label: 'Name: A - Z' },
+    { value: 'NAME_DESC', label: 'Name: Z - A' },
+    { value: 'TOTALRAISEDAMOUNT_ASC', label: 'Raised: Low to high' },
+    { value: 'TOTALRAISEDAMOUNT_DESC', label: 'Raised: High to low' },
+  ];
+  const filterComponent = <Filters changeFilters={changeFilters} />;
 
   useEffect(() => {
     executeAuctionsSearch({
@@ -39,15 +47,6 @@ const CharitiesPage: FC = () => {
 
   setPageTitle('Charities page');
 
-  const sortOptions = [
-    { value: 'ACTIVATED_AT_ASC', label: 'Newest' },
-    { value: 'ACTIVATED_AT_DESC', label: 'Latest' },
-    { value: 'NAME_ASC', label: 'Name: A - Z' },
-    { value: 'NAME_DESC', label: 'Name: Z - A' },
-    { value: 'TOTALRAISEDAMOUNT_ASC', label: 'Raised: Low to high' },
-    { value: 'TOTALRAISEDAMOUNT_DESC', label: 'Raised: High to low' },
-  ];
-  const filterComponent = <Filters changeFilters={changeFilters} />;
   return (
     <AllItemsLayout
       changeFilters={changeFilters}

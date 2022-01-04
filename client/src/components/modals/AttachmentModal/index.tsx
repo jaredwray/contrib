@@ -14,9 +14,8 @@ interface Props {
 }
 
 const AttachmentModal: FC<Props> = ({ attachment, closeModal }) => {
-  if (!attachment) {
-    return null;
-  }
+  if (!attachment) return null;
+
   const isVideo = attachment.type === 'VIDEO';
 
   return (

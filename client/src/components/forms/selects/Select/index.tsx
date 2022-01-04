@@ -21,7 +21,6 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
     setSelectedOption(selected);
   }, [selected]);
   const isArrayOfObjects = options?.length ? typeof options[0] === 'object' : null;
-
   const handleSelect = useCallback(
     (key) => {
       setSelectedOption(options.find((option) => (isArrayOfObjects ? option.value === key : option === key)));
@@ -29,12 +28,9 @@ const Select: FC<Props> = ({ options, placeholder, selected, onChange, small, cl
     },
     [isArrayOfObjects, onChange, options],
   );
-
   const title = isArrayOfObjects ? selectedOption?.label : selectedOption;
 
-  if (!options) {
-    return null;
-  }
+  if (!options) return null;
 
   return (
     <DropdownButton

@@ -80,9 +80,8 @@ export default function DeliveryPricePage() {
 
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
-    if (!elements) {
-      return;
-    }
+    if (!elements) return;
+
     try {
       if (!paymentInformation || newCard) {
         const tokenResult = await stripe?.createToken(elements.getElement(CardElement) as StripeCardElement);
@@ -146,10 +145,7 @@ export default function DeliveryPricePage() {
     });
   };
 
-  if (!auctionData) {
-    return null;
-  }
-
+  if (!auctionData) return null;
   if (!account) {
     RedirectWithReturnAfterLogin(`/auctions/${auctionId}/delivery/payment`);
     return null;
@@ -170,7 +166,6 @@ export default function DeliveryPricePage() {
     history.push(`/auctions/${auctionId}/delivery/address`);
     return null;
   }
-
   if (!isWinner) {
     history.replace(`/`);
     return null;

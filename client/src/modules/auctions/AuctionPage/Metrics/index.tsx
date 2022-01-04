@@ -19,9 +19,7 @@ const Metrics: FC<Props> = ({ metrics, requestMetrics }) => {
   const [showMetrics, setShowMetrics] = useState(false);
 
   useEffect(() => {
-    if (!metrics && showMetrics) {
-      requestMetrics();
-    }
+    if (!metrics && showMetrics) requestMetrics();
   }, [metrics, showMetrics, requestMetrics]);
 
   return (

@@ -88,9 +88,8 @@ const CharityPage = () => {
       return;
     }
     submitValidationRedirect();
-    if (!isFullObject) {
-      return;
-    }
+    if (!isFullObject) return;
+
     try {
       await updateAuction({ variables: { id: auctionId, charity: selectedOption.id } });
     } catch (error: any) {
@@ -106,12 +105,7 @@ const CharityPage = () => {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
-  if (!charitiesListData) {
-    return null;
-  }
+  if (auction === undefined || !charitiesListData) return null;
 
   const favouriteCharities = auction.auctionOrganizer.favoriteCharities.map((charity: { id: string; name: string }) => {
     return { label: charity.name, value: charity.name, id: charity.id };
@@ -131,7 +125,6 @@ const CharityPage = () => {
     setselectedOption(selectedOption);
   };
   const options = favouriteCharities.concat(notFavouriteCharities);
-
   const textBlock = 'What charity will benefit from the proceeds of this auction.';
 
   setPageTitle(`Edit Auction ${auction.title} | Charity`);

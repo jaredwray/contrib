@@ -31,6 +31,7 @@ export const InfluencerOnboardingBasicPage: FC = () => {
     myAccount: UserAccount;
   }>(MyAccountQuery);
   const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
+  const influencerProfile = myAccountData?.myAccount?.influencerProfile;
 
   const handleSubmit = async ({ name, sport, team, profileDescription }: FormValues) => {
     try {
@@ -43,10 +44,7 @@ export const InfluencerOnboardingBasicPage: FC = () => {
     }
   };
 
-  const influencerProfile = myAccountData?.myAccount?.influencerProfile;
-  if (!influencerProfile) {
-    return null;
-  }
+  if (!influencerProfile) return null;
 
   setPageTitle('Influencer onboarding page');
 

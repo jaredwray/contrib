@@ -29,9 +29,7 @@ const AuctionDonePage = () => {
     history.replace('/');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
 
   const auctionLink = auction?.bitlyLink || getShortLink(auction.shortLink.slug);
 

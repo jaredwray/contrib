@@ -34,10 +34,7 @@ export default function Assistants() {
     history.replace('/404');
     return null;
   }
-
-  if (influencer === undefined) {
-    return null;
-  }
+  if (influencer === undefined) return null;
 
   setPageTitle(`${influencerId === 'me' ? 'My' : `${influencer.name}'s`} assistants`);
 

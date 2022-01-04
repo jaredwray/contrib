@@ -15,12 +15,9 @@ const Form: FC<Props> = ({ constraints, children, initialValues = {}, onSubmit, 
   const validate = useMemo(() => {
     if (constraints) {
       return (values: object) => {
-        let result = null;
+        if (!constraints) return null;
 
-        if (constraints) {
-          result = validateJs(values, constraints);
-        }
-        return result;
+        return validateJs(values, constraints);
       };
     }
   }, [constraints]);

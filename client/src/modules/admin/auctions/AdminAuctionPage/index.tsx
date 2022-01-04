@@ -93,11 +93,9 @@ export default function AdminAuctionPage() {
     }
   }, [auctionId, addToast, chargeAuction, getAuctionData]);
 
-  if (!auction || !bids) {
-    return null;
-  }
-  const hasBids = bids.length > 0;
+  if (!auction || !bids) return null;
 
+  const hasBids = bids.length > 0;
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));
   const maxBid = bids.filter(({ bid }: AuctionBid) => bid.amount === maxBidAmount)[0];
   const onChargeClickHandler = () => {
@@ -112,6 +110,7 @@ export default function AdminAuctionPage() {
     setIsBid(true);
     setBid(arg);
   };
+
   setPageTitle(`${auction.title} Auction info`);
 
   return (

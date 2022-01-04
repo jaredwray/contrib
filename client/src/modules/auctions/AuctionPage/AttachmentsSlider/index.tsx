@@ -36,13 +36,8 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
 
   const handleAttachmentClick = useCallback(
     (e: MouseEvent, attachment: AuctionAttachment) => {
-      if (e.screenX !== state.current.x) {
-        e.preventDefault();
-        return;
-      }
-      if (attachment.type === 'IMAGE') {
-        setAttachmentToDisplay(attachment);
-      }
+      if (e.screenX !== state.current.x) return e.preventDefault();
+      if (attachment.type === 'IMAGE') setAttachmentToDisplay(attachment);
     },
     [setAttachmentToDisplay],
   );
@@ -87,9 +82,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
     [setActiveStream],
   );
 
-  if (attachments.length === 0) {
-    return null;
-  }
+  if (attachments.length === 0) return null;
 
   return (
     <>

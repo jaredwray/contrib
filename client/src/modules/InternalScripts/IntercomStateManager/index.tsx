@@ -13,16 +13,16 @@ const IntercomStateManager: FC = () => {
   useEffect(() => {
     const appId = process.env.REACT_APP_INTERCOM_APP_ID;
 
-    if (appId) {
-      const w = window as any;
+    if (!appId) return;
 
-      w.Intercom('boot', {
-        app_id: appId,
-        name: user?.name,
-        email: user?.email,
-        created_at: account?.createdAt ? getUnixTime(toDate(account.createdAt)) : null,
-      });
-    }
+    const w = window as any;
+
+    w.Intercom('boot', {
+      app_id: appId,
+      name: user?.name,
+      email: user?.email,
+      created_at: account?.createdAt ? getUnixTime(toDate(account.createdAt)) : null,
+    });
   }, [account, user]);
 
   return null;

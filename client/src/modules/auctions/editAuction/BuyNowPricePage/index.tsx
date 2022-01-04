@@ -32,9 +32,9 @@ const BuyNowPricePage = () => {
     onCompleted() {
       if (isActive) {
         history.goBack();
-        return;
+      } else {
+        history.push(`/auctions/${auctionId}/price/fmv`);
       }
-      history.push(`/auctions/${auctionId}/price/fmv`);
     },
   });
   const handlePrevAction = useCallback(() => {
@@ -53,9 +53,7 @@ const BuyNowPricePage = () => {
 
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
-        if (isActive) {
-          showMessage('Updated');
-        }
+        if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);
       }
@@ -71,9 +69,8 @@ const BuyNowPricePage = () => {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
+
   const auctionPrice = auction.itemPrice ?? {
     amount: Number((auction?.startPrice?.amount * 20).toFixed(2)),
     currency: 'USD',

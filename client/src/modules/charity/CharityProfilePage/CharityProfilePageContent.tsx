@@ -36,7 +36,6 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const { isAuthenticated } = useAuth();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
   const history = useHistory();
-
   const { data } = useQuery(AuctionsListQuery, {
     variables: {
       filters: {
@@ -48,7 +47,6 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
 
   const [followCharity, { loading: followLoading }] = useMutation(FollowCharity);
   const [unfollowCharity, { loading: unfollowLoading }] = useMutation(UnfollowCharity);
-
   const [followed, setFollowed] = useState(() =>
     charity?.followers?.some((follower) => follower.user === account?.mongodbId),
   );
@@ -81,7 +79,6 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   }, [charity.id, addToast, unfollowCharity, followersNumber]);
 
   const auctions = data?.auctions?.items ?? [];
-
   const isMyProfile = account?.charity?.id === charity.id;
   const isActive = charity.status === CharityStatus.ACTIVE;
 
@@ -91,15 +88,11 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   }
 
   const profileAuctions = profileAuctionsHash(auctions);
-
   const liveAuctions = profileAuctions.ACTIVE;
   const pastAuctions = profileAuctions.SETTLED;
-
   const hasLiveAuctions = Boolean(liveAuctions.length);
   const hasPastAuctions = Boolean(pastAuctions.length);
-
   const hasAuctions = Boolean(auctions.length);
-
   const liveAuctionCards = liveAuctions.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
   const pastAuctionCards = pastAuctions.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
 

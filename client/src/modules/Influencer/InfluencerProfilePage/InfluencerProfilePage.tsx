@@ -24,9 +24,7 @@ export const InfluencerProfilePage: FC = () => {
     return null;
   }
 
-  if (influencer === undefined) {
-    return null;
-  }
+  if (influencer === undefined) return null;
 
   setPageTitle(`${influencerId === 'me' ? 'My' : `${influencer.name}'s`} Profile`);
 

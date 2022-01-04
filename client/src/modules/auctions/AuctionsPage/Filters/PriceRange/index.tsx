@@ -26,9 +26,7 @@ const PriceRange: FC<Props> = ({ initialBids, bids, changeFilters }) => {
     [changeFilters],
   );
 
-  if (!initialBids) {
-    return null;
-  }
+  if (!initialBids) return null;
 
   return (
     <Form.Group>

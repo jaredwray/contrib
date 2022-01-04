@@ -20,9 +20,7 @@ interface Props {
 }
 
 const CardInfo: FC<Props> = ({ expired, className, isSubmitting, paymentInfo, onNewCardAdd }) => {
-  if (!paymentInfo) {
-    return null;
-  }
+  if (!paymentInfo) return null;
 
   return (
     <div className={clsx(className || styles.cardInfo, expired && styles.expired, 'flex-wrap')}>

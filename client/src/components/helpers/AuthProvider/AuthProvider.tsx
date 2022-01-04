@@ -65,9 +65,7 @@ export function AuthProvider({ children, apiUrl }: PropTypes) {
     [user, isAuthenticated, isLoading, apiUrl],
   );
 
-  if (isLoading) {
-    return null;
-  }
+  if (isLoading) return null;
 
   return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>;
 }

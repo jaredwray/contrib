@@ -28,8 +28,8 @@ export const InfluencerOnboardingCharitiesPage: FC = () => {
   const { account } = useContext(UserAccountContext);
   const history = useHistory();
   const { data: myAccountData } = useQuery<{ myAccount: UserAccount }>(MyProfileQuery);
-
   const [updateMyFavoriteCharities] = useMutation(UpdateFavoriteCharities);
+  const influencerProfile = myAccountData?.myAccount?.influencerProfile;
 
   const handleSubmit = useCallback(
     async ({ favoriteCharities }: FormValues) => {
@@ -43,10 +43,7 @@ export const InfluencerOnboardingCharitiesPage: FC = () => {
     [updateMyFavoriteCharities, addToast, influencerId, history],
   );
 
-  const influencerProfile = myAccountData?.myAccount?.influencerProfile;
-  if (!influencerProfile) {
-    return null;
-  }
+  if (!influencerProfile) return null;
 
   setPageTitle(account?.isAdmin ? 'Influencer onboarding charities' : 'My charities');
 

@@ -17,6 +17,13 @@ import { UserAccount, UserAccountStatus } from 'src/types/UserAccount';
 import Layout from '../Layout';
 import styles from './styles.module.scss';
 
+interface Country {
+  countryCode: string;
+  dialCode: string;
+  format: string;
+  name: string;
+}
+
 export default function PhoneNumberVerification() {
   const { logout } = useAuth();
   const { data: myAccountsData } = useQuery<{ myAccount: UserAccount }>(MyAccountQuery, {
@@ -29,21 +36,20 @@ export default function PhoneNumberVerification() {
   const [error, setError] = useState();
   const invitationToken = useReactiveVar(invitationTokenVar);
   const countryName = ALLOWED_COUNTRY_NAME;
+
   useEffect(() => {
-    if (!phoneInputValue) {
-      setPhoneInputValue('1');
-    }
+    if (!phoneInputValue) setPhoneInputValue('1');
     if (phoneInputValue[0] !== '1') {
       const passedValue = phoneInputValue.toString().split('');
       passedValue.unshift('1');
       setPhoneInputValue(passedValue.join(''));
     }
   }, [phoneInputValue]);
+
   const handleSubmit = useCallback(() => {
     phoneInputValue &&
       enterPhoneNumber({ variables: { phoneNumber: `+${phoneInputValue}` } }).catch((error) => setError(error.message));
   }, [enterPhoneNumber, phoneInputValue]);
-
   const handleBack = useCallback(
     (e) => {
       e.preventDefault();
@@ -51,6 +57,10 @@ export default function PhoneNumberVerification() {
     },
     [logout],
   );
+  const handleChange = (value: string, country: Country) => {
+    setPhoneInputValue(value);
+    setPhoneInputIsValid(country.name !== countryName);
+  };
 
   useEffect(() => {
     if (myAccountsData?.myAccount?.status !== UserAccountStatus.PHONE_NUMBER_REQUIRED) {
@@ -66,19 +76,8 @@ export default function PhoneNumberVerification() {
     }
   }, [invitationToken, enterInvitationCode]);
 
-  if (invitationToken) {
-    return null;
-  }
-  interface Country {
-    countryCode: string;
-    dialCode: string;
-    format: string;
-    name: string;
-  }
-  const handleChange = (value: string, country: Country) => {
-    setPhoneInputValue(value);
-    setPhoneInputIsValid(country.name !== countryName);
-  };
+  if (invitationToken) return null;
+
   setPageTitle('Phone number verification');
   return (
     <Layout>

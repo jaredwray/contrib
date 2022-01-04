@@ -31,9 +31,9 @@ const StartPricePage = () => {
     onCompleted() {
       if (isActive) {
         history.goBack();
-        return;
+      } else {
+        history.push(`/auctions/${auctionId}/price/buying`);
       }
-      history.push(`/auctions/${auctionId}/price/buying`);
     },
   });
   const handlePrevAction = useCallback(() => {
@@ -49,9 +49,7 @@ const StartPricePage = () => {
       }
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
-        if (isActive) {
-          showMessage('Updated');
-        }
+        if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);
       }
@@ -67,9 +65,8 @@ const StartPricePage = () => {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
+
   const textBlock =
     'The starting price for the item which determines the minimum amount that can be bid. The item will not sell if no bids at or above this price are received.';
 

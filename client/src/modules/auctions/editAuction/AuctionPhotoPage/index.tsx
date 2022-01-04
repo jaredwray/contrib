@@ -68,14 +68,13 @@ const AuctionPhotoPage = () => {
 
   if (!account?.isAdmin && auction?.isActive) {
     history.push(`/`);
+    return null;
   }
   if (auction === null) {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
 
   setPageTitle(`Auction ${auction.title} | Photo page`);
 

@@ -35,6 +35,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
         showWarning('Please, check the data');
         return;
       }
+
       updateAuctionMeasures({
         variables: {
           auctionId: auction.id,

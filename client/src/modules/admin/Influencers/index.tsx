@@ -75,13 +75,10 @@ export default function InfluencersPage() {
     },
     [addToast, resendInviteMessage, toastContent],
   );
-  if (error) {
-    return null;
-  }
+
+  if (error) return null;
 
   const influencers = data?.influencersList || { skip: 0, totalItems: 0, items: [] };
-
-  setPageTitle('Admin nfluencers auction page');
   const controlBtns = (
     <>
       <CreateInfluencer />
@@ -92,6 +89,9 @@ export default function InfluencersPage() {
       />
     </>
   );
+
+  setPageTitle('Admin nfluencers auction page');
+
   return (
     <AdminPage
       controlBtns={controlBtns}

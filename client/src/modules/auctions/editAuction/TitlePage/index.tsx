@@ -38,9 +38,9 @@ const EditAuctionPage = () => {
     onCompleted() /* istanbul ignore next */ {
       if (isActive) {
         history.goBack();
-        return;
+      } else {
+        history.push(`/auctions/${auctionId}/description`);
       }
-      history.push(`/auctions/${auctionId}/description`);
     },
   });
 

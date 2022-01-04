@@ -89,9 +89,7 @@ export default function DeliveryAddressPage() {
     ],
   );
 
-  if (!auctionData) {
-    return null;
-  }
+  if (!auctionData) return null;
 
   if (!account) {
     RedirectWithReturnAfterLogin(`/auctions/${auctionId}/delivery/address`);
@@ -116,12 +114,10 @@ export default function DeliveryAddressPage() {
 
   const { title } = auction;
   const initialValues = auction.winner.address;
-
   const selectedOption = () => {
     const selected = USAStates.find((option) => option.value === initialValues.state);
     return selected || USAStates[0];
   };
-
   const textBlock = (
     <>
       Please, fill the form to receive
@@ -134,6 +130,7 @@ export default function DeliveryAddressPage() {
   const handleChange = (value: string) => {
     setPhoneInputValue(value);
   };
+
   setPageTitle(`Delivery address for ${title} auction`);
 
   return (

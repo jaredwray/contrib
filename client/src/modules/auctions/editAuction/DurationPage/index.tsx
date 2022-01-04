@@ -31,9 +31,9 @@ const DurationPage = () => {
     onCompleted() {
       if (isActive) {
         history.goBack();
-        return;
+      } else {
+        history.push(`/auctions/${auctionId}/charity`);
       }
-      history.push(`/auctions/${auctionId}/charity`);
     },
   });
   const selectedOption = useCallback(() => {
@@ -66,9 +66,8 @@ const DurationPage = () => {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
+
   const textBlock = 'How long the auction should run for? Our recommended time is usually 3 days';
 
   setPageTitle(`Edit Auction ${auction.title} | Duration`);

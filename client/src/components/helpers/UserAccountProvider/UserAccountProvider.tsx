@@ -21,28 +21,15 @@ export function UserAccountProvider({ children }: PropTypes) {
   const location = useLocation();
   const { user } = useAuth();
   const userId = user?.id;
-
-  const [getMyAccount, { data: myAccountData, error: myAccountError }] = useLazyQuery(MyAccountQuery);
-
+  const [getMyAccount, { data: myAccountData }] = useLazyQuery(MyAccountQuery);
   const queryParams = useUrlQueryParams();
   const myAccount = myAccountData?.myAccount;
-
   const userContextValue = useMemo(() => ({ account: myAccount }), [myAccount]);
 
   // load profile when user is logged in
   useEffect(() => {
-    if (userId) {
-      getMyAccount();
-    }
+    if (userId) getMyAccount();
   }, [userId, getMyAccount]);
-
-  // write error to console if something went wrong
-  useEffect(() => {
-    if (myAccountError) {
-      // eslint-disable-next-line no-console
-      console.error('error fetching account data', myAccountError);
-    }
-  }, [myAccountError]);
 
   if (myAccount?.charity && !myAccount.charity.stripeStatus) {
     window.location.href = myAccount.charity.stripeAccountLink;
@@ -51,6 +38,7 @@ export function UserAccountProvider({ children }: PropTypes) {
   // redirect to onboarding if needed
   const targetPathname = getOnboardingPath(myAccount);
   const currentPathname = location.pathname;
+
   useEffect(() => {
     if (targetPathname !== null && targetPathname !== currentPathname) {
       history.replace(targetPathname);
@@ -61,17 +49,11 @@ export function UserAccountProvider({ children }: PropTypes) {
   const returnUrl = queryParams.get('returnURL');
 
   useEffect(() => {
-    if (invitationToken) {
-      invitationTokenVar(invitationToken);
-    }
-    if (returnUrl) {
-      returnUrlVar(returnUrl);
-    }
+    if (invitationToken) invitationTokenVar(invitationToken);
+    if (returnUrl) returnUrlVar(returnUrl);
   }, [invitationToken, returnUrl]);
 
-  if ((userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) {
-    return null;
-  }
+  if ((userId && !myAccountData) || (targetPathname && targetPathname !== currentPathname)) return null;
 
   return <UserAccountContext.Provider value={userContextValue}>{children}</UserAccountContext.Provider>;
 }

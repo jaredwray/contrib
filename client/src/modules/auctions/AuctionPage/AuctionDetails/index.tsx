@@ -7,7 +7,6 @@ import { format, toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 import { useHistory, Link } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import WatchBtn from 'src/components/buttons/WatchBtn';
@@ -17,6 +16,7 @@ import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
@@ -36,7 +36,7 @@ interface Props {
 const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement => {
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth();
-  const { addToast } = useToasts();
+  const { showMessage, showError } = useShowNotification();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
   const [isBuying, setIsBuying] = useState(false);
@@ -77,9 +77,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
   let callAfterMs = 60000;
   const secondsLeft = differenceInSeconds(toDate(endDate), new Date());
 
-  if (secondsLeft <= 120) {
-    callAfterMs = 1000;
-  }
+  if (secondsLeft <= 120) callAfterMs = 1000;
 
   useEffect(() => {
     if (!canBid) return;
@@ -93,13 +91,10 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
 
   let soldTime = '';
   let stoppedTime = '';
+  let isShowBuyButton;
 
-  if (isSold && stoppedAt) {
-    soldTime = format(new Date(stoppedAt), 'MMM dd yyyy p');
-  }
-  if (isStopped && stoppedAt) {
-    stoppedTime = format(new Date(stoppedAt), 'MMM dd yyyy');
-  }
+  if (isSold && stoppedAt) soldTime = format(new Date(stoppedAt), 'MMM dd yyyy p');
+  if (isStopped && stoppedAt) stoppedTime = format(new Date(stoppedAt), 'MMM dd yyyy');
 
   const durationTillEnd = toHumanReadableDuration(endDate);
   const endDateFormatted = dateFormat(new Date(endDate), 'MMM dd yyyy');
@@ -122,11 +117,8 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
   const confirmationRef = useRef<BidConfirmationRef>(null);
   const buyingPrice = Dinero(itemPrice)?.toFormat('$0,0');
-  let isShowBuyButton;
 
-  if (itemPrice) {
-    isShowBuyButton = itemPrice?.amount > minBid.getAmount();
-  }
+  if (itemPrice) isShowBuyButton = itemPrice?.amount > minBid.getAmount();
 
   const commonBidHandler = useCallback(
     (amount: Dinero.Dinero, isBuying?: boolean) => {
@@ -145,6 +137,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     },
     [isAuthenticated, auctionId, RedirectWithReturnAfterLogin],
   );
+
   const handleBid = useCallback(async (amount: Dinero.Dinero) => commonBidHandler(amount), [commonBidHandler]);
   const handleBuy = useCallback(async () => {
     setIsBuying(true);
@@ -162,39 +155,47 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     const value = Dinero({ amount, currency });
 
     if (value.greaterThanOrEqual(minBid)) {
-      handleBid(value).catch(() => {
-        // any error should be handled by handleBid
+      handleBid(value).catch((error) => {
+        showError(error.message);
       });
     }
     history.replace(`/auctions/${auctionId}`);
-  }, [placeBidQueryParam, auctionId, minBid, handleBid, history]);
+  }, [placeBidQueryParam, auctionId, minBid, handleBid, history, showError]);
 
   const handleFollowAuction = useCallback(async () => {
     if (isAuthenticated) {
       try {
         await followAuction({ variables: { auctionId } });
-        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
+        showMessage('Successfully followed');
         setFollowed(true);
         setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
       } catch (error) {
-        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+        showError(error.message);
       }
       return;
     }
 
     RedirectWithReturnAfterLogin(`/auctions/${auctionId}`);
-  }, [auctionId, addToast, followAuction, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
+  }, [
+    auctionId,
+    showError,
+    showMessage,
+    followAuction,
+    followersNumber,
+    isAuthenticated,
+    RedirectWithReturnAfterLogin,
+  ]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {
       await unfollowAuction({ variables: { auctionId } });
-      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      showMessage('Successfully unfollowed');
       setFollowed(false);
       setFollowersNumber(followersNumber - 1);
     } catch (error) {
-      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      showError(error.message);
     }
-  }, [auctionId, addToast, unfollowAuction, followersNumber]);
+  }, [auctionId, showError, showMessage, unfollowAuction, followersNumber]);
 
   return (
     <>

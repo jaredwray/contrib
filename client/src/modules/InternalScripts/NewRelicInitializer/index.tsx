@@ -14,10 +14,7 @@ const AGENT_IDS: AgentIdsType = {
 
 const NewRelicInitializer: FC = () => {
   useEffect(() => {
-    if (process.env.REACT_APP_USE_NEWRELIC !== 'true') {
-      return;
-    }
-
+    if (process.env.REACT_APP_USE_NEWRELIC !== 'true') return;
     if (!process.env.REACT_APP_PLATFORM_URL) return;
 
     const platformUrl = new URL(process.env.REACT_APP_PLATFORM_URL);

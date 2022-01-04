@@ -31,9 +31,7 @@ export default function DeliveryStatusPage() {
     executeAuctionData({ variables: { id: auctionId } });
   }, [executeAuctionData, auctionId]);
 
-  if (!auctionData) {
-    return null;
-  }
+  if (!auctionData) return null;
 
   if (!account) {
     RedirectWithReturnAfterLogin(`/auctions/${auctionId}/delivery/status`);

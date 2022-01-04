@@ -25,9 +25,7 @@ export const PhoneNumberVerification: FC<Props> = ({ phoneNumber, setIsConfirmed
   const allowedCountryName = ALLOWED_COUNTRY_NAME;
 
   useEffect(() => {
-    if (!phoneNumber) {
-      setPhoneNumber('1');
-    }
+    if (!phoneNumber) setPhoneNumber('1');
     if (phoneNumber[0] !== '1') {
       const passedValue = phoneNumber.toString().split('');
       passedValue.unshift('1');

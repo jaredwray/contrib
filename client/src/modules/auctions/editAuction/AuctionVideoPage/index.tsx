@@ -74,9 +74,7 @@ const AuctionVideoPage = () => {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
 
   setPageTitle(`Auction ${auction.title} | Video page`);
 

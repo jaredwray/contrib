@@ -48,9 +48,9 @@ const MoneyField: FC<Props> = ({
     (event) => {
       const targetValue = event.target.value;
       const number = targetValue.replace(/[^0-9]/g, '');
-      if (setDisabled && minValue) {
-        setDisabled(minValue > number || number > MaxBidValue);
-      }
+
+      if (setDisabled && minValue) setDisabled(minValue > number || number > MaxBidValue);
+
       onChange({ ...value, amount: number ? parseInt(number, 10) * 100 : 0 });
     },
     [onChange, value, minValue, setDisabled],

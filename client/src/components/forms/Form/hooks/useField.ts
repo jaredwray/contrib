@@ -11,17 +11,14 @@ interface ConfigProps {
 
 const useField = (name: string, { constraints, disabled, type }: ConfigProps) => {
   const validate = useMemo(() => {
-    if (constraints) {
-      return (value: { [x: string]: any }) => single(value, constraints);
-    }
-    return null;
+    if (!constraints) return null;
+
+    return (value: { [x: string]: any }) => single(value, constraints);
   }, [constraints]);
 
   const fieldConfig: { [x: string]: any } = { validate };
 
-  if (type) {
-    Object.assign(fieldConfig, { type });
-  }
+  if (type) Object.assign(fieldConfig, { type });
 
   const {
     input,
