@@ -15,6 +15,7 @@ import styles from './styles.module.scss';
 const OtpResendDuration = Duration.fromObject({ seconds: 5 });
 
 const DELAY_VALUE_MS = 1000;
+const OTP_LENGTH = 6;
 
 interface Props {
   phoneNumber: string;
@@ -27,9 +28,7 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
   const [otpIsValid, setOtpIsValid] = useState(false);
   const [canResendOtp, setCanResendOtp] = useState(false);
   const [loadingLogIn, setLoadingLogIn] = useState(false);
-
   const { showError } = useShowNotification();
-
   const [sendOtp, { loading: loadingOtp }] = useMutation(SendOtpMutation);
 
   let afterLoginUri = mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, '/after-login');
@@ -41,33 +40,25 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
 
     setOtpValue(otp);
 
-    if (otp.length === 6 && !otpIsValid) {
-      return setOtpIsValid(true);
-    }
-
-    if (otpIsValid) {
-      setOtpIsValid(false);
-    }
+    if (otp.length === OTP_LENGTH && !otpIsValid) return setOtpIsValid(true);
+    if (otpIsValid) setOtpIsValid(false);
   };
 
   const handleSubmit = useCallback(async () => {
     try {
       const apiUrl = mergeUrlPath(process.env.REACT_APP_API_AUDIENCE, '/api/v1/auth/sms');
+
       setLoadingLogIn(true);
+
       const responce = await fetch(apiUrl, {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phoneNumber: `+${phoneNumber}`, otp: otpValue }),
       });
-
       const result = await responce.json();
 
-      if (result?.error) {
-        return showError(result.error.message);
-      }
+      if (result?.error) return showError(result.error.message);
 
       window.location.href = afterLoginUri;
     } catch (err) {
@@ -91,6 +82,7 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
     const refreshCanResendOtp = () => {
       const durationSinceOtpSent = otpSentAt.diffNow().negate();
       const nextCanResendOtp = durationSinceOtpSent > OtpResendDuration;
+
       if (process.title !== 'browser' || nextCanResendOtp !== canResendOtp) {
         setCanResendOtp(nextCanResendOtp);
       }

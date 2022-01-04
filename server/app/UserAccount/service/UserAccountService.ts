@@ -109,10 +109,6 @@ export class UserAccountService {
   }
 
   async getAccountByAuthzId(authzId: string, user?: AuthUser): Promise<UserAccount> {
-    if (authzId.startsWith('sms|')) {
-      return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
-    }
-
     let account = await this.AccountModel.findOne({ authzId }).exec();
 
     if (account != null) {
@@ -125,6 +121,8 @@ export class UserAccountService {
 
       return UserAccountService.makeUserAccount(account, accountEntityTypes);
     }
+
+    if (authzId.startsWith('sms|')) return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
 
     return {
       id: authzId,
