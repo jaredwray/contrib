@@ -6,6 +6,7 @@ import type { StripeCardElement, StripeCardElementChangeEvent } from '@stripe/st
 import { isPast } from 'date-fns';
 import { Row, Col } from 'react-bootstrap';
 
+import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { CardInput } from 'src/components/forms/inputs/CardInput';
 import { UserProfile } from 'src/components/helpers/UserAccountProvider/UserProfile';
@@ -24,6 +25,7 @@ const PaymentInformation: FC<Props> = ({ account }) => {
   const elements = useElements();
 
   const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
+    refetchQueries: [{ query: MyAccountQuery }],
     /* istanbul ignore next */
     onCompleted() {
       setNewCard(false);

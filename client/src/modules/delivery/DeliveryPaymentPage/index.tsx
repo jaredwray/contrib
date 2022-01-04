@@ -9,6 +9,7 @@ import Dinero from 'dinero.js';
 import { Row, Spinner } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { AuctionQuery, CalculateShippingCostQuery, ShippingRegistrationMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { CardInput } from 'src/components/forms/inputs/CardInput';
@@ -37,7 +38,9 @@ export default function DeliveryPricePage() {
   const [newCard, setNewCard] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
 
-  const [RegisterPaymentMethod] = useMutation(RegisterPaymentMethodMutation);
+  const [RegisterPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
+    refetchQueries: [{ query: MyAccountQuery }],
+  });
   const [ExecuteAuctionData, { loading: executeAuctionLoading, data: auctionData }] = useLazyQuery(AuctionQuery, {
     fetchPolicy: process.title === 'browser' ? 'network-only' : 'cache-and-network',
   });
