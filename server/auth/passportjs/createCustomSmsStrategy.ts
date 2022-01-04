@@ -13,7 +13,7 @@ export const createCustomSmsStrategy = (twilioService: TwilioVerificationService
 
         if (verificationResult) {
           const user = {
-            id: `sms|${phoneNumber}`,
+            id: `sms|${phoneNumber.replace('+', '')}`,
             name: phoneNumber || '',
             picture: '',
             email: '',

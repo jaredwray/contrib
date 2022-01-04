@@ -132,10 +132,7 @@ export const InfluencerResolvers: InfluencerResolversType = {
   UserAccount: {
     influencerProfile: loadAccount(
       async (userAccount: UserAccount, _, { user, currentAccount, loaders }): Promise<InfluencerProfile | null> => {
-        // TODO: remove after old authzIds with sms update
-        const hasAccessByPhoneNumber =
-          userAccount.id.startsWith('sms|') && user?.phone_number === userAccount.phoneNumber;
-        const hasAccess = currentAccount?.isAdmin || user?.id === userAccount.id || hasAccessByPhoneNumber;
+        const hasAccess = currentAccount?.isAdmin || user?.id === userAccount.id;
         if (!userAccount.mongodbId || !hasAccess) {
           return null;
         }

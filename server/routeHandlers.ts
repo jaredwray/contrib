@@ -8,7 +8,7 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
-  { auction, charity, stripeService, twilioNotification }: IAppServices,
+  { auction, charity, stripeService, twilioNotification, userAccount }: IAppServices,
 ): void {
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
@@ -17,6 +17,14 @@ export default function appRouteHandlers(
       express.json()(req, res, next);
     }
   });
+
+  //TODO: delete after update sms aythzIds
+  app.post('/api/v1/update-sms-authzIds', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) return;
+    const result = await userAccount.updateSmsAuthzIds();
+    return res.send(result ? 'Done' : 'Failed');
+  });
+  //TODO ends
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) return;
