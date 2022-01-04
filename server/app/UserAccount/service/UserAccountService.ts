@@ -43,6 +43,25 @@ export class UserAccountService {
     private readonly cloudTaskService: CloudTaskService,
   ) {}
 
+  //TODO: delete after update sms aythzIds
+  public async updateSmsAuthzIds() {
+    try {
+      const accounts = await this.AccountModel.find({ authzId: { $regex: 'sms', $options: 'i' } });
+
+      for (const account of accounts) {
+        account.authzId = `sms|${account.phoneNumber.replace('+', '')}`;
+
+        await account.save();
+      }
+
+      return true;
+    } catch (error) {
+      AppLogger.error(`Something went wrong when try to update sms authzId: ${error.message}`);
+      return false;
+    }
+  }
+  //TODO ends
+
   public async createOrUpdateUserAddress(
     auctionId: string,
     userId: string,
@@ -90,14 +109,11 @@ export class UserAccountService {
   }
 
   async getAccountByAuthzId(authzId: string, user?: AuthUser): Promise<UserAccount> {
-    let account = await this.AccountModel.findOne({ authzId }).exec();
-    // TODO: remove after old authzIds with sms update
-    if (!account && authzId.startsWith('sms|')) {
-      account = await this.AccountModel.findOne({ phoneNumber: user.phone_number }).exec();
-      if (!account) {
-        return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
-      }
+    if (authzId.startsWith('sms|')) {
+      return await this.confirmAccountWithPhoneNumber(authzId, user.phone_number);
     }
+
+    let account = await this.AccountModel.findOne({ authzId }).exec();
 
     if (account != null) {
       const filter = { userAccount: account._id };
