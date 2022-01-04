@@ -8,6 +8,7 @@ import { isPast } from 'date-fns';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 
+import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { MakeAuctionBidMutation } from 'src/apollo/queries/bids';
@@ -45,7 +46,9 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const { account } = useContext(UserAccountContext);
 
     const [makeBid] = useMutation(MakeAuctionBidMutation);
-    const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation);
+    const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
+      refetchQueries: [{ query: MyAccountQuery }],
+    });
 
     const paymentInformation = account?.paymentInformation;
 
