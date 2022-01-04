@@ -46,9 +46,7 @@ export const Delivery: FC<Props> = ({ auction, isDeliveryPage, refreshAuctionDat
     updatedAt = format(new Date(auction.delivery?.updatedAt), 'MMM dd yyyy HH:mm:ssXXX');
   }
 
-  if (!auction.delivery?.status) {
-    return <p>no information yet</p>;
-  }
+  if (!auction.delivery?.status) return <p>no information yet</p>;
 
   return (
     <Row>

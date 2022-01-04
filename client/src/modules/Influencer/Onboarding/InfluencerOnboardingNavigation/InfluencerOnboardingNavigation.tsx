@@ -16,10 +16,7 @@ export const InfluencerOnboardingNavigation: FC<Props> = ({ step }) => {
   const { submitting } = useFormState({ subscription: { submitting: true } });
 
   const handlePrev = useMemo(() => {
-    if (step === 'charities') {
-      return () => history.replace('/onboarding/basic');
-    }
-    return null;
+    if (step === 'charities') return () => history.replace('/onboarding/basic');
   }, [step, history]);
 
   return (

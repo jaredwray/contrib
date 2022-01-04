@@ -24,15 +24,15 @@ export const CreateInfluencerModal: FC<Props> = ({ open, onClose }) => {
 
   const onSubmit = useCallback(
     ({ name }: { name: string }) => {
-      if (name) {
-        setCreating(true);
-        createMutation({ variables: { name } })
-          .then((response) => {
-            history.push(`/profiles/${response.data.createInfluencer.id}/edit`);
-          })
-          .catch((error) => setCreateError(error.message))
-          .finally(() => setCreating(false));
-      }
+      if (!name) return;
+
+      setCreating(true);
+      createMutation({ variables: { name } })
+        .then((response) => {
+          history.push(`/profiles/${response.data.createInfluencer.id}/edit`);
+        })
+        .catch((error) => setCreateError(error.message))
+        .finally(() => setCreating(false));
     },
     [createMutation, history],
   );

@@ -22,21 +22,6 @@ export default function Footer() {
         <Row className={clsx('pt-4 pb-4', styles.info)}>
           <Col className="p-0 pl-md-4 pr-md-4 text-headline">Auction your items quickly and hassle free.</Col>
         </Row>
-        {/*
-            <Row className={styles.socialMedia}>
-              <Col md className="p-0 pl-md-4 pr-md-4 pt-lg-4 pb-4">
-                <a className={clsx('d-inline-block mr-4', styles.twitter)} href="/" rel="external" title="twitter">
-                  <i className="d-none" />
-                </a>
-                <a className={clsx('d-inline-block mr-4', styles.instagram)} href="/" rel="external" title="instagram">
-                  <i className="d-none" />
-                </a>
-                <a className={clsx('d-inline-block mr-4', styles.facebook)} href="/" rel="external" title="facebook">
-                  <i className="d-none" />
-                </a>
-              </Col>
-            </Row>
-          */}
         <Row>
           <Col md className="p-0 pl-md-4 pr-md-4 text-label text-all-cups">
             Copyright {new Date().getFullYear()} Contrib Inc.

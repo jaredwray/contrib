@@ -39,9 +39,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
 
   const onClickSearch = useCallback(
     (e: BaseSyntheticEvent) => {
-      if (!e.target.value) {
-        setCharitiesSearch(favoriteCharities);
-      }
+      if (!e.target.value) setCharitiesSearch(favoriteCharities);
     },
     [favoriteCharities],
   );

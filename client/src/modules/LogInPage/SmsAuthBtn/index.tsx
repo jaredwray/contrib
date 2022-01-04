@@ -3,11 +3,11 @@ import { FC, useState } from 'react';
 import AuthBtn from '../AuthBtn';
 import { Modal } from './Modal';
 
+const DELAY_VALUE_MS = 200;
+
 interface Props {
   returnURL: string;
 }
-
-const DELAY_VALUE_MS = 200;
 
 export const SmsAuthBtn: FC<Props> = ({ returnURL }) => {
   const [showDialog, setShowDialog] = useState(false);

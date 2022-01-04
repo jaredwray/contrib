@@ -51,9 +51,8 @@ export const CharityProfileEditPage: FC = () => {
     history.replace('/404');
     return null;
   }
-  if (charityProfile === undefined) {
-    return null;
-  }
+  if (charityProfile === undefined) return null;
+
   setPageTitle(charityId === 'me' ? 'My charity' : `Charity ${charityProfile.name} edit page`);
 
   return (

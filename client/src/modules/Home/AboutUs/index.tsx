@@ -17,15 +17,6 @@ export default function AboutUs() {
             for important charities, and make a direct and meaningful impact in their communities.
           </Col>
         </Row>
-        {/*
-        <Row>
-          <Col className="pt-3">
-            <Button className={clsx('btn-with-arrows text-label', styles.button)} variant="secondary">
-              How does it work?
-            </Button>
-          </Col>
-        </Row>
-        */}
       </Container>
     </section>
   );

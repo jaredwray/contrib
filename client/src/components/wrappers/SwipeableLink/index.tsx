@@ -15,9 +15,7 @@ const SwipeableLink = ({ children, className, to, title }: Props) => {
     state.current.x = e.screenX;
   };
   const handleClick = (e: any) => {
-    if (e.screenX !== state.current.x) {
-      e.preventDefault();
-    }
+    if (e.screenX !== state.current.x) e.preventDefault();
   };
 
   return (

@@ -10,9 +10,7 @@ import Сarousel from './Сarousel';
 
 const Auctions: FC = () => {
   const { data, loading } = useQuery(GetAuctionsForProfilePageQuery);
-
   const auctions = data?.getAuctionsForProfilePage || { live: [], won: [] };
-
   const liveAuctions = auctions?.live?.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
   const wonAuctions = auctions?.won?.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
 

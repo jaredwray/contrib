@@ -32,10 +32,10 @@ export const Modal: FC<Props> = ({
   bid: currentBid,
   customerInformation,
 }) => {
-  if (!currentBid || (!customerInformation && customerLoading)) {
-    return null;
-  }
+  if (!currentBid || (!customerInformation && customerLoading)) return null;
+
   const { bid, user } = currentBid;
+
   return (
     <Dialog
       className="font-weight-normal text-left"

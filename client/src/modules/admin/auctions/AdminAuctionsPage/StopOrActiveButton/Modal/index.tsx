@@ -50,13 +50,14 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
         </>
       );
     }
-    if (!isStopped) {
+
+    if (!isStopped)
       return (
         <>
           Do you want to stop an auction: <b>{title}</b>?
         </>
       );
-    }
+
     return (
       <>
         <p>

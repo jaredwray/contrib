@@ -42,9 +42,8 @@ const Filters: FC<Props> = ({ initialBids, filters, changeFilters, charityChange
     setselectedOption(selectedOption);
     charityChangeFilter('charity', selectedOption?.id ? [selectedOption.id] : []);
   };
-  if (!charitiesListData) {
-    return null;
-  }
+
+  if (!charitiesListData) return null;
 
   const options = [
     OptionAll,

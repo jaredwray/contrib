@@ -18,9 +18,7 @@ const DOUGHNUT_LABELS_LIMIT = 3;
 export const ChartDoughnut: FC<Props> = ({ labels, values, name, isAuctionPage }) => {
   const isCountries = name === 'countries';
 
-  if (!labels || !values) {
-    return null;
-  }
+  if (!labels || !values) return null;
 
   const ChartValues = (labels: string[], values: number[]) => {
     return {

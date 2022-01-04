@@ -54,13 +54,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   const imageSrc = useAuctionPreviewAttachment(auction?.attachments);
   const influencer = auctionOrganizer || auction?.auctionOrganizer;
   const currentPrice = useMemo(() => {
-    if (!auction) {
-      return Dinero();
-    }
-
-    if (auction.currentPrice) {
-      return Dinero(auction.currentPrice);
-    }
+    if (!auction) return Dinero();
+    if (auction.currentPrice) return Dinero(auction.currentPrice);
 
     return Dinero(auction.startPrice);
   }, [auction]);
@@ -90,9 +85,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
     }
   }, [auction?.id, addToast, unfollowAuction]);
 
-  if (!auction) {
-    return null;
-  }
+  if (!auction) return null;
 
   const priceFormatted = currentPrice.toFormat('$0,0');
   const { isActive, isSettled, isDraft, isSold } = auction;

@@ -39,12 +39,8 @@ const USPhoneInput: FC<Props> = ({
       isValid={(value: string, country: any): any => {
         let validationText;
 
-        if (validateFunction) {
-          validationText = validateFunction(value);
-        }
-        if (country.name !== countryName) {
-          validationText = 'You can provide USA phone numbers only';
-        }
+        if (validateFunction) validationText = validateFunction(value);
+        if (country.name !== countryName) validationText = 'You can provide USA phone numbers only';
 
         return <p className="mb-1 text-label error-message">{validationText || errorText}</p>;
       }}

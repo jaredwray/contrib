@@ -30,9 +30,7 @@ const Slider: FC<Props> = ({ items }) => {
     slidesToShow: items.length <= Math.round(windowWidth / 500) ? items.length : 1,
   };
 
-  if (!items.length) {
-    return null;
-  }
+  if (!items.length) return null;
 
   return (
     <div className="multi-carousel">

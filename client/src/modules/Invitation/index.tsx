@@ -21,7 +21,6 @@ export default function InvitationPage() {
   });
 
   const history = useHistory();
-
   const invitation = data?.invitation;
 
   const handleSignUp = useCallback(() => {
@@ -29,19 +28,17 @@ export default function InvitationPage() {
   }, [RedirectWithReturnAfterLogin, slug]);
 
   useEffect(() => {
-    if (!loading && !invitation) {
-      history.push('/');
-    }
+    if (!loading && !invitation) history.push('/');
   }, [invitation, loading, error, history]);
 
-  if (!invitation) {
-    return null;
-  }
+  if (!invitation) return null;
+
   const textBlock = (
     <div className="text-headline pt-4" data-test-id="invitation-page-welcome-message">
       {invitation.welcomeMessage}
     </div>
   );
+
   setPageTitle('Invitation page');
 
   return (

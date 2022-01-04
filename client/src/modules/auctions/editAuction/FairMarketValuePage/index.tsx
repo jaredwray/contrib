@@ -31,9 +31,9 @@ const FairMarketValuePage = () => {
     onCompleted() {
       if (isActive) {
         history.goBack();
-        return;
+      } else {
+        history.push(`/auctions/${auctionId}/duration`);
       }
-      history.push(`/auctions/${auctionId}/duration`);
     },
   });
   const handlePrevAction = useCallback(() => {
@@ -49,9 +49,7 @@ const FairMarketValuePage = () => {
       }
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
-        if (isActive) {
-          showMessage('Updated');
-        }
+        if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);
       }
@@ -67,9 +65,8 @@ const FairMarketValuePage = () => {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
+
   const textBlock =
     'The fair market value is the price something would sell for on the open market. A good example of this is a jersey signed or not would have a fair market value of $99 dollars which is what it is online.';
 

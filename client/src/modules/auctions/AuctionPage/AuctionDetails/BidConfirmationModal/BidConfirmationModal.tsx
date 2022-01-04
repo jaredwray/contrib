@@ -94,9 +94,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     );
 
     const handleBiding = useCallback(async () => {
-      if (!elements || process.title === 'browser' ? !activeBid : false) {
-        return;
-      }
+      if (!elements || process.title === 'browser' ? !activeBid : false) return;
 
       setSubmitting(true);
 

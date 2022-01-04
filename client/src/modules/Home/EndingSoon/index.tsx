@@ -23,9 +23,8 @@ export default function EndingSoon() {
     },
   });
 
-  if (loading || error) {
-    return null;
-  }
+  if (loading || error) return null;
+
   const items = data.auctions.items.map((auction: Auction, i: number) => <AuctionCard key={i} auction={auction} />);
 
   return (

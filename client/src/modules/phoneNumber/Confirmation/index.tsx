@@ -64,10 +64,7 @@ export default function PhoneNumberConfirmation() {
 
   const handleSubmit = useCallback(
     ({ otp }: { otp: string }) => {
-      if (!otp) {
-        return;
-      }
-
+      if (!otp) return;
       if (invitationToken) {
         confirmPhoneNumberWithInvitation({
           variables: {
@@ -77,16 +74,14 @@ export default function PhoneNumberConfirmation() {
         }).catch((error) => console.error(`error confirming phone number: `, error));
         return;
       }
+      if (!phoneNumber) return;
 
-      if (phoneNumber) {
-        confirmPhoneNumber({
-          variables: {
-            otp,
-            phoneNumber,
-          },
-        }).catch((error) => console.error(`error confirming phone number: `, error));
-        return;
-      }
+      confirmPhoneNumber({
+        variables: {
+          otp,
+          phoneNumber,
+        },
+      }).catch((error) => console.error(`error confirming phone number: `, error));
     },
     [confirmPhoneNumber, confirmPhoneNumberWithInvitation, phoneNumber, invitationToken],
   );
@@ -131,9 +126,7 @@ export default function PhoneNumberConfirmation() {
   const isLoading = confirmLoading || confirmInvitationLoading || otpIsResending || invitationOtpIsResending;
   const error = confirmError ?? confirmInvitationError ?? resendError ?? invitationResendError;
 
-  if (!myAccountData) {
-    return null;
-  }
+  if (!myAccountData) return null;
 
   setPageTitle('Phone number confirmation');
 

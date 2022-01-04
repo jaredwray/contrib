@@ -55,18 +55,13 @@ export default function AdminAuctionsPage() {
     (value) => {
       setSearchQuery(value);
       setPageSkip(0);
-      if (!value) {
-        history.push(`${pathname}`);
-        return;
-      }
-      history.push(`${pathname}?q=${value}`);
+
+      history.push(`${pathname}${value && `?q=${value}`}`);
     },
     [setSearchQuery, history, pathname],
   );
 
-  if (error) {
-    return null;
-  }
+  if (error) return null;
 
   const auctions = data?.auctions || { skip: 0, totalItems: 0, items: [] };
 

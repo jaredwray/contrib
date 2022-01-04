@@ -30,9 +30,9 @@ const EditAuctionDescriptionPage = () => {
     onCompleted() {
       if (isActive) {
         history.goBack();
-        return;
+      } else {
+        history.push(`/auctions/${auctionId}/video`);
       }
-      history.push(`/auctions/${auctionId}/video`);
     },
   });
   const handlePrevAction = useCallback(() => {
@@ -43,9 +43,7 @@ const EditAuctionDescriptionPage = () => {
     async (values) => {
       try {
         await updateAuction({ variables: { id: auctionId, ...values } });
-        if (isActive) {
-          showMessage('Updated');
-        }
+        if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);
       }
@@ -61,9 +59,8 @@ const EditAuctionDescriptionPage = () => {
     history.replace('/404');
     return null;
   }
-  if (auction === undefined) {
-    return null;
-  }
+  if (auction === undefined) return null;
+
   const textBlock =
     'This is the short one or two sentence description that will be used to describe the item. It will appear on the Contrib auction page along side the bidding box etc.';
 
