@@ -1,6 +1,7 @@
 import { UserAccount } from 'app/UserAccount/dto/UserAccount';
 import { ClientSession, Connection, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 
 import { IInvitation, InvitationModel } from '../mongodb/InvitationModel';
 import { UserAccountModel } from '../../UserAccount/mongodb/UserAccountModel';
@@ -323,9 +324,7 @@ export class InvitationService {
           );
 
           await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
-
           await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
-
           await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, assistant });
           returnObject = { invitationId: invitation.id };
         } else {
@@ -385,10 +384,7 @@ export class InvitationService {
     if (influencerId) {
       const profile = await this.influencerService.findInfluencer({ _id: influencerId }, session);
 
-      if (!profile) {
-        throw new AppError('requested influencer profile does not exist');
-      }
-
+      if (!profile) throw new AppError('requested influencer profile does not exist');
       if (profile.status !== InfluencerStatus.TRANSIENT || profile.userAccount) {
         throw new AppError('given influencer has already been invited');
       }
@@ -409,10 +405,7 @@ export class InvitationService {
         session,
       });
 
-      if (!invitation) {
-        return;
-      }
-
+      if (!invitation) return;
       if (invitation.accepted) {
         throw new Error(
           `user account with ${userAccount.phoneNumber} has been created, but invitation to the same phone number is already accepted`,
@@ -458,8 +451,10 @@ export class InvitationService {
   }
 
   private async acceptInvitation(invitation: IInvitation): Promise<IInvitation> {
-    invitation.accepted = true;
-    invitation.updatedAt = new Date();
+    Object.assign(invitation, {
+      accepted: true,
+      updatedAt: this.timeNow(),
+    });
     return await invitation.save();
   }
 
@@ -468,7 +463,7 @@ export class InvitationService {
     { phoneNumber, firstName, lastName, welcomeMessage, accepted, parentEntityType }: InviteInput,
     session: ClientSession,
   ): Promise<Invitation> {
-    const now = new Date();
+    const now = this.timeNow();
     const slug = uuidv4();
     const [invitation] = await this.InvitationModel.create(
       [
@@ -498,22 +493,19 @@ export class InvitationService {
     return InvitationService.makeInvitation(invitation);
   }
 
+  private timeNow(): String {
+    return dayjs().second(0).toISOString();
+  }
+
   private static makeInvitation(model: IInvitation): Invitation | null {
-    if (!model) {
-      return null;
-    }
+    if (!model) return null;
+
+    const { _id, parentEntityId, ...rest } = model.toObject();
+
     return {
       id: model._id.toString(),
-      slug: model.slug,
-      firstName: model.firstName,
-      lastName: model.lastName,
-      welcomeMessage: model.welcomeMessage,
-      phoneNumber: model.phoneNumber,
-      accepted: model.accepted,
-      createdAt: model.createdAt.toISOString(),
-      updatedAt: model.updatedAt.toISOString(),
-      parentEntityId: model.parentEntityId.toString(),
-      parentEntityType: model.parentEntityType,
+      parentEntityId: parentEntityId.toString(),
+      ...rest,
     };
   }
 }

@@ -13,12 +13,15 @@ export interface ICharityModel extends Document {
   stripeStatus: CharityStripeStatus;
   userAccount: IUserAccount['_id'];
   stripeAccountId: string | null;
-  avatarUrl: string | null;
+  avatarUrl?: string;
   profileDescription: string | null;
   website: string | null;
   totalRaisedAmount: number;
-  activatedAt: Dayjs;
   followers: IFollowObject[];
+  activatedAt: Dayjs;
+  createdAt?: Dayjs;
+  updatedAt?: Dayjs;
+  onboardedAt?: Dayjs;
 }
 
 export const CharityCollectionName = 'charity';
@@ -35,10 +38,18 @@ const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   profileDescription: { type: SchemaTypes.String },
   website: { type: SchemaTypes.String },
   totalRaisedAmount: { type: SchemaTypes.Number, default: 0 },
-  activatedAt: {
+  activatedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+  createdAt: {
     type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
     get: (v) => dayjs(v),
   },
+  updatedAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
+  onboardedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   followers: [
     {
       user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },

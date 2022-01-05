@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { InvitationParentEntityType } from '../mongodb/InvitationParentEntityType';
 
 export interface Invitation {
@@ -10,6 +11,6 @@ export interface Invitation {
   parentEntityType: InvitationParentEntityType;
   parentEntityId: string;
   accepted: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
 }

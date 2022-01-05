@@ -258,10 +258,9 @@ export class CharityService {
         }
 
         const newAttributes = objectTrimmer(input);
+        const newSemanticId = slugify(newAttributes.name);
 
-        if (charity.name != newAttributes.name && charity.name != this.DEFAULT_NAME) {
-          const newSemanticId = slugify(newAttributes.name);
-
+        if (charity.name != newAttributes.name && newSemanticId != slugify(this.DEFAULT_NAME)) {
           await this.checkSemanticId(newSemanticId, id);
 
           charity.semanticIds = charity.semanticIds.filter((f) => f != newSemanticId);
@@ -274,6 +273,10 @@ export class CharityService {
         });
 
         this.maybeActivateCharity(charity);
+        Object.assign(charity, {
+          updatedAt: this.timeNow(),
+        });
+
         await charity.save({ session });
       });
 
@@ -330,6 +333,12 @@ export class CharityService {
             .catch((e: any) => AppLogger.error(`exec error : ${e}`));
         }),
     );
+
+    Object.assign(charity, {
+      updatedAt: this.timeNow(),
+    });
+    await charity.save();
+
     return CharityService.makeCharity(charity);
   }
 
@@ -341,7 +350,11 @@ export class CharityService {
     if (charity.userAccount)
       throw new Error(`cannot assign user to charity: charity ${id} already has a user account assigned`);
 
-    charity.userAccount = userAccountId;
+    Object.assign(charity, {
+      userAccount: userAccountId,
+      updatedAt: this.timeNow(),
+      onboardedAt: this.timeNow(),
+    });
     await charity.save();
 
     return CharityService.makeCharity(charity);
@@ -366,15 +379,10 @@ export class CharityService {
 
     if (!status && !profileStatus && !stripeStatus) throw new Error('at least one status must be updated');
 
-    if (status) {
-      model.status = status;
-    }
-    if (stripeStatus) {
-      model.stripeStatus = stripeStatus;
-    }
-    if (profileStatus) {
-      model.profileStatus = profileStatus;
-    }
+    if (status) model.status = status;
+    if (stripeStatus) model.stripeStatus = stripeStatus;
+    if (profileStatus) model.profileStatus = profileStatus;
+
     if (userAccount) {
       if (model.userAccount) throw new Error('Attempting to override user account for a charity');
 
@@ -383,6 +391,10 @@ export class CharityService {
 
     try {
       this.maybeActivateCharity(model);
+      Object.assign(model, {
+        updatedAt: this.timeNow(),
+      });
+
       await model.save({ session });
     } catch (error) {
       AppLogger.info(`Cannot update charity #${charity.id}: ${error.message}`);
@@ -395,7 +407,10 @@ export class CharityService {
     const charity = await this.CharityModel.findById(id).exec();
     if (!charity) throw new Error(`Charity record not found`);
 
-    Object.assign(charity, objectTrimmer(input));
+    Object.assign(charity, {
+      ...objectTrimmer(input),
+      updatedAt: this.timeNow(),
+    });
     await charity.save();
     return CharityService.makeCharity(charity);
   }
@@ -466,10 +481,14 @@ export class CharityService {
     return `http://${website}`;
   }
 
+  private timeNow(): String {
+    return dayjs().second(0).toISOString();
+  }
+
   public static makeCharity(model: ICharityModel): Charity | null {
     if (!model) return null;
 
-    const { _id, userAccount, website, avatarUrl, followers, totalRaisedAmount, semanticIds, ...rest } =
+    const { _id, userAccount, avatarUrl, followers, totalRaisedAmount, semanticIds, ...rest } =
       'toObject' in model ? model.toObject() : model;
 
     return {
@@ -477,8 +496,7 @@ export class CharityService {
       semanticId: semanticIds?.pop() ?? null,
       userAccount: userAccount?.toString() ?? null,
       avatarUrl: avatarUrl ?? `/content/img/users/person.png`,
-      website,
-      websiteUrl: CharityService.websiteUrl(website),
+      websiteUrl: CharityService.websiteUrl(model.website),
       followers: followers.map((follower) => {
         return {
           user: follower.user,

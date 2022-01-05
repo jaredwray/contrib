@@ -19,9 +19,10 @@ export interface IUserAccount extends Document {
   phoneNumber: string;
   isAdmin: boolean;
   stripeCustomerId: string | null;
-  createdAt: Date;
+  createdAt: Dayjs;
+  updatedAt?: Dayjs;
   acceptedTerms: string;
-  acceptedTermsAt: Date;
+  acceptedTermsAt: Dayjs;
   address?: UserAccountAddress;
   followingInfluencers: IFollowObject[];
   followingCharitis: IFollowObject[];
@@ -35,25 +36,46 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   phoneNumber: { type: SchemaTypes.String, required: true, unique: true },
   isAdmin: { type: SchemaTypes.Boolean, required: false },
   stripeCustomerId: { type: SchemaTypes.String, required: false },
-  createdAt: { type: SchemaTypes.Date, required: true },
+  createdAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
+  updatedAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
   acceptedTerms: { type: SchemaTypes.String },
-  acceptedTermsAt: { type: SchemaTypes.Date },
+  acceptedTermsAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   followingAuctions: [
     {
       auction: { type: SchemaTypes.ObjectId, ref: 'auction' },
-      createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+      createdAt: {
+        type: SchemaTypes.Date,
+        default: dayjs().second(0).toISOString(),
+        get: (v) => dayjs(v),
+      },
     },
   ],
   followingInfluencers: [
     {
       influencerProfile: { type: SchemaTypes.ObjectId, ref: 'influencer' },
-      createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+      createdAt: {
+        type: SchemaTypes.Date,
+        default: dayjs().second(0).toISOString(),
+        get: (v) => dayjs(v),
+      },
     },
   ],
   followingCharitis: [
     {
       charityProfile: { type: SchemaTypes.ObjectId, ref: 'charity' },
-      createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+      createdAt: {
+        type: SchemaTypes.Date,
+        default: dayjs().second(0).toISOString(),
+        get: (v) => dayjs(v),
+      },
     },
   ],
   address: {

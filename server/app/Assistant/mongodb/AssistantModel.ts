@@ -1,3 +1,4 @@
+import dayjs, { Dayjs } from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { AssistantStatus } from '../dto/AssistantStatus';
 import { IUserAccount, UserAccountCollectionName } from '../../UserAccount/mongodb/UserAccountModel';
@@ -8,6 +9,9 @@ export interface IAssistant extends Document {
   status: AssistantStatus;
   userAccount: IUserAccount['_id'];
   influencer: IInfluencer['_id'];
+  createdAt?: Dayjs;
+  updatedAt?: Dayjs;
+  onboardedAt?: Dayjs;
 }
 
 export const AssistantCollectionName = 'assistants';
@@ -17,6 +21,17 @@ const AssistantSchema: Schema<IAssistant> = new Schema<IAssistant>({
   status: { type: SchemaTypes.String, required: true },
   userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   influencer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName, required: true },
+  createdAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
+  updatedAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
+  onboardedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
 });
 
 export const AssistantModel = (connection: Connection): Model<IAssistant> => {

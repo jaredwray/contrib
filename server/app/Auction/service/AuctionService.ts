@@ -98,6 +98,7 @@ export class AuctionService {
             acc.won = [...acc.won, cur];
             return acc;
           }
+
           return acc;
         },
         { live: [], won: [] },
@@ -179,9 +180,11 @@ export class AuctionService {
 
       Object.assign(auction.delivery, {
         status: AuctionDeliveryStatus.PAID,
-        updatedAt: dayjs().second(0),
+        updatedAt: this.timeNow(),
         timeInTransit,
       });
+      Object.assign(auction, { updatedAt: this.timeNow() });
+
       await auction.save();
       await this.notifyOrganizerAboutDelivery(auction);
     } catch (error) {
@@ -228,10 +231,14 @@ export class AuctionService {
 
       Object.assign(auction.delivery, {
         status: AuctionDeliveryStatus.DELIVERY_PAID,
-        updatedAt: dayjs().second(0),
+        updatedAt: this.timeNow(),
         identificationNumber,
         shippingLabel: barcode,
       });
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+      });
+
       await auction.save();
 
       const trackingShortLink = await this.shortLinkService.createShortLink({
@@ -255,8 +262,12 @@ export class AuctionService {
     } catch (error) {
       Object.assign(auction.delivery, {
         status: AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED,
-        updatedAt: dayjs().second(0),
+        updatedAt: this.timeNow(),
       });
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+      });
+
       await auction.save();
       throw new Error(error.message);
     }
@@ -294,6 +305,9 @@ export class AuctionService {
     if (deliveryMethod) {
       try {
         auction.delivery.deliveryMethod = deliveryMethod;
+        Object.assign(auction, {
+          updatedAt: this.timeNow(),
+        });
 
         await auction.save();
       } catch (error) {
@@ -330,7 +344,9 @@ export class AuctionService {
       Object.assign(auction.delivery, {
         parcel: { width, length, height, weight },
       });
-
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+      });
       await auction.save();
 
       return { width, length, height, weight };
@@ -641,11 +657,9 @@ export class AuctionService {
     const auction = await this.AuctionModel.findById(id, null, { session }).exec();
 
     if (!auction.charity) throw new AppError('There is no charity attached to given auction');
-
     if (auction.status !== AuctionStatus.ACTIVE) {
       throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
     }
-
     if (dayjs().utc().isAfter(auction.endsAt)) {
       throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
     }
@@ -685,8 +699,11 @@ export class AuctionService {
 
       const createdBid = await this.bidService.createBid(bidInput, session);
 
-      auction.currentPrice = bid.getAmount();
-      auction.totalBids += 1;
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+        currentPrice: bid.getAmount(),
+        totalBids: auction.totalBids + 1,
+      });
 
       await auction.save({ session });
       await session.commitTransaction();
@@ -858,7 +875,10 @@ export class AuctionService {
   public async settleAndChargeCurrentAuction(id: string): Promise<void> {
     const auction = await this.AuctionModel.findOne({ _id: id });
     if (auction.status !== AuctionStatus.ACTIVE) {
-      auction.status = AuctionStatus.ACTIVE;
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+        status: AuctionStatus.ACTIVE,
+      });
       await auction.save();
     }
     return await this.settleAuctionAndCharge(auction);
@@ -891,7 +911,10 @@ export class AuctionService {
     const [lastAuctionBid] = await this.BidModel.find({ auction: auction._id }).sort({ bid: -1 }).limit(1);
 
     if (!lastAuctionBid) {
-      auction.status = AuctionStatus.SETTLED;
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+        status: AuctionStatus.SETTLED,
+      });
       await auction.save();
       return;
     }
@@ -922,14 +945,20 @@ export class AuctionService {
 
       await this.updateTotalRaisedAmount(currentAuction, lastAuctionBid.bid);
 
-      auction.winner = lastAuctionBid.user._id.toString();
-      auction.status = AuctionStatus.SETTLED;
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+        winner: lastAuctionBid.user._id.toString(),
+        status: AuctionStatus.SETTLED,
+      });
 
       await await lastAuctionBid.save();
       await auction.save();
     } catch (error) {
       AppLogger.error(`Unable to charge user ${lastAuctionBid.user._id.toString()}, with error: ${error.message}`);
-      auction.status = AuctionStatus.FAILED;
+      Object.assign(auction, {
+        updatedAt: this.timeNow(),
+        status: AuctionStatus.FAILED,
+      });
       await auction.save();
       throw new AppError('Unable to charge');
     }
@@ -983,7 +1012,11 @@ export class AuctionService {
   public async activateAuction(auction: IAuctionModel): Promise<void> {
     if (!auction) throw new AppError('Auction not found');
 
-    auction.status = AuctionStatus.ACTIVE;
+    Object.assign(auction, {
+      updatedAt: this.timeNow(),
+      status: AuctionStatus.ACTIVE,
+    });
+
     await auction.save();
     await this.sendAuctionIsActivatedMessage(auction);
 
@@ -1067,11 +1100,17 @@ export class AuctionService {
 
     AppLogger.info(`Auction with id ${auction.id} has been sold`);
 
-    auction.winner = user.mongodbId;
-    auction.delivery.updatedAt = dayjs().second(0);
-    auction.status = AuctionStatus.SOLD;
-    auction.currentPrice = auction.itemPrice;
-    auction.stoppedAt = dayjs().second(0);
+    Object.assign(auction, {
+      updatedAt: this.timeNow(),
+      winner: user.mongodbId,
+      status: AuctionStatus.SOLD,
+      currentPrice: auction.itemPrice,
+      stoppedAt: this.timeNow(),
+      delivery: {
+        ...auction.delivery,
+        updatedAt: this.timeNow(),
+      },
+    });
 
     try {
       await auction.save();
@@ -1097,8 +1136,11 @@ export class AuctionService {
   public async stopAuction(id: string): Promise<Auction> {
     const auction = await this.auctionRepository.getAuction(id);
 
-    auction.status = AuctionStatus.STOPPED;
-    auction.stoppedAt = dayjs().second(0);
+    Object.assign(auction, {
+      updatedAt: this.timeNow(),
+      status: AuctionStatus.STOPPED,
+      stoppedAt: this.timeNow(),
+    });
 
     try {
       await auction.save();
@@ -1110,8 +1152,11 @@ export class AuctionService {
   public async activateAuctionById(id: string): Promise<Auction> {
     const auction = await this.auctionRepository.getAuction(id);
 
-    auction.endsAt < dayjs() ? (auction.status = AuctionStatus.SETTLED) : (auction.status = AuctionStatus.ACTIVE);
-    auction.stoppedAt = null;
+    Object.assign(auction, {
+      updatedAt: this.timeNow(),
+      stoppedAt: this.timeNow(),
+      status: auction.endsAt < dayjs() ? AuctionStatus.SETTLED : AuctionStatus.ACTIVE,
+    });
 
     try {
       await auction.save();
@@ -1129,9 +1174,7 @@ export class AuctionService {
       const cloudflareStreaming = new CloudflareStreaming();
       await cloudflareStreaming.deleteFromCloudFlare(uid);
     }
-    if (url) {
-      await this.attachmentsService.removeFileAttachment(url);
-    }
+    if (url) await this.attachmentsService.removeFileAttachment(url);
   }
 
   public async deleteAuctionAttachment(
@@ -1147,7 +1190,6 @@ export class AuctionService {
 
     try {
       await this.deleteAttachmentFromCloud(attachment.url, attachment.uid);
-
       await auction.updateOne({ $pull: { assets: attachment._id } });
       await attachment.delete();
 
@@ -1212,6 +1254,10 @@ export class AuctionService {
       address,
       phoneNumber,
     };
+  }
+
+  private timeNow(): String {
+    return dayjs().second(0).toISOString();
   }
 
   public makeAuction(model: IAuctionModel): Auction | null {
