@@ -41,7 +41,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
     variables: {
       filters: {
         charity: charity.id,
-        status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED],
+        status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD],
       },
     },
   });
