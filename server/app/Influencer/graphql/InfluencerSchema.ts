@@ -19,6 +19,7 @@ export const InfluencerSchema = gql`
     id: String!
     name: String!
     sport: String
+    team: String
     profileDescription: String
     avatarUrl: String!
     status: InfluencerStatus!

@@ -8,6 +8,7 @@ export interface InfluencerProfile {
   id: string;
   name: string;
   sport: string;
+  team: string | null;
   profileDescription: string | null;
   avatarUrl: string;
   status: InfluencerStatus;

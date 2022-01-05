@@ -10,7 +10,8 @@ export interface IInfluencer extends Document {
   avatarUrl: string;
   status: InfluencerStatus;
   userAccount: IUserAccount['_id'];
-  sport: string;
+  sport: string | null;
+  team: string | null;
   profileDescription: string | null;
   favoriteCharities: ICharityModel['_id'][];
   assistants: IAssistant['_id'][];
@@ -29,6 +30,7 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   status: { type: SchemaTypes.String, required: true },
   userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   sport: { type: SchemaTypes.String },
+  team: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
   favoriteCharities: [{ type: SchemaTypes.ObjectId, ref: CharityCollectionName }],
   assistants: [{ type: SchemaTypes.ObjectId, ref: AssistantCollectionName }],
