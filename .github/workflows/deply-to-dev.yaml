@@ -96,9 +96,9 @@ jobs:
           token: ${{ secrets.CODECOV_KEY }}
 
       # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@v0
         with:
-          service_account_key: ${{ secrets.DEV_GCP_SA_KEY }}
+          credentials_json: ${{ secrets.DEV_GCP_SA_KEY }}
           project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
           export_default_credentials: true
 
