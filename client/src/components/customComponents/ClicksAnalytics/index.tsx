@@ -43,7 +43,7 @@ export const ClicksAnalytics: FC<Props> = ({ metrics, isAuctionPage }) => {
   };
 
   if (!metrics.clicks) {
-    return <div className={clsx('text--body', isAuctionPage && 'pt-3')}>No information yet</div>;
+    return <div className={clsx('text-label', isAuctionPage && 'pt-3')}>No information yet</div>;
   }
 
   const {

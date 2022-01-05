@@ -5,8 +5,8 @@ import { Spinner } from 'react-bootstrap';
 const Loading: FC = () => {
   return (
     <>
-      <span>...Loading</span>
-      <Spinner animation="border" className="ml-2" />
+      <span className="text-label">... Loading</span>
+      <Spinner animation="border" className="ml-2" size="sm" />
     </>
   );
 };
