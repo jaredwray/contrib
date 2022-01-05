@@ -9,8 +9,9 @@ export interface InfluencerProfile {
   id: string;
   name: string;
   avatarUrl: string;
-  sport: string;
-  profileDescription?: string;
+  sport: string | null;
+  team: string | null;
+  profileDescription: string | null;
   favoriteCharities: Charity[];
   assistants: Assistant[];
   auctions?: Auction[];
