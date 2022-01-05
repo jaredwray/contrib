@@ -141,14 +141,14 @@ export class InfluencerService {
 
         const createdFollower = {
           user: currentAccountId,
-          createdAt: dayjs(),
+          createdAt: this.timeNow(),
         };
 
         const influencerProfileId = influencer._id.toString();
 
         const createdFollowing = {
           influencerProfile: influencerProfileId,
-          createdAt: dayjs(),
+          createdAt: this.timeNow(),
         };
 
         Object.assign(influencer, {
@@ -246,20 +246,21 @@ export class InfluencerService {
     userAccount: UserAccount | null,
     session?: ClientSession,
   ): Promise<InfluencerProfile> {
-    if (profile.status === status) {
-      return profile;
-    }
+    if (profile.status === status) return profile;
 
     const model = await this.InfluencerModel.findById(profile.id, null, { session }).exec();
-    model.status = status;
-    model.onboardedAt = dayjs().second(0);
 
     if (userAccount) {
-      if (model.userAccount) {
-        throw new Error('attempting to override user account for an influencer');
-      }
+      if (model.userAccount) throw new Error('attempting to override user account for an influencer');
+
       model.userAccount = userAccount.mongodbId;
     }
+
+    Object.assign(model, {
+      status,
+      onboardedAt: this.timeNow(),
+      updatedAt: this.timeNow(),
+    });
 
     await model.save();
     return InfluencerService.makeInfluencerProfile(model);
@@ -303,6 +304,9 @@ export class InfluencerService {
     }
 
     Object.assign(influencer, objectTrimmer(input));
+    Object.assign(influencer, {
+      updatedAt: this.timeNow(),
+    });
 
     await influencer.save();
 
@@ -311,9 +315,7 @@ export class InfluencerService {
 
   async updateInfluencerProfileAvatarById(id: string, image: any): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
-    if (!influencer) {
-      throw new Error(`influencer record #${id} not found`);
-    }
+    if (!influencer) throw new Error(`influencer record #${id} not found`);
 
     const { filename: originalFilename, createReadStream } = await image;
     const ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg', 'webp'];
@@ -348,19 +350,25 @@ export class InfluencerService {
             .catch((e: any) => AppLogger.error(`exec error : ${e}`));
         }),
     );
+    Object.assign(influencer, {
+      updatedAt: this.timeNow(),
+    });
+
+    await influencer.save();
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
   async updateInfluencerProfileFavoriteCharitiesById(id: string, charities: [string]): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
-    if (!influencer) {
-      throw new Error(`influencer record #${id} not found`);
-    }
+    if (!influencer) throw new Error(`influencer record #${id} not found`);
 
     const favoriteCharities = await this.charityService.listCharitiesByIds(charities);
-    influencer.favoriteCharities = favoriteCharities.map((m) => m.id);
 
+    Object.assign(influencer, {
+      favoriteCharities: favoriteCharities.map((m) => m.id),
+      updatedAt: this.timeNow(),
+    });
     await influencer.save();
 
     return InfluencerService.makeInfluencerProfile(influencer);
@@ -368,6 +376,10 @@ export class InfluencerService {
 
   async assignAssistantsToInfluencer(influencerId: string, assistantId: string): Promise<void> {
     await this.InfluencerModel.updateOne({ _id: influencerId }, { $addToSet: { assistants: assistantId } });
+  }
+
+  private timeNow(): String {
+    return dayjs().second(0).toISOString();
   }
 
   public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {

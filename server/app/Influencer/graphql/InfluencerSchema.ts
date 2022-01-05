@@ -19,7 +19,6 @@ export const InfluencerSchema = gql`
     id: String!
     name: String!
     sport: String
-    team: String
     profileDescription: String
     avatarUrl: String!
     status: InfluencerStatus!
@@ -29,6 +28,8 @@ export const InfluencerSchema = gql`
     assistants: [Assistant!]!
     totalRaisedAmount: Money
     followers: [Follow]
+    createdAt: DateTime
+    onboardedAt: DateTime
   }
 
   type InfluencersPage {

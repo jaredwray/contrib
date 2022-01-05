@@ -90,14 +90,16 @@ export class UserAccountService {
       Object.assign(auction.delivery, {
         address: { ...input },
         status: AuctionDeliveryStatus.ADDRESS_PROVIDED,
-        updatedAt: dayjs().second(0),
+        updatedAt: this.timeNow(),
       });
+      await auction.save();
+
       Object.assign(user, {
         address: { ...input },
+        updatedAt: this.timeNow(),
       });
-
-      await auction.save();
       await user.save();
+
       return input;
     } catch (error) {
       AppLogger.error(`Can not create or update user address for user #${userId}. Error:${error.message}`);
@@ -128,7 +130,7 @@ export class UserAccountService {
       id: authzId,
       phoneNumber: null,
       status: UserAccountStatus.PHONE_NUMBER_REQUIRED,
-      createdAt: dayjs().toISOString(),
+      createdAt: dayjs().second(0),
     };
   }
 
@@ -137,7 +139,7 @@ export class UserAccountService {
     if (account != null) {
       return {
         id: account._id.toString(),
-        createdAt: account.createdAt.toISOString(),
+        createdAt: account.createdAt,
         phoneNumber: account.phoneNumber,
         stripeCustomerId: account.stripeCustomerId,
       };
@@ -160,7 +162,7 @@ export class UserAccountService {
       phoneNumber: model.phoneNumber,
       status: UserAccountStatus.COMPLETED,
       mongodbId: model._id.toString(),
-      createdAt: model.createdAt.toISOString(),
+      createdAt: model.createdAt,
     }));
   }
 
@@ -211,7 +213,7 @@ export class UserAccountService {
       id: authzId,
       phoneNumber,
       status: UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED,
-      createdAt: dayjs().toISOString(),
+      createdAt: dayjs().second(0),
     };
   }
 
@@ -302,15 +304,11 @@ export class UserAccountService {
   }
 
   async updateAccountStripeCustomerId(account: UserAccount, stripeCustomerId: string): Promise<UserAccount> {
-    if (!account.mongodbId) {
-      throw new Error('cannot update non-persisted UserAccount');
-    }
+    if (!account.mongodbId) throw new Error('cannot update non-persisted UserAccount');
 
     await this.AccountModel.updateOne(
       { _id: account.mongodbId },
-      {
-        $set: { stripeCustomerId },
-      },
+      { $set: { stripeCustomerId, updatedAt: this.timeNow() } },
     );
 
     return this.getAccountByAuthzId(account.id);
@@ -323,24 +321,29 @@ export class UserAccountService {
 
     const account = await this.AccountModel.findById(id).exec();
 
-    account.acceptedTerms = version;
-    account.acceptedTermsAt = new Date();
+    Object.assign(account, {
+      acceptedTerms: version,
+      acceptedTermsAt: this.timeNow(),
+      updatedAt: this.timeNow(),
+    });
     await account.save();
 
     return UserAccountService.makeUserAccount(account);
   }
 
+  private timeNow(): String {
+    return dayjs().second(0).toISOString();
+  }
+
   private static makeUserAccount(model: IUserAccount, accountEntityTypes?): UserAccount {
+    const { _id, authzId, acceptedTerms, ...rest } = model.toObject();
+
     return {
-      id: model.authzId,
-      phoneNumber: model.phoneNumber,
+      id: authzId,
       status: UserAccountStatus.COMPLETED,
-      mongodbId: model._id.toString(),
-      stripeCustomerId: model.stripeCustomerId,
-      createdAt: model.createdAt.toISOString(),
-      notAcceptedTerms: TermsService.notAcceptedTerms(model.acceptedTerms, accountEntityTypes),
-      address: model.address,
-      isAdmin: model.isAdmin,
+      mongodbId: _id.toString(),
+      notAcceptedTerms: TermsService.notAcceptedTerms(acceptedTerms, accountEntityTypes),
+      ...rest,
     };
   }
 }

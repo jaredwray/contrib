@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Storage } from '@google-cloud/storage';
 import { ClientSession, Connection, ObjectId } from 'mongoose';
 import { IAssistant, AssistantModel } from '../mongodb/AssistantModel';
@@ -45,20 +46,23 @@ export class AssistantService {
 
   async assignUserToAssistant(id: ObjectId, userAccountId: string, session: ClientSession): Promise<Assistant> {
     const assistant = await this.assistantModel.findById(id, null, { session }).exec();
+
     if (!assistant) {
       throw new Error(`cannot assign user to assistant: assistant ${id} is not found`);
     }
-
     if (assistant.status !== AssistantStatus.INVITATION_PENDING) {
       throw new Error(`cannot assign user to assistant: assistant ${id} status is ${assistant.status} `);
     }
-
     if (assistant.userAccount) {
       throw new Error(`cannot assign user to assistant: assistant ${id} already has a user account assigned`);
     }
 
-    assistant.userAccount = userAccountId;
-    assistant.status = AssistantStatus.ONBOARDED;
+    Object.assign(assistant, {
+      userAccount: userAccountId,
+      status: AssistantStatus.ONBOARDED,
+      onboardedAt: this.timeNow(),
+      updatedAt: this.timeNow(),
+    });
     await assistant.save();
 
     return AssistantService.makeAssistant(assistant);
@@ -78,6 +82,10 @@ export class AssistantService {
   async listAssistantsByUserAccountIds(userAccountIds: readonly string[]): Promise<Assistant[]> {
     const models = await this.assistantModel.find({ userAccount: { $in: userAccountIds } });
     return models.map((assistant) => AssistantService.makeAssistant(assistant));
+  }
+
+  private timeNow(): String {
+    return dayjs().second(0).toISOString();
   }
 
   public static makeAssistant(model: IAssistant): Assistant {

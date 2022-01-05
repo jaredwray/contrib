@@ -20,6 +20,8 @@ export interface Charity {
   website: string | null;
   websiteUrl: string | null;
   totalRaisedAmount: Dinero.Dinero;
-  activatedAt: Dayjs;
   followers: Follow[];
+  activatedAt: Dayjs;
+  onboardedAt?: Dayjs;
+  createdAt?: Dayjs;
 }

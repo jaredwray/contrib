@@ -22,9 +22,6 @@ export interface IAuctionModel extends Document {
   itemPrice?: number;
   priceCurrency?: string;
   charity: ICharityModel['_id'];
-  startsAt: dayjs.Dayjs;
-  endsAt: dayjs.Dayjs;
-  stoppedAt: dayjs.Dayjs;
   startPrice: number;
   bitlyLink: string;
   shortLink: IShortLinkModel['_id'];
@@ -32,6 +29,11 @@ export interface IAuctionModel extends Document {
   sentNotifications: [string];
   totalBids: number;
   winner?: IUserAccount['_id'];
+  createdAt: dayjs.Dayjs;
+  updatedAt: dayjs.Dayjs;
+  startsAt: dayjs.Dayjs;
+  endsAt: dayjs.Dayjs;
+  stoppedAt: dayjs.Dayjs;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -60,8 +62,22 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
       default: dayjs().second(0).toISOString(),
       get: (v) => dayjs(v),
     },
-    endsAt: { type: SchemaTypes.Date, default: dayjs().second(0).add(3, 'days').toISOString(), get: (v) => dayjs(v) },
-    stoppedAt: { type: SchemaTypes.Date },
+    endsAt: {
+      type: SchemaTypes.Date,
+      default: dayjs().second(0).add(3, 'days').toISOString(),
+      get: (v) => dayjs(v),
+    },
+    stoppedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+    createdAt: {
+      type: SchemaTypes.Date,
+      default: dayjs().second(0).toISOString(),
+      get: (v) => dayjs(v),
+    },
+    updatedAt: {
+      type: SchemaTypes.Date,
+      default: dayjs().second(0).toISOString(),
+      get: (v) => dayjs(v),
+    },
     bitlyLink: { type: SchemaTypes.String },
     shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
     fairMarketValue: { type: SchemaTypes.Number },

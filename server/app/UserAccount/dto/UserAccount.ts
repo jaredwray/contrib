@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { UserAccountStatus } from './UserAccountStatus';
 import { UserAccountAddress } from './UserAccountAddress';
 
@@ -8,7 +9,8 @@ export interface UserAccount {
   mongodbId?: string;
   isAdmin?: boolean;
   stripeCustomerId?: string;
-  createdAt: string;
+  createdAt: Dayjs;
+  updatedAt?: Dayjs;
   notAcceptedTerms?: string;
   address?: UserAccountAddress;
 }

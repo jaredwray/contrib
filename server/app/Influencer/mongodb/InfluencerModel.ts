@@ -10,12 +10,13 @@ export interface IInfluencer extends Document {
   avatarUrl: string;
   status: InfluencerStatus;
   userAccount: IUserAccount['_id'];
-  sport: string | null;
-  team: string | null;
+  sport: string;
   profileDescription: string | null;
   favoriteCharities: ICharityModel['_id'][];
   assistants: IAssistant['_id'][];
   totalRaisedAmount: number;
+  createdAt?: Dayjs;
+  updatedAt?: Dayjs;
   onboardedAt: Dayjs;
   followers: IFollowObject[];
 }
@@ -28,15 +29,21 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   status: { type: SchemaTypes.String, required: true },
   userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
   sport: { type: SchemaTypes.String },
-  team: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
   favoriteCharities: [{ type: SchemaTypes.ObjectId, ref: CharityCollectionName }],
   assistants: [{ type: SchemaTypes.ObjectId, ref: AssistantCollectionName }],
   totalRaisedAmount: { type: SchemaTypes.Number, default: 0 },
-  onboardedAt: {
+  createdAt: {
     type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
     get: (v) => dayjs(v),
   },
+  updatedAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
+  onboardedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   followers: [
     {
       user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },

@@ -1,3 +1,4 @@
+import dayjs, { Dayjs } from 'dayjs';
 import { Connection, Document, Model, ObjectId, Schema, SchemaTypes } from 'mongoose';
 import { InvitationParentEntityType } from './InvitationParentEntityType';
 import { ShortLinkCollectionName, IShortLinkModel } from '../../ShortLink/mongodb/ShortLinkModel';
@@ -11,8 +12,8 @@ export interface IInvitation extends Document {
   phoneNumber: string;
   parentEntityType: InvitationParentEntityType;
   parentEntityId: ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
   shortLink: IShortLinkModel['_id'];
 }
 
@@ -27,8 +28,16 @@ const InvitationSchema: Schema<IInvitation> = new Schema<IInvitation>({
   phoneNumber: { type: SchemaTypes.String, required: true },
   parentEntityType: { type: SchemaTypes.String, required: true },
   parentEntityId: { type: SchemaTypes.ObjectId, required: true },
-  createdAt: { type: SchemaTypes.Date, required: true },
-  updatedAt: { type: SchemaTypes.Date, required: true },
+  createdAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
+  updatedAt: {
+    type: SchemaTypes.Date,
+    default: dayjs().second(0).toISOString(),
+    get: (v) => dayjs(v),
+  },
   shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
 });
 
