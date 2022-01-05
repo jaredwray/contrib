@@ -4,26 +4,25 @@ import { useQuery, useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
+import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
 import { ReadMore } from 'src/components/buttons/ReadMoreButton';
 import WatchBtn from 'src/components/buttons/WatchBtn';
-import AuctionCard from 'src/components/customComponents/AuctionCard';
+import { AuctionsInfoLoading } from 'src/components/customComponents/AuctionsStatusInfo/AuctionsInfoLoading';
 import { ProfileAvatar } from 'src/components/customComponents/ProfileAvatar';
 import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
-import { ProfileSliderRow } from 'src/components/wrappers/ProfileSliderRow';
-import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
-import { AuctionStatus, Auction } from 'src/types/Auction';
+import { useShowNotification } from 'src/helpers/useShowNotification';
+import { AuctionStatus } from 'src/types/Auction';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
-import { FollowCharity, UnfollowCharity } from '../../../apollo/queries/charityProfile';
+import { CharityAuctionsInfo } from './CharityAuctionsInfo';
 import styles from './CharityProfilePageContent.module.scss';
 
 interface Props {
@@ -31,12 +30,14 @@ interface Props {
 }
 
 export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
-  const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
+
+  const history = useHistory();
+  const { showMessage, showError } = useShowNotification();
   const { isAuthenticated } = useAuth();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
-  const history = useHistory();
-  const { data } = useQuery(AuctionsListQuery, {
+
+  const { data, loading: isLoadingAuctions } = useQuery(AuctionsListQuery, {
     variables: {
       filters: {
         charity: charity.id,
@@ -47,6 +48,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
 
   const [followCharity, { loading: followLoading }] = useMutation(FollowCharity);
   const [unfollowCharity, { loading: unfollowLoading }] = useMutation(UnfollowCharity);
+
   const [followed, setFollowed] = useState(() =>
     charity?.followers?.some((follower) => follower.user === account?.mongodbId),
   );
@@ -56,27 +58,35 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
     if (isAuthenticated) {
       try {
         await followCharity({ variables: { charityId: charity.id } });
-        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
+        showMessage('Successfully followed');
         setFollowed(true);
         setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
       } catch (error) {
-        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+        showError(error.message);
       }
       return;
     }
     RedirectWithReturnAfterLogin(`/charity/${charity.id}`);
-  }, [charity.id, addToast, followCharity, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
+  }, [
+    charity.id,
+    followersNumber,
+    isAuthenticated,
+    followCharity,
+    RedirectWithReturnAfterLogin,
+    showMessage,
+    showError,
+  ]);
 
   const handleUnfollowCharity = useCallback(async () => {
     try {
       await unfollowCharity({ variables: { charityId: charity.id } });
-      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      showMessage('Successfully unfollowed');
       setFollowed(false);
       setFollowersNumber(followersNumber - 1);
     } catch (error) {
-      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      showError(error.message);
     }
-  }, [charity.id, addToast, unfollowCharity, followersNumber]);
+  }, [charity.id, followersNumber, unfollowCharity, showMessage, showError]);
 
   const auctions = data?.auctions?.items ?? [];
   const isMyProfile = account?.charity?.id === charity.id;
@@ -86,15 +96,6 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
     history.replace('/');
     return null;
   }
-
-  const profileAuctions = profileAuctionsHash(auctions);
-  const liveAuctions = profileAuctions.ACTIVE;
-  const pastAuctions = profileAuctions.SETTLED;
-  const hasLiveAuctions = Boolean(liveAuctions.length);
-  const hasPastAuctions = Boolean(pastAuctions.length);
-  const hasAuctions = Boolean(auctions.length);
-  const liveAuctionCards = liveAuctions.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
-  const pastAuctionCards = pastAuctions.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
 
   return (
     <Layout>
@@ -116,7 +117,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
         <div className={styles.header}>
           <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
         </div>
-        <Container className={clsx(styles.content, 'mb-3')}>
+        <Container className={clsx(styles.content, 'mb-5')}>
           <Row>
             <Col md="6">
               {!isActive && <NotActiveStatus />}
@@ -159,18 +160,15 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
           </Row>
         </Container>
       </section>
-      {hasAuctions && (
-        <section className={clsx(styles.sliders, 'pt-4 pt-md-5')}>
-          <Container>
-            {hasLiveAuctions && (
-              <ProfileSliderRow items={liveAuctionCards}>Live auctions benefiting {charity.name}</ProfileSliderRow>
-            )}
-            {hasPastAuctions && (
-              <ProfileSliderRow items={pastAuctionCards}>Ended auctions benefiting {charity.name}</ProfileSliderRow>
-            )}
-          </Container>
-        </section>
-      )}
+      <section className={clsx(styles.sliders, 'pt-4 pt-md-5 pb-4 p-md-5')}>
+        <Container>
+          {isLoadingAuctions ? (
+            <AuctionsInfoLoading name={charity.name} />
+          ) : (
+            <CharityAuctionsInfo auctions={auctions} name={charity.name} />
+          )}
+        </Container>
+      </section>
     </Layout>
   );
 };

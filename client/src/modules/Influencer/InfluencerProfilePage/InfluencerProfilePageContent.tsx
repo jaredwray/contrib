@@ -4,25 +4,25 @@ import { useQuery, useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
+import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
 import { ReadMore } from 'src/components/buttons/ReadMoreButton';
 import WatchBtn from 'src/components/buttons/WatchBtn';
-import AuctionCard from 'src/components/customComponents/AuctionCard';
+import { AuctionsInfoLoading } from 'src/components/customComponents/AuctionsStatusInfo/AuctionsInfoLoading';
 import { ProfileAvatar } from 'src/components/customComponents/ProfileAvatar';
 import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
-import { ProfileSliderRow } from 'src/components/wrappers/ProfileSliderRow';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import { FollowInfluencer, UnfollowInfluencer } from '../../../apollo/queries/influencers';
+import { InfluencerAuctionsInfo } from './InfluencerAuctionsInfo';
 import styles from './InfluencerProfilePageContent.module.scss';
 
 interface Props {
@@ -30,8 +30,9 @@ interface Props {
 }
 
 export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
-  const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
+
+  const { showMessage, showError } = useShowNotification();
   const { isAuthenticated } = useAuth();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
@@ -39,8 +40,9 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
     influencer?.followers?.some((follower) => follower.user === account?.mongodbId),
   );
   const [followersNumber, setFollowersNumber] = useState(influencer?.followers?.length || 0);
+  const [draftAuctions, setDraftAuctions] = useState<Auction[]>([]);
 
-  const { data } = useQuery(AuctionsListQuery, {
+  const { data, loading: isLoadingAuctions } = useQuery(AuctionsListQuery, {
     variables: {
       filters: {
         auctionOrganizer: influencer.id,
@@ -66,54 +68,44 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
     if (isAuthenticated) {
       try {
         await followInfluencer({ variables: { influencerId: influencer.id } });
-        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
+        showMessage('Successfully followed');
         setFollowed(true);
         setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
       } catch (error) {
-        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+        showError(error.message);
       }
       return;
     }
 
     RedirectWithReturnAfterLogin(`/profiles/${influencer.id}`);
-  }, [influencer.id, addToast, followInfluencer, followersNumber, isAuthenticated, RedirectWithReturnAfterLogin]);
+  }, [
+    influencer.id,
+    followersNumber,
+    isAuthenticated,
+    RedirectWithReturnAfterLogin,
+    followInfluencer,
+    showMessage,
+    showError,
+  ]);
 
   const handleUnfollowInfluencer = useCallback(async () => {
     try {
       await unfollowInfluencer({ variables: { influencerId: influencer.id } });
-      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      showMessage('Successfully unfollowed');
       setFollowed(false);
       setFollowersNumber(followersNumber - 1);
     } catch (error) {
-      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      showError(error.message);
     }
-  }, [influencer.id, addToast, unfollowInfluencer, followersNumber]);
+  }, [influencer.id, followersNumber, unfollowInfluencer, showMessage, showError]);
 
-  const auctions = data?.auctions?.items;
-  const profileAuctions = profileAuctionsHash(auctions);
-  const liveAuctions = profileAuctions.ACTIVE;
-  const pastAuctions = profileAuctions.SETTLED.concat(profileAuctions.SOLD);
-  const [draftAuctions, setDraftAuctions] = useState<Auction[]>([]);
-  const stoppedAuctions = profileAuctions.STOPPED;
+  const auctions = data?.auctions?.items || [];
 
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
 
   const onDelete = useCallback((auction: Auction) => {
     setDraftAuctions((prevState: Auction[]) => prevState.filter((draft) => draft !== auction));
   }, []);
-
-  const liveAuctionsLayout = liveAuctions.map((auction: Auction) => (
-    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
-  ));
-  const draftAuctionsLayout = draftAuctions.map((auction: Auction) => (
-    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} onDelete={onDelete} />
-  ));
-  const stoppedAuctionsLayout = stoppedAuctions.map((auction: Auction) => (
-    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
-  ));
-  const pastAuctionsLayout = pastAuctions.map((auction: Auction) => (
-    <AuctionCard key={auction.id} auction={auction} auctionOrganizer={influencer} />
-  ));
 
   return (
     <Layout>
@@ -133,7 +125,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           <ProfileAvatar src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
 
-        <Container className={clsx(styles.content, 'mb-3')}>
+        <Container className={clsx(styles.content, 'mb-5')}>
           <Row>
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>
@@ -169,31 +161,21 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
         </Container>
       </section>
 
-      {Boolean(auctions?.length) && (
-        <section className={clsx(styles.sliders, 'pt-4 pt-md-5')}>
-          <Container>
-            {Boolean(liveAuctions.length) && (
-              <ProfileSliderRow items={liveAuctionsLayout}>{influencer.name}'s live auctions</ProfileSliderRow>
-            )}
-            {(account?.isAdmin || isMyProfile) && (
-              <>
-                {Boolean(draftAuctions.length) && (
-                  <ProfileSliderRow items={draftAuctionsLayout}>{influencer.name}'s draft auctions</ProfileSliderRow>
-                )}
-                {Boolean(stoppedAuctions.length) && (
-                  <ProfileSliderRow items={stoppedAuctionsLayout}>
-                    {influencer.name}'s stopped auctions
-                  </ProfileSliderRow>
-                )}
-              </>
-            )}
-
-            {Boolean(pastAuctions.length) && (
-              <ProfileSliderRow items={pastAuctionsLayout}>{influencer.name}'s ended auctions</ProfileSliderRow>
-            )}
-          </Container>
-        </section>
-      )}
+      <section className={clsx(styles.sliders, 'pt-4 pt-md-5 pb-4 pb-md-5')}>
+        <Container className={styles.auctionContainer}>
+          {isLoadingAuctions ? (
+            <AuctionsInfoLoading name={influencer.name} />
+          ) : (
+            <InfluencerAuctionsInfo
+              auctions={auctions}
+              draftAuctions={draftAuctions}
+              influencer={influencer}
+              isShowDraftAndStopped={account?.isAdmin || isMyProfile}
+              onDeleteDraftAuctions={onDelete}
+            />
+          )}
+        </Container>
+      </section>
     </Layout>
   );
 };
