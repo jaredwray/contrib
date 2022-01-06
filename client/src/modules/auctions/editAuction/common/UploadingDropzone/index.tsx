@@ -91,13 +91,11 @@ const UploadingDropzone: FC<Props> = ({
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: any) => {
-      setAttachments((prevState: AttachmentsStateInterface) => {
-        return {
-          ...prevState,
-          uploaded: attachments.uploaded,
-          loading: attachments.loading.concat(acceptedFiles),
-        };
-      });
+      setAttachments((prevState: AttachmentsStateInterface) => ({
+        ...prevState,
+        uploaded: attachments.uploaded,
+        loading: attachments.loading.concat(acceptedFiles),
+      }));
 
       acceptedFiles.forEach(async (file) => {
         let uid;

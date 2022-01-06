@@ -137,8 +137,10 @@ describe('ShortLinkPage ', () => {
         );
       });
 
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper!.update();
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve));
+        wrapper!.update();
+      });
 
       expect(mockHistoryReplaceFn).toBeCalled();
       expect(mockHistoryReplaceFn.mock.calls[0][0]).toBe('/404');
@@ -160,8 +162,10 @@ describe('ShortLinkPage ', () => {
         );
       });
 
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper!.update();
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve));
+        wrapper!.update();
+      });
 
       expect(mockHistoryReplaceFn).toBeCalled();
       expect(mockHistoryReplaceFn.mock.calls[0][0]).toBe('/auctions/61a8a97964b524183c831b70');
@@ -183,8 +187,10 @@ describe('ShortLinkPage ', () => {
         );
       });
 
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper!.update();
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve));
+        wrapper!.update();
+      });
 
       expect(window.location.href).toEqual('http://example.com/auctions/61a8a97964b524183c831b70');
     });
@@ -205,8 +211,10 @@ describe('ShortLinkPage ', () => {
         );
       });
 
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper!.update();
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve));
+        wrapper!.update();
+      });
 
       expect(mockHistoryReplaceFn).toBeCalled();
       expect(mockHistoryReplaceFn.mock.calls[0][0]).toBe('/auctions/61a8a97964b524183c831b70/delivery/address');

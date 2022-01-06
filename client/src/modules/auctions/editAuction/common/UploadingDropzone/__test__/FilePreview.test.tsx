@@ -25,6 +25,10 @@ const props: any = {
 describe('AuctionPage ', () => {
   let wrapper: ReactWrapper;
   beforeEach(() => {
+    Object.defineProperty(HTMLMediaElement.prototype, 'muted', {
+      set: jest.fn(),
+    });
+
     wrapper = mount(<FilePreview {...props} />);
   });
   afterEach(() => {

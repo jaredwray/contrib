@@ -70,7 +70,7 @@ export default function PhoneNumberVerification() {
 
   useEffect(() => {
     if (invitationToken) {
-      enterInvitationCode({ variables: { code: invitationToken } }).catch((error) => {
+      enterInvitationCode({ variables: { code: invitationToken } }).catch(() => {
         invitationTokenVar(null);
       });
     }

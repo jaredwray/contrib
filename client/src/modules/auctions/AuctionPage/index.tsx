@@ -59,6 +59,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
   const accoutIsOwnerOrAdmin = account?.isAdmin || accoutIsOwner;
 
   if (error || auction === undefined) return null;
+
   if (auction === null) {
     history.replace('/404');
     return null;
@@ -69,7 +70,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     (auction.isStopped && !accoutIsOwnerOrAdmin) ||
     (isDeliveryPage && !accoutIsOwnerOrAdmin && auction && !(auction.isSettled || auction.isSold))
   ) {
-    history.push(`/`);
+    history.push('/');
     return null;
   }
 

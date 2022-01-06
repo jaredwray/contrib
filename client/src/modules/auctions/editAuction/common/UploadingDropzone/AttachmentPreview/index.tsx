@@ -35,13 +35,11 @@ const AttachementPreview: FC<Props> = ({
 
   const removeMedia = useCallback(
     (attachment: AuctionAttachment) => {
-      setAttachments((prevState: AttachmentsStateInterface) => {
-        return {
-          ...prevState,
-          uploaded: prevState.uploaded.filter((uploaded: AuctionAttachment) => uploaded.id !== attachment.id),
-          loading: prevState.loading,
-        };
-      });
+      setAttachments((prevState: AttachmentsStateInterface) => ({
+        ...prevState,
+        uploaded: prevState.uploaded.filter((uploaded: AuctionAttachment) => uploaded.id !== attachment.id),
+        loading: prevState.loading,
+      }));
 
       removeAuctionMedia({
         variables: { auctionId, attachmentId: attachment.id },

@@ -64,7 +64,7 @@ const mocks = [
   {
     request: {
       query: ConfirmPhoneNumberWithInvitationMutation,
-      variables: { code: '3222222222', otp: '4444' },
+      variables: { code: '222', otp: '4444' },
     },
     newData: () => {
       mockFn();
@@ -72,7 +72,7 @@ const mocks = [
         data: {
           confirmAccountWithInvitation: {
             id: 'testID',
-            phoneNumber: '2323232323',
+            phoneNumber: '2222222222',
             status: 'testStatus',
             influencerProfile: {
               id: 'testId',
@@ -85,7 +85,7 @@ const mocks = [
   {
     request: {
       query: ConfirmPhoneNumberMutation,
-      variables: { phoneNumber: '3222222222', otp: '4444' },
+      variables: { phoneNumber: '2222222222', otp: '4444' },
     },
     newData: () => {
       mockFn();
@@ -93,7 +93,7 @@ const mocks = [
         data: {
           confirmAccountWithPhoneNumber: {
             id: 'testID',
-            phoneNumber: '3222222222',
+            phoneNumber: '2222222222',
             status: 'testStatus',
             influencerProfile: {
               id: 'testInfId',
@@ -106,7 +106,7 @@ const mocks = [
   {
     request: {
       query: ResendOtpMutation,
-      variables: { phoneNumber: '3222222222' },
+      variables: { phoneNumber: '2222222222' },
     },
     newData: () => {
       mockFn();
@@ -114,7 +114,7 @@ const mocks = [
         data: {
           createAccountWithPhoneNumber: {
             id: 'testID',
-            phoneNumber: '3222222222',
+            phoneNumber: '2222222222',
             status: 'testStatus',
             influencerProfile: {
               id: 'testInfId',
@@ -127,7 +127,7 @@ const mocks = [
   {
     request: {
       query: ResendOtpWithInvitationMutation,
-      variables: { code: '4444' },
+      variables: { code: '222' },
     },
     newData: () => {
       mockFn();
@@ -135,7 +135,7 @@ const mocks = [
         data: {
           createAccountWithInvitation: {
             id: 'testID',
-            phoneNumber: '3222222222',
+            phoneNumber: '2222222222',
             status: 'testStatus',
             influencerProfile: {
               id: 'testInfId',
@@ -159,7 +159,7 @@ describe('PhoneNumberConfirmation page ', () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
-        <MockedProvider>
+        <MockedProvider mocks={mocks}>
           <PhoneNumberConfirmation />
         </MockedProvider>,
       );
@@ -171,7 +171,7 @@ describe('PhoneNumberConfirmation page ', () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
-        <MockedProvider cache={cache}>
+        <MockedProvider cache={cache} mocks={mocks}>
           <PhoneNumberConfirmation />
         </MockedProvider>,
       );
@@ -188,7 +188,7 @@ describe('PhoneNumberConfirmation page ', () => {
 
       await act(async () => {
         wrapper = mount(
-          <MockedProvider cache={cache}>
+          <MockedProvider cache={cache} mocks={mocks}>
             <PhoneNumberConfirmation />
           </MockedProvider>,
         );
@@ -264,7 +264,7 @@ describe('PhoneNumberConfirmation page ', () => {
         wrapper.update();
       });
 
-      expect(mockFn).toHaveBeenCalledTimes(0);
+      expect(mockFn).toHaveBeenCalled();
     });
   });
 
@@ -297,7 +297,7 @@ describe('PhoneNumberConfirmation page ', () => {
         wrapper.update();
       });
 
-      expect(mockFn).toHaveBeenCalledTimes(0);
+      expect(mockFn).toHaveBeenCalled();
     });
   });
 
@@ -326,7 +326,7 @@ describe('PhoneNumberConfirmation page ', () => {
         wrapper.update();
       });
 
-      expect(mockFn).toHaveBeenCalledTimes(0);
+      expect(mockFn).toHaveBeenCalled();
     });
   });
 
@@ -353,7 +353,7 @@ describe('PhoneNumberConfirmation page ', () => {
         wrapper.update();
       });
 
-      expect(mockFn).toHaveBeenCalledTimes(0);
+      expect(mockFn).toHaveBeenCalled();
     });
   });
 });

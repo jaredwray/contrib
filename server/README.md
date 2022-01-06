@@ -50,7 +50,7 @@ The customers MyUPS username.
 
 ## For AUTH service:
 
-We using AUTH to authenticate users on our platform. Required data examples:
+We using Passport.js to authenticate users on our platform. We using 3 strategies: Google, Twitter, Facebook. Required data examples:
 
 #### examples
 

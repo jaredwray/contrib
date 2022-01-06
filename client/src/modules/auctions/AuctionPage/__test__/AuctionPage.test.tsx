@@ -30,6 +30,7 @@ const draftAuctionCache = new InMemoryCache();
 const activeAuctionCache = new InMemoryCache();
 const stoppedAuctionCache = new InMemoryCache();
 const soldAuctionCache = new InMemoryCache();
+const nullAuctionCache = new InMemoryCache();
 
 stoppedAuctionCache.writeQuery({
   query: AuctionQuery,
@@ -38,6 +39,14 @@ stoppedAuctionCache.writeQuery({
     auction: AuctionQueryAuction,
   },
 });
+nullAuctionCache.writeQuery({
+  query: AuctionQuery,
+  variables: { id: 'testId' },
+  data: {
+    auction: null,
+  },
+});
+
 soldAuctionCache.writeQuery({
   query: AuctionQuery,
   variables: { id: 'testId' },
@@ -60,24 +69,85 @@ draftAuctionCache.writeQuery({
   },
 });
 
+const mockAuctionSubscriptionData = {
+  followers: [
+    {
+      user: '222',
+      createdAt: '2021-02-18T14:36:35.208+00:00',
+    },
+  ],
+  status: 'testStatus',
+  currentPrice: { amount: 1100, currency: 'USD', precision: 2 },
+  endDate: '2021-02-18T14:36:35.208+00:00',
+  stoppedAt: null,
+  totalBids: 2,
+  isActive: true,
+  isDraft: false,
+  isSettled: false,
+  isFailed: false,
+  isSold: false,
+  isStopped: false,
+};
+
+const activeAuctionMock = [
+  {
+    request: {
+      query: AuctionSubscription,
+    },
+    newData: () => {
+      return {
+        data: {
+          auction: mockAuctionSubscriptionData,
+        },
+      };
+    },
+  },
+];
+
+const errorMock = [
+  {
+    request: {
+      query: AuctionSubscription,
+    },
+    newData: () => {
+      return {
+        data: {
+          auction: null,
+        },
+      };
+    },
+  },
+];
+
+const stoppedAuctionMock = [
+  {
+    request: {
+      query: AuctionSubscription,
+    },
+    newData: () => {
+      return {
+        data: {
+          auction: {
+            ...mockAuctionSubscriptionData,
+            isActive: false,
+            stoppedAt: '2021-02-18T14:36:35.208+00:00',
+            isStopped: true,
+          },
+        },
+      };
+    },
+  },
+];
+
 describe('AuctionPage', () => {
   describe('when invalid id provided', () => {
-    const nullAuctionCache = new InMemoryCache();
-    nullAuctionCache.writeQuery({
-      query: AuctionQuery,
-      variables: { id: 'testId' },
-      data: {
-        auction: null,
-      },
-    });
-
     it('redirects to 404 page', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
           <Router history={history}>
             <ToastProvider>
-              <MockedProvider cache={nullAuctionCache}>
+              <MockedProvider cache={nullAuctionCache} mocks={errorMock}>
                 <AuctionPage />
               </MockedProvider>
             </ToastProvider>
@@ -96,7 +166,7 @@ describe('AuctionPage', () => {
           <UserAccountContext.Provider value={testAccount}>
             <Router history={history}>
               <ToastProvider>
-                <MockedProvider cache={activeAuctionCache}>
+                <MockedProvider cache={activeAuctionCache} mocks={activeAuctionMock}>
                   <AuctionPage />
                 </MockedProvider>
               </ToastProvider>
@@ -114,7 +184,7 @@ describe('AuctionPage', () => {
           <UserAccountContext.Provider value={testAccount}>
             <Router history={history}>
               <ToastProvider>
-                <MockedProvider cache={stoppedAuctionCache}>
+                <MockedProvider cache={stoppedAuctionCache} mocks={activeAuctionMock}>
                   <AuctionPage />
                 </MockedProvider>
               </ToastProvider>
@@ -132,7 +202,7 @@ describe('AuctionPage', () => {
           <UserAccountContext.Provider value={testAccount}>
             <Router history={history}>
               <ToastProvider>
-                <MockedProvider cache={soldAuctionCache}>
+                <MockedProvider cache={soldAuctionCache} mocks={activeAuctionMock}>
                   <AuctionPage isDeliveryPage={true} />
                 </MockedProvider>
               </ToastProvider>
@@ -152,7 +222,7 @@ describe('AuctionPage', () => {
           <UserAccountContext.Provider value={owner}>
             <Router history={history}>
               <ToastProvider>
-                <MockedProvider cache={activeAuctionCache}>
+                <MockedProvider cache={activeAuctionCache} mocks={activeAuctionMock}>
                   <AuctionPage />
                 </MockedProvider>
               </ToastProvider>
@@ -170,7 +240,7 @@ describe('AuctionPage', () => {
           <UserAccountContext.Provider value={owner}>
             <Router history={history}>
               <ToastProvider>
-                <MockedProvider cache={stoppedAuctionCache}>
+                <MockedProvider cache={stoppedAuctionCache} mocks={activeAuctionMock}>
                   <AuctionPage />
                 </MockedProvider>
               </ToastProvider>
@@ -188,7 +258,7 @@ describe('AuctionPage', () => {
           <UserAccountContext.Provider value={owner}>
             <Router history={history}>
               <ToastProvider>
-                <MockedProvider cache={soldAuctionCache}>
+                <MockedProvider cache={soldAuctionCache} mocks={activeAuctionMock}>
                   <AuctionPage isDeliveryPage={true} />
                 </MockedProvider>
               </ToastProvider>
@@ -207,7 +277,7 @@ describe('AuctionPage', () => {
         wrapper = mount(
           <Router history={history}>
             <ToastProvider>
-              <MockedProvider cache={stoppedAuctionCache}>
+              <MockedProvider cache={stoppedAuctionCache} mocks={stoppedAuctionMock}>
                 <AuctionPage />
               </MockedProvider>
             </ToastProvider>
@@ -224,7 +294,7 @@ describe('AuctionPage', () => {
           <UserAccountContext.Provider value={testAccount}>
             <Router history={history}>
               <ToastProvider>
-                <MockedProvider cache={activeAuctionCache}>
+                <MockedProvider cache={activeAuctionCache} mocks={activeAuctionMock}>
                   <AuctionPage />
                 </MockedProvider>
               </ToastProvider>
@@ -241,7 +311,7 @@ describe('AuctionPage', () => {
     await act(async () => {
       wrapper = mount(
         <Router history={history}>
-          <MockedProvider>
+          <MockedProvider mocks={activeAuctionMock}>
             <AuctionPage />
           </MockedProvider>
         </Router>,
@@ -256,7 +326,7 @@ describe('AuctionPage', () => {
       wrapper = mount(
         <Router history={history}>
           <ToastProvider>
-            <MockedProvider cache={draftAuctionCache}>
+            <MockedProvider cache={draftAuctionCache} mocks={activeAuctionMock}>
               <AuctionPage />
             </MockedProvider>
           </ToastProvider>

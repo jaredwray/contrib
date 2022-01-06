@@ -19,7 +19,7 @@ describe('AuthProvider', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  xit('component is defined', () => {
+  it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
   });
 
