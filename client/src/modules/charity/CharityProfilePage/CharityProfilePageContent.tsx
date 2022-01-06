@@ -117,7 +117,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
         <div className={styles.header}>
           <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
         </div>
-        <Container className={clsx(styles.content, 'mb-5')}>
+        <Container className={clsx(styles.content, 'mb-0 mb-md-3')}>
           <Row>
             <Col md="6">
               {!isActive && <NotActiveStatus />}

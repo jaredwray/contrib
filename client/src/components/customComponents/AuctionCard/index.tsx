@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Image } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { CloseButton } from 'src/components/buttons/CloseButton';
@@ -15,6 +14,7 @@ import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPreviewAttachment';
 import { Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
@@ -34,7 +34,7 @@ type Props = {
 
 const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDonePage, onDelete }) => {
   const { account } = useContext(UserAccountContext);
-  const { addToast } = useToasts();
+  const { showMessage, showError } = useShowNotification();
   const { isAuthenticated } = useAuth();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
@@ -43,10 +43,6 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
 
   const followers = auction?.followers;
-  const loading = followLoading || unfollowLoading;
-  const isOwner = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
-    auction?.auctionOrganizer.id,
-  );
 
   const [showDialog, setShowDialog] = useState(false);
   const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
@@ -61,29 +57,34 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
   }, [auction]);
 
   const handleFollowAuction = useCallback(async () => {
-    if (isAuthenticated) {
-      try {
-        await followAuction({ variables: { auctionId: auction.id } });
-        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
-        setFollowed(true);
-      } catch (error) {
-        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
-      }
-      return;
-    }
+    if (!isAuthenticated) return RedirectWithReturnAfterLogin(history.location.pathname);
 
-    RedirectWithReturnAfterLogin(history.location.pathname);
-  }, [auction?.id, addToast, followAuction, isAuthenticated, history.location.pathname, RedirectWithReturnAfterLogin]);
+    try {
+      await followAuction({ variables: { auctionId: auction.id } });
+      showMessage('Successfully followed');
+      setFollowed(true);
+    } catch (error) {
+      showError(error.message);
+    }
+  }, [
+    auction?.id,
+    showMessage,
+    showError,
+    followAuction,
+    isAuthenticated,
+    history.location.pathname,
+    RedirectWithReturnAfterLogin,
+  ]);
 
   const handleUnfollowAuction = useCallback(async () => {
     try {
       await unfollowAuction({ variables: { auctionId: auction.id } });
-      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      showMessage('Successfully unfollowed');
       setFollowed(false);
     } catch (error) {
-      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      showError(error.message);
     }
-  }, [auction?.id, addToast, unfollowAuction]);
+  }, [auction?.id, showMessage, showError, unfollowAuction]);
 
   if (!auction) return null;
 
@@ -107,10 +108,9 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
         {!isDraft && (
           <HeartBtn
             className={clsx(styles.followBtn)}
-            disabled={isOwner}
             followHandler={handleFollowAuction}
             followed={followed}
-            loading={loading}
+            loading={followLoading || unfollowLoading}
             unfollowHandler={handleUnfollowAuction}
           />
         )}

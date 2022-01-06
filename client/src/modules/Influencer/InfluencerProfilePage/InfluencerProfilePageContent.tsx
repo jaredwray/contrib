@@ -124,8 +124,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
         <div className={styles.header}>
           <ProfileAvatar src={ResizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
-
-        <Container className={clsx(styles.content, 'mb-5')}>
+        <Container className={clsx(styles.content, 'mb-0 mb-md-3')}>
           <Row>
             <Col md="6">
               <p className="text-headline break-word">{influencer.name}</p>

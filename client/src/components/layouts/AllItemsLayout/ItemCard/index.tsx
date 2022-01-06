@@ -3,7 +3,6 @@ import { FC, useCallback, useState, useContext } from 'react';
 import { useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { useHistory } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
 import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
@@ -12,6 +11,7 @@ import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAm
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 
 import HeartBtn from '../../../buttons/HeartButton';
 import SwipeableLink from '../../../wrappers/SwipeableLink';
@@ -26,7 +26,7 @@ type Props = {
 
 const ItemCard: FC<Props> = ({ item, horizontal, isCharity, path }) => {
   const { account } = useContext(UserAccountContext);
-  const { addToast } = useToasts();
+  const { showMessage, showError } = useShowNotification();
   const { isAuthenticated } = useAuth();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
@@ -35,39 +35,41 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity, path }) => {
   const [unfollow, { loading: unfollowLoading }] = useMutation(isCharity ? UnfollowCharity : UnfollowInfluencer);
 
   const followers = item?.followers;
-  const loading = followLoading || unfollowLoading;
-  const isOwner = isCharity
-    ? account?.charity?.id.includes(item?.id)
-    : [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(item?.id);
 
   const [followed, setFollowed] = useState(() =>
     followers?.some((follower: any) => follower.user === account?.mongodbId),
   );
 
   const handleFollow = useCallback(async () => {
-    if (isAuthenticated) {
-      try {
-        await follow({ variables: { [isCharity ? 'charityId' : 'influencerId']: item.id } });
-        addToast('Successfully followed', { autoDismiss: true, appearance: 'success' });
-        setFollowed(true);
-      } catch (error) {
-        addToast(error.message, { autoDismiss: true, appearance: 'warning' });
-      }
-      return;
-    }
+    if (!isAuthenticated) return RedirectWithReturnAfterLogin(history.location.pathname);
 
-    RedirectWithReturnAfterLogin(history.location.pathname);
-  }, [item?.id, addToast, follow, isAuthenticated, history.location.pathname, isCharity, RedirectWithReturnAfterLogin]);
+    try {
+      await follow({ variables: { [isCharity ? 'charityId' : 'influencerId']: item.id } });
+      showMessage('Successfully followed');
+      setFollowed(true);
+    } catch (error) {
+      showError(error.message);
+    }
+  }, [
+    item?.id,
+    showMessage,
+    showError,
+    follow,
+    isAuthenticated,
+    history.location.pathname,
+    isCharity,
+    RedirectWithReturnAfterLogin,
+  ]);
 
   const handleUnfollow = useCallback(async () => {
     try {
       await unfollow({ variables: { [isCharity ? 'charityId' : 'influencerId']: item.id } });
-      addToast('Successfully unfollowed', { autoDismiss: true, appearance: 'success' });
+      showMessage('Successfully unfollowed');
       setFollowed(false);
     } catch (error) {
-      addToast(error.message, { autoDismiss: true, appearance: 'warning' });
+      showError(error.message);
     }
-  }, [item?.id, isCharity, addToast, unfollow]);
+  }, [item?.id, isCharity, showMessage, showError, unfollow]);
 
   if (!item) return null;
 
@@ -76,10 +78,9 @@ const ItemCard: FC<Props> = ({ item, horizontal, isCharity, path }) => {
       <div className={clsx(styles.wrapper)}>
         <HeartBtn
           className={clsx(styles.followBtn)}
-          disabled={isOwner}
           followHandler={handleFollow}
           followed={followed}
-          loading={loading}
+          loading={followLoading || unfollowLoading}
           unfollowHandler={handleUnfollow}
         />
 
