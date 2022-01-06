@@ -106,7 +106,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
               <Col className="p-0">
                 <Link
                   className={clsx(styles.editBtn, 'text-label btn btn-secondary')}
-                  to={'/charity/' + (isMyProfile ? 'me' : charity.id) + '/edit'}
+                  to={`/charity/${isMyProfile ? 'me' : charity.id}/edit`}
                 >
                   Edit
                 </Link>

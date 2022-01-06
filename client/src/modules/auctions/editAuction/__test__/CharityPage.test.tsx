@@ -36,6 +36,7 @@ const undefinedlDataCache = new InMemoryCache();
 const cacheAuctionWithoutDescription = new InMemoryCache();
 const cacheAuctionWithoutVideoAttachments = new InMemoryCache();
 const cacheAuctionWithoutItemPrice = new InMemoryCache();
+const cacheAuctionWithoutFairMarketValue = new InMemoryCache();
 const auction = {
   id: 'testId',
   endDate: '2021-07-01T22:28:00.270Z',
@@ -64,6 +65,7 @@ const ActiveCharitiesListQuery = {
     },
   },
 };
+
 cache.writeQuery({
   query: GetAuctionDetailsQuery,
   variables: { id: 'testId' },
@@ -123,6 +125,15 @@ cacheAuctionWithoutItemPrice.writeQuery({
   },
 });
 cacheAuctionWithoutItemPrice.writeQuery(ActiveCharitiesListQuery);
+
+cacheAuctionWithoutFairMarketValue.writeQuery({
+  query: GetAuctionDetailsQuery,
+  variables: { id: 'testId' },
+  data: {
+    auction: { ...auction, fairMarketValue: null },
+  },
+});
+cacheAuctionWithoutFairMarketValue.writeQuery(ActiveCharitiesListQuery);
 
 const mockFn = jest.fn();
 
@@ -278,6 +289,40 @@ describe('EditAuctionCharityPage ', () => {
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
               <MockedProvider cache={cacheAuctionWithoutDescription}>
+                <CharityPage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(CharitySearchSelect).props().onChange(null);
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit({});
+    });
+    await act(async () => {
+      wrapper!.find(CharitySearchSelect).props().onChange({ value: 'test', label: 'test', id: 'testId' });
+    });
+    wrapper!.update();
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit({});
+    });
+    expect(mockHistoryFn).toBeCalled();
+  });
+  it('should submit and redirect to fmv page', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cacheAuctionWithoutFairMarketValue}>
                 <CharityPage />
               </MockedProvider>
             </UserAccountContext.Provider>

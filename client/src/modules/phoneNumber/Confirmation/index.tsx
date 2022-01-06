@@ -71,9 +71,10 @@ export default function PhoneNumberConfirmation() {
             otp,
             code: invitationToken,
           },
-        }).catch((error) => console.error(`error confirming phone number: `, error));
+        });
         return;
       }
+
       if (!phoneNumber) return;
 
       confirmPhoneNumber({
@@ -81,7 +82,7 @@ export default function PhoneNumberConfirmation() {
           otp,
           phoneNumber,
         },
-      }).catch((error) => console.error(`error confirming phone number: `, error));
+      });
     },
     [confirmPhoneNumber, confirmPhoneNumberWithInvitation, phoneNumber, invitationToken],
   );
@@ -91,14 +92,9 @@ export default function PhoneNumberConfirmation() {
       ? resendConfirmationCodeWithInvitation({ variables: { code: invitationToken } })
       : resendConfirmationCode({ variables: { phoneNumber } });
 
-    promise.then(
-      () => {
-        setOtpSentAt(DateTime.local());
-      },
-      (error) => {
-        console.error(`error resending confirmation code: `, error);
-      },
-    );
+    promise.then(() => {
+      setOtpSentAt(DateTime.local());
+    });
   }, [phoneNumber, invitationToken, resendConfirmationCode, resendConfirmationCodeWithInvitation]);
 
   useEffect(() => {

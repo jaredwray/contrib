@@ -3,6 +3,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { InMemoryCache } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { MemoryRouter } from 'react-router-dom';
+import { ToastProvider } from 'react-toast-notifications';
 
 import { InfluencersListQuery } from 'src/apollo/queries/influencers';
 import { AllItemsLayout } from 'src/components/layouts/AllItemsLayout';
@@ -15,14 +16,35 @@ const cache = new InMemoryCache();
 
 cache.writeQuery({
   query: InfluencersListQuery,
-  variables: { size: 100, skip: 0, filters: { query: '', orderBy: 'DEFAULT', pageSkip: 0 } },
-
+  variables: {
+    size: 20,
+    skip: 0,
+    orderBy: 'DEFAULT',
+    filters: {
+      query: '',
+      status: ['ONBOARDED'],
+    },
+  },
   data: {
     influencersList: {
-      size: 100,
+      totalItems: 1,
+      size: 1,
       skip: 0,
-      totalItems: 2,
-      items: [],
+      items: [
+        {
+          id: '61d4c8ce28d39b1e43b04796',
+          name: '15416356158 15416356158',
+          avatarUrl: '/content/img/users/person.png',
+          sport: 'asd',
+          status: 'ONBOARDED',
+          totalRaisedAmount: {
+            amount: 0,
+            currency: 'USD',
+            precision: 2,
+          },
+          followers: [],
+        },
+      ],
     },
   },
 });
@@ -33,11 +55,13 @@ describe('InfluerncersPage', () => {
   beforeEach(async () => {
     await act(async () => {
       wrapper = mount(
-        <MemoryRouter>
-          <MockedProvider cache={cache}>
-            <InfluerncersPage />
-          </MockedProvider>
-        </MemoryRouter>,
+        <ToastProvider>
+          <MemoryRouter>
+            <MockedProvider cache={cache}>
+              <InfluerncersPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </ToastProvider>,
       );
     });
   });

@@ -86,6 +86,38 @@ To deliver auction winnings, we use UPS service.
 
 You can find all the necessary information about UPS for development here: `https://www.ups.com/upsdeveloperkit?loc=en_US`.
 
+## Authentication logic:
+
+To authenticate users, we use the PassportJs library. We use 3 authentication strategies: Google, Facebook, Twitter.
+
+To configure each of them to work correctly, you need to take the following steps:
+
+### Auth with Google by passport.js:
+
+1. Log in to the Google Cloud Platform.
+2. Select the Contrib project.
+3. Add the following links to the Authorized JavaScript origins field: `https://dev.contrib.org`, `https://contrib.org`, `https://live.contrib.org`, 
+4. Add the following links to the Authorized Redirect URIs field: `https://dev.contrib.org/api/v1/auth/google/callback`, `https://contrib.org/api/v1/auth/google/callback`, `https://live.contrib.org/api/v1/auth/google/callback`.
+5. Get Client ID and Client secret for GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET envs.
+6. Register Google Strategy as indicated on this page: `http://www.passportjs.org/packages/passport-google-oauth20/`
+
+### Auth with Facebook by passport.js:
+
+1. Log in to the Facebook Developers.
+2. Go to Facebook Login => Setting
+3. Add the following links to the Valid OAuth Redirect URIs: `https://dev.contrib.org/api/v1/auth/facebook/callback`, `https://contrib.org/api/v1/auth/facebook/callback`, `https://live.contrib.org/api/v1/auth/facebook/callback`.
+4. Get App ID and App Secret for FACEBOOK_APP_ID and FACEBOOK_APP_ID envs on the Settings => Basic.
+5. Register Facebook Strategy as indicated on this page: `http://www.passportjs.org/packages/passport-facebook/`
+
+### Auth with Twitter by passport.js: 
+
+1. Log in to the Twittet Application Management.
+2. Go to the Setting tab.
+3. Add the following links to the Callback URLs: `https://dev.contrib.org/api/v1/auth/twitter/callback`, `https://contrib.org/api/v1/auth/twitter/callback`, `https://live.contrib.org/api/v1/auth/twitter/callback`.
+4. Go to the API Keys tab, there you will find your Consumer key and Consumer secret keys for TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET envs.
+5. Register Twitter Strategy as indicated on this page: `http://www.passportjs.org/packages/passport-twitter/`
+
+
 ## Setup webhook to notify application when an event happens in an account
 
 1. Sign in to Stripe `https://stripe.com/`

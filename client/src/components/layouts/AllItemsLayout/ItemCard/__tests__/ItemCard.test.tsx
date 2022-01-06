@@ -20,14 +20,16 @@ const item = {
   sport: 'football',
 };
 const props: any = {
+  path: 'test',
   item,
   isCharity: false,
 };
 const props2: any = {
+  path: 'test',
   item,
   isCharity: true,
 };
-const emptyProps: any = {};
+const emptyProps: any = { path: 'test' };
 const mockFn = jest.fn();
 const mockFollowCharity = jest.fn();
 
