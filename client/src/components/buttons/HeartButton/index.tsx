@@ -8,11 +8,11 @@ import AsyncButton from '../AsyncButton';
 import styles from './styles.module.scss';
 
 interface Props {
-  followed: boolean | undefined;
-  loading: boolean | undefined;
-  disabled: boolean | undefined;
-  followHandler: (() => Promise<void>) | undefined;
-  unfollowHandler: (() => Promise<void>) | undefined;
+  followed?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+  followHandler?: () => Promise<void>;
+  unfollowHandler?: () => Promise<void>;
   className?: string;
 }
 
