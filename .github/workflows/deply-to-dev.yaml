@@ -98,10 +98,9 @@ jobs:
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@v0
         with:
-          credentials_json:
-            service_account_key: ${{ secrets.DEV_GCP_SA_KEY }}
-            project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
-            export_default_credentials: true
+          service_account_key: ${{ secrets.DEV_GCP_SA_KEY }}
+          project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
+          export_default_credentials: true
 
       # Build and push image to Google Container Registry
       - name: Docker Auth
