@@ -14,12 +14,11 @@ export default function Header() {
   const { account } = useContext(UserAccountContext);
   const { user, isAuthenticated, logout } = useAuth();
 
-  const w = window as any;
-
   const handleLogout = useCallback(() => {
+    const w = window as any;
     logout!(w.location.origin);
     w.Intercom('shutdown');
-  }, [logout, w]);
+  }, [logout]);
 
   return (
     <header className="p-0 pl-sm-4 pr-sm-4 navigation-header">
