@@ -15,6 +15,7 @@ import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAm
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
@@ -24,6 +25,7 @@ import { Charity, CharityStatus } from 'src/types/Charity';
 
 import { CharityAuctionsInfo } from './CharityAuctionsInfo';
 import styles from './CharityProfilePageContent.module.scss';
+import ShareBtn from './ShareBtn';
 
 interface Props {
   charity: Charity;
@@ -126,11 +128,11 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
               {charity.website && (
                 <p className="text-label text-all-cups">
                   <a className={styles.link} href={charity.websiteUrl}>
-                    {charity.website}&#160;&gt;&gt;
+                    {charity.website}
                   </a>
                 </p>
               )}
-              <div className="d-sm-block d-none">
+              <div className="d-md-block d-none">
                 <WatchBtn
                   disabled={isMyProfile || !isActive}
                   entityType="charity"
@@ -139,6 +141,13 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
                   followersNumber={followersNumber}
                   loading={followLoading || unfollowLoading}
                   unfollowHandler={handleUnfollowCharity}
+                />
+                <ShareBtn
+                  charityName={charity.name}
+                  link={mergeUrlPath(
+                    process.env.REACT_APP_PLATFORM_URL,
+                    `/charity/${charity.semanticId || charity.id}`,
+                  )}
                 />
               </div>
             </Col>
@@ -155,6 +164,10 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
                 followersNumber={followersNumber}
                 loading={followLoading || unfollowLoading}
                 unfollowHandler={handleUnfollowCharity}
+              />
+              <ShareBtn
+                charityName={charity.name}
+                link={mergeUrlPath(process.env.REACT_APP_PLATFORM_URL, `/charity/${charity.semanticId || charity.id}`)}
               />
             </Col>
           </Row>
