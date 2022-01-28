@@ -1,0 +1,21 @@
+@import 'src/variables.scss';
+
+.container {
+  border: 1px solid $barely-gray-color;
+  border-left: none;
+  border-right: none;
+}
+.text {
+  color: $sage-color;
+  cursor: pointer;
+  user-select: none;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  margin-left: 1px;
+}

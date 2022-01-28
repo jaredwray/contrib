@@ -2167,6 +2167,13 @@
   resolved "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
+"@types/qrcode@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.npmjs.org/@types/qrcode/-/qrcode-1.4.2.tgz"
+  integrity sha512-7uNT9L4WQTNJejHTSTdaJhfBSCN73xtXaHFyBJ8TSwiLhe4PRuTue7Iph0s2nG9R/ifUaSnGhLUOZavlBEqDWQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/react-copy-to-clipboard@^5.0.0":
   version "5.0.0"
   resolved "https://registry.npmjs.org/@types/react-copy-to-clipboard/-/react-copy-to-clipboard-5.0.0.tgz"
@@ -4928,6 +4935,11 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
+dijkstrajs@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/dijkstrajs/-/dijkstrajs-1.0.2.tgz"
+  integrity sha512-QV6PMaHTCNmKSeP6QoXhVTw9snc9VD8MulTT0Bd99Pacp4SS1cjcrYPgBPmibqKVtMJJfqC6XvOXgPMEEPH/fg==
+
 dinero.js@^1.8.1:
   version "1.8.1"
   resolved "https://registry.npmjs.org/dinero.js/-/dinero.js-1.8.1.tgz"
@@ -5189,6 +5201,11 @@ emojis-list@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/emojis-list/-/emojis-list-3.0.0.tgz"
   integrity sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==
+
+encode-utf8@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/encode-utf8/-/encode-utf8-1.0.3.tgz"
+  integrity sha512-ucAnuBEhUK4boH2HjVYG5Q2mQyPorvv0u/ocS+zhdw0S8AlHYY+GOFhP1Gio5z4icpP2ivFSvhtFjQi8+T9ppw==
 
 encodeurl@~1.0.2:
   version "1.0.2"
@@ -8989,7 +9006,7 @@ nouislider-react@^3.4.0:
 
 nouislider@^14.6.3:
   version "14.7.0"
-  resolved "https://registry.yarnpkg.com/nouislider/-/nouislider-14.7.0.tgz#a71db0587c92567b6da1df57d251d3696d942362"
+  resolved "https://registry.npmjs.org/nouislider/-/nouislider-14.7.0.tgz"
   integrity sha512-4RtQ1+LHJKesDCNJrXkQcwXAWCrC2aggdLYMstS/G5fEWL+fXZbUA9pwVNHFghMGuFGRATlDLNInRaPeRKzpFQ==
 
 npm-run-path@^2.0.0:
@@ -9589,6 +9606,11 @@ pkg-up@3.1.0:
   integrity sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==
   dependencies:
     find-up "^3.0.0"
+
+pngjs@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/pngjs/-/pngjs-5.0.0.tgz"
+  integrity sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==
 
 pnp-webpack-plugin@1.6.4:
   version "1.6.4"
@@ -10473,6 +10495,16 @@ q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
+
+qrcode@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/qrcode/-/qrcode-1.5.0.tgz"
+  integrity sha512-9MgRpgVc+/+47dFvQeD6U2s0Z92EsKzcHogtum4QB+UNd025WOJSHvn/hjk9xmzj7Stj95CyUAs31mrjxliEsQ==
+  dependencies:
+    dijkstrajs "^1.0.1"
+    encode-utf8 "^1.0.3"
+    pngjs "^5.0.0"
+    yargs "^15.3.1"
 
 qs@6.7.0:
   version "6.7.0"
@@ -13688,7 +13720,7 @@ yargs@^13.3.2:
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
 
-yargs@^15.4.1:
+yargs@^15.3.1, yargs@^15.4.1:
   version "15.4.1"
   resolved "https://registry.npmjs.org/yargs/-/yargs-15.4.1.tgz"
   integrity sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==
