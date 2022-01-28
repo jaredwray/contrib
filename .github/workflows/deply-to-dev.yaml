@@ -99,12 +99,12 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v0
         with:
           credentials_json:
-            type: "service_account"
-            project_id: "contrib-dev"
-            private_key_id: "da2a20f17d88ee5f3a0f0dba58b5a591aa7431e3"
+            type: service_account
+            project_id: contrib-dev
+            private_key_id: da2a20f17d88ee5f3a0f0dba58b5a591aa7431e3
             private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC+9CaH40Vnd06Y\nbwXmBU7fTms8fb/qfKN0t3rdlXvDZJ70PptXo2BPc4yvY3H7BuhGJ9natsqTQl6j\n5AT/yfjDapNv7K/9V1OfBf4WnfgyEz8bnhD3Y56BSj+8/6FOUEe2TOR+a4qL6cwK\nDbnukqVvsJzu31/Ke+zSv5ZHSpyPoliMH6Sf7F9ZZ4qLujE9d/iwdwVJ0aSy//y+\nl/kUaSLx2PMXLyMm1Fqsg0DO0QHfx1wo/rgtUpioyoNSEi3QwDURMZlQnOD/dOAe\nnS+NOisIUNpWE+DUZ5aYFvr/YqmBpsHD+ZmvZfR/RQsi8zmfvuIwsYu5b6tvMjgV\ntWd1DGw1AgMBAAECggEAJoI1PQU7y2RXkM0e+ubKI6V8YcwYRnERQ6n22LXbKini\nFm6DxFY5x3wNfJdI9q9La06BFCb1zmG9lT6YNX9lL/+PsSwhx6zzO6gpOCVuVqbj\n/K1RTZqk7fzrwrEothLhi2WRVN9aJuIk2EgxXWfsfgw3ccLRXhPEzDF/3GuzDBH/\nqxWKoxNrCFglpqzJqxdo+/em8OPnOuVOz8AR/ZVWO7CR5D5jX3yVw2KeqGs8ALNg\nf8wDYx2UVQRHAuYKeONn8vnX+TTJfFpUbPijnAP6VeySsO9oCGQxJCICaZ0Lg5F3\nVRvpBLgTZOJThGDe23oW+HBilJMzN1f6aGPbkNxrBwKBgQDgKEUY7azLbjlPLdK1\nHzYUPsvxeHMikqZXPrk2Dsuirh9JhW75dbghTpvbJyWqPO0ZsTwlRKfDB78fBdLq\nYBQTb3kaCZRPGb+6zld5uXI7JWbTpUEW3ezXbX8hV/FTIuyrzANqwnY/z0dKk7G6\nrxW3cJpFOmR9s+Yf7oj0h2wN8wKBgQDaFGUfQyR8tWqbgJFK5u0eiUSEODTBKMtu\nD+zUSX13kSjX0XPGrRx4lxXpo7hP11FcN2xbC0gbphaTx4Ff9CgNZv7lvgu0Py4Q\nyRb4NE7v78v7QLMopV1I5fGluyvu5Q5sbIYi+0mZONMLOdZn36o2x0Ur6/k8k+LB\nxD9OZIcfNwKBgERDPzemObcB7CX2uHI7/QYRUZ5JphZjPpDXIyQZQV5bVF/ZaMBD\nXz2VaNVGiKvdPf9TABQBYm18UHGsHl0NwU9h5SlOvYGRP9gtumnxVZ45d6UAcF/8\nWYIJcGvBElbVDeoLiQbcDZLFFtrZO4i0hRKGEhT/AVdej7gttjtxejCNAoGBAJ2z\nYezZgOktx4nrzyV7GL2cRg/XFU8ZUQKmQXzCKBjuv7pRnIdvZ8dMemwaGI6kBhHJ\ngnHUFrDnyivTeZsJ1Gzcrjc01wHhLk61HAcgzHR10+w9PVGHQ44Tuks+ruZyfZuq\nXtWtIevLS9IyYPl8pHo4X60DV5iW2MOGRsFJsOzBAoGBAL166eSpgi/pl/ImOBRB\nU/4UKSJzhYVoH5tCeBouDAVttp4LhPwgloJq0xZE2yTZ5CWc5q93tOj88cMjzV5v\nQS6tVxk4VwyYn7SnS+G9CTZ2xteiRZNOz8i4HUbnTn1NDHsNu3PSxE5N7hbTbQZ+\nrJOCQkLiMhmSV2dCglIViJHF\n-----END PRIVATE KEY-----\n"
-            client_email: "content-owner@contrib-dev.iam.gserviceaccount.com"
-            client_id: "105786523305870671291"
+            client_email: content-owner@contrib-dev.iam.gserviceaccount.com
+            client_id: 105786523305870671291
             auth_uri: "https://accounts.google.com/o/oauth2/auth"
             token_uri: "https://oauth2.googleapis.com/token"
             auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs"
