@@ -34,7 +34,7 @@ const ShareBtn: FC<Props> = ({ charityName, link }) => {
           </div>
         </Button>
         <div className="d-table-cell pl-4 align-middle">
-          <div className={clsx(styles.text, 'text-subhead')}>Share this charity</div>
+          <div className={clsx(styles.text, 'text-subhead')}>Share via QR Code</div>
         </div>
       </div>
       <QRCodeModal name={charityName} open={showDialog} src={src} onClose={() => setShowDialog(false)} />

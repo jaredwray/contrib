@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import AuctionCard from 'src/components/customComponents/AuctionCard';
 import { NoAuctionsInfo } from 'src/components/customComponents/AuctionsStatusInfo/NoAuctionsInfo';
-import { ProfileSliderRow } from 'src/components/wrappers/ProfileSliderRow';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import { Auction } from 'src/types/Auction';
 
@@ -21,8 +20,6 @@ export const CharityAuctionsInfo: FC<Props> = ({ auctions, name }) => {
   const liveAuctions = profileAuctions.ACTIVE;
   const pastAuctions = [...profileAuctions.SETTLED, ...profileAuctions.SOLD];
 
-  const pastAuctionCards = pastAuctions.map((auction: Auction) => <AuctionCard key={auction.id} auction={auction} />);
-
   if (auctions.length === 0) return <NoAuctionsInfo name={name} />;
 
   return (
@@ -38,7 +35,14 @@ export const CharityAuctionsInfo: FC<Props> = ({ auctions, name }) => {
         </div>
       )}
       {Boolean(pastAuctions.length) && (
-        <ProfileSliderRow items={pastAuctionCards}>Ended auctions benefiting {name}</ProfileSliderRow>
+        <div className="mb-4">
+          <span className="label-with-separator text-label mb-4 d-block ">Ended auctions benefiting {name}</span>
+          <div className={clsx(styles.auctions, 'd-grid align-items-center')}>
+            {pastAuctions.map((auction: Auction) => (
+              <AuctionCard key={auction.id} horizontal auction={auction} />
+            ))}
+          </div>
+        </div>
       )}
     </>
   );
