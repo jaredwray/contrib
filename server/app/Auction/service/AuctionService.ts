@@ -616,7 +616,9 @@ export class AuctionService {
         ...(title ? { title } : {}),
         ...(startDate ? { startsAt: startDate } : {}),
         ...(endDate ? { endsAt: endDate } : {}),
-        ...(duration ? { endsAt: dayjs().add(duration, 'days') } : {}),
+        ...(duration
+          ? { startsAt: dayjs().second(0).toISOString(), endsAt: dayjs().second(0).add(duration, 'days').toISOString() }
+          : {}),
         ...(startPrice
           ? {
               startPrice: startPrice.getAmount(),
@@ -804,7 +806,7 @@ export class AuctionService {
     if (
       auction.endsAt.diff(dayjs().utc(), 'minute') >
         AppConfig.googleCloud.auctionEndsTime.notificationForAuctionOrganizer ||
-      Math.abs(dayjs(auction.startsAt).diff(auction.endsAt, 'hour')) <= 24 ||
+      dayjs(auction.endsAt).diff(auction.startsAt, 'hour') <= 24 ||
       auction.sentNotifications.includes('notificationForAuctionOrganizer')
     ) {
       return;
