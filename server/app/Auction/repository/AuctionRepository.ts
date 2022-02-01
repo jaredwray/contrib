@@ -1,21 +1,25 @@
 import { ClientSession, Connection, FilterQuery, Query, Types } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
-import { v4 as uuidv4 } from 'uuid';
 
+import { ShortLinkService, ShortLinkModel } from '../../ShortLink';
+
+import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { AuctionModel, IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionAssetModel, IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
-import { ShortLinkService, ShortLinkModel } from '../../ShortLink';
-import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
-import { AppError, ErrorCode } from '../../../errors';
+
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionStatus } from '../dto/AuctionStatus';
 import { IAuctionFilters, IAuctionRepository, ICreateAuction, IUpdateAuction } from './IAuctionRepoository';
+
+import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
 import { AppConfig } from '../../../config';
+
 import { objectTrimmer } from '../../../helpers/objectTrimmer';
+import { auctionDuration } from '../../../helpers/auctionDuration';
 
 type ISearchFilter = { [key in AuctionOrderBy]: { [key: string]: string } };
 type ISearchOptions = {
@@ -198,9 +202,16 @@ export class AuctionRepository implements IAuctionRepository {
       throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
     }
 
+    const utcCurrentDate = dayjs().second(0);
+    const utcCurrentDateISO = utcCurrentDate.toISOString();
+
     const [auction] = await this.AuctionModel.create([
       {
         ...objectTrimmer(input),
+        startsAt: utcCurrentDateISO,
+        endsAt: utcCurrentDate.add(3, 'days').toISOString(),
+        createdAt: utcCurrentDateISO,
+        updatedAt: utcCurrentDateISO,
         auctionOrganizer: Types.ObjectId(organizerId),
         startPrice: input.startPrice?.getAmount(),
         currentPrice: input.startPrice?.getAmount(),
@@ -210,14 +221,26 @@ export class AuctionRepository implements IAuctionRepository {
     ]);
 
     const shortLink = await this.shortLinkService.createShortLink({ address: `auctions/${auction._id.toString()}` });
+
     Object.assign(auction, { shortLink: shortLink.id });
+
     await auction.save();
 
     AppLogger.info(`createAuction method called for #${auction._id.toString()} auction;`);
     AppLogger.info(
-      `dayjs(): ${dayjs()}; new Date(): ${new Date()}; ends date: ${dayjs().add(3, 'days')}; startsAt after update: ${
-        auction.startsAt
-      }`,
+      JSON.stringify({
+        ['when auction creating']: {
+          ['new Date']: new Date(),
+          ['startsAt , createdAt, updatedAt']: utcCurrentDateISO,
+          endsAt: utcCurrentDate.add(3, 'days').toISOString(),
+        },
+        ['when auction created']: {
+          startsAt: auction.startsAt,
+          createdAt: auction.createdAt,
+          updatedAt: auction.updatedAt,
+          endsAt: auction.endsAt,
+        },
+      }),
     );
 
     return this.populateAuctionModel(auction).execPopulate();
@@ -256,19 +279,35 @@ export class AuctionRepository implements IAuctionRepository {
       throw new AppError(`Cannot activate auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
 
-    const duration = auction.startsAt.diff(auction.endsAt, 'days');
+    AppLogger.info(`activateAuction method called for #${id} auction;`);
 
-    auction.startsAt = dayjs().second(0);
-    auction.endsAt = auction.startsAt.add(Math.abs(duration), 'days');
-    auction.status = AuctionStatus.ACTIVE;
+    const duration = auctionDuration({ startsAt: auction.startsAt, endsAt: auction.endsAt });
+
+    const utcCurrentTime = dayjs().second(0);
+
+    Object.assign(auction, {
+      startsAt: utcCurrentTime.toISOString(),
+      endsAt: utcCurrentTime.add(duration, 'days').toISOString(),
+      status: AuctionStatus.ACTIVE,
+    });
+
     const updatedAuction = await auction.save();
 
-    AppLogger.info(`activateAuction method called for #${id} auction;`);
     AppLogger.info(
-      `duration: ${duration}; dayjs: ${dayjs()}; new Date(): ${new Date()}; new endsAt: ${dayjs().add(
-        Math.abs(duration),
-        'days',
-      )}; endsAt after update: ${auction.endsAt}`,
+      JSON.stringify({
+        ['before auction update']: {
+          ['new Date']: new Date(),
+          utcCurrentTime,
+          startsAt: auction.startsAt,
+          endsAt: auction.endsAt,
+          duration,
+        },
+        ['auction updated']: {
+          startsAt: updatedAuction.startsAt,
+          endsAt: updatedAuction.endsAt,
+          duration: updatedAuction.endsAt.diff(updatedAuction.startsAt, 'days'),
+        },
+      }),
     );
 
     return this.populateAuctionModel(updatedAuction).execPopulate();

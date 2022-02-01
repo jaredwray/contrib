@@ -59,23 +59,19 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
     startsAt: {
       type: SchemaTypes.Date,
-      default: dayjs().second(0).toISOString(),
       get: (v) => dayjs(v),
     },
     endsAt: {
       type: SchemaTypes.Date,
-      default: dayjs().second(0).add(3, 'days').toISOString(),
       get: (v) => dayjs(v),
     },
     stoppedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
     createdAt: {
       type: SchemaTypes.Date,
-      default: dayjs().second(0).toISOString(),
       get: (v) => dayjs(v),
     },
     updatedAt: {
       type: SchemaTypes.Date,
-      default: dayjs().second(0).toISOString(),
       get: (v) => dayjs(v),
     },
     bitlyLink: { type: SchemaTypes.String },
