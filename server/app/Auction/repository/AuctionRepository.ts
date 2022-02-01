@@ -228,7 +228,7 @@ export class AuctionRepository implements IAuctionRepository {
 
     AppLogger.info(`createAuction method called for #${auction._id.toString()} auction;`);
     AppLogger.info(
-      JSON.stringify({
+      `date values: ${JSON.stringify({
         ['when auction creating']: {
           ['new Date']: new Date(),
           ['startsAt , createdAt, updatedAt']: utcCurrentDateISO,
@@ -240,7 +240,7 @@ export class AuctionRepository implements IAuctionRepository {
           updatedAt: auction.updatedAt,
           endsAt: auction.endsAt,
         },
-      }),
+      })}`,
     );
 
     return this.populateAuctionModel(auction).execPopulate();
@@ -294,7 +294,7 @@ export class AuctionRepository implements IAuctionRepository {
     const updatedAuction = await auction.save();
 
     AppLogger.info(
-      JSON.stringify({
+      `date values: ${JSON.stringify({
         ['before auction update']: {
           ['new Date']: new Date(),
           utcCurrentTime,
@@ -307,7 +307,7 @@ export class AuctionRepository implements IAuctionRepository {
           endsAt: updatedAuction.endsAt,
           duration: updatedAuction.endsAt.diff(updatedAuction.startsAt, 'days'),
         },
-      }),
+      })}`,
     );
 
     return this.populateAuctionModel(updatedAuction).execPopulate();
