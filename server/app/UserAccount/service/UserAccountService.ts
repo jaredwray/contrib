@@ -19,6 +19,7 @@ import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
 import { UPSDeliveryService } from '../../UPSService';
+import { StripeService } from '../../Payment';
 import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
 
@@ -33,7 +34,6 @@ export class UserAccountService {
   private readonly CharityModel: Model<ICharityModel> = CharityModel(this.connection);
   private readonly InfluencerModel: Model<IInfluencer> = InfluencerModel(this.connection);
   private readonly InvitationModel: Model<IInvitation> = InvitationModel(this.connection);
-  private readonly UPSService = new UPSDeliveryService();
 
   constructor(
     private readonly connection: Connection,
@@ -41,23 +41,16 @@ export class UserAccountService {
     private readonly eventHub: EventHub,
     private readonly handlebarsService: HandlebarsService,
     private readonly cloudTaskService: CloudTaskService,
+    private readonly UPSService: UPSDeliveryService,
+    private readonly stripeService: StripeService,
   ) {}
 
-  //TODO: delete after update sms aythzIds
-  public async updateSmsAuthzIds() {
-    try {
-      const accounts = await this.AccountModel.find({ authzId: { $regex: 'sms', $options: 'i' } });
+  //TODO: delete after update customers address info in Stripe for accounts with stripeCustomer id
+  public async updateCustomersAddress() {
+    const accounts = await this.AccountModel.find({ stripeCustomerId: { $exists: true }, address: { $exists: true } });
 
-      for (const account of accounts) {
-        account.authzId = `sms|${account.phoneNumber.replace('+', '')}`;
-
-        await account.save();
-      }
-
-      return true;
-    } catch (error) {
-      AppLogger.error(`Something went wrong when try to update sms authzId: ${error.message}`);
-      return false;
+    for (const account of accounts) {
+      await this.stripeService.updateStripeCustomerAddress(account?.stripeCustomerId, account?.address);
     }
   }
   //TODO ends
@@ -65,6 +58,7 @@ export class UserAccountService {
   public async createOrUpdateUserAddress(
     auctionId: string,
     userId: string,
+    stripeId: string,
     input: UserAccountAddress,
   ): Promise<UserAccountAddress> {
     const auction = await this.AuctionModel.findById(auctionId);
@@ -100,12 +94,12 @@ export class UserAccountService {
       });
       await user.save();
 
+      await this.stripeService.updateStripeCustomerAddress(stripeId, input);
+
       return input;
     } catch (error) {
       AppLogger.error(`Can not create or update user address for user #${userId}. Error:${error.message}`);
-      if (error.message.startsWith('The postal code')) {
-        throw new AppError(error.message);
-      }
+      if (error.message.startsWith('The postal code')) throw new AppError(error.message);
       throw new AppError('Something went wrong. Please, check the entered data');
     }
   }

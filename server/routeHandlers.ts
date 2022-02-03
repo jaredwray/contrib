@@ -19,10 +19,12 @@ export default function appRouteHandlers(
   });
 
   //TODO: delete after update sms aythzIds
-  app.post('/api/v1/update-sms-authzIds', async (req, res) => {
+  app.post('/api/v1/update-stripe-customer-address', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) return;
-    const result = await userAccount.updateSmsAuthzIds();
-    return res.send(result ? 'Done' : 'Failed');
+
+    await userAccount.updateCustomersAddress();
+
+    res.sendStatus(200);
   });
   //TODO ends
 
