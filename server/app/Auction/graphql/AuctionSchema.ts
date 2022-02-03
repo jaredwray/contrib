@@ -168,10 +168,10 @@ export const AuctionSchema = gql`
   }
 
   type Parcel {
-    width: Int!
-    length: Int!
-    height: Int!
-    weight: Int!
+    width: Int
+    length: Int
+    height: Int
+    weight: Int
   }
 
   type DeliveryRate {

@@ -18,16 +18,6 @@ export default function appRouteHandlers(
     }
   });
 
-  //TODO: delete after update sms aythzIds
-  app.post('/api/v1/update-stripe-customer-address', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) return;
-
-    await userAccount.updateCustomersAddress();
-
-    res.sendStatus(200);
-  });
-  //TODO ends
-
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) return;
 
