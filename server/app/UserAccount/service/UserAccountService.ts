@@ -22,6 +22,7 @@ import { UPSDeliveryService } from '../../UPSService';
 import { StripeService } from '../../Payment';
 import { CloudTaskService } from '../../CloudTaskService';
 import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
+import { isValidAddressFields } from '../../../helpers/isValidAddressFields';
 
 import { AppConfig } from '../../../config';
 import { AppError, ErrorCode } from '../../../errors';
@@ -51,6 +52,9 @@ export class UserAccountService {
     stripeId: string,
     input: UserAccountAddress,
   ): Promise<UserAccountAddress> {
+    if (!isValidAddressFields(input))
+      throw new AppError('Something went wrong. Please, check the entered data or try later');
+
     const auction = await this.AuctionModel.findById(auctionId);
     if (!auction) {
       AppLogger.error(`Can not find auction #${auctionId}`);
@@ -68,6 +72,7 @@ export class UserAccountService {
       AppLogger.error(`Can not find user #${userId} for create or update user address`);
       throw new AppError('Something went wrong. Please, try again later');
     }
+
     try {
       await this.UPSService.getDeliveryPrice(input, '03');
 
@@ -76,20 +81,21 @@ export class UserAccountService {
         status: AuctionDeliveryStatus.ADDRESS_PROVIDED,
         updatedAt: this.timeNow(),
       });
-      await auction.save();
-
       Object.assign(user, {
         address: { ...input },
         updatedAt: this.timeNow(),
       });
-      await user.save();
 
+      await auction.save();
+      await user.save();
       await this.stripeService.updateStripeCustomerAddress(stripeId, input);
 
       return input;
     } catch (error) {
-      AppLogger.error(`Can not create or update user address for user #${userId}. Error:${error.message}`);
+      AppLogger.error(`Can not create or update user address for user #${userId}: ${error.message}`);
+
       if (error.message.startsWith('The postal code')) throw new AppError(error.message);
+
       throw new AppError('Something went wrong. Please, check the entered data');
     }
   }
@@ -158,10 +164,11 @@ export class UserAccountService {
     try {
       await this.twilioVerificationService.createVerification(phoneNumber);
     } catch (error) {
-      if (error.message.startsWith('Invalid parameter `To`')) {
+      if (error.message.startsWith('Invalid parameter `To`'))
         throw new AppError(`${error.message.replace('Invalid parameter `To`', 'Invalid phone number')}`);
-      }
-      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}. Error: ${error.message}`);
+
+      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}: ${error.message}`);
+
       throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
     }
     return { phoneNumber };
@@ -190,9 +197,11 @@ export class UserAccountService {
           ErrorCode.BAD_REQUEST,
         );
       }
-      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}. Error: ${error.message}`);
+
+      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}: ${error.message}`);
       throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
     }
+
     return {
       id: authzId,
       phoneNumber,
