@@ -97,7 +97,7 @@ export const UserAccountSchema = gql`
     verifyChangePhoneNumber(phoneNumber: String): PhoneNumber
     confirmAccountWithPhoneNumber(phoneNumber: String!, otp: String!): UserAccount!
     confirmChangePhoneNumber(phoneNumber: String, otp: String): PhoneNumber
-    createOrUpdateUserAddress(auctionId: String!, userId: String, input: UserAccountAddressInput!): UserAccountAddress!
+    createOrUpdateUserAddress(auctionId: String!, input: UserAccountAddressInput!): UserAccountAddress!
     updateCreditCard(stripeCustomerId: String!): UserAccount!
   }
 `;

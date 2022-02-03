@@ -1,9 +1,12 @@
 import Dinero from 'dinero.js';
 import Stripe from 'stripe';
 
-import { AppConfig, requireEnvVar } from '../../../config';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
+import { UserAccountAddress } from '../../UserAccount/dto/UserAccountAddress';
+
+import { AppConfig, requireEnvVar } from '../../../config';
 import { AppLogger } from '../../../logger';
+import { AppError } from '../../../errors';
 
 export class StripeService {
   private readonly stripe = new Stripe(AppConfig.stripe.secretKey, { apiVersion: '2020-08-27' });
@@ -77,6 +80,25 @@ export class StripeService {
     }
     await this.stripe.customers.update(customerId, { default_source: card.id });
     return card;
+  }
+
+  public async updateStripeCustomerAddress(customerId: string, addressData: UserAccountAddress): Promise<void> {
+    if (!customerId) return;
+
+    if (!addressData || !Object.keys(addressData).length) {
+      AppLogger.error(`Can not update customer address info for customer #${customerId}. No address info`);
+      return;
+    }
+
+    const { state, city, zipCode, street } = addressData;
+
+    try {
+      await this.stripe.customers.update(customerId, {
+        address: { city, state, postal_code: zipCode.toString(), line1: street, country: 'US' },
+      });
+    } catch (error) {
+      AppLogger.error(`Can not update customer address info for customer #${customerId}: ${error.message}`);
+    }
   }
 
   public async createCharge(

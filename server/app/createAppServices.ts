@@ -35,6 +35,8 @@ export default function createAppServices(connection: Connection): IAppServices 
     eventHub,
     handlebarsService,
     cloudTaskService,
+    ups,
+    stripeService,
   );
   const influencer = new InfluencerService(connection, charity);
   const payment = new PaymentService(userAccount, stripeService);
