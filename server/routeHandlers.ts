@@ -10,6 +10,16 @@ export default function appRouteHandlers(
   app: express.Express,
   { auction, charity, stripeService, twilioNotification, userAccount }: IAppServices,
 ): void {
+  //TODO: delete after update sms aythzIds
+  app.post('/api/v1/update-stripe-customer-address', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) return;
+
+    const responce = await userAccount.updateCustomersAddress();
+
+    return res.json(responce);
+  });
+  //TODO ends
+
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();

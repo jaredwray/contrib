@@ -84,11 +84,14 @@ export class StripeService {
   public async updateStripeCustomerAddress(customerId: string, addressData: UserAccountAddress): Promise<void> {
     if (!customerId) return;
 
-    const { state, city, zipCode, street } = addressData;
+    const { state, city, zipCode, street, name } = addressData;
+
+    const addressInfo = { city, state, postal_code: zipCode.toString(), line1: street, country: 'US' };
 
     try {
       await this.stripe.customers.update(customerId, {
-        address: { city, state, postal_code: zipCode.toString(), line1: street, country: 'US' },
+        address: addressInfo,
+        shipping: { address: addressInfo, name },
       });
     } catch (error) {
       AppLogger.error(`Can not update customer address info for customer #${customerId}: ${error.message}`);
