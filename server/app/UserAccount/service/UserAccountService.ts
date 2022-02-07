@@ -51,8 +51,7 @@ export class UserAccountService {
     const accounts = await this.AccountModel.find({ stripeCustomerId: { $exists: true }, address: { $exists: true } });
 
     for (const account of accounts) {
-      if (isValidAddressFields(account.address))
-        await this.stripeService.updateStripeCustomerAddress(account.stripeCustomerId, account.address);
+      await this.stripeService.updateStripeCustomerAddress(account.stripeCustomerId, account.address);
     }
   }
 
