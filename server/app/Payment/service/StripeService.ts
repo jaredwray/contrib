@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UserAccountAddress } from '../../UserAccount/dto/UserAccountAddress';
+import { isValidAddressFields } from '../../../helpers/isValidAddressFields';
 
 import { AppConfig, requireEnvVar } from '../../../config';
 import { AppLogger } from '../../../logger';
@@ -82,7 +83,7 @@ export class StripeService {
   }
 
   public async updateStripeCustomerAddress(customerId: string, addressData: UserAccountAddress): Promise<void> {
-    if (!customerId) return;
+    if (!customerId || !isValidAddressFields(addressData)) return;
 
     const { state, city, zipCode, street, name } = addressData;
 
