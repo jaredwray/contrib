@@ -25,7 +25,6 @@ import { BidInput } from './BidInput';
 import ShareBtn from './ShareBtn';
 import styles from './styles.module.scss';
 
-const BIDS_STEP_CENTS = 1000;
 const FINAL_BID = 999999;
 
 interface Props {
@@ -60,6 +59,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     totalBids,
     status,
     fairMarketValue,
+    bidStep,
   } = auction;
 
   const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
@@ -108,10 +108,10 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     () =>
       (currentPrice &&
         (!isFinalBid
-          ? Dinero(currentPrice).add(Dinero({ amount: BIDS_STEP_CENTS }))
+          ? Dinero(currentPrice).add(Dinero(bidStep))
           : Dinero({ amount: FINAL_BID * 100, currency: currentPrice.currency }))) ||
       Dinero(startPrice),
-    [currentPrice, startPrice, isFinalBid],
+    [currentPrice, startPrice, isFinalBid, bidStep],
   );
 
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');

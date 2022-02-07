@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 import { DocumentNode, useMutation } from '@apollo/client';
 import clsx from 'clsx';
@@ -23,38 +23,41 @@ interface Props {
 }
 
 export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctionsList }) => {
-  const [updateAuctionfairMarketValue, { loading: updating }] = useMutation(mutation);
+  const [updateAuctionBidStep, { loading: updating }] = useMutation(mutation);
   const { showMessage, showError } = useShowNotification();
   const onSubmit = useCallback(
-    ({ fairMarketValue }: { fairMarketValue: DineroObject }) => {
-      if (Dinero(fairMarketValue).getAmount() < 1) {
-        showError('Fair market value should be more than $1');
+    ({ bidStep }: { bidStep: DineroObject }) => {
+      if (Dinero(bidStep).getAmount() < 1) {
+        showError('Bid step value should be more than $1');
         return;
       }
-      updateAuctionfairMarketValue({
-        variables: { id: auction?.id, fairMarketValue },
+      updateAuctionBidStep({
+        variables: { id: auction?.id, bidStep },
       })
         .then(() => {
           onClose();
           getAuctionsList();
-          showMessage('Auction fair market value was updated');
+          showMessage('Auction bid step value was updated');
         })
         .catch(() => {
-          showError('Cannot update auction fair market value');
+          showError('Cannot update auction bid step value');
         });
     },
-    [updateAuctionfairMarketValue, auction?.id, showError, showMessage, getAuctionsList, onClose],
+    [updateAuctionBidStep, auction?.id, showError, showMessage, getAuctionsList, onClose],
   );
 
-  const initialValues = {
-    fairMarketValue: Dinero(auction.fairMarketValue).toObject(),
-  };
+  const initialValues = useMemo(
+    () => ({
+      bidStep: Dinero(auction.bidStep).toObject(),
+    }),
+    [auction.bidStep],
+  );
 
   return (
-    <Dialog open={open} title="Set Fair Market Value" onClose={onClose}>
+    <Dialog open={open} title="Set Bid Step" onClose={onClose}>
       <DialogContent>
         <Form initialValues={initialValues} onSubmit={onSubmit}>
-          <MoneyField name="fairMarketValue" title="Enter price" />
+          <MoneyField name="bidStep" title="Enter step price" />
           <hr />
           <div className="float-right">
             <AsyncButton

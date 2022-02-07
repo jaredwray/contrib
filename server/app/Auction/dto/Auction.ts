@@ -23,6 +23,7 @@ export interface Auction {
   description: string;
   currentPrice: Dinero.Dinero;
   startPrice: Dinero.Dinero;
+  bidStep: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
   bitlylink?: string;
   shortLink?: ShortLink;

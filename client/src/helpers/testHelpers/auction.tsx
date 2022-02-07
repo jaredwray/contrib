@@ -40,6 +40,7 @@ export const AuctionQueryAuction = {
   currentPrice: { amount: 112200, currency: 'USD', precision: 2 },
   endDate,
   fairMarketValue: null,
+  bidStep: { amount: 100, currency: 'USD', precision: 2 },
   followers: [{ createdAt: '2021-06-28T12:52:49.463Z', user: '60d9ac0f650c813a783906b0' }],
   description: 'test',
   id: 'testId',
@@ -108,6 +109,7 @@ export const auction = {
   totalBids: 1,
   description: 'test',
   currentPrice: { amount: 100, currency: 'USD', precision: 2 },
+  bidStep: { amount: 100, currency: 'USD', precision: 2 },
   startPrice: { amount: 100, currency: 'USD', precision: 2 },
   itemPrice: { amount: 1000, currency: 'USD', precision: 2 },
   fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
@@ -145,6 +147,7 @@ export const auctionForAdminPage = {
   },
   startDate: '2021-06-23T08:00:18.000Z',
   startPrice: { amount: 100, currency: 'USD', precision: 2 },
+  bidStep: { amount: 100, currency: 'USD', precision: 2 },
   status: 'FAILED',
   title: '1',
   delivery: {

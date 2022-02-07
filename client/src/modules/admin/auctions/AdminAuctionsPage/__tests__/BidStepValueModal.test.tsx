@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Form from 'src/components/forms/Form/Form';
-import { Modal } from '../FairMarketValueChangeButton/Modal';
+import { Modal } from '../BidStepValueChangeButton/Modal';
 import { UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 
 delete window.location;
@@ -25,6 +25,7 @@ describe('Should render correctly "Modal"', () => {
       itemPrice: null,
       description: 'test',
       endDate: '2021-07-31T08:00:00.000Z',
+      bidStep: { amount: 0, currency: 'USD', precision: 2 },
       fairMarketValue: { amount: 0, currency: 'USD', precision: 2 },
       followers: [{ user: 'test' }],
       id: 'test',
@@ -47,7 +48,7 @@ describe('Should render correctly "Modal"', () => {
     {
       request: {
         query: UpdateAuctionMutation,
-        variables: { id: 'test', fairMarketValue: { amount: 200, currency: 'USD', precision: 2 } },
+        variables: { id: 'test', bidStep: { amount: 200, currency: 'USD', precision: 2 } },
       },
       newData: () => {
         mockFn();
@@ -104,7 +105,7 @@ describe('Should render correctly "Modal"', () => {
       wrapper
         .find(Form)
         .props()
-        .onSubmit({ fairMarketValue: { amount: 0, currency: 'USD', precision: 2 } });
+        .onSubmit({ bidStep: { amount: 0, currency: 'USD', precision: 2 } });
     });
   });
   it('should submit the form and call the mutation', async () => {
@@ -121,7 +122,7 @@ describe('Should render correctly "Modal"', () => {
       wrapper
         .find(Form)
         .props()
-        .onSubmit({ fairMarketValue: { amount: 200, currency: 'USD', precision: 2 } });
+        .onSubmit({ bidStep: { amount: 200, currency: 'USD', precision: 2 } });
       expect(mockFn).toHaveBeenCalledTimes(1);
 
       await new Promise((resolve) => setTimeout(resolve));
@@ -143,7 +144,7 @@ describe('Should render correctly "Modal"', () => {
       wrapper
         .find(Form)
         .props()
-        .onSubmit({ fairMarketValue: { amount: 200, currency: 'USD', precision: 2 } });
+        .onSubmit({ bidStep: { amount: 200, currency: 'USD', precision: 2 } });
       expect(mockFn).toHaveBeenCalledTimes(0);
     });
   });

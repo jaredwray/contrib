@@ -21,8 +21,8 @@ import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Auction } from 'src/types/Auction';
 
+import { BidStepValueChangeButton } from './BidStepValueChangeButton';
 import { DeleteAuctionButton } from './DeleteAuctionButton';
-import { FairMarketValueChangeButton } from './FairMarketValueChangeButton';
 import { StopOrActiveButton } from './StopOrActiveButton';
 import styles from './styles.module.scss';
 
@@ -85,7 +85,7 @@ export default function AdminAuctionsPage() {
             <th>Influencer</th>
             <th className={styles.status}>Status</th>
             <th className={styles.price}>Price</th>
-            <th className={styles.price}>Fair Market Value</th>
+            <th className={styles.price}>Bid Step</th>
             <th className={styles.actions}></th>
           </tr>
         </thead>
@@ -97,7 +97,7 @@ export default function AdminAuctionsPage() {
               <td className={styles.otherColumns}>{auction.auctionOrganizer.name}</td>
               <td>{auction.status}</td>
               <td>{Dinero(auction.currentPrice ?? auction.startPrice).toFormat('$0,0')}</td>
-              <td>{auction.fairMarketValue && Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
+              <td>{Dinero(auction.bidStep).toFormat('$0,0')}</td>
               <td className={styles.actions}>
                 <ActionsDropdown>
                   {(auction.isSettled || auction.isSold) && (
@@ -127,8 +127,8 @@ export default function AdminAuctionsPage() {
                       mutation={auction.isStopped ? ActivateAuctionMutation : StopAuctionMutation}
                     />
                   )}
-                  {auction.isActive && (
-                    <FairMarketValueChangeButton
+                  {!auction.isSold && !auction.isSettled && (
+                    <BidStepValueChangeButton
                       auction={auction}
                       className={clsx(styles.actionBtn, 'dropdown-item text--body')}
                       getAuctionsList={getAuctionsList}
