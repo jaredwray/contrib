@@ -46,6 +46,20 @@ export class UserAccountService {
     private readonly stripeService: StripeService,
   ) {}
 
+  //TODO: delete after update customers address info in Stripe for accounts with stripeCustomer id
+
+  public async updateCustomersAddress() {
+    const accounts = await this.AccountModel.find({ stripeCustomerId: { $exists: true }, address: { $exists: true } });
+
+    for (const account of accounts) {
+      await this.stripeService.updateStripeCustomerAddress(account?.stripeCustomerId, account?.address);
+    }
+
+    return { message: 'Updated' };
+  }
+
+  //TODO ends
+
   public async createOrUpdateUserAddress(
     auctionId: string,
     userId: string,
