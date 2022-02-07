@@ -59,6 +59,7 @@ export const AuctionForAdminPageQuery = gql`
       endDate
       startPrice
       bitlyLink
+      bidStep
       shortLink {
         slug
       }
@@ -148,6 +149,7 @@ export const AuctionQuery = gql`
       isSold
       isStopped
       startPrice
+      bidStep
       totalBids
       fairMarketValue
       currentPrice
@@ -240,6 +242,7 @@ export const AuctionsListQuery = gql`
         isStopped
         title
         startPrice
+        bidStep
         itemPrice
         startDate
         endDate
@@ -408,6 +411,7 @@ export const UpdateAuctionMutation = gql`
     $startDate: DateTime
     $endDate: DateTime
     $startPrice: Money
+    $bidStep: Money
     $itemPrice: Money
     $charity: String
     $fairMarketValue: Money
@@ -421,6 +425,7 @@ export const UpdateAuctionMutation = gql`
         startDate: $startDate
         endDate: $endDate
         startPrice: $startPrice
+        bidStep: $bidStep
         itemPrice: $itemPrice
         charity: $charity
         fairMarketValue: $fairMarketValue
@@ -433,6 +438,7 @@ export const UpdateAuctionMutation = gql`
       startDate
       endDate
       startPrice
+      bidStep
       itemPrice
       fairMarketValue
       charity {

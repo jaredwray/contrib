@@ -14,12 +14,12 @@ interface Props {
   getAuctionsList: () => void;
 }
 
-export const FairMarketValueChangeButton: FC<Props> = ({ auction, className, mutation, getAuctionsList }) => {
+export const BidStepValueChangeButton: FC<Props> = ({ auction, className, mutation, getAuctionsList }) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
       <Button className={className} variant="link" onClick={() => setShowDialog(true)}>
-        Set Fair Market Value
+        Set Bid Step
       </Button>
       <Modal
         auction={auction}

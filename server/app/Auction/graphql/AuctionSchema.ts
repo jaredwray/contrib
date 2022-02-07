@@ -58,6 +58,7 @@ export const AuctionSchema = gql`
     status: AuctionStatus!
     attachments: [AuctionAttachment]
     startPrice: Money
+    bidStep: Money
     itemPrice: Money
     currentPrice: Money
     charity: Charity
@@ -78,26 +79,6 @@ export const AuctionSchema = gql`
     isFailed: Boolean!
     isSold: Boolean!
     isStopped: Boolean!
-  }
-
-  type AuctionForAdminPage {
-    id: String!
-    title: String!
-    status: AuctionStatus
-    startDate: DateTime!
-    endDate: DateTime!
-    charity: AuctionCharity
-    bids: [AuctionBid]
-    currentPrice: Money!
-    startPrice: Money!
-    fairMarketValue: Money
-    auctionOrganizer: AuctionAdminOrganizer
-    delivery: AuctionDelivery
-    winner: Winner
-    isFailed: Boolean!
-    isSold: Boolean!
-    isActive: Boolean!
-    link: String!
   }
 
   type Winner {
@@ -210,6 +191,7 @@ export const AuctionSchema = gql`
     startDate: DateTime
     endDate: DateTime
     startPrice: Money
+    bidStep: Money
     charity: String
     fairMarketValue: Money
     itemPrice: Money

@@ -10,6 +10,7 @@ export type AuctionInput = {
   duration?: number;
   endDate?: Dayjs;
   startPrice?: Dinero.Dinero;
+  bidStep?: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
   organizerId?: string;
   fairMarketValue?: Dinero.Dinero;

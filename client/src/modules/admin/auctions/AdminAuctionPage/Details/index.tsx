@@ -51,6 +51,10 @@ export const Details: FC<Props> = ({ auction, charity }) => {
             <td>Current Price</td>
             <td>{Dinero(auction.currentPrice).toFormat('$0,0')}</td>
           </tr>
+          <tr>
+            <td>Bid Step Price</td>
+            <td>{Dinero(auction.bidStep).toFormat('$0,0')}</td>
+          </tr>
           {auction.fairMarketValue && (
             <tr>
               <td>Fair Market Value</td>

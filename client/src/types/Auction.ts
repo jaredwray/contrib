@@ -56,6 +56,7 @@ export interface Auction {
   endDate: string;
   stoppedAt?: string;
   startPrice: DineroObject;
+  bidStep: DineroObject;
   itemPrice?: DineroObject;
   currentPrice: DineroObject;
   auctionOrganizer: InfluencerProfile;

@@ -1,13 +1,13 @@
-import { FairMarketValueChangeButton } from '../FairMarketValueChangeButton';
+import { BidStepValueChangeButton } from '../BidStepValueChangeButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { mount, ReactWrapper } from 'enzyme';
 import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
-import { Modal } from 'src/modules/admin/auctions/AdminAuctionsPage/FairMarketValueChangeButton/Modal';
+import { Modal } from 'src/modules/admin/auctions/AdminAuctionsPage/BidStepValueChangeButton/Modal';
 import { act } from 'react-dom/test-utils';
-describe('Should render correctly "FairMarketValueChangeButton"', () => {
+describe('Should render correctly "BidStepValueChangeButton"', () => {
   const props: any = {
     auction,
     mutation: gql`
@@ -26,7 +26,7 @@ describe('Should render correctly "FairMarketValueChangeButton"', () => {
       <ToastProvider>
         <MockedProvider>
           <Router>
-            <FairMarketValueChangeButton {...props} />
+            <BidStepValueChangeButton {...props} />
           </Router>
         </MockedProvider>
       </ToastProvider>,

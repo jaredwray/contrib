@@ -20,6 +20,7 @@ export interface IAuctionModel extends Document {
   assets: IAuctionAssetModel['_id'][];
   currentPrice: number;
   itemPrice?: number;
+  bidStep: number;
   priceCurrency?: string;
   charity: ICharityModel['_id'];
   startPrice: number;
@@ -55,6 +56,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     itemPrice: { type: SchemaTypes.Number },
     priceCurrency: { type: SchemaTypes.String, default: AppConfig.app.defaultCurrency },
     currentPrice: { type: SchemaTypes.Number, default: 0 },
+    bidStep: { type: SchemaTypes.Number, default: 1000 },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
     startsAt: {

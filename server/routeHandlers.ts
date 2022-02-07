@@ -20,6 +20,16 @@ export default function appRouteHandlers(
   });
   //TODO ends
 
+  //TODO: delete after update auctions bid step
+  app.post('/api/v1/update-auctions-bid-step', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) return;
+
+    const responce = await auction.updateAuctionsBidStep();
+
+    return res.json(responce);
+  });
+  //TODO ends
+
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
