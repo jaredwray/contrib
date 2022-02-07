@@ -73,23 +73,19 @@ export class AuctionService {
   ) {}
 
   //TODO: delete after update auctions bid step
-
   public async updateAuctionsBidStep() {
     const auctions = await this.AuctionModel.find({ bidStep: { $exists: false } });
 
     for (const auction of auctions) {
-      try {
-        Object.assign(auction, { bidStep: 1000 });
+      Object.assign(auction, { bidStep: 1000 });
 
+      try {
         await auction.save();
       } catch (error) {
         AppLogger.error(`Can not update bid step for auction #${auction._id.toString()}. Error: ${error.message}`);
       }
     }
-
-    return { message: 'Updated' };
   }
-
   //TODO ends
 
   public async getAuctionsForProfilePage(userId: string): Promise<AuctionsForProfilePage | null> {

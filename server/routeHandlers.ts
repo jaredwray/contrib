@@ -10,26 +10,6 @@ export default function appRouteHandlers(
   app: express.Express,
   { auction, charity, stripeService, twilioNotification, userAccount }: IAppServices,
 ): void {
-  //TODO: delete after update sms aythzIds
-  app.post('/api/v1/update-stripe-customer-address', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) return;
-
-    const responce = await userAccount.updateCustomersAddress();
-
-    return res.json(responce);
-  });
-  //TODO ends
-
-  //TODO: delete after update auctions bid step
-  app.post('/api/v1/update-auctions-bid-step', async (req, res) => {
-    if (!isAuthorizedRequest(req, res)) return;
-
-    const responce = await auction.updateAuctionsBidStep();
-
-    return res.json(responce);
-  });
-  //TODO ends
-
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) {
       next();
@@ -37,6 +17,26 @@ export default function appRouteHandlers(
       express.json()(req, res, next);
     }
   });
+
+  //TODO: delete after update sms aythzIds
+  app.post('/api/v1/update-stripe-customer-address', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) return;
+
+    await userAccount.updateCustomersAddress();
+
+    res.sendStatus(200);
+  });
+  //TODO ends
+
+  //TODO: delete after update auctions bid step
+  app.post('/api/v1/update-auctions-bid-step', async (req, res) => {
+    if (!isAuthorizedRequest(req, res)) return;
+
+    await auction.updateAuctionsBidStep();
+
+    res.sendStatus(200);
+  });
+  //TODO ends
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) return;
