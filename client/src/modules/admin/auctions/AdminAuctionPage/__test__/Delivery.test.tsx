@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import { GraphQLError } from 'graphql';
 import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
 

@@ -55,9 +55,11 @@ const CharityPage = () => {
     history.push(`/auctions/${auctionId}/duration`);
   }, [auctionId, history]);
 
-  const { description, itemPrice, startPrice, attachments, fairMarketValue } = auction || {};
+  const { description, itemPrice, startPrice, attachments, fairMarketValue, items } = auction || {};
   const videoAttachments = attachments?.filter((attachment: any) => attachment?.type === 'VIDEO');
-  const isFullObject = Boolean(description && itemPrice && fairMarketValue && videoAttachments.length);
+  const isFullObject = Boolean(
+    description && itemPrice && (fairMarketValue || items?.length) && videoAttachments.length,
+  );
 
   const submitValidationRedirect = useCallback(() => {
     if (!description) {
@@ -75,13 +77,23 @@ const CharityPage = () => {
       showError('You should fill in starting price field');
       return;
     }
-    if (!fairMarketValue) {
+    if (!fairMarketValue && !items?.length) {
       history.push(`/auctions/${auctionId}/price/fmv`);
       showError('You should fill in fair market value field');
       return;
     }
     return;
-  }, [videoAttachments?.length, auctionId, description, history, startPrice, itemPrice, fairMarketValue, showError]);
+  }, [
+    videoAttachments?.length,
+    auctionId,
+    description,
+    history,
+    startPrice,
+    itemPrice,
+    fairMarketValue,
+    items?.length,
+    showError,
+  ]);
   const handleSubmit = useCallback(async () => {
     if (!selectedOption) {
       showError('You should select charity');

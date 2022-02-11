@@ -607,6 +607,7 @@ export class AuctionService {
       duration,
       description,
       fairMarketValue,
+      items,
       ...rest
     } = objectTrimmer(input);
 
@@ -639,6 +640,17 @@ export class AuctionService {
         ...(fairMarketValue
           ? {
               fairMarketValue: fairMarketValue.getAmount(),
+              items: [],
+            }
+          : {}),
+        ...(items
+          ? {
+              items: items.map(({ name, contributor, fairMarketValue }) => ({
+                name,
+                contributor,
+                fairMarketValue: fairMarketValue.getAmount(),
+              })),
+              fairMarketValue: undefined,
             }
           : {}),
         ...(bidStep
@@ -1283,6 +1295,7 @@ export class AuctionService {
       auctionOrganizer,
       priceCurrency,
       fairMarketValue,
+      items,
       followers,
       winner,
       shortLink,
@@ -1343,6 +1356,17 @@ export class AuctionService {
             currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
             amount: fairMarketValue,
           })
+        : null,
+      items: items
+        ? items.map(({ _id, name, contributor, fairMarketValue }) => ({
+            id: _id.toString(),
+            name,
+            contributor,
+            fairMarketValue: Dinero({
+              currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
+              amount: fairMarketValue,
+            }),
+          }))
         : null,
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       followers: followers.map((follower) => {

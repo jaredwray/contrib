@@ -1,0 +1,10 @@
+@import 'src/variables.scss';
+
+.multipleItemsButton {
+  margin-left: auto;
+
+  @media (max-width: $small-weight) {
+    width: 100%;
+    margin-bottom: 32px;
+  }
+}

@@ -6,6 +6,7 @@ import { ShortLink } from '../../ShortLink/dto/ShortLink';
 import { AuctionStatus } from './AuctionStatus';
 import { AuctionWinner } from './AuctionWinner';
 import { AuctionDelivery } from './AuctionDelivery';
+import { AuctionItem } from './AuctionItem';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { Follow } from '../../FollowDto';
 
@@ -28,6 +29,7 @@ export interface Auction {
   bitlylink?: string;
   shortLink?: ShortLink;
   fairMarketValue: Dinero.Dinero;
+  items?: AuctionItem[];
   followers?: Follow[];
   winner?: AuctionWinner;
   delivery: AuctionDelivery;

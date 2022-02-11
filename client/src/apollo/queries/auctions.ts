@@ -65,6 +65,12 @@ export const AuctionForAdminPageQuery = gql`
       }
       currentPrice
       fairMarketValue
+      items {
+        id
+        name
+        contributor
+        fairMarketValue
+      }
       auctionOrganizer {
         id
         name
@@ -112,6 +118,7 @@ export const AuctionForAdminPageQuery = gql`
       isFailed
       isActive
       isSold
+      isSettled
     }
   }
 `;
@@ -152,6 +159,12 @@ export const AuctionQuery = gql`
       bidStep
       totalBids
       fairMarketValue
+      items {
+        id
+        name
+        contributor
+        fairMarketValue
+      }
       currentPrice
       auctionOrganizer {
         id
@@ -256,7 +269,6 @@ export const AuctionsListQuery = gql`
           url
           thumbnail
         }
-        fairMarketValue
         followers {
           user
         }
@@ -299,6 +311,43 @@ export const CalculateShippingCostQuery = gql`
     calculateShippingCost(auctionId: $auctionId, deliveryMethod: $deliveryMethod) {
       deliveryPrice
       timeInTransit
+    }
+  }
+`;
+
+export const GetAuctionDetailsQuery = gql`
+  query GetAuctionDetails($id: String!) {
+    auction(id: $id) {
+      id
+      endDate
+      itemPrice
+      title
+      description
+      status
+      isActive
+      startPrice
+      startDate
+      fairMarketValue
+      items {
+        id
+        name
+        contributor
+        fairMarketValue
+      }
+      charity {
+        id
+        name
+      }
+      auctionOrganizer {
+        id
+        favoriteCharities {
+          id
+          name
+        }
+      }
+      attachments {
+        type
+      }
     }
   }
 `;
@@ -372,37 +421,6 @@ export const CreateAuctionMutation = gql`
   }
 `;
 
-export const GetAuctionDetailsQuery = gql`
-  query GetAuctionDetails($id: String!) {
-    auction(id: $id) {
-      id
-      endDate
-      itemPrice
-      title
-      description
-      status
-      isActive
-      startPrice
-      startDate
-      fairMarketValue
-      charity {
-        id
-        name
-      }
-      auctionOrganizer {
-        id
-        favoriteCharities {
-          id
-          name
-        }
-      }
-      attachments {
-        type
-      }
-    }
-  }
-`;
-
 export const UpdateAuctionMutation = gql`
   mutation UpdateAuction(
     $id: String!
@@ -415,6 +433,7 @@ export const UpdateAuctionMutation = gql`
     $itemPrice: Money
     $charity: String
     $fairMarketValue: Money
+    $items: [AuctionItemInput]
     $duration: Int
   ) {
     updateAuction(
@@ -429,6 +448,7 @@ export const UpdateAuctionMutation = gql`
         itemPrice: $itemPrice
         charity: $charity
         fairMarketValue: $fairMarketValue
+        items: $items
         duration: $duration
       }
     ) {
@@ -441,6 +461,12 @@ export const UpdateAuctionMutation = gql`
       bidStep
       itemPrice
       fairMarketValue
+      items {
+        id
+        name
+        contributor
+        fairMarketValue
+      }
       charity {
         id
         name
