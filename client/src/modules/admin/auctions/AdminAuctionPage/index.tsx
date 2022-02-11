@@ -3,7 +3,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import {
@@ -20,6 +20,7 @@ import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { AuctionBid } from 'src/types/Bid';
 
+import AuctionItems from './AuctionItems';
 import Bids from './Bids';
 import Delivery from './Delivery';
 import Details from './Details';
@@ -27,26 +28,26 @@ import { Modal } from './Modal';
 import styles from './styles.module.scss';
 
 export default function AdminAuctionPage() {
+  const history = useHistory();
+  const { auctionId } = useParams<{ auctionId: string }>();
+  const { addToast } = useToasts();
+
   const [showDialog, setShowDialog] = useState(false);
   const [bid, setBid] = useState(null);
-
   const [isBid, setIsBid] = useState(false);
-  const { addToast } = useToasts();
 
   const [chargeAuction, { loading: chargeLoading }] = useMutation(ChargeCurrentAuctionMutation);
   const [chargeBid, { loading: bidLoading }] = useMutation(ChargeCurrentBidMutation);
-
-  const { auctionId } = useParams<{ auctionId: string }>();
 
   const { data: auctionBids } = useQuery(AuctionBidsQuery, { variables: { auctionId } });
   const { data: auctionMetricsData, loading: metricsLoading } = useQuery(AuctionMetricsQuery, {
     variables: { auctionId },
   });
+
   const [getAuctionData, { data: auctionData }] = useLazyQuery(AuctionForAdminPageQuery, {
     variables: { id: auctionId },
     fetchPolicy: 'cache-and-network',
   });
-
   const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformationQuery);
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function AdminAuctionPage() {
   const charity = auction?.charity;
   const bids = auctionBids?.bids;
   const customerInformation = customer?.getCustomerInformation;
+  const showEditButton = !auction?.isSettled && !auction?.isSold && !auction?.isFailed;
 
   const handleChargeBid = useCallback(
     async (item) => {
@@ -93,17 +95,23 @@ export default function AdminAuctionPage() {
     }
   }, [auctionId, addToast, chargeAuction, getAuctionData]);
 
+  const handleEditClick = useCallback(() => {
+    history.push(`/auctions/${auctionId}/price/fmv`);
+  }, [auctionId, history]);
+
   if (!auction || !bids) return null;
 
   const hasBids = bids.length > 0;
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));
   const maxBid = bids.filter(({ bid }: AuctionBid) => bid.amount === maxBidAmount)[0];
+
   const onChargeClickHandler = () => {
     getCustomerInformation({ variables: { stripeCustomerId: maxBid.user.stripeCustomerId } });
     setShowDialog(true);
     setIsBid(false);
     setBid(maxBid);
   };
+
   const onBidClickHandler = (arg: any) => {
     getCustomerInformation({ variables: { stripeCustomerId: arg.user.stripeCustomerId } });
     setShowDialog(true);
@@ -120,7 +128,12 @@ export default function AdminAuctionPage() {
           <Row>
             <Col lg="5">
               <div className="text-headline mb-2">Auction details</div>
-              <Details auction={auction} charity={charity} />
+              <Details
+                auction={auction}
+                charity={charity}
+                handleEditClick={handleEditClick}
+                showEditButton={showEditButton}
+              />
               {hasBids && auction.isFailed && (
                 <AsyncButton
                   className={clsx(styles.select, 'p-2')}
@@ -132,12 +145,22 @@ export default function AdminAuctionPage() {
                   Charge auction
                 </AsyncButton>
               )}
+              {auction.items.length > 0 && (
+                <>
+                  <div className="text-headline mb-2">Auction items</div>
+                  <AuctionItems
+                    handleEditClick={handleEditClick}
+                    items={auction.items}
+                    showEditButton={showEditButton}
+                  />
+                </>
+              )}
               <div className="text-headline mb-2">Delivery</div>
               <Delivery auction={auction} refreshAuctionData={getAuctionData} />
             </Col>
             <Col lg="7">
               <>
-                <Row className="text-headline mb-2">Auction metrics </Row>
+                <div className="text-headline mb-2">Auction metrics </div>
                 {metricsLoading ? <Loading /> : <ClicksAnalytics metrics={metrics} />}
               </>
             </Col>

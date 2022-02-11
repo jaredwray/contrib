@@ -1,0 +1,22 @@
+@import 'src/variables.scss';
+
+.editButton {
+  width: 200px;
+
+  @media (max-width: $small-weight) {
+    width: 100%;
+  }
+}
+
+.tableContainer {
+  overflow-x: auto;
+
+  table {
+    min-width: 460px;
+
+    td {
+      min-width: 120px;
+      vertical-align: center;
+    }
+  }
+}

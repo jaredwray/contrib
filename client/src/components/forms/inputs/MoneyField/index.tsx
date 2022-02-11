@@ -18,7 +18,9 @@ interface Props {
   constraints?: { [key: string]: any };
   externalText?: string | ReactElement;
   minValue?: number;
+  valueFromState?: { amount: number; currency: Dinero.Currency };
   setDisabled?: (_: SetStateAction<boolean>) => void;
+  setValueToState?: (name: string, value: Dinero.Dinero) => void;
 }
 
 const MaxLength = 8;
@@ -34,15 +36,30 @@ const MoneyField: FC<Props> = ({
   constraints: inputConstraints,
   externalText,
   minValue,
+  valueFromState,
   setDisabled,
+  setValueToState,
 }) => {
   const constraints = useFieldConstraints(inputConstraints, required);
   const { hasError, errorMessage, value, onChange, ...inputProps } = useField(name, { constraints, disabled });
 
-  const filteredValue = Dinero({
-    amount: parseInt(value.amount.toString().slice(-1 * MaxLength)),
-    currency: value.currency,
-  });
+  let filteredValueFromState;
+
+  if (valueFromState) {
+    filteredValueFromState = Dinero({
+      amount: parseInt(valueFromState.amount.toString().slice(-1 * MaxLength)),
+      currency: valueFromState.currency,
+    });
+  }
+
+  let filteredValue;
+
+  if (value) {
+    filteredValue = Dinero({
+      amount: parseInt(value.amount.toString().slice(-1 * MaxLength)),
+      currency: value.currency,
+    });
+  }
 
   const handleChange = useCallback(
     (event) => {
@@ -51,9 +68,14 @@ const MoneyField: FC<Props> = ({
 
       if (setDisabled && minValue) setDisabled(minValue > number || number > MaxBidValue);
 
-      onChange({ ...value, amount: number ? parseInt(number, 10) * 100 : 0 });
+      const currentValue = valueFromState || value;
+      const onChangeValue = { ...currentValue, amount: number ? parseInt(number, 10) * 100 : 0 };
+
+      onChange(onChangeValue);
+
+      if (setValueToState) setValueToState(name, onChangeValue);
     },
-    [onChange, value, minValue, setDisabled],
+    [value, name, minValue, valueFromState, setDisabled, setValueToState, onChange],
   );
 
   const handleFocus = useCallback((event) => event.target.select(), []);
@@ -67,7 +89,7 @@ const MoneyField: FC<Props> = ({
         isInvalid={hasError}
         maxLength={MaxLength}
         placeholder={placeholder}
-        value={filteredValue.toFormat('$0,0')}
+        value={filteredValueFromState?.toFormat('$0,0') || filteredValue?.toFormat('$0,0')}
         onChange={handleChange}
         onFocus={handleFocus}
       />

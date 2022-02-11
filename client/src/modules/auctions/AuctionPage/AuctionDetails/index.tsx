@@ -59,6 +59,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     totalBids,
     status,
     fairMarketValue,
+    items,
     bidStep,
   } = auction;
 
@@ -235,7 +236,9 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
           setIsBuying={setIsBuying}
         />
       </WithStripe>
-      {canBid && <BidInput fairMarketValue={Dinero(fairMarketValue)} minBid={minBid} onSubmit={handleBid} />}
+      {canBid && (
+        <BidInput fairMarketValue={Dinero(fairMarketValue)} items={items} minBid={minBid} onSubmit={handleBid} />
+      )}
       {canEdit && (
         <Link className="w-100 btn btn-primary" to={`/auctions/${auction.auctionOrganizer.id}/${auctionId}/title`}>
           Edit

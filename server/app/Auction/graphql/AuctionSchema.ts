@@ -70,6 +70,7 @@ export const AuctionSchema = gql`
     bitlyLink: String
     shortLink: Link
     fairMarketValue: Money
+    items: [AuctionItem]
     followers: [Follow]
     delivery: AuctionDelivery
     winner: Winner
@@ -175,6 +176,13 @@ export const AuctionSchema = gql`
     won: [Auction]
   }
 
+  type AuctionItem {
+    id: String
+    name: String
+    contributor: String
+    fairMarketValue: Money
+  }
+
   input AuctionSearchFilters {
     minPrice: Int
     maxPrice: Int
@@ -182,6 +190,13 @@ export const AuctionSchema = gql`
     auctionOrganizer: String
     charity: [String]
     selectedAuction: String
+  }
+
+  input AuctionItemInput {
+    id: String
+    name: String
+    contributor: String
+    fairMarketValue: Money
   }
 
   input AuctionInput {
@@ -194,6 +209,7 @@ export const AuctionSchema = gql`
     bidStep: Money
     charity: String
     fairMarketValue: Money
+    items: [AuctionItemInput]
     itemPrice: Money
     duration: Int
   }

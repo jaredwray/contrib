@@ -9,6 +9,7 @@ describe('BidInput', () => {
     minBid: Dinero({ amount: 1, currency: 'USD' }),
     onSubmit: jest.fn(),
     fairMarketValue: Dinero({ amount: 3, currency: 'USD' }),
+    items: [],
   };
 
   let wrapper: ReactWrapper;

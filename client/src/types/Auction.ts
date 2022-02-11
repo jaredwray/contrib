@@ -45,6 +45,13 @@ export interface AuctionDelivery {
   identificationNumber?: string;
 }
 
+export interface AuctionItem {
+  id: string;
+  name: string;
+  contributor: string;
+  fairMarketValue: { amount: number; currency: Dinero.Currency };
+}
+
 export interface Auction {
   id: string;
   title: string;
@@ -63,6 +70,7 @@ export interface Auction {
   bitlyLink?: string;
   shortLink: ShortLink;
   fairMarketValue: DineroObject;
+  items: AuctionItem[];
   followers?: Follow[];
   winner?: Winner;
   delivery: AuctionDelivery;

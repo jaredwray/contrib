@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { Types } from 'mongoose';
-import { IAuctionModel } from '../mongodb/AuctionModel';
+import { IAuctionModel, IAuctionItem } from '../mongodb/AuctionModel';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
@@ -36,6 +36,7 @@ export type IUpdateAuction = {
   endDate?: dayjs.Dayjs;
   organizerId?: string;
   fairMarketValue?: number;
+  items?: IAuctionItem[];
 };
 
 export interface IAuctionRepository {

@@ -10,6 +10,13 @@ import { AuctionDelivery } from '../dto/AuctionDelivery';
 import { AuctionAssetCollectionName, IAuctionAssetModel } from './AuctionAssetModel';
 import { InfluencerCollectionName, IInfluencer } from '../../Influencer/mongodb/InfluencerModel';
 
+export interface IAuctionItem {
+  _id: string;
+  contributor: string;
+  name: string;
+  fairMarketValue: number;
+}
+
 export interface IAuctionModel extends Document {
   title: string;
   status: AuctionStatus;
@@ -27,6 +34,7 @@ export interface IAuctionModel extends Document {
   bitlyLink: string;
   shortLink: IShortLinkModel['_id'];
   fairMarketValue: number;
+  items: [IAuctionItem];
   sentNotifications: [string];
   totalBids: number;
   winner?: IUserAccount['_id'];
@@ -79,6 +87,13 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     bitlyLink: { type: SchemaTypes.String },
     shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
     fairMarketValue: { type: SchemaTypes.Number },
+    items: [
+      {
+        name: { type: SchemaTypes.String },
+        contributor: { type: SchemaTypes.String },
+        fairMarketValue: { type: SchemaTypes.Number },
+      },
+    ],
     totalBids: { type: SchemaTypes.Number, default: 0 },
     winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
     delivery: {

@@ -1,28 +1,67 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState, useMemo } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import Dinero from 'dinero.js';
+import { Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 import MoneyField from 'src/components/forms/inputs/MoneyField';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { trimObject } from 'src/helpers/trimObject';
 import { useShowNotification } from 'src/helpers/useShowNotification';
+import { AuctionItem } from 'src/types/Auction';
 
 import Row from '../common/Row';
+import MultipleFMV from './MultipleFairMarketValue';
+import styles from './styles.module.scss';
 
 const FairMarketValuePage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const { showMessage, showError, showWarning } = useShowNotification();
   const history = useHistory();
-  const [submitValue, setSubmitValue] = useState();
 
-  const { loading: loadingQuery, data: auctionData } = useQuery(GetAuctionDetailsQuery, {
+  const generateInitialValuesForAuctionItem = useCallback(
+    () => ({
+      id: uuidv4(),
+      name: '',
+      contributor: '',
+      fairMarketValue: { amount: 0, currency: 'USD' as Dinero.Currency },
+    }),
+    [],
+  );
+
+  const [formState, setFormState] = useState<AuctionItem[]>([
+    generateInitialValuesForAuctionItem(),
+    generateInitialValuesForAuctionItem(),
+  ]);
+
+  const [isMultipleFMV, setIsMultipleFMV] = useState(false);
+
+  const { loading: isLoadingQuery, data: auctionData } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
+    /* istanbul ignore next */
+    onCompleted({ auction }) {
+      const auctionItems = auction?.items;
+
+      if (!auctionItems?.length) return;
+
+      setIsMultipleFMV(true);
+      setFormState(
+        auctionItems.map(({ id, name, contributor, fairMarketValue }: any) => ({
+          id,
+          name,
+          contributor,
+          fairMarketValue,
+        })),
+      );
+    },
   });
+
   const auction = auctionData?.auction;
   const { isActive, fairMarketValue } = auction || {};
 
@@ -36,26 +75,113 @@ const FairMarketValuePage = () => {
       }
     },
   });
-  const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}/price/buying`);
-  }, [auctionId, history]);
 
-  const handleSubmit = useCallback(
-    async (values) => {
-      setSubmitValue(values.fairMarketValue);
-      if (values.fairMarketValue.amount === 0) {
-        showWarning('Fair Market Value cannot be zero');
-        return;
+  const initialValues = useMemo(
+    () => ({
+      fairMarketValue: Dinero(fairMarketValue).toObject(),
+    }),
+    [fairMarketValue],
+  );
+
+  const isValidAuctionItemsData = useCallback(
+    (fields: AuctionItem[]) => {
+      if (fields.some(({ fairMarketValue }) => fairMarketValue.amount === 0)) {
+        showWarning('Fair Market Value for auction item can not be zero');
+        return false;
       }
+      if (fields.some(({ name }) => !name)) {
+        showWarning(`Item name can not be blank`);
+        return false;
+      }
+      if (fields.some(({ contributor }) => !contributor)) {
+        showWarning(`Contributor name can not be blank`);
+        return false;
+      }
+      return true;
+    },
+    [showWarning],
+  );
+
+  const tryToUpdateAuction = useCallback(
+    async (variables: any) => {
       try {
-        await updateAuction({ variables: { id: auctionId, ...values } });
+        await updateAuction({
+          variables: { id: auctionId, ...variables },
+        });
         if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);
       }
     },
-    [auctionId, updateAuction, showMessage, showError, showWarning, isActive],
+    [auctionId, isActive, updateAuction, showError, showMessage],
   );
+
+  const updateAuctionItemsFMV = useCallback(
+    async (formState: AuctionItem[]) => {
+      const trimmedFormState = formState.map((item) => trimObject(item));
+
+      if (!isValidAuctionItemsData(trimmedFormState)) return;
+
+      tryToUpdateAuction({ items: trimmedFormState });
+    },
+    [tryToUpdateAuction, isValidAuctionItemsData],
+  );
+
+  const updateAuctionFMV = useCallback(
+    async (fairMarketValue) => {
+      if (fairMarketValue.amount === 0) {
+        showWarning('Fair Market Value can not be zero');
+        return;
+      }
+
+      tryToUpdateAuction({ fairMarketValue });
+    },
+    [tryToUpdateAuction, showWarning],
+  );
+
+  const handleSubmit = useCallback(
+    async (values) => {
+      if (isMultipleFMV) {
+        updateAuctionItemsFMV(formState);
+        return;
+      }
+
+      updateAuctionFMV(values.fairMarketValue);
+    },
+    [formState, isMultipleFMV, updateAuctionFMV, updateAuctionItemsFMV],
+  );
+
+  const handlePrevAction = useCallback(() => {
+    history.push(`/auctions/${auctionId}/price/buying`);
+  }, [auctionId, history]);
+
+  const handleIsMultipleItems = useCallback(() => setIsMultipleFMV(true), [setIsMultipleFMV]);
+
+  const updateFormState = useCallback((name: string, value: string | Dinero.Dinero) => {
+    const [itemFieldName, itemId] = name.split('_');
+
+    setFormState((prev) =>
+      prev.map((item) => {
+        if (item.id === itemId) {
+          return { ...item, [itemFieldName]: value };
+        }
+
+        return item;
+      }),
+    );
+  }, []);
+
+  const handleAddItem = useCallback(() => {
+    setFormState((prev) => [...prev, generateInitialValuesForAuctionItem()]);
+  }, [generateInitialValuesForAuctionItem]);
+
+  const handleRemoveCurrentItem = useCallback((id: string) => {
+    setFormState((prev) => prev.filter((item) => item.id !== id));
+  }, []);
+
+  const handleBack = useCallback(() => {
+    setIsMultipleFMV(false);
+  }, []);
 
   if (!account?.isAdmin && isActive) {
     history.push(`/`);
@@ -75,7 +201,7 @@ const FairMarketValuePage = () => {
   return (
     <StepByStepPageLayout
       header="Auction an item"
-      initialValues={{ fairMarketValue: Dinero(submitValue ?? fairMarketValue).toObject() }}
+      initialValues={initialValues}
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
@@ -84,7 +210,23 @@ const FairMarketValuePage = () => {
       title={isActive ? 'Edit Fair Market Value' : 'Fair Market Value'}
       onSubmit={handleSubmit}
     >
-      <Row description={textBlock}>{!loadingQuery && <MoneyField name="fairMarketValue" />}</Row>
+      {isMultipleFMV ? (
+        <MultipleFMV
+          formState={formState}
+          handleAddItem={handleAddItem}
+          handleBack={handleBack}
+          handleRemoveCurrentItem={handleRemoveCurrentItem}
+          updateFormState={updateFormState}
+          updating={updating}
+        />
+      ) : (
+        <>
+          <Row description={textBlock}>{!isLoadingQuery && <MoneyField name="fairMarketValue" />}</Row>
+          <Button className={styles.multipleItemsButton} onClick={handleIsMultipleItems}>
+            Multiple Items
+          </Button>
+        </>
+      )}
     </StepByStepPageLayout>
   );
 };

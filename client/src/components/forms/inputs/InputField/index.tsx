@@ -1,4 +1,4 @@
-import { forwardRef, BaseSyntheticEvent, KeyboardEventHandler } from 'react';
+import { forwardRef, BaseSyntheticEvent, KeyboardEventHandler, useCallback } from 'react';
 
 import { Form as BsForm } from 'react-bootstrap';
 
@@ -22,6 +22,8 @@ interface Props {
   maxLength?: number;
   onKeyPress?: KeyboardEventHandler<HTMLInputElement>;
   onInput?: (event: BaseSyntheticEvent) => void;
+  setValueToState?: (name: string, value: string | Dinero.Dinero) => void;
+  valueFromState?: string;
   ref?: HTMLInputElement | null;
   isInvalid?: boolean;
 }
@@ -41,14 +43,28 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
       externalText,
       type,
       maxLength,
+      isInvalid,
+      valueFromState,
       onKeyPress,
       onInput,
-      isInvalid,
+      setValueToState,
     },
     ref,
   ) => {
     const constraints = useFieldConstraints(inputConstraints, required);
-    const { hasError, errorMessage, ...inputProps } = useField(name, { constraints, disabled });
+    const { hasError, errorMessage, value, onChange, ...inputProps } = useField(name, {
+      constraints,
+      disabled,
+    });
+
+    const handleChange = useCallback(
+      (e) => {
+        onChange(e.target.value);
+
+        if (setValueToState) setValueToState(name, e.target.value);
+      },
+      [name, setValueToState, onChange],
+    );
 
     return (
       <Group className={wrapperClassName}>
@@ -62,6 +78,8 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           maxLength={maxLength}
           placeholder={placeholder}
           type={type}
+          value={valueFromState || value}
+          onChange={handleChange}
           onInput={onInput ? (e: BaseSyntheticEvent) => onInput(e) : () => {}}
           onKeyPress={onKeyPress}
         />

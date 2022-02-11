@@ -1,0 +1,26 @@
+@import 'src/variables.scss';
+
+.auctionItemContainer {
+  margin-bottom: 16px;
+
+  p {
+    margin-bottom: 8px;
+  }
+
+  span {
+    word-break: break-word;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  p:first-child,
+  span {
+    color: $sage-color;
+  }
+
+  button {
+    min-width: 200px;
+  }
+}

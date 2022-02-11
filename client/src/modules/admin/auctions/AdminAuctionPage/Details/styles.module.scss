@@ -1,0 +1,25 @@
+@import 'src/variables.scss';
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tableContainer {
+  overflow-x: auto;
+
+  table {
+    min-width: 460px;
+
+    tr {
+      td:first-child {
+        min-width: 120px;
+      }
+    }
+  }
+
+  button {
+    padding: 8px 24px;
+  }
+}

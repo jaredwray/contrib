@@ -25,7 +25,6 @@ export const GetAuctionsForProfilePageQuery = gql`
           url
           thumbnail
         }
-        fairMarketValue
         followers {
           user
         }
@@ -52,7 +51,6 @@ export const GetAuctionsForProfilePageQuery = gql`
           url
           thumbnail
         }
-        fairMarketValue
         followers {
           user
         }

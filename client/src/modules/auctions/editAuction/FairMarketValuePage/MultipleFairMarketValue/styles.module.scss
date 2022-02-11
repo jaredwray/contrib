@@ -1,0 +1,21 @@
+@import 'src/variables.scss';
+
+.inputsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  input {
+    min-width: 330px;
+  }
+}
+
+.buttonsWrapper {
+  display: flex;
+  justify-content: flex-end;
+
+  @media (max-width: $medium-weight) {
+    justify-content: space-between;
+  }
+}

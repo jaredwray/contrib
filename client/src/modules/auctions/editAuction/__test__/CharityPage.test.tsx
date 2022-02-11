@@ -48,6 +48,7 @@ const auction = {
   isActive: true,
   startPrice: { amount: 10, currency: 'USD', precision: 2 },
   fairMarketValue: { amount: 10, currency: 'USD', precision: 2 },
+  items: [],
   startDate: '2021-07-01T22:28:00.261Z',
   charity: { id: 'testId', name: 'test' },
   auctionOrganizer: { id: 'testId', favoriteCharities: [{ id: 'testId', name: 'test' }] },
@@ -161,6 +162,7 @@ const mocks = [
               name: 'test',
             },
             fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
+            items: [],
           },
         },
       };

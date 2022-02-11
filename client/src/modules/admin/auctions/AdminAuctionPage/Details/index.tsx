@@ -2,24 +2,28 @@ import { FC } from 'react';
 
 import { format } from 'date-fns-tz';
 import Dinero from 'dinero.js';
-import { Row, Table } from 'react-bootstrap';
+import { Row, Table, Button } from 'react-bootstrap';
 
 import { getShortLink } from 'src/helpers/getShortLink';
 import { Auction } from 'src/types/Auction';
 import { Charity } from 'src/types/Charity';
 
+import styles from './styles.module.scss';
+
 interface Props {
   auction: Auction;
   charity: Charity;
+  showEditButton: boolean;
+  handleEditClick: () => void;
 }
 
-export const Details: FC<Props> = ({ auction, charity }) => {
+export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEditClick }) => {
   const auctionStartDate = format(new Date(auction.startDate), 'MMM dd yyyy HH:mm:ssXXX');
   const auctionEndDate = format(new Date(auction.endDate), 'MMM dd yyyy HH:mm:ssXXX');
 
   return (
-    <Row>
-      <Table className="d-inline details-table">
+    <Row className={styles.tableContainer}>
+      <Table className="d-table d-sm-block">
         <tbody className="font-weight-normal table-bordered pb-3 text-break">
           <tr>
             <td>Id</td>
@@ -57,8 +61,15 @@ export const Details: FC<Props> = ({ auction, charity }) => {
           </tr>
           {auction.fairMarketValue && (
             <tr>
-              <td>Fair Market Value</td>
-              <td>{Dinero(auction.fairMarketValue).toFormat('$0,0')}</td>
+              <td className="align-middle">Fair Market Value</td>
+              <td className={styles.wrapper}>
+                <span>{Dinero(auction.fairMarketValue).toFormat('$0,0')}</span>
+                {showEditButton && (
+                  <Button variant="secondary" onClick={handleEditClick}>
+                    Edit
+                  </Button>
+                )}
+              </td>
             </tr>
           )}
           <tr>
