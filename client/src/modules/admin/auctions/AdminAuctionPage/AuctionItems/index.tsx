@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Table, Button, Row } from 'react-bootstrap';
 
@@ -37,7 +38,7 @@ export const AuctionItems: FC<Props> = ({ items, showEditButton, handleEditClick
         </Table>
       </Row>
       {showEditButton && (
-        <Button className={styles.editButton} onClick={handleEditClick}>
+        <Button className={clsx(styles.editButton, 'mb-4')} onClick={handleEditClick}>
           Edit
         </Button>
       )}

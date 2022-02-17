@@ -10,6 +10,7 @@ import { useHistory, Link } from 'react-router-dom';
 
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import WatchBtn from 'src/components/buttons/WatchBtn';
+import AuctionItemsFMV from 'src/components/customComponents/AuctionItems';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import WithStripe from 'src/components/wrappers/WithStripe';
 import { pluralize } from 'src/helpers/pluralize';
@@ -58,7 +59,6 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     isActive,
     totalBids,
     status,
-    fairMarketValue,
     items,
     bidStep,
   } = auction;
@@ -70,6 +70,8 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );
+  const fairMarketValue = Dinero(auction.fairMarketValue);
+  const hasFairMarketValue = fairMarketValue && fairMarketValue.getAmount() > 0;
 
   const withDeliveryInfoLink = (isMyAuction || account?.isAdmin) && (isSold || isSettled);
   const isWinner = auction.winner?.mongodbId === account?.mongodbId;
@@ -236,9 +238,11 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
           setIsBuying={setIsBuying}
         />
       </WithStripe>
-      {canBid && (
-        <BidInput fairMarketValue={Dinero(fairMarketValue)} items={items} minBid={minBid} onSubmit={handleBid} />
-      )}
+      {canBid && <BidInput items={items} minBid={minBid} onSubmit={handleBid} />}
+      <>
+        {hasFairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
+        {items.length > 0 && <AuctionItemsFMV items={items} />}
+      </>
       {canEdit && (
         <Link className="w-100 btn btn-primary" to={`/auctions/${auction.auctionOrganizer.id}/${auctionId}/title`}>
           Edit
