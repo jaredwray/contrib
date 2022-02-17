@@ -63,9 +63,9 @@ export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEdi
             <tr>
               <td className="align-middle">Fair Market Value</td>
               <td className={styles.wrapper}>
-                <span>{Dinero(auction.fairMarketValue).toFormat('$0,0')}</span>
+                {Dinero(auction.fairMarketValue).toFormat('$0,0')}
                 {showEditButton && (
-                  <Button variant="secondary" onClick={handleEditClick}>
+                  <Button className={styles.editButton} variant="secondary" onClick={handleEditClick}>
                     Edit
                   </Button>
                 )}
