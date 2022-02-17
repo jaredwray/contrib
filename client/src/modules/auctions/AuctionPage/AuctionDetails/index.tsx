@@ -230,6 +230,10 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
           {soldTime}
         </div>
       )}
+      <>
+        {hasFairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
+        {items.length > 0 && <AuctionItemsFMV items={items} />}
+      </>
       <WithStripe>
         <BidConfirmationModal
           ref={confirmationRef}
@@ -239,10 +243,6 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
         />
       </WithStripe>
       {canBid && <BidInput items={items} minBid={minBid} onSubmit={handleBid} />}
-      <>
-        {hasFairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
-        {items.length > 0 && <AuctionItemsFMV items={items} />}
-      </>
       {canEdit && (
         <Link className="w-100 btn btn-primary" to={`/auctions/${auction.auctionOrganizer.id}/${auctionId}/title`}>
           Edit
