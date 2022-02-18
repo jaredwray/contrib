@@ -16,7 +16,7 @@ interface Props {
   handleAddItem: () => void;
   handleBack: () => void;
   handleRemoveCurrentItem: (id: string) => void;
-  updateFormState: (name: string, value: string | Dinero.Dinero) => void;
+  updateFormState: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
 const MAX_AUCTION_ITEMS = 10;

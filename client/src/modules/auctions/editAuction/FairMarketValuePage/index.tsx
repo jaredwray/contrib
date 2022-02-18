@@ -157,7 +157,7 @@ const FairMarketValuePage = () => {
 
   const handleIsMultipleItems = useCallback(() => setIsMultipleFMV(true), [setIsMultipleFMV]);
 
-  const updateFormState = useCallback((name: string, value: string | Dinero.Dinero) => {
+  const updateFormState = useCallback((name: string, value: string | Dinero.DineroObject) => {
     const [itemFieldName, itemId] = name.split('_');
 
     setFormState((prev) =>

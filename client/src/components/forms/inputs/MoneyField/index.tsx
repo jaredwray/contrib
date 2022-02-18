@@ -20,7 +20,7 @@ interface Props {
   minValue?: number;
   valueFromState?: { amount: number; currency: Dinero.Currency };
   setDisabled?: (_: SetStateAction<boolean>) => void;
-  setValueToState?: (name: string, value: Dinero.Dinero) => void;
+  setValueToState?: (name: string, value: Dinero.DineroObject) => void;
 }
 
 const MaxLength = 8;
