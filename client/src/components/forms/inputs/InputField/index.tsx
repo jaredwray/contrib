@@ -22,7 +22,7 @@ interface Props {
   maxLength?: number;
   onKeyPress?: KeyboardEventHandler<HTMLInputElement>;
   onInput?: (event: BaseSyntheticEvent) => void;
-  setValueToState?: (name: string, value: string | Dinero.Dinero) => void;
+  setValueToState?: (name: string, value: string | Dinero.DineroObject) => void;
   valueFromState?: string;
   ref?: HTMLInputElement | null;
   isInvalid?: boolean;

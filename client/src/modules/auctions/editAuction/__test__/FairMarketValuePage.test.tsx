@@ -13,6 +13,7 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 
 import FairMarketValuePage from '../FairMarketValuePage';
+import MultipleFMV from '../FairMarketValuePage/MultipleFairMarketValue';
 
 const mockHistoryFn = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -29,6 +30,7 @@ jest.mock('react-router-dom', () => ({
 }));
 const cache = new InMemoryCache();
 const cache2 = new InMemoryCache();
+const cacheWithMultipleItems = new InMemoryCache();
 const nullDataCache = new InMemoryCache();
 const undefinedlDataCache = new InMemoryCache();
 const auction = {
@@ -48,6 +50,20 @@ const auction = {
   auctionOrganizer: { id: 'testId', favoriteCharities: [] },
   attachments: [{ type: 'VIDEO' }],
 };
+const auctionItems = [
+  {
+    id: '2a7af71e-c43f-4fd2-926d-ce3e9b849938',
+    name: 'qwe',
+    contributor: 'qwe',
+    fairMarketValue: { amount: 200, currency: 'USD' },
+  },
+  {
+    id: '12076460-803e-4b98-9be7-7bd3adc54d4c',
+    name: 'qwe',
+    contributor: 'qwe',
+    fairMarketValue: { amount: 200, currency: 'USD' },
+  },
+];
 cache.writeQuery({
   query: GetAuctionDetailsQuery,
   variables: { id: 'testId' },
@@ -62,6 +78,18 @@ cache2.writeQuery({
     auction: {
       ...auction,
       isActive: false,
+    },
+  },
+});
+cacheWithMultipleItems.writeQuery({
+  query: GetAuctionDetailsQuery,
+  variables: { id: 'testId' },
+  data: {
+    auction: {
+      ...auction,
+      isActive: false,
+      items: auctionItems,
+      fairMarketValue: null,
     },
   },
 });
@@ -111,6 +139,42 @@ const mocks = [
     },
   },
 ];
+
+const mockWithMultipleItems = [
+  {
+    request: {
+      query: UpdateAuctionMutation,
+      variables: {
+        id: 'testId',
+        items: auctionItems,
+      },
+    },
+    newData: () => {
+      mockFn();
+      return {
+        data: {
+          updateAuction: {
+            id: 'testId',
+            description: 'test',
+            title: 'test',
+            link: 'test',
+            startDate: '2021-07-01T22:28:00.261Z',
+            endDate: '2021-08-14T19:01:00.232Z',
+            startPrice: { amount: 100, currency: 'USD', precision: 2 },
+            itemPrice: null,
+            charity: {
+              id: 'testId',
+              name: 'test',
+            },
+            fairMarketValue: null,
+            items: auctionItems,
+          },
+        },
+      };
+    },
+  },
+];
+
 const errorMocks = [
   {
     request: {
@@ -125,9 +189,60 @@ const errorMocks = [
     },
   },
 ];
-const submitValues = {
+const submitValuesWithFMV = {
   fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
 };
+
+const submitValuesWithMultipleItems = {
+  fairMarketValue: {
+    amount: 1100,
+    currency: 'USD',
+    precision: 2,
+  },
+  'name_2a7af71e-c43f-4fd2-926d-ce3e9b849938': 'qwe',
+  'contributor_2a7af71e-c43f-4fd2-926d-ce3e9b849938': 'qwe',
+  'fairMarketValue_2a7af71e-c43f-4fd2-926d-ce3e9b849938': {
+    amount: 200,
+    currency: 'USD',
+  },
+  'name_12076460-803e-4b98-9be7-7bd3adc54d4c': 'qwe',
+  'contributor_12076460-803e-4b98-9be7-7bd3adc54d4c': 'qwe',
+  'fairMarketValue_12076460-803e-4b98-9be7-7bd3adc54d4c': {
+    amount: 200,
+    currency: 'USD',
+  },
+};
+
+const submitValuesWithEmptyFMV = {
+  fairMarketValue: {
+    amount: 200,
+    currency: 'USD',
+    precision: 2,
+  },
+  'name_2a7af71e-c43f-4fd2-926d-ce3e9b849938': 'qwe',
+  'contributor_2a7af71e-c43f-4fd2-926d-ce3e9b849938': 'qwe',
+  'fairMarketValue_2a7af71e-c43f-4fd2-926d-ce3e9b849938': {
+    amount: 0,
+    currency: 'USD',
+  },
+  'name_12076460-803e-4b98-9be7-7bd3adc54d4c': 'qwe',
+  'contributor_12076460-803e-4b98-9be7-7bd3adc54d4c': 'qwe',
+  'fairMarketValue_12076460-803e-4b98-9be7-7bd3adc54d4c': {
+    amount: 200,
+    currency: 'USD',
+  },
+};
+
+const submitValuesWithEmptyName = {
+  ...submitValuesWithMultipleItems,
+  ['name_2a7af71e-c43f-4fd2-926d-ce3e9b849938']: '',
+};
+
+const submitValuesWithEmptyContributor = {
+  ...submitValuesWithMultipleItems,
+  ['contributor_2a7af71e-c43f-4fd2-926d-ce3e9b849938']: '',
+};
+
 describe('EditFairMarketValuePage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
@@ -276,12 +391,132 @@ describe('EditFairMarketValuePage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!.find(Form).props().onSubmit(submitValues);
+      wrapper!.find(Form).props().onSubmit(submitValuesWithFMV);
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockHistoryFn).toHaveBeenCalled();
   });
-  it('should submit form and not call the mutation becouse of error', async () => {
+  it('should submit form with multiple auction items, call the mutation and goBack', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cacheWithMultipleItems} mocks={mockWithMultipleItems}>
+                <FairMarketValuePage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      const multipleFMV = wrapper!.find(MultipleFMV);
+      multipleFMV.props().handleAddItem();
+      multipleFMV.props().handleRemoveCurrentItem('2a7af71e-c43f-4fd2-926d-ce3e9b849938');
+      multipleFMV.props().handleBack();
+      wrapper!.find(Form).props().onSubmit(submitValuesWithMultipleItems);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockHistoryFn).toHaveBeenCalled();
+  });
+  it('should submit form with multiple and not call the mutation because of empty name', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cacheWithMultipleItems} mocks={mockWithMultipleItems}>
+                <FairMarketValuePage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(MultipleFMV).props().updateFormState('name_2a7af71e-c43f-4fd2-926d-ce3e9b849938', '');
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitValuesWithEmptyName);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+  it('should submit form with multiple and not call the mutation because of empty contributor', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cacheWithMultipleItems} mocks={mockWithMultipleItems}>
+                <FairMarketValuePage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(MultipleFMV).props().updateFormState('contributor_2a7af71e-c43f-4fd2-926d-ce3e9b849938', '');
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitValuesWithEmptyContributor);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+  it('should submit form with multiple items and not call the mutation because of empty fairMarketValue', async () => {
+    let wrapper: ReactWrapper;
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter>
+          <ToastProvider>
+            <UserAccountContext.Provider value={testAccount}>
+              <MockedProvider cache={cacheWithMultipleItems} mocks={mockWithMultipleItems}>
+                <FairMarketValuePage />
+              </MockedProvider>
+            </UserAccountContext.Provider>
+          </ToastProvider>
+        </MemoryRouter>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(MultipleFMV).props().updateFormState('fairMarketValue_2a7af71e-c43f-4fd2-926d-ce3e9b849938', {
+        amount: 0,
+        currency: 'USD',
+        precision: 2,
+      });
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
+    await act(async () => {
+      wrapper!.find(Form).props().onSubmit(submitValuesWithEmptyFMV);
+    });
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+  it('should submit form and not call the mutation because of error', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
@@ -301,7 +536,7 @@ describe('EditFairMarketValuePage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!.find(Form).props().onSubmit(submitValues);
+      wrapper!.find(Form).props().onSubmit(submitValuesWithFMV);
     });
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockHistoryFn).toHaveBeenCalled();
@@ -326,7 +561,7 @@ describe('EditFairMarketValuePage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      wrapper!.find(Form).props().onSubmit(submitValues);
+      wrapper!.find(Form).props().onSubmit(submitValuesWithFMV);
     });
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
