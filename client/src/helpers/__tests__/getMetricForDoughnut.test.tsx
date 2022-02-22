@@ -12,6 +12,8 @@ const result = {
   values: [2],
 };
 
-test('it should return metric', () => {
-  expect(getMetricForGraphics(mock)).toStrictEqual(result);
+describe('getMetricForGraphics', () => {
+  test('it returns metric', () => {
+    expect(getMetricForGraphics(mock)).toStrictEqual(result);
+  });
 });
