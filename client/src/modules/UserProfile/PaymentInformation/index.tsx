@@ -79,7 +79,7 @@ const PaymentInformation: FC<Props> = ({ account }) => {
 
   return (
     <>
-      <h2 className="text-headline mb-3">Payment Information</h2>
+      <h2 className="text-headline mb-3">Place Your Bid</h2>
       <hr className="d-none d-md-block" />
       <Row className="mb-0 mb-md-4">
         <Col className="pl-0 pr-0 pr-md-3" md="6">

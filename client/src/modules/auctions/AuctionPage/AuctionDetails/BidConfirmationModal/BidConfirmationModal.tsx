@@ -172,8 +172,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
               <p>Please make sure this card has enough available funds at time of auction finalization.</p>
             ) : (
               <p>
-                We need some payment information to secure your bid. Your card will only be charged if you win and after
-                the auction ends.
+                First, we need some payment information to secure your bid. Your card will only be charged after the
+                auction ends (if you win).
               </p>
             )}
 
