@@ -61,7 +61,7 @@ const StripeInput: FC<Props> = ({
 
   return (
     <div
-      className={clsx(inputClassName || styles.root, 'mb-4 mb-sm-0', focused && styles.focused)}
+      className={clsx(inputClassName || styles.root, 'mb-4 mb-sm-0 p-3', focused && styles.focused)}
       onClick={() => node?.focus()}
     >
       <CardElement

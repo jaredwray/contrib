@@ -1,5 +1,19 @@
 @import 'src/variables.scss';
 
+.input {
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid $light-sage-color;
+  will-change: opacity, transform;
+  border-radius: 8px;
+  cursor: text;
+}
+
+.modalTitle {
+  div {
+    font-weight: bold !important;
+  }
+}
 .cardInputWrapper {
   margin: 0 auto;
 
@@ -10,12 +24,13 @@
 
 .actionBtn {
   height: 50px !important;
+  width: 100%;
+}
 
-  @media (max-width: $small-weight) {
-    width: 100%;
-  }
-  @media (min-width: $small-weight) {
-    width: 200px;
+.cancelBtn {
+  text-decoration: underline !important;
+  &:hover {
+    text-decoration: none !important;
   }
 }
 
