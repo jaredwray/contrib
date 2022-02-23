@@ -54,8 +54,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
     const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
 
-    const hasPaymentMethod = Boolean(paymentInformation);
-    const title = hasPaymentMethod ? 'Place Your Bid' : 'Payment information';
+    const title = 'Place Your Bid';
     const buyingTitle = 'Buy it now';
 
     const handleClose = useCallback(() => {
@@ -191,10 +190,9 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
               <span className="text-super-headline">{activeBid?.toFormat('$0,0')}</span>
             </p>
             <hr />
-            <p className="text-label">We do not ship to the following states: AL, HI, IL, MA, MI, SC.</p>
             <p className="text-label">
-              By clicking confirm, you acknowledge your item cannot be shipped to: Alabama, Hawaii, Illionois,
-              Massachusets, Mississippi, or South Carolina
+              By clicking confirm, you acknowledge your item cannot be shipped to: Alabama, Hawaii, Illinois,
+              Massachusetts, Mississippi, or South Carolina.
             </p>
           </div>
         </DialogContent>
