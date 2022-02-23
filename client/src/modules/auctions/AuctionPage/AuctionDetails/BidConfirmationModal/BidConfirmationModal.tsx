@@ -191,8 +191,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
             </p>
             <hr />
             <p className="text-label">
-              By clicking confirm, you acknowledge your item cannot be shipped to: Alabama, Hawaii, Illionois,
-              Massachusets, Mississippi, or South Carolina
+              By clicking confirm, you acknowledge your item cannot be shipped to: Alabama, Hawaii, Illinois,
+              Massachusetts, Mississippi, or South Carolina.
             </p>
           </div>
         </DialogContent>
