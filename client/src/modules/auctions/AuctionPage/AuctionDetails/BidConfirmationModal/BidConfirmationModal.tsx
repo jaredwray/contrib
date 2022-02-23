@@ -190,7 +190,6 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
               <span className="text-super-headline">{activeBid?.toFormat('$0,0')}</span>
             </p>
             <hr />
-            <p className="text-label">We do not ship to the following states: AL, HI, IL, MA, MI, SC.</p>
             <p className="text-label">
               By clicking confirm, you acknowledge your item cannot be shipped to: Alabama, Hawaii, Illionois,
               Massachusets, Mississippi, or South Carolina
