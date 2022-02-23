@@ -54,8 +54,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
     const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
 
-    const hasPaymentMethod = Boolean(paymentInformation);
-    const title = hasPaymentMethod ? 'Place Your Bid' : 'Payment information';
+    const title = 'Place Your Bid';
     const buyingTitle = 'Buy it now';
 
     const handleClose = useCallback(() => {
