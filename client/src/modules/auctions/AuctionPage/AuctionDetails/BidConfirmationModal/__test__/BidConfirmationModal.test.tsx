@@ -289,7 +289,7 @@ describe('BidConfirmationModal', () => {
         );
       });
 
-      expect(wrapper!.find("[data-test-id='bid-button']").first().text()).toEqual('Confirm bidding');
+      expect(wrapper!.find("[data-test-id='bid-button']").first().text()).toEqual('Confirm');
 
       await new Promise((resolve) => setTimeout(resolve));
 

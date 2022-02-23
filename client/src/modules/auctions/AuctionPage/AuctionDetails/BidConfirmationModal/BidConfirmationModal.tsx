@@ -55,8 +55,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
 
     const hasPaymentMethod = Boolean(paymentInformation);
-    const title = hasPaymentMethod ? 'Confirm bid' : 'Payment information';
-    const buyingTitle = 'Confirm buying';
+    const title = hasPaymentMethod ? 'Place Your Bid' : 'Payment information';
+    const buyingTitle = 'Buy it now';
 
     const handleClose = useCallback(() => {
       setActiveBid(null);
@@ -160,56 +160,65 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     return (
       <Dialog
         backdrop="static"
+        className={styles.modalTitle}
         keyboard={false}
         open={process.title === 'browser' ? Boolean(activeBid) : true}
         title={isBuying ? buyingTitle : title}
         onClose={handleClose}
       >
-        <DialogContent>
+        <DialogContent className="pt-0 pb-0">
           <div className={clsx(styles.cardInputWrapper, 'text--body')}>
-            {isBuying || (
+            {isBuying ? (
+              <p>Please make sure this card has enough available funds at time of auction finalization.</p>
+            ) : (
               <p>
-                We need your card number in order to place your bid. Card will be charged only after auction end, in
-                case your bid is winning.
+                We need some payment information to secure your bid. Your card will only be charged if you win and after
+                the auction ends.
               </p>
             )}
-            <p>Please make sure this card has enough available funds at time of auction finalization.</p>
+
             <CardInput
               expired={expired}
               handleAddCard={handleAddCard}
               isSubmitting={isSubmitting}
               newCard={newCard}
               paymentInformation={paymentInformation}
+              stripeInputStyles={styles.input}
               onCancel={handleNewCardCancelBtnClick}
               onChange={handleCardInputChange}
             />
-            <p className="text-center pt-0 pt-sm-3 mb-0">
-              {isBuying ? 'Price is' : 'Your bid is'}
-              <span className="pl-1 font-weight-bold">{activeBid?.toFormat('$0,0')}</span>
+            <p className="text-center pt-4 mb-4">
+              <span className="text-super-headline">{activeBid?.toFormat('$0,0')}</span>
+            </p>
+            <hr />
+            <p className="text-label">We do not ship to the following states: AL, HI, IL, MA, MI, SC.</p>
+            <p className="text-label">
+              By clicking confirm, you acknowledge your item cannot be shipped to: Alabama, Hawaii, Illionois,
+              Massachusets, Mississippi, or South Carolina
             </p>
           </div>
         </DialogContent>
 
-        <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
-          <Button
-            className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
-            disabled={buttonsAreDisabled}
-            size="sm"
-            variant="light"
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
+        <DialogActions className="d-block pt-0 pt-sm-2">
           <AsyncButton
-            className={styles.actionBtn}
+            className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
             data-test-id="bid-button"
             disabled={buttonsAreDisabled}
             loading={isSubmitting}
             variant="secondary"
             onClick={isBuying ? handleBuying : handleBiding}
           >
-            {isBuying ? 'Buy it now' : 'Confirm bidding'}
+            {isBuying ? 'Buy it now' : 'Confirm'}
           </AsyncButton>
+          <Button
+            className={clsx(styles.actionBtn, styles.cancelBtn, 'ml-0 mr-sm-auto p-3')}
+            disabled={buttonsAreDisabled}
+            size="sm"
+            variant="link"
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     );
