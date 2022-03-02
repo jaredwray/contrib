@@ -10,12 +10,10 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 
-import About from './About';
 import AttachmentsSlider from './AttachmentsSlider';
 import AuctionDetails from './AuctionDetails';
-import Author from './Author';
-import Benefits from './Benefits';
 import DeliveryInfo from './DeliveryInfo';
+import GeneralInformation from './GeneralInformation';
 import Metrics from './Metrics';
 import SimilarAuctions from './SimilarAuctions';
 
@@ -86,24 +84,15 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     <Layout>
       <Container className="pt-0 pt-md-5 pb-4 pb-md-5">
         <Row>
-          <Col md="1" />
-          <Col md="6">
+          <Col md="4">
             <AttachmentsSlider attachments={attachments} />
           </Col>
-          <Col md="1" />
-          <Col md="4">
+          <Col md="5">
             <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
           </Col>
-          <Col md="1" />
-        </Row>
-        <Row>
-          <Col md="1" />
-          <Col md="6">
-            <Author {...auction.auctionOrganizer} />
-            <About {...auction} />
-            <Benefits {...auction.charity} />
+          <Col md="3">
+            <GeneralInformation auction={auction} />
           </Col>
-          <Col md="7" />
         </Row>
         {withMetrcis && !isDeliveryPage && (
           <Row>

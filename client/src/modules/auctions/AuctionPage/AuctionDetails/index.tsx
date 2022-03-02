@@ -1,19 +1,15 @@
 import { FC, ReactElement, useCallback, useEffect, useMemo, useRef, useContext, useState } from 'react';
 
-import { useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { format as dateFormat, differenceInSeconds } from 'date-fns';
 import { format, toDate } from 'date-fns-tz';
 import Dinero from 'dinero.js';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import { useHistory, Link } from 'react-router-dom';
 
-import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
-import WatchBtn from 'src/components/buttons/WatchBtn';
 import AuctionItemsFMV from 'src/components/customComponents/AuctionItems';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import WithStripe from 'src/components/wrappers/WithStripe';
-import { pluralize } from 'src/helpers/pluralize';
 import { toHumanReadableDuration } from 'src/helpers/timeFormatters';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
@@ -23,7 +19,6 @@ import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal';
 import { BidInput } from './BidInput';
-import ShareBtn from './ShareBtn';
 import styles from './styles.module.scss';
 
 const FINAL_BID = 999999;
@@ -36,17 +31,14 @@ interface Props {
 const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement => {
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth();
-  const { showMessage, showError } = useShowNotification();
+  const { showError } = useShowNotification();
   const history = useHistory();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
   const [isBuying, setIsBuying] = useState(false);
   const [minutesWithoutReload, SetMinutesinterval] = useState(0);
-  const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
-  const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
   const auctionId = auction.id;
 
   const {
-    followers,
     startPrice,
     itemPrice,
     currentPrice,
@@ -63,8 +55,6 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     bidStep,
   } = auction;
 
-  const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
-  const [followersNumber, setFollowersNumber] = useState(followers?.length || 0);
   const ended = toDate(endDate) <= new Date();
   const canBid = isActive && !ended && currentPrice.amount !== FINAL_BID * 100 && !isDeliveryPage;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
@@ -100,8 +90,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
   if (isStopped && stoppedAt) stoppedTime = format(new Date(stoppedAt), 'MMM dd yyyy');
 
   const durationTillEnd = toHumanReadableDuration(endDate);
-  const endDateFormatted = dateFormat(new Date(endDate), 'MMM dd yyyy');
-  const price = useMemo(() => (currentPrice && Dinero(currentPrice)) || Dinero(startPrice), [currentPrice, startPrice]);
+  const endDateFormatted = dateFormat(new Date(endDate), 'EEEE, dd, hh:mma');
   const isFinalBid = currentPrice.amount / 100 > FINAL_BID - 10;
   const isPaid =
     auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAID ||
@@ -165,56 +154,19 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     history.replace(`/auctions/${auctionId}`);
   }, [placeBidQueryParam, auctionId, minBid, handleBid, history, showError]);
 
-  const handleFollowAuction = useCallback(async () => {
-    if (isAuthenticated) {
-      try {
-        await followAuction({ variables: { auctionId } });
-        showMessage('Successfully followed');
-        setFollowed(true);
-        setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
-      } catch (error) {
-        showError(error.message);
-      }
-      return;
-    }
-
-    RedirectWithReturnAfterLogin(`/auctions/${auctionId}`);
-  }, [
-    auctionId,
-    showError,
-    showMessage,
-    followAuction,
-    followersNumber,
-    isAuthenticated,
-    RedirectWithReturnAfterLogin,
-  ]);
-
-  const handleUnfollowAuction = useCallback(async () => {
-    try {
-      await unfollowAuction({ variables: { auctionId } });
-      showMessage('Successfully unfollowed');
-      setFollowed(false);
-      setFollowersNumber(followersNumber - 1);
-    } catch (error) {
-      showError(error.message);
-    }
-  }, [auctionId, showError, showMessage, unfollowAuction, followersNumber]);
-
   return (
     <>
       <div className={clsx(styles.title, 'text-subhead pt-2 break-word')}>{title}</div>
-      <div className="text-headline">{price.toFormat('$0,0')}</div>
       {!isSold && (
-        <div className="d-flex justify-content-between flex-wrap text-all-cups pt-3 pb-3">
-          <span className="pr-4 pr-sm-0">{pluralize(totalBids, 'bid')}</span>
+        <div className="d-flex justify-content-between flex-wrap pt-3 pb-3">
           <span>
             {!ended && (
               <>
-                <span className={styles.notBold}>ends in </span>
+                <span>Ends in </span>
                 {secondsLeft <= 60 ? <span className={styles.secondsLeft}>{`${secondsLeft}s`}</span> : durationTillEnd}
               </>
             )}
-            <span className={styles.notBold}>{ended && 'ended'} on </span>
+            <span>{ended && 'ended'} on </span>
             {endDateFormatted}
           </span>
         </div>
@@ -231,7 +183,24 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
         </div>
       )}
       <>
-        {hasFairMarketValue && <p>Fair market value: {fairMarketValue.toFormat('$0,0')}</p>}
+        <Row>
+          <Col>
+            Current Bid:
+            <div>View all bids ({totalBids})</div>
+          </Col>
+          <Col>{Dinero(currentPrice).toFormat('$0,0')}</Col>
+        </Row>
+
+        {hasFairMarketValue && (
+          <Row>
+            <Col>
+              Fair market value:
+              <div>How is this calculated?</div>
+            </Col>
+            <Col>{fairMarketValue.toFormat('$0,0')}</Col>
+          </Row>
+        )}
+
         {items.length > 0 && <AuctionItemsFMV items={items} />}
       </>
       <WithStripe>
@@ -249,23 +218,15 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
         </Link>
       )}
       {canBid && isShowBuyButton && (
-        <Button className="w-100 d-block" title="Buy it now" type="button" variant="primary" onClick={handleBuy}>
-          Buy it now for
-          <br />
-          {buyingPrice}
-        </Button>
+        <Row>
+          <Col>Buy it now for {buyingPrice}</Col>
+          <Col>
+            <Button className="w-100 d-block" title="Buy it now" type="button" variant="primary" onClick={handleBuy}>
+              Buy it now
+            </Button>
+          </Col>
+        </Row>
       )}
-      {isActive && !ended && (
-        <WatchBtn
-          entityType="auction"
-          followHandler={handleFollowAuction}
-          followed={followed}
-          followersNumber={followersNumber}
-          loading={followLoading || unfollowLoading}
-          unfollowHandler={handleUnfollowAuction}
-        />
-      )}
-      <ShareBtn link={auction.shortLink.shortLink} />
       {withLinkToDelivery && (
         <Link className="d-block mt-4" to={`/auctions/${auctionId}/delivery/${isPaid ? 'status' : 'address'}`}>
           {isPaid ? 'Delivery status' : 'Pay for delivery'}

@@ -83,6 +83,7 @@ const MoneyField: FC<Props> = ({
   return (
     <Group>
       {title && <Label>{title}</Label>}
+      {externalText && <p className="text--body mt-2">{externalText}</p>}
       <Control
         {...inputProps}
         className={className}
@@ -94,7 +95,6 @@ const MoneyField: FC<Props> = ({
         onFocus={handleFocus}
       />
       <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
-      {externalText && <p className="text--body mt-2">{externalText}</p>}
     </Group>
   );
 };

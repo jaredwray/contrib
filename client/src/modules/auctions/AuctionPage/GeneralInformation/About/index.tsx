@@ -2,7 +2,7 @@ import { FC, ReactElement } from 'react';
 
 import { Auction } from 'src/types/Auction';
 
-import Row from '../common/Row';
+import Row from '../../common/Row';
 
 const About: FC<Auction> = ({ description }): ReactElement => {
   return (

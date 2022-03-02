@@ -30,6 +30,7 @@ export const BidInput: FC<Props> = ({ minBid, items, onSubmit }) => {
   );
   const isMaxBidCharged = minBid.getAmount() / 100 > MaxBidValue;
   const isFinalBid = minBid.getAmount() / 100 === MaxBidValue;
+  const minBidFormatted = minBid.toFormat('$0,0');
 
   return (
     <Form initialValues={initialFormValues} onSubmit={handleSubmit}>
@@ -37,23 +38,23 @@ export const BidInput: FC<Props> = ({ minBid, items, onSubmit }) => {
         <MoneyField
           required
           externalText={
-            <span className={clsx(styles.notBold, 'text-label text-all-cups')}>
-              enter <span className={styles.bold}>{minBid.toFormat('$0,0')}</span> {!isFinalBid && <span>or more</span>}
-            </span>
+            <>
+              <span className={clsx(styles.notBold, 'text-label')}>
+                Enter your bid amount of {minBidFormatted}
+                {!isFinalBid && <span> or more</span>}
+              </span>
+              <div>Learn more about bidding</div>
+            </>
           }
           minValue={minBid.getAmount() / 100}
           name="bid"
           setDisabled={setDisabled}
-          title="Enter your max bid amount"
         />
       )}
       {!isMaxBidCharged && (
-        <>
-          <Button className="w-100" disabled={disabled} title="Place your bid" type="submit" variant="dark">
-            Place your bid
-          </Button>
-          <p className="text-label pt-2 mb-2">Bidding is a commitment to buy this item if you win the auction.</p>{' '}
-        </>
+        <Button className="w-100 text-all-cups" disabled={disabled} title="Place your bid" type="submit" variant="dark">
+          Place bid
+        </Button>
       )}
     </Form>
   );

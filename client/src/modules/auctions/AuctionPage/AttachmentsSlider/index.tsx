@@ -56,10 +56,10 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   );
 
   const settings = {
-    arrows: true,
+    arrows: false,
+    dots: true,
     className: clsx(styles.slider, 'auction-attachments-slider'),
     customPaging,
-    dots: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     beforeChange: () => activeStream?.pause(),
@@ -67,8 +67,8 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
       {
         breakpoint: 768,
         settings: {
-          dots: false,
           arrows: true,
+          dots: true,
           afterChange,
         },
       },
