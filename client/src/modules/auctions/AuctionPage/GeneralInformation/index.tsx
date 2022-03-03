@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client';
 import { toDate } from 'date-fns-tz';
 
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
-import WatchBtn from 'src/components/buttons/WatchBtn';
+import FollowBtn from 'src/components/buttons/FollowBtn';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
@@ -15,7 +15,6 @@ import About from './About';
 import Author from './Author';
 import Benefits from './Benefits';
 import ShareBtn from './ShareBtn';
-/*import styles from './styles.module.scss';*/
 
 interface Props {
   auction: Auction;
@@ -72,20 +71,27 @@ const GeneralInformation: FC<Props> = ({ auction }): ReactElement => {
 
   return (
     <>
-      <Author {...auction.auctionOrganizer} />
-      <About {...auction} />
-      <Benefits {...auction.charity} />
-      {auction.isActive && !ended && (
-        <WatchBtn
-          entityType="auction"
-          followHandler={handleFollowAuction}
-          followed={followed}
-          followersNumber={followersNumber}
-          loading={followLoading || unfollowLoading}
-          unfollowHandler={handleUnfollowAuction}
-        />
-      )}
-      <ShareBtn link={auction.shortLink.shortLink} />
+      <div className="framed">
+        <Author {...auction.auctionOrganizer} />
+        <About {...auction} />
+      </div>
+      <div className="framed mt-4">
+        <Benefits {...auction.charity} />
+      </div>
+      <div className="framed mt-4">
+        {auction.isActive && !ended && (
+          <FollowBtn
+            className="pb-3"
+            entityType="auction"
+            followHandler={handleFollowAuction}
+            followed={followed}
+            followersNumber={followersNumber}
+            loading={followLoading || unfollowLoading}
+            unfollowHandler={handleUnfollowAuction}
+          />
+        )}
+        <ShareBtn link={auction.shortLink.shortLink} />
+      </div>
     </>
   );
 };

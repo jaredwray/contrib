@@ -12,6 +12,8 @@
 
 .attachmentImageWrapper {
   cursor: pointer;
+  border: 1px solid $whitesmoke-color;
+  box-sizing: border-box;
 }
 
 .attachment {

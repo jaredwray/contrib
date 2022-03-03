@@ -5,12 +5,3 @@
   width: 60px;
   min-width: 60px;
 }
-
-.link {
-  &,
-  &:focus,
-  &:hover {
-    color: $dark-gray-color;
-    outline: none;
-  }
-}

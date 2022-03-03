@@ -1,7 +1,7 @@
 @import 'src/variables.scss';
 
 .auction-attachments-slider {
-  margin-top: 10px;
+  margin-top: 5px;
 
   /* Arrows */
   .slick-arrow {
@@ -66,7 +66,7 @@
     }
 
     &.slick-active {
-      border: 1px solid $sage-color;
+      border: 1px solid $salmon-color;
     }
   }
 }
