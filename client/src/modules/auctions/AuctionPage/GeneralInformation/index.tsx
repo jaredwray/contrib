@@ -1,6 +1,7 @@
 import { FC, ReactElement, useCallback, useContext, useState } from 'react';
 
 import { useMutation } from '@apollo/client';
+import clsx from 'clsx';
 import { toDate } from 'date-fns-tz';
 
 import { FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
@@ -15,6 +16,7 @@ import About from './About';
 import Author from './Author';
 import Benefits from './Benefits';
 import ShareBtn from './ShareBtn';
+import styles from './styles.module.scss';
 
 interface Props {
   auction: Auction;
@@ -81,7 +83,7 @@ const GeneralInformation: FC<Props> = ({ auction }): ReactElement => {
       <div className="framed mt-4">
         {auction.isActive && !ended && (
           <FollowBtn
-            className="pb-3"
+            className={clsx(styles.followBtn, 'text-body-new pb-3')}
             entityType="auction"
             followHandler={handleFollowAuction}
             followed={followed}

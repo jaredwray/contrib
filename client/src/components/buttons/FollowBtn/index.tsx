@@ -43,7 +43,16 @@ const FollowBtn: FC<Props> = ({
       </Col>
       <Col xs="1">
         {loading ? (
-          <Spinner animation="border" aria-hidden="true" as="span" className={styles.spinner} role="status" size="sm" />
+          <div className="pt-1">
+            <Spinner
+              animation="border"
+              aria-hidden="true"
+              as="span"
+              className={styles.spinner}
+              role="status"
+              size="sm"
+            />
+          </div>
         ) : (
           <span className="clickable" onClick={onClick}>
             <FollowIcon followed={followed} />

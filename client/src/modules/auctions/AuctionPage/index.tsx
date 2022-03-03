@@ -87,11 +87,15 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
           <Col md="4">
             <AttachmentsSlider attachments={attachments} />
           </Col>
-          <Col md="5">
-            <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
-          </Col>
-          <Col md="3">
-            <GeneralInformation auction={auction} />
+          <Col md="8">
+            <Row>
+              <Col lg="8">
+                <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
+              </Col>
+              <Col className="pt-4 pt-md-0" lg="4">
+                <GeneralInformation auction={auction} />
+              </Col>
+            </Row>
           </Col>
         </Row>
         {withMetrcis && !isDeliveryPage && (

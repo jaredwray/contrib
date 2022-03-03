@@ -5,6 +5,7 @@ import Dinero from 'dinero.js';
 import { Button, Row, Col } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
+import InformationLink from 'src/components/customComponents/InformationLink';
 import WithStripe from 'src/components/wrappers/WithStripe';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
@@ -95,7 +96,7 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
   }, [placeBidQueryParam, auctionId, minBid, handleBid, history, showError]);
 
   return (
-    <div className="pt-4">
+    <div className="pt-3">
       <WithStripe>
         <BidConfirmationModal
           ref={confirmationRef}
@@ -106,14 +107,20 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
       </WithStripe>
       <BidInput items={items} minBid={minBid} onSubmit={handleBid} />
       {isShowBuyButton && (
-        <Row className={clsx(styles.buyItNow, 'mt-4 p-2')}>
-          <Col className="pr-0">
+        <Row className={clsx(styles.buyItNowWrapper, 'mt-4 p-2')}>
+          <Col className="text-label-new pr-0">
             Buy it now for {buyingPrice}
-            <div className="link">How is this calculated?</div>
+            <InformationLink content="secret" text="How is this calculated?" />
           </Col>
-          <Col>
-            <Button className="w-100 d-block" title="Buy it now" type="button" variant="primary" onClick={handleBuy}>
-              Buy it now
+          <Col lg="6" md="12">
+            <Button
+              className={clsx(styles.buyItNowBtn, 'w-100 d-block')}
+              title="Buy it now"
+              type="button"
+              variant="light"
+              onClick={handleBuy}
+            >
+              Buy It Now
             </Button>
           </Col>
         </Row>

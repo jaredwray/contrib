@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 
+import InformationLink from 'src/components/customComponents/InformationLink';
 import Form from 'src/components/forms/Form/Form';
 import MoneyField from 'src/components/forms/inputs/MoneyField';
 import { AuctionItem } from 'src/types/Auction';
@@ -15,7 +16,7 @@ interface Props {
   minBid: Dinero.Dinero;
   onSubmit: (amount: Dinero.Dinero) => Promise<any>;
 }
-const MaxBidValue = 999999;
+const MAX_BID_VALUE = 999999;
 
 export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -28,8 +29,8 @@ export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
     },
     [onSubmit],
   );
-  const isMaxBidCharged = minBid.getAmount() / 100 > MaxBidValue;
-  const isFinalBid = minBid.getAmount() / 100 === MaxBidValue;
+  const isMaxBidCharged = minBid.getAmount() / 100 > MAX_BID_VALUE;
+  const isFinalBid = minBid.getAmount() / 100 === MAX_BID_VALUE;
   const minBidFormatted = minBid.toFormat('$0,0');
 
   if (isMaxBidCharged) return null;
@@ -39,10 +40,22 @@ export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
       <p className="text--body">
         Enter your bid amount of {minBidFormatted}
         {!isFinalBid && <span> or more</span>}
-        <div className="link">Learn more about bidding</div>
+        <InformationLink content="secret" text="Learn more about bidding" />
       </p>
-      <MoneyField required minValue={minBid.getAmount() / 100} name="bid" setDisabled={setDisabled} />
-      <Button className="w-100 text-all-cups" disabled={disabled} title="Place your bid" type="submit" variant="dark">
+      <MoneyField
+        required
+        className={styles.input}
+        minValue={minBid.getAmount() / 100}
+        name="bid"
+        setDisabled={setDisabled}
+      />
+      <Button
+        className={clsx(styles.button, 'w-100 text-all-cups')}
+        disabled={disabled}
+        title="Place your bid"
+        type="submit"
+        variant="dark"
+      >
         Place bid
       </Button>
     </Form>

@@ -12,17 +12,17 @@ import styles from './styles.module.scss';
 const Author: FC<InfluencerProfile> = ({ id, name, avatarUrl }): ReactElement => {
   return (
     <Row className="d-flex align-items-center">
-      <Row>Auction by</Row>
-      <Row className={clsx(styles.name, 'text-subhead text-sm break-word d-inline-block pt-2')} title={name}>
-        <div className="d-flex align-items-center">
+      <Row className="text-label-new">Auction by</Row>
+      <Row className="text-sm d-inline-block pt-2">
+        <div className="d-flex">
           <Image
             roundedCircle
             className={clsx(styles.avatar, 'd-inline-block')}
             src={ResizedImageUrl(avatarUrl, 120)}
           />
           <div className="pl-4">
-            <div>{name}</div>
-            <Link className={clsx('text-label link')} to={`/profiles/${id}`}>
+            <div className={clsx(styles.name, 'text-label')}>{name}</div>
+            <Link className="link" to={`/profiles/${id}`}>
               View Profile
             </Link>
           </div>

@@ -12,7 +12,7 @@ import {
   CustomerInformationQuery,
   AuctionMetricsQuery,
 } from 'src/apollo/queries/auctions';
-import { AuctionBidsQuery, ChargeCurrentBidMutation } from 'src/apollo/queries/bids';
+import { PopulatedAuctionBidsQuery, ChargeCurrentBidMutation } from 'src/apollo/queries/bids';
 import AsyncButton from 'src/components/buttons/AsyncButton';
 import ClicksAnalytics from 'src/components/customComponents/ClicksAnalytics';
 import Loading from 'src/components/customComponents/Loading';
@@ -39,7 +39,7 @@ export default function AdminAuctionPage() {
   const [chargeAuction, { loading: chargeLoading }] = useMutation(ChargeCurrentAuctionMutation);
   const [chargeBid, { loading: bidLoading }] = useMutation(ChargeCurrentBidMutation);
 
-  const { data: auctionBids } = useQuery(AuctionBidsQuery, { variables: { auctionId } });
+  const { data: auctionBids } = useQuery(PopulatedAuctionBidsQuery, { variables: { auctionId } });
   const { data: auctionMetricsData, loading: metricsLoading } = useQuery(AuctionMetricsQuery, {
     variables: { auctionId },
   });

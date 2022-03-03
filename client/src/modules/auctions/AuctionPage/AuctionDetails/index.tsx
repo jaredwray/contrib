@@ -1,4 +1,4 @@
-import { FC, ReactElement, useContext } from 'react';
+import { FC, ReactElement, useCallback, useContext, useState } from 'react';
 
 import clsx from 'clsx';
 import { toDate } from 'date-fns-tz';
@@ -7,10 +7,12 @@ import { Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import AuctionItemsFMV from 'src/components/customComponents/AuctionItems';
+import InformationLink from 'src/components/customComponents/InformationLink';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import BidButtons from './BidButtons';
+import BidsListModal from './BidsListModal';
 import Status from './Status';
 import styles from './styles.module.scss';
 
@@ -23,6 +25,7 @@ interface Props {
 
 const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement => {
   const { account } = useContext(UserAccountContext);
+  const [showBidsDialog, setShowBidsDialog] = useState(false);
   const auctionId = auction.id;
 
   const { currentPrice, endDate, title, isSold, isSettled, isActive, totalBids, items } = auction;
@@ -44,28 +47,36 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAID ||
     auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED;
 
+  const viewAllBidsClick = useCallback(() => {
+    if (totalBids === 0) return;
+    setShowBidsDialog(true);
+  }, [totalBids, setShowBidsDialog]);
+
   return (
     <>
-      <div className={clsx(styles.title, 'text-subhead pb-2 break-word')}>{title}</div>
-      <hr />
+      <div className={clsx(styles.title, 'text-subhead pt-md-0 pt-4 pb-2 break-word')}>{title}</div>
+      <hr className="mt-2" />
       <Status auction={auction} canBid={canBid} ended={ended} />
       <hr />
 
       <Row className="pt-3">
         <Col>
-          Current Bid:
-          <div className="link">View all bids ({totalBids})</div>
+          <div className="text-label-new">Current Bid:</div>
+          <div className="link" onClick={viewAllBidsClick}>
+            View all bids ({totalBids})
+          </div>
+          <BidsListModal auctionId={auctionId} open={showBidsDialog} onClose={() => setShowBidsDialog(false)} />
         </Col>
-        <Col>{Dinero(currentPrice).toFormat('$0,0')}</Col>
+        <Col className="text-label-new">{Dinero(currentPrice).toFormat('$0,0')}</Col>
       </Row>
 
       {hasFairMarketValue && (
         <Row className="pt-4">
           <Col>
-            Fair market value:
-            <div className="link">How is this calculated?</div>
+            <div className={clsx(styles.fmv, 'text-label-new')}>Fair market value:</div>
+            <InformationLink content="secret" text="How is this calculated?" />
           </Col>
-          <Col>{fairMarketValue.toFormat('$0,0')}</Col>
+          <Col className={clsx(styles.fmv, 'text-label-new')}>{fairMarketValue.toFormat('$0,0')}</Col>
         </Row>
       )}
 

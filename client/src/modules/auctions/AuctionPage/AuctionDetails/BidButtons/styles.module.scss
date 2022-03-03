@@ -1,5 +1,16 @@
 @import 'src/variables.scss';
 
-.buyItNow {
+.buyItNowWrapper {
   background-color: $light-blue;
+}
+
+.buyItNowBtn {
+  background-color: $light-blue !important;
+  border: 1px solid $cornflower-blue-color !important;
+  box-sizing: border-box !important;
+  font-size: 12px !important;
+  line-height: 15px !important;
+  font-weight: 400 !important;
+  color: $cornflower-blue-color !important;
+  padding: 10px !important;
 }

@@ -1,19 +1,9 @@
-@import 'src/variables.scss';
-
-.title {
-  color: $sage-color;
-}
-
-.notBold {
-  color: $sage-color;
-}
-
-.bold {
-  color: $dark-gray-color;
-}
-
 .secondsLeft {
   min-width: 35px;
   display: inline-block;
   text-align: right;
+}
+
+.followBtn {
+  font-weight: 500 !important;
 }
