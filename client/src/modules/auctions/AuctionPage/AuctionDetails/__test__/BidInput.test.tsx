@@ -1,7 +1,7 @@
 import Dinero from 'dinero.js';
 import { ReactWrapper, mount } from 'enzyme';
 
-import { BidInput } from '../BidInput';
+import { BidInput } from '../BidButtons/BidInput';
 import Form from 'src/components/forms/Form/Form';
 
 describe('BidInput', () => {

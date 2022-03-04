@@ -2,7 +2,7 @@ import { act } from '@testing-library/react';
 import { mount } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import Benefits from '../Benefits';
+import Benefits from '../GeneralInformation/Benefits';
 
 const defaultProps: any = {
   id: '123',

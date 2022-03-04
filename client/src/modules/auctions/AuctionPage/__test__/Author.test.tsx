@@ -1,7 +1,7 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render } from 'enzyme';
 
-import Author from '../Author';
+import Author from '../GeneralInformation/Author';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
