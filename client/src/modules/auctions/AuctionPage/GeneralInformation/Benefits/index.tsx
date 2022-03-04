@@ -13,7 +13,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id, semanticId })
   return (
     <Row className="d-flex align-items-center">
       <Row className="text-label-new">This auction benefits</Row>
-      <Row className={clsx(styles.name, 'text-subhead text-sm d-inline-block pt-2')}>
+      <Row className="text-sm d-inline-block pt-2">
         <div className="d-flex">
           <Image
             roundedCircle

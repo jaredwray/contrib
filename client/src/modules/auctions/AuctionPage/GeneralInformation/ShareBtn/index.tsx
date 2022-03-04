@@ -19,7 +19,7 @@ const ShareBtn: FC<Props> = ({ link }) => {
   return (
     <Row>
       <Col className={clsx(styles.shareBtn, 'text-body-new')}>
-        Spread the word, make an impact!
+        <div>Spread the word, make an impact!</div>
         <CopyToClipboard text={link} onCopy={() => showMessage('link copied')}>
           <div className="link">Share this auction with others</div>
         </CopyToClipboard>

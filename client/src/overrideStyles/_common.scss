@@ -4,12 +4,15 @@
   &,
   &:hover {
     color: $sky-color;
-    font-weight: 500;
+    font-weight: 500 !important;
     font-size: 11px !important;
-    line-height: 16px;
+    line-height: 16px !important;
     cursor: pointer;
     width: fit-content;
   }
+}
+a.link {
+  display: inline-block !important;
 }
 
 .framed {
