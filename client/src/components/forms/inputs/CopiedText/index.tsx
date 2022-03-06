@@ -23,13 +23,13 @@ const CopiedText: FC<Props> = ({ text, deliveryPage }: Props) => {
           type="text"
           value={text}
         />
-        <InputGroup.Append>
+        <InputGroup.Text>
           <CopyToClipboard text={text} onCopy={() => setCopied(true)}>
             <Button className={styles.copyBtn} type="button">
               {(copied && 'Copied') || 'Copy'}
             </Button>
           </CopyToClipboard>
-        </InputGroup.Append>
+        </InputGroup.Text>
       </InputGroup>
     </Form>
   );
