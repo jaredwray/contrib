@@ -15,7 +15,7 @@ interface Props {
 
 const InformationModal: FC<Props> = ({ open, onClose, text, title }): ReactElement => {
   return (
-    <Dialog backdrop="static" keyboard={false} open={open} title={title} onClose={onClose}>
+    <Dialog backdrop="static" keyboard={false} open={open} title={title} onClose={onClose} onHide={onClose}>
       <DialogContent className="pt-0 pb-0">
         <Row>{text}</Row>
       </DialogContent>

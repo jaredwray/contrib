@@ -20,7 +20,7 @@ const Author: FC<InfluencerProfile> = ({ id, name, avatarUrl }): ReactElement =>
             className={clsx(styles.avatar, 'd-inline-block')}
             src={ResizedImageUrl(avatarUrl, 120)}
           />
-          <div className="pl-4">
+          <div className="pl-3">
             <div className="text-body-new">{name}</div>
             <Link className="link" to={`/profiles/${id}`}>
               View Profile

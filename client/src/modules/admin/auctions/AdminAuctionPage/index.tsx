@@ -57,7 +57,7 @@ export default function AdminAuctionPage() {
   const metrics = auctionMetricsData?.getAuctionMetrics;
   const auction = auctionData?.auction;
   const charity = auction?.charity;
-  const bids = auctionBids?.bids;
+  const bids = auctionBids?.bids || [];
   const customerInformation = customer?.getCustomerInformation;
   const showEditButton = !auction?.isSettled && !auction?.isSold && !auction?.isFailed;
 
@@ -99,7 +99,7 @@ export default function AdminAuctionPage() {
     history.push(`/auctions/${auctionId}/price/fmv`);
   }, [auctionId, history]);
 
-  if (!auction || !bids) return null;
+  if (!auction) return null;
 
   const hasBids = bids.length > 0;
   const maxBidAmount = Math.max(...bids.map(({ bid }: AuctionBid) => bid.amount));

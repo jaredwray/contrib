@@ -50,11 +50,10 @@ export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
         setDisabled={setDisabled}
       />
       <Button
-        className={clsx(styles.button, 'w-100 text-all-cups')}
+        className={clsx(styles.button, 'w-100 text-all-cups mt-3')}
         disabled={disabled}
         title="Place your bid"
         type="submit"
-        variant="dark"
       >
         Place bid
       </Button>

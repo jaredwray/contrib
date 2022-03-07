@@ -33,7 +33,7 @@ export const ReadMore: FC<Props> = ({ text, linkClassName, textClassName }) => {
     rleState.clamped && setClamped(rleState.clamped);
   };
   return text ? (
-    <>
+    <div className="p-0">
       <div className={textClassName}>
         <LinesEllipsis
           basedOn="words"
@@ -49,7 +49,7 @@ export const ReadMore: FC<Props> = ({ text, linkClassName, textClassName }) => {
           Read {isShortDescription ? 'more' : 'less'}.
         </span>
       )}
-    </>
+    </div>
   ) : (
     <p className={styles.noDescription}>no description</p>
   );

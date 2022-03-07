@@ -20,7 +20,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id, semanticId })
             className={clsx(styles.avatar, 'd-inline-block')}
             src={ResizedImageUrl(avatarUrl, 120)}
           />
-          <div className="pl-4">
+          <div className="pl-3">
             <div className="text-body-new">{name}</div>
             <Link className="link" to={`/charity/${semanticId || id}`}>
               Visit charity page and learn more

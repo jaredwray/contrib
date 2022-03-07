@@ -107,23 +107,25 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
       </WithStripe>
       <BidInput items={items} minBid={minBid} onSubmit={handleBid} />
       {isShowBuyButton && (
-        <Row className={clsx(styles.buyItNowWrapper, 'mt-4 p-2')}>
-          <Col className="text-label-new pr-0">
-            Buy it now for {buyingPrice}
-            <InformationLink content="secret" text="How is this calculated?" />
-          </Col>
-          <Col lg="6" md="12">
-            <Button
-              className={clsx(styles.buyItNowBtn, 'w-100 d-block')}
-              title="Buy it now"
-              type="button"
-              variant="light"
-              onClick={handleBuy}
-            >
-              Buy It Now
-            </Button>
-          </Col>
-        </Row>
+        <div className={clsx(styles.buyItNowWrapper, 'mt-3')}>
+          <Row className="p-4">
+            <Col className="text-label-new p-0">
+              Buy it now for {buyingPrice}
+              <InformationLink content="secret" text="How is this calculated?" />
+            </Col>
+            <Col className="p-0" lg="6" md="12">
+              <Button
+                className={clsx(styles.buyItNowBtn, 'w-100 d-block mt-md-0 mt-3')}
+                title="Buy it now"
+                type="button"
+                variant="light"
+                onClick={handleBuy}
+              >
+                Buy It Now
+              </Button>
+            </Col>
+          </Row>
+        </div>
       )}
     </div>
   );
