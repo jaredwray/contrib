@@ -81,7 +81,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           value={valueFromState || value}
           onChange={handleChange}
           onInput={onInput ? (e: BaseSyntheticEvent) => onInput(e) : () => {}}
-          onKeyPress={onKeyPress}
+          onKeyPress={() => onKeyPress}
         />
         <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
         {externalText && <p className="text--body mt-2">{externalText}</p>}
