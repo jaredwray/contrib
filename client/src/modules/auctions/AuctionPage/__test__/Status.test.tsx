@@ -1,7 +1,7 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render } from 'enzyme';
 
-import Status from '../About/Status';
+import Status from '../GeneralInformation/About/Status';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 

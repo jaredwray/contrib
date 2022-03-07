@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const AuctionBidsQuery = gql`
-  query AuctionBids($auctionId: String!) {
-    bids(auctionId: $auctionId) {
+export const PopulatedAuctionBidsQuery = gql`
+  query PopulatedAuctionBidsQuery($auctionId: String!) {
+    populatedBids(auctionId: $auctionId) {
       user {
         id
         mongodbId
@@ -10,6 +10,15 @@ export const AuctionBidsQuery = gql`
         stripeCustomerId
         createdAt
       }
+      bid
+      createdAt
+    }
+  }
+`;
+
+export const AuctionBidsQuery = gql`
+  query AuctionBids($auctionId: String!) {
+    bids(auctionId: $auctionId) {
       bid
       createdAt
     }

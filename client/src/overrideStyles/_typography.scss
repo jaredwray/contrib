@@ -16,8 +16,9 @@
 }
 
 .text-subhead {
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: 600;
 }
 
 .text--body {
@@ -26,10 +27,22 @@
   font-weight: 500;
 }
 
+.text-body-new {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
 .text-label,
 label {
   font-size: 12px;
   line-height: 21px;
+}
+
+.text-label-new {
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 600;
 }
 
 .text-all-cups {

@@ -1,5 +1,5 @@
 export interface AuctionBid {
-  user: {
+  user?: {
     id: string;
     mongodbId: string;
     phoneNumber: string;

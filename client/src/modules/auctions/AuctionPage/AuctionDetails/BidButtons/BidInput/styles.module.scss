@@ -1,0 +1,32 @@
+@import 'src/variables.scss';
+
+.error {
+  color: $salmon-color;
+}
+
+.form {
+  background-color: $light-yellow-color;
+}
+
+.button {
+  background-color: $ochre-color !important;
+  border: none !important;
+
+  &:hover {
+    background-color: $light-ochre-color !important;
+  }
+}
+
+.input {
+  font-size: 18px !important;
+  line-height: 22px !important;
+  font-weight: 400 !important;
+  text-align: center;
+  border-color: $light-ochre-color !important;
+  color: $black-color !important;
+
+  &:focus {
+    border-color: $ochre-color !important;
+    box-shadow: $ochre-color 0 0 0 1px !important;
+  }
+}

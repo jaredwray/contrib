@@ -1,6 +1,7 @@
 import { DineroObject } from 'dinero.js';
 
 import { Address } from './Address';
+import { Charity } from './Charity';
 import { Follow } from './Follow';
 import { InfluencerProfile } from './InfluencerProfile';
 import { Parcel } from './Parcel';
@@ -73,6 +74,7 @@ export interface Auction {
   items: AuctionItem[];
   followers?: Follow[];
   winner?: Winner;
+  charity: Charity;
   delivery: AuctionDelivery;
   isActive: boolean;
   isDraft: boolean;

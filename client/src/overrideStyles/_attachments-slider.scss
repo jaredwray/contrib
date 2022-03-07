@@ -1,7 +1,7 @@
 @import 'src/variables.scss';
 
 .auction-attachments-slider {
-  margin-top: 10px;
+  margin-top: 5px;
 
   /* Arrows */
   .slick-arrow {
@@ -66,11 +66,12 @@
     }
 
     &.slick-active {
-      border: 1px solid $sage-color;
+      border: 1px solid $salmon-color;
     }
   }
 }
-@media (max-width: $medium-weight) {
+
+@media (max-width: $almost-medium-weight) {
   .auction-attachments-slider {
     .slick-arrow {
       margin-top: 4px;
@@ -95,5 +96,26 @@
   .slick-next {
     transform: rotate(-180deg) scale(0.6, -0.6) translateY(-55%) !important;
     right: -10px !important;
+  }
+
+  .slick-dots li {
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 0 !important;
+
+    & > div {
+      height: 8px;
+      width: 8px;
+      background-color: $light-silver-color;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    &.slick-active {
+      border: none !important;
+      & > div {
+        background-color: $gray77-color;
+      }
+    }
   }
 }

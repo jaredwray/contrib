@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 
+import clsx from 'clsx';
 import LinesEllipsis from 'react-lines-ellipsis';
 
 import styles from './styles.module.scss';
@@ -8,8 +9,10 @@ const LINES_PER_PAGE = 6;
 
 interface Props {
   text?: string | null;
+  linkClassName?: string;
+  textClassName?: string;
 }
-export const ReadMore: FC<Props> = ({ text }) => {
+export const ReadMore: FC<Props> = ({ text, linkClassName, textClassName }) => {
   const [readMore, setReadMore] = useState(LINES_PER_PAGE);
   const [isClamped, setClamped] = useState(false);
 
@@ -30,21 +33,23 @@ export const ReadMore: FC<Props> = ({ text }) => {
     rleState.clamped && setClamped(rleState.clamped);
   };
   return text ? (
-    <>
-      <LinesEllipsis
-        basedOn="words"
-        ellipsis="..."
-        maxLine={readMore}
-        style={{ fontWeight: 'normal', whiteSpace: 'break-spaces', paddingBottom: '15px' }}
-        text={formattedText || ''}
-        onReflow={reflow}
-      />
+    <div className="p-0">
+      <div className={textClassName}>
+        <LinesEllipsis
+          basedOn="words"
+          ellipsis="..."
+          maxLine={readMore}
+          style={{ fontWeight: 'normal', whiteSpace: 'break-spaces' }}
+          text={formattedText || ''}
+          onReflow={reflow}
+        />
+      </div>
       {isClamped && (
-        <span className={styles.readMoreBtn} data-test-id="read_more_btn" onClick={handleClick}>
+        <span className={clsx(styles.readMoreBtn, linkClassName)} data-test-id="read_more_btn" onClick={handleClick}>
           Read {isShortDescription ? 'more' : 'less'}.
         </span>
       )}
-    </>
+    </div>
   ) : (
     <p className={styles.noDescription}>no description</p>
   );

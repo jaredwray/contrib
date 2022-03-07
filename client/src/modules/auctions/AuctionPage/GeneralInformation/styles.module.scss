@@ -1,11 +1,9 @@
-@import 'src/variables.scss';
-
 .secondsLeft {
   min-width: 35px;
   display: inline-block;
   text-align: right;
 }
 
-.fmv {
-  font-weight: 400;
+.followBtn {
+  font-weight: 500 !important;
 }

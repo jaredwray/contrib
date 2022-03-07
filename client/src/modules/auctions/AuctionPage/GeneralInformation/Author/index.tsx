@@ -1,32 +1,33 @@
 import { FC, ReactElement } from 'react';
 
 import clsx from 'clsx';
-import { Image } from 'react-bootstrap';
+import { Row, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import Row from '../common/Row';
 import styles from './styles.module.scss';
 
 const Author: FC<InfluencerProfile> = ({ id, name, avatarUrl }): ReactElement => {
   return (
-    <Row childrenClassName="d-flex align-items-center" title="This auction by">
-      <Link
-        className={clsx(styles.name, 'text-subhead text-all-cups text-sm break-word d-inline-block')}
-        title={name}
-        to={`/profiles/${id}`}
-      >
-        <div className="d-flex align-items-center">
+    <Row className="d-flex align-items-center">
+      <Row className="text-label-new">Auction by</Row>
+      <Row className="text-sm d-inline-block pt-2">
+        <div className="d-flex">
           <Image
             roundedCircle
             className={clsx(styles.avatar, 'd-inline-block')}
             src={ResizedImageUrl(avatarUrl, 120)}
           />
-          <span className="pl-4 ">{name}</span>
+          <div className="pl-3">
+            <div className="text-body-new">{name}</div>
+            <Link className="link" to={`/profiles/${id}`}>
+              View Profile
+            </Link>
+          </div>
         </div>
-      </Link>
+      </Row>
     </Row>
   );
 };

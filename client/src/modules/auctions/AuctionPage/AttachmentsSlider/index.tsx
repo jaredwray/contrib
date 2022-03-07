@@ -20,19 +20,7 @@ interface Props {
 const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   const state = useRef({ x: 0 });
   const [attachmentToDisplay, setAttachmentToDisplay] = useState<AuctionAttachment | null>(null);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(1);
   const [activeStream, setActiveStream] = useState<HTMLStreamElement>();
-
-  const closeModal = useCallback(() => {
-    setAttachmentToDisplay(null);
-  }, [setAttachmentToDisplay]);
-
-  const handleAttachmentMouseDown = useCallback(
-    (e: MouseEvent) => {
-      state.current.x = e.screenX;
-    },
-    [state],
-  );
 
   const handleAttachmentClick = useCallback(
     (e: MouseEvent, attachment: AuctionAttachment) => {
@@ -42,24 +30,18 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
     [setAttachmentToDisplay],
   );
 
-  const customPaging = (i: number) => (
+  const desktopPaging = (i: number) => (
     <div key={i}>
       <AttachmentThumbnail key={i} attachment={attachments[i]} className={styles.attachmentThumbnail} />
     </div>
   );
-
-  const afterChange = useCallback(
-    (i: number) => {
-      setCurrentSlideIndex(i + 1);
-    },
-    [setCurrentSlideIndex],
-  );
+  const mobilePaging = (i: number) => <div key={i} />;
 
   const settings = {
-    arrows: true,
-    className: clsx(styles.slider, 'auction-attachments-slider'),
-    customPaging,
+    arrows: false,
     dots: true,
+    className: clsx(styles.slider, 'auction-attachments-slider'),
+    customPaging: desktopPaging,
     slidesToShow: 1,
     slidesToScroll: 1,
     beforeChange: () => activeStream?.pause(),
@@ -67,9 +49,8 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
       {
         breakpoint: 768,
         settings: {
-          dots: false,
-          arrows: true,
-          afterChange,
+          dots: true,
+          customPaging: mobilePaging,
         },
       },
     ],
@@ -86,7 +67,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
 
   return (
     <>
-      <AttachmentModal attachment={attachmentToDisplay} closeModal={closeModal} />
+      <AttachmentModal attachment={attachmentToDisplay} closeModal={() => setAttachmentToDisplay(null)} />
       <Slider {...settings}>
         {attachments.map((attachment, i) => (
           <div
@@ -94,7 +75,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
             className={styles.attachmentImageWrapper}
             data-test-id="attachment-id"
             onClick={(e: MouseEvent) => handleAttachmentClick(e, attachment)}
-            onMouseDown={handleAttachmentMouseDown}
+            onMouseDown={(e: MouseEvent) => (state.current.x = e.screenX)}
           >
             {attachment.type === 'IMAGE' ? (
               <Image className={styles.attachment} src={ResizedImageUrl(attachment.url, 720)} />
@@ -104,9 +85,6 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
           </div>
         ))}
       </Slider>
-      <div className={clsx(styles.attachmentStatus, 'd-block d-md-none text-center text-body text-all-cups')}>
-        {currentSlideIndex} of {attachments.length}
-      </div>
     </>
   );
 };
