@@ -3,6 +3,10 @@
 .select-field {
   min-width: 105px;
 
+  .dropdown-toggle {
+    width: 100%;
+  }
+
   .dropdown-menu {
     width: 100%;
     overflow: hidden;

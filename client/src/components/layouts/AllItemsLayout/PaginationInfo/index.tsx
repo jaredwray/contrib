@@ -17,11 +17,9 @@ const PaginationInfo: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage }) 
   const itemsOnPageFromNumber = itemsOnPage === 0 ? 0 : pageSkip + 1;
 
   return (
-    <div className={clsx(styles.paginationInfo, 'text-label float-left d-sm-table pt-3 pb-3 pt-sm-0 pb-sm-0')}>
-      <span className="d-sm-table-cell align-middle">
-        {itemsOnPageFromNumber}-{itemsOnPage}
-      </span>
-      <span className={clsx(styles.pagesCount, 'd-sm-table-cell align-middle pl-1')}>of {totalItems}</span>
+    <div className={clsx(styles.paginationInfo, 'd-flex align-items-center h-100 text-label')}>
+      {itemsOnPageFromNumber}-{itemsOnPage}
+      <span className={clsx(styles.pagesCount, 'ps-1')}>of {totalItems}</span>
     </div>
   );
 };
