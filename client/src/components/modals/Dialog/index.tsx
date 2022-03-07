@@ -15,7 +15,7 @@ interface Props extends ModalProps {
 
 const Dialog: FC<Props> = ({ className, open, onClose, title, children, size, withCloseButton, ...rest }) => {
   return (
-    <Modal centered aria-labelledby="contained-modal" show={open} size={size} onHide={() => onClose} {...rest}>
+    <Modal centered aria-labelledby="contained-modal" show={open} size={size} onHide={onClose} {...rest}>
       {title && (
         <Header className={className} closeButton={withCloseButton ?? true}>
           <Title id="contained-modal">{title}</Title>

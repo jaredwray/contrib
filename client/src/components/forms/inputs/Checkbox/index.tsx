@@ -37,6 +37,7 @@ const Checkbox: FC<Props> = ({
     <BsForm.Group className={wrapperClassName}>
       <BsForm.Check
         {...checkboxProps}
+        custom
         className="clickable d-inline-block"
         id={name}
         label={label}

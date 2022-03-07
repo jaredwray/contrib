@@ -89,7 +89,7 @@ export const ClicksAnalytics: FC<Props> = ({ metrics, isAuctionPage }) => {
   return (
     <>
       <Row>
-        <ButtonGroup className={clsx(styles.select, 'mb-3', isAuctionPage && 'mx-auto mt-3')}>
+        <ButtonGroup toggle className={clsx(styles.select, 'mb-3', isAuctionPage && 'mx-auto mt-3')}>
           {type.map((radio, idx) => (
             <ToggleButton
               key={idx}
