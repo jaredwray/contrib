@@ -111,7 +111,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
     <Layout>
       <section className={styles.root}>
         <Container className="p-0">
-          <Row>
+          <Row className="position-relative">
             <Col className="p-0">
               {isMyProfile && (
                 <Link className={clsx(styles.editBtn, 'text-label btn btn-secondary')} to={'/profiles/me/edit'}>

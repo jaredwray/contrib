@@ -78,7 +78,7 @@ const MultipleItems: FC<Props> = ({
         </Row>
       ))}
       <div className={styles.buttonsWrapper}>
-        <Button className="mr-5" disabled={updating} variant="light" onClick={handleBack}>
+        <Button className="me-5" disabled={updating} variant="light" onClick={handleBack}>
           Single Item
         </Button>
         <Button disabled={isMaxItems || updating} onClick={handleAddItem}>

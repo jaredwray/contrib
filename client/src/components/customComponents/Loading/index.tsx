@@ -6,7 +6,7 @@ const Loading: FC = () => {
   return (
     <>
       <span className="text-label">... Loading</span>
-      <Spinner animation="border" className="ml-2" size="sm" />
+      <Spinner animation="border" className="ms-2" size="sm" />
     </>
   );
 };

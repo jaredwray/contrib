@@ -49,7 +49,7 @@ const VerificationStep: FC<Props> = ({ currentPhoneNumber, newPhoneNumber, setNe
             <Field name="phoneNumber">
               {({ input }) => (
                 <PhoneInput
-                  className={clsx(styles.input, 'd-inline-block mb-4 mb-sm-0 mr-sm-4')}
+                  className={clsx(styles.input, 'd-inline-block mb-4 mb-sm-0 me-sm-4')}
                   errorText={error}
                   otherProps={{ ...input }}
                   validateFunction={(value) => {

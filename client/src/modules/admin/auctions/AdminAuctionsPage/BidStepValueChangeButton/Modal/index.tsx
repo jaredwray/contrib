@@ -58,8 +58,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
       <DialogContent>
         <Form initialValues={initialValues} onSubmit={onSubmit}>
           <MoneyField name="bidStep" title="Enter step price" />
-          <hr />
-          <div className="float-right">
+          <div className="float-end pt-2">
             <AsyncButton
               className={clsx('text-subhead', styles.button)}
               loading={updating}

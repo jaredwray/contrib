@@ -5,8 +5,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { CreateInfluencer } from '../CreateInfluencer';
 import { CreateInfluencerModal } from 'src/modules/admin/Influencers/CreateInfluencer/CreateInfluencerModal';
 
-describe('Should render correctly "CreateInfluencer"', () => {
+describe('CreateInfluencer', () => {
   let wrapper: ReactWrapper;
+
   beforeEach(() => {
     wrapper = mount(
       <MockedProvider>
@@ -16,17 +17,17 @@ describe('Should render correctly "CreateInfluencer"', () => {
       </MockedProvider>,
     );
   });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  it('component is defined', () => {
+
+  it('renders component', () => {
     expect(wrapper).toHaveLength(1);
   });
-  it('it should open Modal when clicking', () => {
+
+  it('opens Modal on the button clicking', () => {
     wrapper.children().find('Button').simulate('click');
   });
-  it('it should close Modal when clicking', () => {
+
+  it('closes Modal on the close button click', () => {
     wrapper.children().find('Button').simulate('click');
-    wrapper.children().find(CreateInfluencerModal).children().find('.close').simulate('click');
+    wrapper.children().find(CreateInfluencerModal).children().find('.btn-close').simulate('click');
   });
 });

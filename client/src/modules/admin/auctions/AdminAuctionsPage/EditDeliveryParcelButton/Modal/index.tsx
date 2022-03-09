@@ -71,13 +71,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
   );
 
   return (
-    <Dialog
-      className="font-weight-normal text-center"
-      open={open}
-      size="sm"
-      title="Delivery box properties"
-      onClose={onClose}
-    >
+    <Dialog className="fw-normal text-center" open={open} size="sm" title="Delivery box properties" onClose={onClose}>
       <Form initialValues={currentValues} onSubmit={onSubmit}>
         <DialogContent>
           <ModalRow title="Length in">
@@ -95,7 +89,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
         </DialogContent>
         <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
           <Button
-            className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+            className={clsx(styles.actionBtn, 'ms-0 me-sm-auto p-3')}
             disabled={updating}
             variant="light"
             onClick={onClose}

@@ -8,7 +8,7 @@ interface Props {
 
 export const ActionsDropdown: FC<Props> = ({ children }) => {
   return (
-    <DropdownButton className="dropdown-actions" id="itemActions" align="end" title="..." variant="link">
+    <DropdownButton align="end" className="dropdown-actions" id="itemActions" title="..." variant="link">
       {children}
     </DropdownButton>
   );

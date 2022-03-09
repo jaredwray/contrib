@@ -21,7 +21,7 @@ const InformationModal: FC<Props> = ({ open, onClose, text, title }): ReactEleme
       </DialogContent>
 
       <DialogActions className="d-block pt-0 pt-sm-2">
-        <Button className="float-right" size="sm" variant="link" onClick={onClose}>
+        <Button className="float-end" size="sm" variant="link" onClick={onClose}>
           Cancel
         </Button>
       </DialogActions>

@@ -49,11 +49,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
       refetchQueries: [{ query: MyAccountQuery }],
     });
-
     const paymentInformation = account?.paymentInformation;
-
     const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
-
     const title = 'Place Your Bid';
     const buyingTitle = 'Buy it now';
 
@@ -62,19 +59,12 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       setNewCard(false);
       setIsBuying(false);
     }, [setIsBuying]);
-
-    const handleAddCard = useCallback(() => {
-      setNewCard(true);
-    }, []);
-
-    const handleCardInputChange = useCallback((event: StripeCardElementChangeEvent) => {
-      setCardComplete(event.complete);
-    }, []);
-
-    const handleNewCardCancelBtnClick = useCallback(() => {
-      setNewCard(false);
-    }, [setNewCard]);
-
+    const handleAddCard = useCallback(() => setNewCard(true), []);
+    const handleCardInputChange = useCallback(
+      (event: StripeCardElementChangeEvent) => setCardComplete(event.complete),
+      [],
+    );
+    const handleNewCardCancelBtnClick = useCallback(() => setNewCard(false), [setNewCard]);
     const handleRegisterPayment = useCallback(
       async (paymentInformation, newCard) => {
         if (!paymentInformation || newCard) {
@@ -199,7 +189,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
         <DialogActions className="d-block pt-0 pt-sm-2">
           <AsyncButton
-            className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+            className={clsx(styles.actionBtn, 'ms-0 me-sm-auto p-3')}
             data-test-id="bid-button"
             disabled={buttonsAreDisabled}
             loading={isSubmitting}
@@ -209,7 +199,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
             {isBuying ? 'Buy it now' : 'Confirm'}
           </AsyncButton>
           <Button
-            className={clsx(styles.actionBtn, styles.cancelBtn, 'ml-0 mr-sm-auto p-3')}
+            className={clsx(styles.actionBtn, styles.cancelBtn, 'ms-0 me-sm-auto p-3')}
             disabled={buttonsAreDisabled}
             size="sm"
             variant="link"

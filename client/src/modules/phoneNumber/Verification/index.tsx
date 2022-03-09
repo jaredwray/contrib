@@ -101,7 +101,7 @@ export default function PhoneNumberVerification() {
               <Field name="phoneNumber">
                 {({ input }) => (
                   <PhoneInput
-                    className="mb-3 w-auto d-inline-block pr-3"
+                    className="mb-3 w-auto d-inline-block pe-3"
                     disabled={formSubmitting}
                     otherProps={{ input }}
                     value={phoneInputValue}

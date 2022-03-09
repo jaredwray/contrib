@@ -57,18 +57,19 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
   const [followersNumber, setFollowersNumber] = useState(charity?.followers?.length || 0);
 
   const handleFollowCharity = useCallback(async () => {
-    if (isAuthenticated) {
-      try {
-        await followCharity({ variables: { charityId: charity.id } });
-        showMessage('Successfully followed');
-        setFollowed(true);
-        setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
-      } catch (error) {
-        showError(error.message);
-      }
+    if (!isAuthenticated) {
+      RedirectWithReturnAfterLogin(`/charity/${charity.id}`);
       return;
     }
-    RedirectWithReturnAfterLogin(`/charity/${charity.id}`);
+
+    try {
+      await followCharity({ variables: { charityId: charity.id } });
+      showMessage('Successfully followed');
+      setFollowed(true);
+      setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
+    } catch (error) {
+      showError(error.message);
+    }
   }, [
     charity.id,
     followersNumber,
@@ -104,7 +105,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
       <section className={styles.root}>
         {(isMyProfile || account?.isAdmin) && (
           <Container className="p-0">
-            <Row>
+            <Row className="position-relative">
               <Col className="p-0">
                 <Link
                   className={clsx(styles.editBtn, 'text-label btn btn-secondary')}

@@ -22,9 +22,7 @@ const TermsConfirmationDialog: FC = () => {
 
   const onSubmit = useCallback(
     async (values) => {
-      if (!values.terms) {
-        return;
-      }
+      if (!values.terms) return;
 
       try {
         await acceptAccountTerms({ variables: { version: account?.notAcceptedTerms } });
@@ -60,7 +58,7 @@ const TermsConfirmationDialog: FC = () => {
 
           <Checkbox label={checkboxLabel} name="terms" required={true} wrapperClassName="mb-0" />
 
-          <div className="float-right">
+          <div className="float-end">
             <Button className="text-label" type="submit" variant="secondary">
               Accept
             </Button>

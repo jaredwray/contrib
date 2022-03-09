@@ -42,11 +42,8 @@ export const CreateInfluencerModal: FC<Props> = ({ open, onClose }) => {
       <DialogContent>
         <Form initialValues={{ name: null }} onSubmit={onSubmit}>
           {createError && <Alert variant="danger">{createError}</Alert>}
-
           <InputField required name="name" title="Enter Name" />
-
-          <hr />
-          <div className="float-right">
+          <div className="float-end">
             {creating ? (
               <Spinner animation="border" />
             ) : (

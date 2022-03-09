@@ -24,7 +24,7 @@ const Filters: FC<Props> = ({ changeFilters }) => {
 
   return (
     <>
-      <div className={clsx('float-left pt-4 pb-4', styles.title)}>Influencers</div>
+      <div className={clsx('float-start py-4', styles.title)}>Influencers</div>
       <SearchInput className="mb-1" placeholder="Search" onCancel={handleQueryCancel} onChange={handleQueryChange} />
     </>
   );

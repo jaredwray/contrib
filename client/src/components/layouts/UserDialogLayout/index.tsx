@@ -35,7 +35,7 @@ export const UserDialogLayout: FC<Props> = ({
             'p-0 h-100 d-md-table-cell align-middle',
           )}
         >
-          <Row className="pt-lg-3 pb-lg-3 pt-5 pb-5 align-items-center">
+          <Row className="py-lg-3 py-5 align-items-center">
             {!successBlock ? (
               <>
                 <Col lg="6">
@@ -50,7 +50,7 @@ export const UserDialogLayout: FC<Props> = ({
                   <div className={styles.separator} />
                   {textBlock}
                 </Col>
-                <Col className="pt-4 pt-lg-0 pb-4 pb-lg-0" lg="6">
+                <Col className="py-4 py-lg-0" lg="6">
                   <div className={clsx(styles.rightBlock, 'p-2 p-sm-4')}>
                     <div className="w-100">{children}</div>
                   </div>

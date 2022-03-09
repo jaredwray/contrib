@@ -25,7 +25,7 @@ const BidsListModal: FC<Props> = ({ auctionId, open, onClose }): ReactElement =>
       <DialogContent className="pt-0 pb-0">
         <Row>
           <Table>
-            <tbody className="font-weight-normal table-bordered pb-3 text-break">
+            <tbody className="fw-normal table-bordered pb-3 text-break">
               {bids.map(({ bid, createdAt }, i) => (
                 <tr key={i}>
                   <td>{`$${bid?.amount / 100}`}</td>
@@ -38,7 +38,7 @@ const BidsListModal: FC<Props> = ({ auctionId, open, onClose }): ReactElement =>
       </DialogContent>
 
       <DialogActions className="d-block pt-0 pt-sm-2">
-        <Button className="float-right" size="sm" variant="link" onClick={onClose}>
+        <Button className="float-end" size="sm" variant="link" onClick={onClose}>
           Cancel
         </Button>
       </DialogActions>

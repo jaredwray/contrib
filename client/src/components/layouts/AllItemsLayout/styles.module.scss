@@ -8,13 +8,13 @@
   }
 }
 .filtersWrapper {
-  max-width: 306px;
+  max-width: 306px !important;
   margin-left: auto;
   margin-right: auto;
 
   @media (max-width: $small-weight) {
     margin-bottom: 27px;
-    max-width: unset;
+    max-width: unset !important;
   }
 }
 

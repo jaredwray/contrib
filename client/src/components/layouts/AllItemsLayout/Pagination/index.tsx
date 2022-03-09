@@ -95,18 +95,18 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
   return (
     <div className="pt-4 pb-4 text-center text-md-left d-flex mt-auto align-items-center" id="pagination">
       <Button
-        className={clsx(styles.navBtn, 'pl-0 font-weight-bold')}
+        className={clsx(styles.navBtn, 'ps-0 fw-bold')}
         disabled={!hasPev}
         variant="link"
         onClick={() => goToPage(currentPage - 1)}
       >
         Prev
       </Button>
-      <div className="text-label d-inline-block pl-1 pl-sm-4 pr-1 pr-sm-4">
+      <div className="text-label d-inline-block px-1 px-sm-4">
         <PaginationWithDots />
       </div>
       <Button
-        className={clsx(styles.navBtn, 'pr-0 font-weight-bold')}
+        className={clsx(styles.navBtn, 'pe-0 fw-bold')}
         disabled={!hasNext}
         variant="link"
         onClick={() => goToPage(currentPage + 1)}

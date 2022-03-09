@@ -68,7 +68,7 @@ export default function CharitiesPage(): any {
             <th className={styles.actions}></th>
           </tr>
         </thead>
-        <tbody className="font-weight-normal">
+        <tbody className="fw-normal">
           {charities.items.map((item: Charity) => (
             <ClickableTr key={item.id} linkTo={`/charity/${item.semanticId || item.id}`}>
               <td className={styles.idColumn}>{item.id}</td>

@@ -24,7 +24,7 @@ export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEdi
   return (
     <Row className={styles.tableContainer}>
       <Table className="d-table d-sm-block">
-        <tbody className="font-weight-normal table-bordered pb-3 text-break">
+        <tbody className="fw-normal table-bordered pb-3 text-break">
           <tr>
             <td>Id</td>
             <td>{auction.id}</td>

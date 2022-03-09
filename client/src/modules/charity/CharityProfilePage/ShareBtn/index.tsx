@@ -25,7 +25,7 @@ const ShareBtn: FC<Props> = ({ charityName, link }) => {
   return (
     <>
       <div
-        className={clsx(styles.container, 'mt-3 mb-3 pt-3 pb-3 d-table align-middle w-100')}
+        className={clsx(styles.container, 'my-3 py-3 d-table align-middle w-100')}
         onClick={() => setShowDialog(true)}
       >
         <Button className={clsx(styles.button)} variant="link">
@@ -33,7 +33,7 @@ const ShareBtn: FC<Props> = ({ charityName, link }) => {
             <ShareIcon />
           </div>
         </Button>
-        <div className="d-table-cell pl-4 align-middle">
+        <div className="d-table-cell ps-4 align-middle">
           <div className={clsx(styles.text, 'text-subhead')}>Share via QR Code</div>
         </div>
       </div>

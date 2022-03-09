@@ -27,7 +27,7 @@ const CardInfo: FC<Props> = ({ expired, className, isSubmitting, paymentInfo, on
       <div className="flex-column text-center">
         {paymentInfo.cardBrand} **** **** **** {paymentInfo.cardNumberLast4}, {paymentInfo.cardExpirationMonth}/
         {`${paymentInfo.cardExpirationYear}`.slice(-2)}
-        {expired && <span className="text-all-cups font-weight-bold">expired</span>}
+        {expired && <span className="text-all-cups fw-bold">expired</span>}
       </div>
 
       <Button

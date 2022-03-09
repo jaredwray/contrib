@@ -41,9 +41,9 @@ export default function SimilarAuctions({ selectedAuction }: Props) {
           <Col className={clsx(styles.title, 'text-super pb-3 pb-md-3 pb-lg-0')} lg="8" xs="12">
             Similar auctions
           </Col>
-          <Col className="align-self-end pr-lg-0" lg="4" xs="12">
+          <Col className="align-self-end pe-lg-0" lg="4" xs="12">
             <Link
-              className={clsx('float-lg-right text-subhead text-all-cups ml-1 ml-md-0', styles.seeAllLink)}
+              className={clsx('float-lg-end text-subhead text-all-cups ms-1 ms-md-0', styles.seeAllLink)}
               to="/auctions"
             >
               See all auctions &gt;&gt;

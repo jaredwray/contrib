@@ -30,15 +30,14 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
   const allowedCountryName = ALLOWED_COUNTRY_NAME;
 
   useEffect(() => {
-    if (!phoneInputValue) {
-      setPhoneInputValue('1');
-    }
+    if (!phoneInputValue) setPhoneInputValue('1');
     if (phoneInputValue[0] !== '1') {
       const passedValue = phoneInputValue.toString().split('');
       passedValue.unshift('1');
       setPhoneInputValue(passedValue.join(''));
     }
   }, [phoneInputValue]);
+
   const handleOnClose = useCallback(() => {
     setPhoneInputValue('');
     setInvitationError('');
@@ -47,9 +46,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
 
   const onSubmit = useCallback(
     ({ firstName, lastName, welcomeMessage }: { firstName: string; lastName: string; welcomeMessage: string }) => {
-      if (!firstName || !lastName || !welcomeMessage) {
-        return;
-      }
+      if (!firstName || !lastName || !welcomeMessage) return;
 
       setCreating(true);
       inviteMutation({
@@ -60,12 +57,8 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
           handleOnClose();
           addToast('Invited', { autoDismiss: true, appearance: 'success' });
         })
-        .catch((error) => {
-          setInvitationError(error.message);
-        })
-        .finally(() => {
-          setCreating(false);
-        });
+        .catch((error) => setInvitationError(error.message))
+        .finally(() => setCreating(false));
     },
     [inviteMutation, mutationVariables, updateEntitisList, addToast, phoneInputValue, handleOnClose],
   );
@@ -105,11 +98,8 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
               )}
             </Field>
           </RbForm.Group>
-
           <InputField required textarea name="welcomeMessage" title="Enter Message on the Welcome page" />
-
-          <hr />
-          <div className="float-right">
+          <div className="float-end pt-2">
             {creating ? (
               <Spinner animation="border" />
             ) : (

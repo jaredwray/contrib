@@ -26,7 +26,7 @@ export const AuctionItems: FC<Props> = ({ items, showEditButton, handleEditClick
               <th>Fair Market Value</th>
             </tr>
           </thead>
-          <tbody className="font-weight-normal table-bordered pb-3 text-break">
+          <tbody className="fw-normal table-bordered pb-3 text-break">
             {items.map(({ id, name, contributor, fairMarketValue }) => (
               <tr key={id}>
                 <td>{name}</td>

@@ -30,7 +30,6 @@ export default function InfluencersPage() {
   const [getInfluencersList, { loading, data, error }] = useLazyQuery(InfluencersListQuery, {
     fetchPolicy: 'cache-and-network',
   });
-
   const [resendInviteMessage, { loading: resendInviteLoading }] = useMutation(ResendInviteMessageMutation);
 
   useEffect(() => {
@@ -39,14 +38,8 @@ export default function InfluencersPage() {
     });
   }, [getInfluencersList, searchQuery, pageSkip]);
 
-  const onInputSearchChange = useCallback((value) => {
-    setSearchQuery(value);
-  }, []);
-
-  const clearAndCloseSearch = useCallback(() => {
-    setSearchQuery('');
-  }, []);
-
+  const onInputSearchChange = useCallback((value) => setSearchQuery(value), []);
+  const clearAndCloseSearch = useCallback(() => setSearchQuery(''), []);
   const toastContent = useCallback(
     (link: string, firstName: string, phoneNumber: string) => (
       <>
@@ -83,7 +76,7 @@ export default function InfluencersPage() {
     <>
       <CreateInfluencer />
       <InviteButton
-        className={clsx(styles.inviteBtn, 'text--body d-inline-block ml-3')}
+        className={clsx(styles.inviteBtn, 'text--body d-inline-block ms-3')}
         mutation={InviteInfluencerMutation}
         updateEntitisList={getInfluencersList}
       />
@@ -112,7 +105,7 @@ export default function InfluencersPage() {
             <th className={styles.actions}></th>
           </tr>
         </thead>
-        <tbody className="font-weight-normal">
+        <tbody className="fw-normal">
           {influencers.items.map((item: InfluencerProfile) => (
             <ClickableTr key={item.id} linkTo={`/profiles/${item.id}`}>
               <td className={styles.idColumn} title={item.id}>

@@ -27,7 +27,7 @@ export default function LogInPage() {
               <span className={cslx(styles.arrows)}>&#171;&#32;&#32;</span>
               back
             </div>
-            <h1 className="text-headline font-weight-bold">Log in</h1>
+            <h1 className="text-headline fw-bold">Log in</h1>
             <div className={cslx(styles.authBtns, 'pt-4')}>
               <AuthBtn provider="facebook" returnURL={returnURL} />
               <AuthBtn provider="twitter" returnURL={returnURL} />

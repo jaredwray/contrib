@@ -18,7 +18,6 @@ const PriceRange: FC<Props> = ({ initialBids, bids, changeFilters }) => {
   const onSliderUpdate = useCallback((values: string[]) => {
     setPriceRange({ minPrice: values[0], maxPrice: values[1] });
   }, []);
-
   const onSliderChange = useCallback(
     (values: string[]) => {
       changeFilters('bids', { minPrice: parseInt(values[0]), maxPrice: parseInt(values[1]) });
@@ -43,7 +42,7 @@ const PriceRange: FC<Props> = ({ initialBids, bids, changeFilters }) => {
         onUpdate={onSliderUpdate}
       />
       <div className="text-label text-all-cups">
-        <span className="float-left">
+        <span className="float-start">
           <NumberFormat
             decimalScale={0}
             displayType={'text'}
@@ -52,11 +51,11 @@ const PriceRange: FC<Props> = ({ initialBids, bids, changeFilters }) => {
             value={priceRange?.minPrice}
           />
         </span>
-        <span className="float-right">
+        <span className="float-end">
           <NumberFormat
             decimalScale={0}
-            displayType={'text'}
-            prefix={'to $'}
+            displayType="text"
+            prefix="to $"
             thousandSeparator={true}
             value={priceRange?.maxPrice}
           />

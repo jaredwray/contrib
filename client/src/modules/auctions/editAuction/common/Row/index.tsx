@@ -29,7 +29,7 @@ const Row: FC<Props> = ({
         {renderRemoveButton && renderRemoveButton()}
       </Col>
 
-      <Col className={clsx('pl-md-5', childrenWrapperClassName)}>{children}</Col>
+      <Col className={clsx('ps-md-5', childrenWrapperClassName)}>{children}</Col>
     </RbRow>
   );
 };

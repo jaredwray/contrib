@@ -1,4 +1,4 @@
-import { useState, FC } from 'react';
+import { FC, useState, useCallback } from 'react';
 
 import Dialog from 'src/components/modals/Dialog';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
@@ -16,17 +16,14 @@ interface Props {
 
 export const Modal: FC<Props> = ({ open, onClose, isConfirmed, setIsConfirmed, returnURL }) => {
   const [phoneInputValue, setPhoneInputValue] = useState('');
+  const handleOnClose = useCallback(() => {
+    setPhoneInputValue('');
+    onClose();
+  }, [setPhoneInputValue, onClose]);
 
   return (
-    <Dialog
-      open={open}
-      title="Log in with SMS"
-      onClose={() => {
-        setPhoneInputValue('');
-        onClose();
-      }}
-    >
-      <DialogContent className="pt-4 pb-4">
+    <Dialog open={open} title="Log in with SMS" onClose={handleOnClose}>
+      <DialogContent>
         {isConfirmed ? (
           <PhoneNumberConfirmation phoneNumber={phoneInputValue} returnURL={returnURL} />
         ) : (

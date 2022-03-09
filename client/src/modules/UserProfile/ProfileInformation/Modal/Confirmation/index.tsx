@@ -86,7 +86,7 @@ const ConfirmationStep: FC<Props> = ({ newPhoneNumber, onClose, setPhoneNumber }
           </Field>
           <div className="d-flex justify-content-between flex-wrap ">
             <Button
-              className="d-inline-block text-label pl-0 mr-2"
+              className="d-inline-block text-label ps-0 me-2"
               disabled={loading || !canResendOtp}
               variant="link"
               onClick={handleResendCode}

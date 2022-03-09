@@ -51,7 +51,7 @@ export const Delivery: FC<Props> = ({ auction, isDeliveryPage, refreshAuctionDat
   return (
     <Row>
       <Table className="d-inline details-table">
-        <tbody className="font-weight-normal table-bordered pb-3 text-break">
+        <tbody className="fw-normal table-bordered pb-3 text-break">
           <tr>
             <td>Recepient</td>
             <td>{deliveryAddress?.name}</td>

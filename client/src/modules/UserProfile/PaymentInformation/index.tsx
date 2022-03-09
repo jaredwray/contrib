@@ -82,10 +82,10 @@ const PaymentInformation: FC<Props> = ({ account }) => {
       <h2 className="text-headline mb-3">Place Your Bid</h2>
       <hr className="d-none d-md-block" />
       <Row className="mb-0 mb-md-4">
-        <Col className="pl-0 pr-0 pr-md-3" md="6">
-          <div className="text--body font-weight-bold">My credit card</div>
+        <Col className="px-0 pe-md-3" md="6">
+          <div className="text--body fw-bold">My credit card</div>
         </Col>
-        <Col className="pr-0 pl-0 pl-md-2 pr-md-2 mt-2 mt-md-0" md="6">
+        <Col className="px-0 px-md-2 mt-2 mt-md-0" md="6">
           <CardInput
             expired={expired}
             handleAddCard={handleAddCard}

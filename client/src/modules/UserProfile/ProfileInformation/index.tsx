@@ -21,10 +21,10 @@ const ProfileInformation: FC<Props> = ({ account }) => {
       <h2 className="text-headline mb-3">Profile Information</h2>
       <hr className="d-none d-md-block" />
       <Row className="mb-4">
-        <Col className="pl-0 pr-0 pr-md-3" md="6">
-          <div className="text--body font-weight-bold">Phone Number</div>
+        <Col className="px-0 px-md-3" md="6">
+          <div className="text--body fw-bold">Phone Number</div>
         </Col>
-        <Col className="pr-0 pl-0 pl-md-2 pr-md-2" md="6">
+        <Col className="px-0 px-md-2" md="6">
           <div className={styles.wraper}>
             <input disabled className={clsx(styles.input, 'form-control')} value={`+${phoneNumber}`} />
             <Button className={clsx(styles.button, 'btn btn-primary')} onClick={() => setShowDialog(true)}>

@@ -36,14 +36,14 @@ export const Modal: FC<Props> = ({ open, onClose, onConfirm, mutation, auction }
   }, [deleteAuction, auction, onConfirm, onClose]);
 
   return (
-    <Dialog className="font-weight-normal text-center" open={open} title="Confirm deleting" onClose={onClose}>
+    <Dialog className="fw-normal text-center" open={open} title="Confirm deleting" onClose={onClose}>
       <DialogContent>
         Do you want to delete an auction: <b>{auction.title}</b>?
       </DialogContent>
 
       <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
         <Button
-          className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+          className={clsx(styles.actionBtn, 'ms-0 me-sm-auto p-3')}
           disabled={updating}
           size="sm"
           variant="light"

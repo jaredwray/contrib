@@ -364,7 +364,7 @@ export class InvitationService {
         .execPopulate();
 
       const link = await this.shortLinkService.makeLink({ slug: populatedInvitation.shortLink.slug });
-      const message = `Hello, ${name}! You have been invited to join Contrib at ${link}. Sign in with your phone number to begin.`;
+      const message = `Hello, ${name}! You have been invited to join Contrib at ${link} Sign in with your phone number to begin.`;
 
       await this.twilioNotificationService.sendMessage(phoneNumber, message);
 

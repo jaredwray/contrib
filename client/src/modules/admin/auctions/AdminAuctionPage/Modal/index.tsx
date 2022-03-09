@@ -37,12 +37,7 @@ export const Modal: FC<Props> = ({
   const { bid, user } = currentBid;
 
   return (
-    <Dialog
-      className="font-weight-normal text-left"
-      open={open}
-      title={`Charge ${isBid ? 'bid' : 'auction'}`}
-      onClose={onClose}
-    >
+    <Dialog className="fw-normal text-left" open={open} title={`Charge ${isBid ? 'bid' : 'auction'}`} onClose={onClose}>
       <DialogContent className="text-center pt-0">
         <p>
           Withdraw <b>${bid?.amount / 100}</b>
@@ -61,7 +56,7 @@ export const Modal: FC<Props> = ({
       </DialogContent>
       <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
         <Button
-          className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+          className={clsx(styles.actionBtn, 'ms-0 me-sm-auto p-3')}
           disabled={loading}
           size="sm"
           variant="light"
