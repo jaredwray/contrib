@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 
-import InformationLink from 'src/components/customComponents/InformationLink';
 import Form from 'src/components/forms/Form/Form';
 import MoneyField from 'src/components/forms/inputs/MoneyField';
 import { AuctionItem } from 'src/types/Auction';
@@ -40,7 +39,6 @@ export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
       <p className="text--body">
         Enter your bid amount of {minBidFormatted}
         {!isFinalBid && <span> or more</span>}
-        <InformationLink content="secret" text="Learn more about bidding" />
       </p>
       <MoneyField
         required

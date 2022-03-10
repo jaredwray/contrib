@@ -111,7 +111,10 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
           <Row className="p-4">
             <Col className="text-label-new p-0">
               Buy it now for {buyingPrice}
-              <InformationLink content="secret" text="How is this calculated?" />
+              <InformationLink
+                content="This value is carefully selected by the auction owner"
+                text="How is this calculated?"
+              />
             </Col>
             <Col className="p-0" lg="6" md="12">
               <Button

@@ -74,7 +74,10 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
         <Row className="pt-4">
           <Col>
             <div className={clsx(styles.fmv, 'text-label-new')}>Fair market value:</div>
-            <InformationLink content="secret" text="How is this calculated?" />
+            <InformationLink
+              content="This value is carefully selected by the auction owner."
+              text="How is this calculated?"
+            />
           </Col>
           <Col className={clsx(styles.fmv, 'text-label-new')}>{fairMarketValue.toFormat('$0,0')}</Col>
         </Row>
