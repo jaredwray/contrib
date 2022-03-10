@@ -11,9 +11,9 @@ import styles from './styles.module.scss';
 
 const Author: FC<InfluencerProfile> = ({ id, name, avatarUrl }): ReactElement => {
   return (
-    <Row className="d-flex align-items-center">
-      <Row className="text-label-new">Auction by</Row>
-      <Row className="text-sm d-inline-block pt-2">
+    <Row className="d-flex align-items-center mb-3">
+      <Row className="text-label-new p-0">Auction by</Row>
+      <Row className="text-sm d-inline-block pt-2 p-0">
         <div className="d-flex">
           <Image
             roundedCircle

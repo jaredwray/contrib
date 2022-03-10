@@ -12,9 +12,9 @@ import styles from './styles.module.scss';
 const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id, semanticId }) => {
   return (
     <Row className="d-flex align-items-center">
-      <Row className="text-label-new">This auction benefits</Row>
-      <Row className="text-sm d-inline-block pt-2">
-        <div className="d-flex">
+      <Row className="text-label-new p-0">This auction benefits</Row>
+      <Row className="text-sm d-inline-block pt-2 p-0">
+        <div className="d-flex p-0">
           <Image
             roundedCircle
             className={clsx(styles.avatar, 'd-inline-block')}
