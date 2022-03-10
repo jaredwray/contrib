@@ -40,7 +40,7 @@ export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
       <p className="text--body">
         Enter your bid amount of {minBidFormatted}
         {!isFinalBid && <span> or more</span>}
-        <InformationLink content="secret" text="Learn more about bidding" />
+        {/* <InformationLink content="secret" text="Learn more about bidding" /> */}
       </p>
       <MoneyField
         required
