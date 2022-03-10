@@ -141,12 +141,12 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, horizontal, isDoneP
           <div className="d-flex align-items-center mb-1">
             <Image
               roundedCircle
-              className={clsx(styles.avatarUrl, 'mr-2')}
+              className={clsx(styles.avatarUrl, 'me-2')}
               height={32}
               src={ResizedImageUrl(influencer.avatarUrl, 32)}
               width={32}
             />
-            <span className={clsx(horizontal && styles.name, 'text-label text-all-cups text-truncate')}>
+            <span className={clsx(horizontal && styles.name, 'text-label text-all-cups text-truncate ms-2')}>
               {influencer.name}
             </span>
           </div>

@@ -42,6 +42,7 @@ const newProps: any = {
 };
 
 const cache = new InMemoryCache();
+const mockFn = jest.fn();
 
 cache.writeQuery({
   query: AuctionsListQuery,
@@ -60,8 +61,6 @@ cache.writeQuery({
     },
   },
 });
-
-const mockFn = jest.fn();
 
 const mocks = [
   {
@@ -143,7 +142,7 @@ const withNotAuthUser = () => {
   });
 };
 
-describe('Should render correctly "CharityProfilePageContent"', () => {
+describe('CharityProfilePageContent', () => {
   beforeAll(() => {
     process.env = { ...process.env, REACT_APP_API_URL: 'https://dev.contrib.org/graphql' };
   });

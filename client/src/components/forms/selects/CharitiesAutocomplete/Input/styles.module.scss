@@ -1,21 +1,25 @@
 @import 'src/variables.scss';
 
 :global {
-  .charities-search-container.active {
-    .form-control,
-    .input-group-append > .btn {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-  }
-
   .input-group {
     .form-control {
+      & + .input-group-append > .btn {
+        border-left-width: 0px;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+      }
       &:focus + .input-group-append > .btn {
         box-shadow: inset 0 0 0 1px $sage-color;
         border-color: $sage-color !important;
-        border-left-width: 0px !important;
       }
+    }
+  }
+
+  .charities-search-container.active .form-control {
+    border-bottom-left-radius: 0;
+
+    &:focus + .input-group-append > .btn {
+      border-bottom-right-radius: 0;
     }
   }
 }

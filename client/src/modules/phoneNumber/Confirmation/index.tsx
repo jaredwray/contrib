@@ -154,7 +154,7 @@ export default function PhoneNumberConfirmation() {
                 )}
               </Field>
               <Button
-                className="ml-2 mb-2 d-inline-block text-label"
+                className="ms-2 mb-2 d-inline-block text-label"
                 disabled={isLoading}
                 type="submit"
                 variant="secondary"
@@ -163,7 +163,7 @@ export default function PhoneNumberConfirmation() {
               </Button>
               {(process.title === 'browser' ? canResendOtp : true) && (
                 <Button
-                  className="ml-2 d-inline-block text-label"
+                  className="ms-2 d-inline-block text-label"
                   disabled={isLoading}
                   variant="link"
                   onClick={handleResendCode}

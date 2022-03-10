@@ -1,5 +1,6 @@
 import { forwardRef, BaseSyntheticEvent, KeyboardEventHandler, useCallback } from 'react';
 
+import clsx from 'clsx';
 import { Form as BsForm } from 'react-bootstrap';
 
 import useField from '../../Form/hooks/useField';
@@ -67,7 +68,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
     );
 
     return (
-      <Group className={wrapperClassName}>
+      <Group className={clsx(wrapperClassName, 'pb-2')}>
         {title && <Label className="d-block">{title}</Label>}
         <Control
           {...inputProps}
@@ -81,7 +82,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           value={valueFromState || value}
           onChange={handleChange}
           onInput={onInput ? (e: BaseSyntheticEvent) => onInput(e) : () => {}}
-          onKeyPress={onKeyPress}
+          onKeyPress={() => onKeyPress}
         />
         <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
         {externalText && <p className="text--body mt-2">{externalText}</p>}

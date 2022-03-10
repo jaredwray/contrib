@@ -1,7 +1,6 @@
 import { FC, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
-import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -15,7 +14,6 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Charity } from 'src/types/Charity';
 
 import { FormFields } from './FormFields';
-import styles from './styles.module.scss';
 
 interface FormValues {
   name: string;
@@ -64,16 +62,12 @@ export const CharityProfileEditPage: FC = () => {
       >
         <Container>
           <Row>
-            <Col className="text-label label-with-separator">
-              {account?.isAdmin ? 'Charity Account' : 'My Charity account'}
-            </Col>
+            <Col className="text-label label-with-separator">{`${!account?.isAdmin && 'My '}Charity Account`}</Col>
           </Row>
           <Row>
-            <Col className="text-headline">{account?.isAdmin ? 'Charity profile' : 'My Charity profile'}</Col>
-            <hr className={clsx(styles.hr, 'd-none d-md-block')} />
+            <Col className="text-headline">{`${!account?.isAdmin && 'My '}Charity Profile`}</Col>
           </Row>
           <FormFields charity={charityProfile} />
-          <hr className="d-none d-md-block" />
           <Col>
             <SubmitButton text="Save" />
           </Col>

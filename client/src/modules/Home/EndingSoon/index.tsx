@@ -34,9 +34,9 @@ export default function EndingSoon() {
           <Col className={clsx(styles.title, 'text-super pb-3 pb-md-2 pb-lg-0')} lg="8" xs="12">
             Ending soon
           </Col>
-          <Col className="align-self-end pr-lg-0" lg="4" xs="12">
+          <Col className="align-self-end pe-lg-0" lg="4" xs="12">
             <Link
-              className={clsx('float-lg-right text-subhead text-all-cups ml-1 ml-lg-0', styles.seeAllLink)}
+              className={clsx('float-lg-end text-subhead text-all-cups ms-1 ms-lg-0', styles.seeAllLink)}
               to="/auctions"
             >
               See all auctions &gt;&gt;

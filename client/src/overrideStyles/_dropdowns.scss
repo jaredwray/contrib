@@ -9,6 +9,7 @@
     font-size: 20px;
     padding-top: 0;
     min-height: 50px;
+    text-decoration: none;
 
     &[aria-expanded='true'] {
       color: $sage-color;

@@ -44,9 +44,7 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
     [favoriteCharities],
   );
 
-  const onInputSearchChange = useCallback((value) => {
-    setSearchQuery(value);
-  }, []);
+  const onInputSearchChange = useCallback((value) => setSearchQuery(value), []);
 
   const isSelectedCharity = useCallback(
     (charity: Charity) => charities.some((favoriteCharity: Charity) => favoriteCharity.id === charity.id),
@@ -61,13 +59,11 @@ const CharitiesSearchInput: FC<Props> = ({ charities, favoriteCharities, onChang
   );
 
   useEffect(() => {
-    if (searchQuery) {
-      executeSearch({ variables: { filters: { query: searchQuery, status: [CharityStatus.ACTIVE] } } });
-    }
+    if (searchQuery) executeSearch({ variables: { filters: { query: searchQuery, status: [CharityStatus.ACTIVE] } } });
   }, [executeSearch, searchQuery]);
 
   return (
-    <Form.Group className={clsx('charities-search-container', { active: charitiesSearch!.length })}>
+    <Form.Group className={clsx('charities-search-container pb-3', { active: searchQuery && charitiesSearch!.length })}>
       {withTitle && <Form.Label>Search</Form.Label>}
       <div ref={searchContainer} className={styles.wrapper}>
         <SearchInput

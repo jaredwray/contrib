@@ -42,7 +42,13 @@ const StatusDropdown: FC<Props> = ({ selectedStatuses, changeFilters }) => {
   return (
     <Form.Group className="mb-1">
       <Form.Label>Status</Form.Label>
-      <Select options={options} placeholder="Select status" selected={options[0]} onChange={selectStatus} />
+      <Select
+        className="d-block"
+        options={options}
+        placeholder="Select status"
+        selected={options[0]}
+        onChange={selectStatus}
+      />
     </Form.Group>
   );
 };

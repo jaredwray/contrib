@@ -62,7 +62,7 @@ export const InfluencerOnboardingBasicPage: FC = () => {
             <Col className="text-label label-with-separator">Create your account</Col>
           </Row>
           <h2 className="text-headline d-flex flex-row justify-content-between">
-            <span className="mr-1">Your Profile</span>
+            <span className="me-1">Your Profile</span>
             <span className={styles.stepIndicator}>Step 1</span>
           </h2>
           <hr className="d-none d-md-block" />

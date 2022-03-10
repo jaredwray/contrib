@@ -68,7 +68,7 @@ export default function Assistants() {
                       <th>Status</th>
                     </tr>
                   </thead>
-                  <tbody className="font-weight-normal">
+                  <tbody className="fw-normal">
                     {influencer.assistants.map((assistant) => (
                       <tr key={assistant.id}>
                         <td className="break-word">{assistant.name}</td>

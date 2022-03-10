@@ -39,7 +39,7 @@ const WatchBtn: FC<Props> = ({
         loading={loading}
         unfollowHandler={unfollowHandler}
       />
-      <div className="d-table-cell pl-4 align-middle">
+      <div className="d-table-cell ps-4 align-middle">
         <div className={clsx(styles.text, 'text-subhead test-watchThisText')} onClick={onTextClick}>
           Watch this {entityType}
         </div>

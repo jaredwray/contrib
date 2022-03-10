@@ -67,7 +67,7 @@ export const AdminPage: FC<Props> = ({
                 <input className="form-control" placeholder="Search"></input>
               )}
             </Col>
-            <Col className={clsx(styles.pagination, 'pt-3 pt-md-0 pr-0 pl-md-0 text-nowrap')} md="3" sm="5">
+            <Col className={clsx(styles.pagination, 'pt-3 pt-md-0 pe-0 ps-md-0 text-nowrap')} md="3" sm="5">
               <Pagination
                 loading={loading}
                 showNextPage={showNextPage}

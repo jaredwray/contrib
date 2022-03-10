@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import clsx from 'clsx';
+
 import useField from 'src/components/forms/Form/hooks/useField';
 import Select from 'src/components/forms/selects/Select';
 
@@ -18,7 +20,7 @@ const SelectField: FC<Props> = ({ name, options, placeholder, small, selected, c
 
   return (
     <Select
-      className={className}
+      className={clsx(className, 'd-block')}
       disabled={isDisabled}
       options={options}
       selected={selected}

@@ -26,9 +26,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
   const [SetAuctionStatusToStopped, { loading: updating }] = useMutation(mutation);
   const { title, endDate, isStopped } = auction;
   const isSettled = isAfter(new Date(), toDate(endDate));
-  const readableEndDate = (endDate: string) => {
-    return `${format(new Date(endDate), 'MMM dd yyyy')}`;
-  };
+  const readableEndDate = (endDate: string) => `${format(new Date(endDate), 'MMM dd yyyy')}`;
 
   const onSubmit = useCallback(() => {
     SetAuctionStatusToStopped({
@@ -71,7 +69,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
   };
   return (
     <Dialog
-      className="font-weight-normal text-center"
+      className="fw-normal text-center"
       open={open}
       title={`Confirm ${isStopped ? 'activating' : 'stopping'}`}
       onClose={onClose}
@@ -81,7 +79,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
 
         <DialogActions className="justify-content-center flex-column-reverse flex-sm-row pt-0 pt-sm-2">
           <Button
-            className={clsx(styles.actionBtn, 'ml-0 mr-sm-auto p-3')}
+            className={clsx(styles.actionBtn, 'ms-0 me-sm-auto p-3')}
             disabled={updating}
             size="sm"
             variant="light"

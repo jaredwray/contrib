@@ -21,7 +21,7 @@ export default function Header() {
   }, [logout]);
 
   return (
-    <header className="p-0 pl-sm-4 pr-sm-4 navigation-header">
+    <header className="p-0 px-sm-4 navigation-header">
       <Container fluid>
         <Row className="top">
           <Col md className="p-0">
@@ -37,7 +37,7 @@ export default function Header() {
                       <div className="dropdown-menu-user-name d-inline-block break-word">{user?.name}</div>
                       <Image
                         roundedCircle
-                        className="dropdown-menu-user-picture float-right d-inline-block"
+                        className="dropdown-menu-user-picture float-end d-inline-block"
                         src={user?.picture || '/content/img/users/person.png'}
                       />
                       <MenuNavLink link="/profile" title="My Profile" />
@@ -48,9 +48,9 @@ export default function Header() {
                   <MenuNavLink link="/charities" title="Charities" />
                   {account?.isAdmin && (
                     <>
+                      <MenuNavLink link="/admin/auctions" title="Manage Auctions" />
                       <MenuNavLink link="/admin/influencers" title="Manage Influencers" />
                       <MenuNavLink link="/admin/charities" title="Manage Charities" />
-                      <MenuNavLink link="/admin/auctions" title="Manage Auctions" />
                     </>
                   )}
                   {account?.influencerProfile && (

@@ -51,11 +51,11 @@ const SearchInput: FC<Props> = ({
         onClick={onClick}
       />
       {query && (
-        <InputGroup.Append>
+        <div className="input-group-append">
           <Button className={clsx(styles.cancelBtn, 'text-all-cups text-label')} variant="link" onClick={handleCancel}>
             Cancel
           </Button>
-        </InputGroup.Append>
+        </div>
       )}
     </InputGroup>
   );

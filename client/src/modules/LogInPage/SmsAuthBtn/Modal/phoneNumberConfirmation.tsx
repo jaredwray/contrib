@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState, FC, BaseSyntheticEvent } from 'react';
 
 import { useMutation } from '@apollo/client';
-import clsx from 'clsx';
 import { Duration, DateTime } from 'luxon';
 import { Form as BsForm, Button } from 'react-bootstrap';
 import { Field, Form } from 'react-final-form';
@@ -45,11 +44,10 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
   };
 
   const handleSubmit = useCallback(async () => {
+    const apiUrl = mergeUrlPath(process.env.REACT_APP_API_AUDIENCE, '/api/v1/auth/sms');
+    setLoadingLogIn(true);
+
     try {
-      const apiUrl = mergeUrlPath(process.env.REACT_APP_API_AUDIENCE, '/api/v1/auth/sms');
-
-      setLoadingLogIn(true);
-
       const responce = await fetch(apiUrl, {
         method: 'POST',
         credentials: 'include',
@@ -70,12 +68,8 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
 
   const handleResendCode = useCallback(() => {
     sendOtp({ variables: { phoneNumber: `+${phoneNumber}` } })
-      .then(() => {
-        setOtpSentAt(DateTime.local());
-      })
-      .catch((error) => {
-        showError(error.message);
-      });
+      .then(() => setOtpSentAt(DateTime.local()))
+      .catch((error) => showError(error.message));
   }, [phoneNumber, sendOtp, showError]);
 
   useEffect(() => {
@@ -98,14 +92,14 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
 
   return (
     <>
-      <div className="text-subhead pt-3 pb-3">Please, confirm your phone number</div>
-      <Form className="pt-3" onSubmit={handleSubmit}>
+      <div className="text-subhead pb-3">Please, confirm your phone number</div>
+      <Form onSubmit={handleSubmit}>
         {(formProps) => (
           <BsForm onSubmit={formProps.handleSubmit}>
-            <div className={clsx('pt-3', styles.message)}>Verification code has been sent to: {`+${phoneNumber}`}</div>
+            <div className={styles.message}>Verification code has been sent to: {`+${phoneNumber}`}</div>
             <Field name="otp">
               {(props) => (
-                <BsForm.Group className="">
+                <BsForm.Group>
                   <BsForm.Label>Confirmation number</BsForm.Label>
                   <BsForm.Control
                     {...props.input}
@@ -118,25 +112,27 @@ export const PhoneNumberConfirmation: FC<Props> = ({ phoneNumber, returnURL }) =
                 </BsForm.Group>
               )}
             </Field>
-            <Button
-              className="submit-btn mb-2 text-label d-inline-block"
-              disabled={isLoading || !otpIsValid}
-              type="submit"
-              variant="secondary"
-            >
-              Confirm
-            </Button>
-            {(process.title === 'browser' ? canResendOtp : true) && (
+            <div className="pt-4">
               <Button
-                className="ml-2 d-inline-block text-label"
-                data-test-id="resend_otp"
-                disabled={isLoading}
-                variant="link"
-                onClick={handleResendCode}
+                className="submit-btn text-label d-inline-block"
+                disabled={isLoading || !otpIsValid}
+                type="submit"
+                variant="secondary"
               >
-                Resend code
+                Confirm
               </Button>
-            )}
+              {(process.title === 'browser' ? canResendOtp : true) && (
+                <Button
+                  className="ms-2 d-inline-block text-label"
+                  data-test-id="resend_otp"
+                  disabled={isLoading}
+                  variant="link"
+                  onClick={handleResendCode}
+                >
+                  Resend code
+                </Button>
+              )}
+            </div>
           </BsForm>
         )}
       </Form>

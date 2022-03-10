@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 
 import PriceRange from '../Filters/PriceRange';
 
-describe('Should render correctly "Filters"', () => {
+describe('PriceRange', () => {
   const props: any = {
     initialBids: {
       maxPrice: 5,
@@ -16,16 +16,20 @@ describe('Should render correctly "Filters"', () => {
     changeFilters: jest.fn(),
   };
 
-  it('component returns null', () => {
-    const wrapper = mount(<PriceRange {...{ ...props, initialBids: null }} />);
-    wrapper.setProps({});
-    expect(wrapper.find('.form-group')).toHaveLength(0);
+  describe('without bids', () => {
+    it('returns null', () => {
+      const wrapper = mount(<PriceRange {...{ ...props, initialBids: null }} />);
+      wrapper.setProps({});
+      expect(wrapper.isEmptyRender()).toBe(true);
+    });
   });
-  it('component is defined', () => {
-    const wrapper = mount(<PriceRange {...props} />);
-    expect(wrapper.find('.form-group')).toHaveLength(1);
+  describe('with bids', () => {
+    it('returns filters', () => {
+      const wrapper = mount(<PriceRange {...props} />);
+      expect(wrapper.isEmptyRender()).toBe(false);
+    });
   });
-  it('should call changeFilters when changing', () => {
+  it('calls changeFilters onChange', () => {
     const wrapper = mount(<PriceRange {...props} />);
     wrapper.find(Nouislider).prop('onChange')!(['1', '2'], 1, [], true, []);
     expect(props.changeFilters).toHaveBeenCalledTimes(1);

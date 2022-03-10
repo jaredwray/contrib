@@ -58,11 +58,11 @@ export const PhoneNumberVerification: FC<Props> = ({ phoneNumber, setIsConfirmed
 
   return (
     <>
-      <div className="text-subhead pt-3 pb-3">Please, enter your phone number</div>
+      <div className="text-subhead pb-3">Please, enter your phone number</div>
       <Form onSubmit={handleSubmit}>
         {(formProps) => (
           <BsForm
-            className="d-flex justify-content-md-between align-items-md-center flex-md-row flex-column "
+            className="d-flex justify-content-md-between align-items-md-center flex-md-row flex-column"
             onSubmit={formProps.handleSubmit}
           >
             <Field name="phoneNumber">

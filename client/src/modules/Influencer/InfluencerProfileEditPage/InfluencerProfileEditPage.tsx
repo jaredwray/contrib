@@ -1,7 +1,6 @@
 import { FC, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
-import clsx from 'clsx';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -18,7 +17,6 @@ import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { BasicFormFields } from '../common/BasicFormFields';
 import { CharitiesFormFields } from '../common/CharitiesFormFields';
-import styles from './styles.module.scss';
 
 interface FormValues {
   name: string;
@@ -77,17 +75,16 @@ export const InfluencerProfileEditPage: FC = () => {
           </Row>
           <Row>
             <Col className="text-headline">{account?.isAdmin ? 'Profile' : 'My Profile'}</Col>
-            <hr className={clsx(styles.hr, 'd-none d-md-block')} />
           </Row>
           <BasicFormFields influencer={influencerProfile} />
           <Col>
             <h2 className="text-headline d-flex flex-row justify-content-between">
-              <span className="mr-1">{account?.isAdmin ? 'Charities' : 'My Charities'}</span>
+              <span className="me-1">{account?.isAdmin ? 'Charities' : 'My Charities'}</span>
             </h2>
           </Col>
           <hr className="d-none d-md-block" />
           <CharitiesFormFields />
-          <Col>
+          <Col className="pe-2">
             <SubmitButton text="Save" />
           </Col>
         </Container>

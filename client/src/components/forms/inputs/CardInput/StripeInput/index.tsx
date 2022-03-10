@@ -73,7 +73,7 @@ const StripeInput: FC<Props> = ({
       />
       {showSaveBtn && (
         <Button
-          className={clsx(saveButtonClassName || styles.newCardSaveBtn, 'pr-0')}
+          className={clsx(saveButtonClassName || styles.newCardSaveBtn, 'pe-0')}
           disabled={disabled}
           size="sm"
           variant="link"
@@ -84,7 +84,7 @@ const StripeInput: FC<Props> = ({
       )}
       {showCancelBtn && (
         <Button
-          className={clsx(cancelButtonClassName || styles.newCardCancelBtn, 'pr-0')}
+          className={clsx(cancelButtonClassName || styles.newCardCancelBtn, 'pe-0')}
           disabled={disabled}
           size="sm"
           variant="link"

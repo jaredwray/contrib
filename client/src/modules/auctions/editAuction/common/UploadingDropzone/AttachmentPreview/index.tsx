@@ -57,7 +57,7 @@ const AttachementPreview: FC<Props> = ({
     <div className={previewStyles.previewWrapper}>
       <div className={(clsx(previewStyles.attachmentContent), 'd-flex clickable h-100 w-100')} onClick={onClickPreview}>
         {isInvalidPicture ? (
-          <VideoIcon className="w-100 h-100 pr-2" hideAddSign={true} />
+          <VideoIcon className="w-100 h-100 pe-2" hideAddSign={true} />
         ) : (
           <img alt="" className={previewStyles.preview} src={srcUrl} onError={onImagePreviewError} />
         )}

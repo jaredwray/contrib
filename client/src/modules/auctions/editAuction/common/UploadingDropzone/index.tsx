@@ -145,7 +145,7 @@ const UploadingDropzone: FC<Props> = ({
 
   return (
     <>
-      <div className={clsx('pl-md-0 pr-md-0 text-center text-sm-left', hasAttachments && 'd-table-row')}>
+      <div className={clsx('px-md-0 text-center text-sm-start', hasAttachments && 'd-table-row')}>
         {uploadedAttachments.map((attachment: AuctionAttachment, index: number) => (
           <AttachmentPreview
             key={index}

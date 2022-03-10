@@ -18,33 +18,27 @@ const Modal: FC<Props> = ({ currentPhoneNumber, showDialog, setCloseDialog, setP
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [verified, setVerified] = useState(false);
 
-  const handleOnClose = useCallback(() => {
+  const onClose = useCallback(() => {
     setNewPhoneNumber('');
     setVerified(false);
     setCloseDialog();
   }, [setCloseDialog]);
 
   return (
-    <Dialog className="p-4" open={showDialog} title="Confirm Number" onClose={handleOnClose}>
+    <Dialog className="p-4" open={showDialog} title="Confirm Number" onClose={onClose}>
       <DialogContent className={styles.content}>
         {verified ? (
           <ConfirmationStep
             newPhoneNumber={newPhoneNumber}
-            setPhoneNumber={(value: string) => {
-              setPhoneNumber(value);
-            }}
-            onClose={handleOnClose}
+            setPhoneNumber={(value: string) => setPhoneNumber(value)}
+            onClose={onClose}
           />
         ) : (
           <VerificationStep
             currentPhoneNumber={currentPhoneNumber}
             newPhoneNumber={newPhoneNumber}
-            setNewPhoneNumber={(value) => {
-              setNewPhoneNumber(value);
-            }}
-            setVerified={() => {
-              setVerified(true);
-            }}
+            setNewPhoneNumber={(value) => setNewPhoneNumber(value)}
+            setVerified={() => setVerified(true)}
           />
         )}
       </DialogContent>

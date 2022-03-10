@@ -56,7 +56,7 @@ const Filters: FC<Props> = ({ initialBids, filters, changeFilters, charityChange
 
   return (
     <>
-      <div className={clsx('float-left pt-4 pb-4', styles.title)}>Auctions</div>
+      <div className={clsx('float-start py-4', styles.title)}>Auctions</div>
       <SearchInput className="mb-1" placeholder="Search" onCancel={handleQueryCancel} onChange={handleQueryChange} />
       <Form.Group className="mb-1">
         <Form.Label>Charity</Form.Label>

@@ -21,7 +21,7 @@ const StepByStepPageRow: FC<Props> = ({ prevAction, disabled, loading, last, isA
     <div className={styles.root}>
       <Container fluid className="d-flex h-100 justify-content-between align-items-center">
         <Button
-          className="text-subhead font-weight-bold"
+          className="text-subhead fw-bold"
           disabled={(!isActive && (loading || !prevAction)) || disabled}
           variant="link"
           onClick={isActive ? () => history.goBack() : prevAction}
