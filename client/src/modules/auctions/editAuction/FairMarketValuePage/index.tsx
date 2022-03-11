@@ -1,6 +1,7 @@
 import { useCallback, useContext, useState, useMemo } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
+import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
@@ -105,9 +106,7 @@ const FairMarketValuePage = () => {
   const tryToUpdateAuction = useCallback(
     async (variables: any) => {
       try {
-        await updateAuction({
-          variables: { id: auctionId, ...variables },
-        });
+        await updateAuction({ variables: { id: auctionId, ...variables } });
         if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);
@@ -193,9 +192,6 @@ const FairMarketValuePage = () => {
   }
   if (auction === undefined) return null;
 
-  const textBlock =
-    'The fair market value is the price something would sell for on the open market. A good example of this is a jersey signed or not would have a fair market value of $99 dollars which is what it is online.';
-
   setPageTitle(`Edit Auction ${auction.title} | Fair Market Value`);
 
   return (
@@ -221,8 +217,10 @@ const FairMarketValuePage = () => {
         />
       ) : (
         <>
-          <Row description={textBlock}>{!isLoadingQuery && <MoneyField name="fairMarketValue" />}</Row>
-          <Button className={styles.multipleItemsButton} onClick={handleIsMultipleItems}>
+          <Row description="The fair market value is the price something would sell for on the open market. A good example of this is a jersey signed or not would have a fair market value of $99 dollars which is what it is online.">
+            {!isLoadingQuery && <MoneyField name="fairMarketValue" />}
+          </Row>
+          <Button className={clsx(styles.multipleItemsButton, 'mb-0 mb-md-4')} onClick={handleIsMultipleItems}>
             Multiple Items
           </Button>
         </>

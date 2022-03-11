@@ -104,7 +104,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
     <Layout>
       <section className={styles.root}>
         {(isMyProfile || account?.isAdmin) && (
-          <Container className="p-0">
+          <Container className="p-0" fluid="xxl">
             <Row className="position-relative">
               <Col className="p-0">
                 <Link
@@ -120,7 +120,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
         <div className={styles.header}>
           <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
         </div>
-        <Container className={clsx(styles.content, 'mb-0 mb-md-3')}>
+        <Container className={clsx(styles.content, 'mb-0 mb-md-3')} fluid="xxl">
           <Row>
             <Col md="6">
               {!isActive && <NotActiveStatus />}
@@ -175,7 +175,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
         </Container>
       </section>
       <section className={clsx(styles.sliders, 'pt-4 pt-md-5 pb-4 p-md-5')}>
-        <Container>
+        <Container fluid="xxl">
           {isLoadingAuctions ? (
             <AuctionsInfoLoading name={charity.name} />
           ) : (

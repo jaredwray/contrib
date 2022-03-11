@@ -29,7 +29,7 @@ export default function EndingSoon() {
 
   return (
     <section className={styles.root}>
-      <Container className={clsx(styles.homepageContainer, 'header')}>
+      <Container className={clsx(styles.homepageContainer, 'header')} fluid="xxl">
         <Row className="pb-3 pb-sm-3 pb-lg-5">
           <Col className={clsx(styles.title, 'text-super pb-3 pb-md-2 pb-lg-0')} lg="8" xs="12">
             Ending soon

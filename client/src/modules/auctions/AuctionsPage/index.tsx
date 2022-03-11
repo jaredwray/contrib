@@ -45,14 +45,9 @@ const AuctionsPage: FC = () => {
     });
   }, []);
 
-  const auctionStatuses = useMemo(() => {
-    return [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD];
-  }, []);
+  const auctionStatuses = useMemo(() => [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD], []);
 
-  useEffect(() => {
-    changeFilters('bids', initialBids);
-  }, [auctionPriceLimits, changeFilters, initialBids]);
-
+  useEffect(() => changeFilters('bids', initialBids), [auctionPriceLimits, changeFilters, initialBids]);
   useEffect(() => {
     const queryFilters = { charity: filters.charity } as any;
 
@@ -72,7 +67,6 @@ const AuctionsPage: FC = () => {
       },
     });
   }, [executeAuctionsSearch, filters, auctionStatuses]);
-
   useEffect(() => {
     const queryFilters = { charity: filters.charity };
 

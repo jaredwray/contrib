@@ -36,7 +36,7 @@ export default function SimilarAuctions({ selectedAuction }: Props) {
 
   return (
     <section className={styles.root}>
-      <Container className={clsx(styles.homepageContainer, 'header')}>
+      <Container className={clsx(styles.homepageContainer, 'header')} fluid="xxl">
         <Row className="pb-3 pb-md-4">
           <Col className={clsx(styles.title, 'text-super pb-3 pb-md-3 pb-lg-0')} lg="8" xs="12">
             Similar auctions

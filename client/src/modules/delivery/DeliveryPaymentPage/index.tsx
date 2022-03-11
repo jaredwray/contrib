@@ -85,14 +85,17 @@ export default function DeliveryPricePage() {
     try {
       if (!paymentInformation || newCard) {
         const tokenResult = await stripe?.createToken(elements.getElement(CardElement) as StripeCardElement);
+
         if (tokenResult?.error) {
           setSubmitting(false);
           showError(tokenResult.error.message || '');
           return;
         }
+
         const token = tokenResult?.token ?? { id: '' };
         await RegisterPaymentMethod({ variables: { token: token.id } });
       }
+
       await ShippingRegistration({
         variables: {
           auctionId,
@@ -122,18 +125,6 @@ export default function DeliveryPricePage() {
     showError,
     showMessage,
   ]);
-
-  const handleAddCard = useCallback(() => {
-    setNewCard(true);
-  }, []);
-
-  const handleNewCardCancelBtnClick = useCallback(() => {
-    setNewCard(false);
-  }, [setNewCard]);
-
-  const handleCardInputChange = useCallback((event: StripeCardElementChangeEvent) => {
-    setCardComplete(event.complete);
-  }, []);
 
   const handleDeliveryMethodChange = (deliveryMethod: string) => {
     selectedDeliveryMethod.current = deliveryMethod;
@@ -191,7 +182,7 @@ export default function DeliveryPricePage() {
         <Row className="d-flex align-items-baseline w-100 mb-2">
           <div className="w-100">
             <Select
-              className={styles.select}
+              className={clsx(styles.select, 'w-100')}
               disabled={selectisDisabled}
               options={deliveryMethods}
               selected={deliveryMethods[0]}
@@ -201,7 +192,7 @@ export default function DeliveryPricePage() {
         </Row>
         {calculateShippingCostLoading ? (
           <Row className={clsx(styles.deliveryInfo, 'justify-content-center align-items-center w-100')}>
-            <Spinner animation="border" size="sm" />
+            <Spinner animation="border" />
           </Row>
         ) : (
           <div className={styles.deliveryInfo}>
@@ -215,18 +206,20 @@ export default function DeliveryPricePage() {
             </Row>
           </div>
         )}
-        <CardInput
-          cancelButtonStyles={styles.deliveryCardCancelButton}
-          cardInfoStyles={styles.deliveryCardInfo}
-          expired={expired}
-          handleAddCard={handleAddCard}
-          isSubmitting={isSubmitting}
-          newCard={newCard}
-          paymentInformation={paymentInformation}
-          stripeInputStyles={styles.deliveryStripeInput}
-          onCancel={handleNewCardCancelBtnClick}
-          onChange={handleCardInputChange}
-        />
+        <div className="pb-0 pb-md-2">
+          <CardInput
+            cancelButtonStyles={styles.deliveryCardCancelButton}
+            cardInfoStyles={styles.deliveryCardInfo}
+            expired={expired}
+            handleAddCard={() => setNewCard(true)}
+            isSubmitting={isSubmitting}
+            newCard={newCard}
+            paymentInformation={paymentInformation}
+            stripeInputStyles={styles.deliveryStripeInput}
+            onCancel={() => setNewCard(false)}
+            onChange={(event: StripeCardElementChangeEvent) => setCardComplete(event.complete)}
+          />
+        </div>
       </StepRow>
     </StepByStepPageLayout>
   );

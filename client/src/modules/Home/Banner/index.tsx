@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 export default function Banner() {
   return (
     <section className={styles.banner}>
-      <Container className={clsx(styles.homepageContainer, 'position-relative h-100')} fluid="sm">
+      <Container className={clsx(styles.homepageContainer, 'position-relative h-100 m-0')} fluid="xxl">
         <div className={styles.wrapper}>
           <Row>
             <Col className="pt-5 pt-md-4 pt-lg-5 pb-3 pb-md-4 pb-lg-4 text-super" lg="8" xs="6">

@@ -23,9 +23,7 @@ export default function Assistants() {
     variables: { id: influencerId },
   });
 
-  useEffect(() => {
-    getAssistatsList();
-  }, [getAssistatsList]);
+  useEffect(() => getAssistatsList(), [getAssistatsList]);
 
   const influencer = data?.influencer;
   const isMyProfile = account?.influencerProfile?.id === influencer?.id;
@@ -41,7 +39,7 @@ export default function Assistants() {
   return (
     <Layout>
       <section className={clsx(styles.page, 'text-label p-4')}>
-        <Container fluid>
+        <Container fluid="xxl">
           <Row>
             <Col className="text-headline" md="10">
               <span className="break-word">{isMyProfile ? 'My' : `${influencer.name}'s`}</span> assistants
@@ -55,7 +53,7 @@ export default function Assistants() {
             </Col>
           </Row>
         </Container>
-        <Container fluid>
+        <Container fluid="xxl">
           <Row>
             <Col className="w-100 pt-4">
               {!influencer.assistants.length && <p className="text-subhead">You don't have assistants yet</p>}

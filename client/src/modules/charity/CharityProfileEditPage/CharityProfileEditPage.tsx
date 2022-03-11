@@ -60,7 +60,7 @@ export const CharityProfileEditPage: FC = () => {
         initialValues={charityProfile}
         onSubmit={handleSubmit}
       >
-        <Container>
+        <Container fluid="xxl">
           <Row>
             <Col className="text-label label-with-separator">{`${!account?.isAdmin && 'My '}Charity Account`}</Col>
           </Row>

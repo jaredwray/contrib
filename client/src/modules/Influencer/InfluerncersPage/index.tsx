@@ -37,8 +37,6 @@ const InfluencersPage: FC = () => {
     });
   }, [executeInfluencersSearch, filters]);
 
-  setPageTitle('Influencers page');
-
   const sortOptions = [
     { value: 'DEFAULT', label: 'Default' },
     { value: 'ONBOARDED_AT_ASC', label: 'Newest' },
@@ -46,6 +44,9 @@ const InfluencersPage: FC = () => {
     { value: 'NAME_DESC', label: 'Name: Z - A' },
   ];
   const filterComponent = <Filters changeFilters={changeFilters} />;
+
+  setPageTitle('Influencers page');
+
   return (
     <AllItemsLayout
       changeFilters={changeFilters}

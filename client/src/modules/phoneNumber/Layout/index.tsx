@@ -7,7 +7,7 @@ import styles from './styles.module.scss';
 
 export default function PhoneNumberLayout({ children }: { children: any }) {
   return (
-    <Container fluid className="h-100 m-0 p-0">
+    <Container className="h-100 m-0 p-0" fluid="xxl">
       <Row className="m-0 h-100">
         <Col className="p-0 pt-4">
           <Container fluid className="p-0 col-md-9 col-11">

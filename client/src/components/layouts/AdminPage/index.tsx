@@ -58,7 +58,7 @@ export const AdminPage: FC<Props> = ({
   return (
     <Layout>
       <section className={clsx(styles.page, 'text-label p-sm-4 p-1 pt-4 pb-2')}>
-        <Container fluid>
+        <Container fluid="xxl">
           <Row>
             <Col className={styles.searchInput} md={controlBtns ? '4' : '8'}>
               {onChange ? (
@@ -77,13 +77,13 @@ export const AdminPage: FC<Props> = ({
               />
             </Col>
             {controlBtns && (
-              <Col className="pt-3 pt-md-0 text-sm-right text-center" md="5" sm="7">
+              <Col className="pt-3 pt-md-0 text-end" md="5" sm="7">
                 {controlBtns}
               </Col>
             )}
           </Row>
         </Container>
-        <Container fluid>
+        <Container fluid="xxl">
           <Row>
             <Col className="w-100">{(process.title === 'browser' ? !loading : true) && children}</Col>
           </Row>

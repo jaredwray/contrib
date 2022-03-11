@@ -40,7 +40,7 @@ const StepByStepPageLayout: FC<Props> = ({
       {!isActive && <ProgressBar now={progress} />}
       <section className={styles.section}>
         <Form className={styles.form} initialValues={initialValues} onSubmit={onSubmit}>
-          <Container className={styles.container}>
+          <Container className={styles.container} fluid="xxl">
             <StepPageHeader header={header} step={isActive ? null : step} title={title} />
             {children}
           </Container>
