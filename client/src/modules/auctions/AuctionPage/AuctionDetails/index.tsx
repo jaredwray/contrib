@@ -47,10 +47,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
     auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAID ||
     auction.delivery.status === AuctionDeliveryStatus.DELIVERY_PAYMENT_FAILED;
 
-  const viewAllBidsClick = useCallback(() => {
-    if (totalBids === 0) return;
-    setShowBidsDialog(true);
-  }, [totalBids, setShowBidsDialog]);
+  const viewAllBidsClick = useCallback(() => setShowBidsDialog(totalBids > 0), [totalBids, setShowBidsDialog]);
 
   return (
     <>
@@ -65,7 +62,12 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
           <div className="link" onClick={viewAllBidsClick}>
             View all bids ({totalBids})
           </div>
-          <BidsListModal auctionId={auctionId} open={showBidsDialog} onClose={() => setShowBidsDialog(false)} />
+          <BidsListModal
+            auctionId={auctionId}
+            open={showBidsDialog}
+            totalBids={totalBids}
+            onClose={() => setShowBidsDialog(false)}
+          />
         </Col>
         <Col className="text-label-new">{Dinero(currentPrice).toFormat('$0,0')}</Col>
       </Row>

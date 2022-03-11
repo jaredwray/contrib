@@ -35,6 +35,11 @@ interface Props {
 export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
   ({ auctionId, isBuying, setIsBuying }, ref) => {
     const [buyAuction] = useMutation(BuyAuctionMutation);
+    const [makeBid] = useMutation(MakeAuctionBidMutation);
+    const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
+      refetchQueries: [{ query: MyAccountQuery }],
+    });
+
     const stripe = useStripe();
     const elements = useElements();
     const { showMessage, showError } = useShowNotification();
@@ -45,10 +50,6 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const [newCard, setNewCard] = useState(false);
     const { account } = useContext(UserAccountContext);
 
-    const [makeBid] = useMutation(MakeAuctionBidMutation);
-    const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
-      refetchQueries: [{ query: MyAccountQuery }],
-    });
     const paymentInformation = account?.paymentInformation;
     const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
     const title = 'Place Your Bid';
