@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
 import { useQuery } from '@apollo/client';
 import { format } from 'date-fns-tz';
@@ -11,14 +11,19 @@ import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import { AuctionBid } from 'src/types/Bid';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
   auctionId: string;
+  open: boolean;
+  totalBids: number;
+  onClose: () => void;
 }
 
-const BidsListModal: FC<Props> = ({ auctionId, open, onClose }): ReactElement => {
-  const { data } = useQuery(AuctionBidsQuery, { variables: { auctionId } });
+const BidsListModal: FC<Props> = ({ auctionId, open, totalBids, onClose }): ReactElement => {
+  const { refetch, data } = useQuery(AuctionBidsQuery, { variables: { auctionId } });
   const bids = (data?.bids || []) as AuctionBid[];
+
+  useEffect(() => {
+    if (totalBids > bids.length) refetch();
+  }, [bids.length, totalBids, refetch]);
 
   return (
     <Dialog backdrop="static" keyboard={false} open={open} title="Bids list" onClose={onClose}>

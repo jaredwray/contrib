@@ -21,13 +21,8 @@ export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialFormValues = useMemo(() => ({ bid: minBid.toObject() }), [minBid.getAmount()]);
   const [disabled, setDisabled] = useState(false);
+  const handleSubmit = useCallback(({ bid }) => onSubmit(Dinero(bid)), [onSubmit]);
 
-  const handleSubmit = useCallback(
-    ({ bid }) => {
-      return onSubmit(Dinero(bid));
-    },
-    [onSubmit],
-  );
   const isMaxBidCharged = minBid.getAmount() / 100 > MAX_BID_VALUE;
   const isFinalBid = minBid.getAmount() / 100 === MAX_BID_VALUE;
   const minBidFormatted = minBid.toFormat('$0,0');
