@@ -7,9 +7,9 @@
   .slick-arrow {
     position: absolute;
     display: block;
-    height: 60px;
-    width: 60px;
-    top: calc(50% - 60px);
+    height: 20px;
+    width: 20px;
+    top: calc(50% - 40px);
     cursor: pointer;
     font-size: 0;
     line-height: 0;
@@ -30,13 +30,16 @@
       margin-left: 3px;
     }
   }
+  .slick-next,
   .slick-prev {
-    left: -100px;
+    top: calc(min(270px, 50vw) - 15px);
   }
-
+  .slick-prev {
+    left: -20px;
+  }
   .slick-next {
     transform: rotate(-180deg);
-    right: -100px;
+    right: -20px;
   }
 
   /* Dots */
@@ -73,49 +76,46 @@
 
 @media (max-width: $almost-medium-weight) {
   .auction-attachments-slider {
-    .slick-arrow {
-      margin-top: 4px;
-      &:after {
-        border-left-width: 7px;
-        border-top-width: 7px;
+    margin-top: 2px;
+    margin-bottom: 0;
+
+    ul.slick-dots {
+      li {
+        width: 16px !important;
+        height: 16px !important;
+        margin-right: 0 !important;
+
+        & > div {
+          height: 8px;
+          width: 8px;
+          background-color: $light-silver-color;
+          border-radius: 50%;
+          display: inline-block;
+        }
+
+        &.slick-active {
+          border: none !important;
+          & > div {
+            background-color: $gray77-color;
+          }
+        }
       }
     }
   }
+}
+
+@media (max-width: $small-weight) {
   .auction-attachments-slider {
     margin-top: 2px;
     margin-bottom: 0;
-  }
-  .slick-prev,
-  .slick-next {
-    top: 100% !important;
-  }
-  .slick-prev {
-    left: -10px !important;
-    transform: scale(0.6, -0.6) translateY(55%);
-  }
-  .slick-next {
-    transform: rotate(-180deg) scale(0.6, -0.6) translateY(-55%) !important;
-    right: -10px !important;
-  }
 
-  .slick-dots li {
-    width: 16px !important;
-    height: 16px !important;
-    margin-right: 0 !important;
-
-    & > div {
-      height: 8px;
-      width: 8px;
-      background-color: $light-silver-color;
-      border-radius: 50%;
-      display: inline-block;
+    .slick-prev {
+      left: -10px !important;
+      transform: scale(0.6, -0.6) translateY(55%);
     }
-
-    &.slick-active {
-      border: none !important;
-      & > div {
-        background-color: $gray77-color;
-      }
+    .slick-next {
+      transform: rotate(-180deg) scale(0.6, -0.6) translateY(-55%) !important;
+      right: -10px !important;
     }
   }
 }

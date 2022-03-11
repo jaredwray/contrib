@@ -14,6 +14,8 @@
   cursor: pointer;
   border: 1px solid $whitesmoke-color;
   box-sizing: border-box;
+  width: calc(100% - 30px) !important;
+  margin: auto !important;
 }
 
 .attachment {
@@ -32,17 +34,6 @@
   height: 30px;
   line-height: 30px !important;
   background-color: $ochre-color;
-}
-
-.slider {
-  display: flex;
-  flex-direction: row-reverse;
-}
-
-@media (max-width: $large-weight) {
-  .slider {
-    flex-direction: column;
-  }
 }
 
 @media (max-width: $medium-weight) {
