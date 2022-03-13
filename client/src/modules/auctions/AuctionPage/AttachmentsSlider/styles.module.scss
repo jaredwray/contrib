@@ -12,7 +12,6 @@
 
 .attachmentImageWrapper {
   cursor: pointer;
-  border: 1px solid $whitesmoke-color;
   box-sizing: border-box;
   margin: auto !important;
 }
@@ -61,5 +60,8 @@
 @media (min-width: $extra-large-weight) {
   .slider {
     flex-direction: row-reverse;
+  }
+  .attachmentImageWrapper {
+    border: 1px solid $whitesmoke-color;
   }
 }

@@ -14,3 +14,9 @@
   color: $cornflower-blue-color !important;
   padding: 10px !important;
 }
+
+@media (max-width: $small-weight) {
+  .buyItNowWrapper {
+    margin: 0 -0.75rem;
+  }
+}
