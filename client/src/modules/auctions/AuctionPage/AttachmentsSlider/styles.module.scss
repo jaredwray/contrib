@@ -39,7 +39,7 @@
   flex-direction: row-reverse;
 }
 
-@media (min-width: $large-weight) {
+@media (max-width: $extra-large-weight) {
   .slider {
     flex-direction: column;
   }
