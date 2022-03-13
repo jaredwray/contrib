@@ -38,7 +38,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   const mobilePaging = (i: number) => <div key={i} />;
 
   const settings = {
-    arrows: true,
+    arrows: false,
     dots: true,
     className: clsx(styles.slider, 'auction-attachments-slider text-center'),
     customPaging: desktopPaging,
@@ -49,6 +49,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
       {
         breakpoint: 768,
         settings: {
+          arrows: true,
           customPaging: mobilePaging,
         },
       },

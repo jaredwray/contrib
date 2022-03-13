@@ -84,15 +84,15 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     <Layout>
       <Container className="pt-0 pt-md-5 pb-4 pb-md-5">
         <Row>
-          <Col className="p-0" md="4" xxl="5">
+          <Col className="p-0" md="5" lg="5" xxl="5">
             <AttachmentsSlider attachments={attachments} />
           </Col>
-          <Col md="8" xxl="7">
+          <Col md="7" lg="7" xxl="7">
             <Row>
-              <Col lg="8" xxl="7">
+              <Col lg="7" xxl="7">
                 <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
               </Col>
-              <Col className="pt-4 pt-lg-0" lg="4" xxl="5">
+              <Col className="pt-4 pt-lg-0" lg="5" xxl="5">
                 <GeneralInformation auction={auction} />
               </Col>
             </Row>
