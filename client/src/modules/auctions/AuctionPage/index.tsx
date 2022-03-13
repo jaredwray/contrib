@@ -84,7 +84,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     <Layout>
       <Container className="pt-0 pt-md-5 pb-4 pb-md-5">
         <Row>
-          <Col md="4" xxl="5">
+          <Col className="p-0" md="4" xxl="5">
             <AttachmentsSlider attachments={attachments} />
           </Col>
           <Col md="8" xxl="7">

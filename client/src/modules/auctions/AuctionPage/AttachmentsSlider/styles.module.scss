@@ -14,8 +14,10 @@
   cursor: pointer;
   border: 1px solid $whitesmoke-color;
   box-sizing: border-box;
-  width: calc(100% - 30px) !important;
   margin: auto !important;
+  stream {
+    margin: 0 30px !important;
+  }
 }
 
 .attachment {
@@ -37,7 +39,8 @@
 }
 
 .slider {
-  flex-direction: row-reverse;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: $small-weight) {
@@ -53,10 +56,13 @@
     margin-bottom: 0;
     display: block !important;
   }
-}
-
-@media (min-width: $medium-weight) {
   .slider {
     flex-direction: column;
+  }
+}
+
+@media (min-width: $extra-large-weight) {
+  .slider {
+    flex-direction: row-reverse;
   }
 }
