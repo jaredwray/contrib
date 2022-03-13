@@ -21,7 +21,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id, semanticId })
             src={ResizedImageUrl(avatarUrl, 120)}
           />
           <div className="ps-3">
-            <div className="text-body-new">{name}</div>
+            <div className="text-body-new text-all-cups fw-normal">{name}</div>
             <Link className="link" to={`/charity/${semanticId || id}`}>
               Visit charity page and learn more
             </Link>
