@@ -36,6 +36,17 @@
   background-color: $ochre-color;
 }
 
+.slider {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+@media (max-width: $extra-large-weight) {
+  .slider {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: $medium-weight) {
   .attachmentWrapper {
     width: 100%;

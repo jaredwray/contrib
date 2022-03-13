@@ -689,7 +689,7 @@ export class AuctionService {
       currency: (auction.priceCurrency || AppConfig.app.defaultCurrency) as Currency,
     });
 
-    if (bid.lessThanOrEqual(currentPrice)) {
+    if (auction.totalBids > 0 && bid.lessThanOrEqual(currentPrice)) {
       throw new AppError(
         'Provided bid is lower, than maximum bid that was encountered on the auction',
         ErrorCode.BAD_REQUEST,

@@ -32,7 +32,7 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
   const [isBuying, setIsBuying] = useState(false);
   const auctionId = auction.id;
 
-  const { startPrice, itemPrice, currentPrice, items, bidStep } = auction;
+  const { startPrice, itemPrice, currentPrice, items, bidStep, totalBids } = auction;
 
   let isShowBuyButton;
 
@@ -41,15 +41,12 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
   const confirmationRef = useRef<BidConfirmationRef>(null);
   const buyingPrice = Dinero(itemPrice)?.toFormat('$0,0');
-  const minBid = useMemo(
-    () =>
-      (currentPrice &&
-        (!isFinalBid
-          ? Dinero(currentPrice).add(Dinero(bidStep))
-          : Dinero({ amount: FINAL_BID * 100, currency: currentPrice.currency }))) ||
-      Dinero(startPrice),
-    [currentPrice, startPrice, isFinalBid, bidStep],
-  );
+  const minBid = useMemo(() => {
+    if (totalBids === 0) return Dinero(startPrice);
+    if (isFinalBid) return Dinero({ amount: FINAL_BID * 100, currency: currentPrice.currency });
+
+    return Dinero(currentPrice).add(Dinero(bidStep));
+  }, [currentPrice, startPrice, isFinalBid, bidStep, totalBids]);
 
   if (itemPrice) isShowBuyButton = itemPrice?.amount > minBid.getAmount();
 
