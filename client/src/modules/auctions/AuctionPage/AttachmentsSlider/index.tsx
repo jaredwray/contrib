@@ -40,7 +40,11 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   const settings = {
     arrows: false,
     dots: true,
-    className: clsx(styles.slider, 'auction-attachments-slider text-center'),
+    className: clsx(
+      styles.slider,
+      `
+      auction-attachments-slider text-center ${attachments.length === 1 && styles.flexDirectionOverride}`,
+    ),
     customPaging: desktopPaging,
     slidesToShow: 1,
     slidesToScroll: 1,
