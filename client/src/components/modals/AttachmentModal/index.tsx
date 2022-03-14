@@ -21,7 +21,7 @@ const AttachmentModal: FC<Props> = ({ attachment, closeModal }) => {
   return (
     <Modal
       centered
-      contentClassName={clsx('d-table', isVideo || 'w-auto')}
+      contentClassName={clsx('d-table pt-4', isVideo || 'w-auto')}
       dialogClassName={styles.modal}
       show={true}
       onHide={closeModal}
