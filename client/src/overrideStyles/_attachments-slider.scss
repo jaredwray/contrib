@@ -1,7 +1,6 @@
 @import 'src/variables.scss';
 
 .auction-attachments-slider {
-  margin-top: 5px;
 
   /* Arrows */
   .slick-arrow {
@@ -78,7 +77,6 @@
 
 @media (max-width: $almost-medium-weight) {
   .auction-attachments-slider {
-    margin-top: 2px;
     margin-bottom: 0;
 
     ul.slick-dots {
@@ -108,8 +106,9 @@
 
 @media (max-width: $small-weight) {
   .auction-attachments-slider {
-    margin-top: 2px;
     margin-bottom: 0;
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
 
     .slick-prev {
       transform: scale(0.9, -0.9) translateY(50%);

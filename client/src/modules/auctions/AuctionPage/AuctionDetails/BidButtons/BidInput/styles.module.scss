@@ -30,3 +30,9 @@
     box-shadow: $ochre-color 0 0 0 1px !important;
   }
 }
+
+@media (max-width: $small-weight) {
+  .form {
+    margin: 0 -0.75rem;
+  }
+}

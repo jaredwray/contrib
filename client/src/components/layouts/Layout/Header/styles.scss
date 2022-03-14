@@ -1,13 +1,13 @@
 @import 'src/variables.scss';
 
 .navigation-header {
-  box-shadow: 0px 0px 4px $dark-gray-color;
+  border-bottom: 1px solid $light-gray-color
 }
 
 .header-nav-dropdown {
   .dropdown-toggle {
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
     display: inline-block;
     background: no-repeat center url('/assets/images/hamburger.webp');
 
