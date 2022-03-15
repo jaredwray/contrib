@@ -11,8 +11,8 @@ export const ProfileAvatar: FC<Props> = ({ src }) => (
     className={styles.avatar}
     style={{
       display: 'block',
-      width: '194px',
-      height: '194px',
+      maxWidth: '194px',
+      maxHeight: '194px',
       borderRadius: '92px',
       background: '#ffffff',
       backgroundImage: `url(${src})`,
