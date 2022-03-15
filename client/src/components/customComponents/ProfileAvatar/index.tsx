@@ -10,8 +10,14 @@ export const ProfileAvatar: FC<Props> = ({ src }) => (
   <div
     className={styles.avatar}
     style={{
-      background: `no-repeat center url(${src})`,
-      backgroundSize: 'cover',
+      display: 'block',
+      width: '194px',
+      height: '194px',
+      borderRadius: '92px',
+      background: '#ffffff',
+      backgroundImage: `url(${src})`,
+      backgroundPosition: '50% 50%',
+      backgroundRepeat: 'no-repeat',
     }}
   ></div>
 );
