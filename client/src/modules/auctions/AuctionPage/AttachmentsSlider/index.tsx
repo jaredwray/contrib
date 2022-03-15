@@ -84,7 +84,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
             {attachment.type === 'IMAGE' ? (
               <Image className={styles.attachment} src={ResizedImageUrl(attachment.url, 720)} />
             ) : (
-              <Stream controls src={attachment.uid} onPlay={onStreamPlay} />
+              <Stream controls height="min(540px, 100vw)" src={attachment.uid} onPlay={onStreamPlay} />
             )}
           </div>
         ))}
