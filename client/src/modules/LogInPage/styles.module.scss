@@ -20,7 +20,7 @@
   background-color: $sage-color;
   background-size: cover;
   position: relative;
-  height: 50vw !important;
+  height: min(660px, 50vw) !important;
 }
 .signature {
   left: 50px;

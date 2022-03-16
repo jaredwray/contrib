@@ -69,7 +69,7 @@ export const InfluencerProfileEditPage: FC = () => {
         initialValues={influencerProfile}
         onSubmit={handleSubmit}
       >
-        <Container>
+        <Container fluid="xxl">
           <Row>
             <Col className="text-label label-with-separator">{account?.isAdmin ? 'Account' : 'My account'}</Col>
           </Row>

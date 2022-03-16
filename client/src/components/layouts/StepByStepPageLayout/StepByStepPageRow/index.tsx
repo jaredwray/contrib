@@ -17,9 +17,10 @@ interface Props {
 
 const StepByStepPageRow: FC<Props> = ({ prevAction, disabled, loading, last, isActive }) => {
   const history = useHistory();
+
   return (
     <div className={styles.root}>
-      <Container fluid className="d-flex h-100 justify-content-between align-items-center">
+      <Container className="d-flex h-100 justify-content-between align-items-center" fluid="xxl">
         <Button
           className="text-subhead fw-bold"
           disabled={(!isActive && (loading || !prevAction)) || disabled}

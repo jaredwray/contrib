@@ -18,7 +18,7 @@ const UserProfilePage: FC = () => {
   return (
     <Layout>
       <section className={clsx(styles.phoneNumberSection, 'text-label p-2 pt-4 pb-4')}>
-        <Container>
+        <Container fluid="xxl">
           <Row>
             <h1 className="text-label label-with-separator">Profile</h1>
           </Row>

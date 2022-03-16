@@ -31,7 +31,6 @@ interface Props {
 
 export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const { account } = useContext(UserAccountContext);
-
   const { showMessage, showError } = useShowNotification();
   const { isAuthenticated } = useAuth();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
@@ -60,24 +59,26 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
       setDraftAuctions(profileAuctionsHash(auctions.items).DRAFT);
     },
   });
-
   const [followInfluencer, { loading: followLoading }] = useMutation(FollowInfluencer);
   const [unfollowInfluencer, { loading: unfollowLoading }] = useMutation(UnfollowInfluencer);
 
+  const auctions = data?.auctions?.items || [];
+  const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
+
   const handleFollowInfluencer = useCallback(async () => {
-    if (isAuthenticated) {
-      try {
-        await followInfluencer({ variables: { influencerId: influencer.id } });
-        showMessage('Successfully followed');
-        setFollowed(true);
-        setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
-      } catch (error) {
-        showError(error.message);
-      }
+    if (!isAuthenticated) {
+      RedirectWithReturnAfterLogin(`/profiles/${influencer.id}`);
       return;
     }
 
-    RedirectWithReturnAfterLogin(`/profiles/${influencer.id}`);
+    try {
+      await followInfluencer({ variables: { influencerId: influencer.id } });
+      showMessage('Successfully followed');
+      setFollowed(true);
+      setFollowersNumber(followersNumber ? followersNumber + 1 : 1);
+    } catch (error) {
+      showError(error.message);
+    }
   }, [
     influencer.id,
     followersNumber,
@@ -98,11 +99,6 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
       showError(error.message);
     }
   }, [influencer.id, followersNumber, unfollowInfluencer, showMessage, showError]);
-
-  const auctions = data?.auctions?.items || [];
-
-  const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
-
   const onDelete = useCallback((auction: Auction) => {
     setDraftAuctions((prevState: Auction[]) => prevState.filter((draft) => draft !== auction));
   }, []);
@@ -110,7 +106,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   return (
     <Layout>
       <section className={styles.root}>
-        <Container className="p-0">
+        <Container className="p-0" fluid="xxl">
           <Row className="position-relative">
             <Col className="p-0">
               {isMyProfile && (

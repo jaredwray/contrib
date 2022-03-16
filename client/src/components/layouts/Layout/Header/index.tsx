@@ -22,7 +22,7 @@ export default function Header() {
 
   return (
     <header className="p-0 px-sm-4 navigation-header">
-      <Container fluid>
+      <Container fluid="xxl">
         <Row className="top">
           <Col md className="p-0">
             <Navbar collapseOnSelect expand={false}>

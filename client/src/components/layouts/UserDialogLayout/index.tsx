@@ -27,7 +27,7 @@ export const UserDialogLayout: FC<Props> = ({
 }) => (
   <Layout>
     <div className={clsx(backGroundStyle || styles.page, 'w-100 d-flex')}>
-      <Container className="d-md-table p-0">
+      <Container className="d-md-table p-0" fluid="xxl">
         <Container
           className={clsx(
             textColorStyle || styles.container,

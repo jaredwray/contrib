@@ -8,7 +8,7 @@ export default function Privacy() {
 
   return (
     <Layout>
-      <Container className="p-sm-4 px-2 py-3">
+      <Container className="p-sm-4 px-2 py-3" fluid="xxl">
         <Row>
           <Col className="text-label label-with-separator">Our Privacy</Col>
         </Row>

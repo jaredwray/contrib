@@ -57,7 +57,7 @@ export const InfluencerOnboardingBasicPage: FC = () => {
         initialValues={influencerProfile}
         onSubmit={handleSubmit}
       >
-        <Container>
+        <Container fluid="xxl">
           <Row>
             <Col className="text-label label-with-separator">Create your account</Col>
           </Row>

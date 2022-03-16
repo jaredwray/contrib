@@ -7,7 +7,7 @@ import styles from './styles.module.scss';
 export default function AboutUs() {
   return (
     <section className={styles.aboutUs}>
-      <Container className={styles.homepageContainer}>
+      <Container fluid="xxl">
         <Row>
           <Col className="text-label label-with-separator">Who we are</Col>
         </Row>

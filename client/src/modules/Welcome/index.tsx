@@ -11,7 +11,7 @@ export default function WelcomePage() {
   return (
     <Layout>
       <div className="w-100 welcome-page">
-        <Container className="d-md-table">
+        <Container className="d-md-table" fluid="xxl">
           <Container className="h-100 d-md-table-cell align-middle">
             <Row className="pt-lg-3 pt-5 align-items-center">
               <Col lg="6">

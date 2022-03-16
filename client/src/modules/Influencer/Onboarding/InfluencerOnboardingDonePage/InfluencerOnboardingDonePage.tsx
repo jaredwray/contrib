@@ -15,8 +15,8 @@ export const InfluencerOnboardingDonePage: FC = () => {
   return (
     <Layout>
       <div className={clsx('flex-grow-1 d-flex flex-column justify-content-center', styles.wrapper)}>
-        <Container className="d-md-table w-100">
-          <Container className="h-100 d-md-table-cell align-middle">
+        <Container className="d-md-table w-100" fluid="xxl">
+          <Container className="h-100 d-md-table-cell align-middle py-0 py-md-4">
             <Row className="pt-lg-3 pt-5 align-items-center">
               <Col className={clsx(styles.leftBlock)} lg="6">
                 <div className="welcome-page-congratulations d-flex">

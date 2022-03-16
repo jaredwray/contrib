@@ -54,6 +54,7 @@ export default function DeliveryAddressPage() {
         showWarning('Please, check the data');
         return;
       }
+
       UpdateUserAddress({
         variables: {
           auctionId,
@@ -72,9 +73,7 @@ export default function DeliveryAddressPage() {
           showMessage('Your address information was updated');
           history.push(`/auctions/${auctionId}/delivery/payment`);
         })
-        .catch((error) => {
-          showError(error.message);
-        });
+        .catch((error) => showError(error.message));
     },
     [
       UpdateUserAddress,
@@ -127,9 +126,7 @@ export default function DeliveryAddressPage() {
     </>
   );
 
-  const handleChange = (value: string) => {
-    setPhoneInputValue(value);
-  };
+  const handleChange = (value: string) => setPhoneInputValue(value);
 
   setPageTitle(`Delivery address for ${title} auction`);
 
@@ -179,14 +176,13 @@ export default function DeliveryAddressPage() {
         </Row>
         <Row className="d-flex align-items-baseline">
           <span className="pt-1 pb-1 text-label">Phone number</span>
+          <PhoneInput
+            value={
+              auction.delivery.address.phoneNumber || auction.winner.address.phoneNumber || auction.winner.phoneNumber
+            }
+            onChange={handleChange}
+          />
         </Row>
-
-        <PhoneInput
-          value={
-            auction.delivery.address.phoneNumber || auction.winner.address.phoneNumber || auction.winner.phoneNumber
-          }
-          onChange={handleChange}
-        />
       </StepRow>
     </StepByStepPageLayout>
   );

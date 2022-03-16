@@ -124,7 +124,7 @@ export default function AdminAuctionPage() {
   return (
     <Layout>
       <section className={clsx(styles.page, 'text-label p-sm-4 p-1 pt-4 pb-2')}>
-        <Container fluid>
+        <Container fluid="xxl">
           <Row>
             <Col lg="5">
               <div className="text-headline mb-2">Auction details</div>

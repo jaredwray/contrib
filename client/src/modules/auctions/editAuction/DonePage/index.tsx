@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { ProgressBar } from 'react-bootstrap';
+import { Container, ProgressBar } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
@@ -38,22 +38,26 @@ const AuctionDonePage = () => {
   return (
     <Layout>
       <ProgressBar now={100} />
-      <div className={styles.contentWrapper}>
-        <div className={clsx(styles.content, styles.contentLeft)}>
-          <div className={styles.contentRightWrapper}>
-            <p className="text-super">Done</p>
-            <p className="text-headline">Auction created.</p>
-            <p className="text--body">
-              Awesome! Let everyone know about this auction by using the link below and sharing it on your social
-              networks with the videos and photos you provided.
-            </p>
-            <div className="pt-3 pt-md-5 pb-3 pb-md-5 w-100">
-              <CopiedText text={auctionLink} />
+      <Container fluid="xxl">
+        <div className={styles.contentWrapper}>
+          <div className={clsx(styles.content, styles.contentLeft)}>
+            <div className={styles.contentRightWrapper}>
+              <p className="text-super">Done</p>
+              <p className="text-headline">Auction created.</p>
+              <p className="text--body">
+                Awesome! Let everyone know about this auction by using the link below and sharing it on your social
+                networks with the videos and photos you provided.
+              </p>
+              <div className="pt-3 pt-md-5 pb-3 pb-md-5 w-100">
+                <CopiedText text={auctionLink} />
+              </div>
             </div>
           </div>
+          <div className={clsx(styles.content, styles.contentRight)}>
+            {<AuctionCard isDonePage auction={auction} />}
+          </div>
         </div>
-        <div className={clsx(styles.content, styles.contentRight)}>{<AuctionCard isDonePage auction={auction} />}</div>
-      </div>
+      </Container>
     </Layout>
   );
 };
