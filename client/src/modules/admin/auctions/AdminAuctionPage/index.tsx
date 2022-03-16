@@ -43,23 +43,20 @@ export default function AdminAuctionPage() {
   const { data: auctionMetricsData, loading: metricsLoading } = useQuery(AuctionMetricsQuery, {
     variables: { auctionId },
   });
-
   const [getAuctionData, { data: auctionData }] = useLazyQuery(AuctionForAdminPageQuery, {
     variables: { id: auctionId },
     fetchPolicy: 'cache-and-network',
   });
   const [getCustomerInformation, { data: customer, loading: customerLoading }] = useLazyQuery(CustomerInformationQuery);
 
-  useEffect(() => {
-    getAuctionData();
-  }, [getAuctionData]);
-
   const metrics = auctionMetricsData?.getAuctionMetrics;
   const auction = auctionData?.auction;
   const charity = auction?.charity;
-  const bids = auctionBids?.bids || [];
+  const bids = auctionBids?.populatedBids || [];
   const customerInformation = customer?.getCustomerInformation;
   const showEditButton = !auction?.isSettled && !auction?.isSold && !auction?.isFailed;
+
+  useEffect(() => getAuctionData(), [getAuctionData]);
 
   const handleChargeBid = useCallback(
     async (item) => {
@@ -83,7 +80,6 @@ export default function AdminAuctionPage() {
     },
     [addToast, chargeBid, auction?.title, charity?.id, charity?.stripeAccountId],
   );
-
   const handleChargeAuction = useCallback(async () => {
     try {
       await chargeAuction({ variables: { id: auctionId } });
@@ -111,7 +107,6 @@ export default function AdminAuctionPage() {
     setIsBid(false);
     setBid(maxBid);
   };
-
   const onBidClickHandler = (arg: any) => {
     getCustomerInformation({ variables: { stripeCustomerId: arg.user.stripeCustomerId } });
     setShowDialog(true);
