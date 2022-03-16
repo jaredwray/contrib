@@ -12,10 +12,3 @@
 .seeAllLink {
   color: $dark-gray-color;
 }
-
-@media (min-width: $extra-large-weight) {
-  .homepageContainer {
-    max-width: 100% !important;
-    padding: 0 150px !important;
-  }
-}

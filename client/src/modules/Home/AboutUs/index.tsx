@@ -1,6 +1,5 @@
 import React from 'react';
 
-import clsx from 'clsx';
 import { Container, Row, Col } from 'react-bootstrap';
 
 import styles from './styles.module.scss';
@@ -8,7 +7,7 @@ import styles from './styles.module.scss';
 export default function AboutUs() {
   return (
     <section className={styles.aboutUs}>
-      <Container className={clsx(styles.homepageContainer, 'm-0')} fluid="xxl">
+      <Container fluid="xxl">
         <Row>
           <Col className="text-label label-with-separator">Who we are</Col>
         </Row>
