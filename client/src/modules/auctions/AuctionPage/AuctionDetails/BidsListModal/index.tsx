@@ -6,9 +6,10 @@ import { Table, Button, Row } from 'react-bootstrap';
 
 import { AuctionBidsQuery } from 'src/apollo/queries/bids';
 import Dialog from 'src/components/modals/Dialog';
-import DialogActions from 'src/components/modals/Dialog/DialogActions';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import { AuctionBid } from 'src/types/Bid';
+
+import styles from './styles.module.scss';
 
 interface Props {
   auctionId: string;
@@ -26,27 +27,27 @@ const BidsListModal: FC<Props> = ({ auctionId, open, totalBids, onClose }): Reac
   }, [bids.length, totalBids, refetch]);
 
   return (
-    <Dialog backdrop="static" keyboard={false} open={open} title="Bids list" onClose={onClose}>
+    <Dialog backdrop="static" keyboard={false} open={open} title="Bids" onClose={onClose}>
       <DialogContent className="pt-0 pb-0">
         <Row>
-          <Table>
+          <Table className={`p-0 table-striped mb-4 ${styles.bidsList}`}>
+            <thead>
+              <tr>
+                <th>Bid Date</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
             <tbody className="fw-normal table-bordered pb-3 text-break">
               {bids.map(({ bid, createdAt }, i) => (
                 <tr key={i}>
-                  <td>{`$${bid?.amount / 100}`}</td>
-                  <td>{format(new Date(createdAt), 'MMM dd yyyy, HH:mm')}</td>
+                  <td className={'col'}>{format(new Date(createdAt), 'MMM dd yyyy, HH:mm')}</td>
+                  <td className="col">{`$${bid?.amount / 100}`}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
         </Row>
       </DialogContent>
-
-      <DialogActions className="d-block pt-0 pt-sm-2">
-        <Button className="float-end" size="sm" variant="link" onClick={onClose}>
-          Cancel
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

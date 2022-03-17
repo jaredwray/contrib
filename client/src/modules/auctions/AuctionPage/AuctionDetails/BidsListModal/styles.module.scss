@@ -1,0 +1,47 @@
+@import 'src/variables.scss';
+
+table.bidsList {
+    border-collapse: separate;
+    border-spacing: 0 !important;
+    overflow-x: auto;
+    white-space: nowrap;
+  
+    &.details-table {
+      border-spacing: 0;
+    }
+  
+    th {
+      height: auto !important;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 0.75rem;
+      border-bottom: 1px solid $barely-gray-color !important;
+    }
+  
+    tbody {
+      tr {
+        cursor: auto;
+        background-color: $white-color;
+  
+        &:hover,
+        &.tr-selected {
+          background: transparent !important;
+          color: #000000;
+  
+          .dropdown-toggle {
+            &[aria-expanded='true'] {
+              color: $light-sage-color;
+            }
+          }
+        }
+      }
+  
+      td {
+        vertical-align: middle;
+        padding: 0.75rem;
+        white-space: normal;
+        border: 0;
+        border-radius: 0 !important;
+      }
+    }
+}
