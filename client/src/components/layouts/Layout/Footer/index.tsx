@@ -4,41 +4,44 @@ import clsx from 'clsx';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import Logo from 'src/assets/images/logo-with-text-white.svg';
+import Logo from 'src/assets/images/contrib-logo-vertical-negative.svg';
 
 import styles from './styles.module.scss';
 
 export default function Footer() {
   return (
-    <footer className={clsx('d-print-none ps-0 p-4 ps-sm-4', styles.footer)}>
+    <footer className={clsx('d-print-none p-0 p-md-4 pt-4 pb-4', styles.footer)}>
       <Container fluid="xxl">
         <Row>
-          <Col md className="p-0">
-            <Link to="/">
-              <img alt="Contrib" className={styles.logo} src={Logo} />
-            </Link>
-          </Col>
-        </Row>
-        <Row className={clsx('py-4', styles.info)}>
-          <Col className="p-0 text-headline">Auction your items quickly and hassle free.</Col>
-        </Row>
-        <Row>
-          <Col md className="p-0 text-label text-all-cups">
-            Copyright {new Date().getFullYear()} Contrib Inc.
-          </Col>
-        </Row>
-        <Row>
-          <Col md className="p-0">
-            <div className="text-label text-all-cups">
+          <Col sm="12" md="5" className={`p-0 text-center text-md-start ${styles.footerCopy}`}>
+            <div className={styles.footerNav}>
               <Link className={clsx('privacy', styles.link)} to="/privacy-policy">
-                Privacy
+                Auctions
               </Link>
-              &#160;and&#160;
+              &nbsp; &middot; &nbsp;
+              <Link className={clsx('privacy', styles.link)} to="/terms">
+                Influencers
+              </Link>
+              &nbsp; &middot; &nbsp;
+              <Link className={clsx('privacy', styles.link)} to="/terms">
+                Charities
+              </Link>
+            </div>
+            <div className={styles.privacyPolicy}>
+              <Link className={clsx('privacy', styles.link)} to="/privacy-policy">
+                Privacy Policy
+              </Link>
+              &nbsp; &middot; &nbsp;
               <Link className={clsx('privacy', styles.link)} to="/terms">
                 Terms
               </Link>
-              &#160;&gt;&gt;
+              &nbsp; &middot; &nbsp; &copy;{new Date().getFullYear()} Contrib Inc.
             </div>
+          </Col>
+          <Col sm="12" md={{ span: 2, offset: 5 }} className="p-0 text-center text-md-end pt-4 pt-md-0">
+            <Link to="/">
+              <img alt="Contrib" className={styles.logo} src={Logo} />
+            </Link>
           </Col>
         </Row>
       </Container>

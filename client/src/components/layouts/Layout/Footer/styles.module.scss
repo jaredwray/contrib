@@ -15,7 +15,7 @@
 }
 
 .logo {
-  height: 35px;
+  height: 55px;
 }
 
 .socialMedia {
@@ -37,4 +37,26 @@
 
 .facebook {
   background-image: url('/assets/images/facebook.webp');
+}
+
+.footerCopy {
+  color: $white-color;
+  .footerNav a {
+    color: $white-color;
+    font-weight: 500;
+    letter-spacing: .05em;
+    font-size: 14px;
+    line-height: 27px;
+    text-decoration: none !important;
+  }
+  .privacyPolicy, .copyText {
+    font-weight: 100;
+    font-size: 14px;
+    line-height: 27px;
+    color: $light-sage-color;
+    a {
+      color: $light-sage-color;
+      text-decoration: none !important;
+    }
+  }
 }
