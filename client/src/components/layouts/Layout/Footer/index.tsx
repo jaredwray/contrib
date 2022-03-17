@@ -13,7 +13,7 @@ export default function Footer() {
     <footer className={clsx('d-print-none p-0 p-md-4 pt-4 pb-4', styles.footer)}>
       <Container fluid="xxl">
         <Row>
-          <Col sm="12" md="5" className={`p-0 text-center text-md-start ${styles.footerCopy}`}>
+          <Col sm="12" md="5" className={clsx(styles.footerCopy, "p-0 text-center text-md-start"}>
             <div className={styles.footerNav}>
               <Link className={clsx('privacy', styles.link)} to="/privacy-policy">
                 Auctions
