@@ -16,9 +16,7 @@ import appRouteHandlers from './routeHandlers';
 import { AppConfig } from './config';
 import { installPrerenderHandlers } from './prerender';
 
-if (AppConfig.newRelic.enabled) {
-  require('newrelic');
-}
+if (AppConfig.newRelic.enabled) require('newrelic');
 
 const app = express();
 const httpServer = createServer(app);
@@ -27,16 +25,14 @@ app.set('view engine', 'pug');
 
 (async function () {
   const connection = await initMongodbConnection();
-
   const appServices: IAppServices = createAppServices(connection);
-
   const corsOptions = {
     origin: [AppConfig.app.url],
     credentials: true,
   };
+  const bytesInGB = Math.pow(1024, 3);
 
   app.use(cors(corsOptions));
-
   app.use(
     cookieSession({
       name: 'auth cookies',
@@ -44,7 +40,6 @@ app.set('view engine', 'pug');
       keys: [AppConfig.auth.cookies.cookiesSecret],
     }),
   );
-
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -65,7 +60,6 @@ app.set('view engine', 'pug');
   }
 
   app.use(express.json({ limit: '500mb' }));
-
   app.use(
     express.urlencoded({
       limit: '500mb',
@@ -73,8 +67,6 @@ app.set('view engine', 'pug');
       extended: true,
     }),
   );
-
-  const bytesInGB = Math.pow(1024, 3);
   app.use(
     '/graphql',
     graphqlUploadExpress({

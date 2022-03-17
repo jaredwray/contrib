@@ -1,16 +1,13 @@
 import { config as loadDotEnvFile } from 'dotenv';
 import fs from 'fs-extra';
 
-if (fs.pathExistsSync(`./.env`)) {
-  loadDotEnvFile();
-}
+if (fs.pathExistsSync(`./.env`)) loadDotEnvFile();
 
 export const requireEnvVar = (name: string): string => {
   const value = process.env[name];
-  if (!value) {
-    throw new Error(`missing required env variable: ${name}`);
-  }
-  return value;
+  if (value) return value;
+
+  throw new Error(`missing required env variable: ${name}`);
 };
 
 export const AppConfig = {
