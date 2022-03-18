@@ -3,60 +3,24 @@
 .footer {
   background-color: $dark-gray-color;
 
-  &,
-  a,
-  a:hover {
-    color: $sage-color;
+  a {
+    text-decoration: none !important;
   }
-}
-
-.info {
-  color: $white-color;
 }
 
 .logo {
   height: 55px;
 }
 
-.socialMedia {
+.footerNav a {
+  color: $barely-gray-color;
+  letter-spacing: 0.05em;
+}
+
+.privacyPolicy {
+  &,
   a {
-    background-repeat: no-repeat;
-    background-size: contain;
-    width: 36px;
-    height: 36px;
-  }
-}
-
-.twitter {
-  background-image: url('/assets/images/twitter.webp');
-}
-
-.instagram {
-  background-image: url('/assets/images/instagram.webp');
-}
-
-.facebook {
-  background-image: url('/assets/images/facebook.webp');
-}
-
-.footerCopy {
-  color: $white-color;
-  .footerNav a {
-    color: $white-color;
     font-weight: 500;
-    letter-spacing: .05em;
-    font-size: 14px;
-    line-height: 27px;
-    text-decoration: none !important;
-  }
-  .privacyPolicy, .copyText {
-    font-weight: 100;
-    font-size: 14px;
-    line-height: 27px;
-    color: $light-sage-color;
-    a {
-      color: $light-sage-color;
-      text-decoration: none !important;
-    }
+    color: $gray-color;
   }
 }

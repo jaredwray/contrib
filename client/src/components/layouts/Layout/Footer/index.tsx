@@ -13,32 +13,24 @@ export default function Footer() {
     <footer className={clsx('d-print-none p-0 p-md-4 pt-4 pb-4', styles.footer)}>
       <Container fluid="xxl">
         <Row>
-          <Col sm="12" md="5" className={clsx(styles.footerCopy, "p-0 text-center text-md-start"}>
-            <div className={styles.footerNav}>
-              <Link className={clsx('privacy', styles.link)} to="/privacy-policy">
-                Auctions
-              </Link>
+          <Col className="p-0 text-center text-md-start" md="11">
+            <div className={clsx(styles.footerNav, 'text--body')}>
+              <Link to="/">About Us</Link>
               &nbsp; &middot; &nbsp;
-              <Link className={clsx('privacy', styles.link)} to="/terms">
-                Influencers
-              </Link>
+              <Link to="/auctions">Auctions</Link>
               &nbsp; &middot; &nbsp;
-              <Link className={clsx('privacy', styles.link)} to="/terms">
-                Charities
-              </Link>
+              <Link to="/influencers">Influencers</Link>
+              &nbsp; &middot; &nbsp;
+              <Link to="/charities">Charities</Link>
             </div>
-            <div className={styles.privacyPolicy}>
-              <Link className={clsx('privacy', styles.link)} to="/privacy-policy">
-                Privacy Policy
-              </Link>
+            <div className={clsx(styles.privacyPolicy, 'text-body-new')}>
+              <Link to="/privacy-policy">Privacy Policy</Link>
               &nbsp; &middot; &nbsp;
-              <Link className={clsx('privacy', styles.link)} to="/terms">
-                Terms
-              </Link>
+              <Link to="/terms">Terms</Link>
               &nbsp; &middot; &nbsp; &copy;{new Date().getFullYear()} Contrib Inc.
             </div>
           </Col>
-          <Col sm="12" md={{ span: 2, offset: 5 }} className="p-0 text-center text-md-end pt-4 pt-md-0">
+          <Col className="p-0 text-center text-md-end pt-4 pt-md-0" md="1">
             <Link to="/">
               <img alt="Contrib" className={styles.logo} src={Logo} />
             </Link>
