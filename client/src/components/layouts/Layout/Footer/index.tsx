@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 
 export default function Footer() {
   return (
-    <footer className={clsx('d-print-none p-0 p-md-4 pt-4 pb-4', styles.footer)}>
+    <footer className={clsx('d-print-none px-0 py-4 p-md-4', styles.footer)}>
       <Container fluid="xxl">
         <Row>
           <Col className="p-0 text-center text-md-start" md="11">
