@@ -15,8 +15,6 @@ export default function Footer() {
         <Row>
           <Col className="p-0 text-center text-md-start" md="11">
             <div className={clsx(styles.footerNav, 'text--body')}>
-              <Link to="/">About Us</Link>
-              &nbsp; &middot; &nbsp;
               <Link to="/auctions">Auctions</Link>
               &nbsp; &middot; &nbsp;
               <Link to="/influencers">Influencers</Link>
