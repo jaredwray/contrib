@@ -12,9 +12,9 @@ export default function Footer() {
   return (
     <footer className={clsx('d-print-none px-0 py-4 p-md-4', styles.footer)}>
       <Container fluid="xxl">
-        <Row>
+        <Row className="align-items-center">
           <Col className="p-0 text-center text-md-start" md="11">
-            <div className={clsx(styles.footerNav, 'text--body')}>
+            <div className={clsx(styles.footerNav, 'text--body mb-1')}>
               <Link to="/auctions">Auctions</Link>
               &nbsp; &middot; &nbsp;
               <Link to="/influencers">Influencers</Link>

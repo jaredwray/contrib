@@ -9,10 +9,10 @@
 }
 
 .logo {
-  height: 55px;
+  height: 50px;
 }
 
-.footerNav a {
+.footerNav, .footerNav a {
   color: $barely-gray-color;
   letter-spacing: 0.05em;
 }
