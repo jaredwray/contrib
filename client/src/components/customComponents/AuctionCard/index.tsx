@@ -130,7 +130,8 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
         <ProfileInfo link={`/profiles/${influencer.id}`} profile={influencer} />
         {charity && (
           <ProfileInfo
-            className={clsx(styles.charity, 'text-all-cups')}
+            isCharity
+            className={clsx(styles.charity, 'text-all-cups1')}
             link={`/charity/${charity.semanticId || charity.id}`}
             profile={charity}
           />

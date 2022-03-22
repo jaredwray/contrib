@@ -25,6 +25,7 @@ const Slider: FC<Props> = ({ items }) => {
 
   const settings = {
     infinite: false,
+    speed: 300,
     swipeToSlide: true,
     variableWidth: true,
     slidesToShow: items.length <= Math.round(windowWidth / 500) ? items.length : 1,

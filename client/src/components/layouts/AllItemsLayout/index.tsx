@@ -19,6 +19,7 @@ interface Props {
   skip: number;
   totalItems: number;
   sortOptions: { value: string; label: string }[];
+  oldStyle?: boolean;
 }
 
 export const AllItemsLayout: FC<Props> = ({
@@ -29,6 +30,7 @@ export const AllItemsLayout: FC<Props> = ({
   sortOptions,
   totalItems,
   children,
+  oldStyle,
 }) => {
   return (
     <Layout>
@@ -51,7 +53,9 @@ export const AllItemsLayout: FC<Props> = ({
                 <SortBy changeFilters={changeFilters} sortOptions={sortOptions} />
               </Col>
             </Row>
-            <div className={clsx(styles.auctions, 'd-grid align-items-center')}>{children}</div>
+            <div className={clsx(styles.items, oldStyle && styles.itemsOldStyle, 'd-grid align-items-center')}>
+              {children}
+            </div>
             <Pagination
               changeFilters={changeFilters}
               pageSize={size || 0}

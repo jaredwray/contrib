@@ -5,9 +5,18 @@
   margin-left: 20px;
 }
 
+.charity {
+  height: 40px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  width: 207px;
+  overflow: hidden;
+  word-break: break-word;
+}
+
 .link {
   color: $dark-gray-color;
-  white-space: nowrap;
   text-decoration: none;
 }
 

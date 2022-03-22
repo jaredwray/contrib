@@ -50,6 +50,7 @@ const CharitiesPage: FC = () => {
 
   return (
     <AllItemsLayout
+      oldStyle
       changeFilters={changeFilters}
       filters={<Filters changeFilters={changeFilters} />}
       size={charities?.size}
