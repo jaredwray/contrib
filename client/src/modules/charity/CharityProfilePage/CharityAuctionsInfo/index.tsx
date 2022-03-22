@@ -29,7 +29,7 @@ export const CharityAuctionsInfo: FC<Props> = ({ auctions, name }) => {
           <span className="label-with-separator text-label mb-4 d-block ">Live auctions benefiting {name}</span>
           <div className={clsx(styles.auctions, 'd-grid align-items-center')}>
             {liveAuctions.map((auction: Auction) => (
-              <AuctionCard key={auction.id} horizontal auction={auction} />
+              <AuctionCard key={auction.id} auction={auction} />
             ))}
           </div>
         </div>
@@ -39,7 +39,7 @@ export const CharityAuctionsInfo: FC<Props> = ({ auctions, name }) => {
           <span className="label-with-separator text-label mb-4 d-block ">Ended auctions benefiting {name}</span>
           <div className={clsx(styles.auctions, 'd-grid align-items-center')}>
             {pastAuctions.map((auction: Auction) => (
-              <AuctionCard key={auction.id} horizontal auction={auction} />
+              <AuctionCard key={auction.id} auction={auction} />
             ))}
           </div>
         </div>

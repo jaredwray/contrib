@@ -8,22 +8,22 @@
   .slick-slide {
     z-index: 10;
     &:not(:last-child) {
-      margin-right: 74px;
+      margin-right: 22px;
     }
   }
 
   .slick-arrow {
     position: absolute;
     display: block;
-    height: 60px;
-    width: 60px;
-    top: calc(50% - 60px);
+    height: 51px;
+    width: 51px;
+    top: calc(50% - 51px);
     cursor: pointer;
-    border-radius: 60px;
+    border-radius: 51px;
     font-size: 0;
     line-height: 0;
     z-index: 100;
-    background-color: $sage-color;
+    background-color: $dark-gray-color;
     border: none;
     user-select: none;
 
@@ -33,16 +33,14 @@
       height: 20px;
       content: '';
       transform: rotate(-45deg);
-      border: 6px solid $light-gray-color;
+      border: 2px solid $white-color;
       border-right: none;
       border-bottom: none;
       margin-left: 3px;
     }
 
-    &:hover {
-      &:after {
-        border-color: $white-color;
-      }
+    &:hover:after {
+      border-color: $light-gray-color;
     }
   }
 

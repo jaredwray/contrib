@@ -1,26 +1,13 @@
 @import 'src/variables.scss';
 
 .root {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  width: 305px;
-  max-width: 305px;
+  width: 267px;
+  max-width: 267px;
+  height: 352px;
   position: relative;
 }
 
-.name {
-  font-size: 11px !important;
-}
-
-.link {
-  color: $dark-gray-color;
-  white-space: nowrap;
-}
-
 .description {
-  display: flex;
-  flex-direction: column;
   flex: 1 0 auto;
   background-color: $white-color;
   padding: 20px;
@@ -28,39 +15,16 @@
 
 .image {
   background-color: $barely-gray-color;
+  height: 152px;
 }
 
-.auctionTitle {
-  height: 80px;
+.title {
+  height: 42px;
   overflow: hidden;
-  -webkit-line-clamp: 3;
-  font-weight: 700 !important;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  color: $black-color;
+  text-decoration: none;
 }
 
-.horizontalRoot {
-  max-width: 428px;
-  height: 214px;
-  width: 428px;
-  flex-direction: row;
-  @media (max-width: $small-weight) {
-    margin-bottom: 10px;
-  }
-}
-
-.horizontalImage,
-.horizontalDescription {
-  height: 214px;
-  width: 214px;
-  flex-shrink: 0;
-}
-
-.horizontalDescription {
-  flex-grow: 1;
-  flex-basis: 50%;
-}
 .settled {
   opacity: 0.3;
 }
@@ -72,48 +36,6 @@
   line-height: 21px;
 }
 
-@media (max-width: $medium-weight) {
-  .root {
-    max-width: 278px;
-  }
-
-  .description {
-    padding: 10px;
-  }
-
-  .horizontalRoot,
-  .horizontalOnMobileRoot {
-    width: 100%;
-    height: 165px;
-    max-width: 335px;
-    flex-direction: row;
-    align-items: center;
-    & a {
-      width: 100%;
-    }
-  }
-
-  .horizontalImage,
-  .horizontalDescription,
-  .horizontalOnMobileImage,
-  .horizontalOnMobileDescription {
-    font-size: 14px;
-    flex-shrink: 0;
-    height: 163px;
-    width: 100%;
-    min-width: 145px;
-  }
-  .horizontalOnMobileDescription {
-    padding: 5px 10px;
-    width: auto;
-    flex-shrink: 1;
-  }
-}
-
-.wrapper {
-  position: relative;
-}
-
 .followBtn {
   position: absolute;
   top: 10px;
@@ -122,6 +44,17 @@
   background-color: $white-color;
   border-radius: 50%;
 }
-.avatarUrl {
-  min-width: 32px;
+
+.charity {
+  height: 42px;
+}
+
+@media (max-width: $medium-weight) {
+  .root {
+    max-width: 278px;
+  }
+
+  .description {
+    padding: 10px;
+  }
 }

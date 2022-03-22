@@ -22,9 +22,11 @@ const DateDetails: FC<Props> = ({ auction, isDonePage, isSold }) => {
   if (isDonePage) return <>ends on {toFullHumanReadableDatetime(new Date(auction.endDate))}</>;
 
   return (
-    <>
-      {pluralize(auction.totalBids ?? 0, 'bid')} • {toHumanReadableDuration(auction.endDate)}
-    </>
+    <div className="text-label text-left">
+      <span className={styles.bids}>{pluralize(auction.totalBids ?? 0, 'bid')}</span>
+      <span className={styles.dot}>•</span>
+      <span className="text-all-cups ">{toHumanReadableDuration(auction.endDate)}</span>
+    </div>
   );
 };
 

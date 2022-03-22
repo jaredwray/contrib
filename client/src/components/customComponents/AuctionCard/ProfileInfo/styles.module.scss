@@ -1,0 +1,19 @@
+@import 'src/variables.scss';
+
+.name {
+  color: $gray-color;
+  margin-left: 20px;
+}
+
+.link {
+  color: $dark-gray-color;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.avatar {
+  width: 12px;
+  height: 12px;
+  line-height: 12px;
+  margin-top: 4px;
+}

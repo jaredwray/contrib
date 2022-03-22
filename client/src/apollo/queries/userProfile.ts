@@ -28,6 +28,12 @@ export const GetAuctionsForProfilePageQuery = gql`
         followers {
           user
         }
+        charity {
+          id
+          name
+          avatarUrl
+          semanticId
+        }
       }
       live {
         id
@@ -53,6 +59,12 @@ export const GetAuctionsForProfilePageQuery = gql`
         }
         followers {
           user
+        }
+        charity {
+          id
+          name
+          avatarUrl
+          semanticId
         }
       }
     }
