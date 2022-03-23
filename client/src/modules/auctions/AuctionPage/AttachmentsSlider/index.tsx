@@ -1,6 +1,6 @@
 import { FC, ReactElement, MouseEvent, useCallback, useState, useRef } from 'react';
 
-import { HTMLStreamElement, Stream } from '@cloudflare/stream-react';
+import { StreamPlayerApi, Stream } from '@cloudflare/stream-react';
 import clsx from 'clsx';
 import { Image } from 'react-bootstrap';
 import Slider from 'react-slick';
@@ -20,7 +20,7 @@ interface Props {
 const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   const state = useRef({ x: 0 });
   const [attachmentToDisplay, setAttachmentToDisplay] = useState<AuctionAttachment | null>(null);
-  const [activeStream, setActiveStream] = useState<HTMLStreamElement>();
+  const [activeStream, setActiveStream] = useState<StreamPlayerApi>();
 
   const handleAttachmentClick = useCallback(
     (e: MouseEvent, attachment: AuctionAttachment) => {
@@ -32,7 +32,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
 
   const desktopPaging = (i: number) => (
     <div key={i}>
-      <AttachmentThumbnail key={i} attachment={attachments[i]} className={styles.attachmentThumbnail} />
+      <AttachmentThumbnail key={i} attachment={attachments[i]} className={styles.thumbnail} />
     </div>
   );
   const mobilePaging = (i: number) => <div key={i} />;
@@ -40,11 +40,9 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
   const settings = {
     arrows: false,
     dots: true,
-    className: clsx(
-      styles.slider,
-      `
-      auction-attachments-slider text-center ${attachments.length === 1 && styles.flexDirectionOverride}`,
-    ),
+    className: clsx(styles.slider, 'auction-attachments-slider text-center', {
+      'flex-column': attachments.length === 1,
+    }),
     customPaging: desktopPaging,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -60,13 +58,6 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
     ],
   };
 
-  const onStreamPlay = useCallback(
-    (e: any) => {
-      setActiveStream(e.target);
-    },
-    [setActiveStream],
-  );
-
   if (attachments.length === 0) return null;
 
   return (
@@ -76,7 +67,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
         {attachments.map((attachment, i) => (
           <div
             key={i}
-            className={styles.attachmentImageWrapper}
+            className={styles.wrapper}
             data-test-id="attachment-id"
             onClick={(e: MouseEvent) => handleAttachmentClick(e, attachment)}
             onMouseDown={(e: MouseEvent) => (state.current.x = e.screenX)}
@@ -84,7 +75,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
             {attachment.type === 'IMAGE' ? (
               <Image className={styles.attachment} src={ResizedImageUrl(attachment.url, 720)} />
             ) : (
-              <Stream controls height="min(540px, 100vw)" src={attachment.uid} onPlay={onStreamPlay} />
+              <Stream controls responsive={false} src={attachment.uid} onPlay={(e: any) => setActiveStream(e.target)} />
             )}
           </div>
         ))}
