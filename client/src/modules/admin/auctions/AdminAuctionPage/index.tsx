@@ -60,9 +60,10 @@ export default function AdminAuctionPage() {
 
   const handleChargeBid = useCallback(
     async (item) => {
+      const { id, mongodbId, phoneNumber, status, stripeCustomerId, createdAt } = item.user;
+      const user = { id, mongodbId, phoneNumber, status, stripeCustomerId, createdAt };
+
       try {
-        const { id, mongodbId, phoneNumber, status, stripeCustomerId, createdAt } = item.user;
-        const user = { id, mongodbId, phoneNumber, status, stripeCustomerId, createdAt };
         await chargeBid({
           variables: {
             charityId: charity?.id,

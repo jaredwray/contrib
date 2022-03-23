@@ -91,7 +91,7 @@ const EditAuctionPage = () => {
   return (
     <StepByStepPageLayout
       header="Auction an item"
-      initialValues={{ title: auction?.title || null, description: auction?.description || null }}
+      initialValues={{ title: auction?.title, description: auction?.description }}
       isActive={isActive}
       loading={updating || loading}
       progress={10}

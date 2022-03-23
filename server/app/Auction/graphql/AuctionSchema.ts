@@ -80,6 +80,7 @@ export const AuctionSchema = gql`
     isFailed: Boolean!
     isSold: Boolean!
     isStopped: Boolean!
+    password: String
   }
 
   type Winner {
@@ -212,6 +213,7 @@ export const AuctionSchema = gql`
     items: [AuctionItemInput]
     itemPrice: Money
     duration: Int
+    password: String
   }
 
   input CurrentAuctionBid {

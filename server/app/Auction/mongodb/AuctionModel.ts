@@ -43,6 +43,7 @@ export interface IAuctionModel extends Document {
   startsAt: dayjs.Dayjs;
   endsAt: dayjs.Dayjs;
   stoppedAt: dayjs.Dayjs;
+  password?: string;
 }
 
 export const AuctionCollectionName = 'auction';
@@ -87,6 +88,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     bitlyLink: { type: SchemaTypes.String },
     shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
     fairMarketValue: { type: SchemaTypes.Number },
+    password: { type: SchemaTypes.String },
     items: [
       {
         name: { type: SchemaTypes.String },

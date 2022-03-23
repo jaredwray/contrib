@@ -43,6 +43,10 @@ const CharityPage = () => {
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
     /* istanbul ignore next */
     async onCompleted() {
+      if (account?.isAdmin) {
+        history.push(`/auctions/${auctionId}/private`);
+        return;
+      }
       try {
         await finishAuctionCreation({ variables: { id: auctionId } });
       } catch (error: any) {

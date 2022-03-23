@@ -327,6 +327,7 @@ export class AuctionRepository implements IAuctionRepository {
     ) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
+
     Object.assign(auction, input);
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();

@@ -1,8 +1,9 @@
 import { FC } from 'react';
 
+import clsx from 'clsx';
 import { format } from 'date-fns-tz';
 import Dinero from 'dinero.js';
-import { Row, Table, Button } from 'react-bootstrap';
+import { Row, Table, Button, Badge } from 'react-bootstrap';
 
 import { getShortLink } from 'src/helpers/getShortLink';
 import { Auction } from 'src/types/Auction';
@@ -23,12 +24,24 @@ export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEdi
 
   return (
     <Row className={styles.tableContainer}>
+      {auction.password && (
+        <Badge bg="warning" className="w-auto mx-3" text="dark">
+          Private
+        </Badge>
+      )}
       <Table className="d-table d-sm-block">
         <tbody className="fw-normal table-bordered pb-3 text-break">
           <tr>
             <td>Id</td>
             <td>{auction.id}</td>
           </tr>
+          {auction.password && (
+            <tr>
+              <td className={clsx(styles.password, 'fw-bold')}>Password</td>
+              <td>{auction.password}</td>
+            </tr>
+          )}
+
           <tr>
             <td>Title</td>
             <td>{auction.title}</td>

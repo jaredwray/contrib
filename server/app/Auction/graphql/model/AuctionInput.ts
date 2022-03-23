@@ -17,4 +17,5 @@ export type AuctionInput = {
   organizerId?: string;
   fairMarketValue?: Dinero.Dinero;
   items?: AuctionItem[];
+  password?: string;
 };
