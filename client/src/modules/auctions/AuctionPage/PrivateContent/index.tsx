@@ -1,7 +1,6 @@
 import { FC, ReactElement, useCallback, useEffect } from 'react';
 
 import clsx from 'clsx';
-import { toDate } from 'date-fns-tz';
 import { Col, Container, Row, Button } from 'react-bootstrap';
 import { CookiesProvider, useCookies } from 'react-cookie';
 
@@ -17,6 +16,8 @@ interface Props {
   auction: Auction;
 }
 
+const COOKIES_MAX_AGE_SEC = 86400; // one day
+
 const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
   const [cookies, setCookie] = useCookies([auction.id]);
   const passwordEncrypted = btoa(auction.password || '');
@@ -28,9 +29,9 @@ const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
   const onSubmit = useCallback(
     (values) => {
       if (btoa(values.password) === passwordEncrypted)
-        setCookie(auction.id, passwordEncrypted, { secure: true, expires: toDate(auction.endDate) });
+        setCookie(auction.id, passwordEncrypted, { secure: true, maxAge: COOKIES_MAX_AGE_SEC });
     },
-    [auction.id, auction.endDate, setCookie, passwordEncrypted],
+    [auction.id, setCookie, passwordEncrypted],
   );
 
   setPageTitle('Private content');
