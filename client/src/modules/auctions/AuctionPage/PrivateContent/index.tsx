@@ -39,21 +39,22 @@ const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
   return (
     <CookiesProvider>
       <Layout>
-        <Container className="h-100 m-auto" fluid="xs">
-          <Row className="px-3 p-md-0">
-            <Col>This is private content, please, enter the password to see it</Col>
+        <Container className="m-auto">
+          <Row className="mb-4 justify-content-md-center">
+            <Col className="col-md-4 text-center">
+              <h2>This is a private auction</h2>
+              <h4>Please enter your password</h4>
+            </Col>
           </Row>
-          <Row className="pt-2">
-            <Form className={styles.form} onSubmit={onSubmit}>
-              <Col>
+          <Row className="justify-content-md-center">
+            <Col className="col-md-4">
+              <Form className={styles.form} onSubmit={onSubmit}>
                 <InputField required name="password" />
-              </Col>
-              <Col>
-                <Button className={clsx(styles.button, 'float-md-end')} type="submit">
+                <Button className={clsx(styles.button, 'mt-1')} type="submit">
                   Submit
                 </Button>
-              </Col>
-            </Form>
+              </Form>
+            </Col>
           </Row>
         </Container>
       </Layout>
