@@ -160,6 +160,7 @@ export const AuctionQuery = gql`
       bidStep
       totalBids
       fairMarketValue
+      password
       items {
         id
         name
