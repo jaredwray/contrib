@@ -7,13 +7,15 @@ import ShareBtn from '..';
 const props: any = {
   link: 'link',
 };
+describe('ShareBtn', () => {
+  it('renders without crashing', () => {
+    let wrapper: ReactWrapper = mount(
+      <ToastProvider>
+        <ShareBtn {...props} />
+      </ToastProvider>,
+    );
 
-xit('renders without crashing', () => {
-  let wrapper: ReactWrapper = mount(
-    <ToastProvider>
-      <ShareBtn {...props} />
-    </ToastProvider>,
-  );
-
-  wrapper.find(CopyToClipboard).props().onCopy('hello world', true);
+    expect(wrapper.find(CopyToClipboard)).toHaveLength(2);
+    wrapper.find(CopyToClipboard).first().props().onCopy('link', true);
+  });
 });

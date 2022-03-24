@@ -15,6 +15,7 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  errorClassName?: string;
   wrapperClassName?: string;
   constraints?: { [key: string]: any };
   textarea?: boolean;
@@ -38,6 +39,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
       required,
       disabled,
       className,
+      errorClassName,
       wrapperClassName,
       textarea,
       constraints: inputConstraints,
@@ -84,7 +86,9 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           onInput={onInput ? (e: BaseSyntheticEvent) => onInput(e) : () => {}}
           onKeyPress={() => onKeyPress}
         />
-        <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
+        <Control.Feedback className={errorClassName} type="invalid">
+          {errorMessage || (isInvalid && 'invalid')}
+        </Control.Feedback>
         {externalText && <p className="text--body mt-2">{externalText}</p>}
       </Group>
     );

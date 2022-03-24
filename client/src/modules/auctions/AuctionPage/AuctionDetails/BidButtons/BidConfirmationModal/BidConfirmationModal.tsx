@@ -68,17 +68,18 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const handleNewCardCancelBtnClick = useCallback(() => setNewCard(false), [setNewCard]);
     const handleRegisterPayment = useCallback(
       async (paymentInformation, newCard) => {
-        if (!paymentInformation || newCard) {
-          const tokenResult = await stripe?.createToken(elements!.getElement(CardElement) as StripeCardElement);
-          if (tokenResult?.error) {
-            setSubmitting(false);
-            showError(tokenResult.error.message);
-            return;
-          }
-          const token = tokenResult?.token ?? { id: '' };
+        if (paymentInformation && !newCard) return;
 
-          await registerPaymentMethod({ variables: { token: token.id } });
+        const tokenResult = await stripe?.createToken(elements!.getElement(CardElement) as StripeCardElement);
+
+        if (tokenResult?.error) {
+          setSubmitting(false);
+          showError(tokenResult.error.message);
+          return;
         }
+
+        const token = tokenResult?.token ?? { id: '' };
+        await registerPaymentMethod({ variables: { token: token.id } });
       },
       [elements, registerPaymentMethod, showError, stripe],
     );
