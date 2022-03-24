@@ -85,7 +85,9 @@ export class AuctionService {
         };
       }
 
-      const auctionModels = await this.auctionRepository.getAuctions({ filters: { ids: uniqAuctionIds } });
+      const auctionModels = await this.auctionRepository.getAuctions({
+        filters: { ids: uniqAuctionIds },
+      });
       const auctions = auctionModels.map((auctionModel) => this.makeAuction(auctionModel));
 
       return auctions.reduce(
@@ -597,7 +599,6 @@ export class AuctionService {
 
   public async updateAuction(id: string, userId: string, input: AuctionInput, isAdmin: boolean): Promise<Auction> {
     const {
-      title,
       startDate,
       endDate,
       charity,
@@ -605,7 +606,6 @@ export class AuctionService {
       bidStep,
       itemPrice,
       duration,
-      description,
       fairMarketValue,
       items,
       ...rest
@@ -615,7 +615,6 @@ export class AuctionService {
       id,
       userId,
       {
-        ...(title ? { title } : {}),
         ...(startDate ? { startsAt: startDate } : {}),
         ...(endDate ? { endsAt: endDate } : {}),
         ...(duration
@@ -659,7 +658,6 @@ export class AuctionService {
             }
           : {}),
         ...(charity ? { charity: Types.ObjectId(charity) } : {}),
-        ...(description ? { description } : {}),
         ...rest,
       },
       isAdmin,

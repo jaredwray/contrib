@@ -31,6 +31,7 @@ export type IUpdateAuction = {
   startPrice?: number;
   title?: string;
   description?: string;
+  password?: string;
   charity?: Types.ObjectId;
   startDate?: dayjs.Dayjs;
   endDate?: dayjs.Dayjs;

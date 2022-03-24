@@ -1,3 +1,5 @@
+@import 'src/variables.scss';
+
 .idColumn {
   max-width: 235px;
   word-wrap: break-word;
@@ -25,4 +27,8 @@
     vertical-align: middle !important;
     white-space: normal;
   }
+}
+.private {
+  color: $salmon-color;
+  font-weight: bold;
 }

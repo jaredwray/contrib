@@ -93,6 +93,7 @@ export class AuctionRepository implements IAuctionRepository {
     statusFilter: string[],
   ): ISearchOptions {
     return ([
+      [!filters?.all, { password: { $exists: false } }],
       [statusFilter, { status: { $in: statusFilter } }],
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
@@ -327,6 +328,7 @@ export class AuctionRepository implements IAuctionRepository {
     ) {
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
     }
+
     Object.assign(auction, input);
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();

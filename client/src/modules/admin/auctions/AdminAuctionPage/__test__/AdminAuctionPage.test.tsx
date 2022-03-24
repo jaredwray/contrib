@@ -1,7 +1,5 @@
-describe('AdminAuctionPage', () => {
-  xit('component is defined', () => {
-    // expect(wrapper).toHaveLength(1);
-  });
+describe('skipped tests', () => {
+  xit('skipped', () => {});
 });
 
 // import DineroFactory from 'dinero.js';

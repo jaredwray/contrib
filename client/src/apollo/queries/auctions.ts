@@ -65,6 +65,7 @@ export const AuctionForAdminPageQuery = gql`
       }
       currentPrice
       fairMarketValue
+      password
       items {
         id
         name
@@ -159,6 +160,7 @@ export const AuctionQuery = gql`
       bidStep
       totalBids
       fairMarketValue
+      password
       items {
         id
         name
@@ -259,6 +261,7 @@ export const AuctionsListQuery = gql`
         itemPrice
         startDate
         endDate
+        password
         auctionOrganizer {
           id
           name
@@ -328,6 +331,7 @@ export const GetAuctionDetailsQuery = gql`
       startPrice
       startDate
       fairMarketValue
+      password
       items {
         id
         name
@@ -435,6 +439,7 @@ export const UpdateAuctionMutation = gql`
     $fairMarketValue: Money
     $items: [AuctionItemInput]
     $duration: Int
+    $password: String
   ) {
     updateAuction(
       id: $id
@@ -450,6 +455,7 @@ export const UpdateAuctionMutation = gql`
         fairMarketValue: $fairMarketValue
         items: $items
         duration: $duration
+        password: $password
       }
     ) {
       id

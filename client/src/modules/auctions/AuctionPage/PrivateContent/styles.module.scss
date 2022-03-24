@@ -1,0 +1,13 @@
+@import 'src/variables.scss';
+
+.form {
+  max-width: 400px;
+}
+
+.button {
+  width: auto;
+
+  @media (max-width: $small-weight) {
+    width: 100%;
+  }
+}

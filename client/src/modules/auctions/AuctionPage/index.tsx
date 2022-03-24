@@ -3,6 +3,7 @@ import { useContext, useEffect, useState, FC } from 'react';
 
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
+import { CookiesProvider, useCookies } from 'react-cookie';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery, AuctionSubscription, AuctionMetricsQuery } from 'src/apollo/queries/auctions';
@@ -15,6 +16,7 @@ import AuctionDetails from './AuctionDetails';
 import DeliveryInfo from './DeliveryInfo';
 import GeneralInformation from './GeneralInformation';
 import Metrics from './Metrics';
+import PrivateContent from './PrivateContent';
 import SimilarAuctions from './SimilarAuctions';
 
 interface Props {
@@ -41,6 +43,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     auction?.auctionOrganizer?.id,
   );
   const accoutIsOwnerOrAdmin = account?.isAdmin || accoutIsOwner;
+  const [cookies] = useCookies([auction?.id]);
 
   useEffect(() => {
     subscribeToMore({
@@ -66,6 +69,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     history.push('/');
     return null;
   }
+  if (auction.password && cookies[auction?.id] !== btoa(auction.password)) return <PrivateContent auction={auction} />;
 
   const accountEntityId = account?.charity?.id || account?.influencerProfile?.id || account?.assistant?.influencerId;
   const withMetrcis =
@@ -76,42 +80,44 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
   setPageTitle(`${auction.title} auction${isDeliveryPage ? '| Delivery information' : ''}`);
 
   return (
-    <Layout>
-      <Container className="pt-0 pt-md-5 pb-4 pb-md-5" fluid="xxl">
-        <Row>
-          <Col className="p-0" md="5">
-            <AttachmentsSlider attachments={attachments} />
-          </Col>
-          <Col md="7">
+    <CookiesProvider>
+      <Layout>
+        <Container className="pt-0 pt-md-5 pb-4 pb-md-5" fluid="xxl">
+          <Row>
+            <Col className="p-0" md="5">
+              <AttachmentsSlider attachments={attachments} />
+            </Col>
+            <Col md="7">
+              <Row>
+                <Col lg="7">
+                  <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
+                </Col>
+                <Col className="pt-4 pt-lg-0" lg="5">
+                  <GeneralInformation auction={auction} />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          {withMetrcis && !isDeliveryPage && (
             <Row>
-              <Col lg="7">
-                <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
-              </Col>
-              <Col className="pt-4 pt-lg-0" lg="5">
-                <GeneralInformation auction={auction} />
+              <Col md="1" />
+              <Col>
+                <Metrics metrics={metrics} requestMetrics={requestMetrics} />
               </Col>
             </Row>
-          </Col>
-        </Row>
-        {withMetrcis && !isDeliveryPage && (
-          <Row>
-            <Col md="1" />
-            <Col>
-              <Metrics metrics={metrics} requestMetrics={requestMetrics} />
-            </Col>
-          </Row>
-        )}
-        {isDeliveryPage && (
-          <Row>
-            <Col md="1" />
-            <Col>
-              <DeliveryInfo auction={auction} isDeliveryPage={isDeliveryPage} />
-            </Col>
-          </Row>
-        )}
-      </Container>
-      <SimilarAuctions selectedAuction={auctionId} />
-    </Layout>
+          )}
+          {isDeliveryPage && (
+            <Row>
+              <Col md="1" />
+              <Col>
+                <DeliveryInfo auction={auction} isDeliveryPage={isDeliveryPage} />
+              </Col>
+            </Row>
+          )}
+        </Container>
+        <SimilarAuctions selectedAuction={auctionId} />
+      </Layout>
+    </CookiesProvider>
   );
 };
 

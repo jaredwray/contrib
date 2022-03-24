@@ -82,4 +82,5 @@ export interface Auction {
   isFailed: boolean;
   isSold: boolean;
   isStopped: boolean;
+  password?: string;
 }
