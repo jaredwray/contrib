@@ -191,6 +191,7 @@ export const AuctionSchema = gql`
     auctionOrganizer: String
     charity: [String]
     selectedAuction: String
+    all: Boolean
   }
 
   input AuctionItemInput {

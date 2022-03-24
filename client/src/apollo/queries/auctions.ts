@@ -260,6 +260,7 @@ export const AuctionsListQuery = gql`
         itemPrice
         startDate
         endDate
+        password
         auctionOrganizer {
           id
           name

@@ -9,4 +9,5 @@ export interface AuctionSearchFilters {
   selectedAuction?: string;
   winner?: string;
   ids?: string[];
+  all?: boolean;
 }

@@ -38,7 +38,12 @@ export default function AdminAuctionsPage() {
   const [pageSkip, setPageSkip] = useState(initialSkip);
 
   const [getAuctionsList, { loading, data, error }] = useLazyQuery(AuctionsListQuery, {
-    variables: { size: PER_PAGE, skip: initialSkip, query: searchQuery },
+    variables: {
+      size: PER_PAGE,
+      skip: initialSkip,
+      query: searchQuery,
+      filters: { all: true },
+    },
     fetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
@@ -91,7 +96,11 @@ export default function AdminAuctionsPage() {
         </thead>
         <tbody className="fw-normal">
           {auctions.items.map((auction: Auction) => (
-            <ClickableTr key={auction.id} linkTo={`/auctions/${auction.isDraft ? `${auction.id}/title` : auction.id}`}>
+            <ClickableTr
+              key={auction.id}
+              className={clsx(auction.password && styles.private)}
+              linkTo={`/auctions/${auction.isDraft ? `${auction.id}/title` : auction.id}`}
+            >
               <td className={styles.idColumn}>{auction.id}</td>
               <td className={styles.otherColumns}>{auction.title}</td>
               <td className={styles.otherColumns}>{auction.auctionOrganizer.name}</td>

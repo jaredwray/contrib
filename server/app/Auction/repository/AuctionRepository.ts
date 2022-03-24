@@ -93,6 +93,7 @@ export class AuctionRepository implements IAuctionRepository {
     statusFilter: string[],
   ): ISearchOptions {
     return ([
+      [!filters?.all, { password: { $exists: false } }],
       [statusFilter, { status: { $in: statusFilter } }],
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
