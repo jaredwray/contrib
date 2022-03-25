@@ -25,7 +25,7 @@ const AuctionVideoPage = () => {
   const [selectedAttachment, setSelectedAttachment] = useState<AuctionAttachment | null>(null);
   const { auctionId } = useParams<{ auctionId: string }>();
   const history = useHistory();
-  const { showError, showWarning } = useShowNotification();
+  const { showWarning } = useShowNotification();
   const [attachments, setAttachments] = useState<AttachmentsStateInterface>({
     uploaded: [],
     loading: [],
@@ -52,12 +52,8 @@ const AuctionVideoPage = () => {
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(() => {
-    if (attachments.uploaded.length === 0) {
-      showError('You need to upload at least one attachment');
-    } else {
-      history.push(`/auctions/${auctionId}/photo`);
-    }
-  }, [showError, attachments.uploaded.length, auctionId, history]);
+    history.push(`/auctions/${auctionId}/photo`);
+  }, [auctionId, history]);
 
   const closeModal = useCallback(() => {
     setSelectedAttachment(null);
