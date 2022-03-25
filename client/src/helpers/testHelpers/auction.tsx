@@ -53,7 +53,6 @@ export const AuctionQueryAuction = {
   isStopped: true,
   itemPrice: { amount: 10000, currency: 'USD', precision: 2 },
   bitlyLink: 'testBitlyLink',
-  password: null,
   shortLink: {
     slug: 'testSlug',
     shortLink: 'shortLink',
@@ -100,7 +99,6 @@ export const auction = {
     followers: [],
   },
   bitlyLink: 'testBitlyLink',
-  password: null,
   shortLink: {
     slug: 'testSlug',
   },
@@ -147,7 +145,6 @@ export const auctionForAdminPage = {
   isSold: false,
   isSettled: false,
   bitlyLink: 'https://go.contrib.org/3qbU9JG',
-  password: '',
   shortLink: {
     slug: 'testSlug',
   },
