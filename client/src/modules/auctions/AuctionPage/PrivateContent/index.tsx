@@ -1,4 +1,4 @@
-import { FC, ReactElement, useCallback, useEffect, useState } from 'react';
+import { FC, ReactElement, useCallback, useState } from 'react';
 
 import clsx from 'clsx';
 import { Col, Container, Row, Button } from 'react-bootstrap';
@@ -21,15 +21,13 @@ const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
   const [isInvalid, setIsInvalid] = useState(false);
   const { hasAccess, giveAccess } = usePrivateAuction(auction);
 
-  useEffect(() => {
-    if (hasAccess()) window.location.reload();
-  }, [hasAccess]);
+  if (hasAccess()) window.location.reload();
 
   const onSubmit = useCallback(
     (values) => {
       if (hasAccess(values.password)) {
         giveAccess();
-        setIsInvalid(false);
+        window.location.reload();
       } else {
         setIsInvalid(true);
       }
@@ -52,7 +50,13 @@ const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
           <Row className="justify-content-md-center">
             <Col lg="6" md="8" xl="4">
               <Form className={styles.form} onSubmit={onSubmit}>
-                <InputField required errorClassName="position-absolute w-auto" isInvalid={isInvalid} name="password" />
+                <InputField
+                  required
+                  errorClassName="position-absolute w-auto"
+                  isInvalid={isInvalid}
+                  name="password"
+                  onInput={() => setIsInvalid(false)}
+                />
                 <Button className={clsx(styles.button, 'mt-4')} type="submit">
                   Submit
                 </Button>

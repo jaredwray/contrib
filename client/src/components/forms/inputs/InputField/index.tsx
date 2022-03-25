@@ -5,6 +5,7 @@ import { Form as BsForm } from 'react-bootstrap';
 
 import useField from '../../Form/hooks/useField';
 import useFieldConstraints from '../../Form/hooks/useFieldConstraints';
+import styles from './styles.module.scss';
 
 const { Group, Label, Control } = BsForm;
 
@@ -76,7 +77,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           {...inputProps}
           ref={ref}
           as={textarea ? 'textarea' : 'input'}
-          className={className}
+          className={clsx(styles.input, className)}
           isInvalid={hasError || isInvalid}
           maxLength={maxLength}
           placeholder={placeholder}

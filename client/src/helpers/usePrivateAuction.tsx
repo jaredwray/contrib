@@ -11,7 +11,7 @@ export const usePrivateAuction = (auction: Auction) => {
   const passwordEncrypted = btoa(auction?.password || '');
 
   const hasAccess = (value?: string) => {
-    if (!auction || !auction.password) return false;
+    if (!auction?.password) return true;
     if (value) return btoa(value) === passwordEncrypted;
 
     return cookies[auction.id] === passwordEncrypted;
