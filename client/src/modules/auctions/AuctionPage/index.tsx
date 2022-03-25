@@ -70,7 +70,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     history.push('/');
     return null;
   }
-  if (!hasAccess()) return <PrivateContent auction={auction} />;
+  if (!hasAccess() && auction.password !== null) return <PrivateContent auction={auction} />;
 
   const accountEntityId = account?.charity?.id || account?.influencerProfile?.id || account?.assistant?.influencerId;
   const withMetrcis =
