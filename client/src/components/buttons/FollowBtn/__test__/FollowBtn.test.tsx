@@ -12,8 +12,8 @@ describe('FollowBtn', () => {
   const followHandler = jest.fn();
 
   describe('on text click', () => {
-    const clickOnWatchThisText = () => {
-      wrapper.find('.test-watchThisText').simulate('click');
+    const clickOnLink = () => {
+      wrapper.find('.link').simulate('click');
     };
     describe('when loading=true', () => {
       beforeEach(() => {
@@ -24,67 +24,67 @@ describe('FollowBtn', () => {
           followHandler,
         };
         wrapper = mount(<FollowBtn {...props} />);
-        clickOnWatchThisText();
+        clickOnLink();
       });
 
-      xit('does nothing', () => {
+      it('does nothing', () => {
         expect(followHandler).not.toBeCalled();
         expect(unfollowHandler).not.toBeCalled();
       });
     });
-    //
-    //     describe('when disabled=true', () => {
-    //       beforeEach(() => {
-    //         props = {
-    //           auction,
-    //           disabled: true,
-    //           unfollowHandler,
-    //           followHandler,
-    //         };
-    //         wrapper = mount(<FollowBtn {...props} />);
-    //         clickOnWatchThisText();
-    //       });
-    //
-    //       it('does nothing', () => {
-    //         expect(followHandler).not.toBeCalled();
-    //         expect(unfollowHandler).not.toBeCalled();
-    //       });
-    //     });
-    //
-    //     describe('when not disabled or loading, but followed', () => {
-    //       beforeEach(() => {
-    //         props = {
-    //           auction,
-    //           followed: true,
-    //           unfollowHandler,
-    //           followHandler,
-    //         };
-    //         wrapper = mount(<FollowBtn {...props} />);
-    //         clickOnWatchThisText();
-    //       });
-    //
-    //       it('calls unfollowHandler', () => {
-    //         expect(unfollowHandler).toBeCalled();
-    //         expect(followHandler).not.toBeCalled();
-    //       });
-    //     });
-    //
-    //     describe('when not disabled or loading, but unfollowed', () => {
-    //       beforeEach(() => {
-    //         props = {
-    //           auction,
-    //           followed: false,
-    //           unfollowHandler,
-    //           followHandler,
-    //         };
-    //         wrapper = mount(<FollowBtn {...props} />);
-    //         clickOnWatchThisText();
-    //       });
-    //
-    //       it('calls unfollowHandler', () => {
-    //         expect(unfollowHandler).not.toBeCalled();
-    //         expect(followHandler).toBeCalled();
-    //       });
-    //     });
+
+    describe('when disabled=true', () => {
+      beforeEach(() => {
+        props = {
+          auction,
+          disabled: true,
+          unfollowHandler,
+          followHandler,
+        };
+        wrapper = mount(<FollowBtn {...props} />);
+        clickOnLink();
+      });
+
+      it('does nothing', () => {
+        expect(followHandler).not.toBeCalled();
+        expect(unfollowHandler).not.toBeCalled();
+      });
+    });
+
+    describe('when not disabled or loading, but followed', () => {
+      beforeEach(() => {
+        props = {
+          auction,
+          followed: true,
+          unfollowHandler,
+          followHandler,
+        };
+        wrapper = mount(<FollowBtn {...props} />);
+        clickOnLink();
+      });
+
+      it('calls unfollowHandler', () => {
+        expect(unfollowHandler).toBeCalled();
+        expect(followHandler).not.toBeCalled();
+      });
+    });
+
+    describe('when not disabled or loading, but unfollowed', () => {
+      beforeEach(() => {
+        props = {
+          auction,
+          followed: false,
+          unfollowHandler,
+          followHandler,
+        };
+        wrapper = mount(<FollowBtn {...props} />);
+        clickOnLink();
+      });
+
+      it('calls unfollowHandler', () => {
+        expect(unfollowHandler).not.toBeCalled();
+        expect(followHandler).toBeCalled();
+      });
+    });
   });
 });

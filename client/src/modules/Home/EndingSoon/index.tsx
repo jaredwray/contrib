@@ -15,8 +15,6 @@ import styles from './styles.module.scss';
 export default function EndingSoon() {
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: {
-      size: 10,
-      skip: 0,
       filters: {
         status: [AuctionStatus.ACTIVE],
       },

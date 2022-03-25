@@ -3,13 +3,14 @@ import { useContext, useEffect, useState, FC } from 'react';
 
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
-import { CookiesProvider, useCookies } from 'react-cookie';
+import { CookiesProvider } from 'react-cookie';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { AuctionQuery, AuctionSubscription, AuctionMetricsQuery } from 'src/apollo/queries/auctions';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { usePrivateAuction } from 'src/helpers/usePrivateAuction';
 
 import AttachmentsSlider from './AttachmentsSlider';
 import AuctionDetails from './AuctionDetails';
@@ -43,7 +44,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     auction?.auctionOrganizer?.id,
   );
   const accoutIsOwnerOrAdmin = account?.isAdmin || accoutIsOwner;
-  const [cookies] = useCookies([auction?.id]);
+  const { hasAccess } = usePrivateAuction(auction);
 
   useEffect(() => {
     subscribeToMore({
@@ -69,7 +70,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
     history.push('/');
     return null;
   }
-  if (auction.password && cookies[auction?.id] !== btoa(auction.password)) return <PrivateContent auction={auction} />;
+  if (!hasAccess()) return <PrivateContent auction={auction} />;
 
   const accountEntityId = account?.charity?.id || account?.influencerProfile?.id || account?.assistant?.influencerId;
   const withMetrcis =
