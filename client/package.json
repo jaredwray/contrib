@@ -7,7 +7,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --coverage --runInBand --watchAll=false",
     "eject": "react-scripts eject",
-    "lint": "eslint  --cache --cache-location .eslintcache  --ext .js,.ts,.tsx .",
+    "lint": "eslint --cache --cache-location .eslintcache --ext .js,.ts,.tsx .",
     "test:lint": "yarn lint && yarn tsc"
   },
   "engines": {

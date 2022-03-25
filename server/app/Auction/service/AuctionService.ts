@@ -44,8 +44,7 @@ import { IAuctionFilters, IAuctionRepository } from '../repository/IAuctionRepoo
 import { PaymentService, StripeService } from '../../Payment';
 import { ShortLinkService } from '../../ShortLink';
 import { AppConfig } from '../../../config';
-import { CloudTaskService } from '../../CloudTaskService';
-import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
+import { NotificationService, MessageTemplate } from '../../NotificationService';
 import { CharityModel } from '../../Charity/mongodb/CharityModel';
 import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 
@@ -63,8 +62,7 @@ export class AuctionService {
     private readonly connection: Connection,
     private readonly paymentService: PaymentService,
     private readonly cloudStorage: GCloudStorage,
-    private readonly cloudTaskService: CloudTaskService,
-    private readonly handlebarsService: HandlebarsService,
+    private readonly notificationService: NotificationService,
     private readonly bidService: BidService,
     private readonly stripeService: StripeService,
     private readonly shortLinkService: ShortLinkService,
@@ -204,7 +202,7 @@ export class AuctionService {
       address: `auctions/${auction._id.toString()}/delivery/info`,
     });
 
-    await this.sendAuctionNotification(
+    await this.notificationService.sendMessageLater(
       auction.winner.phoneNumber,
       MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_ORGANIZER,
       {
@@ -240,14 +238,13 @@ export class AuctionService {
       Object.assign(auction, {
         updatedAt: this.timeNow(),
       });
-
       await auction.save();
 
       const trackingShortLink = await this.shortLinkService.createShortLink({
         path: this.UPSService.trackingUrl(identificationNumber),
       });
 
-      await this.sendAuctionNotification(
+      await this.notificationService.sendMessageLater(
         auction.winner.phoneNumber,
         MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_WINNER,
         {
@@ -269,8 +266,8 @@ export class AuctionService {
       Object.assign(auction, {
         updatedAt: this.timeNow(),
       });
-
       await auction.save();
+
       throw new Error(error.message);
     }
   }
@@ -300,9 +297,8 @@ export class AuctionService {
       throw new AppError('You are not a winner for this auction');
     }
 
-    if (auction.delivery.status === AuctionDeliveryStatus.ADDRESS_PROVIDED) {
+    if (auction.delivery.status === AuctionDeliveryStatus.ADDRESS_PROVIDED)
       await this.chargeUserForShippingRegistration(auction, deliveryMethod, timeInTransit);
-    }
 
     if (deliveryMethod) {
       try {
@@ -366,57 +362,49 @@ export class AuctionService {
   }
 
   private async sendNotificationForAuctionCharity(auction: IAuctionModel) {
-    try {
-      const charityUserAccount = await this.UserAccountModel.findById(auction.charity.userAccount).exec();
-      if (!charityUserAccount) {
-        AppLogger.error(`Cannot find account ${auction.charity.userAccount}`);
-        return;
-      }
+    const charityUserAccount = await this.UserAccountModel.findById(auction.charity.userAccount).exec();
+    if (!charityUserAccount) {
+      AppLogger.error(`Cannot find account ${auction.charity.userAccount}`);
+      return;
+    }
 
-      await this.sendAuctionNotification(charityUserAccount.phoneNumber, MessageTemplate.AUCTION_IS_CREATED_MESSAGE, {
+    await this.notificationService.sendMessageLater(
+      charityUserAccount.phoneNumber,
+      MessageTemplate.AUCTION_IS_CREATED_MESSAGE,
+      {
         auctionTitle: auction.title,
         auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
-      });
-    } catch (error) {
-      AppLogger.error(`Failed to send notification, error: ${error.message}`);
-    }
+      },
+    );
   }
 
   private async sendNotificationsForCharityFollowers(auction: IAuctionModel) {
-    try {
-      const charityFollowers = auction.charity.followers;
-      charityFollowers?.forEach(async (follower) => {
-        await this.sendAuctionNotification(
-          follower.user.phoneNumber,
-          MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_CHARITY_FOLLOWERS,
-          {
-            auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
-            charityName: auction.charity.name,
-          },
-        );
-      });
-    } catch (error) {
-      AppLogger.error(`Failed to send notification, error: ${error.message}`);
-    }
+    const charityFollowers = auction.charity.followers;
+    charityFollowers?.forEach(async (follower) => {
+      await this.notificationService.sendMessageLater(
+        follower.user.phoneNumber,
+        MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_CHARITY_FOLLOWERS,
+        {
+          auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
+          charityName: auction.charity.name,
+        },
+      );
+    });
   }
 
   private async sendNotificationsForInfluencerFollowers(auction: IAuctionModel) {
-    try {
-      const auctionOrganizerFollowers = auction.auctionOrganizer.followers;
+    const auctionOrganizerFollowers = auction.auctionOrganizer.followers;
 
-      auctionOrganizerFollowers?.forEach(async (follower) => {
-        await this.sendAuctionNotification(
-          follower.user.phoneNumber,
-          MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_INFLUENCER_FOLLOWERS,
-          {
-            auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
-            influencerName: auction.auctionOrganizer.name,
-          },
-        );
-      });
-    } catch (error) {
-      AppLogger.error(`Failed to send notification, error: ${error.message}`);
-    }
+    auctionOrganizerFollowers?.forEach(async (follower) => {
+      await this.notificationService.sendMessageLater(
+        follower.user.phoneNumber,
+        MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_INFLUENCER_FOLLOWERS,
+        {
+          auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
+          influencerName: auction.auctionOrganizer.name,
+        },
+      );
+    });
   }
 
   public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
@@ -541,9 +529,9 @@ export class AuctionService {
 
   public async maybeActivateAuction(id: string, organizerId: string): Promise<Auction> {
     const auction = await this.auctionRepository.activateAuction(id, organizerId);
-    if (auction.status === AuctionStatus.ACTIVE) {
-      await this.sendAuctionIsActivatedMessage(auction);
-    }
+
+    if (auction.status === AuctionStatus.ACTIVE) await this.sendAuctionIsActivatedMessage(auction);
+
     return this.makeAuction(auction);
   }
 
@@ -555,9 +543,8 @@ export class AuctionService {
     filename: string | null,
   ): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, organizerId);
-    if (auction?.status !== AuctionStatus.DRAFT) {
+    if (auction?.status !== AuctionStatus.DRAFT)
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
-    }
 
     try {
       const asset = await this.attachmentsService.uploadFileAttachment(
@@ -566,7 +553,6 @@ export class AuctionService {
         attachment,
         uid,
       );
-
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });
 
       return AuctionService.makeAuctionAttachment(asset, filename ?? (await attachment).filename);
@@ -671,24 +657,19 @@ export class AuctionService {
     const auction = await this.AuctionModel.findById(id, null, { session }).exec();
 
     if (!auction.charity) throw new AppError('There is no charity attached to given auction');
-    if (auction.status !== AuctionStatus.ACTIVE) {
-      throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
-    }
-    if (dayjs().utc().isAfter(auction.endsAt)) {
-      throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
-    }
+    if (auction.status !== AuctionStatus.ACTIVE) throw new AppError('Auction is not active', ErrorCode.BAD_REQUEST);
+    if (dayjs().utc().isAfter(auction.endsAt)) throw new AppError('Auction has already ended', ErrorCode.BAD_REQUEST);
 
     const currentPrice = Dinero({
       amount: auction.currentPrice,
       currency: (auction.priceCurrency || AppConfig.app.defaultCurrency) as Currency,
     });
 
-    if (auction.totalBids > 0 && bid.lessThanOrEqual(currentPrice)) {
+    if (auction.totalBids > 0 && bid.lessThanOrEqual(currentPrice))
       throw new AppError(
         'Provided bid is lower, than maximum bid that was encountered on the auction',
         ErrorCode.BAD_REQUEST,
       );
-    }
     if (bid.getAmount() > AppConfig.bid.maxPriceValue) throw new AppError('Unable to charge', ErrorCode.BAD_REQUEST);
 
     try {
@@ -718,14 +699,17 @@ export class AuctionService {
       if (lastBid && lastBid.user.toString() !== user.mongodbId) {
         try {
           const userAccount = await this.UserAccountModel.findById(lastBid.user);
-          if (!userAccount) {
-            throw new AppError(`Cannot find user with #${lastBid.user}`);
-          }
+          if (!userAccount) throw new AppError(`Cannot find user with #${lastBid.user}`);
+
           const currentAuction = await this.auctionRepository.getPopulatedAuction(auction);
-          await this.sendAuctionNotification(userAccount.phoneNumber, MessageTemplate.AUCTION_BID_OVERLAP, {
-            auctionTitle: currentAuction.title,
-            auctionLink: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
-          });
+          await this.notificationService.sendMessageLater(
+            userAccount.phoneNumber,
+            MessageTemplate.AUCTION_BID_OVERLAP,
+            {
+              auctionTitle: currentAuction.title,
+              auctionLink: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
+            },
+          );
         } catch (error) {
           AppLogger.error(`Failed to send notification for auction #${id}, error: ${error.message}`);
         }
@@ -741,7 +725,7 @@ export class AuctionService {
     }
   }
 
-  public async scheduleAuctionJobSettle(): Promise<{ message: string }> {
+  public async scheduleAuctionJobSettle(): Promise<void> {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
 
     for await (const auction of auctions) {
@@ -751,10 +735,9 @@ export class AuctionService {
         } catch {}
       }
     }
-    return { message: 'Scheduled' };
   }
 
-  public async scheduleAuctionEndsNotification(): Promise<{ message: string }> {
+  public async scheduleAuctionEndsNotification(): Promise<void> {
     const auctions = await this.AuctionModel.find({ status: AuctionStatus.ACTIVE });
 
     for await (const auction of auctions) {
@@ -762,7 +745,6 @@ export class AuctionService {
       await this.sendLastNotificationForUsers(auction);
       await this.sendNotificationForAuctionOrganizer(auction);
     }
-    return { message: 'Scheduled' };
   }
 
   private async sendLastNotificationForUsers(auction: IAuctionModel): Promise<void> {
@@ -790,9 +772,9 @@ export class AuctionService {
     if (
       auction.endsAt.diff(dayjs().utc(), 'minute') > AppConfig.googleCloud.auctionEndsTime.firstNotification ||
       auction.sentNotifications.includes('firstNotification')
-    ) {
+    )
       return;
-    }
+
     try {
       const timeLeftText = `${Math.floor((AppConfig.googleCloud.auctionEndsTime.firstNotification - 1) / 60)} hour`;
       await this.notifyUsers(auction, timeLeftText);
@@ -813,9 +795,9 @@ export class AuctionService {
         AppConfig.googleCloud.auctionEndsTime.notificationForAuctionOrganizer ||
       dayjs(auction.endsAt).diff(auction.startsAt, 'hour') <= 24 ||
       auction.sentNotifications.includes('notificationForAuctionOrganizer')
-    ) {
+    )
       return;
-    }
+
     try {
       await this.notifyAuctionOrganizer(auction);
       auction.sentNotifications.push('notificationForAuctionOrganizer');
@@ -835,14 +817,18 @@ export class AuctionService {
 
     if (!phoneNumber) return null;
 
-    await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_AUCTIONORGANIZER, {
-      auctionTitle: currentAuction.title,
-      auctionPrice: Dinero({
-        amount: currentAuction.currentPrice,
-        currency: currentAuction.priceCurrency as Currency,
-      }).toFormat('$0,0'),
-      shortUrl: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
-    });
+    await this.notificationService.sendMessageLater(
+      phoneNumber,
+      MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_AUCTIONORGANIZER,
+      {
+        auctionTitle: currentAuction.title,
+        auctionPrice: Dinero({
+          amount: currentAuction.currentPrice,
+          currency: currentAuction.priceCurrency as Currency,
+        }).toFormat('$0,0'),
+        shortUrl: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
+      },
+    );
   }
 
   private async notifyUsers(auction: IAuctionModel, timeLeftText: string): Promise<void> {
@@ -858,7 +844,7 @@ export class AuctionService {
 
     phoneNumbers.forEach(async (phoneNumber) => {
       try {
-        await this.sendAuctionNotification(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_USERS, {
+        await this.notificationService.sendMessageLater(phoneNumber, MessageTemplate.AUCTION_ENDS_MESSAGE_FOR_USERS, {
           timeLeftText,
           influencerName: currentAuction.auctionOrganizer.name,
           auctionName: currentAuction.title,
@@ -930,14 +916,17 @@ export class AuctionService {
       await lastAuctionBid.populate({ path: 'user', model: this.UserAccountModel }).execPopulate();
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
 
-      const messageData = await this.getMessageTemplateAndVariables(
+      const { messageTemplate, messageVariables } = await this.getMessageTemplateAndVariables(
         AppConfig.delivery.UPSSMSWithDeliveryLink,
         auction,
         'WON',
       );
-      const { messageTemplate, messageVariables } = messageData;
 
-      await this.sendAuctionNotification(lastAuctionBid.user.phoneNumber, messageTemplate, messageVariables);
+      await this.notificationService.sendMessageLater(
+        lastAuctionBid.user.phoneNumber,
+        messageTemplate,
+        messageVariables,
+      );
 
       AppLogger.info(
         `Auction with id ${auction.id} has been settled with charge id ${
@@ -991,25 +980,6 @@ export class AuctionService {
       charityAccount.stripeAccountId,
       auction.charity.toString(),
     );
-  }
-
-  async sendAuctionNotification(
-    phoneNumber: string,
-    template: MessageTemplate,
-    context?: { [key: string]: any },
-  ): Promise<void> {
-    try {
-      const message = await this.handlebarsService.renderTemplate(template, context);
-      await this.cloudTaskService.createTask(
-        this.cloudTaskService.generateGoogleTaskTarget('notificationTaskTargetURL'),
-        {
-          message,
-          phoneNumber,
-        },
-      );
-    } catch (error) {
-      AppLogger.warn(`Can not send the notification to ${phoneNumber}: ${error.message}`);
-    }
   }
 
   private makeBidDineroValue(amount: number, currency: Dinero.Currency) {
@@ -1124,6 +1094,7 @@ export class AuctionService {
     } catch (error) {
       throw new AppError('Something went wrong. Please, try again later', ErrorCode.BAD_REQUEST);
     }
+
     try {
       const messageData = await this.getMessageTemplateAndVariables(
         AppConfig.delivery.UPSSMSWithDeliveryLink,
@@ -1132,7 +1103,7 @@ export class AuctionService {
       );
       const { messageTemplate, messageVariables } = messageData;
 
-      await this.sendAuctionNotification(user.phoneNumber, messageTemplate, messageVariables);
+      await this.notificationService.sendMessageLater(user.phoneNumber, messageTemplate, messageVariables);
     } catch (error) {
       AppLogger.error(`Something went wrong when send bought notification for auction #${id}, error: ${error.message}`);
       throw new AppError('Something went wrong. Please, try again later', ErrorCode.BAD_REQUEST);
@@ -1167,12 +1138,11 @@ export class AuctionService {
 
     try {
       await auction.save();
-      if (auction.status === AuctionStatus.ACTIVE) {
-        await this.sendAuctionIsActivatedMessage(auction);
-      }
     } catch (error) {
       throw new AppError(`Something went wrong, ${error.message}`, ErrorCode.BAD_REQUEST);
     }
+
+    if (auction.status === AuctionStatus.ACTIVE) await this.sendAuctionIsActivatedMessage(auction);
     return this.makeAuction(auction);
   }
 
@@ -1263,9 +1233,7 @@ export class AuctionService {
     };
   }
 
-  private timeNow(): String {
-    return dayjs().second(0).toISOString();
-  }
+  private timeNow = () => dayjs().second(0);
 
   public makeAuction(model: IAuctionModel): Auction | null {
     const {

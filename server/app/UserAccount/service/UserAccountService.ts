@@ -14,14 +14,14 @@ import { IInfluencer, InfluencerModel } from '../../Influencer/mongodb/Influence
 import { IAuctionModel, AuctionModel } from '../../Auction/mongodb/AuctionModel';
 import { InvitationParentEntityType } from '../../Invitation/mongodb/InvitationParentEntityType';
 import { UserAccountStatus } from '../dto/UserAccountStatus';
-import { TwilioVerificationService } from '../../../twilio-client';
+import { NotificationService } from '../../NotificationService';
+import { PhoneNumberVerificationService } from '../../PhoneNumberVerificationService';
 import { Events } from '../../Events';
 import { EventHub } from '../../EventHub';
 import { TermsService } from '../../TermsService';
 import { UPSDeliveryService } from '../../UPSService';
 import { StripeService } from '../../Payment';
-import { CloudTaskService } from '../../CloudTaskService';
-import { HandlebarsService, MessageTemplate } from '../../Message/service/HandlebarsService';
+import { MessageTemplate } from '../../NotificationService';
 import { isValidAddressFields } from '../../../helpers/isValidAddressFields';
 
 import { AppConfig } from '../../../config';
@@ -38,10 +38,9 @@ export class UserAccountService {
 
   constructor(
     private readonly connection: Connection,
-    private readonly twilioVerificationService: TwilioVerificationService,
+    private readonly notificationService: NotificationService,
+    private readonly phoneNumberVerificationService: PhoneNumberVerificationService,
     private readonly eventHub: EventHub,
-    private readonly handlebarsService: HandlebarsService,
-    private readonly cloudTaskService: CloudTaskService,
     private readonly UPSService: UPSDeliveryService,
     private readonly stripeService: StripeService,
   ) {}
@@ -126,23 +125,20 @@ export class UserAccountService {
 
   async getAccountById(id: string): Promise<UserAccountForBid> {
     const account = await this.AccountModel.findOne({ _id: id }).exec();
-    if (account != null) {
-      return {
-        id: account._id.toString(),
-        createdAt: account.createdAt,
-        phoneNumber: account.phoneNumber,
-        stripeCustomerId: account.stripeCustomerId,
-      };
-    }
-    return null;
+    if (!account) return null;
+
+    return {
+      id: account._id.toString(),
+      createdAt: account.createdAt,
+      phoneNumber: account.phoneNumber,
+      stripeCustomerId: account.stripeCustomerId,
+    };
   }
 
   async getAccountByPhoneNumber(phoneNumber: string, session?: ClientSession): Promise<UserAccount> {
     const account = await this.AccountModel.findOne({ phoneNumber }, null, { session }).exec();
-    if (account != null) {
-      return UserAccountService.makeUserAccount(account);
-    }
-    return null;
+
+    return account && UserAccountService.makeUserAccount(account);
   }
 
   async listAccountsById(ids: readonly string[]): Promise<UserAccount[]> {
@@ -157,50 +153,26 @@ export class UserAccountService {
   }
 
   async verifyChangePhoneNumber(phoneNumber: string): Promise<{ phoneNumber: string } | null> {
-    if (await this.AccountModel.exists({ phoneNumber })) {
+    if (await this.AccountModel.exists({ phoneNumber }))
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
-    }
 
-    try {
-      await this.twilioVerificationService.createVerification(phoneNumber);
-    } catch (error) {
-      if (error.message.startsWith('Invalid parameter `To`'))
-        throw new AppError(`${error.message.replace('Invalid parameter `To`', 'Invalid phone number')}`);
-
-      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}: ${error.message}`);
-
-      throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
-    }
+    await this.phoneNumberVerificationService.createVerification(phoneNumber);
     return { phoneNumber };
   }
 
   async createAccountWithPhoneNumber(authzId: string, phoneNumber: string): Promise<UserAccount> {
-    if (await this.AccountModel.exists({ phoneNumber })) {
+    if (await this.AccountModel.exists({ phoneNumber }))
       throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
-    }
 
     if (
       await this.InvitationModel.exists({
         phoneNumber,
         parentEntityType: InvitationParentEntityType.CHARITY,
       })
-    ) {
+    )
       return await this.confirmAccountWithPhoneNumber(authzId, phoneNumber);
-    }
 
-    try {
-      await this.twilioVerificationService.createVerification(phoneNumber);
-    } catch (error) {
-      if (error.message.startsWith('Invalid parameter `To`')) {
-        throw new AppError(
-          `${error.message.replace('Invalid parameter `To`', 'Invalid phone number')}`,
-          ErrorCode.BAD_REQUEST,
-        );
-      }
-
-      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}: ${error.message}`);
-      throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
-    }
+    await this.phoneNumberVerificationService.createVerification(phoneNumber);
 
     return {
       id: authzId,
@@ -217,80 +189,46 @@ export class UserAccountService {
     otp: string;
   }): Promise<{ phoneNumber: string } | null> {
     const { userId, newPhoneNumber, oldPhoneNumber, otp } = input;
+    const result = await this.phoneNumberVerificationService.confirmVerification(newPhoneNumber, otp);
 
-    const result = await this.twilioVerificationService.confirmVerification(newPhoneNumber, otp);
-
-    if (!result) {
-      throw new AppError('Incorrect verification code', ErrorCode.BAD_REQUEST);
-    }
+    if (!result) throw new AppError('Incorrect verification code', ErrorCode.BAD_REQUEST);
 
     try {
       await this.AccountModel.findByIdAndUpdate(userId, { phoneNumber: newPhoneNumber });
-
       return { phoneNumber: newPhoneNumber };
     } catch (error) {
       AppLogger.error(`Cannot update phoneNumber for user #${userId}. Error: ${error.message}`);
       throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
     }
 
-    try {
-      const message = await this.handlebarsService.renderTemplate(MessageTemplate.PHONE_NUMBER_CHANGED, {
-        oldPhoneNumber,
-        newPhoneNumber,
-        contactEmail: AppConfig.app.contactEmail,
-      });
-
-      await this.cloudTaskService.createTask(
-        this.cloudTaskService.generateGoogleTaskTarget('notificationTaskTargetURL'),
-        {
-          message,
-          oldPhoneNumber,
-        },
-      );
-    } catch (error) {
-      AppLogger.error(`Cannot send notification for user #${userId}. Error: ${error.message}`);
-    }
+    await this.notificationService.sendMessageLater(oldPhoneNumber, MessageTemplate.PHONE_NUMBER_CHANGED, {
+      oldPhoneNumber,
+      newPhoneNumber,
+      contactEmail: AppConfig.app.contactEmail,
+    });
   }
 
   async sendOtp(phoneNumber: string) {
-    try {
-      await this.twilioVerificationService.createVerification(phoneNumber);
-      return {
-        phoneNumber,
-      };
-    } catch (error) {
-      if (error.message.startsWith('Invalid parameter `To`')) {
-        throw new AppError(`${error.message.replace('Invalid parameter `To`', 'Invalid phone number')}`);
-      }
-      AppLogger.error(`Cannot send phone number verification message to ${phoneNumber}. Error: ${error.message}`);
-      throw new AppError(`Something went wrong, please try later.`, ErrorCode.BAD_REQUEST);
-    }
+    await this.phoneNumberVerificationService.createVerification(phoneNumber);
+    return { phoneNumber };
   }
 
   async confirmAccountWithPhoneNumber(authzId: string, phoneNumber: string, otp?: string): Promise<UserAccount> {
     if (otp) {
-      const result = await this.twilioVerificationService.confirmVerification(phoneNumber, otp);
-      if (!result) {
-        throw new AppError('Incorrect verification code', ErrorCode.BAD_REQUEST);
-      }
+      const result = await this.phoneNumberVerificationService.confirmVerification(phoneNumber, otp);
+      if (!result) throw new AppError('Incorrect verification code', ErrorCode.BAD_REQUEST);
     }
 
-    if (await this.AccountModel.exists({ authzId })) {
+    if (await this.AccountModel.exists({ authzId }))
       throw new AppError('Account already exists', ErrorCode.BAD_REQUEST);
-    }
 
     const findedAccount = await this.AccountModel.findOne({ phoneNumber }).exec();
-    if (findedAccount && authzId.startsWith('sms|')) {
-      return UserAccountService.makeUserAccount(findedAccount);
-    }
 
-    if (findedAccount) {
-      throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
-    }
+    if (findedAccount && authzId.startsWith('sms|')) return UserAccountService.makeUserAccount(findedAccount);
+    if (findedAccount) throw new AppError(`${phoneNumber} is already in use`, ErrorCode.BAD_REQUEST);
 
     const accountModel = await this.AccountModel.create({ authzId, phoneNumber, createdAt: dayjs().toISOString() });
     const account = UserAccountService.makeUserAccount(accountModel);
-
     await this.eventHub.broadcast(Events.USER_ACCOUNT_CREATED, account);
 
     return account;
@@ -308,9 +246,7 @@ export class UserAccountService {
   }
 
   async acceptTerms(id: string, version: string): Promise<UserAccount> {
-    if (!TermsService.isValidVersion(version)) {
-      throw new Error(`Terms version ${version} is invalid!`);
-    }
+    if (!TermsService.isValidVersion(version)) throw new Error(`Terms version ${version} is invalid!`);
 
     const account = await this.AccountModel.findById(id).exec();
 
@@ -324,10 +260,7 @@ export class UserAccountService {
     return UserAccountService.makeUserAccount(account);
   }
 
-  private timeNow(): String {
-    return dayjs().second(0).toISOString();
-  }
-
+  private timeNow = () => dayjs().second(0);
   private static makeUserAccount(model: IUserAccount, accountEntityTypes?): UserAccount {
     const { _id, authzId, acceptedTerms, ...rest } = model.toObject();
 

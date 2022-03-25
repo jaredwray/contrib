@@ -37,9 +37,8 @@ export const AssistantResolvers: AssistantResolversType = {
     assistant: loadAccount(
       async (userAccount: UserAccount, _, { user, currentAccount, loaders }): Promise<Assistant | null> => {
         const hasAccess = currentAccount?.isAdmin || user?.id === userAccount.id;
-        if (!userAccount.mongodbId || !hasAccess) {
-          return null;
-        }
+        if (!userAccount.mongodbId || !hasAccess) return null;
+
         return loaders.assistant.getByUserAccountId(userAccount.mongodbId);
       },
     ),

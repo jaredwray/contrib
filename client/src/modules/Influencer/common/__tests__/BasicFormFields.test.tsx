@@ -2,33 +2,30 @@ import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
 import Form from 'src/components/forms/Form/Form';
 import { mount, ReactWrapper } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { BasicFormFields } from '../BasicFormFields';
 import { influencer } from 'src/helpers/testHelpers/influencer';
 
+describe('BasicFormFields', () => {
+  it('renders component', async () => {
+    let wrapper: ReactWrapper;
 
-const mockedSumbit = jest.fn();
+    await act(async () => {
+      wrapper = mount(
+        <MockedProvider>
+          <ToastProvider>
+            <Form onSubmit={jest.fn}>
+              <BasicFormFields influencer={influencer} />
+            </Form>
+          </ToastProvider>
+        </MockedProvider>,
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve));
+      wrapper.update();
+    });
 
-describe('Should render correctly ', () => {
-  const props: any = {
-    influencer: influencer,
-  };
-
-  let wrapper: ReactWrapper;
-  beforeEach(() => {
-    wrapper = mount(
-      <MockedProvider>
-        <ToastProvider>
-          <Form onSubmit={mockedSumbit}>
-            <BasicFormFields {...props} />
-          </Form>
-        </ToastProvider>
-      </MockedProvider>,
-    );
-  });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  it('component is defined', () => {
     expect(wrapper).toHaveLength(1);
   });
 });

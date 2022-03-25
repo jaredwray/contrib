@@ -4,14 +4,14 @@ import { Strategy as GoogleAuthStategy } from 'passport-google-oauth20';
 import { Strategy as FacebookAuthStategy } from 'passport-facebook';
 import { Strategy as TwitterAuthStategy } from 'passport-twitter';
 
-import { TwilioVerificationService } from '../../twilio-client';
+import { PhoneNumberVerificationService } from '../../app/PhoneNumberVerificationService';
 
 import { createStrategyType } from './createStrategyType';
 import { createCustomSmsStrategy } from './createCustomSmsStrategy';
 
 import { AppConfig } from '../../config';
 
-export const createPassportStrategies = (twilioService: TwilioVerificationService) => {
+export const createPassportStrategies = (phoneNumberVerificationService: PhoneNumberVerificationService) => {
   const facebookStrategyData = {
     type: 'facebook',
     options: {
@@ -46,7 +46,7 @@ export const createPassportStrategies = (twilioService: TwilioVerificationServic
 
   createStrategyType(twitterStrategyData);
 
-  createCustomSmsStrategy(twilioService);
+  createCustomSmsStrategy(phoneNumberVerificationService);
 
   passport.serializeUser((user, done) => {
     done(null, user);

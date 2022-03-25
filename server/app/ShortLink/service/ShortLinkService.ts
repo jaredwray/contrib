@@ -14,15 +14,14 @@ export class ShortLinkService {
 
   private async getUniqSlug(slug: string): Promise<string> {
     const isExists = await this.shortLinkModel.exists({ slug });
-    if (!isExists) {
-      return slug;
-    }
+    if (!isExists) return slug;
+
     const newSlug = uuidv4().split('-')[0];
     return await this.getUniqSlug(newSlug);
   }
 
   public makeLink({ address, slug }: { address?: string; slug?: string }): string {
-    const url = new URL(AppConfig.app.url);
+    const url = AppConfig.app.url;
 
     if (address) {
       url.pathname = `/${address}`;

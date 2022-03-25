@@ -56,9 +56,7 @@ export class PaymentService {
   }
 
   private static makePaymentInformationForCard(card: Stripe.Card): PaymentInformation {
-    if (!card) {
-      return null;
-    }
+    if (!card) return null;
 
     return {
       id: card.id,

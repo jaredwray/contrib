@@ -22,9 +22,9 @@ export class CloudflareStreaming {
 
   public async uploadToCloudflare(objectUrl: string, meta: { name: string; [key: string]: string }): Promise<string> {
     const response = await this.http.post(`${CloudflareStreaming.cloudflareUrl}/copy`, { meta, url: objectUrl });
-    if (!response.data || !response.data.result) {
+    if (!response.data || !response.data.result)
       throw new AppError(`Cannot upload video file ${meta.name} on ${CloudflareStreaming.cloudflareUrl}/copy url`);
-    }
+
     return response.data.result.uid;
   }
   public async deleteFromCloudFlare(uid: string) {

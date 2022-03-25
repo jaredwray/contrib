@@ -29,20 +29,15 @@ export class CharityLoader {
 
   async getByUserAccountId(userAccountId: string): Promise<Charity | null> {
     const charity = await this.loaderByUserAccountId.load(userAccountId);
+    if (!charity) return null;
 
-    if (charity) {
-      return await this.charityService.maybeUpdateStripeLink(charity);
-    } else {
-      return null;
-    }
+    return await this.charityService.maybeUpdateStripeLink(charity);
   }
 
   async getById(id: string): Promise<Charity> {
     const charity = await this.loaderById.load(id);
-    if (charity) {
-      return await this.charityService.maybeUpdateStripeLink(charity);
-    } else {
-      return null;
-    }
+    if (!charity) return null;
+
+    return await this.charityService.maybeUpdateStripeLink(charity);
   }
 }

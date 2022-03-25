@@ -29,16 +29,16 @@ export const InvitationResolvers: InvitationResolversType = {
   Mutation: {
     confirmAccountWithInvitation: requireAuthenticated(async (_, { code, otp }, { user, userAccount, invitation }) => {
       const invitationModel = await invitation.findInvitationBySlug(code);
-      if (!invitationModel || invitationModel.accepted) {
+      if (!invitationModel || invitationModel.accepted)
         throw new AppError('Invitation code is outdated', ErrorCode.BAD_REQUEST);
-      }
+
       return userAccount.confirmAccountWithPhoneNumber(user.id, invitationModel.phoneNumber, otp);
     }),
     createAccountWithInvitation: requireAuthenticated(async (_, { code }, { user, userAccount, invitation }) => {
       const invitationModel = await invitation.findInvitationBySlug(code);
-      if (!invitationModel || invitationModel.accepted) {
+      if (!invitationModel || invitationModel.accepted)
         throw new AppError('Invitation code is outdated', ErrorCode.BAD_REQUEST);
-      }
+
       return userAccount.createAccountWithPhoneNumber(user.id, invitationModel.phoneNumber);
     }),
   },
