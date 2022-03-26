@@ -42,7 +42,6 @@ export default function AdminAuctionsPage() {
       size: PER_PAGE,
       skip: initialSkip,
       query: searchQuery,
-      filters: { all: true },
     },
     fetchPolicy: 'cache-and-network',
   });
