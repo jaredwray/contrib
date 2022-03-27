@@ -18,7 +18,7 @@ interface Props {
 }
 
 const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
-  const [isInvalid, setIsInvalid] = useState(false);
+  const [isValid, setIsValid] = useState(true);
   const { hasAccess, giveAccess } = usePrivateAuction(auction);
 
   if (hasAccess()) window.location.reload();
@@ -29,10 +29,10 @@ const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
         giveAccess();
         window.location.reload();
       } else {
-        setIsInvalid(true);
+        setIsValid(false);
       }
     },
-    [hasAccess, giveAccess, setIsInvalid],
+    [hasAccess, giveAccess, setIsValid],
   );
 
   setPageTitle('Private content');
@@ -43,21 +43,22 @@ const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
         <Container className="m-auto">
           <Row className="mb-4 justify-content-md-center">
             <Col className="text-center" lg="6" md="8" xl="4">
-              <h2>This is a private auction</h2>
-              <h4>Please enter your password</h4>
+              <h2 className={styles.h2}>This is a private auction</h2>
+              <h4 className={styles.h4}>Please enter your password</h4>
             </Col>
           </Row>
           <Row className="justify-content-md-center">
             <Col lg="6" md="8" xl="4">
-              <Form className={styles.form} onSubmit={onSubmit}>
+              <Form onSubmit={onSubmit}>
                 <InputField
                   required
+                  className={clsx(styles.input, 'text-center')}
                   errorClassName="position-absolute w-auto"
-                  isInvalid={isInvalid}
+                  isInvalid={!isValid}
                   name="password"
-                  onInput={() => setIsInvalid(false)}
+                  onInput={() => setIsValid(true)}
                 />
-                <Button className={clsx(styles.button, 'mt-4')} type="submit">
+                <Button className="mt-4 w-100" type="submit">
                   Submit
                 </Button>
               </Form>

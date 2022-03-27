@@ -1,22 +1,14 @@
-@import 'src/variables.scss';
-
-h2 {
+.h2 {
   font-weight: 700 !important;
   font-size: 2rem !important;
 }
 
-h4 {
+.h4 {
   font-size: 1.5rem !important;
 }
 
-.form {
-  input {
-    text-align: center;
-    font-weight: 600;
-    letter-spacing: .075rem;
-  }
-}
-
-.button {
-  width: 100%;
+.input {
+  font-weight: 600 !important;
+  letter-spacing: 0.075rem;
+  padding: 0 calc(1.25em + 0.75rem) !important;
 }
