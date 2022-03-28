@@ -201,9 +201,8 @@ const FairMarketValuePage = () => {
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      progress={70}
-      step="7"
-      title={isActive ? 'Edit Fair Market Value' : 'Fair Market Value'}
+      step={6}
+      title={`${isActive ? 'Edit ' : ''}Fair Market Value`}
       onSubmit={handleSubmit}
     >
       {isMultipleFMV ? (

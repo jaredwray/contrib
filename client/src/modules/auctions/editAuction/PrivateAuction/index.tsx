@@ -66,8 +66,7 @@ const PrivateAuction = () => {
       initialValues={{ password: auction.password }}
       loading={loading || updating}
       prevAction={handlePrevAction}
-      progress={95}
-      step="10"
+      step={9}
       title="Private Auction"
       onSubmit={handleSubmit}
     >

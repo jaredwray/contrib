@@ -138,8 +138,8 @@ export default function DeliveryAddressPage() {
         state: initialValues?.state || USAStates[0].value,
       }}
       loading={updating}
-      progress={33.33}
-      step="1"
+      step={1}
+      stepsNumber={3}
       title="Delivery Address"
       onSubmit={onSubmit}
     >

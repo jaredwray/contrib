@@ -31,7 +31,7 @@ const EditAuctionDescriptionPage = () => {
       if (isActive) {
         history.goBack();
       } else {
-        history.push(`/auctions/${auctionId}/video`);
+        history.push(`/auctions/${auctionId}/attachments`);
       }
     },
   });
@@ -72,8 +72,7 @@ const EditAuctionDescriptionPage = () => {
       isActive={isActive}
       loading={updating || loadingQuery}
       prevAction={handlePrevAction}
-      progress={20}
-      step="2"
+      step={2}
       title={isActive ? 'Edit Description' : 'Description'}
       onSubmit={handleSubmit}
     >

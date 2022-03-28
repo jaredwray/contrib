@@ -5,7 +5,7 @@ import cn from 'clsx';
 import styles from './styles.module.scss';
 
 interface Props {
-  step: string | null;
+  step: number | null;
   header: string;
   title: string;
   className?: string;

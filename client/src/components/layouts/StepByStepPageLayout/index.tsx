@@ -9,14 +9,17 @@ import StepByStepPageRow from 'src/components/layouts/StepByStepPageLayout/StepB
 import StepPageHeader from './StepPageHeader';
 import styles from './styles.module.scss';
 
+const AUCTION_CREATION_STEPS_NUMBER = 8;
+
 interface Props {
   disabled?: boolean;
   loading: boolean;
-  progress: number;
+  progress?: number;
+  stepsNumber?: number;
   initialValues?: any;
   isActive?: boolean;
   onSubmit?: any;
-  step: string;
+  step: number;
   title: string;
   header: string;
   onClose?: () => void;
@@ -26,6 +29,7 @@ const StepByStepPageLayout: FC<Props> = ({
   disabled,
   loading,
   progress,
+  stepsNumber = AUCTION_CREATION_STEPS_NUMBER,
   isActive,
   step,
   title,
@@ -35,9 +39,11 @@ const StepByStepPageLayout: FC<Props> = ({
   prevAction,
   children,
 }) => {
+  const progressNow = progress || (step * 100) / stepsNumber;
+
   return (
     <Layout>
-      {!isActive && <ProgressBar now={progress} />}
+      {!isActive && <ProgressBar now={progressNow} />}
       <section className={styles.section}>
         <Form className={styles.form} initialValues={initialValues} onSubmit={onSubmit}>
           <Container className={styles.container} fluid="xxl">

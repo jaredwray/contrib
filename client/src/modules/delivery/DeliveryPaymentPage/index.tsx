@@ -170,8 +170,8 @@ export default function DeliveryPricePage() {
       header="Delivery"
       loading={calculateShippingCostLoading || executeAuctionLoading || isSubmitting}
       prevAction={handlePrevAction}
-      progress={66.66}
-      step="2"
+      step={2}
+      stepsNumber={3}
       title="Delivery payment"
       onSubmit={handleSubmit}
     >
