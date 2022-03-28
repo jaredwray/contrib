@@ -19,8 +19,7 @@ import Influencers from 'src/modules/admin/Influencers';
 import AuctionDeliveryInfoPage from 'src/modules/auctions/AuctionDeliveryInfoPage';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import AllAuctionsPage from 'src/modules/auctions/AuctionsPage';
-import EditAuctionPhotoPage from 'src/modules/auctions/editAuction/AuctionPhotoPage';
-import EditAuctionVideoPage from 'src/modules/auctions/editAuction/AuctionVideoPage';
+import EditAuctionAttachmentsPage from 'src/modules/auctions/editAuction/AuctionAttachmentsPage';
 import EditAuctionBuyNowPricePage from 'src/modules/auctions/editAuction/BuyNowPricePage';
 import EditAuctionCharityPage from 'src/modules/auctions/editAuction/CharityPage';
 import EditAuctionDescriptionPage from 'src/modules/auctions/editAuction/DescriptionPage';
@@ -123,8 +122,11 @@ export const App = () => {
                     path="/auctions/:auctionId/description"
                     role="influencer"
                   />
-                  <PrivateRoute component={EditAuctionVideoPage} path="/auctions/:auctionId/video" role="influencer" />
-                  <PrivateRoute component={EditAuctionPhotoPage} path="/auctions/:auctionId/photo" role="influencer" />
+                  <PrivateRoute
+                    component={EditAuctionAttachmentsPage}
+                    path="/auctions/:auctionId/attachments"
+                    role="influencer"
+                  />
                   <PrivateRoute
                     component={EditStartPricePage}
                     path="/auctions/:auctionId/price/starting"

@@ -16,17 +16,18 @@ import styles from './styles.module.scss';
 interface Props {
   accepted: string;
   auction: Auction;
-  isVideoPage?: boolean;
   attachments: { uploaded: AuctionAttachment[]; loading: File[] };
   setAttachments: (_: SetStateAction<AttachmentsStateInterface>) => void;
   setErrorMessage: (_: SetStateAction<string>) => void;
   setSelectedAttachment: (_: SetStateAction<AuctionAttachment | null>) => void;
 }
 
+const MAX_SIZE_GB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
+const BYTES = Math.pow(1024, 3);
+
 const UploadingDropzone: FC<Props> = ({
   accepted,
   auction,
-  isVideoPage,
   attachments,
   setAttachments,
   setErrorMessage,
@@ -60,9 +61,6 @@ const UploadingDropzone: FC<Props> = ({
   });
 
   const { id: auctionId } = auction;
-  const maxSizeGB = process.env.REACT_APP_MAX_SIZE_VIDEO_GB;
-  const bytes = Math.pow(1024, 3);
-
   const cloudflareUpload = useCallback(
     async (file: File) => {
       const { authToken, accountId } = storageAuthData.getContentStorageAuthData;
@@ -112,7 +110,7 @@ const UploadingDropzone: FC<Props> = ({
       fileRejections.forEach((file: any) => {
         file.errors.forEach((err: any) => {
           if (err.code === 'file-too-large') {
-            const sizeGB = parseFloat(maxSizeGB || '');
+            const sizeGB = parseFloat(MAX_SIZE_GB || '');
             let quantity;
 
             if (sizeGB >= 1) {
@@ -129,24 +127,21 @@ const UploadingDropzone: FC<Props> = ({
         });
       });
     },
-    [addAuctionMedia, cloudflareUpload, setAttachments, setErrorMessage, auctionId, attachments, maxSizeGB],
+    [addAuctionMedia, cloudflareUpload, setAttachments, setErrorMessage, auctionId, attachments],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
-    maxSize: maxSizeGB ? parseFloat(maxSizeGB) * bytes : Infinity,
+    maxSize: MAX_SIZE_GB ? parseFloat(MAX_SIZE_GB) * BYTES : Infinity,
     accept: accepted,
     onDrop,
   });
 
-  const uploadedAttachments = attachments.uploaded.filter((attachment: AuctionAttachment) =>
-    isVideoPage ? attachment.type === 'VIDEO' : attachment.type === 'IMAGE',
-  );
-  const hasAttachments = uploadedAttachments.length || attachments.loading.length;
+  const hasAttachments = attachments.uploaded.length || attachments.loading.length;
 
   return (
     <>
       <div className={clsx('px-md-0 text-center text-sm-start', hasAttachments && 'd-table-row')}>
-        {uploadedAttachments.map((attachment: AuctionAttachment, index: number) => (
+        {attachments.uploaded.map((attachment: AuctionAttachment, index: number) => (
           <AttachmentPreview
             key={index}
             attachment={attachment}
@@ -166,7 +161,7 @@ const UploadingDropzone: FC<Props> = ({
         <input {...getInputProps()} name="attachment" />
         <AddPhotoIcon />
         <p className="text-center mt-2 mb-0">
-          Drag {isVideoPage ? 'video' : 'photos'} here or
+          Drag video or photos here or
           <br />
           click to upload
         </p>

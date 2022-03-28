@@ -87,8 +87,7 @@ const BuyNowPricePage = () => {
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      progress={60}
-      step="6"
+      step={5}
       title={isActive ? 'Edit Buy it Now Price' : 'Buy it Now'}
       onSubmit={handleSubmit}
     >

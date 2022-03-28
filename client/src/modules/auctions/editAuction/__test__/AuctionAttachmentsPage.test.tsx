@@ -10,13 +10,12 @@ import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/forms/Form/Form';
 import StepByStepPageRow from 'src/components/layouts/StepByStepPageLayout/StepByStepPageRow';
 import AttachmentModal from 'src/components/modals/AttachmentModal';
-import UploadingDropzone from 'src/modules/auctions/editAuction/common/UploadingDropzone';
-import AuctionVideoPage from '../AuctionVideoPage';
+import UploadingDropzone from 'src/modules/auctions/editAuction/AuctionAttachmentsPage/UploadingDropzone';
+import AuctionAttachmentsPage from '../AuctionAttachmentsPage';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const mockHistoryFn = jest.fn();
-
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: () => ({
@@ -88,7 +87,7 @@ undefinedDataCache.writeQuery({
   },
 });
 
-describe('AuctionVideoPage ', () => {
+describe('AuctionAttachmentsPage ', () => {
   it('component returns null', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
@@ -96,7 +95,7 @@ describe('AuctionVideoPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider>
-              <AuctionVideoPage />
+              <AuctionAttachmentsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -115,7 +114,7 @@ describe('AuctionVideoPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache}>
-              <AuctionVideoPage />
+              <AuctionAttachmentsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -134,7 +133,7 @@ describe('AuctionVideoPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={nullDataCache}>
-              <AuctionVideoPage />
+              <AuctionAttachmentsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -153,7 +152,7 @@ describe('AuctionVideoPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache2}>
-              <AuctionVideoPage />
+              <AuctionAttachmentsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -177,7 +176,7 @@ describe('AuctionVideoPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache2}>
-              <AuctionVideoPage />
+              <AuctionAttachmentsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -198,7 +197,7 @@ describe('AuctionVideoPage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache3}>
-              <AuctionVideoPage />
+              <AuctionAttachmentsPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,

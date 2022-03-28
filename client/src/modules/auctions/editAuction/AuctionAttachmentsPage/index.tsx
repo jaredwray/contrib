@@ -12,15 +12,15 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import Row from '../common/Row';
-import UploadingDropzone from '../common/UploadingDropzone';
 import styles from './styles.module.scss';
+import UploadingDropzone from './UploadingDropzone';
 
 interface AttachmentsStateInterface {
   uploaded: AuctionAttachment[];
   loading: File[];
 }
 
-const AuctionPhotoPage = () => {
+const AuctionAttachmentsPage = () => {
   const { account } = useContext(UserAccountContext);
   const [selectedAttachment, setSelectedAttachment] = useState<AuctionAttachment | null>(null);
   const { auctionId } = useParams<{ auctionId: string }>();
@@ -48,23 +48,20 @@ const AuctionPhotoPage = () => {
   }, [auction]);
 
   const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}/video`);
+    history.push(`/auctions/${auctionId}/description`);
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(() => {
-    history.push(`/auctions/${auctionId}/price/starting`);
-  }, [auctionId, history]);
+    if (attachments.uploaded.length === 0) {
+      showWarning('You need to upload at least one attachment');
+    } else {
+      history.push(`/auctions/${auctionId}/price/starting`);
+    }
+  }, [showWarning, attachments.uploaded.length, auctionId, history]);
 
   const closeModal = useCallback(() => {
     setSelectedAttachment(null);
   }, [setSelectedAttachment]);
-
-  const description = (
-    <span>
-      You can provide a number of photos that show the item off from a couple of angles as well as any standout
-      markings, signatures, etc.
-    </span>
-  );
 
   if (!account?.isAdmin && auction?.isActive) {
     history.push(`/`);
@@ -76,7 +73,7 @@ const AuctionPhotoPage = () => {
   }
   if (auction === undefined) return null;
 
-  setPageTitle(`Auction ${auction.title} | Photo page`);
+  setPageTitle(`Auction ${auction.title} | Attachments`);
 
   return (
     <StepByStepPageLayout
@@ -84,18 +81,19 @@ const AuctionPhotoPage = () => {
       initialValues={{ photos: [], videos: [] }}
       loading={!!attachments?.loading.length}
       prevAction={handlePrevAction}
-      progress={40}
-      step="4"
-      title="Photos"
+      step={3}
+      title="Attachments"
       onSubmit={handleSubmit}
     >
       <AttachmentModal attachment={selectedAttachment} closeModal={closeModal} />
-      <Row childrenWrapperClassName={styles.dropzoneWrapper} description={description}>
+      <Row
+        childrenWrapperClassName={styles.dropzoneWrapper}
+        description="Upload a video or image to showcase your auction item(s)."
+      >
         <UploadingDropzone
-          accepted=".png, .jpeg, .jpg, .webp"
+          accepted=".mp4, .webm, .opgg, .mov, .png, .jpeg, .jpg, .webp"
           attachments={attachments}
           auction={auction}
-          isVideoPage={false}
           setAttachments={setAttachments}
           setErrorMessage={(message) => showWarning(message.toString())}
           setSelectedAttachment={setSelectedAttachment}
@@ -105,4 +103,4 @@ const AuctionPhotoPage = () => {
   );
 };
 
-export default AuctionPhotoPage;
+export default AuctionAttachmentsPage;

@@ -37,7 +37,7 @@ const StartPricePage = () => {
     },
   });
   const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}/photo`);
+    history.push(`/auctions/${auctionId}/attachments`);
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(
@@ -79,8 +79,7 @@ const StartPricePage = () => {
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      progress={50}
-      step="5"
+      step={4}
       title={isActive ? 'Edit Starting Price' : 'Starting Price'}
       onSubmit={handleSubmit}
     >

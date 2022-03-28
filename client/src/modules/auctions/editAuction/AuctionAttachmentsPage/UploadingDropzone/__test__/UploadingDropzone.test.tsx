@@ -12,7 +12,7 @@ jest.mock('react-router-dom', () => ({
     ownerId: 'testId',
   }),
 }));
-jest.mock('src/modules/auctions/editAuction/common/UploadingDropzone/FilePreview', () => () => <></>);
+jest.mock('src/modules/auctions/editAuction/AuctionAttachmentsPage/UploadingDropzone/FilePreview', () => () => <></>);
 
 global.URL.createObjectURL = jest.fn(() => 'www.test');
 
