@@ -141,11 +141,12 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
           {priceFormatted}
         </div>
 
-        {isDraft && <p className="text-label text-all-cups mb-0 mt-1 text-left">DRAFT</p>}
-
-        {(isActive || isSettled || isSold || isDonePage) && (
-          <DateDetails auction={auction} isDonePage={isDonePage} isSold={isSold} />
-        )}
+        <div className="text-label text-left">
+          {isDraft && <span>DRAFT</span>}
+          {(isActive || isSettled || isSold || isDonePage) && (
+            <DateDetails auction={auction} isDonePage={isDonePage} isSold={isSold} />
+          )}
+        </div>
       </figcaption>
     </figure>
   );

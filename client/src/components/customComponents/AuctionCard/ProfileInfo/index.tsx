@@ -38,8 +38,8 @@ const ProfileInfo: FC<Props> = ({ profile, link, className, isCharity }) => {
         className={clsx(
           styles.name,
           className,
-          'text-body-new text-all-cups fw-normal',
-          isCharity ? styles.charity : 'text-truncate',
+          'text-body-new fw-normal',
+          isCharity ? [styles.charity, 'text-all-cups'] : 'text-truncate',
         )}
       >
         {profile.name}

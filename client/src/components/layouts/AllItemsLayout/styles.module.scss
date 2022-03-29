@@ -27,7 +27,7 @@
 .items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(267px, 1fr));
-  grid-gap: 0.5rem;
+  grid-gap: 1rem;
   align-items: start;
 
   @media (max-width: $small-weight) {
