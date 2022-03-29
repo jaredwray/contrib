@@ -118,7 +118,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
           </Container>
         )}
         <div className={styles.header}>
-          <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl || '', 194)} />
+          <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl, 194)} />
         </div>
         <Container className={clsx(styles.content, 'mb-0 mb-md-3')} fluid="xxl">
           <Row>

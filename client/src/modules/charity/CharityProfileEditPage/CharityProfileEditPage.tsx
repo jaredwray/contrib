@@ -62,10 +62,10 @@ export const CharityProfileEditPage: FC = () => {
       >
         <Container fluid="xxl">
           <Row>
-            <Col className="text-label label-with-separator">{`${!account?.isAdmin && 'My '}Charity Account`}</Col>
+            <Col className="text-label label-with-separator">{`${!account?.isAdmin ? 'My ' : ''}Charity Account`}</Col>
           </Row>
           <Row>
-            <Col className="text-headline">{`${!account?.isAdmin && 'My '}Charity Profile`}</Col>
+            <Col className="text-headline">{`${!account?.isAdmin ? 'My ' : ''}Charity Profile`}</Col>
           </Row>
           <FormFields charity={charityProfile} />
           <Col>
