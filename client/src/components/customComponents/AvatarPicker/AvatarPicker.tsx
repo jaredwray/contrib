@@ -87,7 +87,7 @@ export const AvatarPicker: FC<Props> = ({ item, updateMutation, itemId }) => {
         roundedCircle
         className={styles.image}
         id="profileAvatar"
-        src={uploadPreviewUrl || ResizedImageUrl(item?.avatarUrl || '', 120)}
+        src={uploadPreviewUrl || ResizedImageUrl(item?.avatarUrl, 120)}
         onClick={handleSelectFileToUpload}
       />
       <Button
