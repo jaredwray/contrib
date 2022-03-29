@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -27,17 +27,6 @@ const Filters: FC<Props> = ({ initialBids, filters, changeFilters, charityChange
   const OptionAll = { label: 'All', value: 'All', id: '' };
   const [selectedOption, setselectedOption] = useState<{ value: string; label: string; id: string } | null>(OptionAll);
 
-  const handleQueryChange = useCallback(
-    (value: string) => {
-      changeFilters('query', value);
-    },
-    [changeFilters],
-  );
-
-  const handleQueryCancel = useCallback(() => {
-    changeFilters('query', '');
-  }, [changeFilters]);
-
   const handleChange = (selectedOption: { value: string; label: string; id: string } | null) => {
     setselectedOption(selectedOption);
     charityChangeFilter('charity', selectedOption?.id ? [selectedOption.id] : []);
@@ -57,7 +46,12 @@ const Filters: FC<Props> = ({ initialBids, filters, changeFilters, charityChange
   return (
     <>
       <div className={clsx('float-start py-4', styles.title)}>Auctions</div>
-      <SearchInput className="mb-1" placeholder="Search" onCancel={handleQueryCancel} onChange={handleQueryChange} />
+      <SearchInput
+        className="mb-1"
+        placeholder="Search"
+        onCancel={() => changeFilters('query', '')}
+        onChange={(value: string) => changeFilters('query', value)}
+      />
       <Form.Group className="mb-1">
         <Form.Label>Charity</Form.Label>
         <CharitySearchSelect options={options} selectedOption={selectedOption} onChange={handleChange} />

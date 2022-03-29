@@ -44,19 +44,19 @@ const PriceRange: FC<Props> = ({ initialBids, bids, changeFilters }) => {
       <div className="text-label text-all-cups">
         <span className="float-start">
           <NumberFormat
+            thousandSeparator
             decimalScale={0}
-            displayType={'text'}
-            prefix={'from $'}
-            thousandSeparator={true}
+            displayType="text"
+            prefix="from $"
             value={priceRange?.minPrice}
           />
         </span>
         <span className="float-end">
           <NumberFormat
+            thousandSeparator
             decimalScale={0}
             displayType="text"
             prefix="to $"
-            thousandSeparator={true}
             value={priceRange?.maxPrice}
           />
         </span>

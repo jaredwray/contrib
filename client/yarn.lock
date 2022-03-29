@@ -2333,10 +2333,10 @@
     "@types/react-dom" "*"
     "@types/react-transition-group" "*"
 
-"@types/react-slick@^0.23.4":
-  version "0.23.4"
-  resolved "https://registry.npmjs.org/@types/react-slick/-/react-slick-0.23.4.tgz"
-  integrity sha512-vXoIy4GUfB7/YgqubR4H7RALo+pRdMYCeLgWwV3MPwl5pggTlEkFBTF19R7u+LJc85uMqC7RfsbkqPLMQ4ab+A==
+"@types/react-slick@^0.23.8":
+  version "0.23.8"
+  resolved "https://registry.yarnpkg.com/@types/react-slick/-/react-slick-0.23.8.tgz#91654e657158da57f082c7b213e20756d3a37502"
+  integrity sha512-SfzSg++/3uyftVZaCgHpW+2fnJFsyJEQ/YdsuqfOWQ5lqUYV/gY/UwAnkw4qksCj5jalto/T5rKXJ8zeFldQeA==
   dependencies:
     "@types/react" "*"
 
@@ -11135,10 +11135,10 @@ react-lines-ellipsis@^0.15.0:
   resolved "https://registry.npmjs.org/react-lines-ellipsis/-/react-lines-ellipsis-0.15.0.tgz"
   integrity sha512-8kWpEmu7ijmB6Gz5t+eSjNux2SpVXZBsmfeFE8LjMS7tU3H8ai475CyNc0dH0RDTwt4Esr7c06Xq4SB7Gpl9yQ==
 
-react-number-format@^4.5.1:
-  version "4.5.1"
-  resolved "https://registry.npmjs.org/react-number-format/-/react-number-format-4.5.1.tgz"
-  integrity sha512-c+yFS7EAMy4B4A2ROY5hQdZ+Po8FIEUMl8nxHUNwjPhDUwBz7I594fwhdYFDF4qVG4GwDpZyneXGAyiJe6sj4Q==
+react-number-format@^4.9.1:
+  version "4.9.1"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.9.1.tgz#62b3450b43c911f9227e770a8ea9fa606696e52e"
+  integrity sha512-v49XqXv7SpwYZKGkghNJjoDUr6lIUozlPLrObcxre7GfcLx7qD4TCvArn3GozN/Y4FVbLyEYCwJoBCiChdBh5A==
   dependencies:
     prop-types "^15.7.2"
 

@@ -14,6 +14,7 @@
   position: absolute;
   top: 0;
   right: 0;
+  left: 0;
   transform-origin: 0 0;
   transform-style: flat;
 }
@@ -21,9 +22,6 @@
   height: 100%;
   width: 100%;
   background: $sage-color;
-}
-.noUi-origin {
-  width: 10%;
 }
 
 .noUi-target {
