@@ -5,17 +5,20 @@
   max-width: 267px;
   height: 352px;
   position: relative;
+  background-color: $white-color;
+  border-radius: 8px;
+  border: 1px solid $light-gray-color;
 }
 
 .description {
   flex: 1 0 auto;
-  background-color: $white-color;
-  padding: 20px;
+  padding: 20px;;
 }
 
 .image {
   background-color: $barely-gray-color;
   height: 152px;
+  border-radius: 8px 8px 0 0;
 }
 
 .title {

@@ -1,6 +1,7 @@
 @import 'src/variables.scss';
 
 .multi-carousel {
+  padding-left: .75rem !important;
   .slick-list {
     width: calc((100vw + 100%) / 2 - 8px);
   }
@@ -69,10 +70,10 @@
 
   .slick-next {
     transform: rotate(-180deg);
-    right: calc((100% - 100vw) / 2 + 45px);
   }
 
   @media (max-width: $medium-weight) {
+    padding-left: .3rem !important;
     .slick-arrow {
       display: none !important;
     }
