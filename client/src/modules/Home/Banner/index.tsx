@@ -9,7 +9,7 @@ export default function Banner() {
   return (
     <Container fluid className={clsx(styles.wrapper, 'position-relative p-0')}>
       <Row className="justify-content-md-center h-100">
-        <Col className={clsx(styles.text, 'text-center my-auto p-3')} md="8" xl="6" xxl="3">
+        <Col className={clsx(styles.text, 'text-center my-auto p-3')} md="8" xxl="6">
           <p className="p-0">
             <span className={styles.contribFontWeight}>CONTRIB</span> is a fundraising platform that empowers
             influencers to engage with their fans and raise money for charities.
