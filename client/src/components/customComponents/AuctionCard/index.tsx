@@ -103,7 +103,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
         onConfirm={onDelete}
       />
       <div className="position-relative">
-        {!isDraft && (
+        {/* {!isDraft && (
           <HeartBtn
             className={styles.followBtn}
             followHandler={handleFollowAuction}
@@ -111,7 +111,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
             loading={followLoading || unfollowLoading}
             unfollowHandler={handleUnfollowAuction}
           />
-        )}
+        )} */}
         <SwipeableLink to={linkToAuction}>
           <CoverImage
             alt="Auction image"
