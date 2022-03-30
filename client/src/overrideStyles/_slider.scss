@@ -1,7 +1,7 @@
 @import 'src/variables.scss';
 
 .multi-carousel {
-  padding-left: .75rem !important;
+  padding-left: 0.75rem !important;
   .slick-list {
     width: calc((100vw + 100%) / 2 - 8px);
     overflow: unset;
@@ -14,6 +14,10 @@
 
   .slick-disabled {
     display: none !important;
+  }
+
+  .slick-disabled:hover {
+    display: block !important;
   }
 
   .slick-slide {
@@ -68,7 +72,7 @@
   }
 
   @media (max-width: $medium-weight) {
-    padding-left: .3rem !important;
+    padding-left: 0.3rem !important;
     .slick-arrow {
       display: none !important;
     }
