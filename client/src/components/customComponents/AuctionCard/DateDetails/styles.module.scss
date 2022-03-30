@@ -1,5 +1,14 @@
 @import 'src/variables.scss';
 
+.bids {
+  font-weight: 400 !important;
+  color: $gray-color;
+}
+
+.dot {
+  padding: 0 6px;
+}
+
 .ended {
   color: $white-color;
   background-color: $gray-color;

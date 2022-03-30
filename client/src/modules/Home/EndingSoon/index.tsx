@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useQuery } from '@apollo/client';
-import clsx from 'clsx';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -28,20 +27,14 @@ export default function EndingSoon() {
   return (
     <section className={styles.root}>
       <Container fluid="xxl">
-        <Row className="pb-3 pb-sm-3 pb-lg-5">
-          <Col className={clsx(styles.title, 'text-super pb-3 pb-md-2 pb-lg-0')} lg="8" xs="12">
-            Ending soon
-          </Col>
-          <Col className="align-self-end pe-lg-0" lg="4" xs="12">
-            <Link
-              className={clsx('float-lg-end text-subhead text-all-cups ms-1 ms-lg-0', styles.seeAllLink)}
-              to="/auctions"
-            >
-              See all auctions &gt;&gt;
+        {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
+        <Row className="mt-4">
+          <Col className="text-center">
+            <Link className={styles.seeAllLink} to="/auctions">
+              View all auctions
             </Link>
           </Col>
         </Row>
-        {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
       </Container>
     </section>
   );

@@ -42,8 +42,6 @@ cacheWithoutItems.writeQuery({
   data: {
     auctions: {
       items: [],
-      size: 1,
-      skip: 0,
       totalItems: 1,
     },
   },

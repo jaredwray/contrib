@@ -37,7 +37,6 @@ export const ReadMore: FC<Props> = ({ text, linkClassName, textClassName }) => {
       <div className={textClassName}>
         <LinesEllipsis
           basedOn="words"
-          ellipsis="..."
           maxLine={readMore}
           style={{ fontWeight: 'normal', whiteSpace: 'break-spaces' }}
           text={formattedText || ''}

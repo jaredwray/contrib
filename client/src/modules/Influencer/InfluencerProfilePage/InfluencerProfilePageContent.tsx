@@ -41,7 +41,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const [followersNumber, setFollowersNumber] = useState(influencer?.followers?.length || 0);
   const [draftAuctions, setDraftAuctions] = useState<Auction[]>([]);
 
-  const { data, loading: isLoadingAuctions } = useQuery(AuctionsListQuery, {
+  const { data: auctionsData, loading: isLoadingAuctions } = useQuery(AuctionsListQuery, {
     variables: {
       filters: {
         auctionOrganizer: influencer.id,
@@ -62,7 +62,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   const [followInfluencer, { loading: followLoading }] = useMutation(FollowInfluencer);
   const [unfollowInfluencer, { loading: unfollowLoading }] = useMutation(UnfollowInfluencer);
 
-  const auctions = data?.auctions?.items || [];
+  const auctions = auctionsData?.auctions?.items || [];
   const isMyProfile = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(influencer.id);
 
   const handleFollowInfluencer = useCallback(async () => {
