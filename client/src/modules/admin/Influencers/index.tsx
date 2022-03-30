@@ -95,7 +95,7 @@ export default function InfluencersPage() {
       onCancel={clearAndCloseSearch}
       onChange={onInputSearchChange}
     >
-      <Table className="d-block d-lg-table">
+      <Table className="d-block">
         <thead>
           <tr>
             <th>ID</th>

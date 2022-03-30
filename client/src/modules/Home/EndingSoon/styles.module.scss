@@ -6,9 +6,17 @@
 
 .root {
   background-color: $barely-gray-color;
+  padding: 1.5em 0;
   padding: 30px 0;
+  width: calc(100vw - 20px);
+  overflow: hidden;
 }
 
 .seeAllLink {
-  color: $dark-gray-color;
+  color: $sage-color;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 27px;
+  letter-spacing: 0.05em;
 }

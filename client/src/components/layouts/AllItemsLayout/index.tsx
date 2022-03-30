@@ -10,7 +10,7 @@ import PaginationInfo from './PaginationInfo';
 import SortBy from './SortBy';
 import styles from './styles.module.scss';
 
-export const PER_PAGE = 20;
+export const PER_PAGE = 24;
 
 interface Props {
   filters: React.ReactNode;
@@ -19,6 +19,7 @@ interface Props {
   skip: number;
   totalItems: number;
   sortOptions: { value: string; label: string }[];
+  oldStyle?: boolean;
 }
 
 export const AllItemsLayout: FC<Props> = ({
@@ -29,6 +30,7 @@ export const AllItemsLayout: FC<Props> = ({
   sortOptions,
   totalItems,
   children,
+  oldStyle,
 }) => {
   return (
     <Layout>
@@ -39,7 +41,7 @@ export const AllItemsLayout: FC<Props> = ({
           </Col>
           <Col className={clsx(styles.rightBlock, 'hv-100 px-3 px-lg-5')} md="8" xl="9">
             <Row className="py-md-3 py-2 flex-column-reverse flex-md-row">
-              <Col className="mt-3 mt-md-0" md="6" xs="12">
+              <Col className="mt-3 mt-md-0" md="6">
                 <PaginationInfo
                   pageSize={size || 0}
                   pageSkip={skip || 0}
@@ -47,11 +49,13 @@ export const AllItemsLayout: FC<Props> = ({
                   totalItems={totalItems || 0}
                 />
               </Col>
-              <Col md="6" xs="12">
+              <Col md="6">
                 <SortBy changeFilters={changeFilters} sortOptions={sortOptions} />
               </Col>
             </Row>
-            <div className={clsx(styles.auctions, 'd-grid align-items-center')}>{children}</div>
+            <div className={clsx(styles.items, oldStyle && styles.itemsOldStyle, 'd-grid align-items-center')}>
+              {children}
+            </div>
             <Pagination
               changeFilters={changeFilters}
               pageSize={size || 0}

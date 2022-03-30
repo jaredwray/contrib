@@ -120,9 +120,6 @@
 }
 
 @media (min-width: $extra-large-weight) {
-  .slick-prev {
-    left: 65px !important;
-  }
   .slick-next {
     transform: rotate(-180deg);
     right: 0px;

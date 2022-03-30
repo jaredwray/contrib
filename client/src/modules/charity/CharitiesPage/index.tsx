@@ -11,19 +11,6 @@ import { Charity, CharityStatus } from 'src/types/Charity';
 import Filters from './Filters';
 
 const CharitiesPage: FC = () => {
-  const [filters, setFilters] = useState({
-    query: '',
-    orderBy: 'ACTIVATED_AT_ASC',
-    pageSkip: 0,
-  });
-
-  const [executeAuctionsSearch, { data }] = useLazyQuery(CharitiesListQuery);
-  const charitiesData = data?.charitiesList;
-  const changeFilters = useCallback((key: string, value: any) => {
-    setFilters((prevState: any) => {
-      return { ...prevState, pageSkip: 0, [key]: value };
-    });
-  }, []);
   const sortOptions = [
     { value: 'ACTIVATED_AT_ASC', label: 'Newest' },
     { value: 'ACTIVATED_AT_DESC', label: 'Latest' },
@@ -32,7 +19,21 @@ const CharitiesPage: FC = () => {
     { value: 'TOTALRAISEDAMOUNT_ASC', label: 'Raised: Low to high' },
     { value: 'TOTALRAISEDAMOUNT_DESC', label: 'Raised: High to low' },
   ];
-  const filterComponent = <Filters changeFilters={changeFilters} />;
+
+  const [filters, setFilters] = useState({
+    query: '',
+    orderBy: 'ACTIVATED_AT_ASC',
+    pageSkip: 0,
+  });
+
+  const [executeAuctionsSearch, { data: charitiesListData }] = useLazyQuery(CharitiesListQuery);
+  const changeFilters = useCallback((key: string, value: any) => {
+    setFilters((prevState: any) => {
+      return { ...prevState, pageSkip: 0, [key]: value };
+    });
+  }, []);
+
+  const charities = charitiesListData?.charitiesList;
 
   useEffect(() => {
     executeAuctionsSearch({
@@ -49,14 +50,15 @@ const CharitiesPage: FC = () => {
 
   return (
     <AllItemsLayout
+      oldStyle
       changeFilters={changeFilters}
-      filters={filterComponent}
-      size={charitiesData?.size}
-      skip={charitiesData?.skip}
+      filters={<Filters changeFilters={changeFilters} />}
+      size={charities?.size}
+      skip={charities?.skip}
       sortOptions={sortOptions}
-      totalItems={charitiesData?.totalItems}
+      totalItems={charities?.totalItems}
     >
-      {(charitiesData?.items || []).map((charity: Charity) => (
+      {(charities?.items || []).map((charity: Charity) => (
         <ItemCard
           key={charity.id}
           horizontal

@@ -10,7 +10,7 @@ import SearchInput from 'src/components/forms/inputs/SearchInput';
 import ItemCard from 'src/components/layouts/AllItemsLayout/ItemCard';
 import { ToastProvider } from 'react-toast-notifications';
 
-import CharityPage from '..';
+import CharitiesPage from '..';
 import Filters from '../Filters';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
@@ -23,7 +23,7 @@ describe('CharitiesPage', () => {
       cache.writeQuery({
         query: CharitiesListQuery,
         variables: {
-          size: 20,
+          size: 24,
           skip: 0,
           orderBy: 'ACTIVATED_AT_ASC',
           filters: { query: '', status: ['ACTIVE'] },
@@ -68,7 +68,7 @@ describe('CharitiesPage', () => {
           <Router>
             <ToastProvider>
               <MockedProvider cache={cache}>
-                <CharityPage />
+                <CharitiesPage />
               </MockedProvider>
             </ToastProvider>
           </Router>,
@@ -109,7 +109,7 @@ describe('CharitiesPage', () => {
           <Router>
             <ToastProvider>
               <MockedProvider cache={cache}>
-                <CharityPage />
+                <CharitiesPage />
               </MockedProvider>
             </ToastProvider>
           </Router>,

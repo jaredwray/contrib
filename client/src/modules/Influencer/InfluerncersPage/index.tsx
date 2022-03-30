@@ -49,6 +49,7 @@ const InfluencersPage: FC = () => {
 
   return (
     <AllItemsLayout
+      oldStyle
       changeFilters={changeFilters}
       filters={filterComponent}
       size={influencersData?.size}

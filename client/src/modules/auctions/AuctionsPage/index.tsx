@@ -105,7 +105,7 @@ const AuctionsPage: FC = () => {
       totalItems={auctions?.totalItems}
     >
       {(auctions?.items || []).map((auction: Auction) => (
-        <AuctionCard key={auction.id} horizontal auction={auction} />
+        <AuctionCard key={auction.id} auction={auction} />
       ))}
     </AllItemsLayout>
   );

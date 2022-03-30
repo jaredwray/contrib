@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import Logo from 'src/assets/images/logo-with-text.svg';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import { DEFAULT_AVATAR_PATH } from 'src/constants';
 import { useAuth } from 'src/helpers/useAuth';
 
 import MenuNavLink from './MenuNavLink';
@@ -38,7 +39,7 @@ export default function Header() {
                       <Image
                         roundedCircle
                         className="dropdown-menu-user-picture float-end d-inline-block"
-                        src={user?.picture || '/content/img/users/person.png'}
+                        src={user?.picture || DEFAULT_AVATAR_PATH}
                       />
                       <MenuNavLink link="/profile" title="My Profile" />
                     </>

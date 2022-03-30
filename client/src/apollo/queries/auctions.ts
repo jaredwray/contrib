@@ -267,6 +267,12 @@ export const AuctionsListQuery = gql`
           name
           avatarUrl
         }
+        charity {
+          id
+          name
+          avatarUrl
+          semanticId
+        }
         attachments {
           type
           url

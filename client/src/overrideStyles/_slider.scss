@@ -1,48 +1,65 @@
 @import 'src/variables.scss';
 
 .multi-carousel {
+  padding-left: 0.75rem !important;
   .slick-list {
     width: calc((100vw + 100%) / 2 - 8px);
+    overflow: unset;
+  }
+
+  .slick-track {
+    display: flex;
+    width: auto !important;
+  }
+
+  .slick-disabled {
+    display: none !important;
+  }
+
+  .slick-disabled:hover {
+    display: block !important;
   }
 
   .slick-slide {
     z-index: 10;
     &:not(:last-child) {
-      margin-right: 74px;
+      margin-right: 22px;
     }
   }
 
   .slick-arrow {
     position: absolute;
     display: block;
-    height: 60px;
-    width: 60px;
-    top: calc(50% - 60px);
+    height: 51px;
+    width: 51px;
+    top: calc(50% - 51px);
     cursor: pointer;
-    border-radius: 60px;
+    border-radius: 51px;
     font-size: 0;
     line-height: 0;
     z-index: 100;
-    background-color: $sage-color;
+    background-color: $dark-gray-color;
+    opacity: 0.81;
     border: none;
     user-select: none;
 
     &:after {
       display: inline-block;
-      width: 20px;
-      height: 20px;
+      width: 14px;
+      height: 14px;
       content: '';
       transform: rotate(-45deg);
-      border: 6px solid $light-gray-color;
+      border: 2px solid $white-color;
       border-right: none;
       border-bottom: none;
       margin-left: 3px;
+      border-start-start-radius: 2px;
+      border-bottom-left-radius: 1px;
+      border-top-right-radius: 1px;
     }
 
-    &:hover {
-      &:after {
-        border-color: $white-color;
-      }
+    &:hover:after {
+      border-color: $light-gray-color;
     }
   }
 
@@ -52,10 +69,10 @@
 
   .slick-next {
     transform: rotate(-180deg);
-    right: calc((100% - 100vw) / 2 + 45px);
   }
 
   @media (max-width: $medium-weight) {
+    padding-left: 0.3rem !important;
     .slick-arrow {
       display: none !important;
     }
