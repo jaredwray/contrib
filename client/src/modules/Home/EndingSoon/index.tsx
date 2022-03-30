@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useQuery } from '@apollo/client';
-import clsx from 'clsx';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
