@@ -72,6 +72,7 @@
       font-size: 14px;
       color: $white-color;
       padding: 0 0 1em 0 !important;
+      letter-spacing: 0.05rem;
 
       &:hover {
         background-color: $barely-gray-color;
@@ -99,12 +100,17 @@
       }
     }
 
-    .dropdown-menu-copyright {
-      color: $light-gray-color;
+    .dropdown-menu-copyright, .dropdown-menu-privacy {
+      color: $gray-color;
     }
 
     .dropdown-menu-privacy {
-      color: $sage-color;
+      a {
+        color: $gray-color;
+        text-decoration: none;
+        font-weight: normal;
+        letter-spacing: 0.025rem;
+      }
     }
   }
 }

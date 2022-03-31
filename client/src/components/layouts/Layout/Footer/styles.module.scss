@@ -14,7 +14,7 @@
 
 .footerNav, .footerNav a {
   color: $barely-gray-color;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.025rem;
 }
 
 .privacyPolicy {
@@ -22,5 +22,6 @@
   a {
     font-weight: 500;
     color: $gray-color;
+    letter-spacing: 0.025rem;
   }
 }
