@@ -27,8 +27,8 @@ export default function Header() {
         <Row className="top px-0">
           <Col md className="p-0">
             <Navbar collapseOnSelect expand={false}>
-              <NavDropdown className="header-nav-dropdown" id="headerNavDropdown" title="">
-                <section className="nav-dropdown-menu px-3 pb-3 text-center text-subhead">
+              <NavDropdown className="flex-grow-1 header-nav-dropdown" id="headerNavDropdown" title="">
+                <section className="nav-dropdown-menu px-3 py-4 text-center text-subhead">
                   {isAuthenticated && (
                     <>
                       <div className="dropdown-menu-user-name d-inline-block break-word">{user?.name}</div>
@@ -87,10 +87,10 @@ export default function Header() {
                   </div>
                 </section>
               </NavDropdown>
-              <Link to="/">
-                <img alt="Contrib" className="header-logo" src={Logo} />
+              <Link className="flex-grow-1 header-logo" to="/">
+                <img alt="Contrib" src={Logo} />
               </Link>
-              <Navbar className="p-0 desktop-navbar">
+              <Navbar className="p-0 desktop-navbar flex-grow-1">
                 <Nav>
                   <Nav.Link className="px-3 py-2" href="/auctions">
                     Auctions
@@ -103,7 +103,7 @@ export default function Header() {
                   </Nav.Link>
                 </Nav>
               </Navbar>
-              <div className="header-login-profile-icon">
+              <div className="flex-grow-1 header-login-profile-icon">
                 {isAuthenticated ? (
                   <a href="/log-in" title="Log In">
                     <Image roundedCircle className="profile-icon" src={user?.picture || DEFAULT_AVATAR_PATH} />

@@ -5,11 +5,15 @@
   background: $dark-gray-color;
   color: $white-color;
   .header-logo {
-    height: 20px;
+    text-align: center;
+    img {
+      height: 20px;
+    }
   }
 }
 
 .header-nav-dropdown {
+  flex-basis: 0;
   a#headerNavDropdown {
     vertical-align: middle !important;
   }
@@ -18,7 +22,8 @@
     width: 20px;
     height: 20px;
     display: inline-block;
-    background: no-repeat center url('/assets/images/hamburger.webp');
+    background: no-repeat center url('/assets/images/hamburger.svg');
+    color: red;
 
     &::after {
       display: none !important;
@@ -26,7 +31,7 @@
   }
 
   &.show .dropdown-toggle {
-    background-image: url('/assets/images/close.webp');
+    background-image: url('/assets/images/close.svg');
     width: 20px;
     height: 20px;
   }
@@ -42,6 +47,7 @@
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
+    background: $dark-gray-color !important;
 
     &.show {
       width: 100% !important;
@@ -63,13 +69,9 @@
     }
 
     .dropdown-item {
-      color: $sage-color;
-      padding: 10px 0;
-      margin-left: -40px;
-
-      span {
-        margin-left: 40px;
-      }
+      font-size: 14px;
+      color: $white-color;
+      padding: 0 0 1em 0 !important;
 
       &:hover {
         background-color: $barely-gray-color;
@@ -121,6 +123,8 @@
 
 .header-login-profile-icon {
   margin-right: 1em !important;
+  text-align: right;
+  flex-basis: 0;
   img {
     height: 20px;
     background-color: white;
@@ -128,6 +132,12 @@
 }
 
 @media (min-width: $medium-weight) {
+  .navigation-header {
+    .header-logo {
+      text-align: left;
+      flex-basis: 0;
+    }
+  }
   .header-login-profile-icon {
     margin-right: 0 !important;
   }
@@ -136,5 +146,8 @@
   }
   .desktop-navbar {
     display: block !important;
+    .navbar-nav {
+      justify-content: center;
+    }
   }
 }
