@@ -31,7 +31,7 @@ export default function EndingSoon() {
         <Row className="mt-4">
           <Col className="text-center">
             <Link className={styles.seeAllLink} to="/auctions">
-              View all auctions
+              View Auctions
             </Link>
           </Col>
         </Row>

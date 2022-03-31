@@ -1,80 +1,77 @@
 @import 'src/variables.scss';
 
-.banner {
-  height: 505px;
-  color: $white-color;
-  text-align: left;
-  background-color: $sage-color;
-}
-
 .wrapper {
-  height: 100%;
-  padding: 30px 0;
-  background-image: url('/assets/images/player-md.webp');
+  height: 224px;
+  background-image: url('/assets/images/banner.webp');
   background-repeat: no-repeat;
-  background-position: right;
-  background-size: contain;
+  background-position: left;
+  background-size: cover;
+}
+.link {
+  font-weight: 500;
+  text-decoration: none;
 }
 
-.button {
-  &:hover,
-  &:active,
-  &:hover:focus,
-  &:active:focus {
-    background: $ochre-color !important;
+.contribFontWeight {
+  font-weight: 800;
+}
+
+.text {
+  font-weight: 500;
+  color: $dark-gray-color;
+  align-items: center;
+  text-align: center;
+  max-width: 680px !important;
+}
+
+@media (max-width: 375px) {
+  .text {
+    font-size: 14px;
+    line-height: 32px;
+    margin: auto;
+    letter-spacing: 0.025em;
   }
 }
 
-.signature {
-  bottom: 30px;
+@media (min-width: 376px) {
+  .text {
+    font-size: 16px;
+    line-height: 32px;
+    margin: auto;
+    letter-spacing: 0.025em;
+  }
 }
 
-.separator {
-  height: 12px;
-  width: 102px;
-  background-color: $dark-gray-color;
+@media (min-width: $small-weight) {
+  .text {
+    font-size: 16px;
+    line-height: 32px;
+    letter-spacing: 0.025em;
+  }
 }
 
-@media (max-width: $large-weight) {
+@media (min-width: $medium-weight) {
   .wrapper {
-    background-image: none;
+    height: 176px;
+    background-image: url('/assets/images/banner-md.webp');
   }
-
-  .banner {
-    background-image: url('/assets/images/player-sm.webp');
-    background-repeat: no-repeat;
-    background-position: right;
-    background-size: contain;
-  }
-
-  .separator {
-    height: 8px;
-    width: 68px;
+  .text {
+    font-size: 18px;
+    line-height: 38px;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    max-width: 520px !important;
   }
 }
 
-@media (max-width: 380px) {
-  .banner {
-    background-image: none;
+@media (min-width: $large-weight) {
+  .wrapper {
+    height: 176px;
+    background-image: url('/assets/images/banner-md.webp');
   }
-
-  .homepageContainer {
-    background-image: url('/assets/images/player-sm.webp');
-    background-repeat: no-repeat;
-    background-position: right;
-    background-size: cover;
-  }
-}
-
-@media (max-width: 1286px) {
-  .message {
-    font-size: 32px !important;
-    line-height: 36px !important;
-  }
-}
-
-@media (max-width: $small-weight) {
-  .button {
-    height: 40px !important;
+  .text {
+    font-size: 20px;
+    line-height: 40px;
+    letter-spacing: 0.04em;
   }
 }
