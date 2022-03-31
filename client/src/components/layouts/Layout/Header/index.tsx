@@ -104,13 +104,13 @@ export default function Header() {
               </Navbar>
               <div className="flex-grow-1 header-login-profile-icon">
                 {isAuthenticated ? (
-                  <a href="/log-in" title="Log In">
+                  <Link to="/log-in">
                     <Image roundedCircle className="profile-icon" src={user?.picture || DEFAULT_AVATAR_PATH} />
-                  </a>
+                  </Link>
                 ) : (
-                  <a href="/log-in" title="Log In">
+                  <Link to="/log-in">
                     <Image roundedCircle className="profile-icon" src={DEFAULT_AVATAR_PATH} />
-                  </a>
+                  </Link>
                 )}
               </div>
             </Navbar>
