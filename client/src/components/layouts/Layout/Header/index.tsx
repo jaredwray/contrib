@@ -31,12 +31,7 @@ export default function Header() {
                 <section className="nav-dropdown-menu px-3 py-4 text-center text-subhead">
                   {isAuthenticated && (
                     <>
-                      <div className="dropdown-menu-user-name d-inline-block break-word">{user?.name}</div>
-                      <Image
-                        roundedCircle
-                        className="dropdown-menu-user-picture float-end d-inline-block"
-                        src={user?.picture || DEFAULT_AVATAR_PATH}
-                      />
+                      <div className="dropdown-menu-user-name d-inline-block break-word pb-4">{user?.name}</div>
                       <MenuNavLink link="/profile" title="My Profile" />
                     </>
                   )}

@@ -50,7 +50,7 @@
     background: $dark-gray-color !important;
 
     &.show {
-      width: 100% !important;
+      width: 100vw !important;
       margin: 0 !important;
       border-radius: 0 !important;
     }
@@ -59,7 +59,8 @@
   .nav-dropdown-menu {
 
     .dropdown-menu-user-name {
-      color: $light-gray-color;
+      color: $white-color;
+      font-weight: 400;
       max-width: 260px;
     }
 
@@ -73,6 +74,10 @@
       color: $white-color;
       padding: 0 0 1em 0 !important;
       letter-spacing: 0.05rem;
+      &.active {
+        background: none !important;
+        font-weight: 700;
+      }
 
       &:hover {
         background-color: $barely-gray-color;
