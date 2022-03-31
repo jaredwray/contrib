@@ -5,7 +5,8 @@
   background: $dark-gray-color;
   color: $white-color;
   .header-logo {
-    text-align: center;
+    display: flex;
+    justify-content: center;
     img {
       height: 20px;
     }
@@ -14,11 +15,13 @@
 
 .header-nav-dropdown {
   flex-basis: 0;
+
   a#headerNavDropdown {
-    vertical-align: middle !important;
+    display: flex;
+    justify-content: start !important;
   }
   .dropdown-toggle {
-    margin: 0 1em !important;
+    margin: 0 .75em !important;
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -43,7 +46,7 @@
 
   .dropdown-menu {
     position: fixed;
-    top: 40px !important;
+    top: 36px !important;
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
@@ -133,7 +136,7 @@
 }
 
 .header-login-profile-icon {
-  margin-right: 1em !important;
+  margin-right: .75em !important;
   text-align: right;
   flex-basis: 0;
   img {
@@ -144,8 +147,8 @@
 @media (min-width: $medium-weight) {
   .navigation-header {
     .header-logo {
-      text-align: left;
       flex-basis: 0;
+      justify-content: start;
     }
   }
   .header-login-profile-icon {

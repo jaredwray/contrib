@@ -22,11 +22,11 @@ export default function Header() {
   }, [logout]);
 
   return (
-    <header className="p-0 px-sm-4 navigation-header">
+    <header className="p-0 px-sm-3 navigation-header">
       <Container className="p-0" fluid="xxl">
         <Row className="top px-0">
           <Col md className="p-0">
-            <Navbar collapseOnSelect expand={false}>
+            <Navbar collapseOnSelect className="p-0" expand={false}>
               <NavDropdown className="flex-grow-1 header-nav-dropdown" id="headerNavDropdown" title="">
                 <section className="nav-dropdown-menu px-3 py-4 text-center text-subhead">
                   {isAuthenticated && (
@@ -81,25 +81,25 @@ export default function Header() {
                   </div>
                 </section>
               </NavDropdown>
-              <Link className="flex-grow-1 header-logo" to="/">
+              <Link className="flex-grow-1 header-logo d-flex p-2 p-md-0" to="/">
                 <img alt="Contrib" src={Logo} />
               </Link>
               <Navbar className="p-0 desktop-navbar flex-grow-1">
                 <Nav>
-                  <Nav.Link className="px-3 py-2" href="/auctions">
+                  <Nav.Link className="px-3 py-3" href="/auctions">
                     Auctions
                   </Nav.Link>
-                  <Nav.Link className="px-3 py-2" href="/influencers">
+                  <Nav.Link className="px-3 py-3" href="/influencers">
                     Influencers
                   </Nav.Link>
-                  <Nav.Link className="px-3 py-2" href="/charities">
+                  <Nav.Link className="px-3 py-3" href="/charities">
                     Charities
                   </Nav.Link>
                 </Nav>
               </Navbar>
               <div className="flex-grow-1 header-login-profile-icon">
                 {isAuthenticated ? (
-                  <Link to="/profile">
+                  <Link className="d-flex justify-content-end" to="/profile">
                     <Image roundedCircle className="profile-icon" src={user?.picture || DEFAULT_AVATAR_PATH} />
                   </Link>
                 ) : (
