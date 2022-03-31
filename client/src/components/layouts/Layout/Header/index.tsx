@@ -105,11 +105,13 @@ export default function Header() {
               </Navbar>
               <div className="header-login-profile-icon">
                 {isAuthenticated ? (
-                  <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={handleLogout}>
-                    <span>Sign Out</span>
-                  </NavDropdown.Item>
+                  <a href="/log-in" title="Log In">
+                    <Image roundedCircle className="profile-icon" src={user?.picture || DEFAULT_AVATAR_PATH} />
+                  </a>
                 ) : (
-                  <Image roundedCircle className="profile-icon" src={DEFAULT_AVATAR_PATH} />
+                  <a href="/log-in" title="Log In">
+                    <Image roundedCircle className="profile-icon" src={DEFAULT_AVATAR_PATH} />
+                  </a>
                 )}
               </div>
             </Navbar>
