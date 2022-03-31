@@ -17,41 +17,17 @@
 }
 
 .text {
+  font-size: 16px;
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
   color: $dark-gray-color;
-  font-weight: 800;
-  font-size: 24px;
-  line-height: 50px;
-  letter-spacing: 0.08em;
   align-items: center;
   text-align: center;
+  max-width: 680px !important;
 }
 
-@media (max-width: $extra-large-weight) {
-  .text {
-    color: $dark-gray-color;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 50px;
-    letter-spacing: 0.05em;
-    align-items: center;
-    text-align: center;
-  }
-}
-
-@media (max-width: $medium-weight) {
-  .wrapper {
-    height: 176px;
-    background-image: url('/assets/images/banner-md.webp');
-  }
-  .text {
-    font-size: 20px;
-    line-height: 38px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-}
-
-@media (max-width: $small-weight) {
+@media (min-width: $small-weight) {
   .text {
     font-size: 16px;
     line-height: 32px;
@@ -60,11 +36,27 @@
   }
 }
 
-@media (max-width: 375px) {
+@media (min-width: $medium-weight) {
+  .wrapper {
+    height: 176px;
+    background-image: url('/assets/images/banner-md.webp');
+  }
   .text {
-    font-size: 16px;
-    line-height: 30px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
+    font-size: 20px;
+    line-height: 38px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+}
+
+@media (min-width: $extra-large-weight) {
+  .text {
+    color: $dark-gray-color;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 46px;
+    letter-spacing: 0.05em;
+    align-items: center;
+    text-align: center;
   }
 }
