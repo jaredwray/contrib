@@ -38,7 +38,7 @@ describe('Should render correctly "MultipleFairMarketValue"', () => {
     updateFormState: () => {},
   };
 
-  xit('component is defined', () => {
+  it('component is defined', () => {
     let wrapper = mount(
       <Form onSubmit={mockedSumbit}>
         <ToastProvider>
