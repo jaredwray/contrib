@@ -3,7 +3,7 @@ import { useCallback, useContext } from 'react';
 import { Container, Image, Row, Col, Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import Logo from 'src/assets/images/logo-with-text-white.svg';
+import Logo from 'src/assets/images/contrib-logo-horizontal-white.svg';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { DEFAULT_AVATAR_PATH } from 'src/constants';
 import { useAuth } from 'src/helpers/useAuth';
