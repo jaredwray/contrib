@@ -100,7 +100,11 @@ export default function Header() {
               <div className="flex-grow-1 header-login-profile-icon">
                 {isAuthenticated ? (
                   <Link className="d-flex justify-content-end" to="/profile">
-                    <Image roundedCircle className="profile-icon" src={user?.picture || DEFAULT_AVATAR_PATH} />
+                    <Image
+                      roundedCircle
+                      className="profile-icon dropdown-menu-user-picture"
+                      src={user?.picture || DEFAULT_AVATAR_PATH}
+                    />
                   </Link>
                 ) : (
                   <Link to="/log-in">
