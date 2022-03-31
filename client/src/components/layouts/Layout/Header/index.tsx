@@ -1,9 +1,9 @@
 import { useCallback, useContext } from 'react';
 
-import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
+import { Container, Image, Row, Col, Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import Logo from 'src/assets/images/logo-with-text.svg';
+import Logo from 'src/assets/images/logo-with-text-white.svg';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { DEFAULT_AVATAR_PATH } from 'src/constants';
 import { useAuth } from 'src/helpers/useAuth';
@@ -23,16 +23,12 @@ export default function Header() {
 
   return (
     <header className="p-0 px-sm-4 navigation-header">
-      <Container fluid="xxl">
-        <Row className="top">
+      <Container className="p-0" fluid="xxl">
+        <Row className="top px-0">
           <Col md className="p-0">
             <Navbar collapseOnSelect expand={false}>
-              <Link to="/">
-                <img alt="Contrib" src={Logo} />
-              </Link>
-
               <NavDropdown className="header-nav-dropdown" id="headerNavDropdown" title="">
-                <section className="nav-dropdown-menu text-subhead">
+                <section className="nav-dropdown-menu px-3 pb-3 text-center text-subhead">
                   {isAuthenticated && (
                     <>
                       <div className="dropdown-menu-user-name d-inline-block break-word">{user?.name}</div>
@@ -91,6 +87,31 @@ export default function Header() {
                   </div>
                 </section>
               </NavDropdown>
+              <Link to="/">
+                <img alt="Contrib" className="header-logo" src={Logo} />
+              </Link>
+              <Navbar className="p-0 desktop-navbar">
+                <Nav>
+                  <Nav.Link className="px-3 py-2" href="/auctions">
+                    Auctions
+                  </Nav.Link>
+                  <Nav.Link className="px-3 py-2" href="/influencers">
+                    Influencers
+                  </Nav.Link>
+                  <Nav.Link className="px-3 py-2" href="/charities">
+                    Charities
+                  </Nav.Link>
+                </Nav>
+              </Navbar>
+              <div className="header-login-profile-icon">
+                {isAuthenticated ? (
+                  <NavDropdown.Item data-test-id="dropdown-menu-logout-button" onClick={handleLogout}>
+                    <span>Sign Out</span>
+                  </NavDropdown.Item>
+                ) : (
+                  <Image roundedCircle className="profile-icon" src={DEFAULT_AVATAR_PATH} />
+                )}
+              </div>
             </Navbar>
           </Col>
         </Row>

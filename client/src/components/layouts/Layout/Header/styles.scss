@@ -1,13 +1,22 @@
 @import 'src/variables.scss';
 
 .navigation-header {
-  border-bottom: 1px solid $light-gray-color
+  border-bottom: 1px solid $light-gray-color;
+  background: $dark-gray-color;
+  color: $white-color;
+  .header-logo {
+    height: 20px;
+  }
 }
 
 .header-nav-dropdown {
+  a#headerNavDropdown {
+    vertical-align: middle !important;
+  }
   .dropdown-toggle {
-    width: 24px;
-    height: 24px;
+    margin: 0 1em !important;
+    width: 20px;
+    height: 20px;
     display: inline-block;
     background: no-repeat center url('/assets/images/hamburger.webp');
 
@@ -18,42 +27,30 @@
 
   &.show .dropdown-toggle {
     background-image: url('/assets/images/close.webp');
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
   }
 
   .nav-link {
     padding: 0;
+    color: white !important;
   }
 
   .dropdown-menu {
-    left: auto !important;
-    right: 2px !important;
+    position: fixed;
+    top: 40px !important;
     margin: 0 !important;
     padding: 0 !important;
+    border: 0 !important;
 
     &.show {
+      width: 100% !important;
       margin: 0 !important;
-
-      @media (max-width: $small-weight) {
-        margin-top: 2px !important;
-        border: none;
-      }
-    }
-    @media (max-width: $small-weight) {
-      right: -31px !important;
+      border-radius: 0 !important;
     }
   }
 
   .nav-dropdown-menu {
-    width: 385px;
-    padding: 20px 40px;
-    @media (max-width: 370px) {
-      width: 330px;
-    }
-    @media (max-width: 315px) {
-      width: 305px;
-    }
 
     .dropdown-menu-user-name {
       color: $light-gray-color;
@@ -69,7 +66,6 @@
       color: $sage-color;
       padding: 10px 0;
       margin-left: -40px;
-      width: 385px;
 
       span {
         margin-left: 40px;
@@ -108,5 +104,37 @@
     .dropdown-menu-privacy {
       color: $sage-color;
     }
+  }
+}
+
+.desktop-navbar {
+  display: none !important;
+  .navbar-nav {
+    a {
+      color: $white-color !important;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .05rem;
+    }
+  }
+}
+
+.header-login-profile-icon {
+  margin-right: 1em !important;
+  img {
+    height: 20px;
+    background-color: white;
+  }
+}
+
+@media (min-width: $medium-weight) {
+  .header-login-profile-icon {
+    margin-right: 0 !important;
+  }
+  .header-nav-dropdown {
+    display: none !important;
+  }
+  .desktop-navbar {
+    display: block !important;
   }
 }
