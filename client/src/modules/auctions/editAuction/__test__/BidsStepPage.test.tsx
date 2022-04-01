@@ -13,7 +13,7 @@ import { auctionForCreation as auction } from 'src/helpers/testHelpers/auction';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 
-import BuyNowPricePage from '../BuyNowPricePage';
+import BidsStepPage from '../BidsStepPage';
 
 const mockHistoryFn = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -68,7 +68,7 @@ const mocks = [
   {
     request: {
       query: UpdateAuctionMutation,
-      variables: { id: 'testId', itemPrice: { amount: 100, currency: 'USD', precision: 2 } },
+      variables: { id: 'testId', bidStep: { amount: 100, currency: 'USD', precision: 2 } },
     },
     newData: () => {
       mockFn();
@@ -82,7 +82,7 @@ const mocks = [
             startDate: '2021-07-01T22:28:00.261Z',
             endDate: '2021-08-14T19:01:00.232Z',
             startPrice: { amount: 100, currency: 'USD', precision: 2 },
-            itemPrice: null,
+            bidStep: null,
             charity: {
               id: 'testId',
               name: 'test',
@@ -96,12 +96,12 @@ const mocks = [
   },
 ];
 const submitValues = {
-  itemPrice: { amount: 100, currency: 'USD', precision: 2 },
+  bidStep: { amount: 100, currency: 'USD', precision: 2 },
 };
 const submitErrorValues = {
-  itemPrice: { amount: 10, currency: 'USD', precision: 2 },
+  bidStep: { amount: 10, currency: 'USD', precision: 2 },
 };
-describe('BuyNowPricePage ', () => {
+describe('BidsStepPage ', () => {
   it('component return null', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
@@ -109,7 +109,7 @@ describe('BuyNowPricePage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider>
-              <BuyNowPricePage />
+              <BidsStepPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -129,7 +129,7 @@ describe('BuyNowPricePage ', () => {
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
               <MockedProvider cache={cache}>
-                <BuyNowPricePage />
+                <BidsStepPage />
               </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
@@ -153,7 +153,7 @@ describe('BuyNowPricePage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={undefinedlDataCache}>
-              <BuyNowPricePage />
+              <BidsStepPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -172,7 +172,7 @@ describe('BuyNowPricePage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={nullDataCache}>
-              <BuyNowPricePage />
+              <BidsStepPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -191,7 +191,7 @@ describe('BuyNowPricePage ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache}>
-              <BuyNowPricePage />
+              <BidsStepPage />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -202,103 +202,5 @@ describe('BuyNowPricePage ', () => {
       wrapper.update();
     });
     expect(mockHistoryFn).toBeCalled();
-  });
-  it('should submit form and not call the mutation becouse of item price less or equal to start price', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache} mocks={mocks}>
-                <BuyNowPricePage />
-              </MockedProvider>
-            </UserAccountContext.Provider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
-    });
-    await act(async () => {
-      wrapper!.find(Form).props().onSubmit(submitErrorValues);
-    });
-    expect(mockFn).toHaveBeenCalledTimes(0);
-  });
-  it('should submit form and not call the mutation', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache} mocks={mocks}>
-                <BuyNowPricePage />
-              </MockedProvider>
-            </UserAccountContext.Provider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
-    });
-    await act(async () => {
-      wrapper!.find(Form).props().onSubmit({});
-    });
-    expect(mockFn).toHaveBeenCalledTimes(0);
-  });
-  it('should submit form and call the mutation and goBack', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache2} mocks={mocks}>
-                <BuyNowPricePage />
-              </MockedProvider>
-            </UserAccountContext.Provider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
-    });
-    await act(async () => {
-      wrapper!.find(Form).props().onSubmit(submitValues);
-    });
-    expect(mockFn).toHaveBeenCalledTimes(1);
-    expect(mockHistoryFn).toHaveBeenCalled();
-  });
-  it('should submit form and call the mutation and push', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <MemoryRouter>
-          <ToastProvider>
-            <UserAccountContext.Provider value={testAccount}>
-              <MockedProvider cache={cache} mocks={mocks}>
-                <BuyNowPricePage />
-              </MockedProvider>
-            </UserAccountContext.Provider>
-          </ToastProvider>
-        </MemoryRouter>,
-      );
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve));
-      wrapper.update();
-    });
-    await act(async () => {
-      wrapper!.find(Form).props().onSubmit(submitValues);
-    });
-    expect(mockFn).toHaveBeenCalledTimes(1);
-    expect(mockHistoryFn).toHaveBeenCalled();
   });
 });

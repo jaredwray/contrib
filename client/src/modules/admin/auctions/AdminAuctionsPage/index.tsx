@@ -81,7 +81,7 @@ export default function AdminAuctionsPage() {
       onCancel={clearAndCloseSearch}
       onChange={onInputSearchChange}
     >
-      <Table className="d-block">
+      <Table className="d-block d-lg-table">
         <thead>
           <tr className={styles.tHead}>
             <th className={styles.tId}>ID</th>

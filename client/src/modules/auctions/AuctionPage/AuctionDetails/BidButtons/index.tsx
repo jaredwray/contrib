@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import InformationLink from 'src/components/customComponents/InformationLink';
 import WithStripe from 'src/components/wrappers/WithStripe';
+import { MAX_PRICE_VALUE, MIN_BID_STEP_VALUE } from 'src/constants';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
@@ -16,8 +17,6 @@ import { Auction } from 'src/types/Auction';
 import { BidConfirmationModal, BidConfirmationRef } from './BidConfirmationModal';
 import { BidInput } from './BidInput';
 import styles from './styles.module.scss';
-
-const FINAL_BID = 999999;
 
 interface Props {
   auction: Auction;
@@ -36,14 +35,14 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
 
   let isShowBuyButton;
 
-  const isFinalBid = currentPrice.amount / 100 > FINAL_BID - 10;
+  const isFinalBid = currentPrice.amount / 100 > MAX_PRICE_VALUE - MIN_BID_STEP_VALUE;
 
   const placeBidQueryParam = useUrlQueryParams().get('placeBid');
   const confirmationRef = useRef<BidConfirmationRef>(null);
   const buyingPrice = Dinero(itemPrice)?.toFormat('$0,0');
   const minBid = useMemo(() => {
     if (totalBids === 0) return Dinero(startPrice);
-    if (isFinalBid) return Dinero({ amount: FINAL_BID * 100, currency: currentPrice.currency });
+    if (isFinalBid) return Dinero({ amount: MAX_PRICE_VALUE * 100, currency: currentPrice.currency });
 
     return Dinero(currentPrice).add(Dinero(bidStep));
   }, [currentPrice, startPrice, isFinalBid, bidStep, totalBids]);

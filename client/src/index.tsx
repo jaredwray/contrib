@@ -20,6 +20,7 @@ import AuctionDeliveryInfoPage from 'src/modules/auctions/AuctionDeliveryInfoPag
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import AllAuctionsPage from 'src/modules/auctions/AuctionsPage';
 import EditAuctionAttachmentsPage from 'src/modules/auctions/editAuction/AuctionAttachmentsPage';
+import EditAuctionBidsStepPage from 'src/modules/auctions/editAuction/BidsStepPage';
 import EditAuctionBuyNowPricePage from 'src/modules/auctions/editAuction/BuyNowPricePage';
 import EditAuctionCharityPage from 'src/modules/auctions/editAuction/CharityPage';
 import EditAuctionDescriptionPage from 'src/modules/auctions/editAuction/DescriptionPage';
@@ -135,6 +136,11 @@ export const App = () => {
                   <PrivateRoute
                     component={EditAuctionBuyNowPricePage}
                     path="/auctions/:auctionId/price/buying"
+                    role="influencer"
+                  />
+                  <PrivateRoute
+                    component={EditAuctionBidsStepPage}
+                    path="/auctions/:auctionId/bids-step"
                     role="influencer"
                   />
                   <PrivateRoute

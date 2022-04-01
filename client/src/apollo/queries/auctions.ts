@@ -330,6 +330,7 @@ export const GetAuctionDetailsQuery = gql`
       id
       endDate
       itemPrice
+      bidStep
       title
       description
       status

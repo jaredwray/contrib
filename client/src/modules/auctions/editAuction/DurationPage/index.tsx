@@ -79,7 +79,7 @@ const DurationPage = () => {
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      step={7}
+      step={8}
       title={isActive ? 'Edit Duration' : 'Duration'}
       onSubmit={handleSubmit}
     >

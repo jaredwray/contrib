@@ -8,12 +8,13 @@ import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/querie
 import MoneyField from 'src/components/forms/inputs/MoneyField';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
+import { MIN_BID_STEP_VALUE, MAX_PRICE_VALUE } from 'src/constants';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 
 import Row from '../common/Row';
 
-const BuyNowPricePage = () => {
+const BidsStepPage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const { showMessage, showError, showWarning } = useShowNotification();
@@ -24,8 +25,7 @@ const BuyNowPricePage = () => {
     variables: { id: auctionId },
   });
   const auction = auctionData?.auction;
-  const { isActive } = auction || {};
-  const startPrice = Dinero(auction?.startPrice);
+  const { isActive, bidStep } = auction || {};
 
   const [updateAuction, { loading: updating }] = useMutation(UpdateAuctionMutation, {
     /* istanbul ignore next */
@@ -33,21 +33,24 @@ const BuyNowPricePage = () => {
       if (isActive) {
         history.goBack();
       } else {
-        history.push(`/auctions/${auctionId}/bids-step`);
+        history.push(`/auctions/${auctionId}/price/fmv`);
       }
     },
   });
   const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}/price/starting`);
+    history.push(`/auctions/${auctionId}/price/buying`);
   }, [auctionId, history]);
 
   const handleSubmit = useCallback(
     async (values) => {
-      setSubmitValue(values.itemPrice);
-
-      const itemPrice = Dinero(values.itemPrice);
-      if (!itemPrice.isZero() && itemPrice.getAmount() <= startPrice.getAmount()) {
-        showWarning(`Buy it Now Price should be greater than Starting Price ${startPrice.toFormat('$0')}`);
+      setSubmitValue(values.bidStep);
+      if (values.bidStep.amount / 100 < MIN_BID_STEP_VALUE) {
+        showWarning(`Minimum value is $${MIN_BID_STEP_VALUE}`);
+        return;
+      }
+      const maxValue = MAX_PRICE_VALUE - auction.startPrice.amount / 100;
+      if (values.bidStep.amount > maxValue) {
+        showWarning(`Maximum value is $${maxValue}`);
         return;
       }
 
@@ -58,7 +61,7 @@ const BuyNowPricePage = () => {
         showError(error.message);
       }
     },
-    [auctionId, updateAuction, showMessage, showError, showWarning, isActive, startPrice],
+    [auctionId, updateAuction, showMessage, showError, showWarning, isActive, auction],
   );
 
   if (!account?.isAdmin && isActive) {
@@ -71,29 +74,23 @@ const BuyNowPricePage = () => {
   }
   if (auction === undefined) return null;
 
-  const auctionPrice = auction.itemPrice ?? {
-    amount: Number((auction?.startPrice?.amount * 20).toFixed(2)),
-    currency: 'USD',
-  };
+  const textBlock = `The bids step price for the item which determines the minimum price increase for the next bid. Minimum value is $${MIN_BID_STEP_VALUE}.`;
 
-  const textBlock =
-    "We usually suggested making the 'Buy it now' button 20x what you starting price is so that bidders have to ability to purchase the item before the auction time closes. If you do not want a 'Buy it Now' option just enter $0";
-
-  setPageTitle(`Edit Auction ${auction.title} | Buy it Now Price`);
+  setPageTitle(`Edit Auction ${auction.title} | Bids Step`);
   return (
     <StepByStepPageLayout
       header="Auction an item"
-      initialValues={{ itemPrice: Dinero(submitValue ?? auctionPrice).toObject() }}
+      initialValues={{ bidStep: Dinero(submitValue ?? bidStep).toObject() }}
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      step={5}
-      title={isActive ? 'Edit Buy it Now Price' : 'Buy it Now'}
+      step={6}
+      title={`${isActive ? 'Edit ' : ''}Bids Step`}
       onSubmit={handleSubmit}
     >
-      <Row description={textBlock}>{!loadingQuery && <MoneyField name="itemPrice" />}</Row>
+      <Row description={textBlock}>{!loadingQuery && <MoneyField name="bidStep" />}</Row>
     </StepByStepPageLayout>
   );
 };
 
-export default BuyNowPricePage;
+export default BidsStepPage;

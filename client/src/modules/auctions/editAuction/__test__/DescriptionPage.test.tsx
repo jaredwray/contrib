@@ -9,6 +9,7 @@ import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/forms/Form/Form';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { testAccount } from 'src/helpers/testHelpers/account';
+import { auctionForCreation as auction } from 'src/helpers/testHelpers/auction';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { GetAuctionDetailsQuery, UpdateAuctionMutation } from 'src/apollo/queries/auctions';
 
@@ -31,24 +32,6 @@ const cache = new InMemoryCache();
 const cache2 = new InMemoryCache();
 const nullDataCache = new InMemoryCache();
 const undefinedlDataCache = new InMemoryCache();
-const auction = {
-  id: 'testId',
-  endDate: '2021-07-01T22:28:00.270Z',
-  itemPrice: { amount: 10000, currency: 'USD', precision: 2 },
-  title: '1',
-  link: 'test',
-  description: 'test',
-  status: 'ACTIVE',
-  isActive: true,
-  startPrice: { amount: 10, currency: 'USD', precision: 2 },
-  fairMarketValue: { amount: 10, currency: 'USD', precision: 2 },
-  items: [],
-  startDate: '2021-07-01T22:28:00.261Z',
-  charity: { id: 'testId', name: 'test' },
-  auctionOrganizer: { id: 'testId', favoriteCharities: [] },
-  attachments: [{ type: 'VIDEO' }],
-  password: null,
-};
 cache.writeQuery({
   query: GetAuctionDetailsQuery,
   variables: { id: 'testId' },
