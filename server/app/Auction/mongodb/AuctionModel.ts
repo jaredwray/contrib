@@ -65,7 +65,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     itemPrice: { type: SchemaTypes.Number },
     priceCurrency: { type: SchemaTypes.String, default: AppConfig.app.defaultCurrency },
     currentPrice: { type: SchemaTypes.Number, default: 0 },
-    bidStep: { type: SchemaTypes.Number, default: 1000 },
+    bidStep: { type: SchemaTypes.Number, default: AppConfig.bid.minBidValue * 100 },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
     auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
     startsAt: {

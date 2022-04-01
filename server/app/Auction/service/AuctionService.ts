@@ -611,6 +611,13 @@ export class AuctionService {
       ...rest
     } = objectTrimmer(input);
 
+    if (bidStep && bidStep.getAmount() < AppConfig.bid.minBidValue * 100) {
+      throw new AppError(`BidStep cannot be less then $${AppConfig.bid.minBidValue}`);
+    }
+    if (bidStep && bidStep.getAmount() > AppConfig.bid.maxBidValue * 100) {
+      throw new AppError(`BidStep cannot be less then $${AppConfig.bid.maxBidValue}`);
+    }
+
     const auction = await this.auctionRepository.updateAuction(
       id,
       userId,
@@ -626,8 +633,8 @@ export class AuctionService {
               currentPrice: startPrice.getAmount(),
               priceCurrency: startPrice.getCurrency(),
               itemPrice:
-                itemPrice?.getAmount() ?? startPrice.getAmount() * 20 > AppConfig.bid.maxBidSize
-                  ? AppConfig.bid.maxBidSize
+                itemPrice?.getAmount() ?? startPrice.getAmount() * 20 > AppConfig.bid.maxBidValue * 100
+                  ? AppConfig.bid.maxBidValue * 100
                   : startPrice.getAmount() * 20,
             }
           : {}),
@@ -694,8 +701,8 @@ export class AuctionService {
       );
     }
 
-    const maxBidAmount = AppConfig.bid.maxBidSize;
-    if (Number(bid.toFormat('0')) * 100 > maxBidAmount) {
+    const maxBidAmount = AppConfig.bid.maxBidValue;
+    if (Number(bid.toFormat('0')) > maxBidAmount) {
       AppLogger.info(
         `Unable to charge auction id ${auction.id}: Amount must be less than $${maxBidAmount.toLocaleString()}`,
       );
@@ -1306,13 +1313,13 @@ export class AuctionService {
       });
       return null;
     }
-    const maxBidAmount = AppConfig.bid.maxBidSize;
-    if (startPrice > maxBidAmount - 100) {
+    const maxBidAmount = AppConfig.bid.maxBidValue;
+    if (startPrice / 100 > maxBidAmount - 100) {
       AppLogger.info(
         `Unable to create auction ${_id}. Start price should be less than $${maxBidAmount.toLocaleString()}`,
       );
       throw new AppError(
-        `Unable to create auction. Starting price should be less than $${(maxBidAmount / 100).toLocaleString()}`,
+        `Unable to create auction. Starting price should be less than $${maxBidAmount.toLocaleString()}`,
         ErrorCode.BAD_REQUEST,
       );
     }

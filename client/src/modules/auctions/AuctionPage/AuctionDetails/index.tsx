@@ -9,14 +9,13 @@ import { Link } from 'react-router-dom';
 import AuctionItemsFMV from 'src/components/customComponents/AuctionItems';
 import InformationLink from 'src/components/customComponents/InformationLink';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
+import { MAX_PRICE_VALUE } from 'src/constants';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';
 
 import BidButtons from './BidButtons';
 import BidsListModal from './BidsListModal';
 import Status from './Status';
 import styles from './styles.module.scss';
-
-const FINAL_BID = 999999;
 
 interface Props {
   auction: Auction;
@@ -31,7 +30,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
   const { currentPrice, endDate, title, isSold, isSettled, isActive, totalBids, items } = auction;
 
   const ended = toDate(endDate) <= new Date();
-  const canBid = isActive && !ended && currentPrice.amount !== FINAL_BID * 100 && !isDeliveryPage;
+  const canBid = isActive && !ended && currentPrice.amount !== MAX_PRICE_VALUE * 100 && !isDeliveryPage;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
   );

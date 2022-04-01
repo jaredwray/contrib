@@ -151,7 +151,7 @@ const FairMarketValuePage = () => {
   );
 
   const handlePrevAction = useCallback(() => {
-    history.push(`/auctions/${auctionId}/price/buying`);
+    history.push(`/auctions/${auctionId}/bids-step`);
   }, [auctionId, history]);
 
   const handleIsMultipleItems = useCallback(() => setIsMultipleFMV(true), [setIsMultipleFMV]);
@@ -201,7 +201,7 @@ const FairMarketValuePage = () => {
       isActive={isActive}
       loading={updating}
       prevAction={handlePrevAction}
-      step={6}
+      step={7}
       title={`${isActive ? 'Edit ' : ''}Fair Market Value`}
       onSubmit={handleSubmit}
     >

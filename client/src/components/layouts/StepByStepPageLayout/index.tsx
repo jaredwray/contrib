@@ -9,7 +9,7 @@ import StepByStepPageRow from 'src/components/layouts/StepByStepPageLayout/StepB
 import StepPageHeader from './StepPageHeader';
 import styles from './styles.module.scss';
 
-const AUCTION_CREATION_STEPS_NUMBER = 8;
+const AUCTION_CREATION_STEPS_NUMBER = 9;
 
 interface Props {
   disabled?: boolean;

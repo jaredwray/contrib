@@ -128,6 +128,26 @@ export const auction = {
   isStopped: false,
 };
 
+export const auctionForCreation = {
+  id: 'testId',
+  endDate: '2021-07-01T22:28:00.270Z',
+  itemPrice: { amount: 10000, currency: 'USD', precision: 2 },
+  title: '1',
+  link: 'test',
+  description: 'test',
+  status: 'ACTIVE',
+  isActive: true,
+  bidStep: { amount: 10, currency: 'USD', precision: 2 },
+  startPrice: { amount: 10, currency: 'USD', precision: 2 },
+  fairMarketValue: { amount: 10, currency: 'USD', precision: 2 },
+  items: [],
+  startDate: '2021-07-01T22:28:00.261Z',
+  charity: { id: 'testId', name: 'test' },
+  auctionOrganizer: { id: 'testId', favoriteCharities: [] },
+  attachments: [{ type: 'VIDEO' }],
+  password: null,
+};
+
 export const auctionForAdminPage = {
   auctionOrganizer: { id: '6089456271a69b3254201019', name: 'sf.admin/influencer' },
   bids,

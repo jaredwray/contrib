@@ -8,6 +8,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import Layout from 'src/components/layouts/Layout';
 import Form from 'src/components/forms/Form/Form';
 import { testAccount } from 'src/helpers/testHelpers/account';
+import { auctionForCreation as auction } from 'src/helpers/testHelpers/auction';
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { CharitySearchSelect } from 'src/components/forms/selects/CharitySearchSelect';
@@ -37,24 +38,7 @@ const cacheAuctionWithoutDescription = new InMemoryCache();
 const cacheAuctionWithoutVideoAttachments = new InMemoryCache();
 const cacheAuctionWithoutItemPrice = new InMemoryCache();
 const cacheAuctionWithoutFairMarketValue = new InMemoryCache();
-const auction = {
-  id: 'testId',
-  endDate: '2021-07-01T22:28:00.270Z',
-  itemPrice: { amount: 10000, currency: 'USD', precision: 2 },
-  title: '1',
-  link: 'test',
-  description: 'test',
-  status: 'ACTIVE',
-  isActive: true,
-  startPrice: { amount: 10, currency: 'USD', precision: 2 },
-  fairMarketValue: { amount: 10, currency: 'USD', precision: 2 },
-  items: [],
-  startDate: '2021-07-01T22:28:00.261Z',
-  charity: { id: 'testId', name: 'test' },
-  auctionOrganizer: { id: 'testId', favoriteCharities: [{ id: 'testId', name: 'test' }] },
-  attachments: [{ type: 'VIDEO' }],
-  password: null,
-};
+
 const ActiveCharitiesListQuery = {
   query: ActiveCharitiesList,
   variables: { filters: { status: ['ACTIVE'] } },

@@ -154,7 +154,7 @@ const CharityPage = () => {
       isActive={isActive}
       loading={updating || updatingStatus}
       prevAction={handlePrevAction}
-      step={8}
+      step={9}
       title={isActive ? 'Edit Charity' : 'Charity'}
       onSubmit={handleSubmit}
     >
