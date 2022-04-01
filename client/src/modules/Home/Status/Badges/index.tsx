@@ -20,16 +20,17 @@ export const Badges = (): ReactElement => {
 
   return (
     <>
-      <Col lg="3" sm="6">
+      <Col className="p-0 pb-4 pb-md-0" lg="3" md="3" sm="6">
         {totalRaised && (
           <TotalAmount
             icon={trophyIcon}
+            info="ALL TIME"
             title="total raised"
             value={Dinero({ amount: totalRaised }).toFormat('$0,0')}
           />
         )}
       </Col>
-      <Col className="pt-4 pb-0 pt-sm-0 pb-sm-3" lg="3" sm="6">
+      <Col className="p-0" lg="3" md="3" sm="6">
         {topEarned && (
           <TotalAmount
             icon={awardIcon}
