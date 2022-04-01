@@ -157,19 +157,20 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
       </section>
 
       <section className={clsx(styles.sliders, 'pt-4 pt-md-5 pb-4 pb-md-5')}>
-        <Container className={styles.auctionContainer}>
-          {isLoadingAuctions ? (
+        {isLoadingAuctions && (
+          <Container>
             <AuctionsInfoLoading name={influencer.name} />
-          ) : (
-            <InfluencerAuctionsInfo
-              auctions={auctions}
-              draftAuctions={draftAuctions}
-              influencer={influencer}
-              isShowDraftAndStopped={account?.isAdmin || isMyProfile}
-              onDeleteDraftAuctions={onDelete}
-            />
-          )}
-        </Container>
+          </Container>
+        )}
+        {!isLoadingAuctions && (
+          <InfluencerAuctionsInfo
+            auctions={auctions}
+            draftAuctions={draftAuctions}
+            influencer={influencer}
+            isShowDraftAndStopped={account?.isAdmin || isMyProfile}
+            onDeleteDraftAuctions={onDelete}
+          />
+        )}
       </section>
     </Layout>
   );
