@@ -23,6 +23,7 @@ interface InfluencerResolversType {
       { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
       { params: any }
     >;
+    topEarnedInfluencer: GraphqlResolver<InfluencerProfile, {}>;
   };
   Mutation: {
     createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
@@ -68,6 +69,7 @@ export const InfluencerResolvers: InfluencerResolversType = {
       }
     }),
     influencersList: async (_, { params }, { influencer }) => influencer.influencersList(params),
+    topEarnedInfluencer: async (_, {}, { influencer }) => influencer.topEarned(),
   },
   Mutation: {
     unfollowInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>

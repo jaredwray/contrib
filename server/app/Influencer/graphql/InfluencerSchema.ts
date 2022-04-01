@@ -77,6 +77,7 @@ export const InfluencerSchema = gql`
   extend type Query {
     influencersList(params: InfluencerParams): InfluencersPage
     influencer(id: String!): InfluencerProfile
+    topEarnedInfluencer: InfluencerProfile
   }
 
   extend type Mutation {

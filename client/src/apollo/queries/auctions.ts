@@ -596,3 +596,9 @@ export const AuctionSubscription = gql`
     }
   }
 `;
+
+export const TotalRaisedAmountQuery = gql`
+  query TotalRaisedAmount {
+    totalRaisedAmount
+  }
+`;

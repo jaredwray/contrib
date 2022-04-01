@@ -48,6 +48,7 @@ interface AuctionResolversType {
       { auctionId: string; deliveryMethod: string }
     >;
     getContentStorageAuthData: GraphqlResolver<{ authToken: string; accountId: string }, void>;
+    totalRaisedAmount: GraphqlResolver<number>;
   };
   Mutation: {
     updateOrCreateMetrics: GraphqlResolver<
@@ -117,6 +118,7 @@ export const AuctionResolvers: AuctionResolversType = {
     getContentStorageAuthData: requireAuthenticated(
       async (_, __, { auction }) => await auction.getContentStorageAuthData(),
     ),
+    totalRaisedAmount: async (_, {}, { auction }) => auction.getTotalRaisedAmount(),
   },
   Mutation: {
     updateOrCreateMetrics: (_, { shortLinkId, input }, { auction }) =>

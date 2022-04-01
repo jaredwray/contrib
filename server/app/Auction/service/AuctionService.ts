@@ -579,10 +579,6 @@ export class AuctionService {
   }
 
   public async getTotalRaisedAmount(charityId?: string, influencerId?: string): Promise<number> {
-    if (!charityId && !influencerId) {
-      throw new AppError('Something went wrong. Please, try again later');
-    }
-
     const filters = { status: { $in: [AuctionStatus.SETTLED, AuctionStatus.SOLD] } };
     if (charityId) {
       filters['charity'] = charityId;

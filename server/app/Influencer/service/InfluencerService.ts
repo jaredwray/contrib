@@ -57,23 +57,23 @@ export class InfluencerService {
       const sortOption = this.getSortOptions(orderBy);
       const activeAuctions = await this.AuctionModel.find({ status: 'ACTIVE' });
 
-      if (activeAuctions.length) {
-        const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer.toString());
-        const uniqOrganizersWithActiveAuctions = Array.from(new Set(auctionOrganisers)).map((id) => Types.ObjectId(id));
-
-        const activeInfluencers = await this.InfluencerModel.find({
-          _id: { $in: uniqOrganizersWithActiveAuctions },
-          ...defaultFilters,
-        }).sort(sortOption);
-        const otherInfluencers = await this.InfluencerModel.find({
-          _id: { $nin: uniqOrganizersWithActiveAuctions },
-          ...defaultFilters,
-        }).sort(sortOption);
-
-        return [...activeInfluencers, ...otherInfluencers].slice(skip, skip + size);
+      if (!activeAuctions.length) {
+        return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
       }
 
-      return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
+      const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer.toString());
+      const uniqOrganizersWithActiveAuctions = Array.from(new Set(auctionOrganisers)).map((id) => Types.ObjectId(id));
+
+      const activeInfluencers = await this.InfluencerModel.find({
+        _id: { $in: uniqOrganizersWithActiveAuctions },
+        ...defaultFilters,
+      }).sort(sortOption);
+      const otherInfluencers = await this.InfluencerModel.find({
+        _id: { $nin: uniqOrganizersWithActiveAuctions },
+        ...defaultFilters,
+      }).sort(sortOption);
+
+      return [...activeInfluencers, ...otherInfluencers].slice(skip, skip + size);
     }
 
     const influencers = this.InfluencerModel.find(this.getSearchOptions(filters))
@@ -98,6 +98,11 @@ export class InfluencerService {
       size: items.length,
       skip: params.skip || 0,
     };
+  }
+
+  public async topEarned() {
+    const model = await this.InfluencerModel.findOne().sort({ totalRaisedAmount: 'desc' });
+    return InfluencerService.makeInfluencerProfile(model);
   }
 
   async handleFollowLogicErrors(
