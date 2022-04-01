@@ -36,10 +36,6 @@ export const AuctionSchema = gql`
     originalFileName: String
   }
 
-  type TotalRaisedAmount {
-    totalRaisedAmount: Money!
-  }
-
   type AuctionDelivery {
     deliveryMethod: String
     shippingLabel: String
@@ -270,6 +266,7 @@ export const AuctionSchema = gql`
     getAuctionMetrics(auctionId: String!): Metrics!
     calculateShippingCost(auctionId: String!, deliveryMethod: String!): DeliveryRate
     getContentStorageAuthData: ContentStorageAuthData
+    totalRaisedAmount: Int
   }
 
   extend type Mutation {

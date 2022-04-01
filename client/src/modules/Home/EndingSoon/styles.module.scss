@@ -7,14 +7,11 @@
 .root {
   background-color: $barely-gray-color;
   padding: 1.5em 0;
-  overflow: hidden;
 }
 
-.seeAllLink {
+.link {
   color: $sage-color;
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 27px;
   letter-spacing: 0.05em;
 }

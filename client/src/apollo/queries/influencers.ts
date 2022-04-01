@@ -54,6 +54,15 @@ export const GetInfluencerQuery = gql`
   }
 `;
 
+export const TopEarnedInfluencerQuery = gql`
+  query TopEarnedInfluencer {
+    topEarnedInfluencer {
+      name
+      totalRaisedAmount
+    }
+  }
+`;
+
 export const InviteInfluencerMutation = gql`
   mutation InviteInfluencer(
     $firstName: String!

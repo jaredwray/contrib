@@ -1,0 +1,17 @@
+@import 'src/variables.scss';
+
+.title {
+  font-size: 10px;
+  line-height: 15px;
+  font-weight: 700;
+}
+
+.info {
+  font-size: 12px;
+  line-height: 21px;
+  font-weight: 400;
+}
+
+.wrapper {
+  max-width: 250px;
+}
