@@ -1,9 +1,9 @@
 import { useCallback, useContext } from 'react';
 
-import { Container, Image, Row, Col, Navbar, NavDropdown } from 'react-bootstrap';
+import { Container, Image, Row, Col, Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import Logo from 'src/assets/images/logo-with-text.svg';
+import Logo from 'src/assets/images/contrib-logo-horizontal-white.svg';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { DEFAULT_AVATAR_PATH } from 'src/constants';
 import { useAuth } from 'src/helpers/useAuth';
@@ -22,25 +22,16 @@ export default function Header() {
   }, [logout]);
 
   return (
-    <header className="p-0 px-sm-4 navigation-header">
-      <Container fluid="xxl">
-        <Row className="top">
+    <header className="p-0 px-sm-3 navigation-header">
+      <Container className="p-0" fluid="xxl">
+        <Row className="top px-0">
           <Col md className="p-0">
-            <Navbar collapseOnSelect expand={false}>
-              <Link to="/">
-                <img alt="Contrib" src={Logo} />
-              </Link>
-
-              <NavDropdown className="header-nav-dropdown" id="headerNavDropdown" title="">
-                <section className="nav-dropdown-menu text-subhead">
+            <Navbar collapseOnSelect className="p-0" expand={false}>
+              <NavDropdown className="flex-grow-1 header-nav-dropdown" id="headerNavDropdown" title="">
+                <section className="nav-dropdown-menu px-3 py-4 text-center text-subhead">
                   {isAuthenticated && (
                     <>
-                      <div className="dropdown-menu-user-name d-inline-block break-word">{user?.name}</div>
-                      <Image
-                        roundedCircle
-                        className="dropdown-menu-user-picture float-end d-inline-block"
-                        src={user?.picture || DEFAULT_AVATAR_PATH}
-                      />
+                      <div className="dropdown-menu-user-name d-inline-block break-word pb-4">{user?.name}</div>
                       <MenuNavLink link="/profile" title="My Profile" />
                     </>
                   )}
@@ -78,19 +69,49 @@ export default function Header() {
                   <div>
                     <div className="pt-4">
                       <div className="text-label text-all-cups dropdown-menu-copyright">
-                        Copyright {new Date().getFullYear()} Contrib Inc.
+                        &copy;{new Date().getFullYear()} Contrib Inc.
                       </div>
 
-                      <div className="dropdown-menu-privacy text-label text-all-cups">
-                        <Link to="/privacy-policy">Privacy</Link>
-                        &#160;and&#160;
+                      <div className="dropdown-menu-privacy text-label">
+                        <Link to="/privacy-policy">Privacy Policy</Link>
+                        &nbsp; &middot; &nbsp;
                         <Link to="/terms">Terms</Link>
-                        &#160;&gt;&gt;
                       </div>
                     </div>
                   </div>
                 </section>
               </NavDropdown>
+              <Link className="flex-grow-1 header-logo d-flex p-2 p-md-0" to="/">
+                <img alt="Contrib" src={Logo} />
+              </Link>
+              <Navbar className="p-0 desktop-navbar flex-grow-1">
+                <Nav>
+                  <Nav.Link className="px-3 py-3" href="/auctions">
+                    Auctions
+                  </Nav.Link>
+                  <Nav.Link className="px-3 py-3" href="/influencers">
+                    Influencers
+                  </Nav.Link>
+                  <Nav.Link className="px-3 py-3" href="/charities">
+                    Charities
+                  </Nav.Link>
+                </Nav>
+              </Navbar>
+              <div className="flex-grow-1 header-login-profile-icon">
+                {isAuthenticated ? (
+                  <Link className="d-flex justify-content-end" to="/profile">
+                    <Image
+                      roundedCircle
+                      className="profile-icon dropdown-menu-user-picture"
+                      src={user?.picture || DEFAULT_AVATAR_PATH}
+                    />
+                  </Link>
+                ) : (
+                  <Link to="/log-in">
+                    <Image roundedCircle className="profile-icon" src={DEFAULT_AVATAR_PATH} />
+                  </Link>
+                )}
+              </div>
             </Navbar>
           </Col>
         </Row>
