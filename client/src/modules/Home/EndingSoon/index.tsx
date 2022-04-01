@@ -26,8 +26,8 @@ export default function EndingSoon() {
   const items = data.auctions.items.map((auction: Auction, i: number) => <AuctionCard key={i} auction={auction} />);
 
   return (
-    <Container fluid className={clsx(styles.root, 'overflow-hidden pt-4 pt-lg-0')}>
-      <Container fluid="xxl">
+    <Container fluid className={clsx(styles.root, 'overflow-hidden pt-4')}>
+      <Container className="p-0" fluid="xxl">
         {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
         <Row className="mt-4">
           <Col className="text-center">
