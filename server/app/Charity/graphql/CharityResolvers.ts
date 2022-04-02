@@ -19,6 +19,7 @@ export const CharityResolvers = {
       return await charity.findCharity(profileId);
     }),
     charitiesList: async (_, { params }, { charity }) => await charity.charitiesList(params),
+    topCharity: async (_, {}, { charity }) => await charity.topCharity(),
   },
   Mutation: {
     unfollowCharity: requireAuthenticated(async (_, { charityId }, { charity, currentAccount }) =>

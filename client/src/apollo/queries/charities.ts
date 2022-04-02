@@ -33,6 +33,16 @@ export const ActiveCharitiesList = gql`
     }
   }
 `;
+export const TopCharityQuery = gql`
+  query TopCharityQuery {
+    topCharity {
+      id
+      semanticId
+      name
+      totalRaisedAmount
+    }
+  }
+`;
 
 export const InviteCharityMutation = gql`
   mutation InviteCharity($firstName: String!, $lastName: String!, $phoneNumber: String!, $welcomeMessage: String!) {

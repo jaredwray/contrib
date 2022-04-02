@@ -5,38 +5,54 @@ import Dinero from 'dinero.js';
 import { Col } from 'react-bootstrap';
 
 import { TotalRaisedAmountQuery } from 'src/apollo/queries/auctions';
+import { TopCharityQuery } from 'src/apollo/queries/charities';
 import { TopEarnedInfluencerQuery } from 'src/apollo/queries/influencers';
-import awardIcon from 'src/assets/images/award.svg';
-import trophyIcon from 'src/assets/images/trophy.svg';
+import AwardIcon from 'src/assets/images/award.svg';
+import TopCharityIcon from 'src/assets/images/top-charity.svg';
+import TrophyIcon from 'src/assets/images/trophy.svg';
 
 import { TotalAmount } from './TotalAmount';
 
 export const Badges = (): ReactElement => {
   const { data: totalRaisedData } = useQuery(TotalRaisedAmountQuery);
   const { data: topEarnedData } = useQuery(TopEarnedInfluencerQuery);
+  const { data: topCarityData } = useQuery(TopCharityQuery);
 
   const totalRaised = totalRaisedData?.totalRaisedAmount;
   const topEarned = topEarnedData?.topEarnedInfluencer;
+  const topCharity = topCarityData?.topCharity;
 
   return (
     <>
-      <Col className="p-0 pb-4 pb-md-0" lg="3" md="3" sm="6">
+      <Col className="text-center text-md-start px-0 pb-4 pb-md-0 py-lg-0" lg="2" md="4">
         {totalRaised && (
           <TotalAmount
-            icon={trophyIcon}
-            info="ALL TIME"
+            firstValue={Dinero({ amount: totalRaised }).toFormat('$0,0')}
+            icon={TrophyIcon}
+            secondValue="all time"
             title="total raised"
-            value={Dinero({ amount: totalRaised }).toFormat('$0,0')}
           />
         )}
       </Col>
-      <Col className="p-0" lg="3" md="3" sm="6">
+      <Col className="p-0 pb-4" lg="3" md="4">
         {topEarned && (
           <TotalAmount
-            icon={awardIcon}
-            info={Dinero(topEarned.totalRaisedAmount).toFormat('$0,0')}
+            firstValue={topEarned.name}
+            icon={AwardIcon}
+            link={`/profiles/${topEarned.id}`}
+            secondValue={Dinero(topEarned.totalRaisedAmount).toFormat('$0,0')}
             title="top earner"
-            value={topEarned.name}
+          />
+        )}
+      </Col>
+      <Col className="p-0" lg="3" md="4">
+        {topCharity && (
+          <TotalAmount
+            firstValue={topCharity.name}
+            icon={TopCharityIcon}
+            link={`/charity/${topCharity.semanticId || topCharity.id}`}
+            secondValue={Dinero(topCharity.totalRaisedAmount).toFormat('$0,0')}
+            title="top charity"
           />
         )}
       </Col>

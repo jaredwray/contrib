@@ -1,12 +1,26 @@
 @import 'src/variables.scss';
 
+.icon {
+  width: 35px;
+  height: 35px;
+}
+
 .title {
   font-size: 10px;
   line-height: 15px;
   font-weight: 700;
 }
 
-.info {
+.link {
+  &,
+  &:hover,
+  &:visited {
+    text-decoration: none;
+    color: $dark-gray-color;
+  }
+}
+
+.secondValue {
   font-size: 12px;
   line-height: 21px;
   font-weight: 400;

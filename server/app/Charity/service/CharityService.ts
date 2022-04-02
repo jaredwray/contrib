@@ -200,6 +200,11 @@ export class CharityService {
     return charityUpd;
   }
 
+  public async topCharity() {
+    const model = await this.CharityModel.findOne().sort({ totalRaisedAmount: 'desc' });
+    return CharityService.makeCharity(model);
+  }
+
   async getLinkForStripeAccount(charity: Charity): Promise<string> {
     const objLink = await this.stripeService.createStripeObjLink(charity.stripeAccountId, charity.id);
     return objLink.url;
