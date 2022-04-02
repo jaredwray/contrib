@@ -97,7 +97,7 @@ export const AppConfig = {
   },
   bid: {
     minBidValue: 10,
-    maxBidValue: 999999,
+    maxPriceValue: 999999,
   },
   delivery: {
     UPSSimpleRateType: 'M', // Delivery type, Valid Values: XS = 1-100 in3 S = 101-250 in3 M = 251-650 in3 L = 651-1,050 in3 XL = 1,051-1,728 in3

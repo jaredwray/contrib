@@ -67,7 +67,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     currentPrice: { type: SchemaTypes.Number, default: 0 },
     bidStep: { type: SchemaTypes.Number, default: AppConfig.bid.minBidValue * 100 },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
-    auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName },
+    auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName, required: true },
     startsAt: {
       type: SchemaTypes.Date,
       get: (v) => dayjs(v),

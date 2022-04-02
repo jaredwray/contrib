@@ -329,6 +329,18 @@ export class AuctionRepository implements IAuctionRepository {
     }
 
     Object.assign(auction, input);
+
+    if (auction.bidStep < AppConfig.bid.minBidValue * 100)
+      throw new AppError(`BidStep cannot be less then $${AppConfig.bid.minBidValue}`);
+    if (auction.bidStep > AppConfig.bid.maxPriceValue * 100)
+      throw new AppError(`BidStep cannot be less then $${AppConfig.bid.maxPriceValue}`);
+    if (auction.itemPrice <= auction.startPrice)
+      throw new AppError(`Item price should be more than $${(auction.startPrice / 100).toLocaleString()}`);
+    if (auction.startPrice > AppConfig.bid.maxPriceValue * 100)
+      throw new AppError(`Starting price should be less than $${AppConfig.bid.maxPriceValue}`);
+    if (auction.itemPrice > AppConfig.bid.maxPriceValue * 100)
+      throw new AppError(`Buy Now price should be less than $${AppConfig.bid.maxPriceValue}`);
+
     const updatedAuction = await auction.save();
     return this.populateAuctionModel(updatedAuction).execPopulate();
   }
