@@ -607,13 +607,6 @@ export class AuctionService {
       ...rest
     } = objectTrimmer(input);
 
-    if (bidStep && bidStep.getAmount() < AppConfig.bid.minBidValue * 100) {
-      throw new AppError(`BidStep cannot be less then $${AppConfig.bid.minBidValue}`);
-    }
-    if (bidStep && bidStep.getAmount() > AppConfig.bid.maxBidValue * 100) {
-      throw new AppError(`BidStep cannot be less then $${AppConfig.bid.maxBidValue}`);
-    }
-
     const auction = await this.auctionRepository.updateAuction(
       id,
       userId,
@@ -629,8 +622,8 @@ export class AuctionService {
               currentPrice: startPrice.getAmount(),
               priceCurrency: startPrice.getCurrency(),
               itemPrice:
-                itemPrice?.getAmount() ?? startPrice.getAmount() * 20 > AppConfig.bid.maxBidValue * 100
-                  ? AppConfig.bid.maxBidValue * 100
+                itemPrice?.getAmount() ?? startPrice.getAmount() * 20 > AppConfig.bid.maxPriceValue * 100
+                  ? AppConfig.bid.maxPriceValue * 100
                   : startPrice.getAmount() * 20,
             }
           : {}),
@@ -696,14 +689,7 @@ export class AuctionService {
         ErrorCode.BAD_REQUEST,
       );
     }
-
-    const maxBidAmount = AppConfig.bid.maxBidValue;
-    if (Number(bid.toFormat('0')) > maxBidAmount) {
-      AppLogger.info(
-        `Unable to charge auction id ${auction.id}: Amount must be less than $${maxBidAmount.toLocaleString()}`,
-      );
-      throw new AppError('Unable to charge', ErrorCode.BAD_REQUEST);
-    }
+    if (bid.getAmount() > AppConfig.bid.maxPriceValue) throw new AppError('Unable to charge', ErrorCode.BAD_REQUEST);
 
     try {
       const [lastBid] = await this.BidModel.find({ auction: auction._id }, null, { session })
@@ -1302,30 +1288,6 @@ export class AuctionService {
       shortLink,
       ...rest
     } = model.toObject();
-
-    if (!auctionOrganizer) {
-      AppLogger.error('auction is missing organizer', {
-        auctionData: JSON.stringify(model.toObject()),
-      });
-      return null;
-    }
-    const maxBidAmount = AppConfig.bid.maxBidValue;
-    if (startPrice / 100 > maxBidAmount - 100) {
-      AppLogger.info(
-        `Unable to create auction ${_id}. Start price should be less than $${maxBidAmount.toLocaleString()}`,
-      );
-      throw new AppError(
-        `Unable to create auction. Starting price should be less than $${maxBidAmount.toLocaleString()}`,
-        ErrorCode.BAD_REQUEST,
-      );
-    }
-    if (itemPrice <= startPrice) {
-      AppLogger.info(`Unable to create auction ${_id}. Item price must more than $${startPrice.toLocaleString()}`);
-      throw new AppError(
-        `Unable to create auction. Item price should be more than $${(startPrice / 100).toLocaleString()}`,
-        ErrorCode.BAD_REQUEST,
-      );
-    }
 
     return {
       id: _id.toString(),
