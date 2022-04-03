@@ -37,20 +37,17 @@ export default function SimilarAuctions({ selectedAuction }: Props) {
   return (
     <section className={styles.root}>
       <Container className={clsx(styles.homepageContainer, 'header')} fluid="xxl">
-        <Row className="pb-3 pb-md-4">
-          <Col className={clsx(styles.title, 'text-super pb-3 pb-md-3 pb-lg-0')} lg="8" xs="12">
-            Similar auctions
-          </Col>
-          <Col className="align-self-end pe-lg-0" lg="4" xs="12">
-            <Link
-              className={clsx('float-lg-end text-subhead text-all-cups ms-1 ms-md-0', styles.seeAllLink)}
-              to="/auctions"
-            >
-              See all auctions &gt;&gt;
+        <Row className="pb-3 pb-md-4 text-center">
+          <Col className={clsx(styles.title, 'pb-3 pb-md-3 pb-lg-0')}>Similar Auctions</Col>
+        </Row>
+        {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
+        <Row className="pt-4 text-center">
+          <Col className="align-self-end pe-lg-0">
+            <Link className={clsx('text--body', styles.seeAllLink)} to="/auctions">
+              View Auctions
             </Link>
           </Col>
         </Row>
-        {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
       </Container>
     </section>
   );
