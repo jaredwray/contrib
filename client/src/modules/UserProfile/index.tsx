@@ -28,7 +28,7 @@ const UserProfilePage: FC = () => {
           </WithStripe>
         </Container>
       </section>
-      <section className={clsx(styles.auctionsSection, 'text-label p-2 pt-4 pb-4')}>
+      <section className={clsx(styles.auctionsSection, 'text-label p-2 pt-4 pb-4 overflow-hidden')}>
         <Container>
           <Auctions />
         </Container>
