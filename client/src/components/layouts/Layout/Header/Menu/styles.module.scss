@@ -1,0 +1,23 @@
+@import 'src/variables.scss';
+
+.copyright,
+.privacy {
+  color: $gray-color;
+}
+
+.privacy a {
+  text-decoration: none;
+  letter-spacing: 0.025rem;
+
+  &,
+  &:hover {
+    color: $gray-color;
+    font-weight: normal !important;
+  }
+}
+
+.userName {
+  color: $white-color;
+  font-weight: 400;
+  max-width: 260px;
+}
