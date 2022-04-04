@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { FC, ReactElement } from 'react';
 
 import { Container } from 'react-bootstrap';
 
 import Slider from 'src/components/customComponents/Slider';
 
 interface Props {
-  items: Object[];
+  items: ReactElement[];
 }
 export const ProfileSliderRow: FC<Props> = ({ items, children }) => {
   return (

@@ -1,12 +1,11 @@
-import { FC } from 'react';
+import { FC, ReactElement } from 'react';
 
 import { Spinner } from 'react-bootstrap';
 
 import Slider from 'src/components/customComponents/Slider';
-import { Auction } from 'src/types/Auction';
 
 interface Props {
-  auctions: Auction[];
+  auctions: ReactElement[];
   emptyText: string;
   loading: boolean;
   title: string;
