@@ -1,0 +1,38 @@
+@import 'src/variables.scss';
+
+.header {
+  border-bottom: 1px solid $light-gray-color;
+  background: $dark-gray-color;
+  color: $white-color;
+}
+
+.logoWrapper {
+  display: flex;
+  justify-content: center;
+}
+.logo {
+  height: 20px;
+}
+
+.avatarWrapper {
+  text-align: right;
+  flex-basis: 0;
+}
+.avatar {
+  width: 20px;
+  height: 20px;
+}
+
+.navbar a {
+  color: $barely-gray-color !important;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.025rem;
+}
+
+@media (min-width: $medium-weight) {
+  .logoWrapper {
+    flex-basis: 0;
+    justify-content: start;
+  }
+}
