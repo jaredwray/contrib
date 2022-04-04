@@ -1,24 +1,32 @@
 @import 'src/variables.scss';
 
 .root {
-  width: 267px;
-  max-width: 267px;
-  height: 352px;
+  width: 262px;
+  height: 400px;
   position: relative;
   background-color: $white-color;
   border-radius: 8px;
-  border: 1px solid $light-gray-color;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(202,204,198,1);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(202,204,198,1);
+  box-shadow: 0px 0px 5px 0px rgba(202,204,198,1);
+  @media (min-width: $small-weight) {
+    width: 300px;
+  }
 }
 
 .description {
   flex: 1 0 auto;
-  padding: 20px;;
+  padding: 20px;
+  border-radius:  0 0 8px 8px;
+  border: 1px solid $light-gray-color;
 }
 
 .image {
   background-color: $barely-gray-color;
-  height: 152px;
+  height: 200px;
   border-radius: 8px 8px 0 0;
+  border: 1px solid $light-gray-color;
+  border-bottom: 0;
 }
 
 .title {
@@ -49,10 +57,6 @@
 }
 
 @media (max-width: $medium-weight) {
-  .root {
-    max-width: 278px;
-  }
-
   .description {
     padding: 10px;
   }
