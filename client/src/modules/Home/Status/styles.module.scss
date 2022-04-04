@@ -6,14 +6,14 @@
 
 .title {
   font-size: 16px;
-  line-height: 36px;
+  line-height: 27px;
   letter-spacing: 0.025em;
-  font-weight: 500;
-  @media (max-width: 425px) {
-    max-width: 190px;
-  }
+  font-weight: 700;
   .subtitle {
-    font-weight: 600;
+    font-weight: 500 !important;    
+    @media (max-width: 375px) {
+      max-width: 250px;
+    }
   }
 }
 

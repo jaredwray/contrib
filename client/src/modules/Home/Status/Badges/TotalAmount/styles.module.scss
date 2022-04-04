@@ -9,16 +9,18 @@
   font-size: 10px;
   line-height: 16px;
   letter-spacing: 0.075rem !important;
-  font-weight: 500 !important;
+  font-weight: 700 !important;
 }
 
 .firstValueWrapper {
   font-size: 16px;
-  line-height: 31px;
+  line-height: 32px;
   font-weight: 600;
   max-width: 200px !important;
+  letter-spacing: 0.01rem;
   a {
     text-decoration: none;
+    color: $sage-color;
   }
 }
 
