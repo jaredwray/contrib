@@ -2,15 +2,22 @@
 
 .root {
   background-color: $barely-gray-color;
+  border-top: 1px solid $light-gray-color;
 }
 
 .title {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 27px;
   letter-spacing: 0.025em;
-  font-weight: 700;
+  font-weight: 600;
+  color: $dark-gray-color;
   .subtitle {
     font-weight: 500 !important;    
+    letter-spacing: 0.017em;
+    .italicSubtitle {
+      font-style: italic;
+      font-weight: 400 !important;
+    }
     @media (max-width: 375px) {
       max-width: 250px;
     }
