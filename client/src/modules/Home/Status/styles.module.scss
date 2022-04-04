@@ -5,15 +5,15 @@
 }
 
 .title {
-  font-size: 20px;
-  line-height: 36px;
+  font-size: 16px;
+  line-height: 27px;
   letter-spacing: 0.025em;
-  font-weight: 500;
-  @media (max-width: 425px) {
-    max-width: 260px;
-  }
+  font-weight: 700;
   .subtitle {
-    font-weight: 700;
+    font-weight: 500 !important;    
+    @media (max-width: 375px) {
+      max-width: 250px;
+    }
   }
 }
 
@@ -25,9 +25,6 @@
 }
 
 @media (min-width: $medium-weight) {
-  .title {
-    font-size: 20px;
-  }
   .label {
     font-size: 14px !important
   }

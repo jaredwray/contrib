@@ -11,13 +11,16 @@ export default function Status() {
     <Container fluid className={styles.root}>
       <Container className="p-0" fluid="xxl">
         <Row className="pt-4">
-          <Col className="text-center px-0 pb-2 pb-lg-0 py-lg-0" xxl="12">
+          <Col className="text-center px-0 pb-2">
             <div className={clsx(styles.title, 'm-auto pb-2 pb-md-0')}>
-              <span className={styles.subtitle}>Make an impact.</span> Direct Influencer-To-Fan Charity Auctions.
+              Make an impact.
+              <span className={clsx(styles.subtitle, 'd-inline-block')}>
+                &nbsp; Direct Influencer-To-Fan Charity Auctions.
+              </span>
             </div>
           </Col>
         </Row>
-        <Row className="pt-0">
+        <Row className="pt-0 justify-content-center">
           <Badges />
         </Row>
       </Container>
