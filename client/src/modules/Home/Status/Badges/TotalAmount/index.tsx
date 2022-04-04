@@ -16,7 +16,7 @@ interface PropTypes {
 
 export const TotalAmount = ({ title, secondValue, firstValue, icon, link }: PropTypes): ReactElement => {
   return (
-    <Row className="text-sm p-2">
+    <Row className="text-sm pb-4">
       <Col className="d-flex justify-content-center p-0 flex-column text-center">
         <div className="pb-2">
           <Image className={clsx(styles.icon, 'pt-1')} src={icon} />
