@@ -16,14 +16,14 @@ interface PropTypes {
 
 export const TotalAmount = ({ title, secondValue, firstValue, icon, link }: PropTypes): ReactElement => {
   return (
-    <Row className="text-sm p-0 pe-1">
-      <Col className="d-flex justify-content-center p-0 flex-column flex-sm-row text-center text-sm-right">
-        <div className="pb-2 pb-sm-4">
+    <Row className="text-sm p-2">
+      <Col className="d-flex justify-content-center p-0 flex-column text-center">
+        <div className="pb-2">
           <Image className={clsx(styles.icon, 'pt-1')} src={icon} />
         </div>
-        <div className={clsx(styles.wrapper, 'ps-2 text-center')}>
+        <div className={clsx(styles.wrapper, 'p-0 text-center')}>
           <div className={clsx(styles.title, 'text-all-cups')}>{title}</div>
-          <div className="text-subhead">
+          <div className={clsx(styles.firstValueWrapper, 'text-truncate m-auto')}>
             {link ? (
               <Link className={styles.link} to={link}>
                 {firstValue}
@@ -32,7 +32,7 @@ export const TotalAmount = ({ title, secondValue, firstValue, icon, link }: Prop
               firstValue
             )}
           </div>
-          {secondValue && <div className={clsx(styles.secondValue, 'text-label text-uppercase')}>{secondValue}</div>}
+          {secondValue && <div className={clsx(styles.secondValue, 'text-uppercase')}>{secondValue}</div>}
         </div>
       </Col>
     </Row>

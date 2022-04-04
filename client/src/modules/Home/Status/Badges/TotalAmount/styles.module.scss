@@ -1,33 +1,30 @@
 @import 'src/variables.scss';
 
 .icon {
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
 }
 
 .title {
   font-size: 10px;
-  line-height: 15px;
-  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.075rem !important;
+  font-weight: 500 !important;
 }
 
-.link {
-  &,
-  &:hover,
-  &:visited {
+.firstValueWrapper {
+  font-size: 16px;
+  line-height: 31px;
+  font-weight: 600;
+  max-width: 200px !important;
+  a {
     text-decoration: none;
-    color: $dark-gray-color;
   }
 }
 
 .secondValue {
-  font-size: 12px;
+  font-size: 14px !important;
   line-height: 21px;
   font-weight: 400;
-}
-
-@media (min-width: $small-weight) {
-  .wrapper {
-    max-width: 250px;
-  }
+  color: $dark-gray-color;
 }
