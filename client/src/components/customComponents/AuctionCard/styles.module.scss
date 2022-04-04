@@ -6,9 +6,9 @@
   position: relative;
   background-color: $white-color;
   border-radius: 8px;
-  -webkit-box-shadow: 0px 0px 5px 0px rgba(202,204,198,1);
-  -moz-box-shadow: 0px 0px 5px 0px rgba(202,204,198,1);
-  box-shadow: 0px 0px 5px 0px rgba(202,204,198,1);
+  -webkit-box-shadow: 0px 0px 9px 0px rgba(202,204,198,1);
+  -moz-box-shadow: 0px 0px 9px 0px rgba(202,204,198,1);
+  box-shadow: 0px 0px 9px 0px rgba(202,204,198,1);
   @media (min-width: $small-weight) {
     width: 300px;
   }
@@ -22,7 +22,6 @@
 }
 
 .image {
-  background-color: $barely-gray-color;
   height: 200px;
   border-radius: 8px 8px 0 0;
   border: 1px solid $light-gray-color;
