@@ -57,6 +57,7 @@ export const GetInfluencerQuery = gql`
 export const TopEarnedInfluencerQuery = gql`
   query TopEarnedInfluencer {
     topEarnedInfluencer {
+      id
       name
       totalRaisedAmount
     }

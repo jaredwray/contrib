@@ -1,17 +1,30 @@
 @import 'src/variables.scss';
 
+.icon {
+  width: 25px;
+  height: 25px;
+}
+
 .title {
   font-size: 10px;
-  line-height: 15px;
-  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.075rem !important;
+  font-weight: 500 !important;
 }
 
-.info {
-  font-size: 12px;
+.firstValueWrapper {
+  font-size: 16px;
+  line-height: 31px;
+  font-weight: 600;
+  max-width: 200px !important;
+  a {
+    text-decoration: none;
+  }
+}
+
+.secondValue {
+  font-size: 14px !important;
   line-height: 21px;
   font-weight: 400;
-}
-
-.wrapper {
-  max-width: 250px;
+  color: $dark-gray-color;
 }

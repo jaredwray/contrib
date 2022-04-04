@@ -11,12 +11,13 @@ export default function Status() {
     <Container fluid className={styles.root}>
       <Container className="p-0" fluid="xxl">
         <Row className="pt-4">
-          <Col className="text-center text-md-start px-0 pb-4 pb-md-0 py-lg-0" lg="6" md="6" sm="4">
-            <div className={clsx(styles.title, 'pb-1 pb-md-0')}>Make An Impact.</div>
-            <div className={clsx(styles.label, 'px-0 px-md-0 mx-md-0 col-8 col-md-12 m-auto text-subhead')}>
-              Direct Influencer-To-Fan Charity Auctions
+          <Col className="text-center px-0 pb-2 pb-lg-0 py-lg-0" xxl="12">
+            <div className={clsx(styles.title, 'm-auto pb-2 pb-md-0')}>
+              <span className={styles.subtitle}>Make an impact.</span> Direct Influencer-To-Fan Charity Auctions.
             </div>
           </Col>
+        </Row>
+        <Row className="pt-0">
           <Badges />
         </Row>
       </Container>

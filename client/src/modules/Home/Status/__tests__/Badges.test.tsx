@@ -3,8 +3,10 @@ import { mount, ReactWrapper } from 'enzyme';
 import { MockedProvider } from '@apollo/client/testing';
 import { InMemoryCache } from '@apollo/client';
 import { act } from 'react-dom/test-utils';
+import { MemoryRouter } from 'react-router-dom';
 import { TotalRaisedAmountQuery } from 'src/apollo/queries/auctions';
 import { TopEarnedInfluencerQuery } from 'src/apollo/queries/influencers';
+import { TopCharityQuery } from 'src/apollo/queries/charities';
 
 import { Badges } from '../Badges';
 import { TotalAmount } from '../Badges/TotalAmount';
@@ -20,6 +22,18 @@ cacheWithItems.writeQuery({
   query: TopEarnedInfluencerQuery,
   data: {
     topEarnedInfluencer: {
+      id: 1,
+      totalRaisedAmount: { amount: 100 },
+      name: 'test',
+    },
+  },
+});
+cacheWithItems.writeQuery({
+  query: TopCharityQuery,
+  data: {
+    topCharity: {
+      id: 2,
+      semanticId: 'test',
       totalRaisedAmount: { amount: 100 },
       name: 'test',
     },
@@ -35,6 +49,12 @@ cacheWithoutItems.writeQuery({
     topEarnedInfluencer: null,
   },
 });
+cacheWithoutItems.writeQuery({
+  query: TopCharityQuery,
+  data: {
+    topCharity: null,
+  },
+});
 
 describe('Badges', () => {
   describe('with data', () => {
@@ -42,9 +62,11 @@ describe('Badges', () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
-          <MockedProvider cache={cacheWithItems}>
-            <Badges />
-          </MockedProvider>,
+          <MemoryRouter>
+            <MockedProvider cache={cacheWithItems}>
+              <Badges />
+            </MockedProvider>
+          </MemoryRouter>,
         );
       });
       await act(async () => {
@@ -52,7 +74,7 @@ describe('Badges', () => {
         wrapper.update();
       });
       expect(wrapper!).toHaveLength(1);
-      expect(wrapper!.find(TotalAmount)).toHaveLength(2);
+      expect(wrapper!.find(TotalAmount)).toHaveLength(3);
     });
   });
 

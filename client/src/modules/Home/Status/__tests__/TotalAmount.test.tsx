@@ -15,7 +15,7 @@ describe('TotalAmount', () => {
 
   describe('with all arguments', () => {
     test('renders without crashing', () => {
-      render(<TotalAmount icon="" info="info" title="test" value="1" />);
+      render(<TotalAmount firstValue="1" icon="" secondValue="info" title="test" />);
     });
   });
 });
