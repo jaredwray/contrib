@@ -23,7 +23,7 @@ export const TotalAmount = ({ title, secondValue, firstValue, icon, link }: Prop
         </div>
         <div className={clsx(styles.wrapper, 'p-0 text-center')}>
           <div className={clsx(styles.title, 'text-all-cups')}>{title}</div>
-          <div className={clsx(styles.firstValueWrapper, 'text-truncate m-auto')}>
+          <div className={clsx(styles.firstValueWrapper, 'text-truncate m-auto pt-1')}>
             {link ? (
               <Link className={styles.link} to={link}>
                 {firstValue}

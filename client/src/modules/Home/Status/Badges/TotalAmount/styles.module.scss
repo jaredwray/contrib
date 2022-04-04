@@ -16,11 +16,12 @@
   font-size: 16px;
   line-height: 32px;
   font-weight: 600;
-  max-width: 220px !important;
+  max-width: 240px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.025rem;
   @media (min-width: $medium-weight) {
-    max-width: 150px !important;
+    max-width: 190px !important;
   }
-  letter-spacing: 0.01rem;
   a {
     text-decoration: none;
     color: $sage-color;
