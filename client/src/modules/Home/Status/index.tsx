@@ -9,7 +9,7 @@ import styles from './styles.module.scss';
 export default function Status() {
   return (
     <Container fluid className={styles.root}>
-      <Container className="p-0" fluid="xxl">
+      <Container className="pt-2" fluid="xxl">
         <Row className="pt-4">
           <Col className="text-center px-0 pb-4 py-2">
             <div className={clsx(styles.title, 'm-auto pb-2 pb-md-0')}>
