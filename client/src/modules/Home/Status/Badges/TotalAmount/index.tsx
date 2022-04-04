@@ -17,11 +17,11 @@ interface PropTypes {
 export const TotalAmount = ({ title, secondValue, firstValue, icon, link }: PropTypes): ReactElement => {
   return (
     <Row className="text-sm p-0 pe-1">
-      <Col className="d-flex justify-content-center justify-content-lg-end p-0">
+      <Col className="d-flex justify-content-center p-0">
         <div>
           <Image className={clsx(styles.icon, 'pt-1')} src={icon} />
         </div>
-        <div className={clsx(styles.wrapper, 'ps-2 text-lg-end text-center')}>
+        <div className={clsx(styles.wrapper, 'ps-2 text-center')}>
           <div className={clsx(styles.title, 'text-all-cups')}>{title}</div>
           <div className="text-subhead">
             {link ? (
