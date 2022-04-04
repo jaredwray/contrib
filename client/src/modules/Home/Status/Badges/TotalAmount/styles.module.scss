@@ -17,6 +17,9 @@
   line-height: 32px;
   font-weight: 600;
   max-width: 220px !important;
+  @media (min-width: $medium-weight) {
+    max-width: 150px !important;
+  }
   letter-spacing: 0.01rem;
   a {
     text-decoration: none;
