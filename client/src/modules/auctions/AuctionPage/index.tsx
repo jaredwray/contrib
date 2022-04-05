@@ -93,7 +93,7 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
                 <Col className="px-0 ps-md-4" lg="7">
                   <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
                 </Col>
-                <Col className="px-0 pt-4 pt-lg-0" lg="5">
+                <Col className="px-0 ps-md-4 pt-4 pt-lg-0" lg="5">
                   <GeneralInformation auction={auction} />
                 </Col>
               </Row>
