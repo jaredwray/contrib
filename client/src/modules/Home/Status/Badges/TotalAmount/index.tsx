@@ -24,16 +24,12 @@ export const TotalAmount = ({ title, secondValue, firstValue, icon, link, avatar
   return (
     <Row className="text-sm pb-2">
       <Col className="d-flex justify-content-center p-0 flex-column text-center">
-        <div className="pb-2 pt-1">
-          <Image
-            className={styles.icon}
-            roundedCircle={!withIcon}
-            src={withIcon ? icon : ResizedImageUrl(avatar, 32)}
-          />
-        </div>
         <div className={clsx(styles.wrapper, 'p-0 text-center')}>
-          <div className={clsx(styles.title, 'text-all-cups')}>{title}</div>
-          <div className={clsx(styles.firstValueWrapper, 'text-truncate m-auto pt-1')}>
+          <div className={clsx(styles.title, 'pb-0 pb-md-2 text-all-cups')}>{title}</div>
+          <div className={clsx(withIcon ? styles.withIcon : styles.withoutIcon, 'pt-2')}>
+            <Image roundedCircle={!withIcon} src={withIcon ? icon : ResizedImageUrl(avatar, 32)} />
+          </div>
+          <div className={clsx(styles.firstValueWrapper, 'text-truncate m-auto')}>
             {link ? (
               <Link className={styles.link} to={link}>
                 {firstValue}
