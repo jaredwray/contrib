@@ -26,20 +26,18 @@ export default function EndingSoon() {
   const items = data.auctions.items.map((auction: Auction, i: number) => <AuctionCard key={i} auction={auction} />);
 
   return (
-    <Container fluid className={clsx(styles.root, 'overflow-hidden pt-4')}>
-      <Container className={clsx('p-0', !items.length && 'text-center')} fluid="xxl">
+    <Container fluid className={clsx(styles.root, 'overflow-hidden pt-2')}>
+      <Container className={clsx('p-0 pb-4 ps-2', !items.length && 'text-center')} fluid="xxl">
+        <Row className="p-0 pt-4 text-left">
+          <span className={clsx(styles.subtitle, 'd-inline-block p-0 px-2 pb-3')}>
+            Direct <span className={styles.italicSubtitle}>Influencer-To-Fan</span> Charity Auctions
+          </span>
+        </Row>
         {items.length ? (
           <Slider items={items} />
         ) : (
           <span className="col-lg-9 col-12">No auctions currently active</span>
         )}
-        <Row className="mt-4">
-          <Col className="text-center">
-            <Link className={clsx(styles.link, 'text--body')} to="/auctions">
-              View Auctions
-            </Link>
-          </Col>
-        </Row>
       </Container>
     </Container>
   );

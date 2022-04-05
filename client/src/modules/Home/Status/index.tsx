@@ -12,16 +12,11 @@ export default function Status() {
       <Container className="pt-2" fluid="xxl">
         <Row className="pt-4">
           <Col className="text-center px-0 pb-3">
-            <div className={clsx(styles.title, 'm-auto text-uppercase')}>Make an impact!</div>
+            <div className={clsx(styles.title, 'm-auto text-uppercase')}>Leaderboards</div>
           </Col>
         </Row>
         <Row className="d-flex flex-row justify-content-center pt-0 pb-4">
           <Badges />
-        </Row>
-        <Row className="p-0 pt-4 text-center">
-          <span className={clsx(styles.subtitle, 'd-inline-block m-auto p-0')}>
-            &nbsp; Direct <span className={styles.italicSubtitle}>Influencer-To-Fan</span> Charity Auctions
-          </span>
         </Row>
       </Container>
     </Container>
