@@ -6,24 +6,11 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 36px;
   letter-spacing: 0.075rem;
-  font-weight: 700;
+  font-weight: 500;
   color: $dark-gray-color;
-}
-
-.subtitle {
-  font-weight: 500 !important;    
-  letter-spacing: 0.025em;
-  font-size: 18px;
-  .italicSubtitle {
-    font-style: italic;
-    font-weight: 400 !important;
-  }
-  @media (max-width: 375px) {
-    font-size: 14px;
-  }
 }
 
 .label {
