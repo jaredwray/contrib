@@ -2,6 +2,7 @@
 
 .multi-carousel {
   padding-left: 0.75rem !important;
+
   .slick-list {
     width: calc((100vw + 100%) / 2 - 8px);
     overflow: unset;
@@ -66,13 +67,14 @@
   .slick-prev {
     left: calc((100% - 100vw) / 2 + 45px);
   }
-
   .slick-next {
     transform: rotate(-180deg);
+    right: calc((100% - 100vw) / 2 + 45px);
   }
 
   @media (max-width: $medium-weight) {
     padding-left: 0.3rem !important;
+
     .slick-arrow {
       display: none !important;
     }
