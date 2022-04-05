@@ -38,7 +38,11 @@ const Slider: FC<Props> = ({ items }) => {
     checkArrow('prev');
   }, [checkArrow]);
 
-  useEffect(checkArrows, [checkArrows]);
+  useEffect(() => {
+    checkArrows();
+    window.addEventListener('resize', checkArrows);
+    return () => window.removeEventListener('resize', checkArrows);
+  }, [checkArrows]);
 
   const settings = {
     infinite: false,
