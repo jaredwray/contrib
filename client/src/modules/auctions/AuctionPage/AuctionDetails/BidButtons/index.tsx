@@ -105,7 +105,7 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
       {isShowBuyButton && (
         <div className={clsx(styles.buyItNowWrapper, 'mt-3')}>
           <Row className="p-4">
-            <Col className="text-label-new p-0">
+            <Col className="text-label p-0 text-center">
               Buy it now for {buyingPrice}
               <InformationLink
                 content="This value is carefully selected by the auction owner"

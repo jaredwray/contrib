@@ -56,7 +56,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
       <hr />
 
       <Row className="pt-3">
-        <Col>
+        <Col className="ps-0">
           <div className="text-label-new">Current Bid:</div>
           <div className="link" onClick={viewAllBidsClick}>
             View all bids ({totalBids})
@@ -73,7 +73,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
 
       {hasFairMarketValue && (
         <Row className="pt-4">
-          <Col>
+          <Col className="ps-0">
             <div className={clsx(styles.fmv, 'text-label-new')}>Fair market value:</div>
             <InformationLink
               content="This value is carefully selected by the auction owner."

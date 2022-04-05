@@ -34,7 +34,7 @@ export const Badges = (): ReactElement => {
           />
         )}
       </Col>
-      <Col className="p-0" lg="2" md="3">
+      <Col className="p-4 p-md-0" lg="2" md="3">
         {topEarned && (
           <TotalAmount
             firstValue={topEarned.name}
@@ -45,7 +45,7 @@ export const Badges = (): ReactElement => {
           />
         )}
       </Col>
-      <Col className="p-0 pb-4" lg="2" md="3">
+      <Col className="p-0" lg="2" md="3">
         {topCharity && (
           <TotalAmount
             firstValue={topCharity.name}

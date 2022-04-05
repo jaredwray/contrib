@@ -38,7 +38,7 @@ const Status: FC<Props> = ({ auction, canBid, ended }): ReactElement => {
   }, [canBid, minutesWithoutReload, secondsLeft, callAfterMs]);
 
   return (
-    <div className="text-body-new text-center pt-2 pb-2">
+    <div className="text-body-new pt-2 pb-2">
       {!isSold && (
         <span>
           {!ended && (

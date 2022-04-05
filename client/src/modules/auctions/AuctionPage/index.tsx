@@ -83,17 +83,17 @@ const AuctionPage: FC<Props> = ({ isDeliveryPage }) => {
   return (
     <CookiesProvider>
       <Layout>
-        <Container className="pt-0 pt-md-5 pb-4 pb-md-5" fluid="xxl">
+        <Container className="pt-0 pt-md-5 pb-4" fluid="xxl">
           <Row>
             <Col className="p-0" md="5">
               <AttachmentsSlider attachments={attachments} />
             </Col>
-            <Col md="7">
+            <Col className="p-0" md="7">
               <Row>
-                <Col lg="7">
+                <Col className="px-0 ps-md-4" lg="7">
                   <AuctionDetails auction={auction} isDeliveryPage={isDeliveryPage} />
                 </Col>
-                <Col className="pt-4 pt-lg-0" lg="5">
+                <Col className="px-0 ps-md-4 pt-4 pt-lg-0" lg="5">
                   <GeneralInformation auction={auction} />
                 </Col>
               </Row>
