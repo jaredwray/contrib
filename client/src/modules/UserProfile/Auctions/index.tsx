@@ -6,7 +6,7 @@ import { GetAuctionsForProfilePageQuery } from 'src/apollo/queries/userProfile';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
 import { Auction } from 'src/types/Auction';
 
-import Сarousel from './Сarousel';
+import Сarousel from './Carousel';
 
 const Auctions: FC = () => {
   const { data, loading } = useQuery(GetAuctionsForProfilePageQuery);

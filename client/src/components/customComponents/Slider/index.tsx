@@ -1,40 +1,56 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, ReactElement, useRef, useCallback } from 'react';
 
 import RSlider from 'react-slick';
 
 import 'slick-carousel/slick/slick.css';
+import './slider.scss';
 
 interface Props {
-  items: any[];
+  items: ReactElement[];
 }
 
 const Slider: FC<Props> = ({ items }) => {
-  function getWindowWidth() {
-    const { innerWidth: width } = window;
-    return width;
-  }
-  const [windowWidth, setWindowWidth] = useState(getWindowWidth());
+  const slider = useRef() as React.MutableRefObject<any>;
+  const sliderWrapper = useRef() as React.MutableRefObject<any>;
 
-  useEffect(() => {
-    function handleResize() {
-      setWindowWidth(getWindowWidth());
-    }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const checkArrow = useCallback(
+    (type: string) => {
+      const itemIndex = type === 'next' ? items.length - 1 : 0;
+      const item = slider.current.innerSlider.list.querySelector(`[data-index="${itemIndex}"]`);
+      const rect = item.getBoundingClientRect();
+      const arrow = sliderWrapper.current.querySelector(`.slick-${type}`);
+      const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+      const disable = type === 'next' ? rect.right <= windowWidth : rect.left >= 0;
+
+      arrow.disabled = disable;
+
+      if (disable) {
+        arrow.classList.add('slick-disabled');
+      } else {
+        arrow.classList.remove('slick-disabled');
+      }
+    },
+    [items.length],
+  );
+
+  const checkArrows = useCallback(() => {
+    checkArrow('next');
+    checkArrow('prev');
+  }, [checkArrow]);
 
   const settings = {
     infinite: false,
+    ref: slider,
     speed: 300,
     swipeToSlide: true,
     variableWidth: true,
-    slidesToShow: items.length <= Math.round(windowWidth / 500) ? items.length : 1,
+    afterChange: checkArrows,
   };
 
   if (!items.length) return null;
 
   return (
-    <div className="multi-carousel">
+    <div ref={sliderWrapper} className="multi-carousel">
       <RSlider {...settings}>{items}</RSlider>
     </div>
   );

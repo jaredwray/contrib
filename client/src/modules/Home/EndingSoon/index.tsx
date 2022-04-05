@@ -27,9 +27,13 @@ export default function EndingSoon() {
 
   return (
     <Container fluid className={clsx(styles.root, 'overflow-hidden pt-4')}>
-      <Container className="p-0" fluid="xxl">
-        {items.length ? <Slider items={items} /> : <span className="col-lg-9 col-12">No active auctions</span>}
-        <Row className="my-4">
+      <Container className={clsx('p-0', !items.length && 'text-center')} fluid="xxl">
+        {items.length ? (
+          <Slider items={items} />
+        ) : (
+          <span className="col-lg-9 col-12">No auctions currently active</span>
+        )}
+        <Row className="mt-4">
           <Col className="text-center">
             <Link className={clsx(styles.link, 'text--body')} to="/auctions">
               View Auctions
