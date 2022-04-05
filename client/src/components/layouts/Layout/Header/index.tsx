@@ -3,7 +3,7 @@ import { Container, Image, Row, Col, Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Logo from 'src/assets/images/contrib-logo-horizontal-white.svg';
-import { DEFAULT_AVATAR_PATH } from 'src/constants';
+import { AVATAR_PATH_WHITE } from 'src/constants';
 import { useAuth } from 'src/helpers/useAuth';
 
 import Menu from './Menu';
@@ -12,7 +12,7 @@ import styles from './styles.module.scss';
 export default function Header() {
   const { user, isAuthenticated } = useAuth();
 
-  const avatar = <Image roundedCircle className={styles.avatar} src={user?.picture || DEFAULT_AVATAR_PATH} />;
+  const avatar = <Image roundedCircle className={styles.avatar} src={user?.picture || AVATAR_PATH_WHITE} />;
 
   return (
     <header className={clsx(styles.header, 'p-0 px-sm-3')}>
