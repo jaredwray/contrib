@@ -218,7 +218,7 @@ export class InfluencerService {
       [
         {
           name: name.trim(),
-          avatarUrl: `/content/img/users/person.png`,
+          avatarUrl: AppConfig.app.defaultAvatar,
           status: InfluencerStatus.TRANSIENT,
           favoriteCharities: [],
           assistants: [],

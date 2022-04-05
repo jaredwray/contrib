@@ -500,7 +500,7 @@ export class CharityService {
       id: _id.toString(),
       semanticId: semanticIds?.pop() ?? null,
       userAccount: userAccount?.toString() ?? null,
-      avatarUrl: avatarUrl ?? `/content/img/users/person.png`,
+      avatarUrl: avatarUrl ?? AppConfig.app.defaultAvatar,
       websiteUrl: CharityService.websiteUrl(model.website),
       followers: followers.map((follower) => {
         return {

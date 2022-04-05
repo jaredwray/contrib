@@ -25,6 +25,7 @@ cacheWithItems.writeQuery({
       id: 1,
       totalRaisedAmount: { amount: 100 },
       name: 'test',
+      avatarUrl: '/',
     },
   },
 });
@@ -36,6 +37,7 @@ cacheWithItems.writeQuery({
       semanticId: 'test',
       totalRaisedAmount: { amount: 100 },
       name: 'test',
+      avatarUrl: '/',
     },
   },
 });

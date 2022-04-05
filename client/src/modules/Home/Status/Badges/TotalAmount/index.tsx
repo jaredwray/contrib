@@ -4,22 +4,32 @@ import clsx from 'clsx';
 import { Col, Row, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import { DEFAULT_AVATAR_PATH } from 'src/constants';
+import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+
 import styles from './styles.module.scss';
 
 interface PropTypes {
   title: string;
   icon: string;
+  avatar?: string;
   firstValue: string | undefined;
   secondValue: string | undefined;
   link?: string;
 }
 
-export const TotalAmount = ({ title, secondValue, firstValue, icon, link }: PropTypes): ReactElement => {
+export const TotalAmount = ({ title, secondValue, firstValue, icon, link, avatar }: PropTypes): ReactElement => {
+  const withIcon = [DEFAULT_AVATAR_PATH, undefined].includes(avatar);
+
   return (
     <Row className="text-sm pb-2">
       <Col className="d-flex justify-content-center p-0 flex-column text-center">
-        <div className="pb-2">
-          <Image className={clsx(styles.icon, 'pt-1')} src={icon} />
+        <div className="pb-2 pt-1">
+          <Image
+            className={styles.icon}
+            roundedCircle={!withIcon}
+            src={withIcon ? icon : ResizedImageUrl(avatar, 32)}
+          />
         </div>
         <div className={clsx(styles.wrapper, 'p-0 text-center')}>
           <div className={clsx(styles.title, 'text-all-cups')}>{title}</div>

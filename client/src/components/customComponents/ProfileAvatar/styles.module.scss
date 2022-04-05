@@ -6,6 +6,11 @@
   margin: 0 auto;
   border-radius: 50%;
   transform: translateY(33px);
+  border-radius: 92px;
+  background-size: contain;
+  background-color: $white-color;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
 }
 
 @media (max-width: $small-weight) {
