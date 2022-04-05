@@ -1,4 +1,4 @@
-import { FC, ReactElement, useRef, useCallback } from 'react';
+import { FC, ReactElement, useRef, useEffect, useCallback } from 'react';
 
 import RSlider from 'react-slick';
 
@@ -37,6 +37,8 @@ const Slider: FC<Props> = ({ items }) => {
     checkArrow('next');
     checkArrow('prev');
   }, [checkArrow]);
+
+  useEffect(checkArrows, [checkArrows]);
 
   const settings = {
     infinite: false,
