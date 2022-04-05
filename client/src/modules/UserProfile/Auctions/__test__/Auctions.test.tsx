@@ -19,8 +19,8 @@ cache.writeQuery({
   },
 });
 
-describe('Should render correctly "Auctions"', () => {
-  it('component is defined', async () => {
+describe('Auctions', () => {
+  it('renders', async () => {
     let wrapper: ReactWrapper;
     await act(async () => {
       wrapper = mount(
