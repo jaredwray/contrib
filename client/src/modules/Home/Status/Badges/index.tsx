@@ -45,7 +45,7 @@ export const Badges = (): ReactElement => {
           />
         )}
       </Col>
-      <Col className="p-0 pb-4" lg="2" md="3">
+      <Col className="p-0" lg="2" md="3">
         {topCharity && (
           <TotalAmount
             firstValue={topCharity.name}
