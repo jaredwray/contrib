@@ -37,7 +37,7 @@ export default function Header() {
                   </Nav.Link>
                 </Nav>
               </Navbar>
-              <div className={clsx(styles.avatarWrapper, 'flex-grow-1 me-4 me-md-0 d-md-none')}>
+              <div className={clsx(styles.avatarWrapper, 'flex-grow-1 me-2 me-md-0 d-md-none')}>
                 <Link className="d-flex justify-content-end" to={isAuthenticated ? '/profile' : '/log-in'}>
                   {avatar}
                 </Link>

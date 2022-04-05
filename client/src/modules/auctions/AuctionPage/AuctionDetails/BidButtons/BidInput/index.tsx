@@ -31,7 +31,7 @@ export const BidInput: FC<Props> = ({ items, minBid, onSubmit }) => {
 
   return (
     <Form className={clsx(styles.form, 'p-4')} initialValues={initialFormValues} onSubmit={handleSubmit}>
-      <p className="text--body">
+      <p className="text-label text-center">
         Enter your bid amount of {minBidFormatted}
         {!isFinalBid && <span> or more</span>}
       </p>
