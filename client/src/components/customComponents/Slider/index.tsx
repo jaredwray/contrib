@@ -1,4 +1,4 @@
-import { FC, ReactElement, useRef, useCallback } from 'react';
+import { FC, ReactElement, useRef, useEffect, useCallback } from 'react';
 
 import RSlider from 'react-slick';
 
@@ -15,10 +15,14 @@ const Slider: FC<Props> = ({ items }) => {
 
   const checkArrow = useCallback(
     (type: string) => {
+      if (!slider.current) return;
+
+      const arrow = sliderWrapper.current.querySelector(`.slick-${type}`);
+      if (!arrow) return;
+
       const itemIndex = type === 'next' ? items.length - 1 : 0;
       const item = slider.current.innerSlider.list.querySelector(`[data-index="${itemIndex}"]`);
       const rect = item.getBoundingClientRect();
-      const arrow = sliderWrapper.current.querySelector(`.slick-${type}`);
       const windowWidth = window.innerWidth || document.documentElement.clientWidth;
       const disable = type === 'next' ? rect.right <= windowWidth : rect.left >= 0;
 
@@ -37,6 +41,12 @@ const Slider: FC<Props> = ({ items }) => {
     checkArrow('next');
     checkArrow('prev');
   }, [checkArrow]);
+
+  useEffect(() => {
+    checkArrows();
+    window.addEventListener('resize', checkArrows);
+    return () => window.removeEventListener('resize', checkArrows);
+  }, [checkArrows]);
 
   const settings = {
     infinite: false,
