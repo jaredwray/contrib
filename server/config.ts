@@ -16,6 +16,7 @@ export const AppConfig = {
     url: requireEnvVar('APP_URL').replace(/\/$/, ''),
     defaultCurrency: 'USD',
     contactEmail: 'help@contrib.org',
+    defaultAvatar: '/content/img/users/person-circle.svg',
   },
   environment: {
     isProduction: process.env.NODE_ENV === 'live',

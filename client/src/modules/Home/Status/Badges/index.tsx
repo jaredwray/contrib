@@ -37,6 +37,7 @@ export const Badges = (): ReactElement => {
       <Col className="p-0" lg="2" md="3">
         {topEarned && (
           <TotalAmount
+            avatar={topEarned.avatarUrl}
             firstValue={topEarned.name}
             icon={AwardIcon}
             link={`/profiles/${topEarned.id}`}
@@ -48,6 +49,7 @@ export const Badges = (): ReactElement => {
       <Col className="p-0 pb-4" lg="2" md="3">
         {topCharity && (
           <TotalAmount
+            avatar={topCharity.avatarUrl}
             firstValue={topCharity.name}
             icon={TopCharityIcon}
             link={`/charity/${topCharity.semanticId || topCharity.id}`}

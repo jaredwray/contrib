@@ -60,6 +60,7 @@ export const TopEarnedInfluencerQuery = gql`
       id
       name
       totalRaisedAmount
+      avatarUrl
     }
   }
 `;

@@ -40,6 +40,7 @@ export const TopCharityQuery = gql`
       semanticId
       name
       totalRaisedAmount
+      avatarUrl
     }
   }
 `;

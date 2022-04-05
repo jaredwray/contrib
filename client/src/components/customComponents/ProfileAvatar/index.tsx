@@ -7,17 +7,5 @@ interface Props {
 }
 
 export const ProfileAvatar: FC<Props> = ({ src }) => (
-  <div
-    className={styles.avatar}
-    style={{
-      display: 'block',
-      maxWidth: '194px',
-      maxHeight: '194px',
-      borderRadius: '92px',
-      background: '#ffffff',
-      backgroundImage: `url(${src})`,
-      backgroundPosition: '50% 50%',
-      backgroundRepeat: 'no-repeat',
-    }}
-  ></div>
+  <div className={styles.avatar} style={{ backgroundImage: `url(${src})` }}></div>
 );
