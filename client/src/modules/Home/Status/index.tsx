@@ -11,7 +11,7 @@ export default function Status() {
     <Container fluid className={styles.root}>
       <Container className="pt-2" fluid="xxl">
         <Row className="pt-4">
-          <Col className="text-center px-0 pb-4 pb-md-2 py-2">
+          <Col className="text-center px-0 pb-3">
             <div className={clsx(styles.title, 'm-auto text-uppercase')}>Make an impact!</div>
           </Col>
         </Row>

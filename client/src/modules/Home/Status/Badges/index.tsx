@@ -24,7 +24,7 @@ export const Badges = (): ReactElement => {
 
   return (
     <>
-      <Col className="text-center px-0" lg="2" md="3">
+      <Col className="text-center px-0 pb-3 pb-md-0" lg="2" md="3">
         {totalRaised && (
           <TotalAmount
             firstValue={Dinero({ amount: totalRaised }).toFormat('$0,0')}
@@ -34,7 +34,7 @@ export const Badges = (): ReactElement => {
           />
         )}
       </Col>
-      <Col className="p-4 p-md-0" lg="2" md="3">
+      <Col className="p-4 pb-3 p-md-0" lg="2" md="3">
         {topEarned && (
           <TotalAmount
             avatar={topEarned.avatarUrl}
@@ -46,7 +46,7 @@ export const Badges = (): ReactElement => {
           />
         )}
       </Col>
-      <Col className="p-0" lg="2" md="3">
+      <Col className="pt-4 pt-md-0" lg="2" md="3">
         {topCharity && (
           <TotalAmount
             avatar={topCharity.avatarUrl}
