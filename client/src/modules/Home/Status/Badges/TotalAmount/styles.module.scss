@@ -21,6 +21,7 @@
     -webkit-box-shadow: 0px 0px 10px 0px rgba(202,204,198,1);
     -moz-box-shadow: 0px 0px 10px 0px rgba(202,204,198,1);
     box-shadow: 0px 0px 10px 0px rgba(202,204,198,1);
+    border: 2px solid $dark-sage-color;
   }
 }
 
@@ -38,18 +39,15 @@
   max-width: 240px !important;
   text-transform: uppercase;
   letter-spacing: 0.025rem;
-  @media (min-width: $medium-weight) {
-    max-width: 190px !important;
-  }
   a {
     text-decoration: none;
-    color: $dark-sage-color;
+    color: $sage-color;
   }
 }
 
 .secondValue {
   font-size: 14px !important;
   line-height: 21px;
-  font-weight: 400;
+  font-weight: 500;
   color: $dark-gray-color;
 }

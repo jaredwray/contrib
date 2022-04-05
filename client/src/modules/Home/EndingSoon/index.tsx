@@ -28,6 +28,11 @@ export default function EndingSoon() {
   return (
     <Container fluid className={clsx(styles.root, 'overflow-hidden pt-4')}>
       <Container className={clsx('p-0', !items.length && 'text-center')} fluid="xxl">
+        <Row className="p-0 text-center">
+          <span className={clsx(styles.subtitle, 'd-inline-block m-auto pt-2 pb-4')}>
+            &nbsp; Direct <span className={styles.italicSubtitle}>Influencer-To-Fan</span> Charity Auctions
+          </span>
+        </Row>
         {items.length ? (
           <Slider items={items} />
         ) : (

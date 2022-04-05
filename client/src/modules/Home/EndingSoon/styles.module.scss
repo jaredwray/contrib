@@ -9,3 +9,16 @@
   border-bottom: 1px solid $light-gray-color;
   padding: 1.5em 0;
 }
+
+.subtitle {
+  font-weight: 500 !important;    
+  letter-spacing: 0.017em;
+  .italicSubtitle {
+    font-style: italic;
+    font-weight: 400 !important;
+  }
+  @media (max-width: 375px) {
+    font-size: 14px;
+    max-width: 200px !important;
+  }
+}
