@@ -24,7 +24,7 @@ const ProfileInfo: FC<Props> = ({ profile, link, className, isCharity }) => {
 
   return (
     <SwipeableLink className={clsx(styles.link, 'pb-2 d-flex')} title={profile.name} to={link}>
-      <div>{isCharity && defaultAvatar && <CharityIcon className="charity" />}</div>
+      <div>{isCharity && defaultAvatar && <CharityIcon />}</div>
       {(!isCharity || !defaultAvatar) && (
         <Image roundedCircle className={clsx(styles.avatar)} src={ResizedImageUrl(profile.avatarUrl, 32)} />
       )}
