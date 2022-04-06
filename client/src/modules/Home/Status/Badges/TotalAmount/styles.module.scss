@@ -28,25 +28,25 @@
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.075rem !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
 }
 
 .firstValueWrapper {
   font-size: 14px;
   line-height: 32px;
-  font-weight: 700;
+  font-weight: 500;
   max-width: 240px !important;
-  text-transform: uppercase;
   letter-spacing: 0.025rem;
+  text-transform: uppercase;
   a {
     text-decoration: none;
-    color: $dark-sage-color;
+    color: $sage-color;
   }
 }
 
 .secondValue {
   font-size: 14px !important;
   line-height: 21px;
-  font-weight: 400;
+  font-weight: 500;
   color: $dark-gray-color;
 }
