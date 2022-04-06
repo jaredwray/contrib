@@ -51,10 +51,6 @@
 }
 
 @media (min-width: $medium-weight) {
-  .wrapper {
-    height: 176px;
-    background-image: url('/assets/images/banner-md.webp');
-  }
   .text {
     font-size: 16px;
     line-height: 34px;
@@ -65,10 +61,6 @@
 }
 
 @media (min-width: $large-weight) {
-  .wrapper {
-    height: 176px;
-    background-image: url('/assets/images/banner-md.webp');
-  }
   .text {
     font-size: 18px;
     line-height: 36px;
