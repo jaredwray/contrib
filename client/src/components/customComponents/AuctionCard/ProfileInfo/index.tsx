@@ -23,23 +23,17 @@ const ProfileInfo: FC<Props> = ({ profile, link, className, isCharity }) => {
   const defaultAvatar = profile.avatarUrl === DEFAULT_AVATAR_PATH;
 
   return (
-    <SwipeableLink className={styles.link} title={profile.name} to={link}>
-      {isCharity && defaultAvatar && <CharityIcon className="float-start pt-1" />}
+    <SwipeableLink className={clsx(styles.link, 'pb-2 d-flex')} title={profile.name} to={link}>
+      <div>{isCharity && defaultAvatar && <CharityIcon />}</div>
       {(!isCharity || !defaultAvatar) && (
-        <Image
-          roundedCircle
-          className={clsx(styles.avatar, 'position-absolute')}
-          height={12}
-          src={ResizedImageUrl(profile.avatarUrl, 32)}
-          width={12}
-        />
+        <Image roundedCircle className={clsx(styles.avatar)} src={ResizedImageUrl(profile.avatarUrl, 32)} />
       )}
       <div
         className={clsx(
           styles.name,
           className,
-          'text-body-new fw-normal',
-          isCharity ? [styles.charity, 'text-all-cups'] : 'text-truncate',
+          'ps-2',
+          isCharity ? [styles.charityName, 'text-all-cups'] : 'text-truncate',
         )}
       >
         {profile.name}

@@ -6,9 +6,9 @@
   position: relative;
   background-color: $white-color;
   border-radius: 8px;
-  -webkit-box-shadow: 0px 0px 9px 0px rgba(202,204,198,1);
-  -moz-box-shadow: 0px 0px 9px 0px rgba(202,204,198,1);
-  box-shadow: 0px 0px 9px 0px rgba(202,204,198,1);
+  -webkit-box-shadow: 0px 2px 10px 0px $light-gray-color;
+  -moz-box-shadow: 0px 2px 10px 0px $light-gray-color;
+  box-shadow: 0px 2px 10px 0px $light-gray-color;
   @media (min-width: $small-weight) {
     width: 300px;
   }
@@ -22,17 +22,19 @@
 }
 
 .image {
-  height: 200px;
+  height: 180px;
   border-radius: 8px 8px 0 0;
   border: 1px solid $light-gray-color;
   border-bottom: 0;
 }
 
 .title {
-  height: 42px;
+  max-height: 42px;
   overflow: hidden;
   color: $black-color;
   text-decoration: none;
+  font-size: 16px !important;
+  font-weight: 500 !important;
 }
 
 .settled {
