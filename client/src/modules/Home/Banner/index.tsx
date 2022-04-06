@@ -7,7 +7,7 @@ import styles from './styles.module.scss';
 
 export default function Banner() {
   return (
-    <Container fluid className={clsx(styles.wrapper, 'position-relative p-0')}>
+    <Container fluid className={clsx(styles.wrapper, 'p-0')}>
       <Row className="justify-content-md-center h-100">
         <Col className={clsx(styles.text, 'text-center my-auto')} lg="6" md="9" xxl="6">
           <div className="px-4 px-lg-1">

@@ -20,7 +20,7 @@ export default function Header() {
   );
 
   return (
-    <header className={clsx(styles.header, 'p-0 px-sm-3')}>
+    <header className={clsx(styles.header, 'fixed-top p-0 px-sm-3')}>
       <Container className="p-0" fluid="xxl">
         <Row className="top px-0">
           <Col md className="p-0">
