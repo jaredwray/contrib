@@ -7,9 +7,9 @@
   background-color: $white-color;
   border-radius: 8px;
   
-  -webkit-box-shadow: 0px 2px 15px 0px $light-gray-color;
-  -moz-box-shadow: 0px 2px 15px 0px $light-gray-color;
-  box-shadow: 0px 2px 15px 0px $light-gray-color;
+  -webkit-box-shadow: 0px 2px 10px 0px $light-gray-color;
+  -moz-box-shadow: 0px 2px 10px 0px $light-gray-color;
+  box-shadow: 0px 2px 10px 0px $light-gray-color;
   @media (min-width: $small-weight) {
     width: 300px;
   }
