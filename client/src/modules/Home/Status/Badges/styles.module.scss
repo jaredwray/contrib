@@ -2,11 +2,13 @@
 
 .badgesWrapper {
   background: $whitesmoke-color;
-  -webkit-box-shadow: 0px 5px 7px 0px $light-gray-color;
-  -moz-box-shadow: 0px 5px 7px 0px $light-gray-color;
-  box-shadow: 0px 5px 7px 0px $light-gray-color;
+  -webkit-box-shadow: 0px 2px 7px 0px $light-gray-color;
+  -moz-box-shadow: 0px 2px 7px 0px $light-gray-color;
+  box-shadow: 0px 2px 7px 0px $light-gray-color;
   border-radius: 8px;
   width: auto !important;
+  border: 1px solid $light-gray-color;
+  border-top: 0;
   .topEarner {
     border-top: 1px solid $barely-gray-color;
     border-bottom: 1px solid $barely-gray-color;
