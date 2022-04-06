@@ -22,10 +22,10 @@ export const TotalAmount = ({ title, secondValue, firstValue, icon, link, avatar
   const withIcon = [DEFAULT_AVATAR_PATH, undefined].includes(avatar);
 
   return (
-    <Row className="text-sm pb-2">
+    <Row className="text-sm">
       <Col className="d-flex justify-content-center p-0 flex-column text-center">
         <div className={clsx(styles.wrapper, 'p-0 text-center')}>
-          <div className={clsx(styles.title, 'pb-0 pb-md-2 text-all-cups')}>{title}</div>
+          <div className={clsx(styles.title, 'text-all-cups')}>{title}</div>
           <div className={clsx(withIcon ? styles.withIcon : styles.withoutIcon, 'pt-2')}>
             <Image roundedCircle={!withIcon} src={withIcon ? icon : ResizedImageUrl(avatar, 32)} />
           </div>
