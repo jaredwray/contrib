@@ -23,7 +23,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id, semanticId })
           <div className="ps-3">
             <div className="text-body-new text-all-cups fw-normal">{name}</div>
             <Link className="link" to={`/charity/${semanticId || id}`}>
-              Visit charity page and learn more
+              Visit charity page
             </Link>
           </div>
         </div>

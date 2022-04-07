@@ -14,12 +14,8 @@
 }
 
 .attachment {
-  max-width: 540px;
-  max-height: 540px;
   width: 100%;
-  height: min(100vw, 100vh);
   margin: 0 auto;
-  object-fit: contain;
 }
 .thumbnail {
   max-width: 50px;
