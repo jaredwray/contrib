@@ -57,9 +57,7 @@ export class InfluencerService {
       const sortOption = this.getSortOptions(orderBy);
       const activeAuctions = await this.AuctionModel.find({ status: 'ACTIVE' });
 
-      if (!activeAuctions.length) {
-        return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
-      }
+      if (!activeAuctions.length) return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
 
       const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer.toString());
       const uniqOrganizersWithActiveAuctions = Array.from(new Set(auctionOrganisers)).map((id) => Types.ObjectId(id));
@@ -140,17 +138,13 @@ export class InfluencerService {
         const currentAccountId = account._id.toString();
         const followed = influencer.followers.some((follower) => follower.user.toString() === currentAccountId);
 
-        if (followed) {
-          throw new AppError('You have already followed to this influencer');
-        }
+        if (followed) throw new AppError('You have already followed to this influencer');
 
         const createdFollower = {
           user: currentAccountId,
           createdAt: this.timeNow(),
         };
-
         const influencerProfileId = influencer._id.toString();
-
         const createdFollowing = {
           influencerProfile: influencerProfileId,
           createdAt: this.timeNow(),
@@ -159,7 +153,6 @@ export class InfluencerService {
         Object.assign(influencer, {
           followers: [...influencer.followers, createdFollower],
         });
-
         Object.assign(account, {
           followingInfluencers: [...account.followingInfluencers, createdFollowing],
         });
@@ -282,17 +275,11 @@ export class InfluencerService {
     session: ClientSession,
   ): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
-    if (!influencer) {
-      throw new Error(`cannot assign user to influencer: influencer ${id} is not found`);
-    }
-
-    if (influencer.status !== InfluencerStatus.INVITATION_PENDING) {
+    if (!influencer) throw new Error(`cannot assign user to influencer: influencer ${id} is not found`);
+    if (influencer.status !== InfluencerStatus.INVITATION_PENDING)
       throw new Error(`cannot assign user to influencer: influencer ${id} status is ${influencer.status} `);
-    }
-
-    if (influencer.userAccount) {
+    if (influencer.userAccount)
       throw new Error(`cannot assign user to influencer: influencer ${id} already has a user account assigned`);
-    }
 
     influencer.userAccount = userAccountId;
     influencer.status = InfluencerStatus.ONBOARDED;
@@ -304,9 +291,7 @@ export class InfluencerService {
 
   async updateInfluencerProfileById(id: string, input: UpdateInfluencerProfileInput): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
-    if (!influencer) {
-      throw new Error(`influencer record #${id} not found`);
-    }
+    if (!influencer) throw new Error(`influencer record #${id} not found`);
 
     Object.assign(influencer, objectTrimmer(input));
     Object.assign(influencer, {
@@ -383,9 +368,7 @@ export class InfluencerService {
     await this.InfluencerModel.updateOne({ _id: influencerId }, { $addToSet: { assistants: assistantId } });
   }
 
-  private timeNow(): String {
-    return dayjs().second(0).toISOString();
-  }
+  private timeNow = () => dayjs().second(0);
 
   public static makeInfluencerProfile(model: IInfluencer): InfluencerProfile {
     const { _id, userAccount, favoriteCharities, assistants, followers, totalRaisedAmount, ...rest } =

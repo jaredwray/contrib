@@ -58,9 +58,7 @@ export class BidService {
   }
 
   public makeBid(model: IBidModel): Bid | null {
-    if (!model) {
-      return null;
-    }
+    if (!model) return null;
     const { user, bid, bidCurrency, createdAt, chargeId } = model;
 
     return {

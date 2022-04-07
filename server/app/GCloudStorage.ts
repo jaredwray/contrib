@@ -39,12 +39,9 @@ export class GCloudStorage {
   }
 
   private static getFileType(extension: string) {
-    if (this.imageSupportedFormats.test(extension)) {
-      return FileType.IMAGE;
-    }
-    if (this.videoSupportedFormats.test(extension)) {
-      return FileType.VIDEO;
-    }
+    if (this.imageSupportedFormats.test(extension)) return FileType.IMAGE;
+    if (this.videoSupportedFormats.test(extension)) return FileType.VIDEO;
+
     return FileType.UNKNOWN;
   }
 
@@ -79,9 +76,7 @@ export class GCloudStorage {
 
     try {
       await this.storage.bucket(bucketName).deleteFiles({ prefix: `${folder}/` }, (err) => {
-        if (!err) {
-          AppLogger.warn(`All files in the ${folder} directory have been deleted`);
-        }
+        if (!err) AppLogger.warn(`All files in the ${folder} directory have been deleted`);
       });
     } catch (error) {
       AppLogger.warn(`Unable to remove files in ${folder}: ${error.message}`);
@@ -118,17 +113,16 @@ export class GCloudStorage {
     const extension = file.filename.split('.').pop();
     const fileType = GCloudStorage.getFileType(extension);
 
-    if (fileType === FileType.UNKNOWN) {
-      throw new AppError('Unsupported file format', ErrorCode.BAD_REQUEST);
-    }
+    if (fileType === FileType.UNKNOWN) throw new AppError('Unsupported file format', ErrorCode.BAD_REQUEST);
+
     const formattedFileName = `${fileName}.${extension}`;
     try {
       const buffer = await this.streamToBuffer(file.createReadStream());
       await this.storage.bucket(bucketName).file(formattedFileName).save(buffer);
 
-      if (fileType === FileType.IMAGE) {
+      if (fileType === FileType.IMAGE)
         await this.storage.bucket(bucketName).file(`pending/${formattedFileName}`).save(buffer);
-      }
+
       let uid;
       const url = `${GCloudStorage.getBucketFullPath(bucketName)}/${formattedFileName}`;
 
@@ -159,12 +153,12 @@ export class GCloudStorage {
       return { fileType: FileType.VIDEO, url: replacedUrl, uid };
     } catch (error) {
       AppLogger.warn(`Cannot upload selected file: ${error.message}`);
-      if (error.name === 'PayloadTooLargeError') {
+      if (error.name === 'PayloadTooLargeError')
         throw new AppError(
           `File is too big, max size is ${AppConfig.cloudflare.maxSizeGB} GB`,
           ErrorCode.INTERNAL_ERROR,
         );
-      }
+
       throw new AppError(`We cannot upload one of your selected file. Please, try later`, ErrorCode.INTERNAL_ERROR);
     }
   }

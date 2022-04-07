@@ -27,7 +27,7 @@ app.set('view engine', 'pug');
   const connection = await initMongodbConnection();
   const appServices: IAppServices = createAppServices(connection);
   const corsOptions = {
-    origin: [AppConfig.app.url],
+    origin: [AppConfig.app.url.origin],
     credentials: true,
   };
   const bytesInGB = Math.pow(1024, 3);
@@ -43,7 +43,7 @@ app.set('view engine', 'pug');
   app.use(passport.initialize());
   app.use(passport.session());
 
-  createPassportStrategies(appServices.twilioVerification);
+  createPassportStrategies(appServices.phoneNumberVerificationService);
 
   appRouteHandlers(app, appServices);
 

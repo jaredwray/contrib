@@ -34,11 +34,9 @@ export class AuctionAttachmentsService {
     attachment: Promise<IFile> | null,
     uid: string,
   ): Promise<{ url: string | undefined; type: string; uid: string | undefined }> {
-    if (uid) {
-      return { url: undefined, type: 'VIDEO', uid };
-    } else {
-      return await this.uploadAttachment(auctionId, organizerId, attachment);
-    }
+    if (uid) return { url: undefined, type: 'VIDEO', uid };
+
+    return await this.uploadAttachment(auctionId, organizerId, attachment);
   }
 
   private async uploadAttachment(

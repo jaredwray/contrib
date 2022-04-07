@@ -8,48 +8,40 @@ export class CloudTaskService {
     credentials: JSON.parse(AppConfig.googleCloud.keyDump),
   });
 
-  public generateGoogleTaskTarget(type: string): string {
-    const appURL = new URL(AppConfig.app.url);
+  public target(type: string): string {
+    const appURL = AppConfig.app.url;
 
     if (!AppConfig.environment.serveClient) {
       appURL.port = AppConfig.app.port.toString();
     }
-    return `${appURL.toString()}${AppConfig.googleCloud.task[type]}`;
+
+    return `${appURL}${AppConfig.googleCloud.task[type]}`;
   }
 
-  public async createTask(returnURL: string, payload: { [key: string]: any }): Promise<void> {
-    if (AppConfig.app.url === 'http://localhost:3000') {
-      return;
-    }
+  public async createTask(returnURL: string, payload: object): Promise<void> {
+    if (AppConfig.environment.isLocal) return;
+    if (!payload) throw new Error('Cannot create task without payload');
 
     const parent = this.cloudTaskClient.queuePath(
       AppConfig.googleCloud.task.googleProjectId,
       AppConfig.googleCloud.task.location,
       AppConfig.googleCloud.task.queue,
     );
-
-    const task = {
-      httpRequest: {
-        httpMethod: 'POST',
-        url: returnURL,
-        body: null,
-        headers: {
-          'Content-Type': 'application/octet-stream',
-        },
-      },
-    };
-
-    if (!payload) {
-      throw new Error('Cannot create task without payload');
-    }
-    task.httpRequest.body = Buffer.from(
+    const body = Buffer.from(
       JSON.stringify({
         ...payload,
         api_token: AppConfig.googleCloud.task.googleTaskApiToken,
       }),
     ).toString('base64');
+    const task = {
+      httpRequest: {
+        body,
+        httpMethod: 'POST',
+        url: returnURL,
+        headers: { 'Content-Type': 'application/octet-stream' },
+      },
+    };
 
-    const request = { parent, task };
-    await this.cloudTaskClient.createTask(request as any);
+    await this.cloudTaskClient.createTask({ parent, task } as any);
   }
 }

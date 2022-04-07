@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "cross-env NODE_ENV=local nodemon --exec ts-node ./index.ts",
-    "build": "tsc --build tsconfig.build.json && node copy-views.js",
+    "build": "tsc --build tsconfig.build.json",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
     "test": "jest --passWithNoTests --detectOpenHandles",
@@ -27,6 +27,7 @@
     "@types/fs-extra": "^9.0.8",
     "@types/passport": "^1.0.7",
     "@types/passport-google-oauth20": "^2.0.11",
+    "airhorn": "^0.6.5",
     "apollo-server-express": "^2.21.2",
     "asoiaf-api": "^1.0.1",
     "axios": "^0.21.1",

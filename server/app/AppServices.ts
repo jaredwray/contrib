@@ -6,10 +6,11 @@ import { CharityService } from './Charity';
 import { AuctionService } from './Auction';
 import { ShortLinkService } from './ShortLink';
 import { BidService } from './Bid';
-import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
+import { PhoneNumberVerificationService } from './PhoneNumberVerificationService';
+
+import { NotificationService } from './NotificationService';
 import { PaymentService, StripeService } from './Payment';
 import { CloudTaskService } from './CloudTaskService';
-import { IHandlebarsService } from './Message/service/HandlebarsService';
 
 export interface IAppServices {
   assistant: AssistantService;
@@ -19,11 +20,10 @@ export interface IAppServices {
   invitation: InvitationService;
   charity: CharityService;
   auction: AuctionService;
-  twilioVerification: TwilioVerificationService;
-  twilioNotification: TwilioNotificationService;
+  phoneNumberVerificationService: PhoneNumberVerificationService;
+  notificationService: NotificationService;
   payment: PaymentService;
   stripeService: StripeService;
   cloudTaskService: CloudTaskService;
-  handlebarsService: IHandlebarsService;
   shortLinkService: ShortLinkService;
 }

@@ -16,9 +16,8 @@ interface PaymentResolversType {
 export const PaymentResolvers: PaymentResolversType = {
   UserAccount: {
     paymentInformation: requireAuthenticated((userAccount, _, { currentAccount, payment }) => {
-      if (userAccount.id !== currentAccount.id) {
-        return null;
-      }
+      if (userAccount.id !== currentAccount.id) return null;
+
       return payment.getAccountPaymentInformation(currentAccount);
     }),
   },

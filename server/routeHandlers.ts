@@ -8,14 +8,12 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
-  { auction, charity, stripeService, twilioNotification, userAccount }: IAppServices,
+  { auction, charity, stripeService, notificationService, userAccount }: IAppServices,
 ): void {
   app.use((req, res, next) => {
-    if (['/api/v1/stripe/'].includes(req.originalUrl)) {
-      next();
-    } else {
-      express.json()(req, res, next);
-    }
+    if (['/api/v1/stripe/'].includes(req.originalUrl)) return next();
+
+    express.json()(req, res, next);
   });
 
   app.post('/api/v1/auctions-settle', async (req, res) => {
@@ -45,7 +43,9 @@ export default function appRouteHandlers(
       return;
     }
 
-    await twilioNotification.sendMessage(parsedBody.phoneNumber, parsedBody.message);
+    const { phoneNumber, template, context } = parsedBody;
+
+    await notificationService.sendMessageNow(phoneNumber, template, context);
     res.sendStatus(200);
   });
 
@@ -53,7 +53,7 @@ export default function appRouteHandlers(
     const { user_id: userId } = req.query;
 
     if (!userId || typeof userId !== 'string') {
-      res.redirect(AppConfig.app.url);
+      res.redirect(AppConfig.app.url.origin);
       return;
     }
 
@@ -140,9 +140,8 @@ export default function appRouteHandlers(
   });
 
   app.get('/api/v1/auth/logout', (req, res) => {
-    const redirectURL = req?.query?.redirectURL?.toString();
     req.logOut();
-    res.redirect(redirectURL || AppConfig.app.url);
+    res.redirect((req?.query?.redirectURL || AppConfig.app.url).toString());
   });
 
   app.post('/api/v1/stripe/', express.raw({ type: 'application/json' }), async (request, response) => {

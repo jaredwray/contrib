@@ -486,9 +486,7 @@ export class CharityService {
     return `http://${website}`;
   }
 
-  private timeNow(): String {
-    return dayjs().second(0).toISOString();
-  }
+  private timeNow = () => dayjs().second(0);
 
   public static makeCharity(model: ICharityModel): Charity | null {
     if (!model) return null;

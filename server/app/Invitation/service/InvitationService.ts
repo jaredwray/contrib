@@ -11,7 +11,7 @@ import { AssistantModel } from '../../Assistant/mongodb/AssistantModel';
 import { InfluencerService } from '../../Influencer';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
 import { InviteInput } from '../graphql/model/InviteInput';
-import { TwilioNotificationService } from '../../../twilio-client';
+import { NotificationService, MessageTemplate } from '../../NotificationService';
 import { AppConfig } from '../../../config';
 import { Invitation } from '../dto/Invitation';
 import { InvitationParentEntityType } from '../mongodb/InvitationParentEntityType';
@@ -43,7 +43,7 @@ export class InvitationService {
     private readonly userAccountService: UserAccountService,
     private readonly charityService: CharityService,
     private readonly influencerService: InfluencerService,
-    private readonly twilioNotificationService: TwilioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly eventHub: EventHub,
     private readonly shortLinkService: ShortLinkService,
   ) {
@@ -79,9 +79,8 @@ export class InvitationService {
           (await this.CharityModel.exists({
             userAccount: findedAccount._id,
           }))
-        ) {
+        )
           throw new AppError(`Account with phone number: ${phoneNumber} already has charity`, ErrorCode.BAD_REQUEST);
-        }
 
         const findedInvitation = await this.InvitationModel.findOne({
           phoneNumber,
@@ -159,9 +158,8 @@ export class InvitationService {
           (await this.InfluencerModel.exists({
             userAccount: findedAccount._id,
           }))
-        ) {
+        )
           throw new AppError(`Account with phone number: ${phoneNumber} already has influencer`, ErrorCode.BAD_REQUEST);
-        }
 
         const findedInvitation = await this.InvitationModel.findOne({
           phoneNumber,
@@ -266,12 +264,12 @@ export class InvitationService {
 
         if (
           findedAccount &&
-          (await this.AssistantModel.exists({
-            userAccount: findedAccount._id,
-          }))
-        ) {
-          throw new AppError(`Account with phone number: ${phoneNumber} already has assistant`, ErrorCode.BAD_REQUEST);
-        }
+          (await this.AssistantModel.exists({ userAccount: findedAccount._id, influencer: influencerId }))
+        )
+          throw new AppError(
+            `Account with phone number ${phoneNumber} is your assistant already`,
+            ErrorCode.BAD_REQUEST,
+          );
 
         const findedInvitation = await this.InvitationModel.findOne({
           phoneNumber,
@@ -295,15 +293,13 @@ export class InvitationService {
         };
 
         if (userAccount) {
-          if (await this.assistantService.findAssistantByUserAccount(userAccount.mongodbId)) {
+          if (await this.assistantService.findAssistantByUserAccount(userAccount.mongodbId))
             throw new AppError(`${phoneNumber} is already using the system for the Assistant`, ErrorCode.BAD_REQUEST);
-          }
 
           const influencer = await this.influencerService.findInfluencer({ _id: influencerId });
-
-          if (!influencer) {
-            throw new AppError(`Invalid influencerId #${influencerId}`, ErrorCode.BAD_REQUEST);
-          }
+          if (!influencer) throw new AppError(`Invalid influencerId #${influencerId}`, ErrorCode.BAD_REQUEST);
+          if (findedAccount && influencer.userAccount.toString() === findedAccount._id.toString())
+            throw new AppError(`You cannot invite itself`, ErrorCode.BAD_REQUEST);
 
           const assistant = await this.assistantService.createAssistant(
             {
@@ -364,16 +360,15 @@ export class InvitationService {
         .execPopulate();
 
       const link = await this.shortLinkService.makeLink({ slug: populatedInvitation.shortLink.slug });
-      const message = `Hello, ${name}! You have been invited to join Contrib at ${link} Sign in with your phone number to begin.`;
 
-      await this.twilioNotificationService.sendMessage(phoneNumber, message);
+      await this.notificationService.sendMessageLater(phoneNumber, MessageTemplate.INVITED, {
+        name,
+        link,
+      });
 
       return link;
     } catch (error) {
       AppLogger.error(`Can not send verification message to phone number: ${phoneNumber}. Error: ${error.message}`);
-      if (error.message.startsWith("The 'To' number")) {
-        throw new AppError(`${error.message.replace("The 'To' number", 'The number')}`, ErrorCode.BAD_REQUEST);
-      }
       throw new AppError(`Can not send verification message`, ErrorCode.BAD_REQUEST);
     }
   }
@@ -381,21 +376,19 @@ export class InvitationService {
     { influencerId, firstName, lastName }: InviteInput,
     session: ClientSession,
   ): Promise<InfluencerProfile | null> {
-    if (influencerId) {
-      const profile = await this.influencerService.findInfluencer({ _id: influencerId }, session);
+    if (!influencerId)
+      return await this.influencerService.createTransientInfluencer(
+        { name: `${firstName.trim()} ${lastName.trim()}` },
+        session,
+      );
 
-      if (!profile) throw new AppError('requested influencer profile does not exist');
-      if (profile.status !== InfluencerStatus.TRANSIENT || profile.userAccount) {
-        throw new AppError('given influencer has already been invited');
-      }
+    const profile = await this.influencerService.findInfluencer({ _id: influencerId }, session);
 
-      return profile;
-    }
+    if (!profile) throw new AppError('requested influencer profile does not exist');
+    if (profile.status !== InfluencerStatus.TRANSIENT || profile.userAccount)
+      throw new AppError('given influencer has already been invited');
 
-    return await this.influencerService.createTransientInfluencer(
-      { name: `${firstName.trim()} ${lastName.trim()}` },
-      session,
-    );
+    return profile;
   }
 
   private async maybeFinalizeInvitation(userAccount: UserAccount): Promise<void> {
@@ -406,11 +399,10 @@ export class InvitationService {
       });
 
       if (!invitation) return;
-      if (invitation.accepted) {
+      if (invitation.accepted)
         throw new Error(
           `user account with ${userAccount.phoneNumber} has been created, but invitation to the same phone number is already accepted`,
         );
-      }
 
       if (invitation.parentEntityType === InvitationParentEntityType.INFLUENCER) {
         await session.withTransaction(async () => {
@@ -493,9 +485,7 @@ export class InvitationService {
     return InvitationService.makeInvitation(invitation);
   }
 
-  private timeNow(): String {
-    return dayjs().second(0).toISOString();
-  }
+  private timeNow = () => dayjs().second(0);
 
   private static makeInvitation(model: IInvitation): Invitation | null {
     if (!model) return null;

@@ -2,7 +2,8 @@ import { Connection } from 'mongoose';
 import { IAppServices } from './AppServices';
 
 import { EventHub } from './EventHub';
-import { TwilioNotificationService, TwilioVerificationService } from '../twilio-client';
+import { PhoneNumberVerificationService } from './PhoneNumberVerificationService';
+import { NotificationService } from './NotificationService';
 import { UserAccountService } from './UserAccount';
 import { InfluencerService } from './Influencer';
 import { InvitationService } from './Invitation';
@@ -16,25 +17,22 @@ import { GCloudStorage } from './GCloudStorage';
 import { CloudflareStreaming } from './CloudflareStreaming';
 import { PaymentService, StripeService } from './Payment';
 import { CloudTaskService } from './CloudTaskService';
-import { HandlebarsService } from './Message/service/HandlebarsService';
 
 export default function createAppServices(connection: Connection): IAppServices {
   const eventHub = new EventHub();
-  const twilioVerification = new TwilioVerificationService();
-  const twilioNotification = new TwilioNotificationService();
+  const phoneNumberVerificationService = new PhoneNumberVerificationService();
   const cloudTaskService = new CloudTaskService();
   const stripeService = new StripeService();
   const shortLinkService = new ShortLinkService(connection);
   const assistant = new AssistantService(connection);
   const charity = new CharityService(connection, eventHub, stripeService);
   const ups = new UPSDeliveryService();
-  const handlebarsService = new HandlebarsService();
+  const notificationService = new NotificationService(cloudTaskService);
   const userAccount = new UserAccountService(
     connection,
-    twilioVerification,
+    notificationService,
+    phoneNumberVerificationService,
     eventHub,
-    handlebarsService,
-    cloudTaskService,
     ups,
     stripeService,
   );
@@ -46,7 +44,7 @@ export default function createAppServices(connection: Connection): IAppServices 
     userAccount,
     charity,
     influencer,
-    twilioNotification,
+    notificationService,
     eventHub,
     shortLinkService,
   );
@@ -60,8 +58,7 @@ export default function createAppServices(connection: Connection): IAppServices 
     connection,
     payment,
     cloudStorage,
-    cloudTaskService,
-    handlebarsService,
+    notificationService,
     bidService,
     stripeService,
     shortLinkService,
@@ -77,12 +74,11 @@ export default function createAppServices(connection: Connection): IAppServices 
     invitation,
     charity,
     auction,
-    twilioVerification,
-    twilioNotification,
+    phoneNumberVerificationService,
+    notificationService,
     payment,
     stripeService,
     cloudTaskService,
-    handlebarsService,
     shortLinkService,
   };
 }

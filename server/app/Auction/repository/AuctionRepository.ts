@@ -198,9 +198,7 @@ export class AuctionRepository implements IAuctionRepository {
   }
 
   async createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel> {
-    if (!input.title) {
-      throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
-    }
+    if (!input.title) throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
 
     const utcCurrentDate = dayjs().second(0);
     const utcCurrentDateISO = utcCurrentDate.toISOString();
@@ -223,7 +221,6 @@ export class AuctionRepository implements IAuctionRepository {
     const shortLink = await this.shortLinkService.createShortLink({ address: `auctions/${auction._id.toString()}` });
 
     Object.assign(auction, { shortLink: shortLink.id });
-
     await auction.save();
 
     AppLogger.info(`createAuction method called for #${auction._id.toString()} auction;`);
@@ -275,9 +272,8 @@ export class AuctionRepository implements IAuctionRepository {
   async activateAuction(id: string, organizerId: string): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, organizerId);
 
-    if (![AuctionStatus.DRAFT, AuctionStatus.STOPPED].includes(auction?.status)) {
+    if (![AuctionStatus.DRAFT, AuctionStatus.STOPPED].includes(auction?.status))
       throw new AppError(`Cannot activate auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
-    }
 
     AppLogger.info(`activateAuction method called for #${id} auction;`);
 
@@ -423,11 +419,8 @@ export class AuctionRepository implements IAuctionRepository {
   private async findAuction(id: string, organizerId?: string): Promise<IAuctionModel> {
     const organizerOpts = organizerId ? { auctionOrganizer: Types.ObjectId(organizerId) } : {};
     const auction = await this.AuctionModel.findOne({ _id: id, ...organizerOpts }).exec();
+    if (auction) return auction;
 
-    if (!auction) {
-      throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
-    }
-
-    return auction;
+    throw new AppError('Auction not found', ErrorCode.NOT_FOUND);
   }
 }

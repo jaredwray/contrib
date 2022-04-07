@@ -31,7 +31,7 @@ export class StripeService {
   }
 
   private stripeReturnURL(charityId: string): string {
-    const appURL = new URL(AppConfig.app.url);
+    const appURL = AppConfig.app.url;
 
     if (!AppConfig.environment.serveClient) {
       appURL.port = AppConfig.app.port.toString();
@@ -58,14 +58,10 @@ export class StripeService {
 
   public async getCustomerCard(customerId: string): Promise<Stripe.Card | null> {
     const maybeDeletedCustomer = await this.stripe.customers.retrieve(customerId, { expand: ['default_source'] });
-    if (maybeDeletedCustomer.deleted) {
-      return null;
-    }
+    if (maybeDeletedCustomer.deleted) return null;
 
     const customer = maybeDeletedCustomer as Stripe.Customer;
-    if (!customer.default_source) {
-      return null;
-    }
+    if (!customer.default_source) return null;
 
     // TODO: check source is actually a card
 

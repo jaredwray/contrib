@@ -21,17 +21,12 @@ export const DateTimeResolver = {
   DateTime: new GraphQLScalarType({
     name: 'DateTime',
     description: 'Day.js dateTime scalar type',
-    parseValue: (value: string) => {
-      return dayjs(value);
-    },
+    parseValue: (value: string) => dayjs(value),
     parseLiteral(valueNode: any): { [name: string]: string } | null {
-      if (valueNode.kind === Kind.STRING && valueNode.value.length) {
-        return valueNode.value;
-      }
+      if (valueNode.kind === Kind.STRING && valueNode.value.length) return valueNode.value;
+
       return null;
     },
-    serialize(value: dayjs.Dayjs): SerializedDateTime {
-      return value.toISOString();
-    },
+    serialize: (value: dayjs.Dayjs): SerializedDateTime => value.toISOString(),
   }),
 };

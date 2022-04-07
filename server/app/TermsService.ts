@@ -5,14 +5,10 @@ export class TermsService {
   public static notAcceptedTerms(lastAcceptedTerms: string | null, accountEntityTypes?): string | null {
     if (accountEntityTypes) {
       const { assistant, charity, influencer } = accountEntityTypes;
-      if (charity && (!influencer && !assistant)) {
-        return null;
-      }
+      if (charity && !influencer && !assistant) return null;
     }
 
-    if (compareVersions(AppConfig.terms.version, lastAcceptedTerms || '0') === 1) {
-      return AppConfig.terms.version;
-    }
+    if (compareVersions(AppConfig.terms.version, lastAcceptedTerms || '0') === 1) return AppConfig.terms.version;
   }
 
   public static isValidVersion(version: string): boolean {

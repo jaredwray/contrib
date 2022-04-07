@@ -10,10 +10,12 @@ export const requireEnvVar = (name: string): string => {
   throw new Error(`missing required env variable: ${name}`);
 };
 
+const appUrl = new URL(requireEnvVar('APP_URL').replace(/\/$/, ''));
+
 export const AppConfig = {
   app: {
     port: Number(process.env.PORT ?? 3000),
-    url: requireEnvVar('APP_URL').replace(/\/$/, ''),
+    url: appUrl,
     defaultCurrency: 'USD',
     contactEmail: 'help@contrib.org',
     defaultAvatar: '/content/img/users/person-circle.svg',
@@ -21,7 +23,7 @@ export const AppConfig = {
   environment: {
     isProduction: process.env.NODE_ENV === 'live',
     isDev: process.env.NODE_ENV === 'dev',
-    isLocal: process.env.NODE_ENV === 'local',
+    isLocal: process.env.NODE_ENV === 'local' || ['localhost', '127.0.0.1'].includes(appUrl.hostname),
     serveClient: Boolean(process.env.SERVE_CLIENT || process.env.NODE_ENV !== 'local'),
   },
   newRelic: {
