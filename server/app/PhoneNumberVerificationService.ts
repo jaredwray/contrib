@@ -3,14 +3,12 @@ import { Twilio } from 'twilio';
 import { AppError, ErrorCode } from '../errors';
 import { AppLogger } from '../logger';
 import { AppConfig } from '../config';
-
-const twilio = new Twilio(AppConfig.twilio.accountSid, AppConfig.twilio.authToken);
-const verifyService = twilio.verify.services(AppConfig.twilio.verificationService.sid);
+import { twilioVerifyService } from './twilioClient';
 
 export class PhoneNumberVerificationService {
   async createVerification(phoneNumber: string): Promise<void> {
     try {
-      const verification = await verifyService.verifications.create({ to: phoneNumber, channel: 'sms' });
+      const verification = await twilioVerifyService.verifications.create({ to: phoneNumber, channel: 'sms' });
       AppLogger.debug(`created twilio verification: ${JSON.stringify(verification)}`);
     } catch (error) {
       if (error.message.startsWith('Invalid parameter `To`'))
@@ -24,7 +22,7 @@ export class PhoneNumberVerificationService {
 
   async confirmVerification(phoneNumber: string, otp: string): Promise<boolean> {
     try {
-      const verificationResult = await verifyService.verificationChecks.create({
+      const verificationResult = await twilioVerifyService.verificationChecks.create({
         to: phoneNumber,
         code: otp,
       });
