@@ -50,7 +50,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
 
   return (
     <>
-      <div className={clsx(styles.title, 'text-subhead pt-md-0 pt-4 pb-2 break-word')}>{title}</div>
+      <div className={clsx(styles.title, 'text-subhead pt-0 pb-2 break-word')}>{title}</div>
       <hr className="mt-2" />
       <Status auction={auction} canBid={canBid} ended={ended} />
       <hr />
