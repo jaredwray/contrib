@@ -114,7 +114,7 @@ const BidButtons: FC<Props> = ({ auction, ended }): ReactElement => {
             </Col>
             <Col className="p-0" lg="6" md="12">
               <Button
-                className={clsx(styles.buyItNowBtn, 'w-100 d-block mt-md-0 mt-3')}
+                className={clsx(styles.buyItNowBtn, 'w-100 d-block mt-3')}
                 title="Buy it now"
                 type="button"
                 variant="light"

@@ -22,10 +22,10 @@
 }
 
 .title {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 16px;
   letter-spacing: 0.075rem !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
 }
 
 .firstValueWrapper {
@@ -34,7 +34,6 @@
   font-weight: 500;
   max-width: 240px !important;
   letter-spacing: 0.025rem;
-  text-transform: uppercase;
   a {
     text-decoration: none;
     color: $sage-color;
