@@ -10,7 +10,6 @@ WORKDIR /usr/src/app
 COPY ./client/build /usr/src/app/client/build
 COPY ./server/package.json /usr/src/app/server/package.json
 COPY ./server/dist /usr/src/app/server/dist
-COPY ./server/views /usr/src/app/server/views
 
 # Install Server Dependencies
 WORKDIR /usr/src/app/server
