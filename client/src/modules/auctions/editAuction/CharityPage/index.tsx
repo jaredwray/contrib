@@ -34,7 +34,6 @@ const CharityPage = () => {
   const { data: charitiesListData } = useQuery(ActiveCharitiesList, {
     variables: { filters: { status: [CharityStatus.ACTIVE] } },
   });
-
   const { data: auctionData, loading: loadingQuery } = useQuery(GetAuctionDetailsQuery, {
     variables: { id: auctionId },
   });
@@ -63,17 +62,10 @@ const CharityPage = () => {
 
   const { description, itemPrice, startPrice, attachments, fairMarketValue, items, charity } = auction || {};
   const isFullObject = Boolean(description && itemPrice && (fairMarketValue || items?.length) && attachments.length);
+
   const charityOption = useCallback((charity: Charity): CharityOption => {
-    return { label: charity.name, value: charity.name, id: charity.id };
+    return { label: charity.name, value: charity.id, id: charity.id };
   }, []);
-
-  useEffect(() => {
-    if (!charity) return;
-
-    const option = charityOption(charity);
-    setSelectedOption(option);
-  }, [charity, charityOption, setSelectedOption]);
-
   const handlePrevAction = useCallback(() => history.push(`/auctions/${auctionId}/duration`), [auctionId, history]);
   const submitValidationRedirect = useCallback(() => {
     if (!description) {
@@ -122,6 +114,10 @@ const CharityPage = () => {
     }
   }, [auctionId, updateAuction, showError, selectedOption, isFullObject, submitValidationRedirect]);
 
+  useEffect(() => {
+    charity && setSelectedOption(charityOption(charity));
+  }, [charity, charityOption, setSelectedOption]);
+
   if (!account?.isAdmin && isActive) {
     history.push(`/`);
     return null;
@@ -132,18 +128,12 @@ const CharityPage = () => {
   }
   if (auction === undefined || !charitiesListData) return null;
 
-  const favouriteCharities = auction.auctionOrganizer.favoriteCharities.map((charity: Charity) =>
-    charityOption(charity),
-  );
-  const notFavouriteCharities = charitiesListData.charitiesList.items
-    .filter((charity: Charity) => !favouriteCharities.map((charity: CharityOption) => charity.id).includes(charity.id))
-    .map((charity: Charity) => charityOption(charity));
-
-  const handleChange = (selectedOption: CharityOption | null) => {
-    return setSelectedOption(selectedOption);
-  };
-  const options = favouriteCharities.concat(notFavouriteCharities);
-  const textBlock = 'What charity will benefit from the proceeds of this auction.';
+  const favoriteCharities = auction.auctionOrganizer.favoriteCharities;
+  const favoriteCharitiesIds = favoriteCharities.map((charity: Charity) => charity.id);
+  const options = [
+    ...favoriteCharities,
+    ...charitiesListData.charitiesList.items.filter((ch: Charity) => !favoriteCharitiesIds.includes(ch.id)),
+  ].map((charity: Charity) => charityOption(charity));
 
   setPageTitle(`Edit Auction ${auction.title} | Charity`);
 
@@ -158,9 +148,9 @@ const CharityPage = () => {
       title={isActive ? 'Edit Charity' : 'Charity'}
       onSubmit={handleSubmit}
     >
-      <Row description={textBlock}>
+      <Row description="What charity will benefit from the proceeds of this auction.">
         {!loadingQuery && (
-          <CharitySearchSelect options={options} selectedOption={selectedOption} onChange={handleChange} />
+          <CharitySearchSelect options={options} selectedOption={selectedOption} onChange={setSelectedOption} />
         )}
       </Row>
     </StepByStepPageLayout>
