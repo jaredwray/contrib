@@ -21,15 +21,15 @@ export class ShortLinkService {
   }
 
   public makeLink({ address, slug }: { address?: string; slug?: string }): string {
-    const url = Object.assign({}, AppConfig.app.url);
+    const url = new URL(AppConfig.app.url.origin);
 
     if (address) {
       url.pathname = `/${address}`;
     }
-
     if (slug) {
       url.pathname = `/go/${slug}`;
     }
+
     return url.toString();
   }
 

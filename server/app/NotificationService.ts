@@ -49,15 +49,11 @@ export class NotificationService {
   ): Promise<void> {
     if (AppConfig.environment.isLocal) return this.sendMessageNow(phoneNumber, template, context);
 
-    try {
-      await this.cloudTaskService.createTask(this.cloudTaskService.target('notificationTaskTargetURL'), {
-        phoneNumber,
-        template,
-        context,
-      });
-    } catch (error) {
-      AppLogger.warn(`Cannot create notificationTaskTargetURL task: ${error.message}`);
-    }
+    await this.cloudTaskService.createTask(this.cloudTaskService.target('notificationTaskTargetURL'), {
+      phoneNumber,
+      template,
+      context,
+    });
   }
 
   private async renderMessage(template: string, context: { [key: string]: any }): Promise<string> {
