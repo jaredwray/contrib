@@ -14,15 +14,15 @@
 }
 
 .subtitle {
-  font-weight: 500 !important;    
+  font-weight: 600 !important;    
   letter-spacing: 0.017em;
   .italicSubtitle {
     font-style: italic;
-    font-weight: 400 !important;
+    font-weight: 500 !important;
   }
   @media (max-width: 375px) {
-    font-size: 14px;
-    max-width: 200px !important;
+    max-width: 220px !important;
+    margin: auto;
   }
 }
 
