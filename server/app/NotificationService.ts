@@ -57,7 +57,10 @@ export class NotificationService {
   }
 
   private async renderMessage(template: string, context: { [key: string]: any }): Promise<string> {
-    const file = await fs.readFile(`${__dirname}/templates/${template}/sms.hbs`, { encoding: 'utf-8' });
+    const file = await fs.readFile(
+      `${AppConfig.environment.isLocal ? __dirname : '/usr/src/app/server'}/templates/${template}/sms.hbs`,
+      { encoding: 'utf-8' },
+    );
     return Handlebars.compile(file)(context);
   }
 }
