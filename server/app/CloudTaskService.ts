@@ -9,7 +9,7 @@ export class CloudTaskService {
   });
 
   public target(type: string): string {
-    const appURL = AppConfig.app.url;
+    const appURL = Object.assign({}, AppConfig.app.url);
 
     if (!AppConfig.environment.serveClient) {
       appURL.port = AppConfig.app.port.toString();
@@ -27,6 +27,7 @@ export class CloudTaskService {
       AppConfig.googleCloud.task.location,
       AppConfig.googleCloud.task.queue,
     );
+
     const body = Buffer.from(
       JSON.stringify({
         ...payload,

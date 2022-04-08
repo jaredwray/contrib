@@ -21,7 +21,7 @@ export class ShortLinkService {
   }
 
   public makeLink({ address, slug }: { address?: string; slug?: string }): string {
-    const url = AppConfig.app.url;
+    const url = Object.assign({}, AppConfig.app.url);
 
     if (address) {
       url.pathname = `/${address}`;

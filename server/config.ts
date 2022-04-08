@@ -12,7 +12,7 @@ export const requireEnvVar = (name: string): string => {
 
 const appUrl = new URL(requireEnvVar('APP_URL').replace(/\/$/, ''));
 
-export const AppConfig = {
+export const AppConfig = Object.freeze({
   app: {
     port: Number(process.env.PORT ?? 3000),
     url: appUrl,
@@ -109,4 +109,4 @@ export const AppConfig = {
     UPSTestEnviroment: (process.env['UPS_TEST_ENVIROMENT'] || 'true') === 'true',
     UPSSMSWithDeliveryLink: (process.env['UPS_SMS_WITH_DELIVERY_LINK'] || 'false') === 'true',
   },
-};
+});
