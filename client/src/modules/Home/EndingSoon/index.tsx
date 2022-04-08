@@ -2,8 +2,7 @@ import React from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import AuctionCard from 'src/components/customComponents/AuctionCard';
@@ -26,20 +25,13 @@ export default function EndingSoon() {
   const items = data.auctions.items.map((auction: Auction, i: number) => <AuctionCard key={i} auction={auction} />);
 
   return (
-    <Container fluid className={clsx(styles.root, 'overflow-hidden pt-4')}>
+    <Container fluid className={clsx(styles.root, 'overflow-hidden text-left px-4 pt-3 pb-5')}>
       <Container className={clsx('p-0', !items.length && 'text-center')} fluid="xxl">
         {items.length ? (
           <Slider items={items} />
         ) : (
           <span className="col-lg-9 col-12">No auctions currently active</span>
         )}
-        <Row className="mt-4">
-          <Col className="text-center">
-            <Link className={clsx(styles.link, 'text--body')} to="/auctions">
-              View Auctions
-            </Link>
-          </Col>
-        </Row>
       </Container>
     </Container>
   );
