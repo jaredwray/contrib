@@ -31,13 +31,13 @@ export class StripeService {
   }
 
   private stripeReturnURL(charityId: string): string {
-    const appURL = Object.assign({}, AppConfig.app.url);
+    const appURL = new URL(AppConfig.app.url.origin);
 
     if (!AppConfig.environment.serveClient) {
       appURL.port = AppConfig.app.port.toString();
     }
 
-    return `${appURL.toString()}api/v1/account_onboarding/?user_id=${charityId}`;
+    return `${appURL}api/v1/account_onboarding/?user_id=${charityId}`;
   }
 
   public constructEvent(body: string | Buffer, signature: string): any {

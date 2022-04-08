@@ -1,6 +1,7 @@
 import { CloudTasksClient } from '@google-cloud/tasks';
 
 import { AppConfig } from '../config';
+import { AppLogger } from '../logger';
 
 export class CloudTaskService {
   private readonly cloudTaskClient = new CloudTasksClient({
@@ -9,7 +10,7 @@ export class CloudTaskService {
   });
 
   public target(type: string): string {
-    const appURL = Object.assign({}, AppConfig.app.url);
+    const appURL = new URL(AppConfig.app.url.origin);
 
     if (!AppConfig.environment.serveClient) {
       appURL.port = AppConfig.app.port.toString();
@@ -43,6 +44,10 @@ export class CloudTaskService {
       },
     };
 
-    await this.cloudTaskClient.createTask({ parent, task } as any);
+    try {
+      await this.cloudTaskClient.createTask({ parent, task } as any);
+    } catch (error) {
+      AppLogger.warn(`Cannot create google task: ${error.message}`);
+    }
   }
 }
