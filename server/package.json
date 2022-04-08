@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "cross-env NODE_ENV=local nodemon --exec ts-node ./index.ts",
-    "build": "tsc --build tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json && node copy-templates.js",
     "format": "prettier --write \"./**/*.ts\"",
     "lint": "eslint \"./**/*.ts\"",
     "test": "jest --passWithNoTests --detectOpenHandles",
