@@ -1,0 +1,40 @@
+@import 'src/variables.scss';
+
+.icon {
+  height: 36px;
+  max-width: 36px;
+}
+
+.text {
+  max-width: 300px;
+  font-weight: 600;
+  color: $dark-gray-color !important;
+}
+
+.button {
+  border-radius: 36px !important;
+  font-weight: 700;
+  background-color: $mint-color !important;
+  border-color: $mint-color !important;
+
+  &:hover {
+    background-color: $sage-color !important;
+  }
+}
+
+.link {
+  text-decoration: none;
+  color: $mint-color;
+  font-weight: 500;
+}
+
+.separator {
+  border-right: 1px solid $barely-gray-color;
+  border-left: 1px solid $barely-gray-color;
+
+  @media (max-width: $small-weight) {
+    border: none;
+    border-top: 1px solid $barely-gray-color;
+    border-bottom: 1px solid $barely-gray-color;
+  }
+}
