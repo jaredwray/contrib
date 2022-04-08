@@ -31,7 +31,7 @@ export class StripeService {
   }
 
   private stripeReturnURL(charityId: string): string {
-    const appURL = AppConfig.app.url;
+    const appURL = Object.assign({}, AppConfig.app.url);
 
     if (!AppConfig.environment.serveClient) {
       appURL.port = AppConfig.app.port.toString();
