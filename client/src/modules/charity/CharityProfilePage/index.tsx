@@ -7,7 +7,7 @@ import { GetCharity } from 'src/apollo/queries/charityProfile';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Charity } from 'src/types/Charity';
 
-import { CharityProfilePageContent } from './CharityProfilePageContent';
+import Content from './Content';
 
 export const CharityProfilePage: FC = () => {
   const history = useHistory();
@@ -25,5 +25,5 @@ export const CharityProfilePage: FC = () => {
 
   setPageTitle(charityId === 'me' ? 'My charity' : `Charity ${charity.name}`);
 
-  return <CharityProfilePageContent charity={charity} />;
+  return <Content charity={charity} />;
 };

@@ -6,9 +6,9 @@ import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 
 import { GetInfluencerQuery } from '../../../apollo/queries/influencers';
-import { InfluencerProfilePageContent } from 'src/modules/Influencer/InfluencerProfilePage/InfluencerProfilePageContent';
+import Content from 'src/modules/Influencer/InfluencerProfilePage/Content';
 
-import { InfluencerProfilePage } from '../InfluencerProfilePage/InfluencerProfilePage';
+import { InfluencerProfilePage } from '../InfluencerProfilePage';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
@@ -63,7 +63,7 @@ describe('InfluencerProfilePage', () => {
         </MockedProvider>
       </Router>,
     );
-    expect(wrapper.find(InfluencerProfilePageContent)).toHaveLength(0);
+    expect(wrapper.find(Content)).toHaveLength(0);
   });
 
   it('renders without crashing', async () => {
@@ -81,7 +81,7 @@ describe('InfluencerProfilePage', () => {
       await new Promise((resolve) => setTimeout(resolve));
       wrapper.update();
 
-      expect(wrapper.find(InfluencerProfilePageContent)).toHaveLength(1);
+      expect(wrapper.find(Content)).toHaveLength(1);
     });
   });
   it('component should redirect to 404 page', async () => {

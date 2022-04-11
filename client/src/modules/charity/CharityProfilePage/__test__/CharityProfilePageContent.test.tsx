@@ -12,7 +12,7 @@ import { AuctionStatus } from 'src/types/Auction';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { testAccount } from 'src/helpers/testHelpers/account';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
-import { CharityProfilePageContent } from '../CharityProfilePageContent';
+import Content from '../Content';
 import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import * as auth from 'src/helpers/useAuth';
@@ -142,7 +142,7 @@ const withNotAuthUser = () => {
   });
 };
 
-describe('CharityProfilePageContent', () => {
+describe('CharityProfilePage Content', () => {
   beforeAll(() => {
     process.env = { ...process.env, REACT_APP_API_URL: 'https://dev.contrib.org/graphql' };
   });
@@ -156,7 +156,7 @@ describe('CharityProfilePageContent', () => {
       <MemoryRouter>
         <ToastProvider>
           <MockedProvider>
-            <CharityProfilePageContent {...newProps} />
+            <Content {...newProps} />
           </MockedProvider>
         </ToastProvider>
       </MemoryRouter>,
@@ -172,7 +172,7 @@ describe('CharityProfilePageContent', () => {
           <ToastProvider>
             <UserAccountContext.Provider value={testAccount}>
               <MockedProvider cache={cache}>
-                <CharityProfilePageContent {...props} />
+                <Content {...props} />
               </MockedProvider>
             </UserAccountContext.Provider>
           </ToastProvider>
@@ -192,7 +192,7 @@ describe('CharityProfilePageContent', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider mocks={mocks}>
-              <CharityProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -212,7 +212,7 @@ describe('CharityProfilePageContent', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider mocks={mocks}>
-              <CharityProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -232,7 +232,7 @@ describe('CharityProfilePageContent', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider mocks={mocks}>
-              <CharityProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -252,7 +252,7 @@ describe('CharityProfilePageContent', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider mocks={errorMocks}>
-              <CharityProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -272,7 +272,7 @@ describe('CharityProfilePageContent', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider mocks={errorMocks}>
-              <CharityProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,

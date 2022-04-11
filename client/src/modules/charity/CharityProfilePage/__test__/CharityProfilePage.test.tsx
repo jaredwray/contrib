@@ -6,7 +6,7 @@ import { InMemoryCache } from '@apollo/client';
 import Layout from 'src/components/layouts/Layout';
 import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
-import { CharityProfilePage } from '../CharityProfilePage';
+import { CharityProfilePage } from '../';
 
 const mockHistoryFn = jest.fn();
 

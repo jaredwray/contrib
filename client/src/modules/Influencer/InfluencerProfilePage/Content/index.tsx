@@ -22,14 +22,14 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 import { AuctionStatus, Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import { InfluencerAuctionsInfo } from './InfluencerAuctionsInfo';
-import styles from './InfluencerProfilePageContent.module.scss';
+import AuctionsInfo from './AuctionsInfo';
+import styles from './styles.module.scss';
 
 interface Props {
   influencer: InfluencerProfile;
 }
 
-export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
+const Content: FC<Props> = ({ influencer }) => {
   const { account } = useContext(UserAccountContext);
   const { showMessage, showError } = useShowNotification();
   const { isAuthenticated } = useAuth();
@@ -161,11 +161,11 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           {isLoadingAuctions ? (
             <AuctionsInfoLoading name={influencer.name} />
           ) : (
-            <InfluencerAuctionsInfo
+            <AuctionsInfo
               auctions={auctions}
               draftAuctions={draftAuctions}
               influencer={influencer}
-              isShowDraftAndStopped={account?.isAdmin || isMyProfile}
+              showDraftAndStopped={account?.isAdmin || isMyProfile}
               onDeleteDraftAuctions={onDelete}
             />
           )}
@@ -174,3 +174,5 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
     </Layout>
   );
 };
+
+export default Content;

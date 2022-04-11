@@ -23,15 +23,15 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 import { AuctionStatus } from 'src/types/Auction';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
-import { CharityAuctionsInfo } from './CharityAuctionsInfo';
-import styles from './CharityProfilePageContent.module.scss';
+import AuctionsInfo from './AuctionsInfo';
 import ShareBtn from './ShareBtn';
+import styles from './styles.module.scss';
 
 interface Props {
   charity: Charity;
 }
 
-export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
+const Content: FC<Props> = ({ charity }) => {
   const { account } = useContext(UserAccountContext);
 
   const history = useHistory();
@@ -179,10 +179,12 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
           {isLoadingAuctions ? (
             <AuctionsInfoLoading name={charity.name} />
           ) : (
-            <CharityAuctionsInfo auctions={auctions} name={charity.name} />
+            <AuctionsInfo auctions={auctions} name={charity.name} />
           )}
         </Container>
       </section>
     </Layout>
   );
 };
+
+export default Content;

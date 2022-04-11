@@ -12,7 +12,7 @@ import AuctionCard from 'src/components/customComponents/AuctionCard';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
-import { InfluencerProfilePageContent } from '../InfluencerProfilePage/InfluencerProfilePageContent';
+import Content from '../InfluencerProfilePage/Content';
 import * as auth from 'src/helpers/useAuth';
 
 jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
@@ -167,7 +167,7 @@ const withNotAuthUser = () => {
   });
 };
 
-describe('InfluencerProfilePageContent ', () => {
+describe('Content ', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -179,7 +179,7 @@ describe('InfluencerProfilePageContent ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache}>
-              <InfluencerProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -198,7 +198,7 @@ describe('InfluencerProfilePageContent ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache2} mocks={mocks}>
-              <InfluencerProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -222,7 +222,7 @@ describe('InfluencerProfilePageContent ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache2} mocks={mocks}>
-              <InfluencerProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -247,7 +247,7 @@ describe('InfluencerProfilePageContent ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache2} mocks={mocks}>
-              <InfluencerProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -272,7 +272,7 @@ describe('InfluencerProfilePageContent ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache2} mocks={errorMocks}>
-              <InfluencerProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,
@@ -297,7 +297,7 @@ describe('InfluencerProfilePageContent ', () => {
         <MemoryRouter>
           <ToastProvider>
             <MockedProvider cache={cache2} mocks={errorMocks}>
-              <InfluencerProfilePageContent {...props} />
+              <Content {...props} />
             </MockedProvider>
           </ToastProvider>
         </MemoryRouter>,

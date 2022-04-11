@@ -2,20 +2,12 @@ import { shallow, ShallowWrapper } from 'enzyme';
 
 import { AuctionStatus } from 'src/types/Auction';
 import { auction } from 'src/helpers/testHelpers/auction';
-import { influencer } from 'src/helpers/testHelpers/influencer';
 import { NoAuctionsInfo } from 'src/components/customComponents/AuctionsStatusInfo/NoAuctionsInfo';
 
-import { InfluencerAuctionsInfo } from '../index';
-
-const mockDeletefn = jest.fn();
+import AuctionsInfo from '..';
 
 const props: any = {
-  draftAuctions: [{ ...auction, isFailed: false, isDraft: true }],
-  influencer: influencer,
-  isShowDraftAndStopped: true,
-  onDeleteDraftAuctions: (auction: any) => {
-    mockDeletefn();
-  },
+  name: 'testName',
 };
 
 const propsWithAuctions: any = {
@@ -32,11 +24,11 @@ const propsWithoutAuctions: any = {
   ...props,
 };
 
-describe('InfluencerAuctionsInfo', () => {
+describe('AuctionsInfo', () => {
   it('renders component', () => {
     let wrapper: ShallowWrapper;
 
-    wrapper = shallow(<InfluencerAuctionsInfo {...propsWithAuctions} />);
+    wrapper = shallow(<AuctionsInfo {...propsWithAuctions} />);
 
     expect(wrapper).toHaveLength(1);
   });
@@ -45,7 +37,7 @@ describe('InfluencerAuctionsInfo', () => {
     it('renders component', () => {
       let wrapper: ShallowWrapper;
 
-      wrapper = shallow(<InfluencerAuctionsInfo {...propsWithoutAuctions} />);
+      wrapper = shallow(<AuctionsInfo {...propsWithoutAuctions} />);
 
       expect(wrapper).toHaveLength(1);
       expect(NoAuctionsInfo).toHaveLength(1);
