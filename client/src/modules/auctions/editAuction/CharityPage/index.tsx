@@ -9,7 +9,7 @@ import {
   FinishAuctionCreationMutation,
 } from 'src/apollo/queries/auctions';
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
-import { CharitySearchSelect } from 'src/components/forms/selects/CharitySearchSelect';
+import { CharitySearchSelect, Option } from 'src/components/forms/selects/CharitySearchSelect';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import StepByStepPageLayout from 'src/components/layouts/StepByStepPageLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
@@ -18,17 +18,11 @@ import { Charity, CharityStatus } from 'src/types/Charity';
 
 import Row from '../common/Row';
 
-interface CharityOption {
-  id: string;
-  label: string;
-  value: string;
-}
-
 const CharityPage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
   const { showError } = useShowNotification();
-  const [selectedOption, setSelectedOption] = useState<any>(null);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const history = useHistory();
 
   const { data: charitiesListData } = useQuery(ActiveCharitiesList, {
@@ -63,7 +57,7 @@ const CharityPage = () => {
   const { description, itemPrice, startPrice, attachments, fairMarketValue, items, charity } = auction || {};
   const isFullObject = Boolean(description && itemPrice && (fairMarketValue || items?.length) && attachments.length);
 
-  const charityOption = useCallback((charity: Charity): CharityOption => {
+  const charityOption = useCallback((charity: Charity): Option => {
     return { label: charity.name, value: charity.id, id: charity.id };
   }, []);
   const handlePrevAction = useCallback(() => history.push(`/auctions/${auctionId}/duration`), [auctionId, history]);
