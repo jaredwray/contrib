@@ -1,7 +1,6 @@
 @import 'src/variables.scss';
 
 .multi-carousel {
-
   .slick-list {
     width: calc((100vw + 100%) / 2 - 8px);
     overflow: unset;
@@ -72,7 +71,6 @@
   }
 
   @media (max-width: $medium-weight) {
-
     .slick-arrow {
       display: none !important;
     }

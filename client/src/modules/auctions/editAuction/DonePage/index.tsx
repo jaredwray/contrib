@@ -38,7 +38,7 @@ const AuctionDonePage = () => {
   return (
     <Layout>
       <ProgressBar now={100} />
-      <Container fluid="xxl">
+      <Container className="m-auto" fluid="xxl">
         <div className={styles.contentWrapper}>
           <div className={clsx(styles.content, styles.contentLeft)}>
             <div className={styles.contentRightWrapper}>
