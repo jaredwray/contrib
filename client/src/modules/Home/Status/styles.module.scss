@@ -1,29 +1,11 @@
 @import 'src/variables.scss';
 
-.root {
-  background-color: $barely-gray-color;
-  border-top: 1px solid $light-gray-color;
-}
-
 .title {
   font-size: 18px;
   line-height: 36px;
   letter-spacing: 0.075rem;
   font-weight: 700;
   color: $dark-gray-color;
-}
-
-.subtitle {
-  font-weight: 600 !important;    
-  letter-spacing: 0.017em;
-  .italicSubtitle {
-    font-style: italic;
-    font-weight: 500 !important;
-  }
-  @media (max-width: 375px) {
-    max-width: 220px !important;
-    margin: auto;
-  }
 }
 
 .label {
