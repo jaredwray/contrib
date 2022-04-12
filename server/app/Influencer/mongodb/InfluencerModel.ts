@@ -27,8 +27,8 @@ export const InfluencerCollectionName = 'influencer';
 const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   name: { type: SchemaTypes.String, required: true },
   avatarUrl: { type: SchemaTypes.String, required: true },
-  status: { type: SchemaTypes.String, required: true },
-  userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+  status: { type: SchemaTypes.String, required: true, index: true },
+  userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName, index: true },
   sport: { type: SchemaTypes.String },
   team: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
@@ -37,12 +37,12 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   totalRaisedAmount: { type: SchemaTypes.Number, default: 0 },
   createdAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   updatedAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   onboardedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },

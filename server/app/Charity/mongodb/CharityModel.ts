@@ -29,10 +29,10 @@ export const CharityCollectionName = 'charity';
 const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   semanticIds: [{ type: SchemaTypes.String, required: true }],
   name: { type: SchemaTypes.String, required: true },
-  status: { type: SchemaTypes.String, required: true },
+  status: { type: SchemaTypes.String, required: true, index: true },
   profileStatus: { type: SchemaTypes.String, required: true },
   stripeStatus: { type: SchemaTypes.String },
-  userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+  userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName, index: true },
   stripeAccountId: { type: SchemaTypes.String },
   avatarUrl: { type: SchemaTypes.String },
   profileDescription: { type: SchemaTypes.String },
@@ -41,12 +41,12 @@ const CharitySchema: Schema<ICharityModel> = new Schema<ICharityModel>({
   activatedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   createdAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   updatedAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   onboardedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },

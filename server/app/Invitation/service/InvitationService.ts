@@ -58,9 +58,7 @@ export class InvitationService {
   }
 
   async listInvitationsByParentEntityIds(parentEntityIds: readonly string[]): Promise<Invitation[]> {
-    const models = await this.InvitationModel.find({
-      parentEntityId: { $in: parentEntityIds },
-    });
+    const models = await this.InvitationModel.find({ parentEntityId: { $in: parentEntityIds } });
     return models.map((model) => InvitationService.makeInvitation(model));
   }
 
@@ -74,12 +72,7 @@ export class InvitationService {
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
 
-        if (
-          findedAccount &&
-          (await this.CharityModel.exists({
-            userAccount: findedAccount._id,
-          }))
-        )
+        if (findedAccount && (await this.CharityModel.exists({ userAccount: findedAccount._id })))
           throw new AppError(`Account with phone number: ${phoneNumber} already has charity`, ErrorCode.BAD_REQUEST);
 
         const findedInvitation = await this.InvitationModel.findOne({
@@ -355,9 +348,7 @@ export class InvitationService {
   ): Promise<string> {
     try {
       const invitation = await this.InvitationModel.findById(invitationId, null, { session });
-      const populatedInvitation = await invitation
-        .populate({ path: 'shortLink', model: this.ShortLinkModel })
-        .execPopulate();
+      const populatedInvitation = await invitation.populate({ path: 'shortLink', model: this.ShortLinkModel });
 
       const link = await this.shortLinkService.makeLink({ slug: populatedInvitation.shortLink.slug });
 
@@ -467,7 +458,7 @@ export class InvitationService {
           welcomeMessage,
           accepted: accepted ?? false,
           parentEntityType,
-          parentEntityId: Types.ObjectId(parent.id),
+          parentEntityId: parent.id,
           createdAt: now,
           updatedAt: now,
         },

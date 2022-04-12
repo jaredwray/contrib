@@ -9,15 +9,15 @@ export interface IBidModel extends Document {
   user: IUserAccount['_id'];
   createdAt: dayjs.Dayjs;
   bid: number;
-  bidCurrency: Dinero.Currency;
+  bidCurrency: string;
   chargeId: string;
 }
 
 export const BidCollectionName = 'bids';
 
 const BidSchema: Schema<IBidModel> = new Schema<IBidModel>({
-  auction: { type: SchemaTypes.ObjectId, ref: AuctionCollectionName },
-  user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+  auction: { type: SchemaTypes.ObjectId, ref: AuctionCollectionName, index: true },
+  user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName, index: true },
   bid: { type: SchemaTypes.Number, required: true },
   bidCurrency: { type: SchemaTypes.String, default: AppConfig.app.defaultCurrency },
   createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },

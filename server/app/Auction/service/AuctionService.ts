@@ -487,7 +487,7 @@ export class AuctionService {
           return;
         }
 
-        const incomingMetric = { date: dayjs().toISOString(), referrer, country, userAgentData };
+        const incomingMetric = { date: dayjs(), referrer, country, userAgentData };
         const auctionId = auctionModel._id.toString();
 
         const metricModel = await this.AuctionMetricModel.findOne({ auction: auctionId }, null, { session });
@@ -599,9 +599,7 @@ export class AuctionService {
       {
         ...(startDate ? { startsAt: startDate } : {}),
         ...(endDate ? { endsAt: endDate } : {}),
-        ...(duration
-          ? { startsAt: dayjs().second(0).toISOString(), endsAt: dayjs().second(0).add(duration, 'days').toISOString() }
-          : {}),
+        ...(duration ? { startsAt: dayjs().second(0), endsAt: dayjs().second(0).add(duration, 'days') } : {}),
         ...(startPrice
           ? {
               startPrice: startPrice.getAmount(),
@@ -639,7 +637,7 @@ export class AuctionService {
               bidStep: bidStep.getAmount(),
             }
           : {}),
-        ...(charity ? { charity: Types.ObjectId(charity) } : {}),
+        ...(charity ? { charity } : {}),
         ...rest,
       },
       isAdmin,
@@ -913,7 +911,7 @@ export class AuctionService {
     }
 
     try {
-      await lastAuctionBid.populate({ path: 'user', model: this.UserAccountModel }).execPopulate();
+      await lastAuctionBid.populate({ path: 'user', model: this.UserAccountModel });
       lastAuctionBid.chargeId = await this.chargeUser(lastAuctionBid, auction);
 
       const { messageTemplate, messageVariables } = await this.getMessageTemplateAndVariables(
@@ -934,10 +932,10 @@ export class AuctionService {
         } and user id ${lastAuctionBid.user._id.toString()}`,
       );
 
-      const currentAuction = await auction
-        .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
-        .populate({ path: 'charity', model: this.CharityModel })
-        .execPopulate();
+      const currentAuction = await auction.populate([
+        { path: 'auctionOrganizer', model: this.InfluencerModel },
+        { path: 'charity', model: this.CharityModel },
+      ]);
 
       await this.updateTotalRaisedAmount(currentAuction, lastAuctionBid.bid);
 
@@ -982,8 +980,8 @@ export class AuctionService {
     );
   }
 
-  private makeBidDineroValue(amount: number, currency: Dinero.Currency) {
-    return Dinero({ amount: amount, currency: (currency ?? AppConfig.app.defaultCurrency) as Dinero.Currency });
+  private makeBidDineroValue(amount: number, currency: string) {
+    return Dinero({ amount: amount, currency: currency as Dinero.Currency });
   }
 
   public async activateAuction(auction: IAuctionModel): Promise<void> {
@@ -1006,12 +1004,12 @@ export class AuctionService {
     const { url, type, uid } = model;
 
     return {
-      id: model._id.toString(),
       type,
       url,
-      cloudflareUrl: model.uid ? CloudflareStreaming.getVideoStreamUrl(model.uid) : null,
-      thumbnail: model.uid ? CloudflareStreaming.getVideoPreviewUrl(model.uid) : null,
       uid,
+      id: model._id.toString(),
+      cloudflareUrl: uid ? CloudflareStreaming.getVideoStreamUrl(uid) : null,
+      thumbnail: uid ? CloudflareStreaming.getVideoPreviewUrl(uid) : null,
       originalFileName: filename,
     };
   }
@@ -1022,10 +1020,10 @@ export class AuctionService {
     return auctions.map((auction) => auction.currentPrice ?? 0).reduce((total, next) => (total += next), 0);
   }
 
-  private makeAssets(assets: IAuctionAssetModel[]): AuctionAssets[] {
+  private makeAssets(assets: any[]): AuctionAssets[] {
     return assets
       .map((asset) => AuctionService.makeAuctionAttachment(asset))
-      .sort((a: any, b: any) => {
+      .sort((a, b) => {
         if (b.type > a.type) return -1;
       });
   }
@@ -1070,7 +1068,7 @@ export class AuctionService {
       await this.updateTotalRaisedAmount(auction, auction.itemPrice);
     } catch (error) {
       AppLogger.error(
-        `Something went wrong when try to update totalRaisedAmount when buy auction #${auction.id} for charity and influencer : ${error.message}`,
+        `Something went wrong during totalRaisedAmount update when buy auction #${auction.id}: ${error.message}`,
       );
       throw new AppError('Unable to charge');
     }
@@ -1083,16 +1081,13 @@ export class AuctionService {
       status: AuctionStatus.SOLD,
       currentPrice: auction.itemPrice,
       stoppedAt: this.timeNow(),
-      delivery: {
-        ...auction.delivery,
-        updatedAt: this.timeNow(),
-      },
     });
 
     try {
       await auction.save();
     } catch (error) {
-      throw new AppError('Something went wrong. Please, try again later', ErrorCode.BAD_REQUEST);
+      AppLogger.error(`Something went wrong during auction update when buy auction #${auction.id}: ${error.message}`);
+      throw new AppError('Something went wrong. Please, try again later');
     }
 
     try {
@@ -1240,14 +1235,12 @@ export class AuctionService {
       _id,
       startsAt,
       endsAt,
-      charity,
       assets,
       status,
       itemPrice,
       currentPrice,
       startPrice,
       bidStep,
-      auctionOrganizer,
       priceCurrency,
       fairMarketValue,
       items,
@@ -1255,48 +1248,30 @@ export class AuctionService {
       winner,
       shortLink,
       ...rest
-    } = model.toObject();
+    } = 'toObject' in model ? model.toObject() : model;
+
+    const currency = (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency;
+    const charity = Array.isArray(model.charity) ? model.charity[0] : model.charity;
+    const auctionOrganizer = Array.isArray(model.auctionOrganizer) ? model.auctionOrganizer[0] : model.auctionOrganizer;
 
     return {
+      ...rest,
       id: _id.toString(),
       attachments: this.makeAssets(assets),
       endDate: endsAt,
       startDate: startsAt,
       charity: charity ? CharityService.makeCharity(charity) : null,
-      currentPrice: Dinero({
-        currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        amount: currentPrice,
-      }),
-      startPrice: Dinero({
-        currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        amount: startPrice,
-      }),
-      bidStep: Dinero({
-        currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-        amount: bidStep,
-      }),
-      itemPrice:
-        itemPrice || itemPrice === 0
-          ? Dinero({
-              currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-              amount: itemPrice,
-            })
-          : null,
-      fairMarketValue: fairMarketValue
-        ? Dinero({
-            currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-            amount: fairMarketValue,
-          })
-        : null,
+      currentPrice: Dinero({ currency, amount: currentPrice }),
+      startPrice: Dinero({ currency, amount: startPrice }),
+      bidStep: Dinero({ currency, amount: bidStep }),
+      itemPrice: itemPrice || itemPrice === 0 ? Dinero({ currency, amount: itemPrice }) : null,
+      fairMarketValue: fairMarketValue ? Dinero({ currency, amount: fairMarketValue }) : null,
       items: items
         ? items.map(({ _id, name, contributor, fairMarketValue }) => ({
             id: _id.toString(),
             name,
             contributor,
-            fairMarketValue: Dinero({
-              currency: (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency,
-              amount: fairMarketValue,
-            }),
+            fairMarketValue: Dinero({ currency, amount: fairMarketValue }),
           }))
         : null,
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
@@ -1315,7 +1290,6 @@ export class AuctionService {
       isFailed: status === AuctionStatus.FAILED,
       isSold: status === AuctionStatus.SOLD,
       isStopped: status === AuctionStatus.STOPPED,
-      ...rest,
     };
   }
 }

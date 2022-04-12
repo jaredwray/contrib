@@ -52,18 +52,17 @@ export class BidService {
       .sort({ bid: 'desc' })
       .populate({ path: 'user', model: this.UserAccountModel });
 
-    if (!bids) return [];
-
-    return bids;
+    return bids ?? [];
   }
 
   public makeBid(model: IBidModel): Bid | null {
     if (!model) return null;
+
     const { user, bid, bidCurrency, createdAt, chargeId } = model;
 
     return {
       user,
-      bid: Dinero({ amount: bid, currency: bidCurrency }),
+      bid: Dinero({ amount: bid, currency: bidCurrency as Currency }),
       createdAt,
       chargeId,
     };

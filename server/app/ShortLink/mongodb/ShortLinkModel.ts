@@ -8,7 +8,7 @@ export interface IShortLinkModel extends Document {
 export const ShortLinkCollectionName = 'short_links';
 
 const ShortLinkSchema: Schema<IShortLinkModel> = new Schema<IShortLinkModel>({
-  slug: { type: SchemaTypes.String, required: true },
+  slug: { type: SchemaTypes.String, required: true, index: true },
   link: { type: SchemaTypes.String, required: true },
 });
 

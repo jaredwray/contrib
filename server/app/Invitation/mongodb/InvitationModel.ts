@@ -23,25 +23,23 @@ const InvitationSchema: Schema<IInvitation> = new Schema<IInvitation>({
   firstName: { type: SchemaTypes.String, required: true },
   lastName: { type: SchemaTypes.String, required: true },
   welcomeMessage: { type: SchemaTypes.String, required: true },
-  slug: { type: SchemaTypes.String, required: true, unique: true },
+  slug: { type: SchemaTypes.String, required: true, index: true, unique: true },
   accepted: { type: SchemaTypes.Boolean, required: true },
   phoneNumber: { type: SchemaTypes.String, required: true },
-  parentEntityType: { type: SchemaTypes.String, required: true },
-  parentEntityId: { type: SchemaTypes.ObjectId, required: true },
+  parentEntityType: { type: SchemaTypes.String, index: true, required: true },
+  parentEntityId: { type: SchemaTypes.ObjectId, index: true, required: true },
   createdAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   updatedAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
 });
-
-InvitationSchema.index({ parentEntityType: 1, parentEntityId: 1 }, { unique: true });
 
 export const InvitationModel = (connection: Connection): Model<IInvitation> => {
   return connection.model<IInvitation>(InvitationCollectionName, InvitationSchema);
