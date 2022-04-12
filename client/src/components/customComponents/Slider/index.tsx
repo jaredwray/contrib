@@ -13,18 +13,27 @@ const Slider: FC<Props> = ({ items }) => {
   const slider = useRef() as React.MutableRefObject<any>;
   const sliderWrapper = useRef() as React.MutableRefObject<any>;
 
-  const checkArrow = useCallback(
-    (type: string) => {
-      if (!slider.current) return;
-
-      const arrow = sliderWrapper.current.querySelector(`.slick-${type}`);
-      if (!arrow) return;
+  const canScrollTo = useCallback(
+    (type: string): boolean => {
+      if (!slider.current) return false;
 
       const itemIndex = type === 'next' ? items.length - 1 : 0;
       const item = slider.current.innerSlider.list.querySelector(`[data-index="${itemIndex}"]`);
       const rect = item.getBoundingClientRect();
       const windowWidth = window.innerWidth || document.documentElement.clientWidth;
-      const disable = type === 'next' ? rect.right <= windowWidth : rect.left >= 0;
+
+      return type === 'next' ? rect.right > windowWidth : rect.left < 0;
+    },
+    [slider, items],
+  );
+  const checkArrow = useCallback(
+    (type: string) => {
+      if (!slider.current || !sliderWrapper.current) return;
+
+      const arrow = sliderWrapper.current.querySelector(`.slick-${type}`);
+      if (!arrow) return;
+
+      const disable = !canScrollTo(type);
 
       arrow.disabled = disable;
 
@@ -34,24 +43,40 @@ const Slider: FC<Props> = ({ items }) => {
         arrow.classList.remove('slick-disabled');
       }
     },
-    [items.length],
+    [canScrollTo],
   );
-
   const checkArrows = useCallback(() => {
     checkArrow('next');
     checkArrow('prev');
   }, [checkArrow]);
+  const scroll = useCallback(
+    (event) => {
+      if (!slider.current || !sliderWrapper.current) return;
+      if (event.deltaY !== 0) return;
+      if (!sliderWrapper.current.contains(event.target)) return;
+
+      event.wheelDelta > 0
+        ? canScrollTo('next') && slider.current.slickNext()
+        : canScrollTo('prev') && slider.current.slickPrev();
+    },
+    [canScrollTo],
+  );
 
   useEffect(() => {
     checkArrows();
     window.addEventListener('resize', checkArrows);
-    return () => window.removeEventListener('resize', checkArrows);
-  }, [checkArrows]);
+    window.addEventListener('wheel', scroll);
+
+    return () => {
+      window.removeEventListener('resize', checkArrows);
+      window.removeEventListener('wheel', scroll);
+    };
+  }, [checkArrows, scroll]);
 
   const settings = {
     infinite: false,
     ref: slider,
-    speed: 300,
+    speed: 500,
     swipeToSlide: true,
     variableWidth: true,
     afterChange: checkArrows,
