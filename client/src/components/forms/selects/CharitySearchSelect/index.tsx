@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { customStyles, selectStyles } from './customStyles';
 import styles from './styles.module.scss';
 
-interface Option {
+export interface Option {
   value: string;
   label: string;
   id: string;
