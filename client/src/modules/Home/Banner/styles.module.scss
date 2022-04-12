@@ -1,11 +1,11 @@
 @import 'src/variables.scss';
 
 .wrapper {
-  height: 224px;
-  background-image: url('/assets/images/banner.webp');
+  background-image: url('/assets/images/banner.png');
   background-repeat: no-repeat;
-  background-position: left;
+  background-position: -300px 0px;
   background-size: cover;
+  border-bottom: 1px solid $light-gray-color;
 }
 .link {
   font-weight: 500;
@@ -17,11 +17,10 @@
 }
 
 .text {
-  font-weight: 500;
+  font-weight: 700;
   color: $dark-gray-color;
   align-items: center;
   text-align: center;
-  max-width: 680px !important;
 }
 
 @media (max-width: 375px) {
@@ -51,19 +50,24 @@
 }
 
 @media (min-width: $medium-weight) {
+  .wrapper {
+    background-position: -80px !important;
+  }
   .text {
-    font-size: 16px;
-    line-height: 34px;
-    font-weight: 500;
-    letter-spacing: 0.025em;
-    max-width: 480px !important;
+    font-size: 18px !important;
+    line-height: 36px !important;
+    letter-spacing: 0.025em !important;
+    max-width: 500px !important;
   }
 }
 
 @media (min-width: $large-weight) {
+  .wrapper {
+    background-position: 0 !important;
+  }
   .text {
-    font-size: 18px;
-    line-height: 36px;
-    letter-spacing: 0.025em;
+    font-size: 20px !important;
+    line-height: 42px !important;
+    max-width: 550px !important;
   }
 }

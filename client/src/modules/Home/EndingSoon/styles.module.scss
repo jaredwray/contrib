@@ -4,6 +4,19 @@
   color: $sage-color;
 }
 
+.subtitle {
+  font-weight: 600 !important;    
+  letter-spacing: 0.017em;
+  .italicSubtitle {
+    font-style: italic;
+    font-weight: 500 !important;
+  }
+  @media (max-width: 375px) {
+    max-width: 220px !important;
+    margin: auto;
+  }
+}
+
 .root {
   background-color: $barely-gray-color;
   border-bottom: 1px solid $light-gray-color;

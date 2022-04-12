@@ -30,9 +30,9 @@ export const Badges = (): ReactElement => {
         <Col className="text-center p-4 py-md-2" md="auto">
           {totalRaised && (
             <TotalAmount
-              firstValue={Dinero({ amount: totalRaised }).toFormat('$0,0')}
+              firstValue="ALL TIME"
               icon={TrophyIcon}
-              secondValue="all time"
+              secondValue={Dinero({ amount: totalRaised }).toFormat('$0,0')}
               title="total raised"
             />
           )}
