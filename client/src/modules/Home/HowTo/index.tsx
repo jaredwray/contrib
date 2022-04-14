@@ -9,7 +9,7 @@ import Item from './Item';
 export default function HowTo() {
   return (
     <Container fluid="xxl">
-      <Row className="py-4 py-md-5 justify-content-center">
+      <Row className="py-0 justify-content-center">
         <Item
           btnText="Create your first auction"
           icon={SpeakerIcon}
