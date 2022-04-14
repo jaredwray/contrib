@@ -18,8 +18,7 @@ const Item = ({ icon, text, btnText, withSeparator }: PropTypes): ReactElement =
     <Col
       className={clsx(
         withSeparator && styles.separator,
-        withSeparator && 'py-5',
-        'd-flex justify-content-center py-5 flex-column text-center',
+        'd-flex justify-content-center py-5 py-md-2 flex-column text-center',
       )}
     >
       <div>
