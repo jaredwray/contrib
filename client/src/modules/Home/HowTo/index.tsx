@@ -13,7 +13,7 @@ export default function HowTo() {
         <Item
           btnText="Create your first auction"
           icon={SpeakerIcon}
-          text="Auction your memorabelia quickly and hassle-free"
+          text="Auction your memorabilia quickly and hassle-free"
         />
         <Item
           withSeparator
