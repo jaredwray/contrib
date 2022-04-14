@@ -9,11 +9,11 @@ import Item from './Item';
 export default function HowTo() {
   return (
     <Container fluid="xxl">
-      <Row className="py-4 py-md-5 justify-content-center">
+      <Row className="py-0 py-md-5 justify-content-center">
         <Item
           btnText="Create your first auction"
           icon={SpeakerIcon}
-          text="Auction your memorabelia quickly and hassle-free"
+          text="Auction your memorabilia quickly and hassle-free"
         />
         <Item
           withSeparator

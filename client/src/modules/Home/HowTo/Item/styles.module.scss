@@ -1,21 +1,23 @@
 @import 'src/variables.scss';
 
 .icon {
-  height: 36px;
-  max-width: 36px;
+  height: 30px;
+  max-width: 35px !important;
 }
 
 .text {
-  max-width: 300px;
-  font-weight: 600;
+  max-width: 260px;
+  font-weight: 600 !important;
   color: $dark-gray-color !important;
+  letter-spacing: 0.025rem !important;
 }
 
 .button {
-  border-radius: 36px !important;
-  font-weight: 700;
+  border-radius: 25px !important;
+  font-weight: 700 !important;
   background-color: $mint-color !important;
   border-color: $mint-color !important;
+  letter-spacing: 0.025rem !important;
 
   &:hover {
     background-color: $sage-color !important;
@@ -25,7 +27,7 @@
 .link {
   text-decoration: none;
   color: $mint-color;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .separator {
