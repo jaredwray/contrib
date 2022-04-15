@@ -1,5 +1,10 @@
 @import 'src/variables.scss';
 
+.item {
+  min-width: 90px;
+  min-height: 124px;
+}
+
 .badgesWrapper {
   background: $whitesmoke-color;
   -webkit-box-shadow: 0px 0px 5px 0px $light-gray-color;
@@ -16,7 +21,7 @@
       border-top: 0;
       border-bottom: 0;
       border-left: 1px solid $barely-gray-color;
-      border-right: 1px solid $barely-gray-color; 
+      border-right: 1px solid $barely-gray-color;
     }
   }
 }

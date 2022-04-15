@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 
 import clsx from 'clsx';
-import { Col, Row, Image } from 'react-bootstrap';
+import { Col, Row, Image, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_AVATAR_PATH } from 'src/constants';
@@ -38,7 +38,11 @@ export const TotalAmount = ({ title, secondValue, firstValue, icon, link, avatar
               firstValue
             )}
           </div>
-          {secondValue && <div className={clsx(styles.secondValue, 'text-uppercase')}>{secondValue}</div>}
+          {secondValue ? (
+            <div className={clsx(styles.secondValue, 'text-uppercase')}>{secondValue}</div>
+          ) : (
+            <Spinner animation="border" className={styles.spinner} />
+          )}
         </div>
       </Col>
     </Row>

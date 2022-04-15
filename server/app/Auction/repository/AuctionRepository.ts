@@ -210,23 +210,6 @@ export class AuctionRepository implements IAuctionRepository {
     Object.assign(auction, { shortLink: shortLink.id });
     await auction.save();
 
-    AppLogger.info(`createAuction method called for #${auction._id.toString()} auction;`);
-    AppLogger.info(
-      `date values: ${JSON.stringify({
-        ['when auction creating']: {
-          ['new Date']: new Date(),
-          ['startsAt , createdAt, updatedAt']: utcCurrentDateISO,
-          endsAt: utcCurrentDate.add(3, 'days').toISOString(),
-        },
-        ['when auction created']: {
-          startsAt: auction.startsAt,
-          createdAt: auction.createdAt,
-          updatedAt: auction.updatedAt,
-          endsAt: auction.endsAt,
-        },
-      })}`,
-    );
-
     return await this.populateAuctionModel(auction);
   }
 
