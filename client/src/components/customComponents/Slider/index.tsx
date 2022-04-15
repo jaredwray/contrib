@@ -49,13 +49,17 @@ const Slider: FC<Props> = ({ items }) => {
     checkArrow('next');
     checkArrow('prev');
   }, [checkArrow]);
+  const preventDefault = useCallback(
+    (event: WheelEvent) => {
+      if (sliderWrapper.current?.contains(event.target)) event.preventDefault();
+    },
+    [sliderWrapper],
+  );
   const scroll = useCallback(
-    (event) => {
+    (e) => {
       if (!slider.current || !sliderWrapper.current) return;
-      if (event.deltaY !== 0) return;
-      if (!sliderWrapper.current.contains(event.target)) return;
 
-      event.wheelDelta > 0
+      e.deltaX < 0 || e.deltaY > 0
         ? canScrollTo('next') && slider.current.slickNext()
         : canScrollTo('prev') && slider.current.slickPrev();
     },
@@ -65,13 +69,13 @@ const Slider: FC<Props> = ({ items }) => {
   useEffect(() => {
     checkArrows();
     window.addEventListener('resize', checkArrows);
-    window.addEventListener('wheel', scroll);
+    window.addEventListener('wheel', preventDefault, { passive: false });
 
     return () => {
       window.removeEventListener('resize', checkArrows);
-      window.removeEventListener('wheel', scroll);
+      window.removeEventListener('wheel', preventDefault);
     };
-  }, [checkArrows, scroll]);
+  }, [checkArrows, preventDefault]);
 
   const settings = {
     infinite: false,
@@ -79,13 +83,14 @@ const Slider: FC<Props> = ({ items }) => {
     speed: 500,
     swipeToSlide: true,
     variableWidth: true,
+    beforeChange: checkArrows,
     afterChange: checkArrows,
   };
 
   if (!items.length) return null;
 
   return (
-    <div ref={sliderWrapper} className="multi-carousel">
+    <div ref={sliderWrapper} className="multi-carousel" onWheel={scroll}>
       <RSlider {...settings}>{items}</RSlider>
     </div>
   );
