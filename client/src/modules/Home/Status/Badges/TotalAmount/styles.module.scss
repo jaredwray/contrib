@@ -1,6 +1,7 @@
 @import 'src/variables.scss';
 
-.withIcon, .withoutIcon {
+.withIcon,
+.withoutIcon {
   height: 55px;
   display: flex;
   align-items: center;
@@ -45,4 +46,10 @@
   line-height: 21px;
   font-weight: 500;
   color: $dark-gray-color;
+}
+
+.spinner {
+  width: 20px !important;
+  height: 20px !important;
+  border-width: 2px !important;
 }

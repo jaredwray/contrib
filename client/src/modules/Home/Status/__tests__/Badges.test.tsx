@@ -81,7 +81,7 @@ describe('Badges', () => {
   });
 
   describe('without data', () => {
-    it('does not render TotalAmount', async () => {
+    it('renders default TotalAmount', async () => {
       let wrapper: ReactWrapper;
       await act(async () => {
         wrapper = mount(
@@ -95,7 +95,7 @@ describe('Badges', () => {
         wrapper.update();
       });
       expect(wrapper!).toHaveLength(1);
-      expect(wrapper!.find(TotalAmount)).toHaveLength(0);
+      expect(wrapper!.find(TotalAmount)).toHaveLength(3);
     });
   });
 });

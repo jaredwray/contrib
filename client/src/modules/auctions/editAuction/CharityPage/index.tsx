@@ -21,7 +21,7 @@ import Row from '../common/Row';
 const CharityPage = () => {
   const { account } = useContext(UserAccountContext);
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { showError } = useShowNotification();
+  const { showError, showWarning } = useShowNotification();
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const history = useHistory();
 
@@ -64,22 +64,22 @@ const CharityPage = () => {
   const submitValidationRedirect = useCallback(() => {
     if (!description) {
       history.push(`/auctions/${auctionId}/description`);
-      showError('You should fill in description field');
+      showWarning('You should fill in description field');
       return;
     }
     if (!attachments?.length) {
       history.push(`/auctions/${auctionId}/attachments`);
-      showError('You need to upload at least one attachment');
+      showWarning('You need to upload at least one attachment');
       return;
     }
     if (startPrice && !itemPrice) {
       history.push(`/auctions/${auctionId}/price/starting`);
-      showError('You should fill in starting price field');
+      showWarning('You should fill in starting price field');
       return;
     }
     if (!fairMarketValue && !items?.length) {
       history.push(`/auctions/${auctionId}/price/fmv`);
-      showError('You should fill in fair market value field');
+      showWarning('You should fill in fair market value field');
       return;
     }
   }, [
@@ -91,11 +91,11 @@ const CharityPage = () => {
     itemPrice,
     fairMarketValue,
     items?.length,
-    showError,
+    showWarning,
   ]);
   const handleSubmit = useCallback(async () => {
     if (!selectedOption) {
-      showError('You should select charity');
+      showWarning('You should select charity');
       return;
     }
     submitValidationRedirect();
@@ -106,7 +106,7 @@ const CharityPage = () => {
     } catch (error: any) {
       showError(error.message);
     }
-  }, [auctionId, updateAuction, showError, selectedOption, isFullObject, submitValidationRedirect]);
+  }, [auctionId, updateAuction, showError, showWarning, selectedOption, isFullObject, submitValidationRedirect]);
 
   useEffect(() => {
     charity && setSelectedOption(charityOption(charity));
