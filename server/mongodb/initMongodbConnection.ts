@@ -7,14 +7,7 @@ const mongoServer = new MongoMemoryServer();
 
 export const initInMemoryMongodbConnection = async (): Promise<any> => {
   const uri = await mongoServer.getUri();
-
-  return await mongoose.connect(uri, {
-    bufferCommands: false,
-    useCreateIndex: true,
-    //@ts-ignore
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  return await mongoose.connect(uri);
 };
 export const closeInMemoryMongodbConnection = async (): Promise<void> => {
   await mongoose.connection.dropDatabase();
@@ -22,13 +15,7 @@ export const closeInMemoryMongodbConnection = async (): Promise<void> => {
   await mongoServer.stop();
 };
 
-const connection = createConnection(AppConfig.mongodb.uri, {
-  bufferCommands: false,
-  useCreateIndex: true,
-  //@ts-ignore
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const connection = createConnection(AppConfig.mongodb.uri);
 export async function initMongodbConnection(): Promise<Connection> {
   return connection;
 }

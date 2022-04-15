@@ -38,12 +38,11 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
   stripeCustomerId: { type: SchemaTypes.String, required: false },
   createdAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   updatedAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
     get: (v) => dayjs(v),
   },
   acceptedTerms: { type: SchemaTypes.String },
@@ -53,7 +52,7 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
       auction: { type: SchemaTypes.ObjectId, ref: 'auction' },
       createdAt: {
         type: SchemaTypes.Date,
-        default: dayjs().second(0).toISOString(),
+        default: dayjs().second(0),
         get: (v) => dayjs(v),
       },
     },
@@ -63,7 +62,7 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
       influencerProfile: { type: SchemaTypes.ObjectId, ref: 'influencer' },
       createdAt: {
         type: SchemaTypes.Date,
-        default: dayjs().second(0).toISOString(),
+        default: dayjs().second(0),
         get: (v) => dayjs(v),
       },
     },
@@ -73,7 +72,7 @@ const UserAccountSchema: Schema<IUserAccount> = new Schema<IUserAccount>({
       charityProfile: { type: SchemaTypes.ObjectId, ref: 'charity' },
       createdAt: {
         type: SchemaTypes.Date,
-        default: dayjs().second(0).toISOString(),
+        default: dayjs().second(0),
         get: (v) => dayjs(v),
       },
     },

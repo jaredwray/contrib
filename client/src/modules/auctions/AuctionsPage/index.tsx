@@ -29,7 +29,7 @@ const AuctionsPage: FC = () => {
     orderBy: 'CREATED_AT_DESC',
     pageSkip: 0,
     status: [],
-    charity: [],
+    charity: null,
   });
 
   const [executeAuctionsSearch, { data: auctionsData }] = useLazyQuery(AuctionsListQuery);
@@ -49,8 +49,11 @@ const AuctionsPage: FC = () => {
 
   useEffect(() => changeFilters('bids', initialBids), [auctionPriceLimits, changeFilters, initialBids]);
   useEffect(() => {
-    const queryFilters = { charity: filters.charity } as any;
+    const queryFilters = {} as { [key: string]: any };
 
+    if (filters.charity) {
+      queryFilters['charity'] = filters.charity;
+    }
     if (filters.bids) {
       queryFilters['maxPrice'] = filters.bids.maxPrice * 100;
       queryFilters['minPrice'] = filters.bids.minPrice * 100;
@@ -91,7 +94,7 @@ const AuctionsPage: FC = () => {
   );
   const sortByEnum = [
     { value: 'CREATED_AT_DESC', label: 'Newest' },
-    { value: 'TIME_ASC', label: 'Ending soon' },
+    { value: 'ENDING_SOON', label: 'Ending soon' },
     { value: 'PRICE_ASC', label: 'Price: Low to high' },
     { value: 'PRICE_DESC', label: 'Price: High to low' },
   ];

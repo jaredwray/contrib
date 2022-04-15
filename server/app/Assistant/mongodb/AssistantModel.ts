@@ -19,16 +19,16 @@ export const AssistantCollectionName = 'assistants';
 const AssistantSchema: Schema<IAssistant> = new Schema<IAssistant>({
   name: { type: SchemaTypes.String, required: true },
   status: { type: SchemaTypes.String, required: true },
-  userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
-  influencer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName, required: true },
+  userAccount: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName, index: true },
+  influencer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName, required: true, index: true },
   createdAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   updatedAt: {
     type: SchemaTypes.Date,
-    default: dayjs().second(0).toISOString(),
+    default: dayjs().second(0),
     get: (v) => dayjs(v),
   },
   onboardedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },

@@ -38,9 +38,8 @@ export class AuctionRepository implements IAuctionRepository {
   private readonly UserAccountModel = UserAccountModel(this.connection);
 
   private static SEARCH_FILTERS: ISearchFilter = {
-    [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'asc' },
-    [AuctionOrderBy.TIME_ASC]: { endsAt: 'asc' },
-    [AuctionOrderBy.TIME_DESC]: { endsAt: 'desc' },
+    [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'desc' },
+    [AuctionOrderBy.ENDING_SOON]: { isActive: 'desc', stoppedAt: 'desc', endsAt: 'asc' },
     [AuctionOrderBy.PRICE_ASC]: { currentPrice: 'asc' },
     [AuctionOrderBy.PRICE_DESC]: { currentPrice: 'desc' },
   };
@@ -62,29 +61,15 @@ export class AuctionRepository implements IAuctionRepository {
     statusFilter: string[],
     filters: AuctionSearchFilters,
   ): { [key: string]: string } {
-    if (
-      statusFilter == [AuctionStatus.SOLD, AuctionStatus.SETTLED] ||
-      name == AuctionOrderBy.PRICE_ASC ||
-      name == AuctionOrderBy.PRICE_DESC ||
-      (filters?.winner && AuctionOrderBy.TIME_DESC)
-    ) {
-      return AuctionRepository.SEARCH_FILTERS[name];
-    }
-    return Object.assign({ status: 'asc' }, AuctionRepository.SEARCH_FILTERS[name]);
+    return AuctionRepository.SEARCH_FILTERS[name];
   }
 
-  private populateAuctionQuery<T>(query: Query<T, IAuctionModel>): Query<T, IAuctionModel> {
-    for (let i = 0; i < this.auctionPopulateOpts.length; i++) {
-      query.populate(this.auctionPopulateOpts[i]);
-    }
-    return query;
+  private async populateAuctionQuery<T>(query: Query<T, IAuctionModel>): Promise<any> {
+    return query.populate(this.auctionPopulateOpts);
   }
 
-  private populateAuctionModel(model: IAuctionModel): IAuctionModel {
-    for (let i = 0; i < this.auctionPopulateOpts.length; i++) {
-      model.populate(this.auctionPopulateOpts[i]);
-    }
-    return model;
+  private async populateAuctionModel(model: IAuctionModel): Promise<IAuctionModel> {
+    return model.populate(this.auctionPopulateOpts);
   }
 
   private static getSearchOptions(
@@ -92,16 +77,18 @@ export class AuctionRepository implements IAuctionRepository {
     filters: AuctionSearchFilters | null,
     statusFilter: string[],
   ): ISearchOptions {
+    const mongoose = require('mongoose');
+    const charityIds = filters?.charity ? filters?.charity.map((el) => mongoose.Types.ObjectId(el)) : [];
     return ([
       [statusFilter, { status: { $in: statusFilter } }],
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
       [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
-      [filters?.charity?.length, { charity: { $in: filters?.charity?.map((id: string) => Types.ObjectId(id)) } }],
+      [charityIds.length, { charity: { $in: charityIds } }],
       [filters?.status, { status: { $in: filters?.status } }],
       [filters?.selectedAuction, { _id: { $ne: filters?.selectedAuction } }],
       [filters?.winner, { winner: filters?.winner }],
-      [filters?.ids?.length, { _id: { $in: filters?.ids?.map((id: string) => Types.ObjectId(id)) } }],
+      [filters?.ids?.length, { _id: { $in: filters?.ids } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {},
@@ -210,7 +197,7 @@ export class AuctionRepository implements IAuctionRepository {
         endsAt: utcCurrentDate.add(3, 'days').toISOString(),
         createdAt: utcCurrentDateISO,
         updatedAt: utcCurrentDateISO,
-        auctionOrganizer: Types.ObjectId(organizerId),
+        auctionOrganizer: organizerId,
         startPrice: input.startPrice?.getAmount(),
         currentPrice: input.startPrice?.getAmount(),
         itemPrice: input.itemPrice?.getAmount(),
@@ -240,12 +227,12 @@ export class AuctionRepository implements IAuctionRepository {
       })}`,
     );
 
-    return this.populateAuctionModel(auction).execPopulate();
+    return await this.populateAuctionModel(auction);
   }
 
   public async getPopulatedAuction(auction: IAuctionModel) {
     try {
-      return this.populateAuctionModel(auction).execPopulate();
+      return await this.populateAuctionModel(auction);
     } catch (error) {
       throw new AppError(
         `Cannot populate auction model #${auction._id.toString()} with error: ${error.message}`,
@@ -256,11 +243,11 @@ export class AuctionRepository implements IAuctionRepository {
 
   public async getAuctionOrganizerUserAccountFromAuction(auction: IAuctionModel) {
     try {
-      return auction
-        .populate({ path: 'auctionOrganizer', model: this.InfluencerModel })
-        .populate({ path: 'auctionOrganizer', populate: { path: 'userAccount', model: this.UserAccountModel } })
-        .populate({ path: 'shortLink', model: this.ShortLinkModel })
-        .execPopulate();
+      return auction.populate([
+        { path: 'auctionOrganizer', model: this.InfluencerModel },
+        { path: 'auctionOrganizer', populate: { path: 'userAccount', model: this.UserAccountModel } },
+        { path: 'shortLink', model: this.ShortLinkModel },
+      ]);
     } catch (error) {
       throw new AppError(
         `Cannot populate auction model #${auction._id.toString()} with error: ${error.message}`,
@@ -306,7 +293,7 @@ export class AuctionRepository implements IAuctionRepository {
       })}`,
     );
 
-    return this.populateAuctionModel(updatedAuction).execPopulate();
+    return await this.populateAuctionModel(updatedAuction);
   }
 
   async updateAuction(
@@ -338,12 +325,15 @@ export class AuctionRepository implements IAuctionRepository {
       throw new AppError(`Buy Now price should be less than $${AppConfig.bid.maxPriceValue}`);
 
     const updatedAuction = await auction.save();
-    return this.populateAuctionModel(updatedAuction).execPopulate();
+
+    return await this.populateAuctionModel(updatedAuction);
   }
 
   async getAuction(id: string, organizerId?: string): Promise<IAuctionModel> {
-    const organizerOpts = organizerId ? { auctionOrganizer: Types.ObjectId(organizerId) } : {};
-    return this.populateAuctionQuery<IAuctionModel>(this.AuctionModel.findOne({ _id: id, ...organizerOpts })).exec();
+    const organizerOpts = organizerId ? { auctionOrganizer: organizerId } : {};
+    const query = this.AuctionModel.findOne({ _id: id, ...organizerOpts });
+
+    return await this.populateAuctionQuery<IAuctionModel>(query);
   }
 
   async countAuctions({
@@ -360,6 +350,64 @@ export class AuctionRepository implements IAuctionRepository {
       .exec();
   }
 
+  private aggregateLookups(): any[] {
+    return [
+      { $lookup: { from: 'influencers', localField: 'auctionOrganizer', foreignField: '_id', as: 'auctionOrganizer' } },
+      {
+        $lookup: {
+          from: 'charities',
+          localField: 'charity',
+          foreignField: '_id',
+          as: 'charity',
+        },
+      },
+      { $lookup: { from: 'accounts', localField: 'userAccount', foreignField: '_id', as: 'userAccount' } },
+      {
+        $lookup: {
+          from: 'auction_assets',
+          let: { assets: '$assets' },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $in: ['$_id', '$$assets'] },
+              },
+            },
+          ],
+          as: 'assets',
+        },
+      },
+      {
+        $lookup: {
+          from: 'accounts',
+          let: { followers: '$followers' },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $in: ['$_id', '$$followers'] },
+              },
+            },
+          ],
+          as: 'followers',
+        },
+      },
+    ];
+  }
+
+  private aggregateSortOptions(
+    name: string,
+    filters: AuctionSearchFilters,
+    statusFilter: string[],
+  ): { [key: string]: 1 | -1 } {
+    const sort = AuctionRepository.searchSortOptionsByName(name, statusFilter, filters);
+    const aggregateSort: { [key: string]: 1 | -1 } = {};
+
+    Object.keys(sort).forEach(function (key) {
+      aggregateSort[key] = sort[key] === 'asc' ? 1 : -1;
+    });
+
+    return aggregateSort;
+  }
+
   async getAuctions({
     query,
     size,
@@ -368,19 +416,29 @@ export class AuctionRepository implements IAuctionRepository {
     filters,
     statusFilter,
   }: IAuctionFilters): Promise<IAuctionModel[]> {
-    const auctions = this.populateAuctionQuery<IAuctionModel[]>(
-      this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters, statusFilter)),
+    const auctions = this.AuctionModel.aggregate(
+      [
+        {
+          $addFields: {
+            isActive: {
+              $cond: { if: { $eq: ['$status', AuctionStatus.ACTIVE] }, then: 1, else: -1 },
+            },
+          },
+        },
+        {
+          $match: { $and: [AuctionRepository.getSearchOptions(query, filters, statusFilter)] },
+        },
+        { $sort: this.aggregateSortOptions(orderBy, filters, statusFilter) },
+      ].concat(this.aggregateLookups()),
     )
-      .skip(skip)
-      .limit(size)
-      .sort(AuctionRepository.searchSortOptionsByName(orderBy, statusFilter, filters));
+      .skip(skip || 0)
+      .limit(size || 100);
+
     return await auctions.exec();
   }
 
   async getAuctionsCount({ query, filters, statusFilter }: IAuctionFilters): Promise<number> {
-    return this.populateAuctionQuery<IAuctionModel[]>(
-      this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters, statusFilter)),
-    )
+    return this.AuctionModel.find(AuctionRepository.getSearchOptions(query, filters, statusFilter))
       .countDocuments()
       .exec();
   }
@@ -405,19 +463,23 @@ export class AuctionRepository implements IAuctionRepository {
     return result?.length ? result[0] : { min: 0, max: 0 };
   }
 
-  public getInfluencersAuctions(id: string): Promise<IAuctionModel[]> {
-    return this.populateAuctionQuery(this.AuctionModel.find({ auctionOrganizer: Types.ObjectId(id) })).exec();
+  public async getInfluencersAuctions(id: string): Promise<IAuctionModel[]> {
+    const query = this.AuctionModel.find({ auctionOrganizer: id });
+
+    return await this.populateAuctionQuery(query);
   }
 
   async addAuctionAttachment(id: string, asset: IAuctionAssetModel): Promise<IAuctionAssetModel> {
     const auction = await this.getAuction(id);
+
     auction.assets.push(asset);
     await auction.save();
+
     return asset;
   }
 
   private async findAuction(id: string, organizerId?: string): Promise<IAuctionModel> {
-    const organizerOpts = organizerId ? { auctionOrganizer: Types.ObjectId(organizerId) } : {};
+    const organizerOpts = organizerId ? { auctionOrganizer: organizerId } : {};
     const auction = await this.AuctionModel.findOne({ _id: id, ...organizerOpts }).exec();
     if (auction) return auction;
 

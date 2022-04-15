@@ -52,9 +52,9 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
   {
     title: { type: SchemaTypes.String, required: true },
     description: { type: SchemaTypes.String },
-    status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT },
-    charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName },
-    sentNotifications: { type: SchemaTypes.Array, default: [] },
+    status: { type: SchemaTypes.String, default: AuctionStatus.DRAFT, index: true },
+    charity: { type: SchemaTypes.ObjectId, ref: CharityCollectionName, index: true },
+    sentNotifications: [{ type: SchemaTypes.Array, default: [] }],
     followers: [
       {
         user: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
@@ -67,7 +67,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
     currentPrice: { type: SchemaTypes.Number, default: 0 },
     bidStep: { type: SchemaTypes.Number, default: AppConfig.bid.minBidValue * 100 },
     assets: [{ type: SchemaTypes.ObjectId, ref: AuctionAssetCollectionName }],
-    auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName, required: true },
+    auctionOrganizer: { type: SchemaTypes.ObjectId, ref: InfluencerCollectionName, required: true, index: true },
     startsAt: {
       type: SchemaTypes.Date,
       get: (v) => dayjs(v),
@@ -97,7 +97,7 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
       },
     ],
     totalBids: { type: SchemaTypes.Number, default: 0 },
-    winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName },
+    winner: { type: SchemaTypes.ObjectId, ref: UserAccountCollectionName, index: true },
     delivery: {
       deliveryMethod: { type: SchemaTypes.String },
       shippingLabel: { type: SchemaTypes.String },

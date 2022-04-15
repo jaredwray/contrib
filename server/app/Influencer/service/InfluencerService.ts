@@ -59,15 +59,14 @@ export class InfluencerService {
 
       if (!activeAuctions.length) return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
 
-      const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer.toString());
-      const uniqOrganizersWithActiveAuctions = Array.from(new Set(auctionOrganisers)).map((id) => Types.ObjectId(id));
+      const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer);
 
       const activeInfluencers = await this.InfluencerModel.find({
-        _id: { $in: uniqOrganizersWithActiveAuctions },
+        _id: { $in: auctionOrganisers },
         ...defaultFilters,
       }).sort(sortOption);
       const otherInfluencers = await this.InfluencerModel.find({
-        _id: { $nin: uniqOrganizersWithActiveAuctions },
+        _id: { $nin: auctionOrganisers },
         ...defaultFilters,
       }).sort(sortOption);
 
@@ -381,7 +380,7 @@ export class InfluencerService {
       assistants: assistants?.map((assistant) => assistant.toString()) ?? [],
       totalRaisedAmount: Dinero({
         currency: AppConfig.app.defaultCurrency as Dinero.Currency,
-        amount: model.totalRaisedAmount,
+        amount: totalRaisedAmount,
       }),
       followers: followers.map((follower) => {
         return {
