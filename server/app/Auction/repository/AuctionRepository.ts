@@ -83,7 +83,7 @@ export class AuctionRepository implements IAuctionRepository {
       [statusFilter, { status: { $in: statusFilter } }],
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
-      [filters?.auctionOrganizer, { auctionOrganizer: filters?.auctionOrganizer }],
+      [filters?.auctionOrganizer, { auctionOrganizer: mongoose.Types.ObjectId(filters.auctionOrganizer) }],
       [charityIds.length, { charity: { $in: charityIds } }],
       [filters?.status, { status: { $in: filters?.status } }],
       [filters?.selectedAuction, { _id: { $ne: filters?.selectedAuction } }],
@@ -399,7 +399,9 @@ export class AuctionRepository implements IAuctionRepository {
     filters,
     statusFilter,
   }: IAuctionFilters): Promise<IAuctionModel[]> {
-    const auctions = this.AuctionModel.aggregate(
+    let auctions;
+
+    auctions = this.AuctionModel.aggregate(
       [
         {
           $addFields: {
@@ -413,11 +415,13 @@ export class AuctionRepository implements IAuctionRepository {
         },
         { $sort: this.aggregateSortOptions(orderBy, filters, statusFilter) },
       ].concat(this.aggregateLookups()),
-    )
-      .skip(skip || 0)
-      .limit(size || 100);
+    );
 
-    return await auctions.exec();
+    if (size) {
+      auctions = auctions.skip(skip || 0).limit(size);
+    }
+
+    return auctions.exec();
   }
 
   async getAuctionsCount({ query, filters, statusFilter }: IAuctionFilters): Promise<number> {
