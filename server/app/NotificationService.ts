@@ -6,7 +6,6 @@ import { AppError, ErrorCode } from '../errors';
 import { AppLogger } from '../logger';
 import { AppConfig } from '../config';
 import { CloudTaskService } from './CloudTaskService';
-import { twilioMessageService } from './twilioClient';
 
 export enum MessageTemplate {
   AUCTION_DELIVERY_DETAILS_FOR_WINNER = 'auction-delivery-details-for-winner',
@@ -27,16 +26,38 @@ export enum MessageTemplate {
 
 export class NotificationService {
   constructor(private readonly cloudTaskService: CloudTaskService) {}
+  private readonly airhorn = require(`${
+    AppConfig.environment.isLocal ? '..' : '/usr/src/app/server'
+  }/node_modules/airhorn/dist/src/airhorn`);
+  private readonly airhornProviderTypes = require(`${
+    AppConfig.environment.isLocal ? '..' : '/usr/src/app/server'
+  }/node_modules/airhorn/dist/src/provider-type`);
+  private readonly airhornClient = new this.airhorn.Airhorn({
+    TEMPLATE_PATH: `${__dirname}/../templates`,
+    TWILIO_SMS_ACCOUNT_SID: AppConfig.twilio.accountSid,
+    TWILIO_SMS_AUTH_TOKEN: AppConfig.twilio.authToken,
+  });
 
   async sendMessageNow(phoneNumber: string, template: string, context: object): Promise<void> {
     try {
-      const message = await this.renderMessage(template, context);
-      const result = await twilioMessageService.create({
-        body: message,
-        to: phoneNumber,
-        from: AppConfig.twilio.senderNumber,
-      });
-      AppLogger.debug(`sent notification to ${phoneNumber}:\n${message}`);
+      const result = await this.airhornClient.send(
+        phoneNumber,
+        AppConfig.twilio.senderNumber,
+        template,
+        this.airhornProviderTypes.ProviderType.SMS,
+        context,
+      );
+
+      let message;
+
+      try {
+        message = await this.renderMessage(template, context);
+        AppLogger.debug(`sent notification to ${phoneNumber}:\n${message}`);
+      } catch (error) {}
+
+      if (!result) {
+        AppLogger.error(`Cannot send the notification to ${phoneNumber}: ${message}`);
+      }
     } catch (error) {
       AppLogger.error(`Cannot send the notification to ${phoneNumber}: ${error.message}`);
     }
