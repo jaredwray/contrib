@@ -155,8 +155,8 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           </Row>
         </Container>
       </section>
-      <section className={clsx(styles.sliders, 'py-4 py-md-5')}>
-        <Container fluid={isLoadingAuctions ? 'xxl' : true}>
+      <section className={clsx(styles.sliders, 'py-2 py-md-5')}>
+        <Container className="mx-0 p-0 mx-md-3" fluid={!isLoadingAuctions}>
           {isLoadingAuctions ? (
             <AuctionsInfoLoading name={influencer.name} />
           ) : (
