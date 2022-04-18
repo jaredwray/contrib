@@ -12,7 +12,7 @@ interface Props {
 
 export const QRCodeModal: FC<Props> = ({ name, src, open, onClose }) => {
   return (
-    <Dialog className="pb-0" open={open} title={`Share Charity: ${name}`} onClose={onClose}>
+    <Dialog classNameHeader="pb-0" open={open} title={`Share Charity: ${name}`} onClose={onClose}>
       <DialogContent className="p-0">
         <img alt="qr code" className="mx-auto d-block w-100 h-100" src={src} />
       </DialogContent>

@@ -36,7 +36,7 @@ export const Modal: FC<Props> = ({ open, onClose, onConfirm, mutation, auction }
   }, [deleteAuction, auction, onConfirm, onClose]);
 
   return (
-    <Dialog className="fw-normal text-center" open={open} title="Confirm deleting" onClose={onClose}>
+    <Dialog classNameHeader="fw-normal text-center" open={open} title="Confirm deleting" onClose={onClose}>
       <DialogContent>
         Do you want to delete an auction: <b>{auction.title}</b>?
       </DialogContent>
