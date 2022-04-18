@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils';
 import { MockedProvider } from '@apollo/client/testing';
 
 //import HeartBtn from 'src/components/buttons/HeartButton';
-import AuctionCard from 'src/components/customComponents/AuctionCard';
+import AuctionCard from 'src/components/custom/AuctionCard';
 import { CloseButton } from 'src/components/buttons/CloseButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { auction } from 'src/helpers/testHelpers/auction';

@@ -13,7 +13,7 @@ import {
   ActivateAuctionMutation,
   DeleteAuctionMutation,
 } from 'src/apollo/queries/auctions';
-import { PER_PAGE } from 'src/components/customComponents/Pagination';
+import { PER_PAGE } from 'src/components/custom/Pagination';
 import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import { AdminPage } from 'src/components/layouts/AdminPage';
 import ClickableTr from 'src/components/wrappers/ClickableTr';

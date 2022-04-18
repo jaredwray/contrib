@@ -1,5 +1,5 @@
 import { shallow, ShallowWrapper } from 'enzyme';
-import Pagination from 'src/components/customComponents/Pagination';
+import Pagination from 'src/components/custom/Pagination';
 
 describe('Should render correctly "Pagination"', () => {
   const props: any = {

@@ -10,7 +10,7 @@ import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import Pagination, { PER_PAGE } from '../../customComponents/Pagination';
+import Pagination, { PER_PAGE } from '../../custom/Pagination';
 import styles from './styles.module.scss';
 
 interface Items {

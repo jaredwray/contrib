@@ -3,7 +3,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import { AuctionStatus } from 'src/types/Auction';
 import { auction } from 'src/helpers/testHelpers/auction';
 import { influencer } from 'src/helpers/testHelpers/influencer';
-import { NoAuctionsInfo } from 'src/components/customComponents/AuctionsStatusInfo/NoAuctionsInfo';
+import { NoAuctionsInfo } from 'src/components/custom/AuctionsStatusInfo/NoAuctionsInfo';
 
 import { InfluencerAuctionsInfo } from '../index';
 

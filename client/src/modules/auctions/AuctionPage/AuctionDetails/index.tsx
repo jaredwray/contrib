@@ -6,8 +6,8 @@ import Dinero from 'dinero.js';
 import { Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import AuctionItemsFMV from 'src/components/customComponents/AuctionItems';
-import InformationLink from 'src/components/customComponents/InformationLink';
+import AuctionItemsFMV from 'src/components/custom/AuctionItems';
+import InformationLink from 'src/components/custom/InformationLink';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { MAX_PRICE_VALUE } from 'src/constants';
 import { Auction, AuctionDeliveryStatus } from 'src/types/Auction';

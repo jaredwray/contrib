@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import Loading from 'src/components/customComponents/Loading';
+import Loading from 'src/components/custom/Loading';
 
 interface Props {
   name: string;

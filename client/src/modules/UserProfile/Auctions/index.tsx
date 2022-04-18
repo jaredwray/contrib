@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { useQuery } from '@apollo/client';
 
 import { GetAuctionsForProfilePageQuery } from 'src/apollo/queries/userProfile';
-import AuctionCard from 'src/components/customComponents/AuctionCard';
+import AuctionCard from 'src/components/custom/AuctionCard';
 import { Auction } from 'src/types/Auction';
 
 import Сarousel from './Carousel';

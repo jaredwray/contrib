@@ -4,7 +4,7 @@ import { Container, ProgressBar } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
-import AuctionCard from 'src/components/customComponents/AuctionCard';
+import AuctionCard from 'src/components/custom/AuctionCard';
 import CopiedText from 'src/components/forms/inputs/CopiedText';
 import Layout from 'src/components/layouts/Layout';
 import { getShortLink } from 'src/helpers/getShortLink';

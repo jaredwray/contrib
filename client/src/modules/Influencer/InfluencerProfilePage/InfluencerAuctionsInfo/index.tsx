@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
-import AuctionCard from 'src/components/customComponents/AuctionCard';
-import { NoAuctionsInfo } from 'src/components/customComponents/AuctionsStatusInfo/NoAuctionsInfo';
+import AuctionCard from 'src/components/custom/AuctionCard';
+import { NoAuctionsInfo } from 'src/components/custom/AuctionsStatusInfo/NoAuctionsInfo';
 import { ProfileSliderRow } from 'src/components/wrappers/ProfileSliderRow';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import { Auction } from 'src/types/Auction';

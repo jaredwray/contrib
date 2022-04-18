@@ -3,7 +3,7 @@ import { FC, useState, useCallback, useEffect, useMemo } from 'react';
 import { useLazyQuery } from '@apollo/client';
 
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
-import AuctionCard from 'src/components/customComponents/AuctionCard';
+import AuctionCard from 'src/components/custom/AuctionCard';
 import { AllItemsLayout, PER_PAGE } from 'src/components/layouts/AllItemsLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction, AuctionStatus } from 'src/types/Auction';

@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import { Container, Row } from 'react-bootstrap';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
-import AuctionCard from 'src/components/customComponents/AuctionCard';
-import Slider from 'src/components/customComponents/Slider';
+import AuctionCard from 'src/components/custom/AuctionCard';
+import Slider from 'src/components/custom/Slider';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
