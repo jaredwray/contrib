@@ -37,7 +37,12 @@ export const Modal: FC<Props> = ({
   const { bid, user } = currentBid;
 
   return (
-    <Dialog className="fw-normal text-left" open={open} title={`Charge ${isBid ? 'bid' : 'auction'}`} onClose={onClose}>
+    <Dialog
+      classNameHeader="fw-normal text-left"
+      open={open}
+      title={`Charge ${isBid ? 'bid' : 'auction'}`}
+      onClose={onClose}
+    >
       <DialogContent className="text-center pt-0">
         <p>
           Withdraw <b>${bid?.amount / 100}</b>

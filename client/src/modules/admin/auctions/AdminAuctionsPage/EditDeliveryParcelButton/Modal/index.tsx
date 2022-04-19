@@ -71,7 +71,13 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction, getAuctions
   );
 
   return (
-    <Dialog className="fw-normal text-center" open={open} size="sm" title="Delivery box properties" onClose={onClose}>
+    <Dialog
+      classNameHeader="fw-normal text-center"
+      open={open}
+      size="sm"
+      title="Delivery box properties"
+      onClose={onClose}
+    >
       <Form initialValues={currentValues} onSubmit={onSubmit}>
         <DialogContent>
           <ModalRow title="Length in">

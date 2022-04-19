@@ -25,7 +25,7 @@ const Modal: FC<Props> = ({ currentPhoneNumber, showDialog, setCloseDialog, setP
   }, [setCloseDialog]);
 
   return (
-    <Dialog className="p-4" open={showDialog} title="Confirm Number" onClose={onClose}>
+    <Dialog classNameHeader="p-4" open={showDialog} title="Confirm Number" onClose={onClose}>
       <DialogContent className={styles.content}>
         {verified ? (
           <ConfirmationStep

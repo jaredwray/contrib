@@ -1,4 +1,4 @@
-import { FC, useContext, useCallback } from 'react';
+import { FC, useContext, useCallback, useState, useEffect } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { Button } from 'react-bootstrap';
@@ -15,7 +15,10 @@ import TermsText from 'src/components/modals/TermsConfirmationDialog/TermsText';
 
 import styles from './styles.module.scss';
 
+const IGNORED_PAGES = ['/privacy-policy', '/terms', '/privacy'];
+
 const TermsConfirmationDialog: FC = () => {
+  const [show, setShow] = useState(false);
   const { addToast } = useToasts();
   const { account } = useContext(UserAccountContext);
   const [acceptAccountTerms] = useMutation(AcceptAccountTermsMutation);
@@ -26,14 +29,22 @@ const TermsConfirmationDialog: FC = () => {
 
       try {
         await acceptAccountTerms({ variables: { version: account?.notAcceptedTerms } });
-
-        window.location.reload(false);
+        setShow(false);
       } catch (error) {
         addToast(error.message, { autoDismiss: true, appearance: 'error' });
       }
     },
     [account, acceptAccountTerms, addToast],
   );
+
+  useEffect(() => {
+    // to cover other modals
+    const timer = setTimeout(() => setShow(true), 1);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [setShow]);
 
   const checkboxLabel = (
     <>
@@ -44,12 +55,10 @@ const TermsConfirmationDialog: FC = () => {
     </>
   );
 
-  if (!account?.notAcceptedTerms || ['/privacy-policy', '/terms', '/privacy'].includes(window.location.pathname)) {
-    return null;
-  }
+  if (!account?.notAcceptedTerms || IGNORED_PAGES.includes(window.location.pathname)) return null;
 
   return (
-    <Dialog open={true} size="lg" title="Privacy and Terms" withCloseButton={false} onClose={() => {}}>
+    <Dialog open={show} size="lg" title="Privacy and Terms" withCloseButton={false} onClose={() => {}}>
       <DialogContent>
         <Form onSubmit={onSubmit}>
           <div className={styles.terms}>
