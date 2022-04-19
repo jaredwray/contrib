@@ -26,11 +26,11 @@ export const PhoneNumberVerification: FC<Props> = ({ phoneNumber, setIsConfirmed
 
   useEffect(() => {
     if (!phoneNumber) setPhoneNumber('1');
-    if (phoneNumber[0] !== '1') {
-      const passedValue = phoneNumber.toString().split('');
-      passedValue.unshift('1');
-      setPhoneNumber(passedValue.join(''));
-    }
+    if (phoneNumber[0] === '1') return;
+
+    const passedValue = phoneNumber.toString().split('');
+    passedValue.unshift('1');
+    setPhoneNumber(passedValue.join(''));
   }, [phoneNumber, setPhoneInputIsValid, setPhoneNumber]);
 
   const handleSubmit = useCallback(() => {
@@ -68,7 +68,7 @@ export const PhoneNumberVerification: FC<Props> = ({ phoneNumber, setIsConfirmed
             <Field name="phoneNumber">
               {({ input }) => (
                 <PhoneInput
-                  className="mb-3 w-auto d-inline-block"
+                  className="w-auto d-inline-block"
                   disabled={loading}
                   otherProps={{ input }}
                   value={phoneNumber}
@@ -77,7 +77,7 @@ export const PhoneNumberVerification: FC<Props> = ({ phoneNumber, setIsConfirmed
               )}
             </Field>
             <Button
-              className="submit-btn mb-2 text-label d-inline-block"
+              className="submit-btn text-label d-inline-block"
               disabled={loading || !phoneInputIsValid}
               type="submit"
               variant="secondary"
