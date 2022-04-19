@@ -1,8 +1,11 @@
 import { FC } from 'react';
 
+import clsx from 'clsx';
 import PhoneInput from 'react-phone-input-2';
 
 import { Country, ALLOWED_COUNTRY_NAME } from 'src/types/Country';
+
+import styles from './styles.module.scss';
 
 interface Props {
   disabled?: boolean;
@@ -40,9 +43,13 @@ const USPhoneInput: FC<Props> = ({
         let validationText;
 
         if (validateFunction) validationText = validateFunction(value);
-        if (country.name !== countryName) validationText = 'You can provide USA phone numbers only';
+        if (country.name !== countryName) validationText = 'Must be a valid US phone number';
 
-        return <p className="mb-1 text-label error-message">{validationText || errorText}</p>;
+        return (
+          <p className={clsx(styles.error, 'text-label error-message position-absolute')}>
+            {validationText || errorText}
+          </p>
+        );
       }}
       placeholder=""
       specialLabel=""
