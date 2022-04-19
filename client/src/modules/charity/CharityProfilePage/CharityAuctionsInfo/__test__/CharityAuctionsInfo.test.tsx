@@ -2,7 +2,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 
 import { AuctionStatus } from 'src/types/Auction';
 import { auction } from 'src/helpers/testHelpers/auction';
-import { NoAuctionsInfo } from 'src/components/customComponents/AuctionsStatusInfo/NoAuctionsInfo';
+import { NoAuctionsInfo } from 'src/components/custom/AuctionsStatusInfo/NoAuctionsInfo';
 
 import { CharityAuctionsInfo } from '../index';
 

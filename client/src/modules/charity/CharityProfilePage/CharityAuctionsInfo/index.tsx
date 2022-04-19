@@ -2,8 +2,8 @@ import { FC } from 'react';
 
 import clsx from 'clsx';
 
-import AuctionCard from 'src/components/customComponents/AuctionCard';
-import { NoAuctionsInfo } from 'src/components/customComponents/AuctionsStatusInfo/NoAuctionsInfo';
+import AuctionCard from 'src/components/custom/AuctionCard';
+import { NoAuctionsInfo } from 'src/components/custom/AuctionsStatusInfo/NoAuctionsInfo';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
 import { Auction } from 'src/types/Auction';
 

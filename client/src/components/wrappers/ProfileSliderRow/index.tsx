@@ -2,7 +2,7 @@ import { FC, ReactElement } from 'react';
 
 import { Container } from 'react-bootstrap';
 
-import Slider from 'src/components/customComponents/Slider';
+import Slider from 'src/components/custom/Slider';
 
 interface Props {
   items: ReactElement[];

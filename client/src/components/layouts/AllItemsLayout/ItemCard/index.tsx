@@ -6,8 +6,8 @@ import { useHistory } from 'react-router-dom';
 
 import { FollowCharity, UnfollowCharity } from 'src/apollo/queries/charityProfile';
 import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
-import CoverImage from 'src/components/customComponents/CoverImage';
-import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
+import CoverImage from 'src/components/custom/CoverImage';
+import { TotalRaisedAmount } from 'src/components/custom/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';

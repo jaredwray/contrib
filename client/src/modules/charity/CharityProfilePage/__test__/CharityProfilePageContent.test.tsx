@@ -18,7 +18,7 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 import * as auth from 'src/helpers/useAuth';
 
 jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
-jest.mock('src/components/customComponents/CoverImage', () => () => <></>);
+jest.mock('src/components/custom/CoverImage', () => () => <></>);
 
 const props: any = {
   charity: {

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Image } from 'react-bootstrap';
 import Slider from 'react-slick';
 
-import AttachmentThumbnail from 'src/components/customComponents/AttachmentThumbnail';
+import AttachmentThumbnail from 'src/components/custom/AttachmentThumbnail';
 import AttachmentModal from 'src/components/modals/AttachmentModal';
 import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
 import { AuctionAttachment } from 'src/types/Auction';

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { CharitiesListQuery, InviteCharityMutation } from 'src/apollo/queries/charities';
 import { InviteButton } from 'src/components/buttons/InviteButton';
-import { PER_PAGE } from 'src/components/customComponents/Pagination';
+import { PER_PAGE } from 'src/components/custom/Pagination';
 import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import { AdminPage } from 'src/components/layouts/AdminPage';
 import ClickableTr from 'src/components/wrappers/ClickableTr';

@@ -1,6 +1,6 @@
 import { mount, ShallowWrapper } from 'enzyme';
 
-import DateDetails from 'src/components/customComponents/AuctionCard/DateDetails';
+import DateDetails from 'src/components/custom/AuctionCard/DateDetails';
 
 jest.useFakeTimers('modern').setSystemTime(new Date('2021-07-05T05:21:00.000Z'));
 

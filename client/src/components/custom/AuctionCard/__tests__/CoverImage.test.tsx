@@ -1,6 +1,6 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 
-import CoverImage from 'src/components/customComponents/CoverImage';
+import CoverImage from 'src/components/custom/CoverImage';
 
 describe('Should render correctly "CoverImage"', () => {
   const props: any = {

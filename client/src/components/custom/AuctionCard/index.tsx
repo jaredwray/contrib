@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { CloseButton } from 'src/components/buttons/CloseButton';
-import CoverImage from 'src/components/customComponents/CoverImage';
+import CoverImage from 'src/components/custom/CoverImage';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
 import { useAuth } from 'src/helpers/useAuth';

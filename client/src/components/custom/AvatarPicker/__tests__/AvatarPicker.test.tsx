@@ -5,7 +5,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import { Button } from 'react-bootstrap';
 
 import { UpdateInfluencerProfileAvatarMutation } from 'src/apollo/queries/profile';
-import { AvatarPicker } from 'src/components/customComponents/AvatarPicker';
+import { AvatarPicker } from 'src/components/custom/AvatarPicker';
 
 describe('AvatarPicker', () => {
   const props: any = {

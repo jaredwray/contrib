@@ -9,9 +9,9 @@ import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { FollowInfluencer, UnfollowInfluencer } from 'src/apollo/queries/influencers';
 import { ReadMore } from 'src/components/buttons/ReadMoreButton';
 import WatchBtn from 'src/components/buttons/WatchBtn';
-import { AuctionsInfoLoading } from 'src/components/customComponents/AuctionsStatusInfo/AuctionsInfoLoading';
-import { ProfileAvatar } from 'src/components/customComponents/ProfileAvatar';
-import { TotalRaisedAmount } from 'src/components/customComponents/TotalRaisedAmount';
+import { AuctionsInfoLoading } from 'src/components/custom/AuctionsStatusInfo/AuctionsInfoLoading';
+import { ProfileAvatar } from 'src/components/custom/ProfileAvatar';
+import { TotalRaisedAmount } from 'src/components/custom/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
@@ -155,9 +155,8 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           </Row>
         </Container>
       </section>
-
-      <section className={clsx(styles.sliders, 'pt-4 pt-md-5 pb-4 pb-md-5')}>
-        <Container fluid="xxl">
+      <section className={clsx(styles.sliders, 'py-2 py-md-5')}>
+        <Container className="mx-0 p-0 mx-md-3" fluid={!isLoadingAuctions}>
           {isLoadingAuctions ? (
             <AuctionsInfoLoading name={influencer.name} />
           ) : (

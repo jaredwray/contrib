@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Col, Row } from 'react-bootstrap';
 
 import { UpdateInfluencerProfileAvatarMutation } from 'src/apollo/queries/profile';
-import { AvatarPicker } from 'src/components/customComponents/AvatarPicker';
+import { AvatarPicker } from 'src/components/custom/AvatarPicker';
 import InputField from 'src/components/forms/inputs/InputField';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 

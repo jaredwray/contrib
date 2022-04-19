@@ -3,8 +3,8 @@ import { FC, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Button } from 'react-bootstrap';
 
-import ClicksAnalytics from 'src/components/customComponents/ClicksAnalytics';
-import Loading from 'src/components/customComponents/Loading';
+import ClicksAnalytics from 'src/components/custom/ClicksAnalytics';
+import Loading from 'src/components/custom/Loading';
 import { Metrics as MetricsType } from 'src/types/Metric';
 
 import Row from '../common/Row';

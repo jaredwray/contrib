@@ -51,9 +51,15 @@ const Slider: FC<Props> = ({ items }) => {
   }, [checkArrow]);
   const preventDefault = useCallback(
     (event: WheelEvent) => {
-      if (sliderWrapper.current?.contains(event.target)) event.preventDefault();
+      if (!sliderWrapper.current?.contains(event.target)) return;
+
+      checkArrows();
+      const activeArrow = sliderWrapper.current.querySelector(`.slick-arrow:not(.slick-disabled)`);
+      if (!activeArrow) return;
+
+      event.preventDefault();
     },
-    [sliderWrapper],
+    [sliderWrapper, checkArrows],
   );
   const scroll = useCallback(
     (e) => {

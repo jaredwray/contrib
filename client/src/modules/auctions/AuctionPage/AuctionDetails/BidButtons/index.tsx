@@ -5,7 +5,7 @@ import Dinero from 'dinero.js';
 import { Button, Row, Col } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
-import InformationLink from 'src/components/customComponents/InformationLink';
+import InformationLink from 'src/components/custom/InformationLink';
 import WithStripe from 'src/components/wrappers/WithStripe';
 import { MAX_PRICE_VALUE, MIN_BID_STEP_VALUE } from 'src/constants';
 import { useAuth } from 'src/helpers/useAuth';

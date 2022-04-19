@@ -14,8 +14,8 @@ import {
 } from 'src/apollo/queries/auctions';
 import { PopulatedAuctionBidsQuery, ChargeCurrentBidMutation } from 'src/apollo/queries/bids';
 import AsyncButton from 'src/components/buttons/AsyncButton';
-import ClicksAnalytics from 'src/components/customComponents/ClicksAnalytics';
-import Loading from 'src/components/customComponents/Loading';
+import ClicksAnalytics from 'src/components/custom/ClicksAnalytics';
+import Loading from 'src/components/custom/Loading';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { AuctionBid } from 'src/types/Bid';
