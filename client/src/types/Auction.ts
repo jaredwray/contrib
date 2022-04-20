@@ -60,8 +60,8 @@ export interface Auction {
   status: AuctionStatus;
   attachments: [AuctionAttachment];
   totalBids: number;
-  startDate: string;
-  endDate: string;
+  startsAt: string;
+  endsAt: string;
   stoppedAt?: string;
   startPrice: DineroObject;
   bidStep: DineroObject;

@@ -16,7 +16,7 @@ const props: any = {
     },
     currentPrice: { amount: 100, currency: 'USD', precision: 2 },
     description: 'zx',
-    endDate: '2021-07-29T08:05:21.000Z',
+    endsAt: '2021-07-29T08:05:21.000Z',
     fairMarketValue: null,
     followers: [],
     id: '60dceda2fdef44c133a15754',
@@ -27,7 +27,7 @@ const props: any = {
     isSold: false,
     isStopped: false,
     itemPrice: null,
-    startDate: '2021-07-03T02:43:00.095Z',
+    startsAt: '2021-07-03T02:43:00.095Z',
     startPrice: { amount: 100, currency: 'USD', precision: 2 },
     status: 'SETTLED',
     title: 'zx',
@@ -56,7 +56,7 @@ describe('Should render correctly "DateDetails"', () => {
       ...{
         auction: {
           ...props.auction,
-          ...{ endDate: '2021-06-01T00:00:00.095Z' },
+          ...{ endsAt: '2021-06-01T00:00:00.095Z' },
         },
       },
     });

@@ -13,8 +13,8 @@ export const GetAuctionsForProfilePageQuery = gql`
         isSold
         startPrice
         itemPrice
-        startDate
-        endDate
+        startsAt
+        endsAt
         auctionOrganizer {
           id
           name
@@ -45,8 +45,8 @@ export const GetAuctionsForProfilePageQuery = gql`
         title
         startPrice
         itemPrice
-        startDate
-        endDate
+        startsAt
+        endsAt
         auctionOrganizer {
           id
           name

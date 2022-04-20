@@ -19,8 +19,8 @@ interface Props {
 }
 
 export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEditClick }) => {
-  const auctionStartDate = format(new Date(auction.startDate), 'MMM dd yyyy HH:mm:ssXXX');
-  const auctionEndDate = format(new Date(auction.endDate), 'MMM dd yyyy HH:mm:ssXXX');
+  const startsAt = format(new Date(auction.startsAt), 'MMM dd yyyy HH:mm:ssXXX');
+  const endsAt = format(new Date(auction.endsAt), 'MMM dd yyyy HH:mm:ssXXX');
 
   return (
     <Row className={styles.tableContainer}>
@@ -87,11 +87,11 @@ export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEdi
           )}
           <tr>
             <td>Start date</td>
-            <td>{auctionStartDate}</td>
+            <td>{startsAt}</td>
           </tr>
           <tr>
             <td>End date</td>
-            <td>{auctionEndDate}</td>
+            <td>{endsAt}</td>
           </tr>
           <tr>
             <td>Charity Name</td>

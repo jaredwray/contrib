@@ -20,8 +20,8 @@ describe('ParcelProps function test', () => {
     ],
     link: 'test',
     totalBids: 1,
-    startDate: 'test',
-    endDate: 'test',
+    startsAt: 'test',
+    endsAt: 'test',
     startPrice: { amount: 1100, currency: 'USD', precision: 2 },
     currentPrice: { amount: 1100, currency: 'USD', precision: 2 },
     auctionOrganizer: {

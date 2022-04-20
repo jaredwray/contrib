@@ -79,8 +79,8 @@ const mocks = [
             description: 'test',
             title: 'test',
             link: 'test',
-            startDate: '2021-07-01T22:28:00.261Z',
-            endDate: '2021-08-14T19:01:00.232Z',
+            startsAt: '2021-07-01T22:28:00.261Z',
+            endsAt: '2021-08-14T19:01:00.232Z',
             startPrice: { amount: 100, currency: 'USD', precision: 2 },
             itemPrice: null,
             charity: {

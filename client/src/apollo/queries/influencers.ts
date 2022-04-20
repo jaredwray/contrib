@@ -38,9 +38,9 @@ export const GetInfluencerQuery = gql`
           id
         }
         status
-        endDate
+        endsAt
         startPrice
-        startDate
+        startsAt
         title
         totalBids
         currentPrice

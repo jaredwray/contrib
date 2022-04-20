@@ -1,7 +1,7 @@
 import { bids } from './bids';
 
 const date = new Date();
-const endDate = date.setDate(date.getDate() + 2);
+const endsAt = date.setDate(date.getDate() + 2);
 
 export const AuctionQueryAuction = {
   attachments: [
@@ -38,7 +38,7 @@ export const AuctionQueryAuction = {
     },
   },
   currentPrice: { amount: 112200, currency: 'USD', precision: 2 },
-  endDate,
+  endsAt,
   fairMarketValue: null,
   items: [],
   bidStep: { amount: 100, currency: 'USD', precision: 2 },
@@ -58,7 +58,7 @@ export const AuctionQueryAuction = {
     slug: 'testSlug',
     shortLink: 'shortLink',
   },
-  startDate: '2021-06-21T08:05:21.000Z',
+  startsAt: '2021-06-21T08:05:21.000Z',
   startPrice: { amount: 33300, currency: 'USD', precision: 2 },
   status: 'ACTIVE',
   stoppedAt: null,
@@ -104,8 +104,8 @@ export const auction = {
   shortLink: {
     slug: 'testSlug',
   },
-  startDate: '2021-05-31T14:22:48.000+00:00',
-  endDate: '2021-05-31T14:22:48.000+00:00',
+  startsAt: '2021-05-31T14:22:48.000+00:00',
+  endsAt: '2021-05-31T14:22:48.000+00:00',
   stoppedAt: '2021-05-31T14:22:48.000+00:00',
   status: 'ACTIVE',
   bids: bids,
@@ -130,7 +130,7 @@ export const auction = {
 
 export const auctionForCreation = {
   id: 'testId',
-  endDate: '2021-07-01T22:28:00.270Z',
+  endsAt: '2021-07-01T22:28:00.270Z',
   itemPrice: { amount: 10000, currency: 'USD', precision: 2 },
   title: '1',
   link: 'test',
@@ -141,7 +141,7 @@ export const auctionForCreation = {
   startPrice: { amount: 10, currency: 'USD', precision: 2 },
   fairMarketValue: { amount: 10, currency: 'USD', precision: 2 },
   items: [],
-  startDate: '2021-07-01T22:28:00.261Z',
+  startsAt: '2021-07-01T22:28:00.261Z',
   charity: { id: 'testId', name: 'test' },
   auctionOrganizer: { id: 'testId', favoriteCharities: [] },
   attachments: [{ type: 'VIDEO' }],
@@ -158,7 +158,7 @@ export const auctionForAdminPage = {
     stripeAccountId: 'acct_1J0nltPSFS13RiaC',
   },
   currentPrice: { amount: 10000000199, currency: 'USD', precision: 2 },
-  endDate: '2021-06-24T08:00:18.000Z',
+  endsAt: '2021-06-24T08:00:18.000Z',
   fairMarketValue: null,
   items: [],
   id: 'testId',
@@ -171,7 +171,7 @@ export const auctionForAdminPage = {
   shortLink: {
     slug: 'testSlug',
   },
-  startDate: '2021-06-23T08:00:18.000Z',
+  startsAt: '2021-06-23T08:00:18.000Z',
   startPrice: { amount: 100, currency: 'USD', precision: 2 },
   bidStep: { amount: 100, currency: 'USD', precision: 2 },
   status: 'FAILED',
