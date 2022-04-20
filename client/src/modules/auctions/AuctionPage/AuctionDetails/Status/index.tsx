@@ -16,10 +16,10 @@ interface Props {
 
 const Status: FC<Props> = ({ auction, canBid, ended }): ReactElement => {
   const [minutesWithoutReload, SetMinutesinterval] = useState(0);
-  const { endDate, isSold, isStopped, stoppedAt, status } = auction;
-  const durationTillEnd = toHumanReadableDuration(endDate);
-  const endDateFormatted = dateFormat(new Date(endDate), 'EEEE, dd, hh:mma');
-  const secondsLeft = differenceInSeconds(toDate(endDate), new Date());
+  const { endsAt, isSold, isStopped, stoppedAt, status } = auction;
+  const durationTillEnd = toHumanReadableDuration(endsAt);
+  const endsAtFormatted = dateFormat(new Date(endsAt), 'EEEE, dd, hh:mma');
+  const secondsLeft = differenceInSeconds(toDate(endsAt), new Date());
 
   let callAfterMs = 60000;
   let soldTime = '';
@@ -48,7 +48,7 @@ const Status: FC<Props> = ({ auction, canBid, ended }): ReactElement => {
             </>
           )}
           <span>{ended && 'ended'} on </span>
-          {endDateFormatted}
+          {endsAtFormatted}
         </span>
       )}
       {isStopped && (

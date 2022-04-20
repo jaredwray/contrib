@@ -58,8 +58,8 @@ export const AuctionSchema = gql`
     itemPrice: Money
     currentPrice: Money
     charity: Charity
-    startDate: DateTime
-    endDate: DateTime
+    startsAt: DateTime
+    endsAt: DateTime
     stoppedAt: DateTime
     auctionOrganizer: InfluencerProfile
     totalBids: Int
@@ -201,8 +201,8 @@ export const AuctionSchema = gql`
     organizerId: String
     title: String
     description: String
-    startDate: DateTime
-    endDate: DateTime
+    startsAt: DateTime
+    endsAt: DateTime
     startPrice: Money
     bidStep: Money
     charity: String

@@ -580,25 +580,12 @@ export class AuctionService {
   }
 
   public async updateAuction(id: string, userId: string, input: AuctionInput, isAdmin: boolean): Promise<Auction> {
-    const {
-      startDate,
-      endDate,
-      charity,
-      startPrice,
-      bidStep,
-      itemPrice,
-      duration,
-      fairMarketValue,
-      items,
-      ...rest
-    } = objectTrimmer(input);
+    const { startPrice, bidStep, itemPrice, duration, fairMarketValue, items, ...rest } = objectTrimmer(input);
 
     const auction = await this.auctionRepository.updateAuction(
       id,
       userId,
       {
-        ...(startDate ? { startsAt: startDate } : {}),
-        ...(endDate ? { endsAt: endDate } : {}),
         ...(duration ? { startsAt: dayjs().second(0), endsAt: dayjs().second(0).add(duration, 'days') } : {}),
         ...(startPrice
           ? {
@@ -637,7 +624,6 @@ export class AuctionService {
               bidStep: bidStep.getAmount(),
             }
           : {}),
-        ...(charity ? { charity } : {}),
         ...rest,
       },
       isAdmin,
@@ -1233,8 +1219,6 @@ export class AuctionService {
   public makeAuction(model: IAuctionModel): Auction | null {
     const {
       _id,
-      startsAt,
-      endsAt,
       assets,
       status,
       itemPrice,
@@ -1258,8 +1242,6 @@ export class AuctionService {
       ...rest,
       id: _id.toString(),
       attachments: this.makeAssets(assets),
-      endDate: endsAt,
-      startDate: startsAt,
       charity: charity ? CharityService.makeCharity(charity) : null,
       currentPrice: Dinero({ currency, amount: currentPrice }),
       startPrice: Dinero({ currency, amount: startPrice }),

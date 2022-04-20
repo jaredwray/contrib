@@ -18,8 +18,8 @@ export type IAuctionFilters = {
 export interface ICreateAuction {
   title?: string;
   description?: string;
-  startDate?: Dayjs;
-  endDate?: Dayjs;
+  startsAt?: Dayjs;
+  endsAt?: Dayjs;
   startPrice?: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
   organizerId?: string;
@@ -33,8 +33,8 @@ export type IUpdateAuction = {
   description?: string;
   password?: string;
   charity?: Types.ObjectId;
-  startDate?: dayjs.Dayjs;
-  endDate?: dayjs.Dayjs;
+  startsAt?: dayjs.Dayjs;
+  endsAt?: dayjs.Dayjs;
   organizerId?: string;
   fairMarketValue?: number;
   items?: IAuctionItem[];

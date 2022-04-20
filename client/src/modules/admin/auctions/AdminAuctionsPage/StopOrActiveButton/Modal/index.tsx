@@ -24,9 +24,9 @@ interface Props {
 
 export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
   const [SetAuctionStatusToStopped, { loading: updating }] = useMutation(mutation);
-  const { title, endDate, isStopped } = auction;
-  const isSettled = isAfter(new Date(), toDate(endDate));
-  const readableEndDate = (endDate: string) => `${format(new Date(endDate), 'MMM dd yyyy')}`;
+  const { title, isStopped } = auction;
+  const isSettled = isAfter(new Date(), toDate(auction.endsAt));
+  const endsAt = format(new Date(auction.endsAt), 'MMM dd yyyy');
 
   const onSubmit = useCallback(() => {
     SetAuctionStatusToStopped({
@@ -39,7 +39,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
       return (
         <>
           <p>
-            The auction <b>{title}</b> has been expired on <b>{readableEndDate(endDate)}</b>,
+            The auction <b>{title}</b> has been expired on <b>{endsAt}</b>,
           </p>
           <p>
             so it will be changed to <b>SETTLED</b>.
@@ -62,7 +62,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, auction }) => {
           Do you want to activate an auction: <b>{title}</b>?
         </p>
         <p>
-          It will end on <b>{readableEndDate(endDate)}</b>
+          It will end on <b>{endsAt}</b>
         </p>
       </>
     );

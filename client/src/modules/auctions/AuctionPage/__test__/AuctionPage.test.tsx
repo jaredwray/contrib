@@ -78,7 +78,7 @@ const mockAuctionSubscriptionData = {
   ],
   status: 'testStatus',
   currentPrice: { amount: 1100, currency: 'USD', precision: 2 },
-  endDate: '2021-02-18T14:36:35.208+00:00',
+  endsAt: '2021-02-18T14:36:35.208+00:00',
   stoppedAt: null,
   totalBids: 2,
   isActive: true,

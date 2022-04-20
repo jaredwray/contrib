@@ -55,8 +55,8 @@ export const AuctionForAdminPageQuery = gql`
       id
       title
       status
-      startDate
-      endDate
+      startsAt
+      endsAt
       startPrice
       bitlyLink
       bidStep
@@ -137,8 +137,8 @@ export const AuctionQuery = gql`
   query Auction($id: String!) {
     auction(id: $id) {
       id
-      startDate
-      endDate
+      startsAt
+      endsAt
       stoppedAt
       startPrice
       title
@@ -259,8 +259,8 @@ export const AuctionsListQuery = gql`
         startPrice
         bidStep
         itemPrice
-        startDate
-        endDate
+        startsAt
+        endsAt
         password
         auctionOrganizer {
           id
@@ -328,7 +328,7 @@ export const GetAuctionDetailsQuery = gql`
   query GetAuctionDetails($id: String!) {
     auction(id: $id) {
       id
-      endDate
+      endsAt
       itemPrice
       bidStep
       title
@@ -336,7 +336,7 @@ export const GetAuctionDetailsQuery = gql`
       status
       isActive
       startPrice
-      startDate
+      startsAt
       fairMarketValue
       password
       items {
@@ -437,8 +437,8 @@ export const UpdateAuctionMutation = gql`
     $id: String!
     $title: String
     $description: String
-    $startDate: DateTime
-    $endDate: DateTime
+    $startsAt: DateTime
+    $endsAt: DateTime
     $startPrice: Money
     $bidStep: Money
     $itemPrice: Money
@@ -453,8 +453,8 @@ export const UpdateAuctionMutation = gql`
       input: {
         description: $description
         title: $title
-        startDate: $startDate
-        endDate: $endDate
+        startsAt: $startsAt
+        endsAt: $endsAt
         startPrice: $startPrice
         bidStep: $bidStep
         itemPrice: $itemPrice
@@ -468,8 +468,8 @@ export const UpdateAuctionMutation = gql`
       id
       description
       title
-      startDate
-      endDate
+      startsAt
+      endsAt
       startPrice
       bidStep
       itemPrice
@@ -584,7 +584,7 @@ export const AuctionSubscription = gql`
       }
       status
       currentPrice
-      endDate
+      endsAt
       stoppedAt
       totalBids
       isActive

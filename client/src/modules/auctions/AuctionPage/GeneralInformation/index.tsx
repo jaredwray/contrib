@@ -26,7 +26,7 @@ const GeneralInformation: FC<Props> = ({ auction }): ReactElement => {
   const [followAuction, { loading: followLoading }] = useMutation(FollowAuctionMutation);
   const [unfollowAuction, { loading: unfollowLoading }] = useMutation(UnfollowAuctionMutation);
   const auctionId = auction.id;
-  const { endDate, followers } = auction;
+  const { endsAt, followers } = auction;
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth();
   const { showMessage, showError } = useShowNotification();
@@ -34,7 +34,7 @@ const GeneralInformation: FC<Props> = ({ auction }): ReactElement => {
 
   const [followed, setFollowed] = useState(() => followers?.some((follower) => follower.user === account?.mongodbId));
   const [followersNumber, setFollowersNumber] = useState(followers?.length || 0);
-  const ended = toDate(endDate) <= new Date();
+  const ended = toDate(endsAt) <= new Date();
 
   const handleFollowAuction = useCallback(async () => {
     if (isAuthenticated) {

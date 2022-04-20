@@ -16,8 +16,8 @@ export interface Auction {
   attachments: AuctionAssets[];
   auctionOrganizer: InfluencerProfile;
   charity: Charity;
-  startDate: Dayjs;
-  endDate: Dayjs;
+  startsAt: Dayjs;
+  endsAt: Dayjs;
   stoppedAt: Dayjs;
   status: AuctionStatus;
   totalBids: number;

@@ -37,7 +37,7 @@ const DurationPage = () => {
     },
   });
   const selectedOption = useCallback(() => {
-    const duration = differenceInCalendarDays(parseISO(auction?.endDate), parseISO(auction?.startDate)) || 3;
+    const duration = differenceInCalendarDays(parseISO(auction?.endsAt), parseISO(auction?.startsAt)) || 3;
     return durationOptions.find(({ value }) => parseInt(value, 10) === duration);
   }, [auction]);
   const handlePrevAction = useCallback(() => {

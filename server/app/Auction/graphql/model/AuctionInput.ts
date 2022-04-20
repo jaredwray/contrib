@@ -8,9 +8,9 @@ export type AuctionInput = {
   title?: string;
   description?: string;
   charity?: string;
-  startDate?: Dayjs;
+  startsAt?: Dayjs;
   duration?: number;
-  endDate?: Dayjs;
+  endsAt?: Dayjs;
   startPrice?: Dinero.Dinero;
   bidStep?: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
