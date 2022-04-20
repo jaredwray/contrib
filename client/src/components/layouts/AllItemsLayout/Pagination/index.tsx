@@ -93,7 +93,7 @@ const Pagination: FC<Props> = ({ totalItems, pageSize, pageSkip, perPage, change
   };
 
   return (
-    <div className="pt-4 pb-4 text-center text-md-left d-flex mt-auto align-items-center" id="pagination">
+    <div className="p-4 text-center text-md-left d-flex mt-auto align-items-center" id="pagination">
       <Button
         className={clsx(styles.navBtn, 'ps-0 fw-bold')}
         disabled={!hasPev}

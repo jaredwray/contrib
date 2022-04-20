@@ -174,8 +174,8 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
           </Row>
         </Container>
       </section>
-      <section className={clsx(styles.sliders, 'pt-4 pt-md-5 pb-4 p-md-5')}>
-        <Container fluid="xxl">
+      <section className={clsx(styles.sliders, 'p-2 p-md-4')}>
+        <Container className="p-0" fluid="xxl">
           {isLoadingAuctions ? (
             <AuctionsInfoLoading name={charity.name} />
           ) : (

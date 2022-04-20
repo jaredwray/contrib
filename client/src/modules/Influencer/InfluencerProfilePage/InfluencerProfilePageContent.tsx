@@ -40,7 +40,6 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
   );
   const [followersNumber, setFollowersNumber] = useState(influencer?.followers?.length || 0);
   const [draftAuctions, setDraftAuctions] = useState<Auction[]>([]);
-
   const { data: auctionsData, loading: isLoadingAuctions } = useQuery(AuctionsListQuery, {
     variables: {
       filters: {
@@ -155,20 +154,20 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           </Row>
         </Container>
       </section>
-      <section className={clsx(styles.sliders, 'py-2 py-md-5')}>
-        <Container className="mx-0 p-0 mx-md-3" fluid={!isLoadingAuctions}>
-          {isLoadingAuctions ? (
+      <section className={clsx(styles.sliders, 'pt-3 pb-5')}>
+        {isLoadingAuctions ? (
+          <Container className="px-3 pt-4">
             <AuctionsInfoLoading name={influencer.name} />
-          ) : (
-            <InfluencerAuctionsInfo
-              auctions={auctions}
-              draftAuctions={draftAuctions}
-              influencer={influencer}
-              isShowDraftAndStopped={account?.isAdmin || isMyProfile}
-              onDeleteDraftAuctions={onDelete}
-            />
-          )}
-        </Container>
+          </Container>
+        ) : (
+          <InfluencerAuctionsInfo
+            auctions={auctions}
+            draftAuctions={draftAuctions}
+            influencer={influencer}
+            isShowDraftAndStopped={account?.isAdmin || isMyProfile}
+            onDeleteDraftAuctions={onDelete}
+          />
+        )}
       </section>
     </Layout>
   );
