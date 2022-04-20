@@ -9,7 +9,7 @@ interface Props {
 }
 export const ProfileSliderRow: FC<Props> = ({ items, children }) => {
   return (
-    <Container fluid className="mb-2 mb-md-0">
+    <Container fluid className="p-0 mb-2 mb-md-0">
       <Container>
         <span className="label-with-separator text-label my-4 d-block ">{children}</span>
       </Container>
