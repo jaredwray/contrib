@@ -1,4 +1,4 @@
-import { FC, ReactElement, useRef, useEffect, useCallback } from 'react';
+import { FC, ReactElement, useRef, useState, useEffect, useCallback } from 'react';
 
 import RSlider from 'react-slick';
 
@@ -12,6 +12,7 @@ interface Props {
 const Slider: FC<Props> = ({ items }) => {
   const slider = useRef() as React.MutableRefObject<any>;
   const sliderWrapper = useRef() as React.MutableRefObject<any>;
+  const [changing, isChanging] = useState(false);
 
   const canScrollTo = useCallback(
     (type: string): boolean => {
@@ -55,15 +56,15 @@ const Slider: FC<Props> = ({ items }) => {
 
       checkArrows();
       const activeArrow = sliderWrapper.current.querySelector(`.slick-arrow:not(.slick-disabled)`);
-      if (!activeArrow) return;
+      if (!activeArrow && !changing) return;
 
       event.preventDefault();
     },
-    [sliderWrapper, checkArrows],
+    [changing, sliderWrapper, checkArrows],
   );
   const scroll = useCallback(
     (e) => {
-      if (!slider.current || !sliderWrapper.current) return;
+      if (!slider.current) return;
 
       e.deltaX < 0 || e.deltaY > 0
         ? canScrollTo('next') && slider.current.slickNext()
@@ -73,7 +74,6 @@ const Slider: FC<Props> = ({ items }) => {
   );
 
   useEffect(() => {
-    checkArrows();
     window.addEventListener('resize', checkArrows);
     window.addEventListener('wheel', preventDefault, { passive: false });
 
@@ -89,8 +89,14 @@ const Slider: FC<Props> = ({ items }) => {
     speed: 500,
     swipeToSlide: true,
     variableWidth: true,
-    beforeChange: checkArrows,
-    afterChange: checkArrows,
+    beforeChange: (current: number, next: number) => {
+      isChanging(true);
+      checkArrows();
+    },
+    afterChange: () => {
+      isChanging(false);
+      checkArrows();
+    },
   };
 
   if (!items.length) return null;
