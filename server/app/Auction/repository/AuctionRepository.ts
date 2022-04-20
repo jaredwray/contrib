@@ -83,7 +83,7 @@ export class AuctionRepository implements IAuctionRepository {
       [statusFilter, { status: { $in: statusFilter } }],
       [query, { title: { $regex: (query || '').trim(), $options: 'i' } }],
       [filters?.maxPrice, { currentPrice: { $gte: filters?.minPrice, $lte: filters?.maxPrice } }],
-      [filters?.auctionOrganizer, { auctionOrganizer: mongoose.Types.ObjectId(filters.auctionOrganizer) }],
+      [filters?.auctionOrganizer, { auctionOrganizer: mongoose.Types.ObjectId(filters?.auctionOrganizer) }],
       [charityIds.length, { charity: { $in: charityIds } }],
       [filters?.status, { status: { $in: filters?.status } }],
       [filters?.selectedAuction, { _id: { $ne: filters?.selectedAuction } }],
