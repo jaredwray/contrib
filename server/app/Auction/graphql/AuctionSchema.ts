@@ -34,6 +34,7 @@ export const AuctionSchema = gql`
     cloudflareUrl: String
     thumbnail: String
     originalFileName: String
+    forCover: Boolean
   }
 
   type AuctionDelivery {
@@ -191,10 +192,16 @@ export const AuctionSchema = gql`
   }
 
   input AuctionItemInput {
-    id: String
     name: String
     contributor: String
     fairMarketValue: Money
+  }
+
+  input AuctionAttachmentInput {
+    file: Upload
+    filename: String
+    uid: String
+    forCover: Boolean
   }
 
   input AuctionInput {
@@ -278,7 +285,7 @@ export const AuctionSchema = gql`
     stopAuction(id: String): Auction
     activateAuction(id: String): Auction
     createAuctionBid(id: String!, bid: Money!): Auction!
-    addAuctionAttachment(id: String!, attachment: Upload, uid: String, filename: String): AuctionAttachment!
+    addAuctionAttachment(id: String!, input: AuctionAttachmentInput!): AuctionAttachment!
     deleteAuctionAttachment(auctionId: String!, attachmentId: String!): AuctionAttachment!
     deleteAuction(id: String!): ResponceId!
     chargeAuction(id: String!): ResponceId!

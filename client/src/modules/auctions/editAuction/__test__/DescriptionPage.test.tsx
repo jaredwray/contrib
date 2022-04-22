@@ -68,7 +68,7 @@ const mocks = [
   {
     request: {
       query: UpdateAuctionMutation,
-      variables: { id: 'testId', description: 'test' },
+      variables: { id: 'testId', input: { description: 'test' } },
     },
     newData: () => {
       mockFn();

@@ -46,7 +46,7 @@ const PrivateAuction = () => {
   const handleSubmit = useCallback(
     async (values) => {
       try {
-        await updateAuction({ variables: { ...values, id: auctionId } });
+        await updateAuction({ variables: { id: auctionId, input: values } });
       } catch (error: any) {
         showError(error.message);
       }

@@ -1,0 +1,32 @@
+@import 'src/variables.scss';
+
+.title {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: $sage-color;
+}
+
+.wrapper > div {
+  border: 1px solid $light-gray-color !important;
+  border-radius: 8px !important;
+}
+
+.table {
+  border-spacing: 0 !important;
+
+  td {
+    border-bottom: 1px solid $whitesmoke-color !important;
+    cursor: default;
+    border: none;
+  }
+
+  td:first-child {
+    border-right: 1px solid $whitesmoke-color !important;
+  }
+
+  tr:hover {
+    background-color: white !important;
+    color: #323432 !important;
+  }
+}

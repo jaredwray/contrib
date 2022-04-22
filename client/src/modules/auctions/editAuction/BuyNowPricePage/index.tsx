@@ -52,7 +52,7 @@ const BuyNowPricePage = () => {
       }
 
       try {
-        await updateAuction({ variables: { id: auctionId, ...values } });
+        await updateAuction({ variables: { id: auctionId, input: values } });
         if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);

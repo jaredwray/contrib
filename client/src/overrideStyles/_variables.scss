@@ -9,8 +9,8 @@ $link-hover-decoration: none;
 
 $input-color: $sage-color;
 $input-placeholder-color: $light-gray-color;
-$input-border-color: $light-sage-color;
-$input-focus-border-color: $sage-color;
+$input-border-color: $light-gray-color;
+$input-focus-border-color: $gray-color;
 $input-border-radius: 10px;
 $input-font-size: 20px;
 $input-line-height: 1.25;
@@ -18,6 +18,10 @@ $input-font-weight: bold;
 $input-btn-focus-box-shadow: inset 0 0 0 1px;
 $input-height: 50px;
 $form-feedback-font-size: 12px;
+
+$form-floating-line-height: 18px;
+$form-floating-padding-y: 0.65rem;
+$form-floating-input-padding-t: 1.2rem;
 
 $custom-switch-width: 5rem;
 $custom-control-gutter: 0.625rem;

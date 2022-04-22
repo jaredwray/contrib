@@ -11,6 +11,7 @@ import { AuctionStatus } from '../dto/AuctionStatus';
 import { AuctionMetrics } from '../dto/AuctionMetrics';
 import { AuctionParcel } from '../dto/AuctionParcel';
 import { AuctionAssets } from '../dto/AuctionAssets';
+import { AuctionAttachmentInput } from './model/AuctionAttachmentInput';
 import { AuctionInput } from './model/AuctionInput';
 import { ChargeCurrentBidInput } from './model/ChargeCurrentBidInput';
 import { ICreateAuctionBidInput } from './model/CreateAuctionBidInput';
@@ -58,10 +59,7 @@ interface AuctionResolversType {
     createAuction: GraphqlResolver<Auction, { input: AuctionInput }>;
     updateAuction: GraphqlResolver<Auction, { id: string; input: AuctionInput }>;
     deleteAuction: GraphqlResolver<{ id: string }, { id: string }>;
-    addAuctionAttachment: GraphqlResolver<
-      AuctionAssets,
-      { id: string; attachment: any; uid: string; filename: string }
-    >;
+    addAuctionAttachment: GraphqlResolver<AuctionAssets, { id: string; input: AuctionAttachmentInput }>;
     deleteAuctionAttachment: GraphqlResolver<AuctionAssets, { auctionId: string; attachmentId: string }>;
     createAuctionBid: GraphqlResolver<Auction, { id: string } & ICreateAuctionBidInput>;
     finishAuctionCreation: GraphqlResolver<Auction, { id: string }>;
@@ -178,15 +176,8 @@ export const AuctionResolvers: AuctionResolversType = {
       pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction: auctionUpdates });
       return auctionUpdates;
     }),
-    addAuctionAttachment: requireRole(
-      async (_, { id, attachment, uid, filename }, { auction, currentAccount, currentInfluencerId }) =>
-        auction.addAuctionAttachment(
-          id,
-          currentAccount.isAdmin ? null : currentInfluencerId,
-          attachment,
-          uid,
-          filename,
-        ),
+    addAuctionAttachment: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencerId }) =>
+      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, input),
     ),
     deleteAuctionAttachment: requireRole(
       async (_, { auctionId, attachmentId }, { auction, currentAccount, currentInfluencerId }) =>

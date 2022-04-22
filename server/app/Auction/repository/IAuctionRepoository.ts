@@ -1,7 +1,8 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { Types } from 'mongoose';
-import { IAuctionModel, IAuctionItem } from '../mongodb/AuctionModel';
+import { IAuctionModel } from '../mongodb/AuctionModel';
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
+import { AuctionItem } from '../dto/AuctionItem';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { IAuctionAssetModel } from '../mongodb/AuctionAssetModel';
 
@@ -15,35 +16,27 @@ export type IAuctionFilters = {
   statusFilter?: string[];
 };
 
-export interface ICreateAuction {
+export type IAuctionInput = {
+  organizerId?: string;
   title?: string;
   description?: string;
-  startsAt?: Dayjs;
-  endsAt?: Dayjs;
   startPrice?: Dinero.Dinero;
   itemPrice?: Dinero.Dinero;
-  organizerId?: string;
-}
-
-export type IUpdateAuction = {
-  itemPrice?: number;
+  fairMarketValue?: Dinero.Dinero;
+  bidStep?: Dinero.Dinero;
   priceCurrency?: string;
-  startPrice?: number;
-  title?: string;
-  description?: string;
+  charity?: string;
+  duration?: number;
   password?: string;
-  charity?: Types.ObjectId;
-  startsAt?: dayjs.Dayjs;
-  endsAt?: dayjs.Dayjs;
-  organizerId?: string;
-  fairMarketValue?: number;
-  items?: IAuctionItem[];
+  startsAt?: Dayjs;
+  endsAt?: Dayjs;
+  items?: AuctionItem[];
 };
 
 export interface IAuctionRepository {
-  createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel>;
+  createAuction(organizerId: string, input: IAuctionInput): Promise<IAuctionModel>;
   activateAuction(id: string, organizerId: string): Promise<IAuctionModel>;
-  updateAuction(id: string, organizerId: string, input: IUpdateAuction, isAdmin: boolean): Promise<IAuctionModel>;
+  updateAuction(id: string, organizerId: string, input: IAuctionInput, isAdmin: boolean): Promise<IAuctionModel>;
   getAuctionPriceLimits({ query, statusFilter, filters }: IAuctionFilters): Promise<{ min: number; max: number }>;
   countAuctions({ query, filters }: { query?: string; filters?: AuctionSearchFilters }): Promise<number>;
   getAuctions({ query, size, skip, orderBy, filters }: IAuctionFilters): Promise<IAuctionModel[]>;

@@ -1,0 +1,47 @@
+@import 'src/variables.scss';
+
+.tooltip {
+  cursor: help;
+}
+
+.input {
+  height: 20px !important;
+  max-width: 135px !important;
+  background: unset !important;
+  font-size: 14px !important;
+  line-height: 18px !important;
+
+  &::placeholder {
+    font-weight: 400 !important;
+    color: $light-gray-color !important;
+  }
+
+  &.inputRequired::placeholder {
+    font-weight: 600 !important;
+    color: $gray-color !important;
+  }
+
+  &,
+  &:focus,
+  &:active {
+    border: none !important;
+    box-shadow: unset !important;
+  }
+
+  &:focus,
+  &:active {
+    &::placeholder {
+      color: transparent !important;
+    }
+  }
+}
+
+.label {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.labelRequired {
+  font-weight: 600;
+}

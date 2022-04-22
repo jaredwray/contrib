@@ -11,4 +11,5 @@ export type AuctionAssets = {
   thumbnail: string | undefined;
   uid: string | undefined;
   originalFileName: string | undefined | null;
+  forCover: boolean | null;
 };

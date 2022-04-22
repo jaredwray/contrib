@@ -23,6 +23,7 @@ import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { BidService } from '../../Bid/service/BidService';
 import { BidModel, IBidModel } from '../../Bid/mongodb/BidModel';
 
+import { AuctionAttachmentInput } from '../graphql/model/AuctionAttachmentInput';
 import { AuctionInput } from '../graphql/model/AuctionInput';
 import { GCloudStorage, IFile } from '../../GCloudStorage';
 import { ICreateAuctionBidInput } from '../graphql/model/CreateAuctionBidInput';
@@ -535,13 +536,7 @@ export class AuctionService {
     return this.makeAuction(auction);
   }
 
-  public async addAuctionAttachment(
-    id: string,
-    organizerId: string | null,
-    attachment: Promise<IFile>,
-    uid: string | null,
-    filename: string | null,
-  ): Promise<AuctionAssets> {
+  public async addAuctionAttachment(id: string, organizerId, input: AuctionAttachmentInput): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, organizerId);
     if (auction?.status !== AuctionStatus.DRAFT)
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
@@ -550,12 +545,13 @@ export class AuctionService {
       const asset = await this.attachmentsService.uploadFileAttachment(
         id,
         auction.auctionOrganizer._id.toString(),
-        attachment,
-        uid,
+        input.file,
+        input.uid,
+        input.forCover,
       );
       await this.AuctionModel.updateOne({ _id: id }, { $addToSet: { assets: asset } });
 
-      return AuctionService.makeAuctionAttachment(asset, filename ?? (await attachment).filename);
+      return AuctionService.makeAuctionAttachment(asset, input.filename ?? (await input.file).filename);
     } catch (error) {
       AppLogger.error(
         `Could not upload attachment for auction #${auction._id.toString()} with error: ${error.message}`,
@@ -987,16 +983,15 @@ export class AuctionService {
   private static makeAuctionAttachment(model: IAuctionAssetModel, filename?: string): AuctionAssets | null {
     if (!model) return null;
 
-    const { url, type, uid } = model;
+    const { _id, uid, __v, ...rest } = 'toObject' in model ? model.toObject() : model;
 
     return {
-      type,
-      url,
       uid,
-      id: model._id.toString(),
+      id: _id.toString(),
       cloudflareUrl: uid ? CloudflareStreaming.getVideoStreamUrl(uid) : null,
       thumbnail: uid ? CloudflareStreaming.getVideoPreviewUrl(uid) : null,
       originalFileName: filename,
+      ...rest,
     };
   }
 
@@ -1010,6 +1005,7 @@ export class AuctionService {
     return assets
       .map((asset) => AuctionService.makeAuctionAttachment(asset))
       .sort((a, b) => {
+        if (a.forCover) return -1;
         if (b.type > a.type) return -1;
       });
   }

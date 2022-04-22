@@ -1,0 +1,16 @@
+@import 'src/variables.scss';
+
+.root {
+  background-color: $mercury-color;
+}
+
+.section {
+  max-width: 420px;
+}
+
+.title {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  font-style: italic;
+}

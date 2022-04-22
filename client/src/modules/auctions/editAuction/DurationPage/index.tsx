@@ -49,7 +49,7 @@ const DurationPage = () => {
       const { duration } = values;
 
       try {
-        await updateAuction({ variables: { id: auctionId, duration: Number(duration) } });
+        await updateAuction({ variables: { id: auctionId, input: { duration: Number(duration) } } });
       } catch (error: any) {
         showError(error.message);
       }

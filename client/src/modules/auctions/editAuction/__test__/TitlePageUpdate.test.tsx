@@ -76,19 +76,21 @@ const mocks = [
         data: {
           updateAuction: {
             id: 'testId',
-            description: 'test',
-            title: 'test',
-            link: 'test',
-            startsAt: '2021-07-01T22:28:00.261Z',
-            endsAt: '2021-08-14T19:01:00.232Z',
-            startPrice: { amount: 100, currency: 'USD', precision: 2 },
-            itemPrice: null,
-            charity: {
-              id: 'testId',
-              name: 'test',
+            input: {
+              description: 'test',
+              title: 'test',
+              link: 'test',
+              startsAt: '2021-07-01T22:28:00.261Z',
+              endsAt: '2021-08-14T19:01:00.232Z',
+              startPrice: { amount: 100, currency: 'USD', precision: 2 },
+              itemPrice: null,
+              charity: {
+                id: 'testId',
+                name: 'test',
+              },
+              fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
+              items: [],
             },
-            fairMarketValue: { amount: 100, currency: 'USD', precision: 2 },
-            items: [],
           },
         },
       };

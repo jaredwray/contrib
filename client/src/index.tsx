@@ -30,6 +30,7 @@ import EditFairMarketValuePage from 'src/modules/auctions/editAuction/FairMarket
 import EditAuctionPrivatePage from 'src/modules/auctions/editAuction/PrivateAuction';
 import EditStartPricePage from 'src/modules/auctions/editAuction/StartPricePage';
 import EditAuctionPage from 'src/modules/auctions/editAuction/TitlePage';
+import NewAuctionPage from 'src/modules/auctions/NewAuction';
 import AllCharitiesPage from 'src/modules/charity/CharitiesPage';
 import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPage';
 import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
@@ -115,9 +116,10 @@ export const App = () => {
                   <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
 
                   <Route exact component={AllAuctionsPage} path="/auctions" />
+                  <PrivateRoute component={EditAuctionPage} path="/auctions/new/old" role="influencer" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/:ownerId/new" role="admin" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/:auctionId/title" role="influencer" />
-                  <PrivateRoute component={EditAuctionPage} path="/auctions/new" role="influencer" />
+                  <PrivateRoute component={NewAuctionPage} path="/auctions/new" role="influencer" />
                   <PrivateRoute
                     component={EditAuctionDescriptionPage}
                     path="/auctions/:auctionId/description"

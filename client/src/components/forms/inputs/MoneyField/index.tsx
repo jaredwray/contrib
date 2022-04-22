@@ -5,6 +5,7 @@ import { Form as BsForm } from 'react-bootstrap';
 
 import useField from 'src/components/forms/Form/hooks/useField';
 import useFieldConstraints from 'src/components/forms/Form/hooks/useFieldConstraints';
+import { DEFAULT_DINERO_OBJECT } from 'src/constants';
 
 const { Group, Label, Control } = BsForm;
 
@@ -18,6 +19,7 @@ interface Props {
   constraints?: { [key: string]: any };
   externalText?: string | ReactElement;
   minValue?: number;
+  withErrorMessage?: boolean;
   valueFromState?: { amount: number; currency: Dinero.Currency };
   setDisabled?: (_: SetStateAction<boolean>) => void;
   setValueToState?: (name: string, value: Dinero.DineroObject) => void;
@@ -36,6 +38,7 @@ const MoneyField: FC<Props> = ({
   constraints: inputConstraints,
   externalText,
   minValue,
+  withErrorMessage = true,
   valueFromState,
   setDisabled,
   setValueToState,
@@ -68,7 +71,7 @@ const MoneyField: FC<Props> = ({
 
       if (setDisabled && minValue) setDisabled(minValue > number || number > MaxBidValue);
 
-      const currentValue = valueFromState || value;
+      const currentValue = valueFromState || value || DEFAULT_DINERO_OBJECT;
       const onChangeValue = { ...currentValue, amount: number ? parseInt(number, 10) * 100 : 0 };
 
       onChange(onChangeValue);
@@ -85,15 +88,16 @@ const MoneyField: FC<Props> = ({
       {title && <Label>{title}</Label>}
       <Control
         {...inputProps}
+        autoComplete="off"
         className={className}
         isInvalid={hasError}
         maxLength={MaxLength}
         placeholder={placeholder}
-        value={filteredValueFromState?.toFormat('$0,0') || filteredValue?.toFormat('$0,0')}
+        value={(filteredValueFromState || filteredValue)?.toFormat('$0,0')}
         onChange={handleChange}
         onFocus={handleFocus}
       />
-      <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>
+      {withErrorMessage && <Control.Feedback type="invalid">{errorMessage}</Control.Feedback>}
       {externalText && <p className="text--body mt-2">{externalText}</p>}
     </Group>
   );

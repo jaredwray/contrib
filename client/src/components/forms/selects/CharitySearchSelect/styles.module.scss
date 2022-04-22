@@ -1,5 +1,27 @@
 @import 'src/variables.scss';
+
 .charitiesSelect {
   font-size: 1.25rem;
   line-height: 1.25;
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 0.65rem 0.75rem;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transform-origin: 0 0;
+  transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  color: $gray-color;
+}
+
+.labelActive {
+  opacity: 0.65;
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
 }

@@ -1,0 +1,30 @@
+@import 'src/variables.scss';
+
+.input > input {
+  height: 42px !important;
+}
+
+.textarea > textarea {
+  height: 84px !important;
+}
+
+.input > input,
+.textarea > textarea {
+  font-size: 14px;
+  line-height: 18px;
+  resize: none;
+}
+
+.input,
+.textarea {
+  label {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: $gray-color;
+  }
+}
+
+.required label {
+  font-weight: 600;
+}

@@ -16,10 +16,14 @@ export class AuctionAttachmentsService {
     organizerId: string,
     attachment: Promise<IFile> | null,
     uid: string | null,
+    forCover: boolean | null,
   ): Promise<IAuctionAssetModel> {
     try {
       const assetOptions = await this.auctionAssetOptions(auctionId, organizerId, attachment, uid);
       const asset = new this.AuctionAsset(assetOptions);
+
+      if (forCover) asset.forCover = true;
+
       await asset.save();
       return asset;
     } catch (error) {

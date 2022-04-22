@@ -7,6 +7,7 @@ export interface IAuctionAssetModel extends Document {
   cloudflareUrl: string;
   thumbnail: string;
   uid: string;
+  forCover: boolean;
 }
 
 export const AuctionAssetCollectionName = 'auction_asset';
@@ -17,6 +18,7 @@ const AuctionAssetSchema: Schema<IAuctionAssetModel> = new Schema<IAuctionAssetM
   cloudflareUrl: { type: SchemaTypes.String },
   uid: { type: SchemaTypes.String },
   thumbnail: { type: SchemaTypes.String },
+  forCover: { type: SchemaTypes.Boolean },
 });
 
 export const AuctionAssetModel = (connection: Connection): Model<IAuctionAssetModel> =>

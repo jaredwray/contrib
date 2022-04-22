@@ -1,0 +1,49 @@
+@import 'src/variables.scss';
+
+.wrapper {
+  height: 120px;
+}
+.previewWrapper {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  width: 91px;
+  height: 91px;
+  background-color: $barely-gray-color;
+  margin: 5px;
+  border-radius: 8px;
+  border: 1px solid $sage-color;
+  cursor: pointer;
+}
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.preview {
+  max-height: 100%;
+  max-width: 100%;
+  display: inline-block;
+  text-align: center;
+  object-fit: contain;
+  margin: auto;
+}
+
+.forCover {
+  border: 2px solid $saffron-gold-color;
+}
+
+.cover {
+  font-weight: 600 !important;
+  color: $saffron-gold-color;
+}
+
+.deleteBtn {
+  top: 5px;
+  right: 5px;
+  height: 13px !important;
+  weight: 13px !important;
+  border: none !important;
+}
