@@ -1,4 +1,4 @@
-import { forwardRef, BaseSyntheticEvent, KeyboardEventHandler, useCallback } from 'react';
+import { forwardRef, BaseSyntheticEvent, KeyboardEventHandler, useCallback, useEffect } from 'react';
 
 import clsx from 'clsx';
 import { Form as BsForm } from 'react-bootstrap';
@@ -29,6 +29,7 @@ interface Props {
   valueFromState?: string;
   ref?: HTMLInputElement | null;
   isInvalid?: boolean;
+  hidden?: boolean;
 }
 
 const InputField = forwardRef<HTMLInputElement | null, Props>(
@@ -51,6 +52,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
       valueFromState,
       onKeyPress,
       onInput,
+      hidden = false,
       setValueToState,
     },
     ref,
@@ -61,17 +63,23 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
       disabled,
     });
 
-    const handleChange = useCallback(
-      (e) => {
-        onChange(e.target.value);
+    const updateValue = useCallback(
+      (value) => {
+        onChange(value);
 
-        if (setValueToState) setValueToState(name, e.target.value);
+        if (setValueToState) setValueToState(name, value);
       },
       [name, setValueToState, onChange],
     );
 
+    const handleChange = useCallback((e) => updateValue(e.target.value), [updateValue]);
+
+    useEffect(() => {
+      hidden && updateValue(valueFromState || value);
+    }, [hidden, updateValue, valueFromState, value]);
+
     return (
-      <Group className={clsx(wrapperClassName, 'pb-2')}>
+      <Group className={clsx(wrapperClassName, !hidden && 'pb-2')}>
         {title && <Label className="d-block">{title}</Label>}
         <Control
           {...inputProps}
@@ -81,15 +89,17 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           isInvalid={hasError || isInvalid}
           maxLength={maxLength}
           placeholder={placeholder}
-          type={type}
+          type={hidden ? 'hidden' : type}
           value={valueFromState || value}
           onChange={handleChange}
           onInput={onInput ? (e: BaseSyntheticEvent) => onInput(e) : () => {}}
           onKeyPress={() => onKeyPress}
         />
-        <Control.Feedback className={errorClassName} type="invalid">
-          {errorMessage || (isInvalid && 'invalid')}
-        </Control.Feedback>
+        {!hidden && (
+          <Control.Feedback className={errorClassName} type="invalid">
+            {errorMessage || (isInvalid && 'invalid')}
+          </Control.Feedback>
+        )}
         {externalText && <p className="text--body mt-2">{externalText}</p>}
       </Group>
     );

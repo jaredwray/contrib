@@ -179,6 +179,7 @@ export const AuctionQuery = gql`
         type
         cloudflareUrl
         thumbnail
+        forCover
       }
       charity {
         id
@@ -424,47 +425,16 @@ export const ChargeCurrentAuctionMutation = gql`
 `;
 
 export const CreateAuctionMutation = gql`
-  mutation CreateAuction($organizerId: String, $title: String!) {
-    createAuction(input: { title: $title, organizerId: $organizerId }) {
+  mutation CreateAuction($input: AuctionInput!) {
+    createAuction(input: $input) {
       id
-      title
     }
   }
 `;
 
 export const UpdateAuctionMutation = gql`
-  mutation UpdateAuction(
-    $id: String!
-    $title: String
-    $description: String
-    $startsAt: DateTime
-    $endsAt: DateTime
-    $startPrice: Money
-    $bidStep: Money
-    $itemPrice: Money
-    $charity: String
-    $fairMarketValue: Money
-    $items: [AuctionItemInput]
-    $duration: Int
-    $password: String
-  ) {
-    updateAuction(
-      id: $id
-      input: {
-        description: $description
-        title: $title
-        startsAt: $startsAt
-        endsAt: $endsAt
-        startPrice: $startPrice
-        bidStep: $bidStep
-        itemPrice: $itemPrice
-        charity: $charity
-        fairMarketValue: $fairMarketValue
-        items: $items
-        duration: $duration
-        password: $password
-      }
-    ) {
+  mutation UpdateAuction($id: String!, $input: AuctionInput!) {
+    updateAuction(id: $id, input: $input) {
       id
       description
       title
@@ -492,8 +462,8 @@ export const UpdateAuctionMutation = gql`
 `;
 
 export const AddAuctionMediaMutation = gql`
-  mutation AddAuctionMedia($id: String!, $file: Upload, $uid: String, $filename: String) {
-    addAuctionAttachment(id: $id, attachment: $file, uid: $uid, filename: $filename) {
+  mutation AddAuctionMedia($id: String!, $input: AuctionAttachmentInput!) {
+    addAuctionAttachment(id: $id, input: $input) {
       id
       type
       cloudflareUrl

@@ -102,7 +102,7 @@ const CharityPage = () => {
     if (!isFullObject) return;
 
     try {
-      await updateAuction({ variables: { id: auctionId, charity: selectedOption.id } });
+      await updateAuction({ variables: { id: auctionId, input: { charity: selectedOption.id } } });
     } catch (error: any) {
       showError(error.message);
     }

@@ -1,0 +1,31 @@
+@import 'src/variables.scss';
+
+.section {
+  padding-bottom: 0;
+
+  @media (max-width: $small-weight) {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+.files {
+  grid-template-columns: repeat(auto-fill, minmax(91px, 1fr));
+  grid-gap: 1rem;
+  align-items: start;
+}
+
+.button {
+  border: 2px dashed $gray77-color !important;
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 91px;
+  height: 91px;
+}
+
+.link {
+  color: $mint-color;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+}

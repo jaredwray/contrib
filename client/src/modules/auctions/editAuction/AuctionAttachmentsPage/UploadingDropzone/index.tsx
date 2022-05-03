@@ -103,7 +103,7 @@ const UploadingDropzone: FC<Props> = ({
         }
 
         addAuctionMedia({
-          variables: { id: auctionId, file: uid ? null : file, uid, filename: file.name },
+          variables: { id: auctionId, input: { file: uid ? null : file, uid, filename: file.name } },
         });
       });
 

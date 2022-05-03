@@ -1,0 +1,37 @@
+@import 'src/variables.scss';
+
+.duration-select.select-field {
+  .dropdown-toggle.btn-outline-primary {
+    border: none;
+    padding: 0 !important;
+    height: 30px !important;
+    width: 135px !important;
+    font-size: 14px !important;
+    line-height: 21px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em;
+    text-decoration-line: underline;
+    color: $mint-color;
+
+    &:before,
+    &:after {
+      display: none !important;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: unset !important;
+      color: $mint-color !important;
+    }
+  }
+
+  .dropdown-item {
+    padding: 14px 0 14px 36px;
+  }
+
+  &.dropdown.show > .dropdown-toggle {
+    background-color: unset !important;
+    box-shadow: unset !important;
+  }
+}

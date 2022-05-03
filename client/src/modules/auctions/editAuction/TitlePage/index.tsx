@@ -63,10 +63,10 @@ const EditAuctionPage = () => {
         tryToUpdateAuction(values);
         return;
       }
-      const variables = ownerId ? { ...values, organizerId: ownerId } : values;
+      const input = ownerId ? { ...values, organizerId: ownerId } : values;
 
       try {
-        await createAuction({ variables });
+        await createAuction({ variables: { input } });
       } catch (error: any) {
         showError(error.message);
       }

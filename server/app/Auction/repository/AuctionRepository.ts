@@ -12,7 +12,7 @@ import { UserAccountModel, IUserAccount } from '../../UserAccount/mongodb/UserAc
 import { AuctionSearchFilters } from '../dto/AuctionSearchFilters';
 import { AuctionOrderBy } from '../dto/AuctionOrderBy';
 import { AuctionStatus } from '../dto/AuctionStatus';
-import { IAuctionFilters, IAuctionRepository, ICreateAuction, IUpdateAuction } from './IAuctionRepoository';
+import { IAuctionFilters, IAuctionRepository, IAuctionInput } from './IAuctionRepoository';
 
 import { AppError, ErrorCode } from '../../../errors';
 import { AppLogger } from '../../../logger';
@@ -184,24 +184,23 @@ export class AuctionRepository implements IAuctionRepository {
     }
   }
 
-  async createAuction(organizerId: string, input: ICreateAuction): Promise<IAuctionModel> {
+  async createAuction(organizerId: string, input: IAuctionInput): Promise<IAuctionModel> {
     if (!input.title) throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
 
     const utcCurrentDate = dayjs().second(0);
     const utcCurrentDateISO = utcCurrentDate.toISOString();
-
     const [auction] = await this.AuctionModel.create([
       {
         ...objectTrimmer(input),
         startsAt: utcCurrentDateISO,
-        endsAt: utcCurrentDate.add(3, 'days').toISOString(),
+        endsAt: utcCurrentDate.add(input.duration || 3, 'days').toISOString(),
         createdAt: utcCurrentDateISO,
         updatedAt: utcCurrentDateISO,
         auctionOrganizer: organizerId,
         startPrice: input.startPrice?.getAmount(),
-        currentPrice: input.startPrice?.getAmount(),
         itemPrice: input.itemPrice?.getAmount(),
-        priceCurrency: input.startPrice?.getCurrency(),
+        fairMarketValue: input.fairMarketValue?.getAmount(),
+        bidStep: input.bidStep?.getAmount(),
       },
     ]);
 
@@ -279,12 +278,7 @@ export class AuctionRepository implements IAuctionRepository {
     return await this.populateAuctionModel(updatedAuction);
   }
 
-  async updateAuction(
-    id: string,
-    organizerId: string,
-    input: IUpdateAuction,
-    isAdmin: boolean,
-  ): Promise<IAuctionModel> {
+  async updateAuction(id: string, organizerId: string, input: IAuctionInput, isAdmin: boolean): Promise<IAuctionModel> {
     const auction = await this.findAuction(id, input.organizerId || organizerId);
 
     if (

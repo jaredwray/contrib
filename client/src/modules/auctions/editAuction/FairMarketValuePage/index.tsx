@@ -106,7 +106,7 @@ const FairMarketValuePage = () => {
   const tryToUpdateAuction = useCallback(
     async (variables: any) => {
       try {
-        await updateAuction({ variables: { id: auctionId, ...variables } });
+        await updateAuction({ variables: { id: auctionId, input: variables } });
         if (isActive) showMessage('Updated');
       } catch (error: any) {
         showError(error.message);

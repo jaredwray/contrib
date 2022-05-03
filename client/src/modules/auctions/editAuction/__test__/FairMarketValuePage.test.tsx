@@ -97,7 +97,7 @@ const mocks = [
   {
     request: {
       query: UpdateAuctionMutation,
-      variables: { id: 'testId', fairMarketValue: { amount: 100, currency: 'USD', precision: 2 } },
+      variables: { id: 'testId', input: { fairMarketValue: { amount: 100, currency: 'USD', precision: 2 } } },
     },
     newData: () => {
       mockFn();
@@ -131,7 +131,9 @@ const mockWithMultipleItems = [
       query: UpdateAuctionMutation,
       variables: {
         id: 'testId',
-        items: auctionItems,
+        input: {
+          items: auctionItems,
+        },
       },
     },
     newData: () => {
@@ -401,6 +403,7 @@ describe('EditFairMarketValuePage ', () => {
       wrapper.update();
     });
     await act(async () => {
+      console.log(wrapper);
       const multipleFMV = wrapper!.find(MultipleFMV);
       multipleFMV.props().handleAddItem();
       multipleFMV.props().handleRemoveCurrentItem('2a7af71e-c43f-4fd2-926d-ce3e9b849938');

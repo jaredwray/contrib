@@ -68,7 +68,7 @@ const mocks = [
   {
     request: {
       query: UpdateAuctionMutation,
-      variables: { id: 'testId', bidStep: { amount: 100, currency: 'USD', precision: 2 } },
+      variables: { id: 'testId', input: { bidStep: { amount: 100, currency: 'USD', precision: 2 } } },
     },
     newData: () => {
       mockFn();

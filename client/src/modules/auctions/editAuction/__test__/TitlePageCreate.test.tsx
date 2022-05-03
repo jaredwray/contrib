@@ -21,7 +21,7 @@ describe('EditAuctionTitlePageEdit ', () => {
       {
         request: {
           query: CreateAuctionMutation,
-          variables: { title: 'test', organizerId: 'ownerId' },
+          variables: { input: { title: 'test', organizerId: 'ownerId' } },
         },
         newData: () => {
           mockFn();
@@ -113,7 +113,7 @@ describe('EditAuctionTitlePageEdit ', () => {
       {
         request: {
           query: CreateAuctionMutation,
-          variables: { title: 'test' },
+          variables: { input: { title: 'test' } },
         },
         newData: () => {
           mockFn();

@@ -1,54 +1,65 @@
-import { SetStateAction } from 'react';
-
 import IconSelected from 'src/assets/images/verified.svg';
 
-export const selectStyles = {
-  color: '#f0f0ee',
-  sageColor: '#5a7864',
-  whiteColor: '#ffffff',
-  lightSageColor: '#96af9b',
-  lightGrayColor: '#caccc6',
-  barelyGrayColor: ' #f0f0ee',
+export const Colors = {
+  primary: '#f0f0ee',
+  sage: '#5a7864',
+  white: '#ffffff',
+  lightSage: '#96af9b',
+  lightGray: '#caccc6',
+  barelyGray: '#f0f0ee',
 };
 
-export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void, menuIsOpen: boolean) => {
+export const customStyles = (floating: boolean) => {
   const customStyles = {
     menu: (provided: any) => ({
       ...provided,
       borderRadius: '10px',
-      borderColor: selectStyles.sageColor,
+      borderColor: Colors.sage,
       marginTop: '4px',
       zIndex: 2,
     }),
     menuList: (provided: any) => ({
       ...provided,
       border: '1px solid',
-      borderColor: selectStyles.sageColor,
+      borderColor: Colors.sage,
       borderRadius: '10px',
       paddingTop: '0px',
       paddingBottom: '0px',
     }),
     menuPortal: (provided: any) => ({
       ...provided,
-      borderColor: selectStyles.sageColor,
+      borderColor: Colors.sage,
     }),
     input: (provided: any) => {
+      const floatingStyles =
+        (floating && {
+          height: '32px',
+          padding: 0,
+          color: '#5a7864',
+          fontSize: '14px',
+          lineHeight: '18px',
+          fontWeight: '600',
+          marginTop: '12px',
+          paddingLeft: '2px',
+        }) ||
+        {};
+
       return {
         ...provided,
         height: '40px',
         padding: '10px 10px 10px 5px',
-        color: selectStyles.sageColor,
+        color: Colors.sage,
         fontSize: '1.25rem',
         lineHeight: '1.25',
+        ...floatingStyles,
       };
     },
     control: (provided: any, state: any) => {
-      setmenuIsOpen(state.menuIsOpen);
       return {
         ...provided,
-        borderColor: state.isFocused ? selectStyles.sageColor : selectStyles.lightSageColor,
+        borderColor: state.isFocused ? Colors.sage : Colors.lightSage,
         '&:hover': {
-          BorderColor: selectStyles.lightSageColor,
+          BorderColor: Colors.lightSage,
         },
         borderRadius: '10px',
         cursor: 'pointer',
@@ -57,29 +68,34 @@ export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void
     option: (provided: any, state: any) => {
       return {
         ...provided,
-        color: selectStyles.sageColor,
+        color: Colors.sage,
         cursor: 'pointer',
         padding: '15px',
         paddingLeft: '36px',
         backgroundImage: state.isSelected ? `url(${IconSelected})` : '',
         backgroundRepeat: `no-repeat;`,
         backgroundPosition: `left 5px top 16px;`,
-        backgroundColor: state.isSelected ? selectStyles.barelyGrayColor : selectStyles.whiteColor,
+        backgroundColor: state.isSelected ? Colors.barelyGray : Colors.white,
         '&:hover': {
           backgroundColor: '#e9ecef',
         },
       };
     },
-    valueContainer: (provided: any) => ({
-      ...provided,
-      width: '0px',
-      marginRight: '10px',
-    }),
+    valueContainer: (provided: any) => {
+      const floatingStyles = (floating && { marginRight: 0 }) || {};
+
+      return {
+        ...provided,
+        width: '0px',
+        marginRight: '10px',
+        ...floatingStyles,
+      };
+    },
 
     placeholder: (provided: any) => {
       return {
         ...provided,
-        color: selectStyles.lightGrayColor,
+        color: Colors.lightGray,
         paddingLeft: '5px',
         '@media(max-width: 992px)': {
           ...provided['@media (max-width: 992px)'],
@@ -87,11 +103,25 @@ export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void
         },
       };
     },
-    singleValue: (provided: any) => ({
-      ...provided,
-      color: selectStyles.sageColor,
-      paddingLeft: '5px',
-    }),
+    singleValue: (provided: any) => {
+      const floatingStyles =
+        (floating && {
+          color: '#5a7864',
+          fontSize: '14px',
+          lineHeight: '18px',
+          fontWeight: '600',
+          marginTop: '12px',
+          paddingLeft: '2px',
+        }) ||
+        {};
+
+      return {
+        ...provided,
+        color: Colors.sage,
+        paddingLeft: '5px',
+        ...floatingStyles,
+      };
+    },
     indicatorSeparator: (provided: any) => ({
       ...provided,
       display: 'none',
@@ -101,22 +131,23 @@ export const customStyles = (setmenuIsOpen: (_: SetStateAction<boolean>) => void
         ...provided,
         width: '50px',
         height: '50px',
-        backgroundColor: menuIsOpen ? selectStyles.sageColor : selectStyles.whiteColor,
+        backgroundColor: Colors.white,
         justifyContent: 'center',
         borderRadius: '0 9px 9px 0',
         border: '1px solid',
-        borderColor: menuIsOpen ? selectStyles.sageColor : selectStyles.whiteColor,
-        borderLeftColor: !menuIsOpen ? selectStyles.sageColor : selectStyles.whiteColor,
+        borderColor: Colors.white,
+        borderLeftColor: Colors.sage,
+        display: floating ? 'none' : 'block',
       };
     },
     dropdownIndicator: (provided: any) => {
       return {
         ...provided,
-        color: menuIsOpen ? selectStyles.whiteColor : selectStyles.sageColor,
+        color: Colors.sage,
         '&:hover': {
-          color: menuIsOpen ? selectStyles.whiteColor : selectStyles.sageColor,
+          color: Colors.sage,
         },
-        transform: menuIsOpen ? 'rotate(180deg)' : 'none',
+        transform: 'none',
       };
     },
   };

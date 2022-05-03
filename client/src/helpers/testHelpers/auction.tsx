@@ -5,8 +5,8 @@ const endsAt = date.setDate(date.getDate() + 2);
 
 export const AuctionQueryAuction = {
   attachments: [
-    { cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test' },
-    { cloudflareUrl: 'cloudflare/url', thumbnail: null, type: 'VIDEO', uid: 'uid', url: null },
+    { cloudflareUrl: null, thumbnail: null, type: 'IMAGE', uid: null, url: 'test', forCover: true },
+    { cloudflareUrl: 'cloudflare/url', thumbnail: null, type: 'VIDEO', uid: 'uid', url: null, forCover: false },
   ],
   auctionOrganizer: {
     id: 'test',
@@ -82,7 +82,7 @@ export const AuctionQueryAuction = {
 export const auction = {
   id: 'testId',
   title: 'test',
-  attachments: [{ thumbnail: 'test', type: 'IMAGE', url: 'test', className: 'test' }],
+  attachments: [{ thumbnail: 'test', type: 'IMAGE', url: 'test', className: 'test', forCover: false }],
   auctionOrganizer: { avatarUrl: 'test', id: 'test', name: 'test' },
   charity: {
     id: 'test',
@@ -144,7 +144,7 @@ export const auctionForCreation = {
   startsAt: '2021-07-01T22:28:00.261Z',
   charity: { id: 'testId', name: 'test' },
   auctionOrganizer: { id: 'testId', favoriteCharities: [] },
-  attachments: [{ type: 'VIDEO' }],
+  attachments: [{ type: 'VIDEO', forCover: false }],
   password: null,
 };
 

@@ -24,11 +24,14 @@ test('customStyles', () => {
     borderColor: '#5a7864',
   });
   expect(customStyles(() => {}, true).input({})).toEqual({
-    height: '40px',
-    padding: '10px 10px 10px 5px',
     color: '#5a7864',
-    fontSize: '1.25rem',
-    lineHeight: '1.25',
+    fontSize: '14px',
+    fontWeight: '600',
+    height: '32px',
+    lineHeight: '18px',
+    marginTop: '12px',
+    padding: 0,
+    paddingLeft: '2px',
   });
   expect(customStyles(() => {}, true).option({}, {})).toEqual({
     color: '#5a7864',
@@ -45,7 +48,7 @@ test('customStyles', () => {
   });
   expect(customStyles(() => {}, true).valueContainer({})).toEqual({
     width: '0px',
-    marginRight: '10px',
+    marginRight: 0,
   });
   expect(customStyles(() => {}, true).placeholder({})).toEqual({
     color: '#caccc6',
@@ -56,7 +59,11 @@ test('customStyles', () => {
   });
   expect(customStyles(() => {}, true).singleValue({})).toEqual({
     color: '#5a7864',
-    paddingLeft: '5px',
+    fontSize: '14px',
+    fontWeight: '600',
+    lineHeight: '18px',
+    marginTop: '12px',
+    paddingLeft: '2px',
   });
   expect(customStyles(() => {}, true).indicatorSeparator({})).toEqual({
     display: 'none',
@@ -64,18 +71,19 @@ test('customStyles', () => {
   expect(customStyles(() => {}, true).indicatorsContainer({})).toEqual({
     width: '50px',
     height: '50px',
-    backgroundColor: '#5a7864',
+    backgroundColor: '#ffffff',
     justifyContent: 'center',
     borderRadius: '0 9px 9px 0',
     border: '1px solid',
-    borderColor: '#5a7864',
-    borderLeftColor: '#ffffff',
+    borderColor: '#ffffff',
+    borderLeftColor: '#5a7864',
+    display: 'none',
   });
   expect(customStyles(() => {}, true).dropdownIndicator({})).toEqual({
-    color: '#ffffff',
+    color: '#5a7864',
     '&:hover': {
-      color: '#ffffff',
+      color: '#5a7864',
     },
-    transform: 'rotate(180deg)',
+    transform: 'none',
   });
 });

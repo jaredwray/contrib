@@ -43,29 +43,11 @@ export const UserAccountSchema = gql`
   }
 
   type UserAccount {
-    """
-    ID is the user_id received from PassportJs.
-    """
     id: String!
     mongodbId: String
-    """
-    Account verified phone number.
-    """
     phoneNumber: String
-
-    """
-    Account onboarding status.
-    """
     status: UserAccountStatus!
-
-    """
-    Admin users will have True here, others will have null.
-    """
     isAdmin: Boolean
-
-    """
-    User creation datetime
-    """
     createdAt: String
     stripeCustomerId: String
     notAcceptedTerms: String

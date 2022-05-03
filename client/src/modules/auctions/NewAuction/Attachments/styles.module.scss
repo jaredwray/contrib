@@ -1,0 +1,17 @@
+@import 'src/variables.scss';
+
+.root {
+  background-color: $whitesmoke-color;
+  border: 1px solid $light-gray-color;
+}
+
+.wrapper {
+  max-width: 420px;
+}
+
+.title {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 700;
+  color: $sage-color;
+}
