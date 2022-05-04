@@ -16,9 +16,10 @@ interface Props {
   disabled?: boolean;
   minValue?: number;
   required?: boolean;
+  checkMissed?: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
-const Item: FC<Props> = ({ label, name, tooltip, placeholder, disabled, minValue, required }: Props) => {
+const Item: FC<Props> = ({ label, name, tooltip, placeholder, disabled, minValue, required, checkMissed }: Props) => {
   const moneyPlaceholder = Number.isInteger(placeholder) ? `${placeholder}` : placeholder;
   return (
     <tr>
@@ -31,6 +32,7 @@ const Item: FC<Props> = ({ label, name, tooltip, placeholder, disabled, minValue
           name={name}
           placeholder={moneyPlaceholder as string}
           required={required}
+          setValueToState={checkMissed}
           withErrorMessage={false}
         />
       </td>

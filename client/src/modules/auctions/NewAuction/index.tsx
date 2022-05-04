@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -19,43 +19,21 @@ import { AuctionAttachmentInput } from 'src/types/inputs/AuctionAttachmentInput'
 
 import Attachments from './Attachments';
 import Details from './Details';
+import IFormState from './IFormState';
 import styles from './styles.module.scss';
 
 const NewAuction = () => {
   const [fileForCover, setFileForCover] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
+  const [formState, setFormState] = useState<IFormState>({
+    missed: ['attachments', 'title', 'startPrice', 'fairMarketValue', 'charity'],
+    errors: [],
+  });
   const [creating, setCreating] = useState(false);
   const { showError, showMessage } = useShowNotification();
   const history = useHistory();
 
   const { data: storageAuthData } = useQuery(ContentStorageAuthDataQuery);
-
-  const cloudflareUpload = useCallback(
-    async (file: File) => {
-      const { authToken, accountId } = storageAuthData.getContentStorageAuthData;
-      const formData = new FormData();
-      formData.append('file', file, file.name);
-
-      try {
-        let uid;
-        await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/stream`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => (uid = data.result.uid));
-
-        return uid;
-      } catch (error) {
-        return undefined;
-      }
-    },
-    [storageAuthData],
-  );
-
   const [finishAuctionCreation] = useMutation(FinishAuctionCreationMutation);
   const [addAuctionMedia] = useMutation(AddAuctionMediaMutation);
   const [createAuction] = useMutation(CreateAuctionMutation, {
@@ -90,6 +68,31 @@ const NewAuction = () => {
     },
   });
 
+  const cloudflareUpload = useCallback(
+    async (file: File) => {
+      const { authToken, accountId } = storageAuthData.getContentStorageAuthData;
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      try {
+        let uid;
+        await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/stream`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => (uid = data.result.uid));
+
+        return uid;
+      } catch (error) {
+        return undefined;
+      }
+    },
+    [storageAuthData],
+  );
   const onSubmit = useCallback(
     async (values) => {
       try {
@@ -102,6 +105,31 @@ const NewAuction = () => {
     },
     [showError, createAuction],
   );
+  const checkMissed = useCallback(
+    (name: string, value: any) => {
+      const hasValue = value.hasOwnProperty('length') ? value.length > 0 : value.amount > 0;
+      const blankValue = value.hasOwnProperty('length') ? value.length === 0 : value.amount === 0;
+
+      if (hasValue && formState?.missed?.includes(name))
+        setFormState((prevState) => {
+          return {
+            ...prevState,
+            missed: prevState.missed.filter((value, index) => value !== name),
+          };
+        });
+
+      if (blankValue && !formState?.missed?.includes(name))
+        setFormState((prevState) => {
+          return {
+            ...prevState,
+            missed: [...new Set([...prevState.missed, name])],
+          };
+        });
+    },
+    [setFormState, formState?.missed],
+  );
+
+  useEffect(() => checkMissed('attachments', files), [files, checkMissed]);
 
   setPageTitle('New Auction');
 
@@ -120,8 +148,13 @@ const NewAuction = () => {
             setFiles={setFiles}
           />
           <section className={clsx(styles.section, 'm-auto py-4')}>
-            <Details disabled={creating} />
-            <AsyncButton className={clsx(styles.button, 'w-100 mt-4')} loading={creating} type="submit">
+            <Details checkMissed={checkMissed} disabled={creating} />
+            <AsyncButton
+              className={clsx(styles.button, 'w-100 mt-4')}
+              disabled={formState?.missed?.length > 0}
+              loading={creating}
+              type="submit"
+            >
               Create Auction
             </AsyncButton>
           </section>

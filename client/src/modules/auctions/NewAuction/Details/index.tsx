@@ -11,18 +11,21 @@ import styles from './styles.module.scss';
 
 interface Props {
   disabled?: boolean;
+  checkMissed: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
-const Details: FC<Props> = ({ disabled }): ReactElement => {
+const Details: FC<Props> = ({ disabled, checkMissed }): ReactElement => {
   return (
     <div>
       <div className={clsx(styles.title, 'pb-4')}>AUCTION DETAILS</div>
       <FloatingLabel
         required
+        className={styles.input}
         description="What are you auctioning? Share key details like who the benefitting Charity is, and the type of impact your auction is making."
         disabled={disabled}
         label="Title"
         name="title"
+        setValueToState={checkMissed}
         type="input"
       />
       <FloatingLabel
@@ -31,11 +34,12 @@ const Details: FC<Props> = ({ disabled }): ReactElement => {
         disabled={disabled}
         label="Description"
         name="description"
+        setValueToState={checkMissed}
         type="textarea"
       />
-      <Prices disabled={disabled} />
+      <Prices checkMissed={checkMissed} disabled={disabled} />
       <Duration disabled={disabled} />
-      <Charities disabled={disabled} />
+      <Charities checkMissed={checkMissed} disabled={disabled} />
     </div>
   );
 };

@@ -8,9 +8,10 @@ import { Charity, CharityStatus } from 'src/types/Charity';
 
 interface Props {
   disabled?: boolean;
+  checkMissed: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
-const Charities: FC<Props> = ({ disabled }) => {
+const Charities: FC<Props> = ({ disabled, checkMissed }) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
   const { data, loading } = useQuery(ActiveCharitiesList, {
@@ -20,6 +21,13 @@ const Charities: FC<Props> = ({ disabled }) => {
   const charityOption = useCallback((charity: Charity): Option => {
     return { label: charity.name, value: charity.id, id: charity.id };
   }, []);
+  const onChange = useCallback(
+    (option: Option | null) => {
+      checkMissed('charity', option?.value || '');
+      setSelectedOption(option);
+    },
+    [checkMissed, setSelectedOption],
+  );
   // const favoriteCharities = auction.auctionOrganizer.favoriteCharities;
   // const favoriteCharitiesIds = favoriteCharities.map((charity: Charity) => charity.id);
   // const options = [
@@ -41,7 +49,7 @@ const Charities: FC<Props> = ({ disabled }) => {
         options={options}
         placeholder=""
         selectedOption={selectedOption}
-        onChange={setSelectedOption}
+        onChange={onChange}
       />
       <div className="text-label-light text-start mx-3 my-2">Search for, and select your partner Charity</div>
     </div>

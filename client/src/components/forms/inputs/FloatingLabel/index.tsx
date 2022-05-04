@@ -75,7 +75,7 @@ const FloatingLabel = forwardRef<HTMLInputElement | null, Props>(
     return (
       <>
         <FloatingLabelRb
-          className={clsx(styles[type as string], className, required && styles.required)}
+          className={clsx(styles[type as string], wrapperClassName, required && styles.required)}
           controlId={`floating${type}`}
           label={label}
         >

@@ -10,15 +10,17 @@ import styles from './styles.module.scss';
 
 interface Props {
   disabled?: boolean;
+  checkMissed: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
-const Prices: FC<Props> = ({ disabled }): ReactElement => {
+const Prices: FC<Props> = ({ disabled, checkMissed }): ReactElement => {
   return (
     <div className={styles.wrapper}>
       <Table borderless responsive className={clsx(styles.table, 'm-0')}>
         <tbody>
           <Item
             required
+            checkMissed={checkMissed}
             disabled={disabled}
             label="Starting Bid Price"
             name="startPrice"
@@ -27,6 +29,7 @@ const Prices: FC<Props> = ({ disabled }): ReactElement => {
           />
           <Item
             required
+            checkMissed={checkMissed}
             disabled={disabled}
             label="Fair Market Value"
             name="fairMarketValue"
