@@ -1,10 +1,8 @@
-interface IFormError {
+export interface IFormError {
   [key: string]: string;
 }
 
-interface IFormState {
+export interface IFormState {
   missed: string[];
-  errors: IFormError[];
+  errors: IFormError;
 }
-
-export default IFormState;

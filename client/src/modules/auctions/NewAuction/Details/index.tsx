@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import FloatingLabel from 'src/components/forms/inputs/FloatingLabel';
 
+import { IFormError } from '../IFormState';
 import Charities from './Charities';
 import Duration from './Duration';
 import Prices from './Prices';
@@ -11,10 +12,11 @@ import styles from './styles.module.scss';
 
 interface Props {
   disabled?: boolean;
+  errors?: IFormError;
   checkMissed: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
-const Details: FC<Props> = ({ disabled, checkMissed }): ReactElement => {
+const Details: FC<Props> = ({ disabled, checkMissed, errors }): ReactElement => {
   return (
     <div>
       <div className={clsx(styles.title, 'pb-4')}>AUCTION DETAILS</div>
@@ -37,7 +39,7 @@ const Details: FC<Props> = ({ disabled, checkMissed }): ReactElement => {
         setValueToState={checkMissed}
         type="textarea"
       />
-      <Prices checkMissed={checkMissed} disabled={disabled} />
+      <Prices checkMissed={checkMissed} disabled={disabled} errors={errors} />
       <Duration disabled={disabled} />
       <Charities checkMissed={checkMissed} disabled={disabled} />
     </div>
