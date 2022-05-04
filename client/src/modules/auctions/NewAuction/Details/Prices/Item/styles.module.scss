@@ -21,6 +21,10 @@
     color: $gray-color !important;
   }
 
+  &.inputWithError {
+    color: $salmon-color;
+  }
+
   &,
   &:focus,
   &:active {

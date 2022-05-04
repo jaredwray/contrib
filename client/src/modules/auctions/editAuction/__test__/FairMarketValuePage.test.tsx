@@ -403,7 +403,6 @@ describe('EditFairMarketValuePage ', () => {
       wrapper.update();
     });
     await act(async () => {
-      console.log(wrapper);
       const multipleFMV = wrapper!.find(MultipleFMV);
       multipleFMV.props().handleAddItem();
       multipleFMV.props().handleRemoveCurrentItem('2a7af71e-c43f-4fd2-926d-ce3e9b849938');

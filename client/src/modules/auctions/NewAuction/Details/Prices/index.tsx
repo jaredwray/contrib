@@ -5,21 +5,26 @@ import { Table } from 'react-bootstrap';
 
 import { MIN_BID_STEP_VALUE } from 'src/constants';
 
+import { IFormError } from '../../IFormState';
 import Item from './Item';
 import styles from './styles.module.scss';
 
 interface Props {
+  errors?: IFormError;
   disabled?: boolean;
+  checkMissed: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
-const Prices: FC<Props> = ({ disabled }): ReactElement => {
+const Prices: FC<Props> = ({ disabled, checkMissed, errors }): ReactElement => {
   return (
     <div className={styles.wrapper}>
       <Table borderless responsive className={clsx(styles.table, 'm-0')}>
         <tbody>
           <Item
             required
+            checkMissed={checkMissed}
             disabled={disabled}
+            error={errors?.startPrice}
             label="Starting Bid Price"
             name="startPrice"
             placeholder={100}
@@ -27,7 +32,9 @@ const Prices: FC<Props> = ({ disabled }): ReactElement => {
           />
           <Item
             required
+            checkMissed={checkMissed}
             disabled={disabled}
+            error={errors?.fairMarketValue}
             label="Fair Market Value"
             name="fairMarketValue"
             placeholder="required"
@@ -35,6 +42,7 @@ const Prices: FC<Props> = ({ disabled }): ReactElement => {
           />
           <Item
             disabled={disabled}
+            error={errors?.bidStep}
             label="Minimum Bid Increment"
             minValue={10}
             name="bidStep"
@@ -43,6 +51,7 @@ const Prices: FC<Props> = ({ disabled }): ReactElement => {
           />
           <Item
             disabled={disabled}
+            error={errors?.itemPrice}
             label="Buy It Now Price"
             name="itemPrice"
             placeholder={0}
