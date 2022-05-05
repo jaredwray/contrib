@@ -56,6 +56,7 @@ const PrivateContent: FC<Props> = ({ auction }): ReactElement => {
                   errorClassName="position-absolute w-auto"
                   isInvalid={!isValid}
                   name="password"
+                  type="password"
                   onInput={() => setIsValid(true)}
                 />
                 <Button className="mt-4 w-100" type="submit">
