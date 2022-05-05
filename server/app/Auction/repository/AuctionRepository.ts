@@ -184,7 +184,7 @@ export class AuctionRepository implements IAuctionRepository {
     }
   }
 
-  async createAuction(organizerId: string, input: IAuctionInput): Promise<IAuctionModel> {
+  async createAuction(organizerId: string, input: IAuctionInput, isAdmin: boolean): Promise<IAuctionModel> {
     if (!input.title) throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
 
     const startPrice = input.startPrice?.getAmount();
@@ -200,6 +200,7 @@ export class AuctionRepository implements IAuctionRepository {
       throw new AppError(`BidStep should be more than $${AppConfig.bid.minBidValue}`, ErrorCode.BAD_REQUEST);
     if (itemPrice && startPrice && itemPrice > 0 && startPrice >= itemPrice)
       throw new AppError('ItemPrice should be more than Starting Bid Price', ErrorCode.BAD_REQUEST);
+    if (input.password && !isAdmin) throw new AppError('Forbidden attributes provided', ErrorCode.FORBIDDEN);
 
     const utcCurrentDate = dayjs().second(0);
     const utcCurrentDateISO = utcCurrentDate.toISOString();

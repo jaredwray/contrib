@@ -131,7 +131,7 @@ export const AuctionResolvers: AuctionResolversType = {
     ),
     createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencerId }) => {
       if (!input.organizerId || currentAccount.isAdmin || currentInfluencerId === input.organizerId) {
-        return auction.createAuctionDraft(input.organizerId || currentInfluencerId, input);
+        return auction.createDraftAuction(input.organizerId || currentInfluencerId, input, currentAccount.isAdmin);
       } else {
         return null;
       }

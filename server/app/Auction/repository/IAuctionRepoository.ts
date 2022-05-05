@@ -34,7 +34,7 @@ export type IAuctionInput = {
 };
 
 export interface IAuctionRepository {
-  createAuction(organizerId: string, input: IAuctionInput): Promise<IAuctionModel>;
+  createAuction(organizerId: string, input: IAuctionInput, isAdmin: boolean): Promise<IAuctionModel>;
   activateAuction(id: string, organizerId: string): Promise<IAuctionModel>;
   updateAuction(id: string, organizerId: string, input: IAuctionInput, isAdmin: boolean): Promise<IAuctionModel>;
   getAuctionPriceLimits({ query, statusFilter, filters }: IAuctionFilters): Promise<{ min: number; max: number }>;
