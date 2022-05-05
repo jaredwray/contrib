@@ -26,6 +26,10 @@ export const MyAccountQuery = gql`
         team
         avatarUrl
         status
+        favoriteCharities {
+          id
+          name
+        }
       }
       assistant {
         name

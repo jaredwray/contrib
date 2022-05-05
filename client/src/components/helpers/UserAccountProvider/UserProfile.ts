@@ -1,6 +1,6 @@
 import { Assistant } from './Assistant';
 import { Charity } from './Charity';
-import { InfluencerProfile } from './InfluencerProfile';
+import { InfluencerProfile } from 'src/types/InfluencerProfile';
 import { PaymentInformation } from './PaymentInformation';
 import { UserAccountAddress } from './UserAccountAddress';
 

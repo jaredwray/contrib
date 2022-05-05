@@ -117,7 +117,7 @@ export const App = () => {
 
                   <Route exact component={AllAuctionsPage} path="/auctions" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/new/old" role="influencer" />
-                  <PrivateRoute component={EditAuctionPage} path="/auctions/:ownerId/new" role="admin" />
+                  <PrivateRoute component={NewAuctionPage} path="/auctions/:ownerId/new" role="admin" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/:auctionId/title" role="influencer" />
                   <PrivateRoute component={NewAuctionPage} path="/auctions/new" role="influencer" />
                   <PrivateRoute
