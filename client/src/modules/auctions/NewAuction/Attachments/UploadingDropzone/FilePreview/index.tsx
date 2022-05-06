@@ -30,7 +30,7 @@ const FilePreview: FC<Props> = ({ file, fileForCover, index, setFiles, setFileFo
   const isForCover = index === fileForCover;
 
   return (
-    <div className={clsx(styles.wrapper, 'd-flex flex-column')}>
+    <div className={styles.wrapper}>
       <div
         className={clsx(styles.previewWrapper, isForCover && styles.forCover, disabled && 'pe-none', 'd-inline-block')}
         onClick={onSelect}

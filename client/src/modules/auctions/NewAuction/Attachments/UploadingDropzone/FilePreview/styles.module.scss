@@ -1,6 +1,7 @@
 @import 'src/variables.scss';
 
 .wrapper {
+  display: inline-table;
   height: 120px;
 }
 .previewWrapper {
