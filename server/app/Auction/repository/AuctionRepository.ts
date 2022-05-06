@@ -212,6 +212,7 @@ export class AuctionRepository implements IAuctionRepository {
         createdAt: utcCurrentDateISO,
         updatedAt: utcCurrentDateISO,
         auctionOrganizer: organizerId,
+        currentPrice: startPrice,
         startPrice,
         itemPrice,
         fairMarketValue,
