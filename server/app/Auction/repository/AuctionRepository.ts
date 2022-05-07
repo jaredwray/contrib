@@ -184,8 +184,23 @@ export class AuctionRepository implements IAuctionRepository {
     }
   }
 
-  async createAuction(organizerId: string, input: IAuctionInput): Promise<IAuctionModel> {
+  async createAuction(organizerId: string, input: IAuctionInput, isAdmin: boolean): Promise<IAuctionModel> {
     if (!input.title) throw new AppError('Cannot create auction without title', ErrorCode.BAD_REQUEST);
+
+    const startPrice = input.startPrice?.getAmount();
+    const itemPrice = input.itemPrice?.getAmount();
+    const fairMarketValue = input.fairMarketValue?.getAmount();
+    const bidStep = input.bidStep?.getAmount();
+
+    if (startPrice && startPrice === 0)
+      throw new AppError('Cannot create auction with zero startPrice', ErrorCode.BAD_REQUEST);
+    if (fairMarketValue && fairMarketValue === 0)
+      throw new AppError('Cannot create auction with zero fairMarketValue', ErrorCode.BAD_REQUEST);
+    if (bidStep && bidStep < AppConfig.bid.minBidValue * 100)
+      throw new AppError(`BidStep should be more than $${AppConfig.bid.minBidValue}`, ErrorCode.BAD_REQUEST);
+    if (itemPrice && startPrice && itemPrice > 0 && startPrice >= itemPrice)
+      throw new AppError('ItemPrice should be more than Starting Bid Price', ErrorCode.BAD_REQUEST);
+    if (input.password && !isAdmin) throw new AppError('Forbidden attributes provided', ErrorCode.FORBIDDEN);
 
     const utcCurrentDate = dayjs().second(0);
     const utcCurrentDateISO = utcCurrentDate.toISOString();
@@ -197,10 +212,11 @@ export class AuctionRepository implements IAuctionRepository {
         createdAt: utcCurrentDateISO,
         updatedAt: utcCurrentDateISO,
         auctionOrganizer: organizerId,
-        startPrice: input.startPrice?.getAmount(),
-        itemPrice: input.itemPrice?.getAmount(),
-        fairMarketValue: input.fairMarketValue?.getAmount(),
-        bidStep: input.bidStep?.getAmount(),
+        currentPrice: startPrice,
+        startPrice,
+        itemPrice,
+        fairMarketValue,
+        bidStep,
       },
     ]);
 

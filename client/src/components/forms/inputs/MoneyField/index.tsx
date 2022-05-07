@@ -75,7 +75,6 @@ const MoneyField: FC<Props> = ({
       const onChangeValue = { ...currentValue, amount: number ? parseInt(number, 10) * 100 : 0 };
 
       onChange(onChangeValue);
-
       if (setValueToState) setValueToState(name, onChangeValue);
     },
     [value, name, minValue, valueFromState, setDisabled, setValueToState, onChange],
@@ -93,7 +92,7 @@ const MoneyField: FC<Props> = ({
         isInvalid={hasError}
         maxLength={MaxLength}
         placeholder={placeholder}
-        value={(filteredValueFromState || filteredValue)?.toFormat('$0,0')}
+        value={(filteredValueFromState || filteredValue)?.toFormat('$0,0') || ''}
         onChange={handleChange}
         onFocus={handleFocus}
       />

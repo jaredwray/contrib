@@ -408,8 +408,8 @@ export class AuctionService {
     });
   }
 
-  public async createAuctionDraft(auctionOrganizerId: string, input: AuctionInput): Promise<Auction> {
-    let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input);
+  public async createDraftAuction(auctionOrganizerId: string, input: AuctionInput, isAdmin: boolean): Promise<Auction> {
+    let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input, isAdmin);
     return this.makeAuction(auction);
   }
 

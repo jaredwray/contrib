@@ -91,7 +91,7 @@ export const UploadingDropzone: FC<Props> = ({
 
   return (
     <div className="py-2">
-      <div className={clsx(styles.files, 'd-grid')}>
+      <div className={styles.files}>
         {files.map((file, index) => (
           <FilePreview
             key={index}

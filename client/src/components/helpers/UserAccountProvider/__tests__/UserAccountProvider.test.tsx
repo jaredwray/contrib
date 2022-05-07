@@ -85,6 +85,7 @@ cacheAccountInfluencerWithoutDescription.writeQuery({
         sport: '1',
         status: 'TRANSIENT',
         team: '1',
+        favoriteCharities: [],
       },
     },
   },

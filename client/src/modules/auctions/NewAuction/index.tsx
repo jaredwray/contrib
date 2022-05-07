@@ -2,7 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import {
   CreateAuctionMutation,
@@ -24,6 +24,7 @@ import { IFormState } from './IFormState';
 import styles from './styles.module.scss';
 
 const NewAuction = () => {
+  const { ownerId } = useParams<{ ownerId: string }>();
   const [fileForCover, setFileForCover] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
   const [formState, setFormState] = useState<IFormState>({
@@ -65,7 +66,7 @@ const NewAuction = () => {
       }
 
       showMessage('Created');
-      history.push(`/auctions/${auctionId}/done`);
+      setTimeout(() => history.push(`/auctions/${auctionId}/done`), 1000); // wait until attachments will be available
     },
   });
 
@@ -123,6 +124,8 @@ const NewAuction = () => {
       }
 
       const input = { ...values, duration: Number(values.duration) };
+      if (ownerId) input.organizerId = ownerId;
+
       const errors = validateFormValues(values);
 
       if (Object.keys(errors).length) {
@@ -137,7 +140,7 @@ const NewAuction = () => {
         showError(error.message);
       }
     },
-    [showError, showWarning, validateFormValues, createAuction, files.length],
+    [showError, showWarning, validateFormValues, createAuction, files.length, ownerId],
   );
 
   const checkMissed = useCallback(

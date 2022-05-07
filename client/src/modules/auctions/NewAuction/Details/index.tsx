@@ -1,8 +1,9 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useContext } from 'react';
 
 import clsx from 'clsx';
 
 import FloatingLabel from 'src/components/forms/inputs/FloatingLabel';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 
 import { IFormError } from '../IFormState';
 import Charities from './Charities';
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const Details: FC<Props> = ({ disabled, checkMissed, errors }): ReactElement => {
+  const { account } = useContext(UserAccountContext);
   return (
     <div>
       <div className={clsx(styles.title, 'pb-4')}>AUCTION DETAILS</div>
@@ -36,12 +38,21 @@ const Details: FC<Props> = ({ disabled, checkMissed, errors }): ReactElement => 
         disabled={disabled}
         label="Description"
         name="description"
-        setValueToState={checkMissed}
         type="textarea"
       />
       <Prices checkMissed={checkMissed} disabled={disabled} errors={errors} />
       <Duration disabled={disabled} />
       <Charities checkMissed={checkMissed} disabled={disabled} />
+      {account?.isAdmin && (
+        <FloatingLabel
+          className={clsx(styles.input, 'mt-3')}
+          description="Enter any password here and this auction will be private. Only user with this password and direct link will see it."
+          disabled={disabled}
+          label="Password"
+          name="password"
+          type="input"
+        />
+      )}
     </div>
   );
 };

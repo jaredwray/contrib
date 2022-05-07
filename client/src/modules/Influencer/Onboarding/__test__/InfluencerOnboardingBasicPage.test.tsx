@@ -43,6 +43,7 @@ cache.writeQuery({
         sport: '1',
         status: 'TRANSIENT',
         team: '1',
+        favoriteCharities: [],
       },
       isAdmin: false,
       createdAt: '2021-02-18T14:36:35.208+00:00',

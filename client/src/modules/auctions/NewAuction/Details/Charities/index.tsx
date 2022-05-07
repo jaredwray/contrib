@@ -1,9 +1,10 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useContext, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 
 import { ActiveCharitiesList } from 'src/apollo/queries/charities';
 import { CharitySearchSelect, Option } from 'src/components/forms/selects/CharitySearchSelect';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const Charities: FC<Props> = ({ disabled, checkMissed }) => {
+  const { account } = useContext(UserAccountContext);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
   const { data, loading } = useQuery(ActiveCharitiesList, {
@@ -28,16 +30,15 @@ const Charities: FC<Props> = ({ disabled, checkMissed }) => {
     },
     [checkMissed, setSelectedOption],
   );
-  // const favoriteCharities = auction.auctionOrganizer.favoriteCharities;
-  // const favoriteCharitiesIds = favoriteCharities.map((charity: Charity) => charity.id);
-  // const options = [
-  //   ...favoriteCharities,
-  //   ...charitiesListData.charitiesList.items.filter((ch: Charity) => !favoriteCharitiesIds.includes(ch.id)),
-  // ].map((charity: Charity) => charityOption(charity));
 
   if (loading) return null;
 
-  const options = data.charitiesList.items.map((charity: Charity) => charityOption(charity));
+  const favoriteCharities = account?.influencerProfile?.favoriteCharities || ([] as Charity[]);
+  const favoriteCharitiesIds = favoriteCharities.map((charity: Charity) => charity.id);
+  const options = [
+    ...favoriteCharities,
+    ...data.charitiesList.items.filter((ch: Charity) => !favoriteCharitiesIds.includes(ch.id)),
+  ].map((charity: Charity) => charityOption(charity));
 
   return (
     <div>
