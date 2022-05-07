@@ -6,6 +6,13 @@
 
 .section {
   max-width: 420px;
+
+  @media (max-width: 420px) {
+    input,
+    textarea {
+      border-radius: 0 !important;
+    }
+  }
 }
 
 .title {

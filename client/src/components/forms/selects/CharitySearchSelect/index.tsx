@@ -16,6 +16,7 @@ export interface Option {
 
 interface Props {
   options: Option[];
+  className?: string;
   name?: string;
   required?: boolean;
   disabled?: boolean;
@@ -27,6 +28,7 @@ interface Props {
 
 export const CharitySearchSelect: FC<Props> = ({
   options,
+  className,
   name,
   required,
   disabled,
@@ -56,7 +58,7 @@ export const CharitySearchSelect: FC<Props> = ({
   return (
     <div className="position-relative">
       <Select
-        className={styles.charitiesSelect}
+        className={clsx(styles.charitiesSelect, className)}
         isDisabled={disabled}
         noOptionsMessage={() => 'no charities found'}
         options={options}

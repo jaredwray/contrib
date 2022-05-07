@@ -7,12 +7,14 @@ import { CharitySearchSelect, Option } from 'src/components/forms/selects/Charit
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { Charity, CharityStatus } from 'src/types/Charity';
 
+import styles from './styles.module.scss';
+
 interface Props {
   disabled?: boolean;
   checkMissed: (name: string, value: string | Dinero.DineroObject) => void;
 }
 
-const Charities: FC<Props> = ({ disabled, checkMissed }) => {
+const Charities: FC<Props> = ({ checkMissed, disabled = false }) => {
   const { account } = useContext(UserAccountContext);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -44,7 +46,8 @@ const Charities: FC<Props> = ({ disabled, checkMissed }) => {
     <div>
       <CharitySearchSelect
         required
-        disabled={!!disabled}
+        className={styles.select}
+        disabled={disabled}
         floatingLabel="Charity"
         name="charity"
         options={options}
