@@ -10,6 +10,10 @@
 .wrapper > div {
   border: 1px solid $light-gray-color !important;
   border-radius: 8px !important;
+
+  @media (max-width: 420px) {
+    border-radius: 0 !important;
+  }
 }
 
 .table {
@@ -26,7 +30,7 @@
   }
 
   tr:hover {
-    background-color: white !important;
-    color: #323432 !important;
+    background-color: $white-color !important;
+    color: $dark-gray-color !important;
   }
 }

@@ -188,14 +188,16 @@ const NewAuction = () => {
           />
           <section className={clsx(styles.section, 'm-auto py-4')}>
             <Details checkMissed={checkMissed} disabled={creating} errors={formState?.errors} />
-            <AsyncButton
-              className={clsx(styles.button, 'w-100 mt-4')}
-              disabled={formState?.missed?.length > 0}
-              loading={creating}
-              type="submit"
-            >
-              Create Auction
-            </AsyncButton>
+            <div className=" mx-3 mx-md-0">
+              <AsyncButton
+                className={clsx(styles.button, 'w-100 mt-4')}
+                disabled={formState?.missed?.length > 0}
+                loading={creating}
+                type="submit"
+              >
+                Create Auction
+              </AsyncButton>
+            </div>
           </section>
         </Form>
       </div>

@@ -6,10 +6,14 @@
   justify-content: center;
   letter-spacing: 0.1em;
   border-radius: 10px;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 21px !important;
 
   &:disabled {
     cursor: not-allowed;
     pointer-events: all !important;
+    color: $gray77-color;
   }
 
   &.btn-secondary {
