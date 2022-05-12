@@ -40,3 +40,12 @@
     border-bottom: 1px solid $barely-gray-color;
   }
 }
+
+.invitation {
+  top: -25px;
+  left: -0.75rem;
+  z-index: 100;
+  background: $light-gray-color;
+  border: 1px solid $light-gray-color;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}

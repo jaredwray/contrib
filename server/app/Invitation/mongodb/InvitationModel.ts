@@ -21,13 +21,13 @@ export const InvitationCollectionName = 'invitation';
 
 const InvitationSchema: Schema<IInvitation> = new Schema<IInvitation>({
   firstName: { type: SchemaTypes.String, required: true },
-  lastName: { type: SchemaTypes.String, required: true },
-  welcomeMessage: { type: SchemaTypes.String, required: true },
+  lastName: { type: SchemaTypes.String },
+  welcomeMessage: { type: SchemaTypes.String },
   slug: { type: SchemaTypes.String, required: true, index: true, unique: true },
-  accepted: { type: SchemaTypes.Boolean, required: true },
+  accepted: { type: SchemaTypes.Boolean, required: true, default: false },
   phoneNumber: { type: SchemaTypes.String, required: true },
   parentEntityType: { type: SchemaTypes.String, index: true, required: true },
-  parentEntityId: { type: SchemaTypes.ObjectId, index: true, required: true },
+  parentEntityId: { type: SchemaTypes.ObjectId, index: true },
   createdAt: {
     type: SchemaTypes.Date,
     default: dayjs().second(0),

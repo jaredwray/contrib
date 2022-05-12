@@ -30,6 +30,7 @@ interface Props {
   ref?: HTMLInputElement | null;
   isInvalid?: boolean;
   hidden?: boolean;
+  displayError?: boolean;
 }
 
 const InputField = forwardRef<HTMLInputElement | null, Props>(
@@ -53,6 +54,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
       onKeyPress,
       onInput,
       hidden = false,
+      displayError = true,
       setValueToState,
     },
     ref,
@@ -85,7 +87,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           {...inputProps}
           ref={ref}
           as={textarea ? 'textarea' : 'input'}
-          className={clsx(styles.input, className)}
+          className={clsx(styles.input, !displayError && styles.inputWithoutError, className)}
           isInvalid={hasError || isInvalid}
           maxLength={maxLength}
           placeholder={placeholder}
@@ -95,7 +97,7 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           onInput={onInput ? (e: BaseSyntheticEvent) => onInput(e) : () => {}}
           onKeyPress={() => onKeyPress}
         />
-        {!hidden && (
+        {!hidden && displayError && (
           <Control.Feedback className={errorClassName} type="invalid">
             {errorMessage || (isInvalid && 'invalid')}
           </Control.Feedback>

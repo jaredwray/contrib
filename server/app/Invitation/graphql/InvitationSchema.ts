@@ -1,12 +1,19 @@
 import { gql } from 'apollo-server-express';
 
 export const InvitationSchema = gql`
+  enum InvitationStatus {
+    PENDING
+    PROPOSED
+    DECLINED
+  }
+
   type Invitation {
     id: String!
     firstName: String!
-    lastName: String!
-    welcomeMessage: String!
-    accepted: Boolean!
+    lastName: String
+    welcomeMessage: String
+    status: InvitationStatus
+    accepted: Boolean
     createdAt: String!
     updatedAt: String!
   }
@@ -18,8 +25,8 @@ export const InvitationSchema = gql`
   input InviteInput {
     phoneNumber: String!
     firstName: String!
-    lastName: String!
-    welcomeMessage: String!
+    lastName: String
+    welcomeMessage: String
     influencerId: String
   }
 
@@ -28,6 +35,7 @@ export const InvitationSchema = gql`
   }
 
   extend type Mutation {
+    proposeInvitation(input: InviteInput): Invitation!
     createAccountWithInvitation(code: String!): UserAccount!
     confirmAccountWithInvitation(code: String!, otp: String!): UserAccount!
   }

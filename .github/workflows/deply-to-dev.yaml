@@ -77,6 +77,7 @@ jobs:
           REACT_APP_GOOGLE_ANALYTICS_APP_ID: "G-0VZJ4JNXP0"
           REACT_APP_SMARTLOOK_ID: ${{ secrets.DEV_REACT_APP_SMARTLOOK_ID }}
           REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE: true
+          REACT_APP_RECAPTCHA_KEY: ${{ secrets.DEV_REACT_APP_RECAPTCHA_KEY }}
 
       # Test Client
       - name: Test Client

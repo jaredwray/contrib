@@ -1,0 +1,18 @@
+@import 'src/variables.scss';
+
+.cancelBtn {
+  &,
+  &:hover {
+    color: $dark-gray-color !important;
+    text-decoration: none !important;
+  }
+}
+
+.captcha {
+  height: 126px;
+
+  & > div > div {
+    display: flex;
+    place-content: center;
+  }
+}

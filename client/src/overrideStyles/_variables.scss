@@ -12,11 +12,13 @@ $input-placeholder-color: $light-gray-color;
 $input-border-color: $light-gray-color;
 $input-focus-border-color: $gray-color;
 $input-border-radius: 10px;
-$input-font-size: 20px;
+$input-font-size: 14px;
 $input-line-height: 1.25;
-$input-font-weight: bold;
+$input-font-weight: 600;
+$input-border-color: $gray-color;
+$input-bg: $whitesmoke-color;
 $input-btn-focus-box-shadow: inset 0 0 0 1px;
-$input-height: 50px;
+$input-height: 48px;
 $form-feedback-font-size: 12px;
 
 $form-floating-line-height: 18px;
