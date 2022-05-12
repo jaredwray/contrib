@@ -1,5 +1,11 @@
 @import 'src/variables.scss';
 
+.container {
+  @media (max-width: $small-weight) {
+    padding: 0 !important;
+  }
+}
+
 .contentWrapper {
   flex-grow: 1;
   display: flex;
@@ -32,7 +38,7 @@
   background-color: $barely-gray-color;
 
   @media (max-width: $medium-weight) {
-    height: 210px;
+    height: 365px;
     order: -1;
   }
 
@@ -41,8 +47,7 @@
     order: 0;
   }
 
-  @media (max-width: 400px) {
-    display: block !important;
+  @media (max-width: $small-weight) {
     overflow: hidden;
     padding: 20px;
   }
@@ -52,5 +57,5 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 400px;
+  max-width: $small-weight;
 }
