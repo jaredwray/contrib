@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { Container, ProgressBar } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { AuctionQuery } from 'src/apollo/queries/auctions';
@@ -37,8 +37,7 @@ const AuctionDonePage = () => {
 
   return (
     <Layout>
-      <ProgressBar now={100} />
-      <Container className="m-auto" fluid="xxl">
+      <Container className={clsx(styles.container, 'm-auto')} fluid="xxl">
         <div className={styles.contentWrapper}>
           <div className={clsx(styles.content, styles.contentLeft)}>
             <div className={styles.contentRightWrapper}>
