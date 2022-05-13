@@ -16,6 +16,7 @@ import AdminAuctionPage from 'src/modules/admin/auctions/AdminAuctionPage';
 import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
 import Charities from 'src/modules/admin/Charities';
 import Influencers from 'src/modules/admin/Influencers';
+import AdminInvitations from 'src/modules/admin/Invitations';
 import AuctionDeliveryInfoPage from 'src/modules/auctions/AuctionDeliveryInfoPage';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import AllAuctionsPage from 'src/modules/auctions/AuctionsPage';
@@ -93,6 +94,7 @@ export const App = () => {
 
                   <PrivateRoute component={Charities} path="/admin/charities" role="admin" />
                   <PrivateRoute component={Influencers} path="/admin/influencers" role="admin" />
+                  <PrivateRoute component={AdminInvitations} path="/admin/invitations" role="admin" />
                   <PrivateRoute component={AdminAuctionPage} path="/admin/auctions/:auctionId" role="admin" />
                   <PrivateRoute component={AdminAuctionsPage} path="/admin/auctions" role="admin" />
 

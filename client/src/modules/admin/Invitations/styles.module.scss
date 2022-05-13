@@ -1,0 +1,16 @@
+@import 'src/variables.scss';
+
+.table {
+  .idColumn {
+    max-width: 235px;
+  }
+
+  td {
+    max-width: 170px;
+    word-break: break-word;
+  }
+}
+
+.actions {
+  width: 50px;
+}

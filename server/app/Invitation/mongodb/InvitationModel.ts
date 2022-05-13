@@ -12,6 +12,7 @@ export interface IInvitation extends Document {
   phoneNumber: string;
   parentEntityType: InvitationParentEntityType;
   parentEntityId: ObjectId;
+  status: string;
   createdAt: Dayjs;
   updatedAt: Dayjs;
   shortLink: IShortLinkModel['_id'];
@@ -28,16 +29,9 @@ const InvitationSchema: Schema<IInvitation> = new Schema<IInvitation>({
   phoneNumber: { type: SchemaTypes.String, required: true },
   parentEntityType: { type: SchemaTypes.String, index: true, required: true },
   parentEntityId: { type: SchemaTypes.ObjectId, index: true },
-  createdAt: {
-    type: SchemaTypes.Date,
-    default: dayjs().second(0),
-    get: (v) => dayjs(v),
-  },
-  updatedAt: {
-    type: SchemaTypes.Date,
-    default: dayjs().second(0),
-    get: (v) => dayjs(v),
-  },
+  status: { type: SchemaTypes.String, index: true },
+  createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+  updatedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
 });
 

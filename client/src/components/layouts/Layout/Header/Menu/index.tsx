@@ -53,6 +53,7 @@ const Menu: FC<Props> = ({ avatar }) => {
             <MenuNavLink link="/admin/auctions" title="Manage Auctions" />
             <MenuNavLink link="/admin/influencers" title="Manage Influencers" />
             <MenuNavLink link="/admin/charities" title="Manage Charities" />
+            <MenuNavLink link="/admin/invitations" title="Manage Invitations" />
           </>
         )}
         {account?.influencerProfile && (

@@ -97,7 +97,6 @@ export const CharitySchema = gql`
   }
 
   extend type Mutation {
-    inviteCharity(input: InviteInput!): InvitationId!
     updateCharity(id: String!, input: CharityInput!): Charity!
     updateCharityProfileAvatar(charityId: String!, image: Upload): Charity!
     updateCharityProfile(charityId: String!, input: CharityProfileInput!): Charity!

@@ -17,12 +17,11 @@ export class BidService {
   constructor(private readonly connection: Connection) {}
 
   public async createBid(input: CreateBidInput, session?: ClientSession): Promise<Bid | null> {
-    if (!input) {
-      return null;
-    }
-    try {
-      const { user, auction, bid, bidCurrency, chargeId } = input;
+    if (!input) return null;
 
+    const { user, auction, bid, bidCurrency, chargeId } = input;
+
+    try {
       const [createdBid] = await this.BidModel.create(
         [
           {
@@ -58,13 +57,11 @@ export class BidService {
   public makeBid(model: IBidModel): Bid | null {
     if (!model) return null;
 
-    const { user, bid, bidCurrency, createdAt, chargeId } = model;
+    const { bid, bidCurrency, ...rest } = model;
 
     return {
-      user,
       bid: Dinero({ amount: bid, currency: bidCurrency as Currency }),
-      createdAt,
-      chargeId,
+      ...rest,
     };
   }
 }

@@ -1,10 +1,10 @@
 import { FC } from 'react';
 
 import clsx from 'clsx';
-import { format } from 'date-fns-tz';
 import Dinero from 'dinero.js';
 import { Row, Table, Button, Badge } from 'react-bootstrap';
 
+import { toFormatedDate } from 'src/helpers/dateHelpers';
 import { getShortLink } from 'src/helpers/getShortLink';
 import { Auction } from 'src/types/Auction';
 import { Charity } from 'src/types/Charity';
@@ -19,9 +19,6 @@ interface Props {
 }
 
 export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEditClick }) => {
-  const startsAt = format(new Date(auction.startsAt), 'MMM dd yyyy HH:mm:ssXXX');
-  const endsAt = format(new Date(auction.endsAt), 'MMM dd yyyy HH:mm:ssXXX');
-
   return (
     <Row className={styles.tableContainer}>
       {auction.password && (
@@ -87,11 +84,11 @@ export const Details: FC<Props> = ({ auction, charity, showEditButton, handleEdi
           )}
           <tr>
             <td>Start date</td>
-            <td>{startsAt}</td>
+            <td>{toFormatedDate(auction.startsAt)}</td>
           </tr>
           <tr>
             <td>End date</td>
-            <td>{endsAt}</td>
+            <td>{toFormatedDate(auction.endsAt)}</td>
           </tr>
           <tr>
             <td>Charity Name</td>

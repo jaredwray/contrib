@@ -1,11 +1,11 @@
 import { ReactElement, SetStateAction, useCallback, useState, useEffect } from 'react';
 
-// import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import clsx from 'clsx';
 import { Button } from 'react-bootstrap';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-// import { InviteInfluencerMutation } from 'src/apollo/queries/influencers';
+import { ProposeInvitationMutation } from 'src/apollo/queries/invitations';
 import AsyncButton from 'src/components/buttons/AsyncButton';
 import Form from 'src/components/forms/Form/Form';
 import InputField from 'src/components/forms/inputs/InputField';
@@ -19,30 +19,27 @@ interface Props {
 }
 
 const InfluencerInvitation = ({ setShowForm }: Props): ReactElement => {
-  const { showMessage } = useShowNotification();
-  // const [inviteMutation] = useMutation(InviteInfluencerMutation);
-  // const [creating, setCreating] = useState(false);
+  const { showMessage, showError } = useShowNotification();
+  const [inviteMutation] = useMutation(ProposeInvitationMutation);
+  const [creating, setCreating] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
   const [formCompleted, setFormCompleted] = useState(false);
   const [captchaPassed, setCaptchaPassed] = useState(false);
 
   const onSubmit = useCallback(
     (values) => {
-      // setCreating(true);
-      // inviteMutation({
-      //   variables: { name, phoneNumber: `+${phoneInputValue}` },
-      // })
-      //   .then(() => {
-      //     updateEntitisList();
-      //     onClose();
-      //     addToast('Invited', { autoDismiss: true, appearance: 'success' });
-      //   })
-      //   .catch((error) => setInvitationError(error.message))
-      //   .finally(() => setCreating(false));
-      showMessage('You will receive a response upon approval');
-      setShowForm(false);
+      setCreating(true);
+
+      inviteMutation({
+        variables: { input: { ...values, phoneNumber: `+${values.phoneNumber}`, parentEntityType: 'INFLUENCER' } },
+      })
+        .then(() => {
+          showMessage('You will receive a response upon approval');
+        })
+        .catch((error) => showError(error.message))
+        .finally(() => setShowForm(false));
     },
-    [showMessage, setShowForm],
+    [inviteMutation, showMessage, showError, setCreating, setShowForm],
   );
 
   useEffect(() => {
@@ -51,7 +48,7 @@ const InfluencerInvitation = ({ setShowForm }: Props): ReactElement => {
 
   return (
     <Form
-      initialValues={{ fullname: null, phoneNumber: null }}
+      initialValues={{ firstName: null, phoneNumber: null }}
       requiredFields={['firstName', 'phoneNumber']}
       onFill={() => setFormCompleted(true)}
       onSubmit={onSubmit}
@@ -67,7 +64,7 @@ const InfluencerInvitation = ({ setShowForm }: Props): ReactElement => {
           onChange={(value) => setCaptchaPassed(!!value)}
         />
       </div>
-      <AsyncButton className="text-label w-100" disabled={!canSubmit} type="submit">
+      <AsyncButton className="text-label w-100" disabled={!canSubmit || creating} loading={creating} type="submit">
         Request Invitation
       </AsyncButton>
       <Button

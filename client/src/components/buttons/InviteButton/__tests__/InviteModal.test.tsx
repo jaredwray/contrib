@@ -6,11 +6,11 @@ import { MockedProvider } from '@apollo/client/testing';
 import { Modal } from 'src/components/buttons/InviteButton/Modal';
 import { ToastProvider } from 'react-toast-notifications';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { InviteInfluencerMutation } from 'src/apollo/queries/influencers';
+import { InviteInfluencerMutation } from 'src/apollo/queries/invitations';
 
 import Form from 'src/components/forms/Form/Form';
 
-describe('Should render correctly "InviteModal"', () => {
+describe('InviteModal', () => {
   const props: any = {
     open: true,
     onClose: jest.fn(),
@@ -25,10 +25,12 @@ describe('Should render correctly "InviteModal"', () => {
       request: {
         query: InviteInfluencerMutation,
         variables: {
-          firstName: 'test',
-          lastName: 'test',
-          phoneNumber: '+',
-          welcomeMessage: 'test',
+          input: {
+            firstName: 'test',
+            lastName: 'test',
+            phoneNumber: '+',
+            welcomeMessage: 'test',
+          },
         },
       },
       newData: () => {

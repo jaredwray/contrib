@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 
 export const InvitationSchema = gql`
   enum InvitationStatus {
+    DONE
     PENDING
     PROPOSED
     DECLINED
@@ -9,17 +10,27 @@ export const InvitationSchema = gql`
 
   type Invitation {
     id: String!
+    phoneNumber: String!
     firstName: String!
     lastName: String
     welcomeMessage: String
     status: InvitationStatus
+    parentEntityType: String!
+    parentEntityId: String
     accepted: Boolean
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type InvitationId {
     invitationId: String!
+  }
+
+  type InvitationsList {
+    items: [Invitation]!
+    totalItems: Int!
+    size: Int!
+    skip: Int!
   }
 
   input InviteInput {
@@ -28,14 +39,26 @@ export const InvitationSchema = gql`
     lastName: String
     welcomeMessage: String
     influencerId: String
+    parentEntityType: String
+  }
+  input InvitationsParams {
+    skip: Int
+    size: Int
   }
 
   extend type Query {
     invitation(slug: String!): Invitation
+    invitations(params: InvitationsParams): InvitationsList!
   }
 
   extend type Mutation {
-    proposeInvitation(input: InviteInput): Invitation!
+    inviteAssistant(input: InviteInput!): InvitationId!
+    inviteCharity(input: InviteInput!): InvitationId!
+    inviteInfluencer(input: InviteInput!): InvitationId!
+    resendInviteMessage(influencerId: String!): ResendInviteResponce!
+    approveInvitation(id: String!): Invitation
+    declineInvitation(id: String!): Invitation
+    proposeInvitation(input: InviteInput): InvitationId!
     createAccountWithInvitation(code: String!): UserAccount!
     confirmAccountWithInvitation(code: String!, otp: String!): UserAccount!
   }

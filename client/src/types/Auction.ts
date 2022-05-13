@@ -41,7 +41,7 @@ export interface AuctionDelivery {
   parcel: Parcel;
   address?: Address;
   status: AuctionDeliveryStatus;
-  updatedAt: string;
+  updatedAt: Date;
   timeInTransit?: string;
   identificationNumber?: string;
 }

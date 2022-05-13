@@ -16,9 +16,7 @@ export default function InvitationPage() {
   const { slug } = useParams<{ slug: string }>();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
-  const { loading, data, error } = useQuery(GetInvitation, {
-    variables: { slug: slug },
-  });
+  const { loading, data, error } = useQuery(GetInvitation, { variables: { slug } });
 
   const history = useHistory();
   const invitation = data?.invitation;
@@ -42,7 +40,7 @@ export default function InvitationPage() {
   setPageTitle('Invitation page');
 
   return (
-    <UserDialogLayout subtitle={invitation.firstName} textBlock={textBlock} title="Hello,">
+    <UserDialogLayout subtitle={invitation.firstName} textBlock={invitation.welcomeMessage && textBlock} title="Hello,">
       <Button
         className="btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
         variant="ochre"

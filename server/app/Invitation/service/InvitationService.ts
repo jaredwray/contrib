@@ -10,10 +10,11 @@ import { InfluencerModel } from '../../Influencer/mongodb/InfluencerModel';
 import { AssistantModel } from '../../Assistant/mongodb/AssistantModel';
 import { InfluencerService } from '../../Influencer';
 import { InfluencerProfile } from '../../Influencer/dto/InfluencerProfile';
-import { InviteInput } from '../graphql/model/InviteInput';
+import { InviteInput } from '../dto/InviteInput';
 import { NotificationService, MessageTemplate } from '../../NotificationService';
 import { AppConfig } from '../../../config';
-import { Invitation } from '../dto/Invitation';
+import { Invitation, InvitationStatus } from '../dto/Invitation';
+import { InvitationsParams } from '../dto/InvitationsParams';
 import { InvitationParentEntityType } from '../mongodb/InvitationParentEntityType';
 import { AppError, ErrorCode } from '../../../errors';
 import { Assistant } from '../../Assistant/dto/Assistant';
@@ -54,12 +55,119 @@ export class InvitationService {
 
   async findInvitationBySlug(slug: string): Promise<Invitation | null> {
     const model = await this.InvitationModel.findOne({ slug }).exec();
-    return InvitationService.makeInvitation(model);
+    return this.makeInvitation(model);
+  }
+
+  private async updateInvitation(invitation: IInvitation, params: any, session?: any): Promise<void> {
+    Object.assign(invitation, {
+      ...params,
+      updatedAt: this.timeNow(),
+    });
+    session ? await invitation.save({ session }) : await invitation.save();
+  }
+
+  async approve(id: string): Promise<Invitation | null> {
+    const session = await this.connection.startSession();
+
+    try {
+      const invitation = await this.InvitationModel.findOne({ _id: id }).exec();
+      const invitationObject = this.makeInvitation(invitation);
+      const { firstName, phoneNumber } = invitation;
+
+      await session.withTransaction(async () => {
+        const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber, session);
+
+        if (userAccount && (await this.InfluencerModel.exists({ userAccount: userAccount.id }))) {
+          await this.updateInvitation(invitation, { status: InvitationStatus.DONE, accepted: true }, session);
+          return invitationObject;
+        }
+
+        const influencerProfile = await this.influencerService.createTransientInfluencer({ name: firstName }, session);
+        const shortLink = await this.shortLinkService.createShortLink(
+          { address: `invitation/${invitationObject.slug}` },
+          session,
+        );
+
+        if (userAccount) {
+          await this.updateInvitation(
+            invitation,
+            { status: InvitationStatus.DONE, accepted: true, parentEntityId: influencerProfile.id },
+            session,
+          );
+          await this.influencerService.updateInfluencerStatus(
+            influencerProfile,
+            InfluencerStatus.ONBOARDED,
+            userAccount,
+            session,
+          );
+
+          await this.eventHub.broadcast(Events.INFLUENCER_ONBOARDED, { userAccount, influencerProfile });
+        }
+
+        if (!userAccount) {
+          await this.updateInvitation(
+            invitation,
+            { status: InvitationStatus.PENDING, parentEntityId: influencerProfile.id },
+            session,
+          );
+          await this.influencerService.updateInfluencerStatus(
+            influencerProfile,
+            InfluencerStatus.INVITATION_PENDING,
+            null,
+            session,
+          );
+        }
+
+        await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session, shortLink.slug);
+      });
+
+      return invitationObject;
+    } finally {
+      session.endSession();
+    }
+  }
+
+  async decline(id: string): Promise<Invitation | null> {
+    const invitation = await this.InvitationModel.findOne({ _id: id }).exec();
+    await this.updateInvitation(invitation, { status: InvitationStatus.DECLINED });
+    return this.makeInvitation(invitation);
+  }
+
+  public async invitations(params: InvitationsParams) {
+    let scope;
+
+    scope = this.InvitationModel.aggregate([
+      {
+        $addFields: {
+          isProposed: {
+            $cond: { if: { $eq: ['$status', InvitationStatus.PROPOSED] }, then: 1, else: -1 },
+          },
+          isPending: {
+            $cond: { if: { $eq: ['$status', InvitationStatus.PENDING] }, then: 1, else: -1 },
+          },
+        },
+      },
+      { $sort: { isProposed: -1, isPending: -1, accepted: 1, createdAt: -1 } },
+    ]);
+
+    if (params.size) {
+      scope = scope.skip(params.skip || 0).limit(params.size);
+    }
+
+    const items = await scope.exec();
+    const totalItems = await this.InvitationModel.countDocuments().exec();
+
+    return {
+      totalItems,
+      items: items.map((item) => this.makeInvitation(item)),
+      size: items.length,
+      skip: params.skip || 0,
+    };
   }
 
   async listInvitationsByParentEntityIds(parentEntityIds: readonly string[]): Promise<Invitation[]> {
     const models = await this.InvitationModel.find({ parentEntityId: { $in: parentEntityIds } });
-    return models.map((model) => InvitationService.makeInvitation(model));
+    return models.map((model) => this.makeInvitation(model));
   }
 
   async inviteCharity(input: InviteInput): Promise<{ invitationId: string }> {
@@ -140,18 +248,14 @@ export class InvitationService {
   async inviteInfluencer(input: InviteInput): Promise<{ invitationId: string }> {
     const session = await this.connection.startSession();
     let returnObject = null;
+
     try {
       const { firstName, lastName, phoneNumber, welcomeMessage } = objectTrimmer(input);
 
       await session.withTransaction(async () => {
         const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
 
-        if (
-          findedAccount &&
-          (await this.InfluencerModel.exists({
-            userAccount: findedAccount._id,
-          }))
-        )
+        if (findedAccount && (await this.InfluencerModel.exists({ userAccount: findedAccount._id })))
           throw new AppError(`Account with phone number: ${phoneNumber} already has influencer`, ErrorCode.BAD_REQUEST);
 
         const findedInvitation = await this.InvitationModel.findOne({
@@ -220,6 +324,7 @@ export class InvitationService {
   async resendInviteMessage(influencerId: string) {
     const session = await this.connection.startSession();
     let returnObject;
+
     try {
       await session.withTransaction(async () => {
         const inviteObject = await this.InvitationModel.findOne({ parentEntityId: influencerId });
@@ -243,6 +348,19 @@ export class InvitationService {
     } finally {
       session.endSession();
     }
+  }
+
+  async createProposed(input: InviteInput): Promise<{ invitationId: string }> {
+    const now = this.timeNow();
+    const invitation = await this.InvitationModel.create({
+      slug: uuidv4(),
+      createdAt: now,
+      updatedAt: now,
+      status: 'PROPOSED',
+      ...input,
+    });
+
+    return { invitationId: invitation._id.toString() };
   }
 
   async inviteAssistant(input: InviteInput): Promise<{ invitationId: string }> {
@@ -345,12 +463,16 @@ export class InvitationService {
     name: string,
     phoneNumber: string,
     session: ClientSession,
+    slug?: string,
   ): Promise<string> {
     try {
-      const invitation = await this.InvitationModel.findById(invitationId, null, { session });
-      const populatedInvitation = await invitation.populate({ path: 'shortLink', model: this.ShortLinkModel });
+      if (!slug) {
+        const invitation = await this.InvitationModel.findById(invitationId, null, { session });
+        const populatedInvitation = await invitation.populate({ path: 'shortLink', model: this.ShortLinkModel });
+        slug = populatedInvitation.shortLink.slug;
+      }
 
-      const link = await this.shortLinkService.makeLink({ slug: populatedInvitation.shortLink.slug });
+      const link = await this.shortLinkService.makeLink({ slug });
 
       await this.notificationService.sendMessageLater(phoneNumber, MessageTemplate.INVITED, {
         name,
@@ -363,6 +485,7 @@ export class InvitationService {
       throw new AppError(`Can not send verification message`, ErrorCode.BAD_REQUEST);
     }
   }
+
   private async getOrCreateTransientInfluencer(
     { influencerId, firstName, lastName }: InviteInput,
     session: ClientSession,
@@ -473,19 +596,27 @@ export class InvitationService {
     Object.assign(invitation, { shortLink: shortLink.id });
     await invitation.save({ session });
 
-    return InvitationService.makeInvitation(invitation);
+    return this.makeInvitation(invitation);
   }
 
   private timeNow = () => dayjs().second(0);
 
-  private static makeInvitation(model: IInvitation): Invitation | null {
+  private status(model: IInvitation): string {
+    if (model.status) return model.status;
+    if (model.accepted) return InvitationStatus.DONE;
+
+    return InvitationStatus.PENDING;
+  }
+
+  private makeInvitation(model: IInvitation): Invitation | null {
     if (!model) return null;
 
-    const { _id, parentEntityId, ...rest } = model.toObject();
+    const { _id, parentEntityId, status, ...rest } = 'toObject' in model ? model.toObject() : model;
 
     return {
       id: model._id.toString(),
-      parentEntityId: parentEntityId.toString(),
+      parentEntityId: parentEntityId?.toString(),
+      status: this.status(model),
       ...rest,
     };
   }
