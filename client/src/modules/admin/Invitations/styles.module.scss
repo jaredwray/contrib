@@ -14,3 +14,13 @@
 .actions {
   width: 50px;
 }
+
+.proposedStatus {
+  color: $ochre-color;
+}
+.doneStatus {
+  color: $dark-sage-color;
+}
+.declinedStatus {
+  color: $salmon-color;
+}

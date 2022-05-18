@@ -351,14 +351,21 @@ export class InvitationService {
   }
 
   async createProposed(input: InviteInput): Promise<{ invitationId: string }> {
-    const now = this.timeNow();
-    const invitation = await this.InvitationModel.create({
-      slug: uuidv4(),
-      createdAt: now,
-      updatedAt: now,
-      status: 'PROPOSED',
-      ...input,
-    });
+    let invitation;
+
+    invitation = await this.InvitationModel.findOne({ phoneNumber: input.phoneNumber });
+
+    if (!invitation) {
+      const now = this.timeNow();
+
+      invitation = await this.InvitationModel.create({
+        slug: uuidv4(),
+        createdAt: now,
+        updatedAt: now,
+        status: InvitationStatus.PROPOSED,
+        ...input,
+      });
+    }
 
     return { invitationId: invitation._id.toString() };
   }

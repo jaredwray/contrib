@@ -97,9 +97,6 @@ describe('InvitationPage', () => {
       );
     });
 
-    const firstName = wrapper!.find('.invitation-page-influencer');
-    expect(firstName.text()).toEqual('Bob');
-
     const welcomeMessage = wrapper!.find("[data-test-id='invitation-page-welcome-message']");
     expect(welcomeMessage.text()).toEqual('Welcome Bob!');
   });

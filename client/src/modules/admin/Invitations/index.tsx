@@ -27,15 +27,16 @@ export default function Invitations() {
   const [approve, { loading: approving }] = useMutation(ApproveInvitationMutation);
   const [decline, { loading: declining }] = useMutation(DeclineInvitationMutation);
 
-  const canAccept = useCallback(
+  const canApprove = useCallback(
     (item: Invitation) => item.status && [InvitationStatus.PROPOSED, InvitationStatus.DECLINED].includes(item.status),
     [],
   );
+  const canDecline = useCallback((item: Invitation) => item.status && item.status === InvitationStatus.PROPOSED, []);
   const canResend = useCallback(
     (item: Invitation) => !item.accepted && item.status && [InvitationStatus.PENDING, undefined].includes(item.status),
     [],
   );
-  const hasActions = useCallback((item: Invitation) => canAccept(item) || canResend(item), [canAccept, canResend]);
+  const hasActions = useCallback((item: Invitation) => canApprove(item) || canResend(item), [canApprove, canResend]);
   const refreshData = useCallback(
     () =>
       getInvitations({
@@ -101,26 +102,28 @@ export default function Invitations() {
               <td>{item.phoneNumber}</td>
               <td>{item.firstName}</td>
               <td>{item.lastName}</td>
-              <td className="text-nowrap">{item.status}</td>
+              <td className={clsx(item.status && styles[`${item.status?.toLowerCase()}Status`], 'text-nowrap')}>
+                {item.status}
+              </td>
               <td className="text-nowrap">{item.parentEntityType}</td>
               <td>{toFormatedDate(item.createdAt)}</td>
               <td className={clsx(styles.actions, 'p-0')}>
                 <ActionsDropdown disabled={!hasActions(item)}>
-                  {canAccept(item) && (
-                    <>
-                      <ActionsDropdownItem
-                        disabled={declining}
-                        loading={approving}
-                        text="Accept"
-                        onClick={() => onApprove(item)}
-                      />
-                      <ActionsDropdownItem
-                        disabled={approving}
-                        loading={declining}
-                        text="Decline"
-                        onClick={() => onDecline(item)}
-                      />
-                    </>
+                  {canApprove(item) && (
+                    <ActionsDropdownItem
+                      disabled={declining}
+                      loading={approving}
+                      text="Approve"
+                      onClick={() => onApprove(item)}
+                    />
+                  )}
+                  {canDecline(item) && (
+                    <ActionsDropdownItem
+                      disabled={approving}
+                      loading={declining}
+                      text="Decline"
+                      onClick={() => onDecline(item)}
+                    />
                   )}
                   {canResend(item) && <ResendInvitationButton item={item} />}
                 </ActionsDropdown>

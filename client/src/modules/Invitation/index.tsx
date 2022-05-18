@@ -40,7 +40,7 @@ export default function InvitationPage() {
   setPageTitle('Invitation page');
 
   return (
-    <UserDialogLayout subtitle={invitation.firstName} textBlock={invitation.welcomeMessage && textBlock} title="Hello,">
+    <UserDialogLayout textBlock={invitation.welcomeMessage && textBlock} title={`Welcome, ${invitation.firstName}!`}>
       <Button
         className="btn-with-arrows d-table-cell align-middle w-100 invitation-page-create-btn"
         variant="ochre"
