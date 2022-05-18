@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Connection, Document, Model, Schema, SchemaTypes } from 'mongoose';
 
 import { UserAccountCollectionName, IFollowObject, IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
@@ -38,11 +38,11 @@ export interface IAuctionModel extends Document {
   sentNotifications: [string];
   totalBids: number;
   winner?: IUserAccount['_id'];
-  createdAt: dayjs.Dayjs;
-  updatedAt: dayjs.Dayjs;
-  startsAt: dayjs.Dayjs;
-  endsAt: dayjs.Dayjs;
-  stoppedAt: dayjs.Dayjs;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
+  startsAt: Dayjs;
+  endsAt: Dayjs;
+  stoppedAt: Dayjs;
   password?: string;
 }
 
@@ -72,19 +72,10 @@ const AuctionSchema: Schema<IAuctionModel> = new Schema<IAuctionModel>(
       type: SchemaTypes.Date,
       get: (v) => dayjs(v),
     },
-    endsAt: {
-      type: SchemaTypes.Date,
-      get: (v) => dayjs(v),
-    },
+    endsAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
     stoppedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
-    createdAt: {
-      type: SchemaTypes.Date,
-      get: (v) => dayjs(v),
-    },
-    updatedAt: {
-      type: SchemaTypes.Date,
-      get: (v) => dayjs(v),
-    },
+    createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+    updatedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
     bitlyLink: { type: SchemaTypes.String },
     shortLink: { type: SchemaTypes.ObjectId, ref: ShortLinkCollectionName },
     fairMarketValue: { type: SchemaTypes.Number },

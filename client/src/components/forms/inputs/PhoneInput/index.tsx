@@ -28,7 +28,6 @@ const USPhoneInput: FC<Props> = ({
   validateFunction,
   ...otherProps
 }: Props) => {
-  const countryName = ALLOWED_COUNTRY_NAME;
   const isValid = valueIsValid ?? true;
 
   return (
@@ -43,7 +42,7 @@ const USPhoneInput: FC<Props> = ({
         let validationText;
 
         if (validateFunction) validationText = validateFunction(value);
-        if (country.name !== countryName) validationText = 'Must be a valid US phone number';
+        if (country.name !== ALLOWED_COUNTRY_NAME) validationText = 'Must be a valid US phone number';
 
         return (
           <p className={clsx(styles.error, 'text-label error-message position-absolute')}>

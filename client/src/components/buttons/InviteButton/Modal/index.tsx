@@ -50,7 +50,9 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
 
       setCreating(true);
       inviteMutation({
-        variables: { firstName, lastName, phoneNumber: `+${phoneInputValue}`, welcomeMessage, ...mutationVariables },
+        variables: {
+          input: { firstName, lastName, phoneNumber: `+${phoneInputValue}`, welcomeMessage, ...mutationVariables },
+        },
       })
         .then(() => {
           updateEntitisList();
@@ -83,8 +85,8 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
         >
           {invitationError && <Alert variant="danger">{invitationError}</Alert>}
 
-          <InputField required name="firstName" title="Enter First Name" />
-          <InputField required name="lastName" title="Enter Last Name" />
+          <InputField required name="firstName" title="First or Full Name" />
+          <InputField name="lastName" title="Last Name" />
           <RbForm.Group>
             <RbForm.Label>Phone Number</RbForm.Label>
             <Field name="phoneNumber">
@@ -98,7 +100,7 @@ export const Modal: FC<Props> = ({ open, onClose, mutation, mutationVariables, u
               )}
             </Field>
           </RbForm.Group>
-          <InputField required textarea name="welcomeMessage" title="Enter Message on the Welcome page" />
+          <InputField textarea name="welcomeMessage" title="Welcome Message" />
           <div className="float-end pt-2">
             {creating ? (
               <Spinner animation="border" />

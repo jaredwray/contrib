@@ -79,6 +79,7 @@ jobs:
           REACT_APP_GOOGLE_ANALYTICS_APP_ID: "G-T3VD43X4L3"
           REACT_APP_SMARTLOOK_ID: ${{ secrets.LIVE_REACT_APP_SMARTLOOK_ID }}
           REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE: true
+          REACT_APP_RECAPTCHA_KEY: ${{ secrets.LIVE_REACT_APP_RECAPTCHA_KEY }}
 
       # Test Client
       - name: Test Client

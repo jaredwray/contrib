@@ -3,9 +3,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 import { MockedProvider } from '@apollo/client/testing';
 import Pagination from '../../../custom/Pagination';
-
 import { AdminPage } from '..';
-describe('Should render correctly "AdminPage"', () => {
+
+describe('AdminPage', () => {
   const props: any = {
     items: [{}, {}],
     pageSkip: 20,

@@ -28,7 +28,6 @@ export const CharityResolvers = {
     followCharity: requireAuthenticated(async (_, { charityId }, { charity, currentAccount }) =>
       charity.followCharity(charityId, currentAccount.mongodbId),
     ),
-    inviteCharity: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteCharity(input)),
     updateCharity: async (
       _: unknown,
       currentInput: { input: CharityInput; id: string },

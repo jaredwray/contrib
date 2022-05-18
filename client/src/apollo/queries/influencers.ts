@@ -65,38 +65,6 @@ export const TopEarnedInfluencerQuery = gql`
   }
 `;
 
-export const InviteInfluencerMutation = gql`
-  mutation InviteInfluencer(
-    $firstName: String!
-    $lastName: String!
-    $phoneNumber: String!
-    $welcomeMessage: String!
-    $influencerId: String
-  ) {
-    inviteInfluencer(
-      input: {
-        firstName: $firstName
-        lastName: $lastName
-        phoneNumber: $phoneNumber
-        welcomeMessage: $welcomeMessage
-        influencerId: $influencerId
-      }
-    ) {
-      invitationId
-    }
-  }
-`;
-
-export const ResendInviteMessageMutation = gql`
-  mutation ResendInviteMessage($influencerId: String!) {
-    resendInviteMessage(influencerId: $influencerId) {
-      link
-      phoneNumber
-      firstName
-    }
-  }
-`;
-
 export const CreateInfluencerMutation = gql`
   mutation CreateInfluencer($name: String!) {
     createInfluencer(input: { name: $name }) {

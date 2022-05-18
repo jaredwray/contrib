@@ -274,6 +274,7 @@ export class InfluencerService {
     session: ClientSession,
   ): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findById(id, null, { session }).exec();
+
     if (!influencer) throw new Error(`cannot assign user to influencer: influencer ${id} is not found`);
     if (influencer.status !== InfluencerStatus.INVITATION_PENDING)
       throw new Error(`cannot assign user to influencer: influencer ${id} status is ${influencer.status} `);

@@ -6,9 +6,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { ToastProvider } from 'react-toast-notifications';
 
+import { ResendInvitationButton } from 'src/components/buttons/ResendInvitationButton';
 import SearchInput from 'src/components/forms/inputs/SearchInput';
 import { AdminPage } from 'src/components/layouts/AdminPage';
-import { InfluencersListQuery, ResendInviteMessageMutation } from 'src/apollo/queries/influencers';
+import { InfluencersListQuery } from 'src/apollo/queries/influencers';
+import { ResendInviteMessageMutation } from 'src/apollo/queries/invitations';
 
 import Influencers from '..';
 
@@ -137,10 +139,8 @@ describe('AdminAuctionPage ', () => {
       expect(wrapper.find(Button).last().text()).toEqual('...');
 
       wrapper.find(Button).last().simulate('click');
-      expect(wrapper.find("[data-test-id='resend-button']")).toHaveLength(2);
-      expect(wrapper.find("[data-test-id='resend-button']").first().text()).toEqual('Resend Invite Message');
-
-      wrapper.find("[data-test-id='resend-button']").first().simulate('click');
+      expect(wrapper.find(ResendInvitationButton)).toHaveLength(1);
+      wrapper.find(ResendInvitationButton).first().simulate('click');
       expect(mockFn).toHaveBeenCalledTimes(1);
     });
   });
@@ -161,9 +161,9 @@ describe('AdminAuctionPage ', () => {
       wrapper.update();
 
       wrapper.find(Button).last().simulate('click');
-      expect(wrapper.find("[data-test-id='resend-button']").first().text()).toEqual('Resend Invite Message');
+      expect(wrapper.find(ResendInvitationButton).first().text()).toEqual('Resend Invite Message');
 
-      wrapper.find("[data-test-id='resend-button']").first().simulate('click');
+      wrapper.find(ResendInvitationButton).first().simulate('click');
       expect(mockFn).toHaveBeenCalledTimes(0);
     });
   });

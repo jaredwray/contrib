@@ -47,8 +47,12 @@ export const UserDialogLayout: FC<Props> = ({
                   ) : (
                     <div className={clsx(styles.title, 'text-super-headline pb-2 pt-0 pt-sm-4')}>{title}</div>
                   )}
-                  <div className={styles.separator} />
-                  {textBlock}
+                  {textBlock && (
+                    <>
+                      <div className={styles.separator} />
+                      {textBlock}
+                    </>
+                  )}
                 </Col>
                 <Col className="py-4 py-lg-0" lg="6">
                   <div className={clsx(styles.rightBlock, 'p-2 p-sm-4')}>

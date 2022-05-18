@@ -1,14 +1,22 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { DropdownButton } from 'react-bootstrap';
 
 interface Props {
-  children?: React.ReactNode;
+  children?: ReactNode;
+  disabled?: boolean;
 }
 
-export const ActionsDropdown: FC<Props> = ({ children }) => {
+export const ActionsDropdown: FC<Props> = ({ children, disabled }) => {
   return (
-    <DropdownButton align="end" className="dropdown-actions" id="itemActions" title="..." variant="link">
+    <DropdownButton
+      align="end"
+      className="dropdown-actions"
+      disabled={disabled}
+      id="itemActions"
+      title="..."
+      variant="link"
+    >
       {children}
     </DropdownButton>
   );

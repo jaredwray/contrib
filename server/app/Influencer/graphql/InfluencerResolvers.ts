@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { Invitation } from '../../Invitation/dto/Invitation';
-import { InviteInput } from '../../Invitation/graphql/model/InviteInput';
+import { InviteInput } from '../../Invitation/dto/InviteInput';
 import { InfluencerProfile } from '../dto/InfluencerProfile';
 import { UserAccount } from '../../UserAccount/dto/UserAccount';
 import { UpdateInfluencerProfileInput } from './model/UpdateInfluencerProfileInput';
@@ -13,25 +13,21 @@ import { requireRole } from '../../../graphql/middleware/requireRole';
 import { GraphqlResolver } from '../../../graphql/types';
 import { Charity } from '../../Charity/dto/Charity';
 import { Assistant } from '../../Assistant/dto/Assistant';
-import { CreateInfluencerInput } from '../../Invitation/graphql/model/CreateInfluencerInput';
+import { CreateInfluencerInput } from '../dto/CreateInfluencerInput';
 import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
+import { InfluencerSearchParams } from '../dto/InfluencerSearchParams';
 
 interface InfluencerResolversType {
   Query: {
     influencer: GraphqlResolver<InfluencerProfile, { id: string }>;
     influencersList: GraphqlResolver<
       { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
-      { params: any }
+      { params: InfluencerSearchParams }
     >;
     topEarnedInfluencer: GraphqlResolver<InfluencerProfile, {}>;
   };
   Mutation: {
     createInfluencer: GraphqlResolver<InfluencerProfile, { input: CreateInfluencerInput }>;
-    inviteInfluencer: GraphqlResolver<{ invitationId: string }, { input: InviteInput }>;
-    resendInviteMessage: GraphqlResolver<
-      { link: string; phoneNumber: string; firstName: string },
-      { influencerId: string }
-    >;
     updateInfluencerProfile: GraphqlResolver<
       InfluencerProfile,
       { influencerId: string; input: UpdateInfluencerProfileInput }
@@ -74,10 +70,6 @@ export const InfluencerResolvers: InfluencerResolversType = {
       influencer.followInfluencer(influencerId, currentAccount.mongodbId),
     ),
     createInfluencer: requireAdmin(async (_, { input }, { influencer }) => influencer.createTransientInfluencer(input)),
-    inviteInfluencer: requireAdmin(async (_, { input }, { invitation }) => invitation.inviteInfluencer(input)),
-    resendInviteMessage: requireAdmin(
-      async (_, { influencerId }, { invitation }) => await invitation.resendInviteMessage(influencerId),
-    ),
     updateInfluencerProfile: requireRole(
       async (_, { influencerId, input }, { influencer, currentAccount, currentInfluencerId }) => {
         const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;

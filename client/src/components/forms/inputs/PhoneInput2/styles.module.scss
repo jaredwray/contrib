@@ -1,0 +1,17 @@
+@import 'src/variables.scss';
+
+.error {
+  margin-top: 50px;
+  margin-left: 10px;
+}
+
+.input input {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+
+  &::placeholder {
+    font-weight: 300;
+    color: $gray-color;
+  }
+}
