@@ -15,10 +15,10 @@ import { useShowNotification } from 'src/helpers/useShowNotification';
 import styles from './styles.module.scss';
 
 interface Props {
-  setShowForm: (_: SetStateAction<boolean>) => void;
+  setActiveForm: (_: SetStateAction<number>) => void;
 }
 
-const InfluencerInvitation = ({ setShowForm }: Props): ReactElement => {
+const InfluencerInvitation = ({ setActiveForm }: Props): ReactElement => {
   const { showMessage, showError } = useShowNotification();
   const [inviteMutation] = useMutation(ProposeInvitationMutation);
   const [creating, setCreating] = useState(false);
@@ -37,9 +37,9 @@ const InfluencerInvitation = ({ setShowForm }: Props): ReactElement => {
           showMessage('You will receive a response upon approval');
         })
         .catch((error) => showError(error.message))
-        .finally(() => setShowForm(false));
+        .finally(() => setActiveForm(0));
     },
-    [inviteMutation, showMessage, showError, setCreating, setShowForm],
+    [inviteMutation, showMessage, showError, setCreating, setActiveForm],
   );
 
   useEffect(() => {
@@ -54,8 +54,10 @@ const InfluencerInvitation = ({ setShowForm }: Props): ReactElement => {
       onSubmit={onSubmit}
       onUnfill={() => setFormCompleted(false)}
     >
-      <div className="text-label-new  text-start">Auction your memorabilia quickly and hassle-free</div>
-      <div className="text-label-new fw-normal text-start">Use this form to receive an invitation</div>
+      <div className={clsx(styles.title, 'text-label-new text-start')}>
+        <div>Auction your memorabilia quickly and hassle-free</div>
+        <div className="fw-normal">Use this form to receive an invitation</div>
+      </div>
       <InputField required className="mt-4" displayError={false} name="firstName" placeholder="Your full name" />
       <PhoneInput placeholder="Your phone number" />
       <div className={clsx(styles.captcha, 'py-4 text-center pe-auto')}>
@@ -70,7 +72,7 @@ const InfluencerInvitation = ({ setShowForm }: Props): ReactElement => {
       <Button
         className={clsx(styles.cancelBtn, 'text-label w-100 pb-0')}
         variant="link"
-        onClick={() => setShowForm(false)}
+        onClick={() => setActiveForm(0)}
       >
         Cancel
       </Button>

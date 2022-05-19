@@ -17,12 +17,16 @@
     color: $gray77-color;
   }
 
+  &.btn-primary {
+    background-color: $mint-color;
+  }
+
   &.btn-secondary {
     color: $sage-color;
 
     &:hover:not(:disabled),
     &:active {
-      background: $sage-color;
+      background-color: $sage-color;
       border-color: $sage-color;
       color: $white-color;
     }

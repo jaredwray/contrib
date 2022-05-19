@@ -1,9 +1,13 @@
 @import 'src/variables.scss';
 
+.title {
+  color: $white-color !important;
+}
+
 .cancelBtn {
   &,
   &:hover {
-    color: $dark-gray-color !important;
+    color: $white-color !important;
     text-decoration: none !important;
   }
 }

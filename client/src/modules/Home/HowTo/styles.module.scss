@@ -1,0 +1,13 @@
+@import 'src/variables.scss';
+
+.container {
+  background-color: $white-color;
+}
+
+.footer {
+  background-color: $mercury-color;
+
+  @media (min-width: $small-weight) {
+    padding-bottom: 130px;
+  }
+}
