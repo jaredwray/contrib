@@ -46,10 +46,8 @@ export const TopCharityQuery = gql`
 `;
 
 export const InviteCharityMutation = gql`
-  mutation InviteCharity($firstName: String!, $lastName: String!, $phoneNumber: String!, $welcomeMessage: String!) {
-    inviteCharity(
-      input: { firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, welcomeMessage: $welcomeMessage }
-    ) {
+  mutation InviteCharity($input: InviteInput!) {
+    inviteCharity(input: $input) {
       invitationId
     }
   }
