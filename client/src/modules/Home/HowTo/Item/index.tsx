@@ -30,7 +30,6 @@ const Item = ({ icon, text, btnText, withSeparator, invitationType }: PropTypes)
         withSeparator && styles.separator,
         'd-flex justify-content-center py-5 py-md-2 flex-column text-center',
       )}
-      md={4}
     >
       {showForm && invitation && <div className={clsx(styles.invitation, 'position-absolute p-4')}>{invitation}</div>}
       <div>
@@ -39,7 +38,7 @@ const Item = ({ icon, text, btnText, withSeparator, invitationType }: PropTypes)
         </div>
         <div className={clsx(styles.text, 'text--body py-4 m-auto')}>{text}</div>
         {invitation ? (
-          <Button className={clsx(styles.button, 'text-label m-auto px-4 w-100')} onClick={() => setShowForm(true)}>
+          <Button className={clsx(styles.button, 'text-label m-auto px-4')} onClick={() => setShowForm(true)}>
             {btnText}
           </Button>
         ) : (
