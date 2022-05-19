@@ -44,6 +44,10 @@ export const InvitationSchema = gql`
   input InvitationsParams {
     skip: Int
     size: Int
+    filters: InvitationFilters
+  }
+  input InvitationFilters {
+    query: String
   }
 
   extend type Query {

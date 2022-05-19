@@ -19,6 +19,7 @@ import styles from './styles.module.scss';
 
 export default function Invitations() {
   const [pageSkip, setPageSkip] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const { showError, showMessage } = useShowNotification();
 
   const [getInvitations, { loading, data, error }] = useLazyQuery(InvitationsQuery, {
@@ -40,11 +41,12 @@ export default function Invitations() {
   const refreshData = useCallback(
     () =>
       getInvitations({
-        variables: { params: { size: PER_PAGE, skip: pageSkip } },
+        variables: { params: { size: PER_PAGE, skip: pageSkip, filters: { query: searchQuery } } },
       }),
 
-    [getInvitations, pageSkip],
+    [getInvitations, pageSkip, searchQuery],
   );
+
   const onApprove = useCallback(
     async (item: Invitation) => {
       try {
@@ -79,7 +81,14 @@ export default function Invitations() {
   setPageTitle('Admin invitations page');
 
   return (
-    <AdminPage items={invitations} loading={loading} pageSkip={pageSkip} setPageSkip={setPageSkip}>
+    <AdminPage
+      items={invitations}
+      loading={loading}
+      pageSkip={pageSkip}
+      setPageSkip={setPageSkip}
+      onCancel={() => setSearchQuery('')}
+      onChange={(value) => setSearchQuery(value)}
+    >
       <Table className={clsx(styles.table, 'd-block d-lg-table')}>
         <thead>
           <tr>

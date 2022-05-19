@@ -1,5 +1,5 @@
 import { UserAccount } from 'app/UserAccount/dto/UserAccount';
-import { ClientSession, Connection, Types } from 'mongoose';
+import { ClientSession, Connection, Types, PipelineStage } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 
@@ -14,7 +14,7 @@ import { InviteInput } from '../dto/InviteInput';
 import { NotificationService, MessageTemplate } from '../../NotificationService';
 import { AppConfig } from '../../../config';
 import { Invitation, InvitationStatus } from '../dto/Invitation';
-import { InvitationsParams } from '../dto/InvitationsParams';
+import { InvitationsParams, InvitationFilters } from '../dto/InvitationsParams';
 import { InvitationParentEntityType } from '../mongodb/InvitationParentEntityType';
 import { AppError, ErrorCode } from '../../../errors';
 import { Assistant } from '../../Assistant/dto/Assistant';
@@ -133,6 +133,23 @@ export class InvitationService {
     return this.makeInvitation(invitation);
   }
 
+  private searchOptions(filters?: InvitationFilters): PipelineStage {
+    if (filters?.query?.trim().toString() === '') return { $match: {} };
+
+    const query = (filters.query || '').trim().replace(/[-[/\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    const queryRegExp = new RegExp(query, 'i');
+
+    return {
+      $match: {
+        $or: [
+          { firstName: { $regex: queryRegExp } },
+          { lastName: { $regex: queryRegExp } },
+          { phoneNumber: { $regex: queryRegExp } },
+        ],
+      },
+    };
+  }
+
   public async invitations(params: InvitationsParams) {
     let scope;
 
@@ -147,6 +164,7 @@ export class InvitationService {
           },
         },
       },
+      this.searchOptions(params?.filters),
       { $sort: { isProposed: -1, isPending: -1, accepted: 1, createdAt: -1 } },
     ]);
 
@@ -155,7 +173,7 @@ export class InvitationService {
     }
 
     const items = await scope.exec();
-    const totalItems = await this.InvitationModel.countDocuments().exec();
+    const totalItems = await this.InvitationModel.count(this.searchOptions(params?.filters)['$match']).exec();
 
     return {
       totalItems,

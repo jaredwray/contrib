@@ -37,7 +37,7 @@ export class InfluencerService {
     [InfluencerOrderBy.ONBOARDED_AT_ASC]: { onboardedAt: 'asc' },
   };
 
-  public getSearchOptions(filters: InfluencerFilters): object {
+  private getSearchOptions(filters: InfluencerFilters): object {
     return ([
       [filters?.status, { status: { $in: filters?.status } }],
       [filters?.query, { name: { $regex: (filters?.query || '').trim(), $options: 'i' } }],
@@ -47,7 +47,7 @@ export class InfluencerService {
     );
   }
 
-  public getSortOptions(orderBy: string): string {
+  private getSortOptions(orderBy: string): string {
     return this.ORDER_SORTS[orderBy];
   }
 
