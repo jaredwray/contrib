@@ -3,7 +3,6 @@ import { FC, useContext, useCallback, useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import { AcceptAccountTermsMutation } from 'src/apollo/queries/terms';
 import Form from 'src/components/forms/Form/Form';
@@ -12,6 +11,7 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 import Dialog from 'src/components/modals/Dialog';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import TermsText from 'src/components/modals/TermsConfirmationDialog/TermsText';
+import { useShowNotification } from 'src/helpers/useShowNotification';
 
 import styles from './styles.module.scss';
 
@@ -19,7 +19,7 @@ const IGNORED_PAGES = ['/privacy-policy', '/terms', '/privacy'];
 
 const TermsConfirmationDialog: FC = () => {
   const [show, setShow] = useState(false);
-  const { addToast } = useToasts();
+  const { showError } = useShowNotification();
   const { account } = useContext(UserAccountContext);
   const [acceptAccountTerms] = useMutation(AcceptAccountTermsMutation);
 
@@ -29,12 +29,12 @@ const TermsConfirmationDialog: FC = () => {
 
       try {
         await acceptAccountTerms({ variables: { version: account?.notAcceptedTerms } });
-        setShow(false);
+        window.location.reload();
       } catch (error) {
-        addToast(error.message, { autoDismiss: true, appearance: 'error' });
+        showError(error.message);
       }
     },
-    [account, acceptAccountTerms, addToast],
+    [account, acceptAccountTerms, showError],
   );
 
   useEffect(() => {
