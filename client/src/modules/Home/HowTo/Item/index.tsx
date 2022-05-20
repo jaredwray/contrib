@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, SetStateAction } from 'react';
 
 import clsx from 'clsx';
 import { Col, Image, Button } from 'react-bootstrap';
@@ -13,22 +13,33 @@ interface PropTypes {
   btnText: string;
   withSeparator?: boolean;
   invitationType?: string;
+  activeForm: number;
+  setActiveForm: (_: SetStateAction<number>) => void;
+  index: number;
 }
 
-const Item = ({ icon, text, btnText, withSeparator, invitationType }: PropTypes): ReactElement => {
-  const [showForm, setShowForm] = useState(false);
-
+const Item = ({
+  icon,
+  text,
+  btnText,
+  withSeparator,
+  invitationType,
+  index,
+  activeForm,
+  setActiveForm,
+}: PropTypes): ReactElement => {
   const InvitationsMap = {
-    influencer: <InfluencerInvitation setShowForm={setShowForm} />,
+    influencer: <InfluencerInvitation setActiveForm={setActiveForm} />,
   } as { [key: string]: ReactElement };
 
   const invitation = invitationType && InvitationsMap[invitationType];
+  const showForm = activeForm === index;
 
   return (
     <Col
       className={clsx(
         withSeparator && styles.separator,
-        'd-flex justify-content-center py-5 py-md-2 flex-column text-center',
+        'd-flex justify-content-center py-5 py-md-2 flex-column text-center invitation-form',
       )}
     >
       {showForm && invitation && <div className={clsx(styles.invitation, 'position-absolute p-4')}>{invitation}</div>}
@@ -38,7 +49,7 @@ const Item = ({ icon, text, btnText, withSeparator, invitationType }: PropTypes)
         </div>
         <div className={clsx(styles.text, 'text--body py-4 m-auto')}>{text}</div>
         {invitation ? (
-          <Button className={clsx(styles.button, 'text-label m-auto px-4')} onClick={() => setShowForm(true)}>
+          <Button className={clsx(styles.button, 'text-label m-auto px-4')} onClick={() => setActiveForm(index)}>
             {btnText}
           </Button>
         ) : (
