@@ -26,6 +26,9 @@ const USPhoneInput: FC<Props> = ({ className, placeholder, disabled = false }: P
             required: true,
             name: 'phoneNumber',
             country: 'us',
+            onFocus: () => {
+              if (input.value === '') input.onChange('+1');
+            },
           }}
           isValid={(value: string, country: any): any => {
             if (value && country.name !== ALLOWED_COUNTRY_NAME)
