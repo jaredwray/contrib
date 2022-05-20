@@ -27,7 +27,7 @@ const ProfileInformation: FC<Props> = ({ account }) => {
         <Col className="px-0 px-md-2" md="6">
           <div className={styles.wraper}>
             <input disabled className={clsx(styles.input, 'form-control')} value={`+${phoneNumber}`} />
-            <Button className={clsx(styles.button, 'btn btn-primary')} onClick={() => setShowDialog(true)}>
+            <Button className={clsx(styles.button, 'btn btn-primary m-auto')} onClick={() => setShowDialog(true)}>
               Change Number
             </Button>
 
