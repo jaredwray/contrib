@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Table } from 'react-bootstrap';
 
 import AsyncButton from 'src/components/buttons/AsyncButton';
-import { toFormatedDate } from 'src/helpers/dateHelpers';
+import { toFormatedDate } from 'src/helpers/timeFormatters';
 import { AuctionBid } from 'src/types/Bid';
 
 import styles from './styles.module.scss';

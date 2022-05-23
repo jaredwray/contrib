@@ -10,8 +10,8 @@ import { PER_PAGE } from 'src/components/custom/Pagination';
 import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import ActionsDropdownItem from 'src/components/forms/selects/ActionsDropdownItem';
 import { AdminPage } from 'src/components/layouts/AdminPage';
-import { toFormatedDate } from 'src/helpers/dateHelpers';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import { toFormatedDate } from 'src/helpers/timeFormatters';
 import { useShowNotification } from 'src/helpers/useShowNotification';
 import { Invitation, InvitationStatus } from 'src/types/Invitation';
 

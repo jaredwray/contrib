@@ -26,10 +26,13 @@ export function toHumanReadableDuration(date: string): string | null {
   return left.filter(Boolean).join(' ');
 }
 
-export function toFullHumanReadableDatetime(prop: Date): string | null {
+export const toFullHumanReadableDatetime = (prop: Date): string | null => {
   const date = toDate(prop);
   const day = format(date, 'd.MM.yy');
   const time = format(date, 'hh:mm a');
 
   return `${day} @ ${time}`;
-}
+};
+
+export const toFormatedDate = (value: string | Date, timeFormat = 'MMM dd yyyy HH:mm XXX') =>
+  format(new Date(value), timeFormat);

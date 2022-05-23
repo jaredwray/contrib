@@ -66,7 +66,7 @@ const NewAuction = () => {
       }
 
       showMessage('Created');
-      setTimeout(() => history.push(`/auctions/${auctionId}/done`), 1000); // wait until attachments will be available
+      setTimeout(() => history.push(`/auctions/${auctionId}/done`), 1500); // wait until attachments will be available
     },
   });
 

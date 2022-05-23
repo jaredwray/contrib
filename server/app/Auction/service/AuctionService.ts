@@ -1233,6 +1233,7 @@ export class AuctionService {
     const currency = (priceCurrency ?? AppConfig.app.defaultCurrency) as Dinero.Currency;
     const charity = Array.isArray(model.charity) ? model.charity[0] : model.charity;
     const auctionOrganizer = Array.isArray(model.auctionOrganizer) ? model.auctionOrganizer[0] : model.auctionOrganizer;
+    const isSettled = status === AuctionStatus.SETTLED || dayjs().utc().isAfter(model.endsAt);
 
     return {
       ...rest,
@@ -1262,9 +1263,9 @@ export class AuctionService {
       winner: winner ? this.makeAuctionWinner(winner) : null,
       shortLink: this.shortLinkService.makeShortLink(shortLink),
       status,
-      isActive: status === AuctionStatus.ACTIVE,
+      isActive: status === AuctionStatus.ACTIVE && !isSettled,
       isDraft: status === AuctionStatus.DRAFT,
-      isSettled: status === AuctionStatus.SETTLED,
+      isSettled,
       isFailed: status === AuctionStatus.FAILED,
       isSold: status === AuctionStatus.SOLD,
       isStopped: status === AuctionStatus.STOPPED,

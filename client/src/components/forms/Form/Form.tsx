@@ -63,7 +63,7 @@ const Form: FC<Props> = ({
     const formData = new FormData(formRef.current);
     const values = Object.fromEntries(formData);
     const completedFields = Object.keys(values).filter((key) => {
-      const value = (values[key] as string)?.trim();
+      const value = values[key].toString().trim();
       if (key === 'phoneNumber') {
         const isInvalid = formRef.current.querySelector('input[name="phoneNumber"].invalid-number');
         if (isInvalid) return false;
