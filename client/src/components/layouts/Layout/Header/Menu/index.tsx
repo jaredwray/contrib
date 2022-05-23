@@ -43,6 +43,7 @@ const Menu: FC<Props> = ({ avatar }) => {
               {user?.name}
             </div>
             <MenuNavLink link="/profile" title="My Profile" />
+            <MenuNavLink link="/my-bids" title="My Bids" />
           </>
         )}
         <MenuNavLink link="/auctions" title="Auctions" />

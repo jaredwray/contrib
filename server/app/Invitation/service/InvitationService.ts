@@ -497,7 +497,7 @@ export class InvitationService {
         slug = populatedInvitation.shortLink.slug;
       }
 
-      const link = await this.shortLinkService.makeLink({ slug });
+      const link = await ShortLinkService.makeLink({ slug });
 
       await this.notificationService.sendMessageLater(phoneNumber, MessageTemplate.INVITED, {
         name,

@@ -25,6 +25,24 @@ export const AuctionBidsQuery = gql`
   }
 `;
 
+export const MyBidsQuery = gql`
+  query MyBidsQuery($params: BidsPageParams) {
+    myBids(params: $params) {
+      totalItems
+      size
+      skip
+      items {
+        auction {
+          id
+          title
+        }
+        bid
+        createdAt
+      }
+    }
+  }
+`;
+
 export const ChargeCurrentBidMutation = gql`
   mutation ChargeCurrentBid(
     $charityId: String!

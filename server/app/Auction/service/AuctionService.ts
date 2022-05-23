@@ -87,7 +87,7 @@ export class AuctionService {
       const auctionModels = await this.auctionRepository.getAuctions({
         filters: { ids: uniqAuctionIds },
       });
-      const auctions = auctionModels.map((auctionModel) => this.makeAuction(auctionModel));
+      const auctions = auctionModels.map((auctionModel) => AuctionService.makeAuction(auctionModel));
 
       return auctions.reduce(
         (acc: AuctionsForProfilePage, cur: Auction) => {
@@ -208,7 +208,7 @@ export class AuctionService {
       MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_ORGANIZER,
       {
         auctionTitle: auction.title,
-        link: this.shortLinkService.makeLink({ slug: deliveryInfoShortLink.slug }),
+        link: ShortLinkService.makeLink({ slug: deliveryInfoShortLink.slug }),
       },
     );
   }
@@ -250,7 +250,7 @@ export class AuctionService {
         MessageTemplate.AUCTION_DELIVERY_DETAILS_FOR_WINNER,
         {
           auctionTitle: auction.title,
-          trackingLink: this.shortLinkService.makeLink({ slug: trackingShortLink.slug }),
+          trackingLink: ShortLinkService.makeLink({ slug: trackingShortLink.slug }),
           identificationNumber,
         },
       );
@@ -374,7 +374,7 @@ export class AuctionService {
       MessageTemplate.AUCTION_IS_CREATED_MESSAGE,
       {
         auctionTitle: auction.title,
-        auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
+        auctionLink: ShortLinkService.makeLink({ slug: auction.shortLink.slug }),
       },
     );
   }
@@ -386,7 +386,7 @@ export class AuctionService {
         follower.user.phoneNumber,
         MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_CHARITY_FOLLOWERS,
         {
-          auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
+          auctionLink: ShortLinkService.makeLink({ slug: auction.shortLink.slug }),
           charityName: auction.charity.name,
         },
       );
@@ -401,7 +401,7 @@ export class AuctionService {
         follower.user.phoneNumber,
         MessageTemplate.AUCTION_IS_CREATED_MESSAGE_FOR_INFLUENCER_FOLLOWERS,
         {
-          auctionLink: this.shortLinkService.makeLink({ slug: auction.shortLink.slug }),
+          auctionLink: ShortLinkService.makeLink({ slug: auction.shortLink.slug }),
           influencerName: auction.auctionOrganizer.name,
         },
       );
@@ -410,7 +410,7 @@ export class AuctionService {
 
   public async createDraftAuction(auctionOrganizerId: string, input: AuctionInput, isAdmin: boolean): Promise<Auction> {
     let auction = await this.auctionRepository.createAuction(auctionOrganizerId, input, isAdmin);
-    return this.makeAuction(auction);
+    return AuctionService.makeAuction(auction);
   }
 
   public async getCustomerInformation(stripeCustomerId: string): Promise<{ email: string; phone: string } | null> {
@@ -435,7 +435,7 @@ export class AuctionService {
 
     return {
       totalItems,
-      items: items.map((item) => this.makeAuction(item)),
+      items: items.map((item) => AuctionService.makeAuction(item)),
       size: items.length,
       skip: params.skip || 0,
     };
@@ -452,7 +452,7 @@ export class AuctionService {
   public async getAuction(id: string, organizerId?: string): Promise<Auction> {
     try {
       const auction = await this.auctionRepository.getAuction(id, organizerId);
-      return this.makeAuction(auction);
+      return AuctionService.makeAuction(auction);
     } catch {}
   }
 
@@ -533,7 +533,7 @@ export class AuctionService {
 
     if (auction.status === AuctionStatus.ACTIVE) await this.sendAuctionIsActivatedMessage(auction);
 
-    return this.makeAuction(auction);
+    return AuctionService.makeAuction(auction);
   }
 
   public async addAuctionAttachment(id: string, organizerId, input: AuctionAttachmentInput): Promise<AuctionAssets> {
@@ -624,7 +624,7 @@ export class AuctionService {
       },
       isAdmin,
     );
-    return this.makeAuction(auction);
+    return AuctionService.makeAuction(auction);
   }
 
   public async addAuctionBid(id: string, { bid, user }: ICreateAuctionBidInput & { user: UserAccount }): Promise<Bid> {
@@ -687,7 +687,7 @@ export class AuctionService {
             MessageTemplate.AUCTION_BID_OVERLAP,
             {
               auctionTitle: currentAuction.title,
-              auctionLink: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
+              auctionLink: ShortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
             },
           );
         } catch (error) {
@@ -806,7 +806,7 @@ export class AuctionService {
           amount: currentAuction.currentPrice,
           currency: currentAuction.priceCurrency as Currency,
         }).toFormat('$0,0'),
-        shortUrl: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
+        shortUrl: ShortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
       },
     );
   }
@@ -818,7 +818,7 @@ export class AuctionService {
     const followerIds = currentAuction.followers.map((follower) => follower.user);
     const followerUsers = await this.UserAccountModel.find({ _id: followerIds }).exec();
     const followersPhonenumber = followerUsers.map((user) => user.phoneNumber);
-    const bidModels = await this.bidService.getPopulatedBids(auction._id);
+    const bidModels = await this.bidService.populatedBids(auction._id);
     const bidsUserPhonenumber = bidModels.map((bid) => bid.user.phoneNumber);
     const phoneNumbers = new Set([...followersPhonenumber, ...bidsUserPhonenumber]);
 
@@ -828,7 +828,7 @@ export class AuctionService {
           timeLeftText,
           influencerName: currentAuction.auctionOrganizer.name,
           auctionName: currentAuction.title,
-          auctionLink: this.shortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
+          auctionLink: ShortLinkService.makeLink({ slug: currentAuction.shortLink.slug }),
         });
       } catch (error) {
         AppLogger.warn(
@@ -842,7 +842,7 @@ export class AuctionService {
 
   public async getInfluencersAuctions(id: string): Promise<Auction[]> {
     const auctions = await this.auctionRepository.getInfluencersAuctions(id);
-    return auctions.map((auction) => this.makeAuction(auction));
+    return auctions.map((auction) => AuctionService.makeAuction(auction));
   }
 
   public async settleAndChargeCurrentAuction(id: string): Promise<void> {
@@ -1001,15 +1001,6 @@ export class AuctionService {
     return auctions.map((auction) => auction.currentPrice ?? 0).reduce((total, next) => (total += next), 0);
   }
 
-  private makeAssets(assets: any[]): AuctionAssets[] {
-    return assets
-      .map((asset) => AuctionService.makeAuctionAttachment(asset))
-      .sort((a, b) => {
-        if (a.forCover) return -1;
-        if (b.type > a.type) return -1;
-      });
-  }
-
   public async buyAuction(id: string, user: UserAccount): Promise<Auction> {
     const auction = await this.auctionRepository.getAuction(id);
 
@@ -1085,7 +1076,7 @@ export class AuctionService {
       AppLogger.error(`Something went wrong when send bought notification for auction #${id}, error: ${error.message}`);
       throw new AppError('Something went wrong. Please, try again later', ErrorCode.BAD_REQUEST);
     }
-    return this.makeAuction(auction);
+    return AuctionService.makeAuction(auction);
   }
 
   public async stopAuction(id: string): Promise<Auction> {
@@ -1102,7 +1093,7 @@ export class AuctionService {
     } catch (error) {
       throw new AppError('Something went wrong', ErrorCode.BAD_REQUEST);
     }
-    return this.makeAuction(auction);
+    return AuctionService.makeAuction(auction);
   }
   public async activateAuctionById(id: string): Promise<Auction> {
     const auction = await this.auctionRepository.getAuction(id);
@@ -1120,7 +1111,7 @@ export class AuctionService {
     }
 
     if (auction.status === AuctionStatus.ACTIVE) await this.sendAuctionIsActivatedMessage(auction);
-    return this.makeAuction(auction);
+    return AuctionService.makeAuction(auction);
   }
 
   private async deleteAttachmentFromCloud(url: string | undefined, uid: string | undefined): Promise<void> {
@@ -1182,7 +1173,7 @@ export class AuctionService {
     const populatedAuction = await this.auctionRepository.getPopulatedAuction(auction);
     const messageVariables: { auctionTitle: string; auctionLink: string; auctionDeliveryLink?: string } = {
       auctionTitle: auction.title,
-      auctionLink: this.shortLinkService.makeLink({ slug: populatedAuction.shortLink.slug }),
+      auctionLink: ShortLinkService.makeLink({ slug: populatedAuction.shortLink.slug }),
     };
 
     if (enviroment) {
@@ -1190,7 +1181,7 @@ export class AuctionService {
         address: `auctions/${auction._id.toString()}/delivery/address`,
       });
 
-      messageVariables.auctionDeliveryLink = this.shortLinkService.makeLink({ slug: deliveryShortLink.slug });
+      messageVariables.auctionDeliveryLink = ShortLinkService.makeLink({ slug: deliveryShortLink.slug });
     }
 
     return {
@@ -1201,18 +1192,27 @@ export class AuctionService {
     };
   }
 
-  public makeAuctionWinner(winner) {
-    const { _id, address, phoneNumber } = winner;
+  private timeNow = () => dayjs().second(0);
+
+  public static makeAuctionWinner(winner) {
+    const { _id, ...rest } = winner;
+
     return {
       mongodbId: _id.toString(),
-      address,
-      phoneNumber,
+      ...rest,
     };
   }
 
-  private timeNow = () => dayjs().second(0);
+  private static makeAssets(assets: any[]): AuctionAssets[] {
+    return assets
+      .map((asset) => AuctionService.makeAuctionAttachment(asset))
+      .sort((a, b) => {
+        if (a.forCover) return -1;
+        if (b.type > a.type) return -1;
+      });
+  }
 
-  public makeAuction(model: IAuctionModel): Auction | null {
+  public static makeAuction(model: IAuctionModel): Auction | null {
     const {
       _id,
       assets,
@@ -1238,21 +1238,19 @@ export class AuctionService {
     return {
       ...rest,
       id: _id.toString(),
-      attachments: this.makeAssets(assets),
-      charity: charity ? CharityService.makeCharity(charity) : null,
+      attachments: AuctionService.makeAssets(assets),
+      charity: charity && charity !== Object(charity) ? CharityService.makeCharity(charity) : null,
       currentPrice: Dinero({ currency, amount: currentPrice }),
       startPrice: Dinero({ currency, amount: startPrice }),
       bidStep: Dinero({ currency, amount: bidStep }),
       itemPrice: itemPrice || itemPrice === 0 ? Dinero({ currency, amount: itemPrice }) : null,
       fairMarketValue: fairMarketValue ? Dinero({ currency, amount: fairMarketValue }) : null,
-      items: items
-        ? items.map(({ _id, name, contributor, fairMarketValue }) => ({
-            id: _id.toString(),
-            name,
-            contributor,
-            fairMarketValue: Dinero({ currency, amount: fairMarketValue }),
-          }))
-        : null,
+      items: items?.map(({ _id, name, contributor, fairMarketValue }) => ({
+        id: _id.toString(),
+        name,
+        contributor,
+        fairMarketValue: Dinero({ currency, amount: fairMarketValue }),
+      })),
       auctionOrganizer: InfluencerService.makeInfluencerProfile(auctionOrganizer),
       followers: followers.map((follower) => {
         return {
@@ -1260,8 +1258,8 @@ export class AuctionService {
           createdAt: follower.createdAt,
         };
       }),
-      winner: winner ? this.makeAuctionWinner(winner) : null,
-      shortLink: this.shortLinkService.makeShortLink(shortLink),
+      winner: winner ? AuctionService.makeAuctionWinner(winner) : null,
+      shortLink: ShortLinkService.makeShortLink(shortLink),
       status,
       isActive: status === AuctionStatus.ACTIVE && !isSettled,
       isDraft: status === AuctionStatus.DRAFT,

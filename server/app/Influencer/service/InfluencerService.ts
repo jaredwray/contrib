@@ -379,11 +379,13 @@ export class InfluencerService {
       userAccount: userAccount?.toString() ?? null,
       favoriteCharities: favoriteCharities?.map((favoriteCharitie) => favoriteCharitie.toString()) ?? [],
       assistants: assistants?.map((assistant) => assistant.toString()) ?? [],
-      totalRaisedAmount: Dinero({
-        currency: AppConfig.app.defaultCurrency as Dinero.Currency,
-        amount: totalRaisedAmount,
-      }),
-      followers: followers.map((follower) => {
+      totalRaisedAmount: totalRaisedAmount
+        ? Dinero({
+            currency: AppConfig.app.defaultCurrency as Dinero.Currency,
+            amount: totalRaisedAmount,
+          })
+        : null,
+      followers: followers?.map((follower) => {
         return {
           user: follower.user,
           createdAt: follower.createdAt,

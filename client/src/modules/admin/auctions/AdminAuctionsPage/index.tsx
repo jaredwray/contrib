@@ -28,23 +28,21 @@ import styles from './styles.module.scss';
 
 export default function AdminAuctionsPage() {
   const history = useHistory();
+  const query = useUrlQueryParams().get('q') || '';
   const { pathname } = useLocation();
 
-  const page = Number(useUrlQueryParams().get('p'));
-  const query = useUrlQueryParams().get('q');
-  const [searchQuery, setSearchQuery] = useState<string>(query || '');
-
-  const initialSkip = !page || page === 1 ? 0 : (page - 1) * PER_PAGE;
-  const [pageSkip, setPageSkip] = useState(initialSkip);
+  const [pageSkip, setPageSkip] = useState(0);
+  const [searchQuery, setSearchQuery] = useState(query);
 
   const [getAuctionsList, { loading, data, error }] = useLazyQuery(AuctionsListQuery, {
     variables: {
       size: PER_PAGE,
-      skip: initialSkip,
+      skip: pageSkip,
       query: searchQuery,
     },
     fetchPolicy: 'cache-and-network',
   });
+
   useEffect(() => {
     setSearchQuery(query || '');
     getAuctionsList();
@@ -76,7 +74,7 @@ export default function AdminAuctionsPage() {
       items={auctions}
       loading={loading}
       pageSkip={pageSkip}
-      searchQuery={query ?? ''}
+      searchQuery={query}
       setPageSkip={setPageSkip}
       onCancel={clearAndCloseSearch}
       onChange={onInputSearchChange}

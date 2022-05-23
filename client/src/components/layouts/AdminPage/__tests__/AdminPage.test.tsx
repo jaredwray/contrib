@@ -25,15 +25,8 @@ describe('AdminPage', () => {
       </Router>,
     );
   });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  it('component is defined', () => {
+
+  it('renders without errors', () => {
     expect(wrapper).toHaveLength(1);
-  });
-  it('should call setPageSkip', () => {
-    wrapper.find(Pagination).props().showNextPage();
-    wrapper.find(Pagination).props().showPrevPage();
-    expect(props.setPageSkip).toHaveBeenCalledTimes(2);
   });
 });

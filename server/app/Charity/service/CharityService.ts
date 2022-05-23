@@ -445,11 +445,11 @@ export class CharityService {
   }
 
   public async getCharities({ filters, orderBy, skip = 0, size }: CharitySearchParams): Promise<ICharityModel[]> {
-    const charities = this.CharityModel.find(this.getSearchOptions(filters))
+    return this.CharityModel.find(this.getSearchOptions(filters))
+      .sort(this.getSortOptions(orderBy))
       .skip(skip)
       .limit(size)
-      .sort(this.getSortOptions(orderBy));
-    return await charities.exec();
+      .exec();
   }
 
   public async getCharitiesCount({ filters }: { filters?: CharityFilters }) {
@@ -458,10 +458,9 @@ export class CharityService {
 
   public async charitiesList(params: CharitySearchParams) {
     const items = await this.getCharities(params);
-    const totalItems = await this.getCharitiesCount(params);
 
     return {
-      totalItems,
+      totalItems: await this.getCharitiesCount(params),
       items: items.map((item) => CharityService.makeCharity(item)),
       size: items.length,
       skip: params.skip || 0,
@@ -474,7 +473,7 @@ export class CharityService {
   }
 
   async listCharitiesByIds(charityIds: readonly string[]): Promise<Charity[]> {
-    if (charityIds.length === 0) return [];
+    if (!charityIds) return [];
 
     const charities = await this.CharityModel.find({ _id: { $in: charityIds } }).exec();
     return charities.map((charity) => CharityService.makeCharity(charity));
@@ -500,7 +499,7 @@ export class CharityService {
       userAccount: userAccount?.toString() ?? null,
       avatarUrl: avatarUrl ?? AppConfig.app.defaultAvatar,
       websiteUrl: CharityService.websiteUrl(model.website),
-      followers: followers.map((follower) => {
+      followers: followers?.map((follower) => {
         return {
           user: follower.user,
           createdAt: follower.createdAt,
@@ -508,7 +507,7 @@ export class CharityService {
       }),
       totalRaisedAmount: Dinero({
         currency: AppConfig.app.defaultCurrency as Dinero.Currency,
-        amount: model.totalRaisedAmount,
+        amount: totalRaisedAmount,
       }),
       ...rest,
     };
