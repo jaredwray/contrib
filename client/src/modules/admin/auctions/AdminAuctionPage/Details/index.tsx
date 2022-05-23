@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import Dinero from 'dinero.js';
 import { Row, Table, Button, Badge } from 'react-bootstrap';
 
-import { toFormatedDate } from 'src/helpers/dateHelpers';
 import { getShortLink } from 'src/helpers/getShortLink';
+import { toFormatedDate } from 'src/helpers/timeFormatters';
 import { Auction } from 'src/types/Auction';
 import { Charity } from 'src/types/Charity';
 

@@ -28,8 +28,7 @@ const AuctionDetails: FC<Props> = ({ auction, isDeliveryPage }): ReactElement =>
   const auctionId = auction.id;
 
   const { currentPrice, endsAt, title, isSold, isSettled, isActive, totalBids, items } = auction;
-
-  const ended = toDate(endsAt) <= new Date();
+  const ended = isSold || isSettled || toDate(endsAt) <= new Date();
   const canBid = isActive && !ended && currentPrice.amount !== MAX_PRICE_VALUE * 100 && !isDeliveryPage;
   const isMyAuction = [account?.influencerProfile?.id, account?.assistant?.influencerId].includes(
     auction.auctionOrganizer.id,
