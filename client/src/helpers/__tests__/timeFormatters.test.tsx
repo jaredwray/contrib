@@ -1,29 +1,33 @@
-import { toHumanReadableDuration, toFullHumanReadableDatetime } from '../timeFormatters';
 import { sub, add } from 'date-fns';
-describe('timeFormatters', () => {
+
+import { toHumanReadableDuration, toFullHumanReadableDatetime } from '../timeFormatters';
+
+describe('toHumanReadableDuration', () => {
   jest.useFakeTimers('modern').setSystemTime(new Date('2020-01-01').getTime());
 
   test('it should return null', () => {
     expect(toHumanReadableDuration(new Date().toISOString())).toBe(null);
   });
 
-  test('it should return "2d ago"', () => {
-    expect(toHumanReadableDuration(sub(new Date(), { days: 2 }).toISOString())).toBe('2d ago');
+  test('returns correct value for past date in days', () => {
+    expect(toHumanReadableDuration(sub(new Date(), { days: 2 }).toISOString())).toBe('Ended 2D ago');
   });
 
-  test('it should return "2h ago"', () => {
-    expect(toHumanReadableDuration(sub(new Date(), { hours: 2 }).toISOString())).toBe('2h ago');
+  test('returns correct value for past time in hours', () => {
+    expect(toHumanReadableDuration(sub(new Date(), { hours: 2 }).toISOString())).toBe('Ended 2H ago');
   });
 
-  test('it should return "10m"', () => {
-    expect(toHumanReadableDuration(sub(new Date(), { minutes: 10 }).toISOString())).toBe('10m');
+  test('returns correct value for future time in minutes', () => {
+    expect(toHumanReadableDuration(sub(new Date(), { minutes: 10 }).toISOString())).toBe('10M');
   });
 
-  test('it should return "1d"', () => {
-    expect(toHumanReadableDuration(add(new Date(), { days: 1 }).toISOString())).toBe('1d');
+  test('returns correct value for future date in days', () => {
+    expect(toHumanReadableDuration(add(new Date(), { days: 1 }).toISOString())).toBe('1D');
   });
+});
 
-  test('it should transform date', () => {
+describe('toFullHumanReadableDatetime', () => {
+  test('returns correct value', () => {
     expect(toFullHumanReadableDatetime(new Date('June 20, 2021 00:20:00'))).toBe('20.06.21 @ 12:20 AM');
   });
 });

@@ -34,45 +34,13 @@ const props: any = {
     totalBids: 0,
   },
 };
-describe('Should render correctly "DateDetails"', () => {
-  it('component is defined and has text: "0 bids • 24d 2h 44m"', () => {
+describe('DateDetails', () => {
+  it('renders correct information', () => {
     const wrapper = mount(<DateDetails {...props} />);
     expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('0 bids•24d 2h 44m');
+    expect(wrapper.text()).toEqual('0 bids•24D 2H 44M');
   });
-  it('component is defined', () => {
-    const wrapper = mount(<DateDetails {...props} />);
-    wrapper.setProps({
-      ...props,
-      ...{ isSold: true },
-    });
-    expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('sold');
-  });
-  it('component is defined and has text: "ended"', () => {
-    const wrapper = mount(<DateDetails {...props} />);
-    wrapper.setProps({
-      ...props,
-      ...{
-        auction: {
-          ...props.auction,
-          ...{ endsAt: '2021-06-01T00:00:00.095Z' },
-        },
-      },
-    });
-    expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('ended');
-  });
-  it('component is defined and has text: "stopped"', () => {
-    const wrapper = mount(<DateDetails {...props} />);
-    wrapper.setProps({
-      ...props,
-      ...{ auction: { ...props.auction, ...{ isAsctive: false }, ...{ isStopped: true } } },
-    });
-    expect(wrapper).toHaveLength(1);
-    expect(wrapper.text()).toEqual('stopped');
-  });
-  it('component is defined when its done page', () => {
+  it('renders correct information for done page', () => {
     const wrapper = mount(<DateDetails {...props} />);
     wrapper.setProps({
       ...props,

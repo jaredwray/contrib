@@ -261,6 +261,7 @@ export const AuctionsListQuery = gql`
         bidStep
         itemPrice
         startsAt
+        stoppedAt
         endsAt
         password
         auctionOrganizer {

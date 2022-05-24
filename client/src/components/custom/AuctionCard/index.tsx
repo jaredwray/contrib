@@ -88,9 +88,11 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
   if (!auction) return null;
 
   const priceFormatted = currentPrice.toFormat('$0,0');
-  const { charity, isActive, isSettled, isDraft, isSold } = auction;
+  const { charity, isSettled, isDraft, isSold } = auction;
   const influencer = auctionOrganizer || auction.auctionOrganizer;
   const linkToAuction = `/auctions/${auctionId}${isDraft ? '/title' : ''}`;
+  const isFinished = isSettled || isSold;
+  const statusName = isSettled ? 'ENDED' : auction.status;
 
   return (
     <figure className={clsx(styles.root, 'd-flex flex-column m-0')}>
@@ -103,6 +105,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
         onConfirm={onDelete}
       />
       <div className="position-relative">
+        {isFinished && <span className={styles.statusLabel}>{statusName}</span>}
         {!isDraft && false && (
           <HeartBtn
             className={styles.followBtn}
@@ -137,15 +140,16 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
           />
         )}
 
-        <div className="text-subhead text-left text-truncate mt-auto" title={priceFormatted}>
+        <div
+          className={clsx('text-subhead text-left text-truncate mt-auto', isFinished && 'text-decoration-line-through')}
+          title={priceFormatted}
+        >
           {priceFormatted}
         </div>
 
         <div className="text-label text-left">
           {isDraft && <span>DRAFT</span>}
-          {(isActive || isSettled || isSold || isDonePage) && (
-            <DateDetails auction={auction} isDonePage={isDonePage} isSold={isSold} />
-          )}
+          {(!isDraft || isDonePage) && <DateDetails auction={auction} isDonePage={isDonePage} />}
         </div>
       </figcaption>
     </figure>

@@ -16,7 +16,7 @@
 
 .description {
   flex: 1 0 auto;
-  border-radius:  0 0 8px 8px;
+  border-radius: 0 0 8px 8px;
   border: 1px solid $light-gray-color;
 }
 
@@ -54,6 +54,15 @@
   z-index: 100;
   background-color: $white-color;
   border-radius: 50%;
+}
+
+.statusLabel {
+  top: 1rem;
+  left: 1rem;
+  position: absolute;
+  color: $white-color;
+  background-color: $gray-color;
+  padding: 4px 6px;
 }
 
 @media (max-width: $medium-weight) {

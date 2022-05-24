@@ -68,9 +68,8 @@ export class AuctionRepository implements IAuctionRepository {
     return query.populate(this.auctionPopulateOpts);
   }
 
-  private async populateAuctionModel(model: IAuctionModel): Promise<IAuctionModel> {
-    return model.populate(this.auctionPopulateOpts);
-  }
+  private populateAuctionModel = (model: IAuctionModel): Promise<IAuctionModel> =>
+    model.populate(this.auctionPopulateOpts);
 
   private static getSearchOptions(
     query: string | null,
@@ -260,10 +259,7 @@ export class AuctionRepository implements IAuctionRepository {
     if (![AuctionStatus.DRAFT, AuctionStatus.STOPPED].includes(auction?.status))
       throw new AppError(`Cannot activate auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
 
-    AppLogger.info(`activateAuction method called for #${id} auction;`);
-
     const duration = auctionDuration({ startsAt: auction.startsAt, endsAt: auction.endsAt });
-
     const utcCurrentTime = dayjs().second(0);
 
     Object.assign(auction, {
@@ -271,27 +267,9 @@ export class AuctionRepository implements IAuctionRepository {
       endsAt: utcCurrentTime.add(duration, 'days').toISOString(),
       status: AuctionStatus.ACTIVE,
     });
+    await auction.save();
 
-    const updatedAuction = await auction.save();
-
-    AppLogger.info(
-      `date values: ${JSON.stringify({
-        ['before auction update']: {
-          ['new Date']: new Date(),
-          utcCurrentTime,
-          startsAt: auction.startsAt,
-          endsAt: auction.endsAt,
-          duration,
-        },
-        ['auction updated']: {
-          startsAt: updatedAuction.startsAt,
-          endsAt: updatedAuction.endsAt,
-          duration: updatedAuction.endsAt.diff(updatedAuction.startsAt, 'days'),
-        },
-      })}`,
-    );
-
-    return await this.populateAuctionModel(updatedAuction);
+    return await this.populateAuctionModel(auction);
   }
 
   async updateAuction(id: string, organizerId: string, input: IAuctionInput, isAdmin: boolean): Promise<IAuctionModel> {
@@ -300,9 +278,8 @@ export class AuctionRepository implements IAuctionRepository {
     if (
       [AuctionStatus.SETTLED, AuctionStatus.FAILED, AuctionStatus.SOLD].includes(auction.status) ||
       (auction.status === AuctionStatus.ACTIVE && !isAdmin)
-    ) {
+    )
       throw new AppError(`Cannot update auction with ${auction.status} status`, ErrorCode.BAD_REQUEST);
-    }
 
     Object.assign(auction, input);
 
@@ -317,9 +294,9 @@ export class AuctionRepository implements IAuctionRepository {
     if (auction.itemPrice > AppConfig.bid.maxPriceValue * 100)
       throw new AppError(`Buy Now price should be less than $${AppConfig.bid.maxPriceValue}`);
 
-    const updatedAuction = await auction.save();
+    await auction.save();
 
-    return await this.populateAuctionModel(updatedAuction);
+    return await this.populateAuctionModel(auction);
   }
 
   async getAuction(id: string, organizerId?: string): Promise<IAuctionModel> {
