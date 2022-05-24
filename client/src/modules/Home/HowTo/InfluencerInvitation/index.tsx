@@ -19,7 +19,7 @@ interface Props {
 }
 
 const InfluencerInvitation = ({ setActiveForm }: Props): ReactElement => {
-  const { showMessage, showError } = useShowNotification();
+  const { showMessage, showError, showWarning } = useShowNotification();
   const [inviteMutation] = useMutation(ProposeInvitationMutation);
   const [creating, setCreating] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
@@ -33,13 +33,18 @@ const InfluencerInvitation = ({ setActiveForm }: Props): ReactElement => {
       inviteMutation({
         variables: { input: { ...values, phoneNumber: `+${values.phoneNumber}`, parentEntityType: 'INFLUENCER' } },
       })
-        .then(() => {
-          showMessage('You will receive a response upon approval');
+        .then((response) => {
+          if (response.data.proposeInvitation.invitationId) {
+            showMessage('You will receive a response upon approval');
+            setActiveForm(0);
+          } else {
+            showWarning('This account cannot be invited to the platform at this time.');
+          }
         })
         .catch((error) => showError(error.message))
-        .finally(() => setActiveForm(0));
+        .finally(() => setCreating(false));
     },
-    [inviteMutation, showMessage, showError, setCreating, setActiveForm],
+    [inviteMutation, showMessage, showError, showWarning, setCreating, setActiveForm],
   );
 
   useEffect(() => {

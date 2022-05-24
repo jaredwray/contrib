@@ -368,9 +368,11 @@ export class InvitationService {
     }
   }
 
-  async createProposed(input: InviteInput): Promise<{ invitationId: string }> {
-    let invitation;
+  async createProposed(input: InviteInput): Promise<{ invitationId: string | null }> {
+    const userAccount = await this.UserAccountModel.findOne({ phoneNumber: input.phoneNumber });
+    if (userAccount) return { invitationId: null };
 
+    let invitation;
     invitation = await this.InvitationModel.findOne({ phoneNumber: input.phoneNumber });
 
     if (!invitation) {
