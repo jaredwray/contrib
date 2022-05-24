@@ -9,7 +9,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import Layout from 'src/components/layouts/Layout';
 import { AuctionQuery } from 'src/apollo/queries/auctions';
 import { AuctionQueryAuction } from 'src/helpers/testHelpers/auction';
-import AuctionDonePage from 'src/modules/auctions/editAuction/DonePage';
+import AuctionDonePage from 'src/modules/auctions/DonePage';
 
 const mockHistoryFn = jest.fn();
 
