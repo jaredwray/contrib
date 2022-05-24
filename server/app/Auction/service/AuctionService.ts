@@ -1239,7 +1239,7 @@ export class AuctionService {
       ...rest,
       id: _id.toString(),
       attachments: AuctionService.makeAssets(assets),
-      charity: charity && charity !== Object(charity) ? CharityService.makeCharity(charity) : null,
+      charity: charity && charity.constructor.name !== 'ObjectId' ? CharityService.makeCharity(charity) : null,
       currentPrice: Dinero({ currency, amount: currentPrice }),
       startPrice: Dinero({ currency, amount: startPrice }),
       bidStep: Dinero({ currency, amount: bidStep }),
