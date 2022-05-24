@@ -66,7 +66,12 @@ const InfluencerInvitation = ({ setActiveForm }: Props): ReactElement => {
           onChange={(value) => setCaptchaPassed(!!value)}
         />
       </div>
-      <AsyncButton className="text-label w-100" disabled={!canSubmit || creating} loading={creating} type="submit">
+      <AsyncButton
+        className={clsx(styles.submitBtn, 'text-label w-100')}
+        disabled={!canSubmit || creating}
+        loading={creating}
+        type="submit"
+      >
         Request Invitation
       </AsyncButton>
       <Button

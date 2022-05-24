@@ -1,42 +1,24 @@
 import Dinero from 'dinero.js';
 import { requireAdmin } from '../../../graphql/middleware/requireAdmin';
+import { requireAuthenticated } from '../../../graphql/middleware/requireAuthenticated';
 import { GraphqlResolver } from '../../../graphql/types';
-
-import { AuctionBid } from '../graphql/model/AuctionBid';
+import { Bid } from '../dto/Bid';
+import { BidsPage, BidsPageParams } from '../dto/BidsPage';
 
 interface BidResolversType {
   Query: {
-    bids: GraphqlResolver<AuctionBid[], { auctionId: string }>;
-    populatedBids: GraphqlResolver<AuctionBid[], { auctionId: string }>;
+    bids: GraphqlResolver<Bid[], { auctionId: string }>;
+    myBids: GraphqlResolver<BidsPage, { params: BidsPageParams }>;
+    populatedBids: GraphqlResolver<Bid[], { auctionId: string }>;
   };
 }
 
 export const BidResolvers: BidResolversType = {
   Query: {
-    populatedBids: requireAdmin(async (_, { auctionId }, { bidService }) => {
-      const bids = await bidService.getPopulatedBids(auctionId);
-      return bids.map((bid) => {
-        return {
-          user: {
-            id: bid.user.authzId,
-            mongodbId: bid.user._id.toString(),
-            phoneNumber: bid.user.phoneNumber,
-            stripeCustomerId: bid.user.stripeCustomerId,
-            createdAt: bid.user.createdAt,
-          },
-          bid: Dinero({ amount: bid.bid, currency: bid.bidCurrency }),
-          createdAt: bid.createdAt.toISOString(),
-        };
-      });
-    }),
-    bids: async (_, { auctionId }, { bidService }) => {
-      const bids = await bidService.getBids(auctionId);
-      return bids.map((bid) => {
-        return {
-          bid: Dinero({ amount: bid.bid, currency: bid.bidCurrency }),
-          createdAt: bid.createdAt.toISOString(),
-        };
-      });
-    },
+    bids: async (_, { auctionId }, { bidService }) => bidService.bids(auctionId),
+    myBids: requireAuthenticated(async (_, { params }, { bidService, currentAccount }) =>
+      bidService.userBids(currentAccount.mongodbId, params),
+    ),
+    populatedBids: requireAdmin(async (_, { auctionId }, { bidService }) => bidService.populatedBids(auctionId)),
   },
 };

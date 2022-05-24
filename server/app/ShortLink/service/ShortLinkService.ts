@@ -12,15 +12,21 @@ export class ShortLinkService {
 
   constructor(private readonly connection: Connection) {}
 
-  private async getUniqSlug(slug: string): Promise<string> {
-    const isExists = await this.shortLinkModel.exists({ slug });
-    if (!isExists) return slug;
-
-    const newSlug = uuidv4().split('-')[0];
-    return await this.getUniqSlug(newSlug);
+  private generateSlug(): string {
+    return uuidv4().split('-')[0];
   }
 
-  public makeLink({ address, slug }: { address?: string; slug?: string }): string {
+  private async uniqSlug(): Promise<string> {
+    let slug;
+
+    do {
+      slug = this.generateSlug();
+    } while (await this.shortLinkModel.exists({ slug }));
+
+    return slug;
+  }
+
+  public static makeLink({ address, slug }: { address?: string; slug?: string }): string {
     const url = new URL(AppConfig.app.url.origin);
 
     if (address) {
@@ -37,8 +43,8 @@ export class ShortLinkService {
     { address, path }: { address?: string; path?: string },
     session?: ClientSession,
   ): Promise<ShortLink> {
-    const link = path || this.makeLink({ address });
-    const slug = await this.getUniqSlug(uuidv4().split('-')[0]);
+    const link = path || ShortLinkService.makeLink({ address });
+    const slug = await this.uniqSlug();
 
     const [model] = await this.shortLinkModel.create(
       [
@@ -50,7 +56,7 @@ export class ShortLinkService {
       { session },
     );
 
-    return this.makeShortLink(model);
+    return ShortLinkService.makeShortLink(model);
   }
 
   public async getLink(slug: string): Promise<ShortLink | null> {
@@ -58,15 +64,17 @@ export class ShortLinkService {
 
     if (!model) return null;
 
-    return this.makeShortLink(model);
+    return ShortLinkService.makeShortLink(model);
   }
 
-  public makeShortLink(model: IShortLinkModel): ShortLink {
+  public static makeShortLink(model: IShortLinkModel): ShortLink {
+    const { _id, slug, ...rest } = 'toObject' in model ? model.toObject() : model;
+
     return {
-      id: model._id.toString(),
-      link: model.link,
-      slug: model.slug,
-      shortLink: this.makeLink({ slug: model.slug }),
+      id: _id.toString(),
+      slug,
+      shortLink: ShortLinkService.makeLink({ slug }),
+      ...rest,
     };
   }
 }

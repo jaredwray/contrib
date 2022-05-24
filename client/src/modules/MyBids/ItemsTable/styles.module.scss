@@ -1,0 +1,13 @@
+@import 'src/variables.scss';
+
+.money {
+  width: 150px;
+
+  @media (max-width: $small-weight) {
+    max-width: 80px;
+  }
+}
+
+.date {
+  width: 125px;
+}

@@ -1,9 +1,10 @@
-import { IUserAccount } from '../../UserAccount/mongodb/UserAccountModel';
+import { UserAccountForBid } from '../../UserAccount/dto/UserAccountForBid';
+import { Auction } from '../../Auction/dto/Auction';
 import { Dayjs } from 'dayjs';
 
 export interface Bid {
-  user: IUserAccount['_id'];
+  user?: UserAccountForBid;
+  auction?: Auction;
   bid: Dinero.Dinero;
   createdAt: Dayjs;
-  chargeId: string;
 }

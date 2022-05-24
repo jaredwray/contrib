@@ -45,6 +45,7 @@ import AllInfluencersPage from 'src/modules/Influencer/InfluerncersPage';
 import InternalScripts from 'src/modules/InternalScripts';
 import InvitationPage from 'src/modules/Invitation';
 import LogInPage from 'src/modules/LogInPage';
+import MyBids from 'src/modules/MyBids';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
 import Privacy from 'src/modules/Privacy';
@@ -180,6 +181,7 @@ export const App = () => {
                   />
                   <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                   <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
+                  <PrivateRoute component={MyBids} path="/my-bids" role="user" />
                   <Route component={ShortLinkPage} path="/go/:slug" />
                   <Route component={LogInPage} path="/log-in" />
                   <Route component={Page404} path="*" />
