@@ -26,22 +26,18 @@ export class BidService {
     if (!input) return null;
 
     const { bidCurrency, ...rest } = input;
+    const [createdBid] = await this.BidModel.create(
+      [
+        {
+          createdAt: this.timeNow(),
+          bidCurrency: (bidCurrency ?? AppConfig.app.defaultCurrency) as Currency,
+          ...rest,
+        },
+      ],
+      { session },
+    );
 
-    try {
-      const [createdBid] = await this.BidModel.create(
-        [
-          {
-            createdAt: this.timeNow(),
-            bidCurrency: (bidCurrency ?? AppConfig.app.defaultCurrency) as Currency,
-            ...rest,
-          },
-        ],
-        { session },
-      );
-      return this.makeBid(createdBid);
-    } catch (error) {
-      throw new AppError('Can not create bid');
-    }
+    return this.makeBid(createdBid);
   }
 
   public async bids(auctionId: string): Promise<Bid[] | []> {
@@ -96,7 +92,7 @@ export class BidService {
     return {
       bid: Dinero({ amount: bid, currency: bidCurrency as Currency }),
       user: this.makeUser(user),
-      auction: auction ? AuctionService.makeAuction(auction) : null,
+      auction: auction.constructor.name === 'ObjectId' ? auction : AuctionService.makeAuction(auction),
       ...rest,
     };
   }
