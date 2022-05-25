@@ -23,7 +23,7 @@ export const InvitationSchema = gql`
   }
 
   type InvitationId {
-    invitationId: String!
+    invitationId: String
   }
 
   type InvitationsList {
