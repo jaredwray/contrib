@@ -53,7 +53,7 @@ const AuctionDonePage = () => {
             </div>
           </div>
           <div className={clsx(styles.content, styles.contentRight)}>
-            {<AuctionCard isDonePage auction={auction} />}
+            <AuctionCard isDonePage auction={auction} />
           </div>
         </div>
       </Container>
