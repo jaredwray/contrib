@@ -52,21 +52,14 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
     const paymentInformation = account?.paymentInformation;
     const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
-    const title = 'Place Your Bid';
-    const buyingTitle = 'Buy it now';
 
-    const handleClose = useCallback(() => {
+    const close = useCallback(() => {
       setActiveBid(null);
       setNewCard(false);
       setIsBuying(false);
     }, [setIsBuying]);
-    const handleAddCard = useCallback(() => setNewCard(true), []);
-    const handleCardInputChange = useCallback(
-      (event: StripeCardElementChangeEvent) => setCardComplete(event.complete),
-      [],
-    );
-    const handleNewCardCancelBtnClick = useCallback(() => setNewCard(false), [setNewCard]);
-    const handleRegisterPayment = useCallback(
+
+    const registerPayment = useCallback(
       async (paymentInformation, newCard) => {
         if (paymentInformation && !newCard) return;
 
@@ -84,14 +77,13 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       [elements, registerPaymentMethod, showError, stripe],
     );
 
-    const handleBiding = useCallback(async () => {
+    const placeBid = useCallback(async () => {
       if (!elements || process.title === 'browser' ? !activeBid : false) return;
 
       setSubmitting(true);
 
       try {
-        await handleRegisterPayment(paymentInformation, newCard);
-
+        await registerPayment(paymentInformation, newCard);
         await makeBid({ variables: { id: auctionId, bid: activeBid?.toObject() } });
 
         setSubmitting(false);
@@ -103,41 +95,22 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         setNewCard(false);
         showError(error.message);
       }
-    }, [
-      elements,
-      activeBid,
-      paymentInformation,
-      newCard,
-      makeBid,
-      auctionId,
-      showMessage,
-      showError,
-      handleRegisterPayment,
-    ]);
+    }, [elements, activeBid, paymentInformation, newCard, makeBid, auctionId, showMessage, showError, registerPayment]);
 
-    const handleBuying = useCallback(async () => {
+    const buyItNow = useCallback(async () => {
       setSubmitting(true);
       try {
-        await handleRegisterPayment(paymentInformation, newCard);
+        await registerPayment(paymentInformation, newCard);
 
         await buyAuction({ variables: { id: auctionId } });
-        showMessage(`Thank you for your purchase!`);
-        handleClose();
+        showMessage('Thank you for your purchase!');
+        close();
       } catch (error: any) {
         setSubmitting(false);
         setNewCard(false);
         showError(error.message);
       }
-    }, [
-      auctionId,
-      buyAuction,
-      showError,
-      showMessage,
-      handleRegisterPayment,
-      handleClose,
-      paymentInformation,
-      newCard,
-    ]);
+    }, [auctionId, buyAuction, showError, showMessage, registerPayment, close, paymentInformation, newCard]);
 
     useImperativeHandle(ref, () => ({
       placeBid: (amount: Dinero.Dinero) => {
@@ -146,7 +119,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     }));
 
     useEffect(() => setNewCard(false), []);
-    const buttonsAreDisabled = isSubmitting || expired || ((newCard || !paymentInformation) && !cardComplete);
+
+    const disabled = isSubmitting || (expired && !cardComplete) || ((newCard || !paymentInformation) && !cardComplete);
 
     return (
       <Dialog
@@ -154,8 +128,8 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
         className={styles.modalTitle}
         keyboard={false}
         open={process.title === 'browser' ? Boolean(activeBid) : true}
-        title={isBuying ? buyingTitle : title}
-        onClose={handleClose}
+        title={isBuying ? 'Buy it now' : 'Place Your Bid'}
+        onClose={close}
       >
         <DialogContent className="pt-0 pb-0">
           <div className={clsx(styles.cardInputWrapper, 'text--body')}>
@@ -170,13 +144,13 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
             <CardInput
               expired={expired}
-              handleAddCard={handleAddCard}
+              handleAddCard={() => setNewCard(true)}
               isSubmitting={isSubmitting}
               newCard={newCard}
               paymentInformation={paymentInformation}
               stripeInputStyles={styles.input}
-              onCancel={handleNewCardCancelBtnClick}
-              onChange={handleCardInputChange}
+              onCancel={() => setNewCard(false)}
+              onChange={(event: StripeCardElementChangeEvent) => setCardComplete(event.complete)}
             />
             <p className="text-center pt-4 mb-4">
               <span className="text-super-headline">{activeBid?.toFormat('$0,0')}</span>
@@ -193,19 +167,19 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
           <AsyncButton
             className={clsx(styles.actionBtn, 'ms-0 me-sm-auto p-3')}
             data-test-id="bid-button"
-            disabled={buttonsAreDisabled}
+            disabled={disabled}
             loading={isSubmitting}
             variant="secondary"
-            onClick={isBuying ? handleBuying : handleBiding}
+            onClick={isBuying ? buyItNow : placeBid}
           >
             {isBuying ? 'Buy it now' : 'Confirm'}
           </AsyncButton>
           <Button
             className={clsx(styles.actionBtn, styles.cancelBtn, 'ms-0 me-sm-auto p-3')}
-            disabled={buttonsAreDisabled}
+            disabled={disabled}
             size="sm"
             variant="link"
-            onClick={handleClose}
+            onClick={close}
           >
             Cancel
           </Button>
