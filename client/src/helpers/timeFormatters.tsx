@@ -13,15 +13,19 @@ export function toHumanReadableDuration(date: string): string | null {
 
   if (hours === 0) {
     const minutes = Math.abs(differenceInMinutes(toDate(date), new Date()));
-    return minutes ? `${minutes}m` : null;
+    return minutes ? `${minutes}M` : null;
   }
 
   const hoursLeft = hours % 24;
   const daysLeft = Math.floor(hours / 24);
   const minutesLeft = minutes - Math.floor(minutes / 60) * 60;
-  const left = [daysLeft ? `${daysLeft}d` : '', hoursLeft ? `${hoursLeft}h` : '', minutesLeft ? `${minutesLeft}m` : ''];
-
-  if (inPast) left.push('ago');
+  const left = [
+    inPast ? 'Ended' : '',
+    daysLeft ? `${daysLeft}D` : '',
+    hoursLeft ? `${hoursLeft}H` : '',
+    minutesLeft ? `${minutesLeft}M` : '',
+    inPast ? 'ago' : '',
+  ];
 
   return left.filter(Boolean).join(' ');
 }
