@@ -16,7 +16,7 @@ import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/U
 import Layout from 'src/components/layouts/Layout';
 import NotActiveStatus from 'src/components/statuses/NotActiveStatus';
 import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
@@ -118,7 +118,7 @@ export const CharityProfilePageContent: FC<Props> = ({ charity }) => {
           </Container>
         )}
         <div className={styles.header}>
-          <ProfileAvatar src={ResizedImageUrl(charity?.avatarUrl, 194)} />
+          <ProfileAvatar src={resizedImageUrl(charity?.avatarUrl, 194)} />
         </div>
         <Container className={clsx(styles.content, 'mb-0 mb-md-3')} fluid="xxl">
           <Row>

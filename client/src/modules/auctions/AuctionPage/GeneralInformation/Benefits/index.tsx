@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Row, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 import { Charity } from 'src/types/Charity';
 
 import styles from './styles.module.scss';
@@ -18,7 +18,7 @@ const Benefits: FC<Charity> = ({ avatarUrl = '', status, name, id, semanticId })
           <Image
             roundedCircle
             className={clsx(styles.avatar, 'd-inline-block')}
-            src={ResizedImageUrl(avatarUrl, 120)}
+            src={resizedImageUrl(avatarUrl, 120)}
           />
           <div className="ps-3">
             <div className="text-body-new text-all-cups fw-normal">{name}</div>
