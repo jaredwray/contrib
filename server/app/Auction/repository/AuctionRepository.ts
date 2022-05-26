@@ -39,7 +39,7 @@ export class AuctionRepository implements IAuctionRepository {
 
   private static SEARCH_FILTERS: ISearchFilter = {
     [AuctionOrderBy.CREATED_AT_DESC]: { startsAt: 'desc' },
-    [AuctionOrderBy.ENDING_SOON]: { isActive: 'desc', endedOrWillEndedAt: 'desc' },
+    [AuctionOrderBy.ENDING_SOON]: { isActive: 'desc', willEndedAt: 'asc', endedAt: 'desc' },
     [AuctionOrderBy.PRICE_ASC]: { currentPrice: 'asc' },
     [AuctionOrderBy.PRICE_DESC]: { currentPrice: 'desc' },
   };
@@ -395,7 +395,10 @@ export class AuctionRepository implements IAuctionRepository {
             isActive: {
               $cond: { if: { $eq: ['$status', AuctionStatus.ACTIVE] }, then: 1, else: -1 },
             },
-            endedOrWillEndedAt: {
+            willEndedAt: {
+              $cond: { if: { $eq: ['$status', AuctionStatus.ACTIVE] }, then: '$endsAt', else: null },
+            },
+            endedAt: {
               $cond: ['$stoppedAt', '$stoppedAt', '$endsAt'],
             },
           },
