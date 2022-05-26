@@ -5,7 +5,7 @@ import { Image } from 'react-bootstrap';
 
 import SwipeableLink from 'src/components/wrappers/SwipeableLink';
 import { DEFAULT_AVATAR_PATH } from 'src/constants';
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
@@ -26,7 +26,7 @@ const ProfileInfo: FC<Props> = ({ profile, link, className, isCharity }) => {
     <SwipeableLink className={clsx(styles.link, 'pb-2 d-flex')} title={profile.name} to={link}>
       <div>{isCharity && defaultAvatar && <CharityIcon />}</div>
       {(!isCharity || !defaultAvatar) && (
-        <Image roundedCircle className={clsx(styles.avatar)} src={ResizedImageUrl(profile.avatarUrl, 32)} />
+        <Image roundedCircle className={clsx(styles.avatar)} src={resizedImageUrl(profile.avatarUrl, 32)} />
       )}
       <div
         className={clsx(

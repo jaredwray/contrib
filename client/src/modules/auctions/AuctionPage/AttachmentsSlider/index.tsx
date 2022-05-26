@@ -7,7 +7,7 @@ import Slider from 'react-slick';
 
 import AttachmentThumbnail from 'src/components/custom/AttachmentThumbnail';
 import AttachmentModal from 'src/components/modals/AttachmentModal';
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 import { AuctionAttachment } from 'src/types/Auction';
 
 import 'slick-carousel/slick/slick.css';
@@ -73,7 +73,7 @@ const AttachmentsSlider: FC<Props> = ({ attachments }): ReactElement | null => {
             onMouseDown={(e: MouseEvent) => (state.current.x = e.screenX)}
           >
             {attachment.type === 'IMAGE' ? (
-              <Image className={styles.attachment} src={ResizedImageUrl(attachment.url, 720)} />
+              <Image className={styles.attachment} src={resizedImageUrl(attachment.url, 720)} />
             ) : (
               <Stream controls responsive={false} src={attachment.uid} onPlay={(e: any) => setActiveStream(e.target)} />
             )}

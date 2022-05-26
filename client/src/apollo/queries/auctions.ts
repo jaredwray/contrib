@@ -465,12 +465,8 @@ export const UpdateAuctionMutation = gql`
 export const AddAuctionMediaMutation = gql`
   mutation AddAuctionMedia($id: String!, $input: AuctionAttachmentInput!) {
     addAuctionAttachment(id: $id, input: $input) {
-      id
       type
-      cloudflareUrl
       thumbnail
-      uid
-      originalFileName
       url
     }
   }

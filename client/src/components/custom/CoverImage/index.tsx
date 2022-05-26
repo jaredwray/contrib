@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import clsx from 'clsx';
 
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 
 import styles from './styles.module.scss';
 
@@ -20,7 +20,7 @@ const CoverImage: FC<Props> = ({ src, alt, formatSize, className }) => {
         <img
           alt={alt}
           className={styles.image}
-          src={ResizedImageUrl(src || '', formatSize)}
+          src={resizedImageUrl(src || '', formatSize)}
           onError={(event) => {
             (event.target as HTMLImageElement).src = '/content/img/default-auction-preview.webp';
           }}

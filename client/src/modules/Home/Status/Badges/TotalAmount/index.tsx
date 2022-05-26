@@ -5,7 +5,7 @@ import { Col, Row, Image, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_AVATAR_PATH } from 'src/constants';
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 
 import styles from './styles.module.scss';
 
@@ -27,7 +27,7 @@ export const TotalAmount = ({ title, secondValue, firstValue, icon, link, avatar
         <div className={clsx(styles.wrapper, 'p-0 text-center')}>
           <div className={clsx(styles.title, 'text-all-cups')}>{title}</div>
           <div className={clsx(withIcon ? styles.withIcon : styles.withoutIcon, 'pt-2')}>
-            <Image roundedCircle={!withIcon} src={withIcon ? icon : ResizedImageUrl(avatar, 32)} />
+            <Image roundedCircle={!withIcon} src={withIcon ? icon : resizedImageUrl(avatar, 32)} />
           </div>
           <div className={clsx(styles.firstValueWrapper, 'text-truncate m-auto')}>
             {link ? (

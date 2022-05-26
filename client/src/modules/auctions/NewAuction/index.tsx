@@ -14,8 +14,10 @@ import AsyncButton from 'src/components/buttons/AsyncButton';
 import Form from 'src/components/forms/Form/Form';
 import Layout from 'src/components/layouts/Layout';
 import { MIN_BID_STEP_VALUE } from 'src/constants';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { useShowNotification } from 'src/helpers/useShowNotification';
+import { AuctionAttachment } from 'src/types/Auction';
 import { AuctionAttachmentInput } from 'src/types/inputs/AuctionAttachmentInput';
 
 import Attachments from './Attachments';
@@ -32,6 +34,10 @@ const NewAuction = () => {
     errors: {},
   });
   const [creating, setCreating] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [auctionId, setAuctionId] = useState('');
+  const [timeNow, setTimeNow] = useState(Date.now());
   const { showError, showMessage, showWarning } = useShowNotification();
   const history = useHistory();
 
@@ -40,7 +46,8 @@ const NewAuction = () => {
   const [addAuctionMedia] = useMutation(AddAuctionMediaMutation);
   const [createAuction] = useMutation(CreateAuctionMutation, {
     async onCompleted({ createAuction }) {
-      const auctionId = createAuction.id;
+      const newAuctionId = createAuction.id;
+      setAuctionId(newAuctionId);
 
       await Promise.all(
         files.map(async (file, index) => {
@@ -53,22 +60,40 @@ const NewAuction = () => {
             input.forCover = true;
           }
 
-          await addAuctionMedia({
-            variables: { id: auctionId, input },
-          });
+          const response = await addAuctionMedia({ variables: { id: newAuctionId, input } });
+          const attachment = response.data.addAuctionAttachment;
+
+          if (index === fileForCover) setCoverImageUrl(coverImagePath(attachment));
         }),
       );
 
       try {
-        await finishAuctionCreation({ variables: { id: auctionId } });
-      } catch (error: any) {
+        await finishAuctionCreation({ variables: { id: newAuctionId } });
+
+        showMessage('Created');
+        updateState();
+        setTimeout(redirectToNextPage, 2500);
+      } catch (error) {
         showError(error.message);
       }
-
-      showMessage('Created');
-      setTimeout(() => history.push(`/auctions/${auctionId}/done`), 1500); // wait until attachments will be available
     },
   });
+
+  const coverImagePath = (attachment: AuctionAttachment) => {
+    if (attachment.type === 'VIDEO') return `${attachment.thumbnail}?width=800&`;
+
+    return resizedImageUrl(attachment.url, 480) + '?';
+  };
+
+  const updateState = useCallback(() => {
+    if (ready) return;
+
+    setTimeNow(Date.now());
+    setTimeout(() => updateState(), 500);
+  }, [ready, setTimeNow]);
+  const redirectToNextPage = useCallback(() => {
+    auctionId && history.push(`/auctions/${auctionId}/done`);
+  }, [history, auctionId]);
 
   const cloudflareUpload = useCallback(
     async (file: File) => {
@@ -80,9 +105,7 @@ const NewAuction = () => {
         let uid;
         await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/stream`, {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+          headers: { Authorization: `Bearer ${authToken}` },
           body: formData,
         })
           .then((response) => response.json())
@@ -169,6 +192,9 @@ const NewAuction = () => {
   );
 
   useEffect(() => checkMissed('attachments', files), [files, checkMissed]);
+  useEffect(() => {
+    ready && redirectToNextPage();
+  }, [ready, redirectToNextPage]);
 
   setPageTitle('New Auction');
 
@@ -200,6 +226,15 @@ const NewAuction = () => {
             </div>
           </section>
         </Form>
+        {coverImageUrl && (
+          <img
+            alt=""
+            className={styles.coverImage}
+            src={`${coverImageUrl}n=${timeNow}`}
+            onError={(event) => setReady(false)}
+            onLoad={(event) => setReady(true)}
+          />
+        )}
       </div>
     </Layout>
   );

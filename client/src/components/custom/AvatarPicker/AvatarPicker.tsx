@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Button, Image } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
 
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 
 import styles from './AvatarPicker.module.scss';
 
@@ -87,7 +87,7 @@ export const AvatarPicker: FC<Props> = ({ item, updateMutation, itemId }) => {
         roundedCircle
         className={styles.image}
         id="profileAvatar"
-        src={uploadPreviewUrl || ResizedImageUrl(item?.avatarUrl, 120)}
+        src={uploadPreviewUrl || resizedImageUrl(item?.avatarUrl, 120)}
         onClick={handleSelectFileToUpload}
       />
       <Button

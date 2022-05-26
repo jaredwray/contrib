@@ -7,9 +7,11 @@ import { useHistory } from 'react-router-dom';
 
 import { DeleteAuctionMutation, FollowAuctionMutation, UnfollowAuctionMutation } from 'src/apollo/queries/auctions';
 import { CloseButton } from 'src/components/buttons/CloseButton';
+import HeartBtn from 'src/components/buttons/HeartButton';
 import CoverImage from 'src/components/custom/CoverImage';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import { Modal } from 'src/components/modals/AdminAuctionsPageModal';
+import SwipeableLink from 'src/components/wrappers/SwipeableLink';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
@@ -17,8 +19,6 @@ import useAuctionPreviewAttachment from 'src/modules/auctions/hooks/useAuctionPr
 import { Auction } from 'src/types/Auction';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import HeartBtn from '../../buttons/HeartButton';
-import SwipeableLink from '../../wrappers/SwipeableLink';
 import DateDetails from './DateDetails';
 import ProfileInfo from './ProfileInfo';
 import styles from './styles.module.scss';

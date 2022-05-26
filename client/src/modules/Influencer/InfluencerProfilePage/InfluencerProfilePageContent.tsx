@@ -15,7 +15,7 @@ import { TotalRaisedAmount } from 'src/components/custom/TotalRaisedAmount';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { profileAuctionsHash } from 'src/helpers/profileAuctionsHash';
-import ResizedImageUrl from 'src/helpers/ResizedImageUrl';
+import resizedImageUrl from 'src/helpers/resizedImageUrl';
 import { useAuth } from 'src/helpers/useAuth';
 import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithReturnAfterLogin';
 import { useShowNotification } from 'src/helpers/useShowNotification';
@@ -117,7 +117,7 @@ export const InfluencerProfilePageContent: FC<Props> = ({ influencer }) => {
           </Row>
         </Container>
         <div className={styles.header}>
-          <ProfileAvatar src={ResizedImageUrl(influencer.avatarUrl, 194)} />
+          <ProfileAvatar src={resizedImageUrl(influencer.avatarUrl, 194)} />
         </div>
         <Container className={clsx(styles.content, 'mb-0 mb-md-3')}>
           <Row>
