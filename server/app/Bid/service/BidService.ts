@@ -41,7 +41,7 @@ export class BidService {
   }
 
   public async bids(auctionId: string): Promise<Bid[] | []> {
-    const bids = await this.BidModel.find({ auction: auctionId }).sort({ bid: 'asc' });
+    const bids = await this.BidModel.find({ auction: auctionId }).sort({ bid: 'desc' });
     return bids.map((bid) => this.makeBid(bid));
   }
 
