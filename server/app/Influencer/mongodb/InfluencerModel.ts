@@ -35,16 +35,8 @@ const InfluencerSchema: Schema<IInfluencer> = new Schema<IInfluencer>({
   favoriteCharities: [{ type: SchemaTypes.ObjectId, ref: CharityCollectionName }],
   assistants: [{ type: SchemaTypes.ObjectId, ref: AssistantCollectionName }],
   totalRaisedAmount: { type: SchemaTypes.Number, default: 0 },
-  createdAt: {
-    type: SchemaTypes.Date,
-    default: dayjs().second(0),
-    get: (v) => dayjs(v),
-  },
-  updatedAt: {
-    type: SchemaTypes.Date,
-    default: dayjs().second(0),
-    get: (v) => dayjs(v),
-  },
+  createdAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
+  updatedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   onboardedAt: { type: SchemaTypes.Date, get: (v) => dayjs(v) },
   followers: [
     {

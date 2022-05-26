@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Container, Row } from 'react-bootstrap';
 
 import { MyBidsQuery } from 'src/apollo/queries/bids';
-import Pagination, { PER_PAGE } from 'src/components/custom/Pagination';
+import Pagination, { PER_PAGE, BLANK_LIST_OBJECT } from 'src/components/custom/Pagination';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 
@@ -24,7 +24,7 @@ const MyBids = () => {
     },
     fetchPolicy: 'cache-and-network',
   });
-  const bidsData = data?.myBids || { size: 0, skip: 0, totalItems: 0, items: [] };
+  const bidsData = data?.myBids || BLANK_LIST_OBJECT;
   const hasBids = bidsData.items.length > 0;
 
   useEffect(() => getBidsList(), [getBidsList]);

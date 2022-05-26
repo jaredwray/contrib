@@ -1,6 +1,6 @@
 import { InfluencerProfileQuery, UpdateInfluencerProfileMutation } from 'src/apollo/queries/profile';
 import Form from 'src/components/forms/Form/Form';
-import { InfluencerProfileEditPage } from '../InfluencerProfileEditPage';
+import InfluencerProfileEditPage from '../InfluencerProfileEditPage';
 import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';

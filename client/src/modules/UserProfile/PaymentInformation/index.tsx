@@ -9,11 +9,11 @@ import { Row, Col } from 'react-bootstrap';
 import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { CardInput } from 'src/components/forms/inputs/CardInput';
-import { UserProfile } from 'src/components/helpers/UserAccountProvider/UserProfile';
 import { useShowNotification } from 'src/helpers/useShowNotification';
+import { UserAccount } from 'src/types/UserAccount';
 
 interface Props {
-  account: UserProfile | null;
+  account: UserAccount | null;
 }
 
 const PaymentInformation: FC<Props> = ({ account }) => {
@@ -37,18 +37,6 @@ const PaymentInformation: FC<Props> = ({ account }) => {
   const paymentInformation = account?.paymentInformation;
   const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
 
-  const handleAddCard = useCallback(() => {
-    setNewCard(true);
-  }, []);
-
-  const handleNewCardCancelBtnClick = useCallback(() => {
-    setNewCard(false);
-  }, [setNewCard]);
-
-  const handleCardInputChange = useCallback((event: StripeCardElementChangeEvent) => {
-    setCardComplete(event.complete);
-  }, []);
-
   const handleNewCardSaveBtnClick = useCallback(async () => {
     if (!elements) return;
 
@@ -62,9 +50,8 @@ const PaymentInformation: FC<Props> = ({ account }) => {
           if (tokenResult.error.message) showError(tokenResult.error.message);
           return;
         }
-        const token = tokenResult?.token ?? { id: '' };
-
-        await registerPaymentMethod({ variables: { token: token.id } });
+        const token = tokenResult?.token?.id || '';
+        await registerPaymentMethod({ variables: { token } });
       }
 
       setSubmitting(false);
@@ -88,13 +75,13 @@ const PaymentInformation: FC<Props> = ({ account }) => {
         <Col className="px-0 px-md-2 mt-2 mt-md-0" md="6">
           <CardInput
             expired={expired}
-            handleAddCard={handleAddCard}
+            handleAddCard={() => setNewCard(true)}
             isSubmitting={isSubmitting}
             newCard={newCard}
             paymentInformation={paymentInformation}
             showSaveBtn={cardComplete}
-            onCancel={handleNewCardCancelBtnClick}
-            onChange={handleCardInputChange}
+            onCancel={() => setNewCard(false)}
+            onChange={(event: StripeCardElementChangeEvent) => setCardComplete(event.complete)}
             onSave={handleNewCardSaveBtnClick}
           />
         </Col>

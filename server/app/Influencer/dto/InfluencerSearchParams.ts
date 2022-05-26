@@ -6,6 +6,7 @@ export interface InfluencerSearchParams {
 }
 
 export interface InfluencerFilters {
+  assistantId?: string;
   status?: string;
   query?: string;
 }

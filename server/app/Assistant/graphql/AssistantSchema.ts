@@ -11,7 +11,9 @@ export const AssistantSchema = gql`
     name: String!
     status: AssistantStatus!
     userAccount: UserAccount
-    influencerId: String!
+    influencerId: String
+    influencerIds: [String]
+    influencers: [String]
     notAcceptedTerms: String
   }
 

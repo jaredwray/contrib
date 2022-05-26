@@ -11,10 +11,10 @@ import Form from 'src/components/forms/Form/Form';
 import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
+import CharitiesFormFields from 'src/modules/influencers/common/CharitiesFormFields';
 import { Charity } from 'src/types/Charity';
 import { UserAccount } from 'src/types/UserAccount';
 
-import { CharitiesFormFields } from '../../common/CharitiesFormFields';
 import { InfluencerOnboardingNavigation } from '../InfluencerOnboardingNavigation';
 import styles from './InfluencerOnboardingCharitiesPage.module.scss';
 

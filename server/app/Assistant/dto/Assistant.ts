@@ -1,4 +1,9 @@
-import { AssistantStatus } from './AssistantStatus';
+import { AssistantInfluencer } from './AssistantInfluencer';
+
+export enum AssistantStatus {
+  INVITATION_PENDING = 'INVITATION_PENDING',
+  ONBOARDED = 'ONBOARDED',
+}
 
 export interface Assistant {
   id: string;
@@ -6,4 +11,5 @@ export interface Assistant {
   status: AssistantStatus;
   userAccount: string;
   influencerId: string;
+  influencerIds: string[];
 }

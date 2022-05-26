@@ -7,6 +7,7 @@ export function loadAccount<Result, Args, Parent>(
     if (context.user && context.currentAccount === undefined) {
       context.currentAccount = await context.userAccount.getAccountByAuthzId(context.user.id, context.user);
     }
+
     return handler(parent, args, context, info);
   };
 }

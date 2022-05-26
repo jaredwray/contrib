@@ -16,6 +16,4 @@ export const closeInMemoryMongodbConnection = async (): Promise<void> => {
 };
 
 const connection = createConnection(AppConfig.mongodb.uri);
-export async function initMongodbConnection(): Promise<Connection> {
-  return connection;
-}
+export const initMongodbConnection = async (): Promise<Connection> => connection;

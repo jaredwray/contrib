@@ -21,11 +21,13 @@ export default function Assistants() {
 
   const [getAssistatsList, { data }] = useLazyQuery<{ influencer: InfluencerProfile }>(AssistantsQuery, {
     variables: { id: influencerId },
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => getAssistatsList(), [getAssistatsList]);
 
   const influencer = data?.influencer;
+  const assistants = influencer?.assistants || [];
   const isMyProfile = account?.influencerProfile?.id === influencer?.id;
 
   if (influencer === null) {
@@ -56,21 +58,20 @@ export default function Assistants() {
         <Container fluid="xxl">
           <Row>
             <Col className="w-100 pt-4">
-              {!influencer.assistants.length && <p className="text-subhead">You don't have assistants yet</p>}
-
-              {influencer.assistants.length > 0 && (
+              {!assistants?.length && <p className="text-subhead">You don't have assistants yet</p>}
+              {assistants?.length > 0 && (
                 <Table className="admin-influencers-table d-block d-sm-table">
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Status</th>
+                      <th className={styles.status}>Status</th>
                     </tr>
                   </thead>
                   <tbody className="fw-normal">
-                    {influencer.assistants.map((assistant) => (
+                    {assistants.map((assistant) => (
                       <tr key={assistant.id}>
                         <td className="break-word">{assistant.name}</td>
-                        <td>{assistant.status}</td>
+                        <td className={styles.status}>{assistant.status}</td>
                       </tr>
                     ))}
                   </tbody>

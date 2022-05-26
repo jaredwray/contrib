@@ -3,13 +3,13 @@ import { FC, useState } from 'react';
 import clsx from 'clsx';
 import { Button, Row, Col } from 'react-bootstrap';
 
-import { UserProfile } from 'src/components/helpers/UserAccountProvider/UserProfile';
+import { UserAccount } from 'src/types/UserAccount';
 
 import Modal from './Modal';
 import styles from './styles.module.scss';
 
 interface Props {
-  account: UserProfile | null;
+  account: UserAccount | null;
 }
 
 const ProfileInformation: FC<Props> = ({ account }) => {

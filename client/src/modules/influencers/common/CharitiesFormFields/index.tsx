@@ -4,7 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 
 import { FavouriteCharitiesField } from './FavouriteCharitiesField';
 
-export const CharitiesFormFields: FC = () => {
+const CharitiesFormFields: FC = () => {
   return (
     <>
       <Row className="pt-3 pt-md-0">
@@ -22,3 +22,4 @@ export const CharitiesFormFields: FC = () => {
     </>
   );
 };
+export default CharitiesFormFields;

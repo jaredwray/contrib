@@ -9,15 +9,13 @@ export async function prerenderAuctionPage(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
-  if (isCrawler(req)) {
-    const auction = await services.auction.getAuction(req.params.auctionId);
-    if (auction) {
-      const auctionImageUrl =
-        (auction.attachments.length && (auction.attachments[0].cloudflareUrl || auction.attachments[0].url)) || null;
-      const facebookAppId = AppConfig.facebook.appId;
-      return res.render('auction', { auction, auctionImageUrl, facebookAppId });
-    }
-  }
+  if (!isCrawler(req)) return next();
 
-  next();
+  const auction = await services.auctionService.getAuction(req.params.auctionId);
+  if (!auction) return;
+
+  const auctionImageUrl =
+    (auction.attachments.length && (auction.attachments[0].cloudflareUrl || auction.attachments[0].url)) || null;
+  const facebookAppId = AppConfig.facebook.appId;
+  return res.render('auction', { auction, auctionImageUrl, facebookAppId });
 }

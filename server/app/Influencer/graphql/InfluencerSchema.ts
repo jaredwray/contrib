@@ -26,7 +26,7 @@ export const InfluencerSchema = gql`
     userAccount: UserAccount
     invitation: Invitation!
     favoriteCharities: [Charity!]!
-    assistants: [Assistant!]!
+    assistants: [Assistant!]
     totalRaisedAmount: Money
     followers: [Follow]
     createdAt: DateTime
@@ -64,6 +64,7 @@ export const InfluencerSchema = gql`
   }
 
   input InfluencerFilters {
+    ids: [String]
     query: String
     status: [InfluencerStatus]
   }
@@ -75,8 +76,9 @@ export const InfluencerSchema = gql`
   }
 
   extend type Query {
-    influencersList(params: InfluencerParams): InfluencersPage
     influencer(id: String!): InfluencerProfile
+    influencersList(params: InfluencerParams): InfluencersPage
+    myInfluencers(params: InfluencerParams): InfluencersPage
     topEarnedInfluencer: InfluencerProfile
   }
 

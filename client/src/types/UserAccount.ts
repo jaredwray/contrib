@@ -18,6 +18,7 @@ export interface PaymentCard {
 
 export interface UserAccount {
   id: string;
+  isAdmin?: boolean;
   mongodbId?: string;
   phoneNumber: string | null;
   status: UserAccountStatus;

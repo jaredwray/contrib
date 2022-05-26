@@ -15,4 +15,5 @@ export interface GraphqlContext extends IAppServices {
   currentCharity?: Charity;
   currentAssistant?: Assistant;
   currentInfluencerId?: string;
+  currentInfluencerIds?: string[];
 }

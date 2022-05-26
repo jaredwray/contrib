@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useCallback } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -16,7 +16,7 @@ import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
 import { BasicFormFields } from '../common/BasicFormFields';
-import { CharitiesFormFields } from '../common/CharitiesFormFields';
+import CharitiesFormFields from '../common/CharitiesFormFields';
 
 interface FormValues {
   name: string;
@@ -26,31 +26,44 @@ interface FormValues {
   favoriteCharities: Charity[];
 }
 
-export const InfluencerProfileEditPage: FC = () => {
+const InfluencerProfileEditPage: FC = () => {
   const influencerId = useParams<{ influencerId: string }>().influencerId ?? 'me';
   const { account } = useContext(UserAccountContext);
-  const { data: influencerProfileData } = useQuery<{
-    influencer: InfluencerProfile;
-  }>(InfluencerProfileQuery, { variables: { id: influencerId } });
-  const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
-  const [updateFavoriteCharities] = useMutation(UpdateFavoriteCharities);
   const history = useHistory();
   const { showMessage, showError } = useShowNotification();
+  const isAdminOrAssistant = account?.isAdmin || account?.assistant;
 
-  const handleSubmit = async ({ name, sport, team, profileDescription, favoriteCharities }: FormValues) => {
-    try {
-      await updateInfluencerProfile({
-        variables: { name, sport, team: team ?? '', profileDescription, influencerId },
-      });
-      await updateFavoriteCharities({
-        variables: { influencerId, charities: favoriteCharities.map((charity) => charity.id) },
-      });
-      showMessage('Your profile has been successfully updated');
-      history.goBack();
-    } catch (error) {
-      showError(error.message);
+  const { data: influencerProfileData } = useQuery<{
+    influencer: InfluencerProfile;
+  }>(InfluencerProfileQuery, { variables: { id: influencerId }, fetchPolicy: 'cache-and-network' });
+  const [updateInfluencerProfile] = useMutation(UpdateInfluencerProfileMutation);
+  const [updateFavoriteCharities] = useMutation(UpdateFavoriteCharities);
+
+  const onSubmit = useCallback(
+    async ({ name, sport, profileDescription, favoriteCharities, team = '' }: FormValues) => {
+      const charities = favoriteCharities.map((charity) => charity.id);
+
+      try {
+        await updateInfluencerProfile({ variables: { name, sport, team, profileDescription, influencerId } });
+        await updateFavoriteCharities({ variables: { influencerId, charities } });
+
+        showMessage('Your profile has been successfully updated');
+        history.goBack();
+      } catch (error) {
+        showError(error.message);
+      }
+    },
+    [history, influencerId, showError, showMessage, updateFavoriteCharities, updateInfluencerProfile],
+  );
+
+  if (influencerId && account?.assistant) {
+    const assistantInfluencerIds = account?.assistant?.influencerIds || [];
+
+    if (!assistantInfluencerIds.includes(influencerId)) {
+      history.replace('/');
+      return null;
     }
-  };
+  }
 
   const influencerProfile = influencerProfileData?.influencer;
 
@@ -67,19 +80,19 @@ export const InfluencerProfileEditPage: FC = () => {
       <Form
         className="d-flex flex-column justify-content-between flex-grow-1 pt-3 pt-md-5"
         initialValues={influencerProfile}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
         <Container fluid="xxl">
           <Row>
-            <Col className="text-label label-with-separator">{account?.isAdmin ? 'Account' : 'My account'}</Col>
+            <Col className="text-label label-with-separator">{isAdminOrAssistant ? 'Account' : 'My account'}</Col>
           </Row>
           <Row>
-            <Col className="text-headline">{account?.isAdmin ? 'Profile' : 'My Profile'}</Col>
+            <Col className="text-headline">{isAdminOrAssistant ? 'Profile' : 'My Profile'}</Col>
           </Row>
           <BasicFormFields influencer={influencerProfile} />
           <Col>
             <h2 className="text-headline d-flex flex-row justify-content-between">
-              <span className="me-1">{account?.isAdmin ? 'Charities' : 'My Charities'}</span>
+              <span className="me-1">{isAdminOrAssistant ? 'Charities' : 'My Charities'}</span>
             </h2>
           </Col>
           <hr className="d-none d-md-block" />
@@ -92,3 +105,5 @@ export const InfluencerProfileEditPage: FC = () => {
     </Layout>
   );
 };
+
+export default InfluencerProfileEditPage;
