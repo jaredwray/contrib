@@ -2,11 +2,12 @@ import fs from 'fs-extra';
 import Handlebars from 'handlebars';
 import path from 'path';
 
-import { AppError, ErrorCode } from '../errors';
-import { AppLogger } from '../logger';
-import { AppConfig } from '../config';
-import { CloudTaskService } from './CloudTaskService';
-import { twilioMessageService } from './twilioClient';
+import { AppError, ErrorCode } from '../../../errors';
+import { AppLogger } from '../../../logger';
+import { AppConfig } from '../../../config';
+import { CloudTaskService } from '../CloudTaskService';
+import { twilioMessageService } from '../../twilioClient';
+import { INotificationModel, NotificationModelModel } from '../mongodb/NotificationModel';
 
 export enum MessageTemplate {
   AUCTION_DELIVERY_DETAILS_FOR_WINNER = 'auction-delivery-details-for-winner',
@@ -26,9 +27,11 @@ export enum MessageTemplate {
 }
 
 export class NotificationService {
-  constructor(private readonly cloudTaskService: CloudTaskService) {}
+  private readonly NotificationModel = NotificationModel(this.connection);
 
-  async sendMessageNow(phoneNumber: string, template: string, context: object): Promise<void> {
+  constructor(private readonly connection: Connection, private readonly cloudTaskService: CloudTaskService) {}
+
+  static async sendMessageNow(phoneNumber: string, template: string, context: object): Promise<void> {
     try {
       const message = await this.renderMessage(template, context);
       const result = await twilioMessageService.create({

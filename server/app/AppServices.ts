@@ -8,7 +8,7 @@ import { ShortLinkService } from './ShortLink';
 import { BidService } from './Bid';
 import { PhoneNumberVerificationService } from './PhoneNumberVerificationService';
 
-import { NotificationService } from './NotificationService';
+import { NotificationService } from './Notification';
 import { PaymentService, StripeService } from './Payment';
 import { CloudTaskService } from './CloudTaskService';
 

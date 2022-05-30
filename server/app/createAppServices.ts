@@ -26,8 +26,8 @@ export default function createAppServices(connection: Connection): IAppServices 
   const shortLinkService = new ShortLinkService(connection);
   const assistant = new AssistantService(connection);
   const charity = new CharityService(connection, eventHub, stripeService);
-  const ups = new UPSDeliveryService();
-  const notificationService = new NotificationService(cloudTaskService);
+  const upsService = new UPSDeliveryService();
+  const notificationService = new NotificationService(connection, cloudTaskService);
   const userAccount = new UserAccountService(
     connection,
     notificationService,
@@ -63,7 +63,7 @@ export default function createAppServices(connection: Connection): IAppServices 
     stripeService,
     shortLinkService,
     auctionAttachments,
-    ups,
+    upsService,
   );
 
   return {
