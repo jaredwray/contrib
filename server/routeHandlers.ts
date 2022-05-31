@@ -58,7 +58,7 @@ export default function appRouteHandlers(
     }
 
     await charity.setDefaultCharityStripeStatus(userId);
-    res.redirect(`${AppConfig.app.url}/charity/me/edit`);
+    res.redirect(`${AppConfig.app.url.origin}/charity/me/edit`);
   });
 
   app.post('/api/v1/auth/sms', (req, res, next) => {
