@@ -12,14 +12,17 @@ import { UserAccountProvider } from 'src/components/helpers/UserAccountProvider'
 import PrivateRoute from 'src/components/routing/PrivateRoute';
 import ShortLinkPage from 'src/components/routing/ShortLinkPage';
 import WithStripe from 'src/components/wrappers/WithStripe';
+import { mergeUrlPath } from 'src/helpers/mergeUrlPath';
 import AdminAuctionPage from 'src/modules/admin/auctions/AdminAuctionPage';
 import AdminAuctionsPage from 'src/modules/admin/auctions/AdminAuctionsPage';
-import Charities from 'src/modules/admin/Charities';
-import Influencers from 'src/modules/admin/Influencers';
+import AdminCharities from 'src/modules/admin/Charities';
+import AdminInfluencers from 'src/modules/admin/Influencers';
 import AdminInvitations from 'src/modules/admin/Invitations';
+import { AfterLogin } from 'src/modules/AfterLogin';
+import AssistantInfluencersPage from 'src/modules/assistants/Influencers';
 import AuctionDeliveryInfoPage from 'src/modules/auctions/AuctionDeliveryInfoPage';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
-import AllAuctionsPage from 'src/modules/auctions/AuctionsPage';
+import AuctionsPage from 'src/modules/auctions/AuctionsPage';
 import AuctionDonePage from 'src/modules/auctions/DonePage';
 import EditAuctionAttachmentsPage from 'src/modules/auctions/editAuction/AuctionAttachmentsPage';
 import EditAuctionBidsStepPage from 'src/modules/auctions/editAuction/BidsStepPage';
@@ -32,7 +35,7 @@ import EditAuctionPrivatePage from 'src/modules/auctions/editAuction/PrivateAuct
 import EditStartPricePage from 'src/modules/auctions/editAuction/StartPricePage';
 import EditAuctionPage from 'src/modules/auctions/editAuction/TitlePage';
 import NewAuctionPage from 'src/modules/auctions/NewAuction';
-import AllCharitiesPage from 'src/modules/charity/CharitiesPage';
+import CharitiesPage from 'src/modules/charity/CharitiesPage';
 import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPage';
 import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
 import DeliveryAddressPage from 'src/modules/delivery/DeliveryAddressPage';
@@ -40,26 +43,23 @@ import DeliveryPaymentPage from 'src/modules/delivery/DeliveryPaymentPage';
 import DeliveryStatusPage from 'src/modules/delivery/DeliveryStatusPage';
 import Page404 from 'src/modules/errors/Page404';
 import HomePage from 'src/modules/Home';
-import Assistants from 'src/modules/Influencer/Assistants';
-import AllInfluencersPage from 'src/modules/Influencer/InfluerncersPage';
+import InfluencerAssistantsPage from 'src/modules/influencers/Assistants';
+import InfluencerProfileEditPage from 'src/modules/influencers/InfluencerProfileEditPage';
+import { InfluencerProfilePage } from 'src/modules/influencers/InfluencerProfilePage';
+import InfluencersPage from 'src/modules/influencers/InfluerncersPage';
+import { InfluencerOnboardingBasicPage } from 'src/modules/influencers/Onboarding/InfluencerOnboardingBasicPage';
+import { InfluencerOnboardingCharitiesPage } from 'src/modules/influencers/Onboarding/InfluencerOnboardingCharitiesPage';
+import { InfluencerOnboardingDonePage } from 'src/modules/influencers/Onboarding/InfluencerOnboardingDonePage';
 import InternalScripts from 'src/modules/InternalScripts';
 import InvitationPage from 'src/modules/Invitation';
 import LogInPage from 'src/modules/LogInPage';
-import MyBids from 'src/modules/MyBids';
+import MyBidsPage from 'src/modules/MyBids';
 import PhoneNumberConfirmation from 'src/modules/phoneNumber/Confirmation';
 import PhoneNumberVerification from 'src/modules/phoneNumber/Verification';
-import Privacy from 'src/modules/Privacy';
-import Terms from 'src/modules/Terms';
+import PrivacyPage from 'src/modules/Privacy';
+import TermsPage from 'src/modules/Terms';
 import UserProfilePage from 'src/modules/UserProfile';
-
 import 'src/index.scss';
-import { mergeUrlPath } from './helpers/mergeUrlPath';
-import { AfterLogin } from './modules/AfterLogin';
-import { InfluencerProfileEditPage } from './modules/Influencer/InfluencerProfileEditPage';
-import { InfluencerProfilePage } from './modules/Influencer/InfluencerProfilePage';
-import { InfluencerOnboardingBasicPage } from './modules/Influencer/Onboarding/InfluencerOnboardingBasicPage';
-import { InfluencerOnboardingCharitiesPage } from './modules/Influencer/Onboarding/InfluencerOnboardingCharitiesPage';
-import { InfluencerOnboardingDonePage } from './modules/Influencer/Onboarding/InfluencerOnboardingDonePage';
 
 export const history = createBrowserHistory();
 
@@ -76,9 +76,9 @@ export const App = () => {
                 <Switch>
                   <Route exact component={HomePage} path="/" />
                   <Route exact component={AfterLogin} path="/after-login" />
-                  <Route exact component={Privacy} path="/privacy-policy" />
-                  <Route exact component={Privacy} path="/privacy" />
-                  <Route exact component={Terms} path="/terms" />
+                  <Route exact component={PrivacyPage} path="/privacy-policy" />
+                  <Route exact component={PrivacyPage} path="/privacy" />
+                  <Route exact component={TermsPage} path="/terms" />
                   <Route exact component={PhoneNumberVerification} path="/phone-verification" />
                   <Route exact component={PhoneNumberConfirmation} path="/phone-confirmation" />
                   <Route exact component={InvitationPage} path="/invitation/:slug" />
@@ -93,33 +93,39 @@ export const App = () => {
                   />
                   <PrivateRoute component={InfluencerOnboardingDonePage} path="/onboarding/done" role="influencer" />
 
-                  <PrivateRoute component={Charities} path="/admin/charities" role="admin" />
-                  <PrivateRoute component={Influencers} path="/admin/influencers" role="admin" />
+                  <PrivateRoute component={AdminCharities} path="/admin/charities" role="admin" />
+                  <PrivateRoute component={AdminInfluencers} path="/admin/influencers" role="admin" />
                   <PrivateRoute component={AdminInvitations} path="/admin/invitations" role="admin" />
                   <PrivateRoute component={AdminAuctionPage} path="/admin/auctions/:auctionId" role="admin" />
                   <PrivateRoute component={AdminAuctionsPage} path="/admin/auctions" role="admin" />
 
-                  <Route exact component={AllInfluencersPage} path="/influencers" />
+                  <PrivateRoute component={AssistantInfluencersPage} path="/my-influencers" role="assistant" />
+
+                  <Route exact component={InfluencersPage} path="/influencers" />
                   <PrivateRoute component={InfluencerProfileEditPage} path="/profiles/me/edit" role="influencer" />
                   <PrivateRoute
                     component={InfluencerProfileEditPage}
                     path="/profiles/:influencerId/edit"
-                    role="admin"
+                    roles={['admin', 'assistant']}
                   />
                   <PrivateRoute component={InfluencerProfilePage} path="/profiles/me" role="influencer" />
                   <Route exact component={InfluencerProfilePage} path="/profiles/:influencerId" />
 
-                  <Route exact component={AllCharitiesPage} path="/charities" />
+                  <Route exact component={CharitiesPage} path="/charities" />
                   <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
                   <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
                   <PrivateRoute component={CharityProfilePage} path="/charity/me" role="charity" />
                   <Route exact component={CharityProfilePage} path="/charity/:charityId" />
 
-                  <PrivateRoute component={Assistants} path="/assistants/me" role="influencer" />
-                  <PrivateRoute component={Assistants} path="/assistants/:influencerId" role="admin" />
+                  <PrivateRoute component={InfluencerAssistantsPage} path="/assistants/me" role="influencer" />
+                  <PrivateRoute component={InfluencerAssistantsPage} path="/assistants/:influencerId" role="admin" />
 
-                  <Route exact component={AllAuctionsPage} path="/auctions" />
-                  <PrivateRoute component={NewAuctionPage} path="/auctions/:ownerId/new" role="admin" />
+                  <Route exact component={AuctionsPage} path="/auctions" />
+                  <PrivateRoute
+                    component={NewAuctionPage}
+                    path="/auctions/:ownerId/new"
+                    roles={['admin', 'assistant']}
+                  />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/:auctionId/title" role="influencer" />
                   <PrivateRoute component={NewAuctionPage} path="/auctions/new" role="influencer" />
                   <PrivateRoute component={EditAuctionPage} path="/auctions/create" role="influencer" />
@@ -181,7 +187,7 @@ export const App = () => {
                   />
                   <Route exact component={AuctionPage} path="/auctions/:auctionId" />
                   <PrivateRoute component={AuctionDonePage} path="/auctions/:auctionId/done" role="influencer" />
-                  <PrivateRoute component={MyBids} path="/my-bids" role="user" />
+                  <PrivateRoute component={MyBidsPage} path="/my-bids" role="user" />
                   <Route component={ShortLinkPage} path="/go/:slug" />
                   <Route component={LogInPage} path="/log-in" />
                   <Route component={Page404} path="*" />

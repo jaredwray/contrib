@@ -8,7 +8,7 @@ import { AppLogger } from './logger';
 
 export default function appRouteHandlers(
   app: express.Express,
-  { auction, charity, stripeService, notificationService, userAccount }: IAppServices,
+  { auctionService, charity, stripeService, notificationService, userAccount }: IAppServices,
 ): void {
   app.use((req, res, next) => {
     if (['/api/v1/stripe/'].includes(req.originalUrl)) return next();
@@ -19,14 +19,14 @@ export default function appRouteHandlers(
   app.post('/api/v1/auctions-settle', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) return;
 
-    const response = await auction.scheduleAuctionJobSettle();
+    const response = await auctionService.scheduleAuctionJobSettle();
     return res.json(response);
   });
 
   app.post('/api/v1/auctions-ends-notify', async (req, res) => {
     if (!isAuthorizedRequest(req, res)) return;
 
-    const response = await auction.scheduleAuctionEndsNotification();
+    const response = await auctionService.scheduleAuctionEndsNotification();
     return res.json(response);
   });
 

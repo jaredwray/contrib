@@ -29,9 +29,9 @@ export const FavouriteCharitiesField: FC<Props> = ({ name, disabled }) => {
 
   return (
     <CharitiesAutocomplete
+      withTitle
       charities={field.value}
       favoriteCharities={[]}
-      withTitle={true}
       onChange={handleFavoriteCharityChange}
     />
   );

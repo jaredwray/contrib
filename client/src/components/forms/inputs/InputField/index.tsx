@@ -87,7 +87,12 @@ const InputField = forwardRef<HTMLInputElement | null, Props>(
           {...inputProps}
           ref={ref}
           as={textarea ? 'textarea' : 'input'}
-          className={clsx(styles.input, !displayError && styles.inputWithoutError, className)}
+          className={clsx(
+            styles.input,
+            !displayError && styles.inputWithoutError,
+            textarea && styles.textarea,
+            className,
+          )}
           isInvalid={hasError || isInvalid}
           maxLength={maxLength}
           placeholder={placeholder}

@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useContext } from 'react';
 
 import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -12,6 +12,7 @@ import {
 } from 'src/apollo/queries/auctions';
 import AsyncButton from 'src/components/buttons/AsyncButton';
 import Form from 'src/components/forms/Form/Form';
+import { UserAccountContext } from 'src/components/helpers/UserAccountProvider/UserAccountContext';
 import Layout from 'src/components/layouts/Layout';
 import { MIN_BID_STEP_VALUE } from 'src/constants';
 import resizedImageUrl from 'src/helpers/resizedImageUrl';
@@ -27,6 +28,7 @@ import styles from './styles.module.scss';
 
 const NewAuction = () => {
   const { ownerId } = useParams<{ ownerId: string }>();
+  const { account } = useContext(UserAccountContext);
   const [fileForCover, setFileForCover] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
   const [formState, setFormState] = useState<IFormState>({
@@ -75,6 +77,7 @@ const NewAuction = () => {
         setTimeout(redirectToNextPage, 2500);
       } catch (error) {
         showError(error.message);
+        setCreating(false);
       }
     },
   });
@@ -161,6 +164,7 @@ const NewAuction = () => {
         await createAuction({ variables: { input } });
       } catch (error: any) {
         showError(error.message);
+        setCreating(false);
       }
     },
     [showError, showWarning, validateFormValues, createAuction, files.length, ownerId],
@@ -195,6 +199,15 @@ const NewAuction = () => {
   useEffect(() => {
     ready && redirectToNextPage();
   }, [ready, redirectToNextPage]);
+
+  if (ownerId && account?.assistant) {
+    const assistantInfluencerIds = account?.assistant?.influencerIds || [];
+
+    if (!assistantInfluencerIds.includes(ownerId)) {
+      history.replace('/');
+      return null;
+    }
+  }
 
   setPageTitle('New Auction');
 

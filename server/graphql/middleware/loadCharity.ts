@@ -9,6 +9,7 @@ export function loadCharity<Result, Args, Parent>(
       context.currentCharity = await context.charity.findCharityByUserAccount(context.currentAccount.mongodbId);
       context.currentCharityId = context.currentCharity?.id;
     }
+
     return handler(parent, args, context, info);
   });
 }

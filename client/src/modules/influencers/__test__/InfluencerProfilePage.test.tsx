@@ -6,7 +6,7 @@ import { act } from 'react-dom/test-utils';
 import { ToastProvider } from 'react-toast-notifications';
 
 import { GetInfluencerQuery } from '../../../apollo/queries/influencers';
-import { InfluencerProfilePageContent } from 'src/modules/Influencer/InfluencerProfilePage/InfluencerProfilePageContent';
+import { InfluencerProfilePageContent } from 'src/modules/influencers/InfluencerProfilePage/InfluencerProfilePageContent';
 
 import { InfluencerProfilePage } from '../InfluencerProfilePage/InfluencerProfilePage';
 

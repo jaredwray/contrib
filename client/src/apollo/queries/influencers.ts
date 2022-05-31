@@ -21,6 +21,32 @@ export const InfluencersListQuery = gql`
   }
 `;
 
+export const MyInfluencersListQuery = gql`
+  query GetMyInfluencersListQueryList(
+    $skip: Int
+    $size: Int
+    $filters: InfluencerFilters
+    $orderBy: InfluencerOrderBy
+  ) {
+    myInfluencers(params: { size: $size, skip: $skip, filters: $filters, orderBy: $orderBy }) {
+      totalItems
+      size
+      skip
+      items {
+        id
+        name
+        avatarUrl
+        sport
+        status
+        totalRaisedAmount
+        followers {
+          user
+        }
+      }
+    }
+  }
+`;
+
 export const GetInfluencerQuery = gql`
   query GetInfluencerById($id: String!) {
     influencer(id: $id) {

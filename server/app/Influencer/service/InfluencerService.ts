@@ -38,47 +38,45 @@ export class InfluencerService {
   };
 
   private getSearchOptions(filters: InfluencerFilters): object {
+    const mongoose = require('mongoose');
     return ([
+      [filters?.assistantId, { assistants: filters?.assistantId && mongoose.Types.ObjectId(filters.assistantId) }],
       [filters?.status, { status: { $in: filters?.status } }],
-      [filters?.query, { name: { $regex: (filters?.query || '').trim(), $options: 'i' } }],
+      [filters?.query, { name: { $regex: filters?.query.toString().trim(), $options: 'i' } }],
     ] as [string, { [key: string]: any }][]).reduce(
       (hash, [condition, filters]) => ({ ...hash, ...(condition ? filters : {}) }),
       {},
     );
   }
 
-  private getSortOptions(orderBy: string): string {
-    return this.ORDER_SORTS[orderBy];
-  }
+  private getSortOptions = (orderBy: string): string => this.ORDER_SORTS[orderBy];
 
   public async getInfluencers({ filters, orderBy, skip = 0, size }: InfluencerSearchParams) {
-    if (orderBy === 'DEFAULT') {
-      const defaultFilters = { status: 'ONBOARDED', name: { $regex: (filters?.query || '').trim(), $options: 'i' } };
-      const sortOption = this.getSortOptions(orderBy);
-      const activeAuctions = await this.AuctionModel.find({ status: 'ACTIVE' });
+    if (orderBy !== 'DEFAULT') {
+      const influencers = this.InfluencerModel.find(this.getSearchOptions(filters))
+        .skip(skip)
+        .limit(size)
+        .sort(this.getSortOptions(orderBy));
 
-      if (!activeAuctions.length) return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
-
-      const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer);
-
-      const activeInfluencers = await this.InfluencerModel.find({
-        _id: { $in: auctionOrganisers },
-        ...defaultFilters,
-      }).sort(sortOption);
-      const otherInfluencers = await this.InfluencerModel.find({
-        _id: { $nin: auctionOrganisers },
-        ...defaultFilters,
-      }).sort(sortOption);
-
-      return [...activeInfluencers, ...otherInfluencers].slice(skip, skip + size);
+      return await influencers.exec();
     }
 
-    const influencers = this.InfluencerModel.find(this.getSearchOptions(filters))
-      .skip(skip)
-      .limit(size)
-      .sort(this.getSortOptions(orderBy));
+    const defaultFilters = { status: 'ONBOARDED', name: { $regex: filters?.query.toString().trim(), $options: 'i' } };
+    const sortOption = this.getSortOptions(orderBy);
+    const activeAuctions = await this.AuctionModel.find({ status: 'ACTIVE' });
+    if (!activeAuctions) return await this.InfluencerModel.find(defaultFilters).sort(sortOption);
 
-    return await influencers.exec();
+    const auctionOrganisers = activeAuctions.map((auctionModel) => auctionModel.auctionOrganizer);
+    const activeInfluencers = await this.InfluencerModel.find({
+      _id: { $in: auctionOrganisers },
+      ...defaultFilters,
+    }).sort(sortOption);
+    const otherInfluencers = await this.InfluencerModel.find({
+      _id: { $nin: auctionOrganisers },
+      ...defaultFilters,
+    }).sort(sortOption);
+
+    return [...activeInfluencers, ...otherInfluencers].slice(skip, skip + size);
   }
 
   public async getInfluencersCount({ filters }: { filters?: InfluencerFilters }) {
@@ -149,12 +147,8 @@ export class InfluencerService {
           createdAt: this.timeNow(),
         };
 
-        Object.assign(influencer, {
-          followers: [...influencer.followers, createdFollower],
-        });
-        Object.assign(account, {
-          followingInfluencers: [...account.followingInfluencers, createdFollowing],
-        });
+        Object.assign(influencer, { followers: [...influencer.followers, createdFollower] });
+        Object.assign(account, { followingInfluencers: [...account.followingInfluencers, createdFollowing] });
 
         await influencer.save({ session });
         await account.save({ session });
@@ -191,7 +185,7 @@ export class InfluencerService {
         await influencer.save({ session });
         await account.save({ session });
 
-        returnObject = { id: Date.now().toString() };
+        returnObject = { id: this.timeNow() };
       });
       return returnObject;
     } catch (error) {
@@ -206,7 +200,7 @@ export class InfluencerService {
     { name }: TransientInfluencerInput,
     session?: ClientSession,
   ): Promise<InfluencerProfile> {
-    const influencer = await this.InfluencerModel.create(
+    const [influencer] = await this.InfluencerModel.create(
       [
         {
           name: name.trim(),
@@ -218,16 +212,16 @@ export class InfluencerService {
       ],
       { session },
     );
-    return InfluencerService.makeInfluencerProfile(influencer[0]);
+    return InfluencerService.makeInfluencerProfile(influencer);
   }
 
-  async findInfluencer(
+  async find(
     searchObject: { _id?: string; userAccount?: string },
     session?: ClientSession,
   ): Promise<InfluencerProfile | null> {
     try {
       const influencer = await this.InfluencerModel.findOne(searchObject, null, { session }).exec();
-      return (influencer && InfluencerService.makeInfluencerProfile(influencer)) ?? null;
+      return InfluencerService.makeInfluencerProfile(influencer);
     } catch (error) {
       AppLogger.error(
         `Cannot find Influencer ${
@@ -258,8 +252,8 @@ export class InfluencerService {
       onboardedAt: this.timeNow(),
       updatedAt: this.timeNow(),
     });
+    await model.save({ session });
 
-    await model.save();
     return InfluencerService.makeInfluencerProfile(model);
   }
 
@@ -281,29 +275,31 @@ export class InfluencerService {
     if (influencer.userAccount)
       throw new Error(`cannot assign user to influencer: influencer ${id} already has a user account assigned`);
 
-    influencer.userAccount = userAccountId;
-    influencer.status = InfluencerStatus.ONBOARDED;
-    influencer.onboardedAt = dayjs().second(0);
-    await influencer.save();
+    Object.assign(influencer, {
+      userAccount: userAccountId,
+      status: InfluencerStatus.ONBOARDED,
+      onboardedAt: this.timeNow(),
+      updatedAt: this.timeNow(),
+    });
+    await influencer.save({ session });
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
-  async updateInfluencerProfileById(id: string, input: UpdateInfluencerProfileInput): Promise<InfluencerProfile> {
+  async updateById(id: string, input: UpdateInfluencerProfileInput): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
     if (!influencer) throw new Error(`influencer record #${id} not found`);
 
-    Object.assign(influencer, objectTrimmer(input));
     Object.assign(influencer, {
       updatedAt: this.timeNow(),
+      ...objectTrimmer(input),
     });
-
     await influencer.save();
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
-  async updateInfluencerProfileAvatarById(id: string, image: any): Promise<InfluencerProfile> {
+  async updateAvatarById(id: string, image: any): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
     if (!influencer) throw new Error(`influencer record #${id} not found`);
 
@@ -340,16 +336,14 @@ export class InfluencerService {
             .catch((e: any) => AppLogger.error(`exec error : ${e}`));
         }),
     );
-    Object.assign(influencer, {
-      updatedAt: this.timeNow(),
-    });
 
+    Object.assign(influencer, { updatedAt: this.timeNow() });
     await influencer.save();
 
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
-  async updateInfluencerProfileFavoriteCharitiesById(id: string, charities: [string]): Promise<InfluencerProfile> {
+  async updateFavoriteCharitiesById(id: string, charities: [string]): Promise<InfluencerProfile> {
     const influencer = await this.InfluencerModel.findOne({ _id: id }).exec();
     if (!influencer) throw new Error(`influencer record #${id} not found`);
 
@@ -364,8 +358,12 @@ export class InfluencerService {
     return InfluencerService.makeInfluencerProfile(influencer);
   }
 
-  async assignAssistantsToInfluencer(influencerId: string, assistantId: string): Promise<void> {
-    await this.InfluencerModel.updateOne({ _id: influencerId }, { $addToSet: { assistants: assistantId } });
+  async assignAssistant(influencerId: string, assistantId: string, session?: ClientSession): Promise<void> {
+    await this.InfluencerModel.updateOne(
+      { _id: influencerId },
+      { $addToSet: { assistants: assistantId } },
+      { session },
+    );
   }
 
   private timeNow = () => dayjs().second(0);

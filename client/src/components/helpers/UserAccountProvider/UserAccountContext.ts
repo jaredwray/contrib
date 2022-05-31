@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
-import { UserProfile } from './UserProfile';
+import { UserAccount } from 'src/types/UserAccount';
 
 type UserContext = {
-  account: UserProfile | null;
+  account: UserAccount | null;
 };
 
 export const UserAccountContext = createContext<UserContext>({

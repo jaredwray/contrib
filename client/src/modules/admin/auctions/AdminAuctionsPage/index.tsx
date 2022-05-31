@@ -13,7 +13,7 @@ import {
   ActivateAuctionMutation,
   DeleteAuctionMutation,
 } from 'src/apollo/queries/auctions';
-import { PER_PAGE } from 'src/components/custom/Pagination';
+import { PER_PAGE, BLANK_LIST_OBJECT } from 'src/components/custom/Pagination';
 import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import { AdminPage } from 'src/components/layouts/AdminPage';
 import ClickableTr from 'src/components/wrappers/ClickableTr';
@@ -65,7 +65,7 @@ export default function AdminAuctionsPage() {
 
   if (error) return null;
 
-  const auctions = data?.auctions || { skip: 0, totalItems: 0, items: [] };
+  const auctions = data?.auctions || BLANK_LIST_OBJECT;
 
   setPageTitle('Auctions page');
 

@@ -6,9 +6,8 @@ export function requireAdmin<Result, Args, Parent>(
   handler: GraphqlHandler<Result, Args, Parent>,
 ): GraphqlHandler<Result, Args, Parent> {
   return loadAccount(async (parent, args, context, info) => {
-    if (!context.currentAccount?.isAdmin) {
-      throw new AppError('Unauthorized', ErrorCode.UNAUTHORIZED);
-    }
+    if (!context.currentAccount?.isAdmin) throw new AppError('Unauthorized', ErrorCode.UNAUTHORIZED);
+
     return handler(parent, args, context, info);
   });
 }

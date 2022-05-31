@@ -10,7 +10,7 @@ export async function prerenderInfluencerPage(
   next: NextFunction,
 ): Promise<void> {
   if (isCrawler(req)) {
-    const influencer = await services.influencer.findInfluencer({ _id: req.params.influencerId });
+    const influencer = await services.influencerService.find({ _id: req.params.influencerId });
     if (influencer) {
       const profileLink = `${AppConfig.app.url}/profiles/${influencer.id}`;
       const facebookAppId = AppConfig.facebook.appId;

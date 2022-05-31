@@ -11,7 +11,7 @@ export function createAppLoaders(services: IAppServices): IAppLoaders {
     assistant: new AssistantLoader(services.assistant),
     userAccount: new UserAccountLoader(services.userAccount),
     invitation: new InvitationLoader(services.invitation),
-    influencer: new InfluencerLoader(services.influencer),
+    influencer: new InfluencerLoader(services.influencerService),
     charity: new CharityLoader(services.charity),
   };
 }

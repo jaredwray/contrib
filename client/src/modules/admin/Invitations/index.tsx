@@ -6,7 +6,7 @@ import { Table } from 'react-bootstrap';
 
 import { InvitationsQuery, ApproveInvitationMutation, DeclineInvitationMutation } from 'src/apollo/queries/invitations';
 import { ResendInvitationButton } from 'src/components/buttons/ResendInvitationButton';
-import { PER_PAGE } from 'src/components/custom/Pagination';
+import { PER_PAGE, BLANK_LIST_OBJECT } from 'src/components/custom/Pagination';
 import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import ActionsDropdownItem from 'src/components/forms/selects/ActionsDropdownItem';
 import { AdminPage } from 'src/components/layouts/AdminPage';
@@ -76,7 +76,7 @@ export default function Invitations() {
 
   if (error) return null;
 
-  const invitations = data?.invitations || { skip: 0, totalItems: 0, items: [] };
+  const invitations = data?.invitations || BLANK_LIST_OBJECT;
 
   setPageTitle('Admin invitations page');
 

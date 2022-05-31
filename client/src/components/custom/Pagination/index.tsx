@@ -9,6 +9,7 @@ import { useUrlQueryParams } from 'src/helpers/useUrlQueryParams';
 import styles from './styles.module.scss';
 
 export const PER_PAGE = 20;
+export const BLANK_LIST_OBJECT = { size: 0, skip: 0, totalItems: 0, items: [] };
 
 interface Props {
   loading: boolean;

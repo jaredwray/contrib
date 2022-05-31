@@ -9,7 +9,7 @@ import { InfluencersListQuery } from 'src/apollo/queries/influencers';
 import { InviteInfluencerMutation } from 'src/apollo/queries/invitations';
 import { InviteButton } from 'src/components/buttons/InviteButton';
 import { ResendInvitationButton } from 'src/components/buttons/ResendInvitationButton';
-import { PER_PAGE } from 'src/components/custom/Pagination';
+import { PER_PAGE, BLANK_LIST_OBJECT } from 'src/components/custom/Pagination';
 import { ActionsDropdown } from 'src/components/forms/selects/ActionsDropdown';
 import { AdminPage } from 'src/components/layouts/AdminPage';
 import ClickableTr from 'src/components/wrappers/ClickableTr';
@@ -38,7 +38,7 @@ export default function InfluencersPage() {
 
   if (error) return null;
 
-  const influencers = data?.influencersList || { skip: 0, totalItems: 0, items: [] };
+  const influencers = data?.influencersList || BLANK_LIST_OBJECT;
   const controlBtns = (
     <>
       <CreateInfluencer />

@@ -88,116 +88,128 @@ const pubSub = new PubSub();
 
 export const AuctionResolvers: AuctionResolversType = {
   Query: {
-    auctions: async (_, { size, skip, query, filters, orderBy, statusFilter }, { auction }) =>
-      auction.listAuctions({ query, filters, orderBy, size, skip, statusFilter }),
-    getAuctionsForProfilePage: requireAuthenticated(async (_, __, { auction, currentAccount }) =>
-      auction.getAuctionsForProfilePage(currentAccount.mongodbId),
+    auctions: async (_, { size, skip, query, filters, orderBy, statusFilter }, { auctionService }) =>
+      auctionService.listAuctions({ query, filters, orderBy, size, skip, statusFilter }),
+    getAuctionsForProfilePage: requireAuthenticated(async (_, __, { auctionService, currentAccount }) =>
+      auctionService.getAuctionsForProfilePage(currentAccount.mongodbId),
     ),
-    auctionPriceLimits: (_, { filters, query, statusFilter }, { auction }) =>
-      auction.getAuctionPriceLimits({ filters, query, statusFilter }),
-    auction: loadRole(async (_, { id, organizerId }, { auction, currentAccount, currentInfluencerId }) => {
-      const foundAuction = await auction.getAuction(id, organizerId);
-      const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencerId;
-      if (foundAuction?.status === AuctionStatus.DRAFT && !isOwner && !currentAccount?.isAdmin) {
-        return null;
-      }
-      return foundAuction;
+    auctionPriceLimits: (_, { filters, query, statusFilter }, { auctionService }) =>
+      auctionService.getAuctionPriceLimits({ filters, query, statusFilter }),
+    auction: loadRole(async (_, { id, organizerId }, { auctionService, currentAccount, currentInfluencerIds }) => {
+      const auction = await auctionService.getAuction(id, organizerId);
+      if (!auction) return null;
+
+      const isOwner = currentInfluencerIds.includes(auction.auctionOrganizer.id);
+      if (auction.status === AuctionStatus.DRAFT && !isOwner && !currentAccount?.isAdmin) return null;
+
+      return auction;
     }),
     getCustomerInformation: requireAdmin(
-      async (_, { stripeCustomerId }, { auction }) => await auction.getCustomerInformation(stripeCustomerId),
+      async (_, { stripeCustomerId }, { auctionService }) =>
+        await auctionService.getCustomerInformation(stripeCustomerId),
     ),
     getAuctionMetrics: requireAuthenticated(
-      async (_, { auctionId }, { auction }) => await auction.getAuctionMetrics(auctionId),
+      async (_, { auctionId }, { auctionService }) => await auctionService.getAuctionMetrics(auctionId),
     ),
     calculateShippingCost: requireAuthenticated(
-      async (_, { auctionId, deliveryMethod }, { auction, currentAccount }) =>
-        await auction.calculateShippingCost(auctionId, deliveryMethod, currentAccount.mongodbId),
+      async (_, { auctionId, deliveryMethod }, { auctionService, currentAccount }) =>
+        await auctionService.calculateShippingCost(auctionId, deliveryMethod, currentAccount.mongodbId),
     ),
     getContentStorageAuthData: requireAuthenticated(
-      async (_, __, { auction }) => await auction.getContentStorageAuthData(),
+      async (_, __, { auctionService }) => await auctionService.getContentStorageAuthData(),
     ),
-    totalRaisedAmount: async (_, {}, { auction }) => auction.getTotalRaisedAmount(),
+    totalRaisedAmount: async (_, {}, { auctionService }) => auctionService.getTotalRaisedAmount(),
   },
   Mutation: {
-    updateOrCreateMetrics: (_, { shortLinkId, input }, { auction }) =>
-      auction.updateOrCreateMetrics(shortLinkId, input),
+    updateOrCreateMetrics: (_, { shortLinkId, input }, { auctionService }) =>
+      auctionService.updateOrCreateMetrics(shortLinkId, input),
     unfollowAuction: requireAuthenticated(
-      async (_, { auctionId }, { auction, currentAccount }) =>
-        await auction.unfollowAuction(auctionId, currentAccount.mongodbId),
+      async (_, { auctionId }, { auctionService, currentAccount }) =>
+        await auctionService.unfollowAuction(auctionId, currentAccount.mongodbId),
     ),
     followAuction: requireAuthenticated(
-      async (_, { auctionId }, { auction, currentAccount }) =>
-        await auction.followAuction(auctionId, currentAccount.mongodbId),
+      async (_, { auctionId }, { auctionService, currentAccount }) =>
+        await auctionService.followAuction(auctionId, currentAccount.mongodbId),
     ),
-    createAuction: requireRole(async (_, { input }, { auction, currentAccount, currentInfluencerId }) => {
-      if (!input.organizerId || currentAccount.isAdmin || currentInfluencerId === input.organizerId) {
-        return auction.createDraftAuction(input.organizerId || currentInfluencerId, input, currentAccount.isAdmin);
-      } else {
-        return null;
-      }
-    }),
-    chargeAuction: requireAdmin(async (_, { id }, { auction }) => {
-      await auction.settleAndChargeCurrentAuction(id);
+    createAuction: requireRole(
+      async (_, { input }, { auctionService, currentAccount, currentInfluencerId, currentInfluencerIds }) => {
+        if (input.organizerId && !currentAccount.isAdmin && !currentInfluencerIds.includes(input.organizerId))
+          throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+
+        return auctionService.createDraftAuction(
+          input.organizerId || currentInfluencerId,
+          input,
+          currentAccount.isAdmin,
+        );
+      },
+    ),
+    chargeAuction: requireAdmin(async (_, { id }, { auctionService }) => {
+      await auctionService.settleAndChargeCurrentAuction(id);
       return { id };
     }),
-    chargeCurrendBid: requireAdmin(async (_, { input }, { auction }) => {
-      await auction.chargeCurrendBid(input);
+    chargeCurrendBid: requireAdmin(async (_, { input }, { auctionService }) => {
+      await auctionService.chargeCurrendBid(input);
       return { id: input.charityId };
     }),
-    updateAuction: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencerId }) => {
-      return auction.updateAuction(
+    updateAuction: requireRole(async (_, { id, input }, { auctionService, currentAccount, currentInfluencerId }) => {
+      return auctionService.updateAuction(
         id,
         currentAccount.isAdmin ? null : currentInfluencerId,
         input,
         currentAccount.isAdmin,
       );
     }),
-    deleteAuction: requireRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) => {
-      const foundAuction = await auction.getAuction(id);
-      const isOwner = foundAuction?.auctionOrganizer?.id === currentInfluencerId;
-      if (!currentAccount.isAdmin && !isOwner) {
-        throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
-      }
-      auction.deleteAuction(id);
+    deleteAuction: requireRole(async (_, { id }, { auctionService, currentAccount, currentInfluencerIds }) => {
+      const auction = await auctionService.getAuction(id);
+      const isOwner = currentInfluencerIds.includes(auction?.auctionOrganizer?.id);
+      if (!currentAccount.isAdmin && !isOwner) throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+
+      auctionService.deleteAuction(id);
       return { id };
     }),
-    buyAuction: requireAuthenticated(async (_, { id }, { auction, currentAccount }) => {
-      const auctionUpdates = await auction.buyAuction(id, currentAccount);
-      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction: auctionUpdates });
-      return auctionUpdates;
+    buyAuction: requireAuthenticated(async (_, { id }, { auctionService, currentAccount }) => {
+      const auction = await auctionService.buyAuction(id, currentAccount);
+      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction });
+      return auction;
     }),
-    stopAuction: requireAuthenticated(async (_, { id }, { auction }) => {
-      const auctionUpdates = await auction.stopAuction(id);
-      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction: auctionUpdates });
-      return auctionUpdates;
+    stopAuction: requireAuthenticated(async (_, { id }, { auctionService }) => {
+      const auction = await auctionService.stopAuction(id);
+      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction });
+      return auction;
     }),
-    activateAuction: requireAuthenticated(async (_, { id }, { auction }) => {
-      const auctionUpdates = await auction.activateAuctionById(id);
-      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction: auctionUpdates });
-      return auctionUpdates;
+    activateAuction: requireAuthenticated(async (_, { id }, { auctionService }) => {
+      const auction = await auctionService.activateAuctionById(id);
+      pubSub.publish(AuctionSubscriptions.AUCTION_UPDATE, { auction });
+      return auction;
     }),
-    addAuctionAttachment: requireRole(async (_, { id, input }, { auction, currentAccount, currentInfluencerId }) =>
-      auction.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, input),
+    addAuctionAttachment: requireRole(
+      async (_, { id, input }, { auctionService, currentAccount, currentInfluencerId }) =>
+        auctionService.addAuctionAttachment(id, currentAccount.isAdmin ? null : currentInfluencerId, input),
     ),
     deleteAuctionAttachment: requireRole(
-      async (_, { auctionId, attachmentId }, { auction, currentAccount, currentInfluencerId }) =>
-        auction.deleteAuctionAttachment(auctionId, currentAccount.isAdmin ? null : currentInfluencerId, attachmentId),
+      async (_, { auctionId, attachmentId }, { auctionService, currentAccount, currentInfluencerId }) =>
+        auctionService.deleteAuctionAttachment(
+          auctionId,
+          currentAccount.isAdmin ? null : currentInfluencerId,
+          attachmentId,
+        ),
     ),
-    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auction, currentAccount }) => {
-      await auction.addAuctionBid(id, { bid, user: currentAccount });
-      const currentAuction = await auction.getAuction(id);
-      pubSub.publish(AuctionSubscriptions.NEW_BID, { auction: currentAuction });
-      return currentAuction;
+    createAuctionBid: requireAuthenticated(async (_, { id, bid }, { auctionService, currentAccount }) => {
+      await auctionService.addAuctionBid(id, { bid, user: currentAccount });
+      const auction = await auctionService.getAuction(id);
+      pubSub.publish(AuctionSubscriptions.NEW_BID, { auction });
+
+      return auction;
     }),
-    finishAuctionCreation: requireRole(async (_, { id }, { auction, currentAccount, currentInfluencerId }) =>
-      auction.maybeActivateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId),
+    finishAuctionCreation: requireRole(async (_, { id }, { auctionService, currentAccount, currentInfluencerId }) =>
+      auctionService.maybeActivateAuction(id, currentAccount.isAdmin ? null : currentInfluencerId),
     ),
     updateAuctionParcel: requireAdmin(
-      async (_, { auctionId, input }, { auction }) => await auction.updateAuctionParcel(auctionId, input),
+      async (_, { auctionId, input }, { auctionService }) => await auctionService.updateAuctionParcel(auctionId, input),
     ),
     shippingRegistration: requireAuthenticated(
-      async (_, { input }, { auction, currentAccount }) =>
-        await auction.shippingRegistration(input, currentAccount.mongodbId),
+      async (_, { input }, { auctionService, currentAccount }) =>
+        await auctionService.shippingRegistration(input, currentAccount.mongodbId),
     ),
   },
   Subscription: {
@@ -206,9 +218,9 @@ export const AuctionResolvers: AuctionResolversType = {
     },
   },
   InfluencerProfile: {
-    auctions: loadRole(async (influencerProfile, _, { auction, currentInfluencerId }) => {
-      const auctions = await auction.getInfluencersAuctions(currentInfluencerId);
-      const isOwner = influencerProfile.id === currentInfluencerId;
+    auctions: loadRole(async (influencerProfile, _, { auctionService, currentInfluencerId, currentInfluencerIds }) => {
+      const auctions = await auctionService.getInfluencersAuctions(currentInfluencerId);
+      const isOwner = currentInfluencerIds.includes(influencerProfile.id);
       return auctions.filter((foundAuction) => foundAuction.status !== AuctionStatus.DRAFT || isOwner);
     }),
   },

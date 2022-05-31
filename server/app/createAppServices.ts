@@ -36,14 +36,14 @@ export default function createAppServices(connection: Connection): IAppServices 
     ups,
     stripeService,
   );
-  const influencer = new InfluencerService(connection, charity);
+  const influencerService = new InfluencerService(connection, charity);
   const payment = new PaymentService(userAccount, stripeService);
   const invitation = new InvitationService(
     connection,
     assistant,
     userAccount,
     charity,
-    influencer,
+    influencerService,
     notificationService,
     eventHub,
     shortLinkService,
@@ -54,7 +54,7 @@ export default function createAppServices(connection: Connection): IAppServices 
   const bidService = new BidService(connection);
   const auctionAttachments = new AuctionAttachmentsService(connection, cloudStorage);
 
-  const auction = new AuctionService(
+  const auctionService = new AuctionService(
     connection,
     payment,
     cloudStorage,
@@ -70,10 +70,10 @@ export default function createAppServices(connection: Connection): IAppServices 
     assistant,
     userAccount,
     bidService,
-    influencer,
+    influencerService,
     invitation,
     charity,
-    auction,
+    auctionService,
     phoneNumberVerificationService,
     notificationService,
     payment,

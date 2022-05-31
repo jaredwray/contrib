@@ -40,9 +40,7 @@ export function UserAccountProvider({ children }: PropTypes) {
   const currentPathname = location.pathname;
 
   useEffect(() => {
-    if (targetPathname !== null && targetPathname !== currentPathname) {
-      history.replace(targetPathname);
-    }
+    if (targetPathname !== null && targetPathname !== currentPathname) history.replace(targetPathname);
   }, [targetPathname, currentPathname, history]);
 
   const invitationToken = queryParams.get('invite');
@@ -59,18 +57,13 @@ export function UserAccountProvider({ children }: PropTypes) {
 }
 
 function getOnboardingPath(userAccount: UserAccount) {
+  if (userAccount?.influencerProfile && !userAccount.influencerProfile.profileDescription) return '/onboarding/basic';
+  if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) return '/phone-confirmation';
   if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_REQUIRED) {
     const returnUrl = returnUrlVar();
     returnUrlVar(returnUrl?.split('?')[0]);
+
     return '/phone-verification';
-  }
-
-  if (userAccount?.influencerProfile && !userAccount.influencerProfile.profileDescription) {
-    return '/onboarding/basic';
-  }
-
-  if (userAccount?.status === UserAccountStatus.PHONE_NUMBER_CONFIRMATION_REQUIRED) {
-    return '/phone-confirmation';
   }
 
   return null;

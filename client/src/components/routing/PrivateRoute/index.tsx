@@ -1,4 +1,4 @@
-import { ComponentType, FC, ReactElement, useCallback, useContext } from 'react';
+import { ComponentType, FC, ReactElement, useContext } from 'react';
 
 import { Redirect, Route } from 'react-router-dom';
 
@@ -9,27 +9,24 @@ import { useRedirectWithReturnAfterLogin } from 'src/helpers/useRedirectWithRetu
 interface Props {
   component: ComponentType;
   path: string;
-  role: string;
+  role?: string;
+  roles?: string[];
 }
 
-const PrivateRoute: FC<Props> = ({ component, path, role }): ReactElement | null => {
+const PrivateRoute: FC<Props> = ({ component, path, role, roles }): ReactElement | null => {
+  const requiredRoles = roles || [role];
   const { account } = useContext(UserAccountContext);
   const { isAuthenticated } = useAuth();
   const RedirectWithReturnAfterLogin = useRedirectWithReturnAfterLogin();
 
-  const isAllowed = useCallback(
-    (role: string) => {
-      return (
-        account?.isAdmin ||
-        (role === 'influencer' && (account?.influencerProfile || account?.assistant)) ||
-        (role === 'charity' && account?.charity) ||
-        (role === 'user' && account?.mongodbId)
-      );
-    },
-    [account],
-  );
+  const isAllowed =
+    account?.isAdmin ||
+    (requiredRoles.includes('influencer') && (account?.influencerProfile || account?.assistant)) ||
+    (requiredRoles.includes('assistant') && account?.assistant) ||
+    (requiredRoles.includes('charity') && account?.charity) ||
+    (requiredRoles.includes('user') && account?.mongodbId);
 
-  if (isAllowed(role)) return <Route exact component={component} path={path} />;
+  if (isAllowed) return <Route exact component={component} path={path} />;
   if (isAuthenticated) return <Redirect to="/" />;
 
   RedirectWithReturnAfterLogin(window.location.pathname);

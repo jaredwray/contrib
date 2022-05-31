@@ -46,9 +46,20 @@ const Menu: FC<Props> = ({ avatar }) => {
             <MenuNavLink link="/my-bids" title="My Bids" />
           </>
         )}
+        {account?.influencerProfile && (
+          <>
+            <MenuNavLink link="/profiles/me" title="My Account" />
+            <MenuNavLink link="/assistants/me" title="My Assistants" />
+          </>
+        )}
+        {account?.charity && <MenuNavLink link="/charity/me" title="My Charity Profile" />}
+        {account?.assistant && <MenuNavLink link={'/my-influencers'} title="My Influencers" />}
+        {account?.influencerProfile && <MenuNavLink link="/auctions/new" title="Create new Auction" />}
+
         <MenuNavLink link="/auctions" title="Auctions" />
         <MenuNavLink link="/influencers" title="Influencers" />
         <MenuNavLink link="/charities" title="Charities" />
+
         {account?.isAdmin && (
           <>
             <MenuNavLink link="/admin/auctions" title="Manage Auctions" />
@@ -57,18 +68,9 @@ const Menu: FC<Props> = ({ avatar }) => {
             <MenuNavLink link="/admin/invitations" title="Manage Invitations" />
           </>
         )}
-        {account?.influencerProfile && (
-          <>
-            <MenuNavLink link="/profiles/me" title="My Account" />
-            <MenuNavLink link="/assistants/me" title="My Assistants" />
-          </>
-        )}
-        {account?.charity && <MenuNavLink link="/charity/me" title="My Charity Profile" />}
-        {account?.assistant && <MenuNavLink link={`/profiles/${account.assistant.influencerId}`} title="Account" />}
-        {(account?.influencerProfile || account?.assistant) && (
-          <MenuNavLink link="/auctions/new" title="Create new Auction" />
-        )}
+
         <NavDropdown.Divider />
+
         {isAuthenticated ? (
           <NavDropdown.Item data-test-id="logout-button" onClick={handleLogout}>
             <span>Sign Out</span>

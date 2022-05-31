@@ -16,10 +16,10 @@ export interface IAppServices {
   assistant: AssistantService;
   userAccount: UserAccountService;
   bidService: BidService;
-  influencer: InfluencerService;
+  influencerService: InfluencerService;
   invitation: InvitationService;
   charity: CharityService;
-  auction: AuctionService;
+  auctionService: AuctionService;
   phoneNumberVerificationService: PhoneNumberVerificationService;
   notificationService: NotificationService;
   payment: PaymentService;

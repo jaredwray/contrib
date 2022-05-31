@@ -24,6 +24,10 @@ interface InfluencerResolversType {
       { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
       { params: InfluencerSearchParams }
     >;
+    myInfluencers: GraphqlResolver<
+      { items: InfluencerProfile[]; totalItems: number; size: number; skip: number },
+      { params: InfluencerSearchParams }
+    >;
     topEarnedInfluencer: GraphqlResolver<InfluencerProfile, {}>;
   };
   Mutation: {
@@ -53,49 +57,74 @@ interface InfluencerResolversType {
 
 export const InfluencerResolvers: InfluencerResolversType = {
   Query: {
-    influencer: loadRole(async (_, { id }, { currentAccount, influencer, currentAssistant }) => {
-      if (id !== 'me' || !currentAccount) return influencer.findInfluencer({ _id: id });
-      if (currentAssistant) return influencer.findInfluencer({ _id: currentAssistant.influencerId });
+    influencer: loadRole(async (_, { id }, { currentAccount, influencerService, currentAssistant }) => {
+      if (id !== 'me' || !currentAccount) return influencerService.find({ _id: id });
+      if (currentAssistant) return influencerService.find({ _id: currentAssistant.influencerId });
 
-      return influencer.findInfluencer({ userAccount: currentAccount.mongodbId });
+      return influencerService.find({ userAccount: currentAccount.mongodbId });
     }),
-    influencersList: async (_, { params }, { influencer }) => influencer.influencersList(params),
-    topEarnedInfluencer: async (_, {}, { influencer }) => influencer.topEarned(),
+    influencersList: async (_, { params }, { influencerService }) => influencerService.influencersList(params),
+    myInfluencers: loadRole(async (_, { params }, { currentAccount, influencerService, currentAssistant }) => {
+      if (!currentAssistant) throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
+
+      return influencerService.influencersList({
+        ...params,
+        filters: {
+          ...params.filters,
+          assistantId: currentAssistant.id,
+        },
+      });
+    }),
+    topEarnedInfluencer: async (_, {}, { influencerService }) => influencerService.topEarned(),
   },
   Mutation: {
-    unfollowInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>
-      influencer.unfollowInfluencer(influencerId, currentAccount.mongodbId),
+    unfollowInfluencer: requireAuthenticated(async (_, { influencerId }, { influencerService, currentAccount }) =>
+      influencerService.unfollowInfluencer(influencerId, currentAccount.mongodbId),
     ),
-    followInfluencer: requireAuthenticated(async (_, { influencerId }, { influencer, currentAccount }) =>
-      influencer.followInfluencer(influencerId, currentAccount.mongodbId),
+    followInfluencer: requireAuthenticated(async (_, { influencerId }, { influencerService, currentAccount }) =>
+      influencerService.followInfluencer(influencerId, currentAccount.mongodbId),
     ),
-    createInfluencer: requireAdmin(async (_, { input }, { influencer }) => influencer.createTransientInfluencer(input)),
+    createInfluencer: requireAdmin(async (_, { input }, { influencerService }) =>
+      influencerService.createTransientInfluencer(input),
+    ),
     updateInfluencerProfile: requireRole(
-      async (_, { influencerId, input }, { influencer, currentAccount, currentInfluencerId }) => {
+      async (
+        _,
+        { influencerId, input },
+        { influencerService, currentAccount, currentInfluencerId, currentInfluencerIds },
+      ) => {
         const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;
-        if (!currentAccount.isAdmin && profileId !== currentInfluencerId)
+        if (!currentAccount.isAdmin && !currentInfluencerIds.includes(profileId))
           throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
 
-        return influencer.updateInfluencerProfileById(profileId, input);
+        return influencerService.updateById(profileId, input);
       },
     ),
     updateInfluencerProfileAvatar: requireRole(
-      async (_, { influencerId, image }, { influencer, currentAccount, currentInfluencerId }) => {
+      async (
+        _,
+        { influencerId, image },
+        { influencerService, currentAccount, currentInfluencerId, currentInfluencerIds },
+      ) => {
         const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;
-        if (!currentAccount.isAdmin && profileId !== currentInfluencerId)
+        if (!currentAccount.isAdmin && !currentInfluencerIds.includes(profileId))
           throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
 
-        return influencer.updateInfluencerProfileAvatarById(profileId, image);
+        return influencerService.updateAvatarById(profileId, image);
       },
     ),
 
     updateInfluencerProfileFavoriteCharities: requireRole(
-      async (_, { influencerId, charities }, { influencer, currentAccount, currentInfluencerId }) => {
+      async (
+        _,
+        { influencerId, charities },
+        { influencerService, currentAccount, currentInfluencerId, currentInfluencerIds },
+      ) => {
         const profileId = influencerId === 'me' ? currentInfluencerId : influencerId;
-        if (!currentAccount.isAdmin && profileId !== currentInfluencerId)
+        if (!currentAccount.isAdmin && !currentInfluencerIds.includes(profileId))
           throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
 
-        return influencer.updateInfluencerProfileFavoriteCharitiesById(profileId, charities);
+        return influencerService.updateFavoriteCharitiesById(profileId, charities);
       },
     ),
   },

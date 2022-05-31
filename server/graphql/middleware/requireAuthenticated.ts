@@ -12,13 +12,10 @@ export function requireAuthenticated<Result, Args, Parent>(
         info.path.typename === 'Mutation' &&
         info.fieldName !== 'acceptAccountTerms' &&
         context.currentAccount.notAcceptedTerms
-      ) {
+      )
         throw new AppError('Forbidden', ErrorCode.FORBIDDEN);
-      }
 
-      if (!context.user) {
-        throw new AppError('Unauthorized', ErrorCode.UNAUTHORIZED);
-      }
+      if (!context.user) throw new AppError('Unauthorized', ErrorCode.UNAUTHORIZED);
 
       return handler(parent, args, context, info);
     },

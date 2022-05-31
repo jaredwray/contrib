@@ -34,7 +34,7 @@ export const MyAccountQuery = gql`
       assistant {
         name
         status
-        influencerId
+        influencerIds
       }
       paymentInformation {
         id

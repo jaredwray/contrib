@@ -392,94 +392,66 @@ export class InvitationService {
 
   async inviteAssistant(input: InviteInput): Promise<{ invitationId: string }> {
     const session = await this.connection.startSession();
-    let returnObject = null;
+    let invitationId = null;
 
     try {
       const { firstName, lastName, phoneNumber, welcomeMessage, influencerId } = objectTrimmer(input);
+      const fullName = `${firstName} ${lastName}`;
+      const parentEntityType = InvitationParentEntityType.ASSISTANT;
 
       await session.withTransaction(async () => {
-        const findedAccount = await this.UserAccountModel.findOne({ phoneNumber: phoneNumber });
+        const account = await this.userAccountService.getAccountByPhoneNumber(phoneNumber);
+        const userAccount = account?.mongodbId;
 
-        if (
-          findedAccount &&
-          (await this.AssistantModel.exists({ userAccount: findedAccount._id, influencer: influencerId }))
-        )
-          throw new AppError(
-            `Account with phone number ${phoneNumber} is your assistant already`,
-            ErrorCode.BAD_REQUEST,
-          );
-
-        const findedInvitation = await this.InvitationModel.findOne({
-          phoneNumber,
-          parentEntityType: InvitationParentEntityType.ASSISTANT,
-        });
+        const findedInvitation = await this.InvitationModel.findOne({ phoneNumber, parentEntityType });
 
         if (findedInvitation) {
           await this.sendInviteMessage(findedInvitation._id.toString(), firstName, phoneNumber, session);
-          returnObject = { invitationId: findedInvitation._id.toString() };
+          invitationId = findedInvitation._id.toString();
           return;
         }
 
-        const userAccount = await this.userAccountService.getAccountByPhoneNumber(phoneNumber);
+        const inviteInput = { parentEntityType: InvitationParentEntityType.ASSISTANT, ...input };
 
-        const inviteInput = {
-          phoneNumber,
-          firstName,
-          lastName,
-          welcomeMessage,
-          parentEntityType: InvitationParentEntityType.ASSISTANT,
-        };
-
-        if (userAccount) {
-          if (await this.assistantService.findAssistantByUserAccount(userAccount.mongodbId))
-            throw new AppError(`${phoneNumber} is already using the system for the Assistant`, ErrorCode.BAD_REQUEST);
-
-          const influencer = await this.influencerService.findInfluencer({ _id: influencerId });
+        if (account) {
+          const influencer = await this.influencerService.find({ _id: influencerId });
           if (!influencer) throw new AppError(`Invalid influencerId #${influencerId}`, ErrorCode.BAD_REQUEST);
-          if (findedAccount && influencer.userAccount.toString() === findedAccount._id.toString())
-            throw new AppError(`You cannot invite itself`, ErrorCode.BAD_REQUEST);
+          if (influencer.userAccount?.toString() === userAccount) throw new AppError('You cannot invite yourself');
 
-          const assistant = await this.assistantService.createAssistant(
-            {
-              name: `${firstName} ${lastName}`,
-              userAccount: userAccount.mongodbId,
-              influencer: influencerId,
-            },
+          const assistant = await this.AssistantModel.findOne({ userAccount }).exec();
+          const assistantModel = AssistantService.makeAssistant(assistant);
+
+          if (assistant) {
+            if (assistantModel.influencerIds.includes(influencerId))
+              throw new AppError('You have this assistant already');
+
+            await this.assistantService.addInfluencer(assistant, influencerId, session);
+            await this.influencerService.assignAssistant(influencerId, assistant.id, session);
+            return;
+          }
+
+          const newAssistant = await this.assistantService.create(
+            { name: fullName, userAccount, influencerId },
             session,
           );
 
-          const invitation = await this.createInvitation(
-            assistant,
-            {
-              ...inviteInput,
-              accepted: true,
-            },
-            session,
-          );
+          const invitation = await this.createInvitation(newAssistant, { accepted: true, ...inviteInput }, session);
+          invitationId = invitation.id;
 
-          await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
-          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
-          await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, assistant });
-          returnObject = { invitationId: invitation.id };
+          await this.influencerService.assignAssistant(influencerId, newAssistant.id, session);
+          await this.eventHub.broadcast(Events.ASSISTANT_ONBOARDED, { userAccount, newAssistant });
         } else {
-          const assistant = await this.assistantService.createAssistant(
-            {
-              name: `${firstName} ${lastName}`,
-              userAccount: null,
-              influencer: influencerId,
-            },
-            session,
-          );
-
+          const assistant = await this.assistantService.create({ name: fullName, influencerId }, session);
           const invitation = await this.createInvitation(assistant, inviteInput, session);
-          await this.influencerService.assignAssistantsToInfluencer(influencerId, assistant.id);
+          invitationId = invitation.id;
 
-          await this.sendInviteMessage(invitation.id, firstName, phoneNumber, session);
-          returnObject = { invitationId: invitation.id };
+          await this.influencerService.assignAssistant(influencerId, assistant.id, session);
         }
+
+        await this.sendInviteMessage(invitationId, firstName, phoneNumber, session);
       });
 
-      return returnObject;
+      return { invitationId };
     } finally {
       session.endSession();
     }
@@ -523,7 +495,7 @@ export class InvitationService {
         session,
       );
 
-    const profile = await this.influencerService.findInfluencer({ _id: influencerId }, session);
+    const profile = await this.influencerService.find({ _id: influencerId }, session);
 
     if (!profile) throw new AppError('requested influencer profile does not exist');
     if (profile.status !== InfluencerStatus.TRANSIENT || profile.userAccount)
@@ -593,7 +565,7 @@ export class InvitationService {
 
   private async createInvitation(
     parent: InfluencerProfile | Assistant | Charity,
-    { phoneNumber, firstName, lastName, welcomeMessage, accepted, parentEntityType }: InviteInput,
+    input: InviteInput,
     session: ClientSession,
   ): Promise<Invitation> {
     const now = this.timeNow();
@@ -602,15 +574,10 @@ export class InvitationService {
       [
         {
           slug,
-          firstName,
-          lastName,
-          phoneNumber,
-          welcomeMessage,
-          accepted: accepted ?? false,
-          parentEntityType,
           parentEntityId: parent.id,
           createdAt: now,
           updatedAt: now,
+          ...input,
         },
       ],
       { session },
