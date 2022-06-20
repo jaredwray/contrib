@@ -1,12 +1,12 @@
 import fs from 'fs-extra';
 import Handlebars from 'handlebars';
 import path from 'path';
+import { Airhorn, ProviderType } from 'airhorn';
 
 import { AppError, ErrorCode } from '../errors';
 import { AppLogger } from '../logger';
 import { AppConfig } from '../config';
 import { CloudTaskService } from './CloudTaskService';
-import { twilioMessageService } from './twilioClient';
 
 export enum MessageTemplate {
   AUCTION_DELIVERY_DETAILS_FOR_WINNER = 'auction-delivery-details-for-winner',
@@ -25,18 +25,36 @@ export enum MessageTemplate {
   INVITED = 'invited',
 }
 
+const airhornClient = new Airhorn({
+  TEMPLATE_PATH: `${__dirname}/../templates`,
+  TWILIO_SMS_ACCOUNT_SID: AppConfig.twilio.accountSid,
+  TWILIO_SMS_AUTH_TOKEN: AppConfig.twilio.authToken,
+});
+
+
 export class NotificationService {
   constructor(private readonly cloudTaskService: CloudTaskService) {}
 
   async sendMessageNow(phoneNumber: string, template: string, context: object): Promise<void> {
     try {
-      const message = await this.renderMessage(template, context);
-      const result = await twilioMessageService.create({
-        body: message,
-        to: phoneNumber,
-        from: AppConfig.twilio.senderNumber,
-      });
-      AppLogger.debug(`sent notification to ${phoneNumber}:\n${message}`);
+      const result = await airhornClient.send(
+        phoneNumber,
+        AppConfig.twilio.senderNumber,
+        template,
+        ProviderType.SMS,
+        context,
+      );
+
+      let message;
+
+      try {
+        message = await this.renderMessage(template, context);
+        AppLogger.debug(`sent notification to ${phoneNumber}:\n${message}`);
+      } catch (error) {}
+
+      if (!result) {
+        AppLogger.error(`Cannot send the notification to ${phoneNumber}: ${message}`);
+      }
     } catch (error) {
       AppLogger.error(`Cannot send the notification to ${phoneNumber}: ${error.message}`);
     }

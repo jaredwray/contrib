@@ -27,6 +27,7 @@
     "@types/fs-extra": "^9.0.8",
     "@types/passport": "^1.0.7",
     "@types/passport-google-oauth20": "^2.0.11",
+    "airhorn": "^0.8.0",
     "apollo-server-express": "^2.21.2",
     "asoiaf-api": "^1.0.1",
     "axios": "^0.21.1",
