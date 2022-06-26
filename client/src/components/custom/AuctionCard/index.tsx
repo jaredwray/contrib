@@ -125,7 +125,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
         </SwipeableLink>
       </div>
 
-      <figcaption className={clsx(styles.description, 'd-flex flex-column p-3')}>
+      <figcaption className={clsx(styles.description, isSettled && styles.settled, 'd-flex flex-column p-3')}>
         <SwipeableLink className={clsx(styles.title, 'mb-4 text-label-new')} title={auction.title} to={linkToAuction}>
           {auction.title}
         </SwipeableLink>
