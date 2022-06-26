@@ -99,7 +99,7 @@ export const AuctionResolvers: AuctionResolversType = {
       const auction = await auctionService.getAuction(id, organizerId);
       if (!auction) return null;
 
-      const isOwner = currentInfluencerIds.includes(auction.auctionOrganizer.id);
+      const isOwner = currentInfluencerIds?.includes(auction.auctionOrganizer.id);
       if (auction.status === AuctionStatus.DRAFT && !isOwner && !currentAccount?.isAdmin) return null;
 
       return auction;
