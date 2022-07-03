@@ -47,7 +47,7 @@ const EditAuctionPage = () => {
   const tryToUpdateAuction = useCallback(
     async (values) => {
       try {
-        await updateAuction({ variables: { id: auctionId, ...values } });
+        await updateAuction({ variables: { id: auctionId, input: values } });
       } catch (error: any) {
         showError(error.message);
       }
