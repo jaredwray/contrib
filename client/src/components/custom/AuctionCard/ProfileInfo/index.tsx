@@ -15,28 +15,52 @@ import styles from './styles.module.scss';
 type Props = {
   profile: InfluencerProfile | Charity;
   link: string;
-  className?: string;
+  profileClassName?: string;
+  charityClassName?: string;
   isCharity?: boolean;
 };
 
-const ProfileInfo: FC<Props> = ({ profile, link, className, isCharity }) => {
+const ProfileInfo: FC<Props> = ({ profile, link, profileClassName, charityClassName, isCharity }) => {
   const defaultAvatar = profile.avatarUrl === DEFAULT_AVATAR_PATH;
 
   return (
-    <SwipeableLink className={clsx(styles.link, 'pb-2 d-flex')} title={profile.name} to={link}>
+    <SwipeableLink
+      className={clsx(
+        styles.link,
+        isCharity && styles.charityWrapper,
+        isCharity && 'p-3',
+        !isCharity && styles.isNotCharity,
+        'd-flex',
+      )}
+      title={profile.name}
+      to={link}
+    >
       <div>{isCharity && defaultAvatar && <CharityIcon />}</div>
-      {(!isCharity || !defaultAvatar) && (
-        <Image roundedCircle className={clsx(styles.avatar)} src={resizedImageUrl(profile.avatarUrl, 32)} />
+      {!isCharity && (
+        <Image
+          roundedCircle
+          className={clsx(styles.avatarUser, profileClassName)}
+          src={resizedImageUrl(profile.avatarUrl, 120)}
+        />
       )}
       <div
         className={clsx(
           styles.name,
-          className,
-          'ps-2',
-          isCharity ? [styles.charityName, 'text-all-cups'] : 'text-truncate',
+          charityClassName,
+          profileClassName,
+          'd-flex justify-content-between align-items-center',
+          isCharity ? [styles.charityName, 'text-all-cups'] : [styles.profileNameWrapper],
         )}
       >
-        {profile.name}
+        <div>
+          <div className={styles.supportingLabel}>{isCharity && 'SUPPORTING'}</div>
+          <div className={styles.profileName}>{profile.name}</div>
+        </div>
+        <div>
+          {isCharity && !defaultAvatar && (
+            <Image roundedCircle className={clsx(styles.avatarCharity)} src={resizedImageUrl(profile.avatarUrl, 120)} />
+          )}
+        </div>
       </div>
     </SwipeableLink>
   );

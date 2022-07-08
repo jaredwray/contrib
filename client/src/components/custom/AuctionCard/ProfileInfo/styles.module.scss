@@ -8,27 +8,92 @@
   letter-spacing: .025rem;
 }
 
-.charityName {
-  font-weight: 400 !important;
-  letter-spacing: .025rem !important;
-  font-size: 12px !important;
-  line-height: 17px;
-  height: 34px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  width: 100%;
-  overflow: hidden;
-  word-break: break-word;
+.settled {
+  opacity: 0.25;
 }
 
+.charityName {
+  font-weight: 400 !important;
+  letter-spacing: .05rem !important;
+  font-size: 11px !important;
+  line-height: 16.5px;
+  width: 100%;
+  @media (min-width: $small-weight) {
+    font-size: 12px !important;;
+    line-height: 18px;
+  }
+}
+
+.supportingLabel {
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.065rem;
+}
 
 .link {
   color: $dark-gray-color;
   text-decoration: none;
+  position: relative;
 }
 
-.avatar {
-  width: 20px;
-  height: 20px;
+.charityWrapper {
+  background: $barely-gray-color;
+  border-radius: 8px;
+  -webkit-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.avatarUser {
+  width: 48px;
+  height: 48px;
+  border: 1px solid $dark-gray-color;
+  -webkit-box-shadow: 0px 1px 4px 0px $dark-gray-color;
+  -moz-box-shadow: 0px 1px 4px 0px $dark-gray-color;
+  box-shadow: 0px 1px 4px 0px $dark-gray-color;
+  z-index: 3;
+}
+
+.profileNameWrapper {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 44px;
+}
+
+.isNotCharity {
+  position: absolute;
+  bottom: -12px;
+  left: 16px;
+  width: 100%;
+  .profileName {
+    font-size: 12px;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    color: $white-color !important;
+    padding-left: 8px;
+    background: $dark-gray-color;
+    height: 18px;
+    &::after {
+      content: '';
+      position: absolute;
+      right: -14px;
+      width: 12px;
+      height: 18px;
+      border-style: solid;
+      border-width: 0 0 18px 14px;
+      border-color: $dark-gray-color $dark-gray-color transparent $dark-gray-color;
+    }
+  }
+}
+
+.avatarCharity {
+  width: 32px;
+  height: 32px;
+  @media (min-width: $small-weight) {
+    width: 48px;
+    height: 48px;
+  }
 }
