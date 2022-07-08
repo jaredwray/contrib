@@ -19,7 +19,7 @@ const DateDetails: FC<Props> = ({ auction, isDonePage }) => {
     <>
       <span className={styles.bids}>{pluralize(auction.totalBids ?? 0, 'bid')}</span>
       <span className={styles.dot}>•</span>
-      <span>{toHumanReadableDuration(date || '')}</span>
+      <span className={styles.date}>{toHumanReadableDuration(date || '')}</span>
     </>
   );
 };

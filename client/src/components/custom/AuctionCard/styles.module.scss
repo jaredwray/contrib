@@ -2,28 +2,25 @@
 
 .root {
   width: 262px;
-  height: 400px;
   position: relative;
   background-color: $white-color;
   border-radius: 8px;
-  -webkit-box-shadow: 0px 2px 10px 0px $light-gray-color;
-  -moz-box-shadow: 0px 2px 10px 0px $light-gray-color;
-  box-shadow: 0px 2px 10px 0px $light-gray-color;
+  -webkit-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   @media (min-width: $small-weight) {
-    width: 300px;
+    width: 312px;
   }
 }
 
 .description {
   flex: 1 0 auto;
   border-radius: 0 0 8px 8px;
-  border: 1px solid $light-gray-color;
 }
 
 .image {
-  height: 160px;
+  height: 200px;
   border-radius: 8px 8px 0 0;
-  border: 1px solid $light-gray-color;
   border-bottom: 0;
 }
 
@@ -32,12 +29,12 @@
   overflow: hidden;
   color: $black-color;
   text-decoration: none;
-  font-size: 16px !important;
+  font-size: 15px !important;
   font-weight: 500 !important;
 }
 
 .settled {
-  opacity: 0.2;
+  opacity: 0.25;
 }
 
 .deleteBtn {
@@ -54,6 +51,12 @@
   z-index: 100;
   background-color: $white-color;
   border-radius: 50%;
+}
+
+.price {
+  font-size: 32px !important;
+  line-height: 48px;
+  font-weight: 500;
 }
 
 .statusLabel {

@@ -95,7 +95,9 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
   const statusName = isSettled ? 'ENDED' : auction.status;
 
   return (
-    <figure className={clsx(styles.root, 'd-flex flex-column m-0')}>
+    <figure
+      className={clsx(styles.root, 'd-flex flex-column m-0', isSettled && styles.settled, isSold && styles.settled)}
+    >
       {isDraft && <CloseButton action={() => setShowDialog(true)} auctionDeleteBtn={true} />}
       <Modal
         auction={auction}
@@ -116,48 +118,39 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
           />
         )}
         <SwipeableLink to={linkToAuction}>
-          <CoverImage
-            alt="Auction image"
-            className={clsx(styles.image, isSettled && styles.settled, isSold && styles.settled)}
-            formatSize={480}
-            src={imageSrc}
-          />
+          <CoverImage alt="Auction image" className={styles.image} formatSize={480} src={imageSrc} />
+          <ProfileInfo link={`/profiles/${influencer.id}`} profile={influencer} />
         </SwipeableLink>
       </div>
 
-      <figcaption
-        className={clsx(
-          styles.description,
-          isSettled && styles.settled,
-          isSold && styles.settled,
-          'd-flex flex-column p-3',
-        )}
-      >
+      <figcaption className={clsx(styles.description, 'd-flex flex-column p-3 pt-4')}>
         <SwipeableLink className={clsx(styles.title, 'mb-4 text-label-new')} title={auction.title} to={linkToAuction}>
           {auction.title}
         </SwipeableLink>
-
-        <ProfileInfo link={`/profiles/${influencer.id}`} profile={influencer} />
-        {charity && (
-          <ProfileInfo
-            isCharity
-            className={clsx(styles.charity, 'text-all-cups')}
-            link={`/charity/${charity.semanticId || charity.id}`}
-            profile={charity}
-          />
-        )}
-
-        <div
-          className={clsx('text-subhead text-left text-truncate mt-auto', isFinished && 'text-decoration-line-through')}
-          title={priceFormatted}
-        >
-          {priceFormatted}
-        </div>
 
         <div className="text-label text-left">
           {isDraft && <span>DRAFT</span>}
           {(!isDraft || isDonePage) && <DateDetails auction={auction} isDonePage={isDonePage} />}
         </div>
+        <div
+          className={clsx(
+            styles.price,
+            'text-subhead text-left text-truncate mt-0 mb-4 mt-2',
+            isFinished && 'text-decoration-line-through',
+          )}
+          title={priceFormatted}
+        >
+          {priceFormatted}
+        </div>
+
+        {charity && (
+          <ProfileInfo
+            isCharity
+            charityClassName={clsx(styles.charity, 'text-all-cups')}
+            link={`/charity/${charity.semanticId || charity.id}`}
+            profile={charity}
+          />
+        )}
       </figcaption>
     </figure>
   );
