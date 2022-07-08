@@ -95,9 +95,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
   const statusName = isSettled ? 'ENDED' : auction.status;
 
   return (
-    <figure
-      className={clsx(styles.root, 'd-flex flex-column m-0', isSettled && styles.settled, isSold && styles.settled)}
-    >
+    <figure className={clsx(styles.root, 'd-flex flex-column m-0')}>
       {isDraft && <CloseButton action={() => setShowDialog(true)} auctionDeleteBtn={true} />}
       <Modal
         auction={auction}
@@ -117,13 +115,23 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
             unfollowHandler={handleUnfollowAuction}
           />
         )}
-        <SwipeableLink to={linkToAuction}>
+        <SwipeableLink
+          className={clsx('position-relative', isSettled && styles.settled, isSold && styles.settled)}
+          to={linkToAuction}
+        >
           <CoverImage alt="Auction image" className={styles.image} formatSize={480} src={imageSrc} />
           <ProfileInfo link={`/profiles/${influencer.id}`} profile={influencer} />
         </SwipeableLink>
       </div>
 
-      <figcaption className={clsx(styles.description, 'd-flex flex-column p-3 pt-4')}>
+      <figcaption
+        className={clsx(
+          styles.description,
+          'd-flex flex-column p-3 pt-4',
+          isSettled && styles.settled,
+          isSold && styles.settled,
+        )}
+      >
         <SwipeableLink className={clsx(styles.title, 'mb-4 text-label-new')} title={auction.title} to={linkToAuction}>
           {auction.title}
         </SwipeableLink>
