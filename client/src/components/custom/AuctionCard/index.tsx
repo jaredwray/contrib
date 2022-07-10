@@ -116,7 +116,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
           />
         )}
         <SwipeableLink
-          className={clsx('position-relative', isSettled && styles.settled, isSold && styles.settled)}
+          className={clsx(styles.linkFix, 'position-relative', isSettled && styles.settled, isSold && styles.settled)}
           to={linkToAuction}
         >
           <CoverImage alt="Auction image" className={styles.image} formatSize={480} src={imageSrc} />
