@@ -220,7 +220,7 @@ export const AuctionResolvers: AuctionResolversType = {
   InfluencerProfile: {
     auctions: loadRole(async (influencerProfile, _, { auctionService, currentInfluencerId, currentInfluencerIds }) => {
       const auctions = await auctionService.getInfluencersAuctions(currentInfluencerId);
-      const isOwner = currentInfluencerIds.includes(influencerProfile.id);
+      const isOwner = currentInfluencerIds?.includes(influencerProfile.id);
       return auctions.filter((foundAuction) => foundAuction.status !== AuctionStatus.DRAFT || isOwner);
     }),
   },
