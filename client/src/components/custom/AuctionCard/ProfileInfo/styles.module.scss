@@ -76,9 +76,11 @@
     padding-left: 8px;
     background: $dark-gray-color;
     height: 18px;
+    width: 100%;
     &::after {
       content: '';
       position: absolute;
+      top: 0;
       right: -14px;
       width: 12px;
       height: 18px;
