@@ -16,7 +16,6 @@ export const Badges = (): ReactElement => {
   const { data: totalRaisedData } = useQuery(TotalRaisedAmountQuery);
   const { data: topEarnedData } = useQuery(TopEarnedInfluencerQuery);
   const { data: topCarityData } = useQuery(TopCharityQuery);
-
   const totalRaised = totalRaisedData?.totalRaisedAmount;
   const topEarned = topEarnedData?.topEarnedInfluencer;
   const topCharity = topCarityData?.topCharity;

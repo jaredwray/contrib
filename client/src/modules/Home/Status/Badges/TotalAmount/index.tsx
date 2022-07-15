@@ -17,7 +17,6 @@ interface PropTypes {
 }
 
 export const TotalAmount = ({ title, secondValue, firstValue, link, avatar }: PropTypes): ReactElement => {
-
   return (
     <Row className="text-sm">
       <Col className="d-flex justify-content-center p-0 flex-column text-center">
