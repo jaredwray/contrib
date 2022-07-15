@@ -25,33 +25,33 @@ export const Badges = (): ReactElement => {
   const topCharity = topCarityData?.topCharity;
 
   return (
-    <Container className={clsx(styles.badgesWrapper, 'd-flex flex-row justify-content-center py-2')}>
+    <Container className={clsx(styles.badgesWrapper, 'd-flex flex-row justify-content-center')}>
       <Row>
-        <Col className={clsx(styles.item, 'text-center p-4 py-md-2')} md="auto">
+        <Col className={clsx(styles.item, 'text-center p-4')} md="auto">
           <TotalAmount
-            firstValue="ALL TIME"
-            icon={TrophyIcon}
-            secondValue={totalRaised && Dinero({ amount: totalRaised }).toFormat('$0,0')}
+            firstValue={totalRaised && Dinero({ amount: totalRaised }).toFormat('$0,0')}
+            // icon={TrophyIcon}
+            secondValue="ALL TIME"
             title="total raised"
           />
         </Col>
-        <Col className={clsx(styles.item, styles.topEarner, 'p-4 py-md-2')} md="auto">
+        <Col className={clsx(styles.item, styles.topEarner, 'p-4')} md="auto">
           <TotalAmount
             avatar={topEarned?.avatarUrl}
-            firstValue={topEarned?.name}
-            icon={AwardIcon}
+            firstValue={topEarned && Dinero(topEarned.totalRaisedAmount).toFormat('$0,0')}
+            // icon={AwardIcon}
             link={topEarned && `/profiles/${topEarned.id}`}
-            secondValue={topEarned && Dinero(topEarned.totalRaisedAmount).toFormat('$0,0')}
+            secondValue={topEarned?.name}
             title="top earner"
           />
         </Col>
-        <Col className={clsx(styles.item, 'p-4 py-md-2')} md="auto">
+        <Col className={clsx(styles.item, 'p-4')} md="auto">
           <TotalAmount
             avatar={topCharity?.avatarUrl}
-            firstValue={topCharity?.name}
-            icon={TopCharityIcon}
+            firstValue={topCharity && Dinero(topCharity.totalRaisedAmount).toFormat('$0,0')}
+            // icon={TopCharityIcon}
             link={topCharity && `/charity/${topCharity.semanticId || topCharity.id}`}
-            secondValue={topCharity && Dinero(topCharity.totalRaisedAmount).toFormat('$0,0')}
+            secondValue={topCharity?.name}
             title="top charity"
           />
         </Col>
