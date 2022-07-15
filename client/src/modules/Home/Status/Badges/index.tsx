@@ -8,9 +8,6 @@ import { Container, Col, Row } from 'react-bootstrap';
 import { TotalRaisedAmountQuery } from 'src/apollo/queries/auctions';
 import { TopCharityQuery } from 'src/apollo/queries/charities';
 import { TopEarnedInfluencerQuery } from 'src/apollo/queries/influencers';
-import AwardIcon from 'src/assets/images/award.svg';
-import TopCharityIcon from 'src/assets/images/top-charity.svg';
-import TrophyIcon from 'src/assets/images/trophy.svg';
 
 import styles from './styles.module.scss';
 import { TotalAmount } from './TotalAmount';
@@ -30,7 +27,6 @@ export const Badges = (): ReactElement => {
         <Col className={clsx(styles.item, 'text-center p-4')} md="auto">
           <TotalAmount
             firstValue={totalRaised && Dinero({ amount: totalRaised }).toFormat('$0,0')}
-            // icon={TrophyIcon}
             secondValue="ALL TIME"
             title="total raised"
           />
@@ -39,7 +35,6 @@ export const Badges = (): ReactElement => {
           <TotalAmount
             avatar={topEarned?.avatarUrl}
             firstValue={topEarned && Dinero(topEarned.totalRaisedAmount).toFormat('$0,0')}
-            // icon={AwardIcon}
             link={topEarned && `/profiles/${topEarned.id}`}
             secondValue={topEarned?.name}
             title="top earner"
@@ -49,7 +44,6 @@ export const Badges = (): ReactElement => {
           <TotalAmount
             avatar={topCharity?.avatarUrl}
             firstValue={topCharity && Dinero(topCharity.totalRaisedAmount).toFormat('$0,0')}
-            // icon={TopCharityIcon}
             link={topCharity && `/charity/${topCharity.semanticId || topCharity.id}`}
             secondValue={topCharity?.name}
             title="top charity"

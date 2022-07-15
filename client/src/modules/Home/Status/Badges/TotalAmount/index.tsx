@@ -1,11 +1,10 @@
 import { ReactElement } from 'react';
 
 import clsx from 'clsx';
-import { Col, Row, Image, Spinner } from 'react-bootstrap';
+import { Col, Row, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_AVATAR_PATH } from 'src/constants';
-import resizedImageUrl from 'src/helpers/resizedImageUrl';
 
 import styles from './styles.module.scss';
 
@@ -18,7 +17,6 @@ interface PropTypes {
 }
 
 export const TotalAmount = ({ title, secondValue, firstValue, link, avatar }: PropTypes): ReactElement => {
-  const withIcon = [DEFAULT_AVATAR_PATH, undefined].includes(avatar);
 
   return (
     <Row className="text-sm">
