@@ -39,7 +39,7 @@ const Item = ({
     <Col
       className={clsx(
         withSeparator && styles.separator,
-        'd-flex justify-content-center py-5 py-md-2 flex-column text-center invitation-form',
+        'justify-content-center py-5 py-md-2 flex-column text-center invitation-form',
       )}
     >
       {showForm && invitation && <div className={clsx(styles.invitation, 'position-absolute p-4')}>{invitation}</div>}
@@ -58,7 +58,7 @@ const Item = ({
           </Link>
         )}
         <Link className={clsx(styles.link, 'text-label pt-3')} to="/log-in">
-          Learn More &#62;
+          Learn More
         </Link>
       </div>
     </Col>

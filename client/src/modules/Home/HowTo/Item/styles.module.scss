@@ -18,6 +18,7 @@
   border-color: $mint-color !important;
   letter-spacing: 0.025rem !important;
   max-width: 300px;
+  display: block !important;
 
   &:hover {
     background-color: $sage-color !important;
@@ -28,6 +29,9 @@
   text-decoration: none;
   color: $mint-color;
   font-weight: 600;
+  display: block;
+  font-size: 11px !important;
+  line-height: 15px !important;
 }
 
 .separator {
