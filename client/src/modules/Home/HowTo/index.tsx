@@ -3,9 +3,9 @@ import { ReactElement, useState } from 'react';
 import clsx from 'clsx';
 import { Container, Row } from 'react-bootstrap';
 
-import CharityIcon from 'src/assets/images/charity.svg';
-import SpeakerIcon from 'src/assets/images/speaker.svg';
-import TicketIcon from 'src/assets/images/ticket.svg';
+import SpeakerIcon from 'src/assets/images/auction-icon.png';
+import CharityIcon from 'src/assets/images/charity-icon.png';
+import TicketIcon from 'src/assets/images/rare-item-icon.png';
 
 import Item from './Item';
 import styles from './styles.module.scss';
