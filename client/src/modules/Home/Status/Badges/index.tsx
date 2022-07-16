@@ -16,6 +16,7 @@ export const Badges = (): ReactElement => {
   const { data: totalRaisedData } = useQuery(TotalRaisedAmountQuery);
   const { data: topEarnedData } = useQuery(TopEarnedInfluencerQuery);
   const { data: topCarityData } = useQuery(TopCharityQuery);
+
   const totalRaised = totalRaisedData?.totalRaisedAmount;
   const topEarned = topEarnedData?.topEarnedInfluencer;
   const topCharity = topCarityData?.topCharity;
@@ -46,6 +47,13 @@ export const Badges = (): ReactElement => {
             link={topCharity && `/charity/${topCharity.semanticId || topCharity.id}`}
             secondValue={topCharity?.name}
             title="top charity"
+          />
+        </Col>
+        <Col className={clsx(styles.item, 'text-center p-4')} md="auto">
+          <TotalAmount
+            firstValue={totalRaised && Dinero({ amount: totalRaised }).toFormat('$0,0')}
+            secondValue="TOTAL MATCHED"
+            title="CORPORATE SPONSORS"
           />
         </Col>
       </Row>
