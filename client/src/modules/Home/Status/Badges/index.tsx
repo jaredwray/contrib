@@ -50,11 +50,7 @@ export const Badges = (): ReactElement => {
           />
         </Col>
         <Col className={clsx(styles.item, 'text-center p-4')} md="auto">
-          <TotalAmount
-            firstValue={totalRaised && Dinero({ amount: totalRaised }).toFormat('$0,0')}
-            secondValue="TOTAL MATCHED"
-            title="CORPORATE SPONSORS"
-          />
+          <TotalAmount firstValue="$5,000" secondValue="TOTAL MATCHED" title="CORPORATE SPONSORS" />
         </Col>
       </Row>
     </Container>
