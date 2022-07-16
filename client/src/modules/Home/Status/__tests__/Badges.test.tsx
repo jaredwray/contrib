@@ -76,7 +76,7 @@ describe('Badges', () => {
         wrapper.update();
       });
       expect(wrapper!).toHaveLength(1);
-      expect(wrapper!.find(TotalAmount)).toHaveLength(3);
+      expect(wrapper!.find(TotalAmount)).toHaveLength(4);
     });
   });
 
@@ -95,7 +95,7 @@ describe('Badges', () => {
         wrapper.update();
       });
       expect(wrapper!).toHaveLength(1);
-      expect(wrapper!.find(TotalAmount)).toHaveLength(3);
+      expect(wrapper!.find(TotalAmount)).toHaveLength(4);
     });
   });
 });

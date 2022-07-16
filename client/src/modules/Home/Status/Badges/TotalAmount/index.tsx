@@ -4,8 +4,6 @@ import clsx from 'clsx';
 import { Col, Row, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { DEFAULT_AVATAR_PATH } from 'src/constants';
-
 import styles from './styles.module.scss';
 
 interface PropTypes {
