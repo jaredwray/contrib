@@ -24,13 +24,13 @@
 
 .title {
   font-size: 10px;
-  line-height: 16px;
+  line-height: 15px;
   letter-spacing: 0.075rem !important;
   font-weight: 500 !important;
 }
 
 .firstValueWrapper {
-  font-size: 14px;
+  font-size: 20px;
   line-height: 32px;
   font-weight: 500;
   max-width: 240px !important;
@@ -42,10 +42,15 @@
 }
 
 .secondValue {
-  font-size: 14px !important;
-  line-height: 21px;
+  font-size: 10px !important;
+  line-height: 15px;
   font-weight: 500;
+  letter-spacing: 0.075rem !important;
   color: $dark-gray-color;
+  a {
+    text-decoration: none;
+    color: $sage-color;
+  }
 }
 
 .spinner {
