@@ -5,7 +5,8 @@
   background-repeat: no-repeat;
   background-position: -300px 0px;
   background-size: cover;
-  border-bottom: 1px solid $light-gray-color;
+  border-bottom: 1px solid black;
+  border-top: 1px solid $dark-gray-color;
 }
 .link {
   font-weight: 500;
@@ -18,7 +19,7 @@
 
 .text {
   font-weight: 600;
-  color: $dark-gray-color;
+  color: $white-color;
   align-items: center;
   text-align: center;
 }
