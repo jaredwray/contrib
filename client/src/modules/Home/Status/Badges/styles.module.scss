@@ -1,10 +1,12 @@
 @import 'src/variables.scss';
 
 .badgesWrapper {
-  background: $white-color;
-  -webkit-box-shadow: inset 0px 0px 5px 0px $gray-color;
-  -moz-box-shadow: inset 0px 0px 5px 0px $gray-color;
-  box-shadow: inset 0px 0px 5px 0px $gray-color;
+  background: $dark-gray-color;
+  -webkit-box-shadow: inset 0px 0px 12px -3px $black-color;
+  -moz-box-shadow: inset 0px 0px 12px -3px $black-color;
+  box-shadow: inset 0px 0px 12px -3px $black-color;
   border-radius: 8px;
   width: auto !important;
+  color: white;
+  border: 1px solid black;
 }
