@@ -24,14 +24,14 @@ export const Badges = (): ReactElement => {
   return (
     <Container className={clsx(styles.badgesWrapper, 'd-flex flex-row justify-content-center')}>
       <Row>
-        <Col className={clsx(styles.item, 'text-center p-4')} md="auto">
+        <Col className={clsx(styles.item, 'text-center p-4 p-sm-3')} md="auto">
           <TotalAmount
             firstValue={totalRaised && Dinero({ amount: totalRaised }).toFormat('$0,0')}
             secondValue="ALL TIME"
             title="total raised"
           />
         </Col>
-        <Col className={clsx(styles.item, styles.topEarner, 'p-4')} md="auto">
+        <Col className={clsx(styles.item, styles.topEarner, 'p-4 p-sm-3')} md="auto">
           <TotalAmount
             avatar={topEarned?.avatarUrl}
             firstValue={topEarned && Dinero(topEarned.totalRaisedAmount).toFormat('$0,0')}
@@ -40,7 +40,7 @@ export const Badges = (): ReactElement => {
             title="top earner"
           />
         </Col>
-        <Col className={clsx(styles.item, 'p-4')} md="auto">
+        <Col className={clsx(styles.item, 'p-4 p-sm-3')} md="auto">
           <TotalAmount
             avatar={topCharity?.avatarUrl}
             firstValue={topCharity && Dinero(topCharity.totalRaisedAmount).toFormat('$0,0')}
@@ -49,7 +49,7 @@ export const Badges = (): ReactElement => {
             title="top charity"
           />
         </Col>
-        <Col className={clsx(styles.item, 'text-center p-4')} md="auto">
+        <Col className={clsx(styles.item, 'text-center p-4 p-sm-3')} md="auto">
           <TotalAmount firstValue="$5,000" secondValue="TOTAL MATCHED" title="CORPORATE SPONSORS" />
         </Col>
       </Row>
