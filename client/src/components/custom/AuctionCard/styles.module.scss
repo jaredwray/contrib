@@ -8,7 +8,7 @@
   -webkit-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-  @media (min-width: $small-weight) {
+  @media (min-width: 376px) {
     width: 312px;
   }
 }
