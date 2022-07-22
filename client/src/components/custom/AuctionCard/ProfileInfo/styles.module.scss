@@ -53,6 +53,7 @@
   -moz-box-shadow: 0px 1px 4px 0px $dark-gray-color;
   box-shadow: 0px 1px 4px 0px $dark-gray-color;
   z-index: 3;
+  object-fit: cover;
 }
 
 .profileNameWrapper {
