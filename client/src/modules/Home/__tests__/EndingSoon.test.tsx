@@ -18,7 +18,7 @@ const cacheWithoutItems = new InMemoryCache();
 cacheWithItems.writeQuery({
   query: AuctionsListQuery,
   variables: {
-    size: 20,
+    size: 25,
     orderBy: 'ENDING_SOON',
     filters: {
       status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD],
@@ -37,7 +37,7 @@ cacheWithItems.writeQuery({
 cacheWithoutItems.writeQuery({
   query: AuctionsListQuery,
   variables: {
-    size: 20,
+    size: 25,
     orderBy: 'ENDING_SOON',
     filters: {
       status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD],
