@@ -21,6 +21,7 @@ import AdminInvitations from 'src/modules/admin/Invitations';
 import { AfterLogin } from 'src/modules/AfterLogin';
 import AssistantInfluencersPage from 'src/modules/assistants/Influencers';
 import AuctionDeliveryInfoPage from 'src/modules/auctions/AuctionDeliveryInfoPage';
+import AuctionGroupPage from 'src/modules/auctions/AuctionGroupPage';
 import AuctionPage from 'src/modules/auctions/AuctionPage';
 import AuctionsPage from 'src/modules/auctions/AuctionsPage';
 import AuctionDonePage from 'src/modules/auctions/DonePage';
@@ -120,6 +121,7 @@ export const App = () => {
                   <PrivateRoute component={InfluencerAssistantsPage} path="/assistants/me" role="influencer" />
                   <PrivateRoute component={InfluencerAssistantsPage} path="/assistants/:influencerId" role="admin" />
 
+                  <Route exact component={AuctionGroupPage} path="/auctions/group/:charityId" />
                   <Route exact component={AuctionsPage} path="/auctions" />
                   <PrivateRoute
                     component={NewAuctionPage}
