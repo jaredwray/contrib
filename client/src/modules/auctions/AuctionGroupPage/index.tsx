@@ -37,7 +37,7 @@ const AuctionGroupPage: FC = () => {
     bids: initialBids,
     orderBy: 'CREATED_AT_DESC',
     pageSkip: 0,
-    status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD],
+    status: [AuctionStatus.ACTIVE],
     charity: charityId,
   });
 
@@ -110,7 +110,7 @@ const AuctionGroupPage: FC = () => {
   return (
     <AllItemsLayout
       changeFilters={changeFilters}
-      filters={componentFilters}
+      filters={''}
       size={auctions?.size}
       skip={auctions?.skip}
       sortOptions={sortByEnum}

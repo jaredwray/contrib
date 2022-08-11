@@ -60,12 +60,12 @@ const Select: FC<Props> = ({
     <>
       <DropdownButton
         as={ButtonGroup}
-        className={clsx('text-subhead justify-content-start select-field', !selectedOption && 'emptyState', className)}
+        className={clsx('select-field', !selectedOption && 'emptyState', className)}
         disabled={disabled}
         id="dropdown-select"
         size={small ? 'sm' : undefined}
         title={`${titlePrefix}${title || placeholder}`}
-        variant="outline-primary"
+        variant=""
         onSelect={handleSelect}
       >
         {options && options.length && isArrayOfObjects ? (

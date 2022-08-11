@@ -28,7 +28,6 @@
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
-    background: $dark-gray-color !important;
 
     &.show {
       width: 100vw !important;
@@ -40,7 +39,7 @@
   .dropdown-item {
     font-size: 14px;
     color: $white-color;
-    padding: 0 0 1em 0 !important;
+    // padding: 0 0 1em 0 !important;
     letter-spacing: 0.05rem;
     &.active {
       background: none !important;
