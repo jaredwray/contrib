@@ -115,6 +115,7 @@ const AuctionGroupPage: FC = () => {
       skip={auctions?.skip}
       sortOptions={sortByEnum}
       totalItems={auctions?.totalItems}
+      charity={charityData?.name}
     >
       {(auctions?.items || []).map((auction: Auction) => (
         <AuctionCard key={auction.id} auction={auction} />

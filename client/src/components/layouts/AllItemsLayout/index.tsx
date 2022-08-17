@@ -20,6 +20,7 @@ interface Props {
   totalItems: number;
   sortOptions: { value: string; label: string }[];
   oldStyle?: boolean;
+  charity?: string;
 }
 
 export const AllItemsLayout: FC<Props> = ({
@@ -31,10 +32,14 @@ export const AllItemsLayout: FC<Props> = ({
   totalItems,
   children,
   oldStyle,
+  charity,
 }) => {
   return (
     <Layout>
       <Container className="p-0" fluid="xxl">
+        <Row className={clsx(styles.row, 'text-center p-3')}>
+          <Col>{`Live Auctions from ` + charity}</Col>
+        </Row>
         <Row className={clsx(styles.row, 'h-100 flex-grow-1')}>
           {/* <Col className={clsx(styles.filtersWrapper, 'pb-0 pb-sm-4')} md="4" xl="3">
             {filters}
