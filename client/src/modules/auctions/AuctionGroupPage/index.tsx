@@ -20,11 +20,9 @@ const AuctionGroupPage: FC = () => {
   if (charityName === 'negu') {
     charityId = '622976aa86bac00003ece369';
   }
-  const { data, error } = useQuery<{ charity: Charity }>(GetCharity, {
+  const { data } = useQuery<{ charity: Charity }>(GetCharity, {
     variables: { id: charityId },
   });
-
-  const charityData = data?.charity;
 
   const initialBids = useMemo(() => {
     return (
@@ -47,11 +45,6 @@ const AuctionGroupPage: FC = () => {
   const [executeAuctionsSearch, { data: auctionsData }] = useLazyQuery(AuctionsListQuery);
   const auctions = auctionsData?.auctions;
   const changeFilters = useCallback((key: string, value: any) => {
-    setFilters((prevState: any) => {
-      return { ...prevState, pageSkip: 0, [key]: value };
-    });
-  }, []);
-  const charityChangeFilter = useCallback((key: string, value: any) => {
     setFilters((prevState: any) => {
       return { ...prevState, pageSkip: 0, [key]: value };
     });
@@ -105,12 +98,12 @@ const AuctionGroupPage: FC = () => {
   return (
     <AllItemsLayout
       changeFilters={changeFilters}
+      charityName={charityName}
       filters={''}
       size={auctions?.size}
       skip={auctions?.skip}
       sortOptions={sortByEnum}
       totalItems={auctions?.totalItems}
-      charityName={charityName}
     >
       {(auctions?.items || []).map((auction: Auction) => (
         <AuctionCard key={auction.id} auction={auction} />
