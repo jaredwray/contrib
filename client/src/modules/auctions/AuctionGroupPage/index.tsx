@@ -11,16 +11,19 @@ import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction, AuctionStatus } from 'src/types/Auction';
 import { Charity } from 'src/types/Charity';
 
-import Filters from './Filters';
-
 const AuctionGroupPage: FC = () => {
   const [getPriceLimits, { data: auctionPriceLimitsData }] = useLazyQuery(AuctionPriceLimitsQuery);
   const auctionPriceLimits = auctionPriceLimitsData?.auctionPriceLimits;
 
-  const charityId = useParams<{ charityId: string }>().charityId ?? 'me';
+  const charityName = useParams<{ charityName: string }>().charityName;
+  let charityId = null;
+  if (charityName === 'negu') {
+    charityId = '622976aa86bac00003ece369';
+  }
   const { data, error } = useQuery<{ charity: Charity }>(GetCharity, {
     variables: { id: charityId },
   });
+
   const charityData = data?.charity;
 
   const initialBids = useMemo(() => {
@@ -91,16 +94,8 @@ const AuctionGroupPage: FC = () => {
     });
   }, [getPriceLimits, filters, auctionStatuses]);
 
-  setPageTitle(`${charityData?.name} Auctions`);
+  setPageTitle(`${charityName} Auctions`);
 
-  const componentFilters = (
-    <Filters
-      changeFilters={changeFilters}
-      charityChangeFilter={charityChangeFilter}
-      filters={filters}
-      initialBids={initialBids}
-    />
-  );
   const sortByEnum = [
     { value: 'CREATED_AT_DESC', label: 'Newest' },
     { value: 'ENDING_SOON', label: 'Ending soon' },
@@ -115,7 +110,7 @@ const AuctionGroupPage: FC = () => {
       skip={auctions?.skip}
       sortOptions={sortByEnum}
       totalItems={auctions?.totalItems}
-      charity={charityData?.name}
+      charityName={charityName}
     >
       {(auctions?.items || []).map((auction: Auction) => (
         <AuctionCard key={auction.id} auction={auction} />
