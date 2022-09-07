@@ -1,12 +1,10 @@
 @import 'src/variables.scss';
 
-.select {
-  min-width: 306px;
-}
-
 .dropdownFormGroup {
   flex-wrap: nowrap !important;
   width: 100%;
+  font-size: 14px;
+  line-height: 21px;
 }
 
 @media (max-width: $small-weight) {

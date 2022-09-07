@@ -296,6 +296,77 @@ export const AuctionsListQuery = gql`
   }
 `;
 
+export const AuctionGroupQuery = gql`
+  query AuctionsList(
+    $size: Int
+    $skip: Int
+    $query: String
+    $orderBy: String
+    $filters: AuctionSearchFilters
+    $statusFilter: [String]
+  ) {
+    auctions(
+      size: $size
+      skip: $skip
+      query: $query
+      orderBy: $orderBy
+      filters: $filters
+      statusFilter: $statusFilter
+    ) {
+      totalItems
+      size
+      skip
+      items {
+        id
+        currentPrice
+        totalBids
+        status
+        isActive
+        isDraft
+        isSettled
+        isFailed
+        isSold
+        isStopped
+        title
+        startPrice
+        bidStep
+        itemPrice
+        startsAt
+        stoppedAt
+        endsAt
+        password
+        auctionOrganizer {
+          id
+          name
+          avatarUrl
+        }
+        charity(id: "60b0e46b9f6e1d2f54c7e27d") {
+          id
+          name
+          avatarUrl
+          semanticId
+        }
+        attachments {
+          type
+          url
+          thumbnail
+        }
+        followers {
+          user
+        }
+        delivery {
+          parcel {
+            width
+            length
+            height
+            weight
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GetAuctionMediaQuery = gql`
   query GetAuctionMedia($id: String!) {
     auction(id: $id) {

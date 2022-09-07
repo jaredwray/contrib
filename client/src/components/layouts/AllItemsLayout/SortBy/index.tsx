@@ -28,7 +28,8 @@ const SortBy: FC<Props> = ({ changeFilters, sortOptions }) => {
   return (
     <div className={clsx(styles.formGroup, 'float-start float-sm-end pt-4 pt-sm-0 form-inline')}>
       <Form.Group className={styles.dropdownFormGroup}>
-        <Form.Label className="text-nowrap pe-3">Sort by</Form.Label>
+        {/* <Form.Label className="text-nowrap pe-3">Sort by</Form.Label> */}
+        sort by
         <Select className={styles.select} options={sortOptions} selected={selectedOption()} onChange={selectSortBy} />
       </Form.Group>
     </div>
