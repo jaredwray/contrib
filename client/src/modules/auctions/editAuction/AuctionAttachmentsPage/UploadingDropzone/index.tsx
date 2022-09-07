@@ -54,7 +54,7 @@ const UploadingDropzone: FC<Props> = ({
         return {
           ...prevState,
           uploaded: attachments.uploaded.concat(attachment),
-          loading: attachments.loading.filter((file) => file.name !== attachment.originalFileName),
+          loading: [],
         };
       });
     },
@@ -152,9 +152,9 @@ const UploadingDropzone: FC<Props> = ({
           />
         ))}
         <div className={styles.filePreviewWrapper}>
-          {attachments.loading.map((file: File, index: number) => (
-            <FilePreview key={index} file={file} />
-          ))}
+          {attachments.loading.map((file: File, index: number) => {
+            return <FilePreview key={index} file={file} />;
+          })}
         </div>
       </div>
       <div {...getRootProps({ className: styles.dropzone })}>
