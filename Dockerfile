@@ -1,4 +1,5 @@
 FROM node:16-alpine
+RUN apk update && apk add git
 
 ENV PORT 3000
 
@@ -12,6 +13,9 @@ COPY ./server/package.json /usr/src/app/server/package.json
 COPY ./server/dist /usr/src/app/server/dist
 
 # Install Server Dependencies
+WORKDIR /usr/src/app/server
+ENV PATH /usr/src/app/server/node_modules/.bin:$PATH
+
 WORKDIR /usr/src/app/server
 RUN yarn
 
