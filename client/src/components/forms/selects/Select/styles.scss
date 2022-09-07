@@ -5,11 +5,17 @@
 
   .dropdown-toggle {
     width: 100%;
+    text-decoration: underline dotted;
+    text-underline-position: under;
+    padding: 0 0 0 .5em;
+    display: block !important;
+    text-align: left;
   }
 
   .dropdown-menu {
     width: 100%;
     overflow: hidden;
+    margin-top: 1em;
   }
 
   .dropdown-items-wrapper {
@@ -18,20 +24,14 @@
   }
 
   &.dropdown.show > .dropdown-toggle {
-    box-shadow: inset 0 0 0 1px $sage-color !important;
-    background-color: $white-color;
-    color: $sage-color;
     transition: none;
+    display: block;
+    text-align: left;
 
     &.btn-sm {
       background-color: $sage-color !important;
       color: $white-color !important;
       transition: none;
-    }
-
-    &::after {
-      background-color: $sage-color;
-      border: none;
     }
 
     &::before {
@@ -125,20 +125,11 @@
 
   .dropdown-item {
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 600;
+    letter-spacing: 0.025rem;
     position: relative;
     white-space: normal;
     word-wrap: break-word;
-
-    &.active::before {
-      content: '';
-      position: absolute;
-      left: 7px;
-      width: 24px;
-      height: 24px;
-      margin-top: 2px;
-      background: url(/assets/images/verified.svg) no-repeat;
-    }
   }
 
   @media (max-width: $medium-weight) {

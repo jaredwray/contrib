@@ -1,4 +1,4 @@
-import { ClientSession, Connection, FilterQuery, Query, Types } from 'mongoose';
+import { ClientSession, Connection, FilterQuery, Query } from 'mongoose';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { ShortLinkService, ShortLinkModel } from '../../ShortLink';
