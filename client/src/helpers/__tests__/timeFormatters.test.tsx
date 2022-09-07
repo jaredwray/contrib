@@ -28,6 +28,6 @@ describe('toHumanReadableDuration', () => {
 
 describe('toFullHumanReadableDatetime', () => {
   test('returns correct value', () => {
-    expect(toFullHumanReadableDatetime(new Date('June 20, 2021 00:20:00'))).toBe('20.06.21 @ 12:20 AM');
+    expect(toFullHumanReadableDatetime(new Date('June 20, 2021 00:20:00'))).toBe('06/20/21 @ 12:20 AM');
   });
 });

@@ -538,7 +538,7 @@ export class AuctionService {
 
   public async addAuctionAttachment(id: string, organizerId, input: AuctionAttachmentInput): Promise<AuctionAssets> {
     const auction = await this.auctionRepository.getAuction(id, organizerId);
-    if (auction?.status !== AuctionStatus.DRAFT)
+    if (![AuctionStatus.DRAFT, AuctionStatus.STOPPED].includes(auction?.status))
       throw new AppError('Auction does not exist or cannot be edited', ErrorCode.NOT_FOUND);
 
     try {

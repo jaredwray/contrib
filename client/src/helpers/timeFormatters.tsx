@@ -32,7 +32,7 @@ export function toHumanReadableDuration(date: string): string | null {
 
 export const toFullHumanReadableDatetime = (prop: Date): string | null => {
   const date = toDate(prop);
-  const day = format(date, 'd.MM.yy');
+  const day = format(date, 'MM/dd/yy');
   const time = format(date, 'hh:mm a');
 
   return `${day} @ ${time}`;
