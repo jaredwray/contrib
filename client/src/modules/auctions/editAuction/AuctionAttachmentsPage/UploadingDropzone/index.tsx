@@ -54,7 +54,7 @@ const UploadingDropzone: FC<Props> = ({
         return {
           ...prevState,
           uploaded: attachments.uploaded.concat(attachment),
-          loading: attachments.loading.filter((file) => file.name !== attachment.originalFileName),
+          loading: [],
         };
       });
     },
