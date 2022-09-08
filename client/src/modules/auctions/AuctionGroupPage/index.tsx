@@ -97,7 +97,7 @@ const AuctionGroupPage: FC = () => {
   return (
     <AllItemsLayout
       changeFilters={changeFilters}
-      charityName={charityName}
+      charityName={charityName.replace(/-/g, ' ')}
       filters={''}
       size={auctions?.size}
       skip={auctions?.skip}
