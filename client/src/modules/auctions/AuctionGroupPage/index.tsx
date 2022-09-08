@@ -19,6 +19,10 @@ const AuctionGroupPage: FC = () => {
     charityId = '622976aa86bac00003ece369';
   }
 
+  if (charityName === 'seattle-childrens') {
+    charityId = '6171b1d56fa84a00036ade09';
+  }
+
   const initialBids = useMemo(() => {
     return (
       auctionPriceLimits && {
