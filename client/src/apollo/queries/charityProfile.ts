@@ -20,6 +20,26 @@ export const GetCharity = gql`
   }
 `;
 
+export const GetCharity2 = gql`
+  query GetCharity($semanticId: String!) {
+    charity(id: $semanticId) {
+      id
+      semanticId
+      name
+      status
+      avatarUrl
+      profileDescription
+      websiteUrl
+      website
+      totalRaisedAmount
+      followers {
+        user
+        createdAt
+      }
+    }
+  }
+`;
+
 export const UpdateCharityProfileMutation = gql`
   mutation UpdateCharityProfile($charityId: String!, $profileDescription: String, $website: String, $name: String) {
     updateCharityProfile(
