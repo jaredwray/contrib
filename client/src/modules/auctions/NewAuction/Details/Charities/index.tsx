@@ -50,7 +50,7 @@ const Charities: FC<Props> = ({ checkMissed, disabled = false }) => {
         disabled={disabled}
         floatingLabel="Charity"
         name="charity"
-        options={options}
+        options={options.sort((a, b) => a.label.localeCompare(b.label))}
         placeholder=""
         selectedOption={selectedOption}
         onChange={onChange}
