@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastProvider } from 'react-toast-notifications';
 
-import { AuctionPriceLimitsQuery, AuctionGroupQuery } from 'src/apollo/queries/auctions';
+import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
 import { auction } from 'src/helpers/testHelpers/auction';
 
 import AuctionsGroupPage from '..';
@@ -15,7 +15,7 @@ jest.mock('src/components/modals/TermsConfirmationDialog', () => () => <></>);
 
 const cache = new InMemoryCache();
 cache.writeQuery({
-  query: AuctionGroupQuery,
+  query: AuctionsListQuery,
   variables: {
     size: 20,
     skip: 0,

@@ -1,28 +1,20 @@
 import { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
-import { useLazyQuery } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { useLazyQuery, useQuery } from '@apollo/client';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { AuctionPriceLimitsQuery, AuctionsListQuery } from 'src/apollo/queries/auctions';
+import { GetCharity } from 'src/apollo/queries/charityProfile';
 import AuctionCard from 'src/components/custom/AuctionCard';
 import { AllItemsLayout, PER_PAGE } from 'src/components/layouts/AllItemsLayout';
 import { setPageTitle } from 'src/helpers/setPageTitle';
 import { Auction, AuctionStatus } from 'src/types/Auction';
+import { Charity } from 'src/types/Charity';
 
 const AuctionGroupPage: FC = () => {
+  const charityName = useParams<{ charityName: string }>().charityName;
   const [getPriceLimits, { data: auctionPriceLimitsData }] = useLazyQuery(AuctionPriceLimitsQuery);
   const auctionPriceLimits = auctionPriceLimitsData?.auctionPriceLimits;
-
-  const charityName = useParams<{ charityName: string }>().charityName;
-  let charityId = null;
-  if (charityName === 'negu') {
-    charityId = '622976aa86bac00003ece369';
-  }
-
-  if (charityName === 'seattle-childrens') {
-    charityId = '6171b1d56fa84a00036ade09';
-  }
-
   const initialBids = useMemo(() => {
     return (
       auctionPriceLimits && {
@@ -31,6 +23,10 @@ const AuctionGroupPage: FC = () => {
       }
     );
   }, [auctionPriceLimits]);
+  const { data, error } = useQuery<{ charity: Charity }>(GetCharity, {
+    variables: { id: charityName },
+  });
+  const charity = data?.charity;
 
   const [filters, setFilters] = useState({
     query: '',
@@ -38,8 +34,10 @@ const AuctionGroupPage: FC = () => {
     orderBy: 'CREATED_AT_DESC',
     pageSkip: 0,
     status: [AuctionStatus.ACTIVE],
-    charity: charityId,
+    charity: charity?.id,
   });
+
+  const history = useHistory();
 
   const [executeAuctionsSearch, { data: auctionsData }] = useLazyQuery(AuctionsListQuery);
   const auctions = auctionsData?.auctions;
@@ -69,11 +67,11 @@ const AuctionGroupPage: FC = () => {
         skip: filters.pageSkip,
         query: filters.query,
         orderBy: filters.orderBy,
-        filters: queryFilters,
+        filters: { charity: charity?.id },
         statusFilter: filters.status.length ? filters.status : auctionStatuses,
       },
     });
-  }, [executeAuctionsSearch, filters, auctionStatuses]);
+  }, [executeAuctionsSearch, filters, auctionStatuses, charity]);
   useEffect(() => {
     const queryFilters = { charity: filters.charity };
 
@@ -86,18 +84,23 @@ const AuctionGroupPage: FC = () => {
     });
   }, [getPriceLimits, filters, auctionStatuses]);
 
-  setPageTitle(`${charityName} Auctions`);
-
   const sortByEnum = [
     { value: 'CREATED_AT_DESC', label: 'Newest' },
     { value: 'ENDING_SOON', label: 'Ending soon' },
     { value: 'PRICE_ASC', label: 'Price: Low to high' },
     { value: 'PRICE_DESC', label: 'Price: High to low' },
   ];
+
+  if (charity === null) {
+    history.replace('/404');
+    return null;
+  }
+  if (error || charity === undefined) return null;
+  setPageTitle(`${charityName} Auctions`);
   return (
     <AllItemsLayout
       changeFilters={changeFilters}
-      charityName={charityName?.replace(/-/g, ' ') || ''}
+      charityName={charity?.name}
       filters={''}
       size={auctions?.size}
       skip={auctions?.skip}
