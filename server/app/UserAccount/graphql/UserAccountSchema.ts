@@ -63,6 +63,15 @@ export const UserAccountSchema = gql`
     phoneNumber: String!
   }
 
+  input UserAccountOptionalAddressInput {
+    name: String
+    state: String
+    city: String
+    zipCode: String
+    street: String
+    phoneNumber: String
+  }
+
   extend type Query {
     myAccount: UserAccount!
     getAccountById(id: String!): UserAccountForBid!
@@ -80,6 +89,7 @@ export const UserAccountSchema = gql`
     confirmAccountWithPhoneNumber(phoneNumber: String!, otp: String!): UserAccount!
     confirmChangePhoneNumber(phoneNumber: String, otp: String): PhoneNumber
     createOrUpdateUserAddress(auctionId: String!, input: UserAccountAddressInput!): UserAccountAddress!
+    updateUserAddress(auctionId: String!, input: UserAccountOptionalAddressInput!): UserAccountAddress!
     updateCreditCard(stripeCustomerId: String!): UserAccount!
   }
 `;

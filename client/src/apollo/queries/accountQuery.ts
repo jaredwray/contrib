@@ -88,3 +88,15 @@ export const CreateOrUpdateUserAddressMutation = gql`
     }
   }
 `;
+
+export const UpdateUserAddressMutation = gql`
+  mutation updateUserAddress($auctionId: String!, $state: String!) {
+    updateUserAddress(auctionId: $auctionId, input: { state: $state }) {
+      state
+      city
+      zipCode
+      street
+      phoneNumber
+    }
+  }
+`;
