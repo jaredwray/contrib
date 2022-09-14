@@ -7,8 +7,9 @@ import clsx from 'clsx';
 import { isPast } from 'date-fns';
 import Dinero from 'dinero.js';
 import { Button } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 
-import { MyAccountQuery } from 'src/apollo/queries/accountQuery';
+import { UpdateUserAddressMutation, MyAccountQuery } from 'src/apollo/queries/accountQuery';
 import { BuyAuctionMutation } from 'src/apollo/queries/auctions';
 import { RegisterPaymentMethodMutation } from 'src/apollo/queries/bidding';
 import { MakeAuctionBidMutation } from 'src/apollo/queries/bids';
@@ -19,6 +20,7 @@ import Dialog from 'src/components/modals/Dialog';
 import DialogActions from 'src/components/modals/Dialog/DialogActions';
 import DialogContent from 'src/components/modals/Dialog/DialogContent';
 import { useShowNotification } from 'src/helpers/useShowNotification';
+import { USAStates } from 'src/modules/delivery/DeliveryAddressPage/USAStates';
 
 import styles from './BidConfirmationModal.module.scss';
 
@@ -39,7 +41,7 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const [registerPaymentMethod] = useMutation(RegisterPaymentMethodMutation, {
       refetchQueries: [{ query: MyAccountQuery }],
     });
-
+    const [UpdateUserAddress] = useMutation(UpdateUserAddressMutation);
     const stripe = useStripe();
     const elements = useElements();
     const { showMessage, showError } = useShowNotification();
@@ -49,6 +51,9 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
     const [activeBid, setActiveBid] = useState<Dinero.Dinero | null>(null);
     const [newCard, setNewCard] = useState(false);
     const { account } = useContext(UserAccountContext);
+    const [isValidShippingState, setValidShippingState] = useState(
+      USAStates.find((approvedState) => approvedState.value === account?.address?.state) ? true : false,
+    );
 
     const paymentInformation = account?.paymentInformation;
     const expired = isPast(new Date(paymentInformation?.cardExpirationYear!, paymentInformation?.cardExpirationMonth!));
@@ -57,7 +62,10 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
       setActiveBid(null);
       setNewCard(false);
       setIsBuying(false);
-    }, [setIsBuying]);
+      if (!isValidShippingState && USAStates.find((approvedState) => approvedState.value !== account?.address?.state)) {
+        setValidShippingState(false);
+      }
+    }, [setIsBuying, isValidShippingState, account?.address?.state]);
 
     const registerPayment = useCallback(
       async (paymentInformation, newCard) => {
@@ -120,7 +128,21 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
 
     useEffect(() => setNewCard(false), []);
 
-    const disabled = isSubmitting || (expired && !cardComplete) || ((newCard || !paymentInformation) && !cardComplete);
+    const selectedOption = async (ev: any) => {
+      await UpdateUserAddress({
+        variables: {
+          auctionId,
+          state: ev.target.value,
+        },
+      });
+      setValidShippingState(true);
+    };
+
+    const disabled =
+      isSubmitting ||
+      !isValidShippingState ||
+      (expired && !cardComplete) ||
+      ((newCard || !paymentInformation) && !cardComplete);
 
     return (
       <Dialog
@@ -141,7 +163,6 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
                 auction ends (if you win).
               </p>
             )}
-
             <CardInput
               expired={expired}
               handleAddCard={() => setNewCard(true)}
@@ -155,11 +176,27 @@ export const BidConfirmationModal = forwardRef<BidConfirmationRef, Props>(
             <p className="text-center pt-4 mb-4">
               <span className="text-super-headline">{activeBid?.toFormat('$0,0')}</span>
             </p>
-            <hr />
-            <p className="text-label">
-              By clicking confirm, you acknowledge your item cannot be shipped to: Alabama, Hawaii, Illinois,
-              Massachusetts, Mississippi, or South Carolina.
+            <hr className="mb-4" />
+            <p className="text-dark text-label">
+              <strong>We cannot ship to the following States:</strong> <br />
+              Alabama, Hawaii, Illinois, Massachusetts, Mississippi, or South Carolina.
             </p>
+            {!isValidShippingState ? (
+              <p className="text-label text-center">
+                <div className="w-100">
+                  <Form.Select className={clsx(styles.select, 'p-3')} name="state" onChange={selectedOption}>
+                    <option className="text-warning">Please confirm your shipping state before bidding.</option>
+                    {USAStates.map((approvedState, i) => {
+                      return (
+                        <option key={i} value={approvedState.value}>
+                          {approvedState.label} ({approvedState.value})
+                        </option>
+                      );
+                    })}
+                  </Form.Select>
+                </div>
+              </p>
+            ) : null}
           </div>
         </DialogContent>
 

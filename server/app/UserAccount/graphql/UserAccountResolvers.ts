@@ -43,6 +43,15 @@ export const UserAccountResolvers = {
           input,
         ),
     ),
+    updateUserAddress: requireAuthenticated(
+      async (_, { auctionId, input }, { currentAccount, userAccount }) =>
+        await userAccount.updateUserAddress(
+          auctionId,
+          currentAccount.mongodbId,
+          currentAccount.stripeCustomerId,
+          input,
+        ),
+    ),
     updateCreditCard: requireAuthenticated(
       async (_, { stripeCustomerId }, { currentAccount, userAccount }) =>
         await userAccount.updateAccountStripeCustomerId(currentAccount, stripeCustomerId),

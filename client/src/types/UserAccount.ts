@@ -1,3 +1,4 @@
+import { Address } from './Address';
 import { Assistant } from './Assistant';
 import { Charity } from './Charity';
 import { InfluencerProfile } from './InfluencerProfile';
@@ -19,6 +20,7 @@ export interface PaymentCard {
 export interface UserAccount {
   id: string;
   isAdmin?: boolean;
+  address: Address | null;
   mongodbId?: string;
   phoneNumber: string | null;
   status: UserAccountStatus;

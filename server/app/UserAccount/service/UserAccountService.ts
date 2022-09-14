@@ -99,6 +99,44 @@ export class UserAccountService {
     }
   }
 
+  public async updateUserAddress(
+    auctionId: string,
+    userId: string,
+    stripeId: string,
+    input: UserAccountAddress,
+  ): Promise<UserAccountAddress> {
+
+    const auction = await this.AuctionModel.findById(auctionId);
+    if (!auction) {
+      AppLogger.error(`Can not find auction #${auctionId}`);
+      throw new AppError('Something went wrong. Please, try again later');
+    }
+
+    const user = await this.AccountModel.findById(userId);
+
+    if (!user) {
+      AppLogger.error(`Can not find user #${userId} for create or update user address`);
+      throw new AppError('Something went wrong. Please, try again later');
+    }
+
+    try {
+      Object.assign(user, {
+        address: { ...input },
+        updatedAt: this.timeNow(),
+      });
+
+      await user.save();
+
+      return input;
+    } catch (error) {
+      AppLogger.error(`Can not create or update user address for user #${userId}: ${error.message}`);
+
+      if (error.message.startsWith('The postal code')) throw new AppError(error.message);
+
+      throw new AppError('Something went wrong. Please, check the entered data');
+    }
+  }
+
   async getAccountByAuthzId(authzId: string, user?: AuthUser): Promise<UserAccount> {
     let account = await this.AccountModel.findOne({ authzId }).exec();
 
@@ -269,6 +307,7 @@ export class UserAccountService {
       status: UserAccountStatus.COMPLETED,
       mongodbId: _id.toString(),
       notAcceptedTerms: TermsService.notAcceptedTerms(acceptedTerms, accountEntityTypes),
+      createdAt: dayjs().second(0),
       ...rest,
     };
   }
