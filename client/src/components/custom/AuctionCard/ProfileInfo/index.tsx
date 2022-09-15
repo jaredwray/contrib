@@ -28,14 +28,14 @@ const ProfileInfo: FC<Props> = ({ profile, link, profileClassName, charityClassN
       className={clsx(
         styles.link,
         isCharity && styles.charityWrapper,
-        isCharity && 'p-3',
+        // isCharity && 'pb-2',
         !isCharity && styles.isNotCharity,
         'd-flex',
       )}
       title={profile.name}
       to={link}
     >
-      <div>{isCharity && defaultAvatar && <CharityIcon />}</div>
+      {/* <div>{isCharity && defaultAvatar && <CharityIcon />}</div> */}
       {!isCharity && (
         <Image
           roundedCircle
@@ -52,15 +52,17 @@ const ProfileInfo: FC<Props> = ({ profile, link, profileClassName, charityClassN
           isCharity ? [styles.charityName, 'text-all-cups'] : [styles.profileNameWrapper],
         )}
       >
-        <div>
-          <div className={styles.supportingLabel}>{isCharity && 'SUPPORTING'}</div>
-          <div className={styles.profileName}>{profile.name}</div>
-        </div>
-        <div>
+        {!isCharity && (
+          <div>
+            {/* <div className={styles.supportingLabel}>{isCharity && 'SUPPORTING'}</div> */}
+            <div className={styles.profileName}>{profile.name}</div>
+          </div>
+        )}
+        {/* <div>
           {isCharity && !defaultAvatar && (
             <Image roundedCircle className={clsx(styles.avatarCharity)} src={resizedImageUrl(profile.avatarUrl, 120)} />
           )}
-        </div>
+        </div> */}
       </div>
     </SwipeableLink>
   );

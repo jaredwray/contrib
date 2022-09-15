@@ -20,9 +20,11 @@
   }
 
   .slick-slide {
+    display: flex !important;
     z-index: 10;
+    min-height: 400px !important;
     &:not(:last-child) {
-      margin-right: 22px;
+      margin-right: 1em;
     }
   }
 
