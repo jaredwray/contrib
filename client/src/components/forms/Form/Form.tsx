@@ -9,6 +9,7 @@ import { VALID_PHONENUMBER_LENGTH } from 'src/constants';
 
 interface Props {
   constraints?: any;
+  children?: any;
   initialValues?: object;
   onSubmit(data: object): void;
   className?: string;
@@ -40,7 +41,7 @@ const Form: FC<Props> = ({
   }, [constraints]);
 
   const handleSubmit = useCallback(
-    async (formData) => {
+    async (formData: any) => {
       try {
         await onSubmit(formData);
       } catch (error) {

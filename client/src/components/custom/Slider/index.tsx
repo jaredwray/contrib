@@ -63,7 +63,7 @@ const Slider: FC<Props> = ({ items }) => {
     [changing, sliderWrapper, checkArrows],
   );
   const scroll = useCallback(
-    (e) => {
+    (e: any) => {
       if (!slider.current) return;
 
       e.deltaX < 0 || e.deltaY > 0

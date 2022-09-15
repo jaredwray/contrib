@@ -1,7 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import 'src/variables.scss';
 @import '~react-datepicker/src/stylesheets/datepicker.scss';
 
 @import 'src/overrideStyles/variables';
+
 @import '~bootstrap/scss/bootstrap';
 @import 'src/overrideStyles';
 
