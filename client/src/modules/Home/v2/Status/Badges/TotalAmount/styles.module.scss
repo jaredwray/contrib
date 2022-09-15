@@ -1,0 +1,60 @@
+@import 'src/variables.scss';
+
+.withIcon,
+.withoutIcon {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.withIcon {
+  img {
+    height: 30px !important;
+  }
+}
+
+.withoutIcon {
+  img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.title {
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 0.075rem !important;
+  font-weight: 500 !important;
+}
+
+.firstValueWrapper {
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 500;
+  max-width: 240px !important;
+  letter-spacing: 0.025rem;
+  a {
+    text-decoration: none;
+    color: $sage-color;
+  }
+}
+
+.secondValue {
+  font-size: 10px !important;
+  line-height: 15px;
+  font-weight: 500;
+  letter-spacing: 0.075rem !important;
+  color: $mint-color;
+  a {
+    text-decoration: none;
+    color: $mint-color;
+  }
+}
+
+.spinner {
+  width: 20px !important;
+  height: 20px !important;
+  border-width: 2px !important;
+}
