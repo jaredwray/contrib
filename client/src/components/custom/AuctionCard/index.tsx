@@ -127,7 +127,7 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
       <figcaption
         className={clsx(
           styles.description,
-          'd-flex flex-column p-3',
+          'd-flex flex-column p-2 pt-3',
           isSettled && styles.settled,
           isSold && styles.settled,
         )}

@@ -1,7 +1,7 @@
 @import 'src/variables.scss';
 
 .badgesWrapper {
-  background: $dark-gray-color;
+  background: $barely-gray-color;
   width: auto !important;
-  color: white;
+  color: $dark-gray-color;
 }
