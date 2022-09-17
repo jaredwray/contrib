@@ -5,8 +5,6 @@
 }
 
 .subtitle {
-  font-weight: 600 !important;    
-  letter-spacing: 0.017em;
   .italicSubtitle {
     font-style: italic;
     font-weight: 500 !important;
@@ -19,6 +17,4 @@
 
 .root {
   background-color: $barely-gray-color;
-  border-bottom: 1px solid $light-gray-color;
-  padding: 1.5em 0;
 }

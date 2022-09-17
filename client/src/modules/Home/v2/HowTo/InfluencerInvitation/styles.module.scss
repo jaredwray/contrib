@@ -1,0 +1,26 @@
+@import 'src/variables.scss';
+
+.title {
+  color: $white-color !important;
+}
+
+.cancelBtn {
+  &,
+  &:hover {
+    color: $white-color !important;
+    text-decoration: none !important;
+  }
+}
+
+.submitBtn {
+  background-color: $mint-color !important;
+}
+
+.captcha {
+  height: 126px;
+
+  & > div > div {
+    display: flex;
+    place-content: center;
+  }
+}

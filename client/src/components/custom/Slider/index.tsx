@@ -75,11 +75,11 @@ const Slider: FC<Props> = ({ items }) => {
 
   useEffect(() => {
     window.addEventListener('resize', checkArrows);
-    window.addEventListener('wheel', preventDefault, { passive: false });
+    // window.addEventListener('wheel', preventDefault, { passive: false });
 
     return () => {
       window.removeEventListener('resize', checkArrows);
-      window.removeEventListener('wheel', preventDefault);
+      // window.removeEventListener('wheel', preventDefault);
     };
   }, [checkArrows, preventDefault]);
 
@@ -102,7 +102,7 @@ const Slider: FC<Props> = ({ items }) => {
   if (!items.length) return null;
 
   return (
-    <div ref={sliderWrapper} className="multi-carousel" onWheel={scroll}>
+    <div ref={sliderWrapper} className="multi-carousel">
       <RSlider {...settings}>{items}</RSlider>
     </div>
   );

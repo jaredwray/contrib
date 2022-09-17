@@ -46,8 +46,8 @@
 }
 
 .avatarUser {
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   border: 1px solid $dark-gray-color;
   -webkit-box-shadow: 0px 1px 4px 0px $dark-gray-color;
   -moz-box-shadow: 0px 1px 4px 0px $dark-gray-color;
@@ -59,8 +59,8 @@
 .profileNameWrapper {
   position: absolute;
   z-index: 2;
-  top: 16px;
-  left: 44px;
+  top: 7px;
+  left: 30px;
 }
 
 .isNotCharity {

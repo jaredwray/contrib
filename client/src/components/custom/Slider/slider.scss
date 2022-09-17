@@ -22,7 +22,7 @@
   .slick-slide {
     display: flex !important;
     z-index: 10;
-    min-height: 400px !important;
+    min-height: 365px !important;
     &:not(:last-child) {
       margin-right: 1em;
     }
@@ -65,11 +65,11 @@
   }
 
   .slick-prev {
-    left: calc((100% - 100vw) / 2 + 45px);
+    // left: calc((100% - 100vw) / 2 + 45px);
   }
   .slick-next {
     transform: rotate(-180deg);
-    right: calc((100% - 100vw) / 2 + 45px);
+    // right: calc((100% - 100vw) / 2 + 45px);
   }
 
   @media (max-width: $medium-weight) {

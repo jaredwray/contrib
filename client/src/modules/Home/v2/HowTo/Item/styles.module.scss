@@ -1,0 +1,62 @@
+@import 'src/variables.scss';
+
+.icon {
+  height: 44px;
+}
+
+.text {
+  max-width: 260px;
+  font-weight: 600 !important;
+  color: $dark-gray-color !important;
+  letter-spacing: 0.025rem !important;
+}
+
+.button {
+  border-radius: 25px !important;
+  font-weight: 700 !important;
+  background-color: $mint-color !important;
+  border-color: $mint-color !important;
+  letter-spacing: 0.025rem !important;
+  max-width: 300px;
+  display: block !important;
+
+  &:hover {
+    background-color: $sage-color !important;
+  }
+}
+
+.link {
+  text-decoration: none;
+  color: $mint-color;
+  font-weight: 600;
+  display: block;
+  font-size: 11px !important;
+  line-height: 15px !important;
+}
+
+.separator {
+  border-right: 1px solid $barely-gray-color;
+  border-left: 1px solid $barely-gray-color;
+
+  @media (max-width: $small-weight) {
+    border: none;
+    border-top: 1px solid $barely-gray-color;
+    border-bottom: 1px solid $barely-gray-color;
+  }
+}
+
+.invitation {
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: $dark-gray-color;
+  border: 1px solid $light-gray-color;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 100%;
+
+  @media (min-width: $small-weight) {
+    width: auto;
+    left: -0.75rem;
+    top: -25px;
+  }
+}

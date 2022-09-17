@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, ReactElement } from 'react';
 
 import { useQuery } from '@apollo/client';
 import clsx from 'clsx';
@@ -11,28 +11,32 @@ import { Auction, AuctionStatus } from 'src/types/Auction';
 
 import styles from './styles.module.scss';
 
-export default function EndingSoon() {
+interface Props {
+  charity: any;
+}
+
+const EndingSoon: FC<Props> = ({ charity }) => {
+  console.log(charity);
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: {
       size: 25,
       orderBy: 'ENDING_SOON',
       filters: {
-        status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD],
+        charity: charity.id,
+        status: [AuctionStatus.ACTIVE],
       },
     },
   });
 
   if (loading || error) return null;
-
-  const items = data.auctions.items.map((auction: Auction, i: number) => <AuctionCard key={i} auction={auction} />);
+  // console.log(data.auctions.items);
+  const items = data.auctions?.items?.map((auction: Auction, i: number) => <AuctionCard key={i} auction={auction} />);
 
   return (
-    <Container fluid className={clsx(styles.root, 'overflow-hidden text-left p-4 pt-md-5 pb-5')}>
+    <Container fluid className={clsx(styles.root, 'overflow-hidden text-left p-3')}>
       <Container className={clsx('p-0', !items.length && 'text-center')} fluid="xxl">
         <Row className="p-0 pb-4">
-          <span className={clsx(styles.subtitle, 'p-0 text-center text-md-start')}>
-            Direct <span className={styles.italicSubtitle}>Influencer-To-Fan</span> Charity Auctions
-          </span>
+          <span className={clsx(styles.subtitle, 'p-0 text-center text-md-start')}>{charity.name}</span>
         </Row>
         {items.length ? (
           <Slider items={items} />
@@ -42,4 +46,6 @@ export default function EndingSoon() {
       </Container>
     </Container>
   );
-}
+};
+
+export default EndingSoon;
