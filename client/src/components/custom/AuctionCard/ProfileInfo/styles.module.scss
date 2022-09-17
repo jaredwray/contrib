@@ -78,6 +78,10 @@
     background: $dark-gray-color;
     height: 18px;
     width: 100%;
+    max-width: 124px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     &::after {
       content: '';
       position: absolute;

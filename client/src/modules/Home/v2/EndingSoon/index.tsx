@@ -16,14 +16,13 @@ interface Props {
 }
 
 const EndingSoon: FC<Props> = ({ charity }) => {
-  console.log(charity);
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: {
       size: 25,
       orderBy: 'ENDING_SOON',
       filters: {
         charity: charity.id,
-        status: [AuctionStatus.ACTIVE],
+        status: [AuctionStatus.ACTIVE, AuctionStatus.SETTLED, AuctionStatus.SOLD],
       },
     },
   });
