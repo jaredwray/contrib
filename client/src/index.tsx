@@ -39,6 +39,7 @@ import NewAuctionPage from 'src/modules/auctions/NewAuction';
 import CharitiesPage from 'src/modules/charity/CharitiesPage';
 import { CharityProfileEditPage } from 'src/modules/charity/CharityProfileEditPage';
 import { CharityProfilePage } from 'src/modules/charity/CharityProfilePage';
+import { CharityQrCodesPage } from 'src/modules/charity/CharityQrCodesPage';
 import DeliveryAddressPage from 'src/modules/delivery/DeliveryAddressPage';
 import DeliveryPaymentPage from 'src/modules/delivery/DeliveryPaymentPage';
 import DeliveryStatusPage from 'src/modules/delivery/DeliveryStatusPage';
@@ -115,6 +116,7 @@ export const App = () => {
                   <Route exact component={CharitiesPage} path="/charities" />
                   <PrivateRoute component={CharityProfileEditPage} path="/charity/me/edit" role="charity" />
                   <PrivateRoute component={CharityProfileEditPage} path="/charity/:charityId/edit" role="admin" />
+                  <PrivateRoute component={CharityQrCodesPage} path="/charity/:charityId/qr-codes" role="admin" />
                   <PrivateRoute component={CharityProfilePage} path="/charity/me" role="charity" />
                   <Route exact component={CharityProfilePage} path="/charity/:charityId" />
 
