@@ -1,13 +1,8 @@
 import { FC, useState } from 'react';
 
-import clsx from 'clsx';
 import { Col, Row } from 'react-bootstrap';
 import QRCode from 'react-qr-code';
-import { handleInputChange } from 'react-select/dist/declarations/src/utils';
 
-import { UpdateCharityProfileAvatarMutation } from 'src/apollo/queries/charityProfile';
-import { AvatarPicker } from 'src/components/custom/AvatarPicker';
-import InputField from 'src/components/forms/inputs/InputField';
 import { Charity } from 'src/types/Charity';
 
 import styles from './FormFields.module.scss';
@@ -20,7 +15,6 @@ export const FormFields: FC<Props> = ({ charity }) => {
   const [value, setValue] = useState(`https://contrib.org/auctions/group/` + charity.semanticId);
   const handleKeyPress = (e: any) => {
     setValue(e.target.value);
-    console.log(value);
   };
   const downloadQrCode = () => {
     const svg = document.getElementById('QRCode') as HTMLImageElement;
@@ -49,7 +43,13 @@ export const FormFields: FC<Props> = ({ charity }) => {
       </Row>
       <Row className="container-fluid">
         <Col className="pt-4 m-auto" md="4">
-          <input className={styles.inputUrl} title={'Enter QR Code url'} value={value} onChange={handleKeyPress} />
+          <input
+            disabled
+            className={styles.inputUrl}
+            title={'Enter QR Code url'}
+            value={value}
+            onChange={handleKeyPress}
+          />
         </Col>
       </Row>
       <button className="btn btn-primary m-auto mt-4" onClick={downloadQrCode}>
