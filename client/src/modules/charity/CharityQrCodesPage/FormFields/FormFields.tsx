@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import clsx from 'clsx';
 import { Col, Row } from 'react-bootstrap';
 import QRCode from 'react-qr-code';
+import { handleInputChange } from 'react-select/dist/declarations/src/utils';
 
 import { UpdateCharityProfileAvatarMutation } from 'src/apollo/queries/charityProfile';
 import { AvatarPicker } from 'src/components/custom/AvatarPicker';
@@ -16,19 +17,44 @@ interface Props {
 }
 
 export const FormFields: FC<Props> = ({ charity }) => {
-  console.log(charity);
+  const [value, setValue] = useState(`https://contrib.org/auctions/group/` + charity.semanticId);
+  const handleKeyPress = (e: any) => {
+    setValue(e.target.value);
+    console.log(value);
+  };
+  const downloadQrCode = () => {
+    const svg = document.getElementById('QRCode') as HTMLImageElement;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx?.drawImage(img, 0, 0);
+      const pngFile = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.download = 'QRCode';
+      downloadLink.href = `${pngFile}`;
+      downloadLink.click();
+    };
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+  };
   return (
     <>
       <Row className="container-fluid text-center">
         <Col className="pt-4 m-auto" md="4">
-          <QRCode value={`http://localhost:8000/auctions/group/` + charity.id} />
+          <QRCode id="QRCode" value={value} />
         </Col>
       </Row>
       <Row className="container-fluid">
         <Col className="pt-4 m-auto" md="4">
-          <InputField required name="name" title="Enter QR Code value" />
+          <input className={styles.inputUrl} title={'Enter QR Code url'} value={value} onChange={handleKeyPress} />
         </Col>
       </Row>
+      <button className="btn btn-primary m-auto mt-4" onClick={downloadQrCode}>
+        Download
+      </button>
     </>
   );
 };
