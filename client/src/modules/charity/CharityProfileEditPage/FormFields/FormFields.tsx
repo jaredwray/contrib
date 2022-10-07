@@ -21,8 +21,6 @@ export const FormFields: FC<Props> = ({ charity }) => {
         <div className={clsx(styles.avatarBlock, 'd-flex flex-column align-items-center')}>
           <AvatarPicker item={charity} itemId="charityId" updateMutation={UpdateCharityProfileAvatarMutation} />
         </div>
-      </Col>
-      <Col className="pt-4 pt-md-0" md="6">
         <InputField required name="name" title="Enter charity name" />
         <InputField name="website" title="Enter charity website" />
         <InputField required textarea className={styles.textarea} name="profileDescription" title="Enter description" />

@@ -1,0 +1,1 @@
+export { CharityQrCodesPage } from './CharityQrCodesPage';
