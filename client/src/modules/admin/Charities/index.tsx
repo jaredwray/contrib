@@ -81,6 +81,9 @@ export default function CharitiesPage(): any {
                   <Link className="dropdown-item text--body" to={`/charity/${item.id}/edit`}>
                     Edit
                   </Link>
+                  <Link className="dropdown-item text--body" to={`/charity/${item.id}/qr-codes`}>
+                    QR Codes
+                  </Link>
                 </ActionsDropdown>
               </td>
             </ClickableTr>
