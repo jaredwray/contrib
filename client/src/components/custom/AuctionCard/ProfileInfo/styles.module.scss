@@ -9,7 +9,7 @@
 }
 
 .settled {
-  opacity: 0.25;
+  opacity: 0.55;
 }
 
 .charityName {
@@ -38,16 +38,16 @@
 }
 
 .charityWrapper {
-  background: $barely-gray-color;
-  border-radius: 8px;
-  -webkit-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+  // background: $barely-gray-color;
+  // border-top: 1px solid $barely-gray-color;
+  // -webkit-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+  // -moz-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
+  // box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .avatarUser {
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   border: 1px solid $dark-gray-color;
   -webkit-box-shadow: 0px 1px 4px 0px $dark-gray-color;
   -moz-box-shadow: 0px 1px 4px 0px $dark-gray-color;
@@ -59,8 +59,8 @@
 .profileNameWrapper {
   position: absolute;
   z-index: 2;
-  top: 16px;
-  left: 44px;
+  top: 7px;
+  left: 30px;
 }
 
 .isNotCharity {
@@ -78,6 +78,10 @@
     background: $dark-gray-color;
     height: 18px;
     width: 100%;
+    max-width: 124px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     &::after {
       content: '';
       position: absolute;

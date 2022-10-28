@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { ModalBody } from 'react-bootstrap';
 
 interface Props {
+  children?: any;
   className?: string;
 }
 

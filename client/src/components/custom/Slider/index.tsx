@@ -62,24 +62,14 @@ const Slider: FC<Props> = ({ items }) => {
     },
     [changing, sliderWrapper, checkArrows],
   );
-  const scroll = useCallback(
-    (e) => {
-      if (!slider.current) return;
-
-      e.deltaX < 0 || e.deltaY > 0
-        ? canScrollTo('next') && slider.current.slickNext()
-        : canScrollTo('prev') && slider.current.slickPrev();
-    },
-    [canScrollTo],
-  );
 
   useEffect(() => {
     window.addEventListener('resize', checkArrows);
-    window.addEventListener('wheel', preventDefault, { passive: false });
+    // window.addEventListener('wheel', preventDefault, { passive: false });
 
     return () => {
       window.removeEventListener('resize', checkArrows);
-      window.removeEventListener('wheel', preventDefault);
+      // window.removeEventListener('wheel', preventDefault);
     };
   }, [checkArrows, preventDefault]);
 
@@ -102,7 +92,7 @@ const Slider: FC<Props> = ({ items }) => {
   if (!items.length) return null;
 
   return (
-    <div ref={sliderWrapper} className="multi-carousel" onWheel={scroll}>
+    <div ref={sliderWrapper} className="multi-carousel">
       <RSlider {...settings}>{items}</RSlider>
     </div>
   );

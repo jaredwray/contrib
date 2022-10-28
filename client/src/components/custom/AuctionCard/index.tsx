@@ -127,28 +127,28 @@ const AuctionCard: FC<Props> = ({ auction, auctionOrganizer, isDonePage, onDelet
       <figcaption
         className={clsx(
           styles.description,
-          'd-flex flex-column p-3 pt-4',
+          'd-flex flex-column p-2 pt-3',
           isSettled && styles.settled,
           isSold && styles.settled,
         )}
       >
-        <SwipeableLink className={clsx(styles.title, 'mb-4 text-label-new')} title={auction.title} to={linkToAuction}>
+        <SwipeableLink className={clsx(styles.title, 'my-2 text-label-new')} title={auction.title} to={linkToAuction}>
           {auction.title}
         </SwipeableLink>
-
-        <div className="text-label text-left">
-          {isDraft && <span>DRAFT</span>}
-          {(!isDraft || isDonePage) && <DateDetails auction={auction} isDonePage={isDonePage} />}
-        </div>
         <div
           className={clsx(
             styles.price,
-            'text-subhead text-left text-truncate mt-0 mb-4 mt-2',
+            'text-subhead text-left text-truncate mt-1 mb-0',
             isFinished && 'text-decoration-line-through',
           )}
           title={priceFormatted}
         >
           {priceFormatted}
+        </div>
+
+        <div className="text-label text-left">
+          {isDraft && <span>DRAFT</span>}
+          {(!isDraft || isDonePage) && <DateDetails auction={auction} isDonePage={isDonePage} />}
         </div>
 
         {charity && (

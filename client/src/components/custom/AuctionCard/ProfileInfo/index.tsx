@@ -4,12 +4,10 @@ import clsx from 'clsx';
 import { Image } from 'react-bootstrap';
 
 import SwipeableLink from 'src/components/wrappers/SwipeableLink';
-import { DEFAULT_AVATAR_PATH } from 'src/constants';
 import resizedImageUrl from 'src/helpers/resizedImageUrl';
 import { Charity } from 'src/types/Charity';
 import { InfluencerProfile } from 'src/types/InfluencerProfile';
 
-import CharityIcon from './CharityIcon';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -21,21 +19,12 @@ type Props = {
 };
 
 const ProfileInfo: FC<Props> = ({ profile, link, profileClassName, charityClassName, isCharity }) => {
-  const defaultAvatar = profile.avatarUrl === DEFAULT_AVATAR_PATH;
-
   return (
     <SwipeableLink
-      className={clsx(
-        styles.link,
-        isCharity && styles.charityWrapper,
-        isCharity && 'p-3',
-        !isCharity && styles.isNotCharity,
-        'd-flex',
-      )}
+      className={clsx(styles.link, isCharity && styles.charityWrapper, !isCharity && styles.isNotCharity, 'd-flex')}
       title={profile.name}
       to={link}
     >
-      <div>{isCharity && defaultAvatar && <CharityIcon />}</div>
       {!isCharity && (
         <Image
           roundedCircle
@@ -52,15 +41,17 @@ const ProfileInfo: FC<Props> = ({ profile, link, profileClassName, charityClassN
           isCharity ? [styles.charityName, 'text-all-cups'] : [styles.profileNameWrapper],
         )}
       >
-        <div>
-          <div className={styles.supportingLabel}>{isCharity && 'SUPPORTING'}</div>
-          <div className={styles.profileName}>{profile.name}</div>
-        </div>
-        <div>
+        {!isCharity && (
+          <div>
+            {/* <div className={styles.supportingLabel}>{isCharity && 'SUPPORTING'}</div> */}
+            <div className={styles.profileName}>{profile.name}</div>
+          </div>
+        )}
+        {/* <div>
           {isCharity && !defaultAvatar && (
             <Image roundedCircle className={clsx(styles.avatarCharity)} src={resizedImageUrl(profile.avatarUrl, 120)} />
           )}
-        </div>
+        </div> */}
       </div>
     </SwipeableLink>
   );

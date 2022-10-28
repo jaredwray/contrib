@@ -44,7 +44,7 @@ import DeliveryAddressPage from 'src/modules/delivery/DeliveryAddressPage';
 import DeliveryPaymentPage from 'src/modules/delivery/DeliveryPaymentPage';
 import DeliveryStatusPage from 'src/modules/delivery/DeliveryStatusPage';
 import Page404 from 'src/modules/errors/Page404';
-import HomePage from 'src/modules/Home';
+import HomePage from 'src/modules/Home/v2';
 import InfluencerAssistantsPage from 'src/modules/influencers/Assistants';
 import InfluencerProfileEditPage from 'src/modules/influencers/InfluencerProfileEditPage';
 import { InfluencerProfilePage } from 'src/modules/influencers/InfluencerProfilePage';

@@ -34,7 +34,7 @@ export const ResendInvitationButton: FC<Props> = ({ item }) => {
   );
 
   const resendMessage = useCallback(
-    async (item) => {
+    async (item: any) => {
       try {
         await resendInviteMessage({ variables: { influencerId: item.id, name: item.name } }).then(({ data }) => {
           const { link, firstName, phoneNumber } = data.resendInviteMessage;

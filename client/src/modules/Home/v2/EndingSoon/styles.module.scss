@@ -1,0 +1,20 @@
+@import 'src/variables.scss';
+
+.title {
+  color: $sage-color;
+}
+
+.subtitle {
+  .italicSubtitle {
+    font-style: italic;
+    font-weight: 500 !important;
+  }
+  @media (max-width: 375px) {
+    max-width: 220px !important;
+    margin: auto;
+  }
+}
+
+.root {
+  background-color: white;
+}

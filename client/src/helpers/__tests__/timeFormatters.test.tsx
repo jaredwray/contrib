@@ -10,11 +10,11 @@ describe('toHumanReadableDuration', () => {
   });
 
   test('returns correct value for past date in days', () => {
-    expect(toHumanReadableDuration(sub(new Date(), { days: 2 }).toISOString())).toBe('Ended 2D ago');
+    expect(toHumanReadableDuration(sub(new Date(), { days: 2 }).toISOString())).toBe('Ended');
   });
 
   test('returns correct value for past time in hours', () => {
-    expect(toHumanReadableDuration(sub(new Date(), { hours: 2 }).toISOString())).toBe('Ended 2H ago');
+    expect(toHumanReadableDuration(sub(new Date(), { hours: 2 }).toISOString())).toBe('Ended');
   });
 
   test('returns correct value for future time in minutes', () => {

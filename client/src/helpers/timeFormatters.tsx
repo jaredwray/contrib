@@ -21,10 +21,10 @@ export function toHumanReadableDuration(date: string): string | null {
   const minutesLeft = minutes - Math.floor(minutes / 60) * 60;
   const left = [
     inPast ? 'Ended' : '',
-    daysLeft ? `${daysLeft}D` : '',
-    hoursLeft ? `${hoursLeft}H` : '',
-    minutesLeft ? `${minutesLeft}M` : '',
-    inPast ? 'ago' : '',
+    daysLeft && !inPast ? `${daysLeft}D` : '',
+    hoursLeft && !inPast ? `${hoursLeft}H` : '',
+    minutesLeft && !inPast ? `${minutesLeft}M` : '',
+    inPast && !inPast ? 'ago' : '',
   ];
 
   return left.filter(Boolean).join(' ');
