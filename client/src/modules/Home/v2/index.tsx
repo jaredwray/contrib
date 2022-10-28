@@ -1,17 +1,13 @@
 import { useQuery } from '@apollo/client';
-import clsx from 'clsx';
 
 import { AuctionsListQuery } from 'src/apollo/queries/auctions';
 import Layout from 'src/components/layouts/Layout';
-import { useAuth } from 'src/helpers/useAuth';
-import { Auction, AuctionStatus } from 'src/types/Auction';
+import { AuctionStatus } from 'src/types/Auction';
 
 import Banner from './Banner';
 import EndingSoon from './EndingSoon';
-import HowTo from './HowTo';
 
 export default function HomePage() {
-  const { isAuthenticated } = useAuth();
   const { loading, data, error } = useQuery(AuctionsListQuery, {
     variables: {
       size: 25,

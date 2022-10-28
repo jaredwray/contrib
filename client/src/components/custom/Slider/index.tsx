@@ -62,16 +62,6 @@ const Slider: FC<Props> = ({ items }) => {
     },
     [changing, sliderWrapper, checkArrows],
   );
-  const scroll = useCallback(
-    (e: any) => {
-      if (!slider.current) return;
-
-      e.deltaX < 0 || e.deltaY > 0
-        ? canScrollTo('next') && slider.current.slickNext()
-        : canScrollTo('prev') && slider.current.slickPrev();
-    },
-    [canScrollTo],
-  );
 
   useEffect(() => {
     window.addEventListener('resize', checkArrows);
