@@ -1,7 +1,6 @@
 # Contrib
 
-![deploy-to-dev](https://github.com/contriborg/contrib-app/workflows/deploy-to-dev/badge.svg)
-![deploy-to-live](https://github.com/contriborg/contrib-app/workflows/deploy-to-live/badge.svg)
+![tests](https://github.com/jaredwray/contrib/workflows/tests/badge.svg)
 [![codecov](https://codecov.io/gh/contriborg/contrib-app/branch/main/graph/badge.svg?token=2LIYGRVN4F)](https://codecov.io/gh/contriborg/contrib-app)
 
 ## Developing locally
