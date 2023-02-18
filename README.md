@@ -30,6 +30,10 @@ If you would like to contribute to the project please read the [Contributing](CO
 
 ## Getting Started
 
+When using a mono repo you will want to install the dependencies for the entire repo. To do this you will want to run the following command: `yarn` This will install all dependencies for the entire repo. This will also install the dependencies for the `app` and `api` as well.
+
+Once you have installed the dependencies you can run the following commands: `yarn start` This will start the `app` on port 3000 and `api` on 3001 in development mode. You can also run the following commands: `yarn start:app` This will start the `app` on port 3000 in development mode. `yarn start:api` This will start the `api` on port 3001 in development mode.
+
 ### Building Contrib
 
 To build contrib for production you will want to run the following commands:
