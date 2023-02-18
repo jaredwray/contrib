@@ -20,7 +20,6 @@ If you would like to contribute to the project please read the [Contributing](CO
 [![codecov](https://codecov.io/gh/jaredwray/contrib/branch/main/graph/badge.svg?token=2LIYGRVN4F)](https://codecov.io/gh/jaredwray/contrib)
 
 * [Getting Started](#getting-started)
-* [System and Service Architecture](#system-and-service-architecture)
 * [How to Deploy the App](#deploying-the-api)
 * [How to Deploy the API](#deploying-the-api)
 * [How to Set Up Cloud Services](#setting-up-cloud-services)
@@ -59,8 +58,6 @@ The mono repo is built using `yarn` and there are easy scripts in the base `pack
 * `yarn start` - this will start the `app` on port 3000 and `api` on 3001 in development mode
 * `yarn start:app` - this will start the `app` on port 3000 in development mode
 * `yarn start:api` - this will start the `api` on port 3001 in development mode
-
-## System and Service Architecture
 
 ## Deploying the API
 
