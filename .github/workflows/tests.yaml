@@ -20,30 +20,25 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Setup Node
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
-      # Build Client
-      - name: Build Client
-        run: REACT_APP_PLATFORM_URL=$ENV_REACT_APP_PLATFORM_URL REACT_APP_API_URL=$ENV_REACT_APP_API_URL REACT_APP_API_AUDIENCE=$ENV_REACT_APP_API_AUDIENCE REACT_APP_MAX_SIZE_VIDEO_GB=$ENV_REACT_APP_MAX_SIZE_VIDEO_GB REACT_APP_FIREBASE_CONFIG=$REACT_APP_FIREBASE_CONFIG REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE=$ENV_REACT_APP_UPS_SHOW_LINK_ON_THE_AUCTION_PAGE yarn build-client
+      # Install Dependencies
+      - name: Install Dependencies
+        run: yarn
 
-      # Test Client
-      - name: Test Client
-        run: yarn test-client
+      # Test
+      - name: Test
+        run: yarn test
 
-      # Build Server
-      - name: Build Server
-        run: yarn build-server
-
-      # Test Server
-      - name: Test Server and Coverage
-        run: yarn test-server
+      # Code Coverage
       - name: Code Coverage
         uses: codecov/codecov-action@v1.0.15
         with:
           token: ${{ secrets.CODECOV_KEY }}
+          file: ./packages/app/coverage/lcov.info
