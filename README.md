@@ -17,7 +17,7 @@ If you would like to contribute to the project please read the [Contributing](CO
 * Cloud Native by default using cloud services such as mongo atlas, stripe, sendgrid, and firebase, cloudflare (streaming), google cloud storage.
 
 ![tests](https://github.com/jaredwray/contrib/workflows/tests/badge.svg)
-[![codecov](https://codecov.io/gh/contriborg/contrib-app/branch/main/graph/badge.svg?token=2LIYGRVN4F)](https://codecov.io/gh/contriborg/contrib-app)
+[![codecov](https://codecov.io/gh/jaredwray/contrib/branch/main/graph/badge.svg?token=2LIYGRVN4F)](https://codecov.io/gh/jaredwray/contrib)
 
 * [Getting Started](#getting-started)
 * [System and Service Architecture](#system-and-service-architecture)
