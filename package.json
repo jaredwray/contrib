@@ -1,22 +1,22 @@
 {
-  "name": "contrib-app",
-  "version": "0.0.1",
-  "description": "",
+  "name": "contrib-mono",
+  "version": "1.0.0",
+  "description": "Contrib Mono Repo",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build-client": "yarn --cwd client install && yarn --cwd client build",
-    "build-server": "yarn --cwd server install && yarn --cwd server build",
-    "test-client": "yarn --cwd client test",
-    "test-server": "yarn --cwd server test:cov",
-    "build-docker": "docker build --pull --rm -f \"Dockerfile\" -t contrib-app:latest \".\"",
-    "run-docker": "docker run --rm -d -p 3000:3000/tcp --env-file ./server/.env contrib-app:latest",
-    "build": "yarn build-client && yarn build-server && yarn build-docker",
-    "start": "yarn --cwd server start"
+    "test": "yarn workspaces run test",
+    "website:start": "yarn serve -s website/"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
     "graphql-upload": "^11.0.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
   }
 }
