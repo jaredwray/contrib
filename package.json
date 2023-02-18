@@ -10,6 +10,12 @@
   ],
   "scripts": {
     "test": "yarn workspaces run test",
+    "build": "yarn workspaces run build",
+    "api:docker:build": "yarn workspace @contrib/api docker:build",
+    "api:docker:run": "yarn workspace @contrib/api docker:run",
+    "start:api": "yarn workspace @contrib/api start",
+    "start:app": "yarn workspace @contrib/app start",
+    "start": "yarn start:api & yarn start:app",
     "website:start": "yarn serve -s website/"
   },
   "dependencies": {
