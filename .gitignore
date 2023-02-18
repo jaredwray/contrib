@@ -44,3 +44,7 @@ debug.log
 .eslintcache
 react-app-env.d.ts
 coverage
+
+# dependencies
+package-lock.json
+yarn.lock
