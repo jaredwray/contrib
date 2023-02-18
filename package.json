@@ -16,7 +16,7 @@
     "start:api": "yarn workspace @contrib/api start",
     "start:app": "yarn workspace @contrib/app start",
     "start": "yarn start:api & yarn start:app",
-    "website:start": "yarn serve -s website/"
+    "website:start": "yarn serve website"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
